@@ -23,6 +23,11 @@ bindings.
 - `lib/src/header_parser` - Parses header files, utilises clang_bindings
 
 ## Building -
-A dynamic library for must be generated for this to work,
-cd to inside this package, then use `build.sh` to generate dynamic library (libclang must be installed
-and its header files should be in the include path)
+A dynamic library for a wrapper to libclang needs to be generated as it is used by parser
+
+### Steps (should work for ubuntu/linux)-
+1. Install libclangdev - `sudo apt-get install libclang-dev`
+2. Add its C headers to your include path (so clang compiler can detect it), you can create a symlink to those files like this -
+ `ln -s /usr/lib/llvm-10/include/clang-c/ /usr/include/`
+
+3. cd to root of this package, then run the `build.sh` script
