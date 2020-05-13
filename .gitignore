@@ -19,3 +19,9 @@ doc/api/
 *.js_
 *.js.deps
 *.js.map
+
+# Dynamic Library for libclang wrapper
+tool/wrapped_libclang/libwrapped_clang.so
+
+# Directory for quick experiments
+experiments/
