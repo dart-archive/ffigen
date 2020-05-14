@@ -31,12 +31,7 @@ class Library {
   /// Generates [file] by generating C bindings.
   /// If format is true(default) 'dartfmt -w $PATH' will be called to format the generated file.
   void generateFile(File file, {bool format = true}) {
-    final w = Writer(
-      dylibIdentifier: dylibIdentifier,
-      initFunctionIdentifier: initFunctionIdentifier,
-    );
-    _generate(w);
-    file.writeAsStringSync(w.toString());
+    file.writeAsStringSync(toString());
     if (format) {
       _dartFmt(file.path);
     }
@@ -57,5 +52,15 @@ class Library {
     if (result.stderr.toString().isNotEmpty) {
       print(result.stderr);
     }
+  }
+
+  @override
+  String toString() {
+    final w = Writer(
+      dylibIdentifier: dylibIdentifier,
+      initFunctionIdentifier: initFunctionIdentifier,
+    );
+    _generate(w);
+    return w.toString();
   }
 }
