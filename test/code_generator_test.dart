@@ -30,10 +30,6 @@ void main() {
 
       var gen = library.toString();
 
-      // writing to file for debug purpose
-      File('test/debug_generated/Function-Binding-test-output.dart')
-        ..writeAsStringSync(gen);
-
       expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
 import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart' as ffi2;
@@ -98,6 +94,65 @@ typedef _dart_last = double Function(
 );
 
 ''');
+      // writing to file for debug purpose
+      File(
+        'test/debug_generated/Function-Binding-test-output.dart',
+      )..writeAsStringSync(gen);
+    });
+
+    test('Struct Binding', () {
+      final library = Library(
+        bindings: [
+          Struc(
+            name: 'test',
+            dartDoc: 'Just a test function\nheres another line',
+          ),
+          Struc(
+            name: 'anotherTest',
+            members: [
+              Member(name: 'a', type: Type('int32')),
+              Member(name: 'b', type: Type('double')),
+              Member(name: 'c', type: Type('char')),
+            ],
+          ),
+        ],
+      );
+
+      var gen = library.toString();
+
+      expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
+import 'dart:ffi' as ffi;
+import 'package:ffi/ffi.dart' as ffi2;
+
+/// Dynamic library
+ffi.DynamicLibrary _dylib;
+
+/// Initialises dynamic library
+void init(ffi.DynamicLibrary dylib){
+  _dylib = dylib;
+}
+/// Just a test function
+/// heres another line
+class test extends ffi.Struct{
+}
+
+class anotherTest extends ffi.Struct{
+  @ffi.Int32()
+  int a;
+
+  @ffi.Double()
+  double b;
+
+  @ffi.Uint8()
+  int c;
+
+}
+
+''');
+
+      // writing to file for debug purpose
+      File('test/debug_generated/Struct-Binding-test-output.dart')
+        ..writeAsStringSync(gen);
     });
   });
 }
