@@ -2,9 +2,13 @@ import 'package:meta/meta.dart';
 
 /// A Binding's String representation
 class BindingString {
-  BindingStringType type;
+  final BindingStringType type;
+  final String string;
 
-  BindingString({@required this.type});
+  const BindingString({@required this.type, @required this.string});
+
+  @override
+  String toString() => string;
 }
 
 /// A type of BindingString

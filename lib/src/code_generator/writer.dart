@@ -1,3 +1,4 @@
+import 'constants.dart';
 import 'binding_string.dart';
 
 /// To store generated String bindings.
@@ -6,14 +7,12 @@ class Writer {
   String dylibIdentifier;
   String initFunctionIdentifier;
 
-  static const _p1 = 'ffi';
-  static const _p2 = 'ffi2';
+  static const _p1 = ffiLibraryPrefix;
+  static const _p2 = ffiUtilLibPrefix;
+
   final List<BindingString> _bindings = [];
 
-  Writer({String dylibIdentifier, String initFunctionIdentifier}) {
-    dylibIdentifier = this.dylibIdentifier ?? '_dylib';
-    initFunctionIdentifier = initFunctionIdentifier ?? 'init';
-  }
+  Writer({this.dylibIdentifier, this.initFunctionIdentifier});
 
   @override
   String toString() {
@@ -36,17 +35,15 @@ class Writer {
     s.write('\n');
     s.write('/// Initialises dynamic library\n');
     s.write('void $initFunctionIdentifier($_p1.DynamicLibrary dylib){\n');
-    s.write('  ${dylibIdentifier}=library;\n');
+    s.write('  ${dylibIdentifier} = dylib;\n');
     s.write('}\n');
-    s.write('\n');
 
     // Write bindings
     for (var bs in _bindings) {
       s.write('\n');
-      s.write(bs);
+      s.write(bs.toString());
     }
 
-    s.write('\n');
     return s.toString();
   }
 

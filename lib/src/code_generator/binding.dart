@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
 
+import 'writer.dart';
 import 'binding_string.dart';
 
 /// A binding class, parent class of all possible types
@@ -12,5 +13,6 @@ abstract class Binding {
 
   const Binding({@required this.name, this.dartDoc});
 
-  BindingString toBindingString();
+  /// Converts an abstract Binding to its string representation
+  BindingString toBindingString(Writer w);
 }

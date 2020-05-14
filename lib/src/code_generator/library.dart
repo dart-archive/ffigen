@@ -25,7 +25,8 @@ class Library {
     this.dylibIdentifier = '_dylib',
     this.initFunctionIdentifier = 'init',
     this.header = '/// AUTO GENERATED FILE, DO NOT EDIT',
-  });
+  })  : assert(dylibIdentifier != null),
+        assert(initFunctionIdentifier != null);
 
   /// Generates [file] by generating C bindings.
   /// If format is true(default) 'dartfmt -w $PATH' will be called to format the generated file.
@@ -45,7 +46,7 @@ class Library {
   void _generate(Writer w) {
     w.header = header;
     for (var b in bindings) {
-      w.addBindingString(b.toBindingString());
+      w.addBindingString(b.toBindingString(w));
     }
   }
 
@@ -53,7 +54,8 @@ class Library {
   void _dartFmt(String path) {
     final result = Process.runSync('dartfmt', ['-w', path],
         runInShell: Platform.isWindows);
-    print(result.stdout);
-    print(result.stderr);
+    if (result.stderr.toString().isNotEmpty) {
+      print(result.stderr);
+    }
   }
 }

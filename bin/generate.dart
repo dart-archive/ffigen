@@ -4,6 +4,11 @@ import 'package:ffigen/src/config_provider/config.dart';
 import 'package:yaml/yaml.dart' as yaml;
 
 void main() {
+  var c = getConfigFromPubspec();
+  print(c.toString());
+}
+
+Config getConfigFromPubspec() {
   var currentDir = Directory.current;
   print('Running in ${currentDir}');
 
@@ -32,5 +37,5 @@ void main() {
     print(e);
     exit(3);
   }
-  var config = Config.fromYaml(bindingsConfigMap);
+  return Config.fromYaml(bindingsConfigMap);
 }
