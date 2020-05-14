@@ -74,13 +74,15 @@ CXString *clang_getTypeSpelling_wrap(CXType *type)
     return s;
 }
 
-CXType *clang_getResultType_wrap(CXType *functionType){
+CXType *clang_getResultType_wrap(CXType *functionType)
+{
     CXType *t = aloc(CXType);
     *t = clang_getResultType(*functionType);
     return t;
 }
 
-CXType *clang_getPointeeType_wrap(CXType *pointerType){
+CXType *clang_getPointeeType_wrap(CXType *pointerType)
+{
     CXType *t = aloc(CXType);
     *t = clang_getPointeeType(*pointerType);
     return t;
