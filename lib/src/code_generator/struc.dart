@@ -29,8 +29,10 @@ class Struc extends Binding {
     // write class declaration
     s.write('class $name extends ${ffiLibraryPrefix}.Struct{\n');
     for (var m in members) {
-      s.write('  @${m.type.toCType()}()\n');
-      s.write('  ${m.type.toDartType()} ${m.name};\n\n');
+      if (m.type.isPrimitive) {
+        s.write('  @${m.type.cType}()\n');
+      }
+      s.write('  ${m.type.dartType} ${m.name};\n\n');
     }
     s.write('}\n\n');
 
