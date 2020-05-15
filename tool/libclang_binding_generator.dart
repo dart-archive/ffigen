@@ -1,4 +1,4 @@
-// Dev tool for generating libclang bindings using the FFI tool
+// Dev tool for generating libclang bindings using the code_generator submodule
 // file generated is lib/src/clang_bindings/clang_bindings.dart
 import 'dart:io';
 
