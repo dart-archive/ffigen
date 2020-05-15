@@ -7,6 +7,8 @@ import 'package:ffigen/src/code_generator.dart';
 const _voidPointer = '*void';
 const _charPointer = '*utf8';
 const _charPointerPointer = '**utf8';
+
+// TODO: this is currently a hack, function pointer int't implemented in code_generator
 const _modifiedVisitorFuncPtr = '*ffi.NativeFunction<visitorFunctionSignature>';
 
 const _cxTranslationUnitImp = 'CXTranslationUnitImpl';
@@ -263,14 +265,26 @@ final bindings = <Binding>[
     ],
     returnType: Type('*$_cxType'),
   ),
-  // TypedefC(
-  //   name: 'visitorFunctionSignature',
-  //   parameters: [Parameter(name:'',type:Type(''),),],parameterTypes: ['*CXCursor', '*CXCursor', '*void'],
-  //   parameterNames: ['cursor', 'parent', 'clientData'],
-  //   returnType: Type('int32'),
-  //   documentation:
-  //       'C signature for `visitorFunction` parameter in [clang_visitChildren_wrap]',
-  // ),
+  TypedefC(
+    dartDoc:
+        'C signature for `visitorFunction` parameter in [clang_visitChildren_wrap]',
+    name: 'visitorFunctionSignature',
+    parameters: [
+      Parameter(
+        name: 'cursor',
+        type: Type('*$_cxCursor'),
+      ),
+      Parameter(
+        name: 'parent',
+        type: Type('*$_cxCursor'),
+      ),
+      Parameter(
+        name: 'clientData',
+        type: Type(_voidPointer),
+      ),
+    ],
+    returnType: Type('int32'),
+  ),
   Func(
     dartDoc: '',
     name: 'clang_visitChildren_wrap',
