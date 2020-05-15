@@ -5,8 +5,8 @@ import 'dart:io';
 import 'package:ffigen/src/code_generator.dart';
 
 const _voidPointer = '*void';
-const _charPointer = '*Utf8';
-const _charPointerPointer = '**Utf8';
+const _charPointer = '*utf8';
+const _charPointerPointer = '**utf8';
 const _modifiedVisitorFuncPtr = '*ffi.NativeFunction<visitorFunctionSignature>';
 
 const _cxTranslationUnitImp = 'CXTranslationUnitImpl';

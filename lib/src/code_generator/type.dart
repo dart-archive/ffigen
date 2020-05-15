@@ -3,6 +3,7 @@ import 'constants.dart';
 /// Type class for return types, variable types, etc
 class Type {
   static const _primitives = <String, _SubType>{
+    'void': _SubType(c: 'Void', dart: 'void'),
     'char': _SubType(c: 'Uint8', dart: 'int'),
     'int8': _SubType(c: 'Int8', dart: 'int'),
     'int16': _SubType(c: 'Int16', dart: 'int'),
@@ -16,6 +17,11 @@ class Type {
     'float32': _SubType(c: 'Float', dart: 'double'),
     'float64': _SubType(c: 'Double', dart: 'double'),
     'double': _SubType(c: 'Double', dart: 'double'),
+  };
+
+  static const _ffiUtils = <String, _SubType>{
+    'utf8': _SubType(c: 'Utf8', dart: 'Utf8'),
+    'utf16': _SubType(c: 'Utf16', dart: 'Utf16'),
   };
 
   final String type;
@@ -47,6 +53,9 @@ class Type {
       if (s != null) {
         // for primitives
         return '$ffiLibraryPrefix.${s.c}';
+      } else if (_ffiUtils.containsKey(t)) {
+        // for Utf8 and Utf16
+        return '$ffiUtilLibPrefix.${_ffiUtils[t].c}';
       } else {
         // for structs
         return t;
@@ -59,7 +68,7 @@ class Type {
 
     if (s != null) {
       return s.dart;
-    } else if (type[0]=='*') {
+    } else if (type[0] == '*') {
       // for pointers
       return _getPointerType(type);
     } else {
