@@ -185,6 +185,7 @@ class WithPointerMember extends ffi.Struct{
 
 ''');
     });
+
     test('Function and Struct Binding (pointer to Struct)', () {
       final library = Library(
         bindings: [
@@ -322,8 +323,7 @@ final ffi.Pointer<Some> test5 = _dylib.lookup<ffi.Pointer<Some>>('test5').value;
 ''');
     });
 
-    test('constant',
-        () {
+    test('constant', () {
       final library = Library(
         bindings: [
           Constant(
@@ -360,6 +360,66 @@ void init(ffi.DynamicLibrary dylib){
 const int test1 = 20;
 
 const double test2 = 20.0;
+
+''');
+    });
+
+    test('TypedefC (primitive, pointers, pointer to struct)', () {
+      final library = Library(
+        bindings: [
+          TypedefC(
+            dartDoc: 'just a test',
+            name: 'test1',
+            returnType: Type('int32'),
+          ),
+          Struc(
+            name: 'SomeStruct'
+          ),
+          TypedefC(
+            name: 'test2',
+            returnType: Type('*int32'),
+            parameters: [
+              Parameter(
+                name: 'param1',
+                type: Type('*SomeStruct'),
+              ),
+              Parameter(
+                name: 'param2',
+                type: Type('char'),
+              ),
+            ],
+          ),
+        ],
+      );
+
+      var gen = library.toString();
+
+      // writing to file for debug purpose
+      File('test/debug_generated/typedef-Binding-test-output.dart')
+        ..writeAsStringSync(gen);
+
+      expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
+import 'dart:ffi' as ffi;
+import 'package:ffi/ffi.dart' as ffi2;
+
+/// Dynamic library
+ffi.DynamicLibrary _dylib;
+
+/// Initialises dynamic library
+void init(ffi.DynamicLibrary dylib){
+  _dylib = dylib;
+}
+/// just a test
+typedef test1 = ffi.Int32 Function(
+);
+
+class SomeStruct extends ffi.Struct{
+}
+
+typedef test2 = ffi.Pointer<ffi.Int32> Function(
+  ffi.Pointer<SomeStruct> param1,
+  ffi.Uint8 param2,
+);
 
 ''');
     });

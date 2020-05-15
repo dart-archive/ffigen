@@ -70,5 +70,5 @@ class Parameter {
   final String name;
   final Type type;
 
-  const Parameter({this.name, this.type});
+  const Parameter({@required this.name, @required this.type});
 }
