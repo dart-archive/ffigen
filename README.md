@@ -17,7 +17,7 @@ bindings.
 - `lib` - Contains all source code
 - `bin` - Contains generate.dart script which end user will execute
 - `tool` - Contains script to generate LibClang bindings using Code_Generator submodule (dev use only).
-- `example` - Project to demonstrate generatiion of bindings for given C header files.
+- `example` - Project to demonstrate generation of bindings for given C header files.
 
 - `lib/src/code_generator` - Generates Binding Files
 - `lib/src/config_provider` - Holds configurations to be passed to other modules
@@ -29,7 +29,4 @@ A dynamic library for a wrapper to libclang needs to be generated as it is used 
 
 ### Steps (should work for ubuntu/linux)-
 1. Install libclangdev - `sudo apt-get install libclang-dev`
-2. Add its C headers to your include path (so clang compiler can detect it), you can create a symlink to those files like this -
- `ln -s /usr/lib/llvm-10/include/clang-c/ /usr/include/`
-
-3. cd to root of this package, then run the `build.sh` script
+2. cd to root of this package, then run the `build.sh` script
