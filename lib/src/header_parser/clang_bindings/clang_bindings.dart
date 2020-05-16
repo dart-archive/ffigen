@@ -12,18 +12,6 @@ void init(ffi.DynamicLibrary dylib) {
   _dylib = dylib;
 }
 
-/// dummy function for testing, TODO: delete later
-int test_in_c() {
-  return _test_in_c();
-}
-
-final _dart_test_in_c _test_in_c =
-    _dylib.lookupFunction<_c_test_in_c, _dart_test_in_c>('test_in_c');
-
-typedef _c_test_in_c = ffi.Int32 Function();
-
-typedef _dart_test_in_c = int Function();
-
 ///
 ffi.Pointer<ffi.Void> clang_createIndex(
   int excludeDeclarationsFromPCH,
@@ -497,3 +485,29 @@ class CXType extends ffi.Struct {
 
 ///
 class CXTranslationUnitImpl extends ffi.Struct {}
+
+const int CXTranslationUnit_None = 0x0;
+
+const int CXChildVisit_Break = 0;
+
+const int CXChildVisit_Continue = 1;
+
+const int CXChildVisit_Recurse = 2;
+
+const int CXCursor_FunctionDecl = 8;
+
+const int CXCursor_ParmDecl = 10;
+
+const int CXType_Invalid = 0;
+
+const int CXType_Void = 2;
+
+const int CXType_Int = 17;
+
+const int CXType_FunctionProto = 111;
+
+const int CXType_Pointer = 101;
+
+const int CXType_Float = 21;
+
+const int CXType_Double = 22;

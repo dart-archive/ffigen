@@ -1,5 +1,5 @@
 // Dev tool for generating libclang bindings using the code_generator submodule
-// file generated is lib/src/clang_bindings/clang_bindings.dart
+// file generated is lib/src/header_parser/clang_bindings/clang_bindings.dart
 import 'dart:io';
 
 import 'package:ffigen/src/code_generator.dart';
@@ -26,16 +26,17 @@ void main() {
           '/// Call [init(dylib)] to initialise dynamicLibrary before using \n\n/// AUTOMATICALLY GENERATED DO NOT EDIT');
 
   // Generates bindings for libclang wrapper
-  library.generateFile(File('lib/src/clang_bindings/clang_bindings.dart'));
+  library.generateFile(
+      File('lib/src/header_parser/clang_bindings/clang_bindings.dart'));
 }
 
 final bindings = <Binding>[
-  Func(
-    dartDoc: 'dummy function for testing, TODO: delete later',
-    name: 'test_in_c',
-    parameters: [],
-    returnType: Type('int32'),
-  ),
+  ...functionAndTypedefsList,
+  ...structList,
+  ...constantsList,
+];
+
+final functionAndTypedefsList = <Binding>[
   Func(
     dartDoc: '',
     name: 'clang_createIndex',
@@ -304,6 +305,9 @@ final bindings = <Binding>[
     ],
     returnType: Type('int32'),
   ),
+];
+
+final structList = <Binding>[
   // Struc(dartDoc: '',name: 'CXTranslationUnitImpl', members: []),
   Struc(
     dartDoc: '',
@@ -335,4 +339,77 @@ final bindings = <Binding>[
     members: [],
   ),
   // Global(name: "justANum", type: 'int32')
+];
+
+final constantsList = <Binding>[
+  Constant(
+    name: 'CXTranslationUnit_None',
+    type: Type('int32'),
+    rawValue: '0x0',
+  ),
+  Constant(
+    name: 'CXChildVisit_Break',
+    type: Type('int32'),
+    rawValue: '0',
+  ),
+  Constant(
+    name: 'CXChildVisit_Continue',
+    type: Type('int32'),
+    rawValue: '1',
+  ),
+  Constant(
+    name: 'CXChildVisit_Recurse',
+    type: Type('int32'),
+    rawValue: '2',
+  ),
+  Constant(
+    name: 'CXCursor_FunctionDecl',
+    type: Type('int32'),
+    rawValue: '8',
+  ),
+  Constant(
+    name: 'CXCursor_ParmDecl',
+    type: Type('int32'),
+    rawValue: '10',
+  ),
+  Constant(
+    name: 'CXType_Invalid',
+    type: Type('int32'),
+    rawValue: '0',
+  ),
+  Constant(
+    name: 'CXType_Void',
+    type: Type('int32'),
+    rawValue: '2',
+  ),
+  Constant(
+    name: 'CXType_Int',
+    type: Type('int32'),
+    rawValue: '17',
+  ),
+  Constant(
+    name: 'CXType_FunctionProto',
+    type: Type('int32'),
+    rawValue: '111',
+  ),
+  Constant(
+    name: 'CXType_Pointer',
+    type: Type('int32'),
+    rawValue: '101',
+  ),
+  Constant(
+    name: 'CXType_Float',
+    type: Type('int32'),
+    rawValue: '21',
+  ),
+  Constant(
+    name: 'CXType_Double',
+    type: Type('int32'),
+    rawValue: '22',
+  ),
+  // Constant(
+  //   name: '',
+  //   type: Type('int32'),
+  //   rawValue: '',
+  // ),
 ];

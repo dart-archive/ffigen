@@ -115,20 +115,57 @@ typedef enum CXChildVisitResult (*ModifiedCXCursorVisitor)(CXCursor *cursor,
                                                            CXCursor *parent,
                                                            CXClientData client_data);
 
-// global variable
-// holds Pointer to Dart function received from [clang_visitChildren_wrap]
+// holds Pointers to Dart function received from [clang_visitChildren_wrap]
 // called in [_visitorWrap]
-ModifiedCXCursorVisitor modifiedVisitor;
+struct _stackForVisitChildren
+{
+    ModifiedCXCursorVisitor modifiedVisitor;
+    struct _stackForVisitChildren *link;
+} * _visitorTop, *_visitorTemp;
+void _push(ModifiedCXCursorVisitor modifiedVisitor)
+{
+    if (_visitorTop == NULL)
+    {
+        _visitorTop = (struct _stackForVisitChildren *)malloc(1 * sizeof(struct _stackForVisitChildren));
+        _visitorTop->link = NULL;
+        _visitorTop->modifiedVisitor = modifiedVisitor;
+    }
+    else
+    {
+        _visitorTemp = (struct _stackForVisitChildren *)malloc(1 * sizeof(struct _stackForVisitChildren));
+        _visitorTemp->link = _visitorTop;
+        _visitorTemp->modifiedVisitor = modifiedVisitor;
+        _visitorTop = _visitorTemp;
+    }
+}
+void _pop()
+{
+    _visitorTemp = _visitorTop;
 
+    if (_visitorTemp == NULL)
+    {
+        printf("\n Error, Wrapper.C : Trying to pop from empty stack");
+        return;
+    }
+    else
+        _visitorTemp = _visitorTop->link;
+    free(_visitorTop);
+    _visitorTop = _visitorTemp;
+}
+ModifiedCXCursorVisitor _top()
+{
+    return _visitorTop->modifiedVisitor;
+}
 // do not write binding for this function
 // used by [clang_visitChildren_wrap]
-enum CXChildVisitResult _visitorwrap(CXCursor cursor, CXCursor parent, CXClientData clientData)
+enum CXChildVisitResult
+_visitorwrap(CXCursor cursor, CXCursor parent, CXClientData clientData)
 {
     CXCursor *ncursor = aloc(CXCursor);
     CXCursor *nparent = aloc(CXCursor);
     *ncursor = cursor;
     *nparent = parent;
-    enum CXChildVisitResult e = modifiedVisitor(ncursor, nparent, clientData);
+    enum CXChildVisitResult e = (_top()(ncursor, nparent, clientData));
     return e;
 }
 
@@ -136,8 +173,10 @@ enum CXChildVisitResult _visitorwrap(CXCursor cursor, CXCursor parent, CXClientD
 // instead of cxcursor by default
 unsigned clang_visitChildren_wrap(CXCursor *parent, ModifiedCXCursorVisitor _modifiedVisitor, CXClientData clientData)
 {
-    modifiedVisitor = _modifiedVisitor;
-    return clang_visitChildren(*parent, _visitorwrap, clientData);
+    _push(_modifiedVisitor);
+    unsigned a = clang_visitChildren(*parent, _visitorwrap, clientData);
+    _pop();
+    return a;
 }
 
 // END ===== WRAPPER FUNCTIONS =====================
