@@ -7,3 +7,8 @@ analyzer:
 
 #   exclude:
 #     - path/to/excluded/files/**
+
+linter:
+  rules:
+    exclude:
+      -lib/src/header_parser/clang_bindings/clang_constants.dart

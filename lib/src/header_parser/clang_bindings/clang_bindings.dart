@@ -485,29 +485,3 @@ class CXType extends ffi.Struct {
 
 ///
 class CXTranslationUnitImpl extends ffi.Struct {}
-
-const int CXTranslationUnit_None = 0x0;
-
-const int CXChildVisit_Break = 0;
-
-const int CXChildVisit_Continue = 1;
-
-const int CXChildVisit_Recurse = 2;
-
-const int CXCursor_FunctionDecl = 8;
-
-const int CXCursor_ParmDecl = 10;
-
-const int CXType_Invalid = 0;
-
-const int CXType_Void = 2;
-
-const int CXType_Int = 17;
-
-const int CXType_FunctionProto = 111;
-
-const int CXType_Pointer = 101;
-
-const int CXType_Float = 21;
-
-const int CXType_Double = 22;
