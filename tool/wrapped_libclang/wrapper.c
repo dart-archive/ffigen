@@ -2,7 +2,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+// utility
 #define aloc(T) ((T *)malloc(sizeof(T)))
+CXCursor *ptrToCXCursor(CXCursor t)
+{
+    CXCursor *c = aloc(CXCursor);
+    *c = t;
+    return c;
+}
+CXString *ptrToCXString(CXString t)
+{
+    CXString *c = aloc(CXString);
+    *c = t;
+    return c;
+}
+CXType *ptrToCXType(CXType t)
+{
+    CXType *c = aloc(CXType);
+    *c = t;
+    return c;
+}
 
 // START ===== Functions for testing libclang behavior in C
 enum CXChildVisitResult visitor_for_test_in_c(CXCursor cursor, CXCursor parent, CXClientData clientData)
@@ -55,58 +75,42 @@ enum CXCursorKind clang_getCursorKind_wrap(CXCursor *cursor)
 
 CXString *clang_getCursorKindSpelling_wrap(enum CXCursorKind kind)
 {
-    CXString *s = aloc(CXString);
-    *s = clang_getCursorKindSpelling(kind);
-    return s;
+    return ptrToCXString(clang_getCursorKindSpelling(kind));
 }
 
 CXType *clang_getCursorType_wrap(CXCursor *cursor)
 {
-    CXType *t = aloc(CXType);
-    *t = clang_getCursorType(*cursor);
-    return t;
+    return ptrToCXType(clang_getCursorType(*cursor));
 }
 
 CXString *clang_getTypeSpelling_wrap(CXType *type)
 {
-    CXString *s = aloc(CXString);
-    *s = clang_getTypeSpelling(*type);
-    return s;
+    return ptrToCXString(clang_getTypeSpelling(*type));
 }
 
 CXType *clang_getResultType_wrap(CXType *functionType)
 {
-    CXType *t = aloc(CXType);
-    *t = clang_getResultType(*functionType);
-    return t;
+    return ptrToCXType(clang_getResultType(*functionType));
 }
 
 CXType *clang_getPointeeType_wrap(CXType *pointerType)
 {
-    CXType *t = aloc(CXType);
-    *t = clang_getPointeeType(*pointerType);
-    return t;
+    return ptrToCXType(clang_getPointeeType(*pointerType));
 }
 
 CXString *clang_getCursorSpelling_wrap(CXCursor *cursor)
 {
-    CXString *s = aloc(CXString);
-    *s = clang_getCursorSpelling(*cursor);
-    return s;
+    return ptrToCXString(clang_getCursorSpelling(*cursor));
 }
 
 CXCursor *clang_getTranslationUnitCursor_wrap(CXTranslationUnit tu)
 {
-    CXCursor *c = aloc(CXCursor);
-    *c = clang_getTranslationUnitCursor(tu);
-    return c;
+    return ptrToCXCursor(clang_getTranslationUnitCursor(tu));
 }
 
 CXString *clang_formatDiagnostic_wrap(CXDiagnostic diag, int opts)
 {
-    CXString *s = aloc(CXString);
-    *s = clang_formatDiagnostic(diag, opts);
-    return s;
+    return ptrToCXString(clang_formatDiagnostic(diag, opts));
 }
 
 // alternative typedef for [CXCursorVisitor] using pointer for passing cursor and parent
@@ -161,11 +165,7 @@ ModifiedCXCursorVisitor _top()
 enum CXChildVisitResult
 _visitorwrap(CXCursor cursor, CXCursor parent, CXClientData clientData)
 {
-    CXCursor *ncursor = aloc(CXCursor);
-    CXCursor *nparent = aloc(CXCursor);
-    *ncursor = cursor;
-    *nparent = parent;
-    enum CXChildVisitResult e = (_top()(ncursor, nparent, clientData));
+    enum CXChildVisitResult e = (_top()(ptrToCXCursor(cursor), ptrToCXCursor(parent), clientData));
     return e;
 }
 
@@ -177,6 +177,16 @@ unsigned clang_visitChildren_wrap(CXCursor *parent, ModifiedCXCursorVisitor _mod
     unsigned a = clang_visitChildren(*parent, _visitorwrap, clientData);
     _pop();
     return a;
+}
+
+int clang_Cursor_getNumArguments_wrap(CXCursor *cursor)
+{
+    return clang_Cursor_getNumArguments(*cursor);
+}
+
+CXCursor *clang_Cursor_getArgument_wrap(CXCursor *cursor, unsigned i)
+{
+    return ptrToCXCursor(clang_Cursor_getArgument(*cursor, i));
 }
 
 // END ===== WRAPPER FUNCTIONS =====================

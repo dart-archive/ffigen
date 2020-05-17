@@ -303,6 +303,32 @@ final functionAndTypedefsList = <Binding>[
     ],
     returnType: Type('int32'),
   ),
+  Func(
+    dartDoc: 'Get Arguments of a function/method, returns -1 for other cursors',
+    name: 'clang_Cursor_getNumArguments_wrap',
+    parameters: [
+      Parameter(
+        name: 'cursor',
+        type: Type('*$_cxCursor'),
+      ),
+    ],
+    returnType: Type('int32'),
+  ),
+  Func(
+    dartDoc: '',
+    name: 'clang_Cursor_getArgument_wrap',
+    parameters: [
+      Parameter(
+        name: 'cursor',
+        type: Type('*$_cxCursor'),
+      ),
+      Parameter(
+        name: 'i',
+        type: Type('uint32'),
+      ),
+    ],
+    returnType: Type('*$_cxCursor'),
+  ),
 ];
 
 final structList = <Binding>[

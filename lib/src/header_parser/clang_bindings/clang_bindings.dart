@@ -465,6 +465,54 @@ typedef _dart_clang_visitChildren_wrap = int Function(
   ffi.Pointer<ffi.Void> clientData,
 );
 
+/// Get Arguments of a function/method, returns -1 for other cursors
+int clang_Cursor_getNumArguments_wrap(
+  ffi.Pointer<CXCursor> cursor,
+) {
+  return _clang_Cursor_getNumArguments_wrap(
+    cursor,
+  );
+}
+
+final _dart_clang_Cursor_getNumArguments_wrap
+    _clang_Cursor_getNumArguments_wrap = _dylib.lookupFunction<
+            _c_clang_Cursor_getNumArguments_wrap,
+            _dart_clang_Cursor_getNumArguments_wrap>(
+        'clang_Cursor_getNumArguments_wrap');
+
+typedef _c_clang_Cursor_getNumArguments_wrap = ffi.Int32 Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _dart_clang_Cursor_getNumArguments_wrap = int Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+///
+ffi.Pointer<CXCursor> clang_Cursor_getArgument_wrap(
+  ffi.Pointer<CXCursor> cursor,
+  int i,
+) {
+  return _clang_Cursor_getArgument_wrap(
+    cursor,
+    i,
+  );
+}
+
+final _dart_clang_Cursor_getArgument_wrap _clang_Cursor_getArgument_wrap =
+    _dylib.lookupFunction<_c_clang_Cursor_getArgument_wrap,
+        _dart_clang_Cursor_getArgument_wrap>('clang_Cursor_getArgument_wrap');
+
+typedef _c_clang_Cursor_getArgument_wrap = ffi.Pointer<CXCursor> Function(
+  ffi.Pointer<CXCursor> cursor,
+  ffi.Uint32 i,
+);
+
+typedef _dart_clang_Cursor_getArgument_wrap = ffi.Pointer<CXCursor> Function(
+  ffi.Pointer<CXCursor> cursor,
+  int i,
+);
+
 ///
 class CXUnsavedFile extends ffi.Struct {}
 

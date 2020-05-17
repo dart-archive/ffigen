@@ -13,10 +13,6 @@ import 'visitors/root_visitor.dart';
 Library parse(Config conf) {
   initParser(conf);
 
-  // TODO: implement for platforms other than linux
-  // init clang dynamic library
-  clang.init(DynamicLibrary.open(config.libclang_dylib_path));
-
   parseAndStoreBindings();
 
   return Library(bindings: bindings);
@@ -31,6 +27,10 @@ Config config;
 void initParser(Config c) {
   config = c;
   bindings.clear();
+
+  // TODO: implement for platforms other than linux
+  // init clang dynamic library
+  clang.init(DynamicLibrary.open(config.libclang_dylib_path));
 }
 
 /// Parses source files and adds generated bindings to [bindings]
