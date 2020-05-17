@@ -3,4 +3,4 @@
 /// Parses the header files AST using clang_bindings
 library header_parser;
 
-export 'header_parser/parser.dart' show Parser;
+export 'header_parser/parser.dart' show parse;

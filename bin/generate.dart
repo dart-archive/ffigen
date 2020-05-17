@@ -2,18 +2,16 @@
 import 'dart:io';
 
 import 'package:ffigen/src/config_provider.dart';
-import 'package:ffigen/src/header_parser.dart';
+import 'package:ffigen/src/header_parser.dart' as parser;
 
 import 'package:yaml/yaml.dart' as yaml;
 
 void main() {
   final config = getConfigFromPubspec();
   //TODO: debug print, delete later
-  print('debug: '+config.toString());
+  print('debug: ' + config.toString());
 
-  final parser = Parser(config);
-
-  final library = parser.parse();
+  final library = parser.parse(config);
 
   library.generateFile(File('gen.dart'));
 }
