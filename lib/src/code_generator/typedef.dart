@@ -21,12 +21,13 @@ class TypedefC extends Binding {
   final Type returnType;
   final List<Parameter> parameters;
 
-  const TypedefC({
+  TypedefC({
     @required String name,
     String dartDoc,
     @required this.returnType,
-    this.parameters = const <Parameter>[],
-  }) : super(name: name, dartDoc: dartDoc);
+    List<Parameter> parameters,
+  })  : this.parameters = parameters ?? [],
+        super(name: name, dartDoc: dartDoc);
 
   @override
   BindingString toBindingString(Writer w) {

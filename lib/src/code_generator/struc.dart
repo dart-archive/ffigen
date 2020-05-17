@@ -10,11 +10,12 @@ import 'type.dart';
 class Struc extends Binding {
   final List<Member> members;
 
-  const Struc({
+  Struc({
     @required String name,
     String dartDoc,
-    this.members = const <Member>[],
-  }) : super(name: name, dartDoc: dartDoc);
+    List<Member> members,
+  })  : this.members = members ?? [],
+        super(name: name, dartDoc: dartDoc);
 
   @override
   BindingString toBindingString(Writer w) {

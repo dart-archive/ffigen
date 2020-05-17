@@ -1,6 +1,5 @@
-
-void example1();
-
-int example2(int a);
-
-int *example3(int a, float b, int *c);
+int sum(int a, int b);
+int subtract(int *a, int b);
+int *multiply(int a, int b);
+float *divide(int a, int b);
+double *dividePercision(float *a, float *b);

@@ -76,6 +76,11 @@ class Type {
       return type;
     }
   }
+
+  @override
+  String toString() {
+    return type;
+  }
 }
 
 class _SubType {

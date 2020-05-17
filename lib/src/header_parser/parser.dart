@@ -9,34 +9,33 @@ import 'clang_bindings/clang_constants.dart' as clang;
 import 'utils.dart';
 import 'visitors/root_visitor.dart';
 
+// Holds all global data
+import 'data.dart' as data;
+
 /// Main entrypoint for header_parser
 Library parse(Config conf) {
   initParser(conf);
 
   parseAndStoreBindings();
 
-  return Library(bindings: bindings);
+  return Library(bindings: data.bindings);
 }
 
 // ===================================================================================
 
-final bindings = <Binding>[];
-Config config;
-
 /// initialises parser, clears any previous values
 void initParser(Config c) {
-  config = c;
-  bindings.clear();
+  data.config = c;
+  data.bindings = <Binding>[];
 
   // TODO: implement for platforms other than linux
-  // init clang dynamic library
-  clang.init(DynamicLibrary.open(config.libclang_dylib_path));
+  clang.init(DynamicLibrary.open(data.config.libclang_dylib_path));
 }
 
 /// Parses source files and adds generated bindings to [bindings]
 void parseAndStoreBindings() {
   // TODO: implement for more than 1 header in list
-  var headerLocation = config.headers[0].path;
+  var headerLocation = data.config.headers[0].path;
 
   var index = clang.clang_createIndex(0, 0);
   var tu = clang.clang_parseTranslationUnit(
@@ -55,31 +54,17 @@ void parseAndStoreBindings() {
   }
 
   print('debug:\n' + getTUDiagnostic(tu));
-
   var rootCursor = clang.clang_getTranslationUnitCursor_wrap(tu);
 
-  clang.clang_visitChildren_wrap(
+  int resultCode = clang.clang_visitChildren_wrap(
     rootCursor,
     Pointer.fromFunction(
         rootCursorVisitor, clang.CXChildVisitResult.CXChildVisit_Break),
     nullptr,
   );
 
+  visitChildrenResultChecker(resultCode);
+
   clang.clang_disposeTranslationUnit(tu);
   clang.clang_disposeIndex(index);
-}
-
-String returnTypeString(Pointer<clang.CXType> type) {
-  switch (type.ref.kind) {
-    case clang.CXTypeKind.CXType_Int:
-      return 'int32';
-    case clang.CXTypeKind.CXType_Float:
-      return 'float';
-    case clang.CXTypeKind.CXType_Double:
-      return 'double';
-    case clang.CXTypeKind.CXType_Pointer:
-      return '*' + returnTypeString(clang.clang_getPointeeType_wrap(type));
-    default:
-      throw Exception('Unimplemented type: ${type.ref.kind}');
-  }
 }
