@@ -11,16 +11,22 @@ import '../data.dart' as data;
 
 int functionCursorVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
-  print('  debug functionCursorVisitor: ${cursor.completeStringRepr()}');
-  switch (clang.clang_getCursorKind_wrap(cursor)) {
-    case clang.CXCursorKind.CXCursor_ParmDecl:
-      _addParameterToLastFunc(cursor);
-      break;
-    default:
-      print('debug: Not Implemented');
+  try {
+    print('  debug functionCursorVisitor: ${cursor.completeStringRepr()}');
+    switch (clang.clang_getCursorKind_wrap(cursor)) {
+      case clang.CXCursorKind.CXCursor_ParmDecl:
+        _addParameterToLastFunc(cursor);
+        break;
+      default:
+        print('debug: Not Implemented');
+    }
+    free(parent);
+    free(cursor);
+  } catch (e, s) {
+    print(e);
+    print(s);
+    rethrow;
   }
-  free(parent);
-  free(cursor);
   return clang.CXChildVisitResult.CXChildVisit_Continue;
 }
 

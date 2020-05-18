@@ -13,20 +13,26 @@ import '../data.dart' as data;
 /// child visitor invoked on translationUnitCursor
 int rootCursorVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
-  print('debug rootCursorVisitor: ${cursor.completeStringRepr()}');
+  try {
+    print('debug rootCursorVisitor: ${cursor.completeStringRepr()}');
 
-  switch (clang.clang_getCursorKind_wrap(cursor)) {
-    case clang.CXCursorKind.CXCursor_FunctionDecl:
-      _createFunc(cursor);
-      _addParameters(cursor);
-      _addFuncToBinding();
-      break;
-    default:
-      print('debug: Not Implemented');
+    switch (clang.clang_getCursorKind_wrap(cursor)) {
+      case clang.CXCursorKind.CXCursor_FunctionDecl:
+        _createFunc(cursor);
+        _addParameters(cursor);
+        _addFuncToBinding();
+        break;
+      default:
+        print('debug: Not Implemented');
+    }
+
+    free(parent);
+    free(cursor);
+  } catch (e, s) {
+    print(e);
+    print(s);
+    rethrow;
   }
-
-  free(parent);
-  free(cursor);
   return clang.CXChildVisitResult.CXChildVisit_Continue;
 }
 

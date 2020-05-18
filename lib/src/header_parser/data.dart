@@ -10,11 +10,3 @@ List<Binding> bindings = <Binding>[];
 
 /// Temporarily holds a function
 Func func;
-
-/// Temporarily holds an Exception, to call later
-///
-/// When an exception occurs in visitor dart function called via a C,
-/// It exits with a result code: 0 [CXChildVisit_Break].
-/// This exception is called when that happens,
-/// The stack trace is lost, but message is reprinted.
-Exception exception = Exception('Untracked Exception');

@@ -8,11 +8,11 @@ import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
 import 'data.dart' as data;
 
-/// Throws exception if resultCode is 0
+/// Check resultCode of [clang.clang_visitChildren_wrap]
+/// Throws exception if resultCode is not 0
 void visitChildrenResultChecker(int resultCode) {
   if (resultCode != 0) {
-    print("debug: resultCode: ${resultCode}, rethrowing exception...");
-    throw data.exception;
+    throw Exception('Exception thrown in a dart function called via C');
   }
 }
 
@@ -106,8 +106,7 @@ String _getCodeGenTypeString(Pointer<clang.CXType> cxtype) {
   } else if (cxTypeKindMap.containsKey(kind)) {
     return cxTypeKindMap[kind];
   } else {
-    data.exception = Exception(
+    throw Exception(
         'Type (type: ${cxtype.kind()}, speling: ${cxtype.spelling()}) not implemented');
-    throw data.exception;
   }
 }
