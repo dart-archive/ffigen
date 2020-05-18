@@ -24,9 +24,11 @@ void main() {
       header:
           '/// Call [init(dylib)] to initialise dynamicLibrary before using \n\n/// AUTOMATICALLY GENERATED DO NOT EDIT');
 
+  var f = File('lib/src/header_parser/clang_bindings/clang_bindings.dart');
   // Generates bindings for libclang wrapper
-  library.generateFile(
-      File('lib/src/header_parser/clang_bindings/clang_bindings.dart'));
+  library.generateFile(f);
+
+  print("Generated bindings: ${f.absolute.path}");
 }
 
 final bindings = <Binding>[
@@ -36,7 +38,7 @@ final bindings = <Binding>[
 
 final functionAndTypedefsList = <Binding>[
   Func(
-    dartDoc: '',
+    dartDoc: 'Dispose index using [clang_disposeIndex]',
     name: 'clang_createIndex',
     parameters: [
       Parameter(
@@ -62,7 +64,7 @@ final functionAndTypedefsList = <Binding>[
     returnType: Type('void'),
   ),
   Func(
-    dartDoc: '',
+    dartDoc: 'Dispose tu using [clang_disposeTranslationUnit]',
     name: 'clang_parseTranslationUnit',
     parameters: [
       Parameter(
@@ -108,7 +110,7 @@ final functionAndTypedefsList = <Binding>[
     returnType: Type('void'),
   ),
   Func(
-    dartDoc: '',
+    dartDoc: 'Free [CXcursor] after use',
     name: 'clang_getTranslationUnitCursor_wrap',
     parameters: [
       Parameter(
@@ -130,7 +132,7 @@ final functionAndTypedefsList = <Binding>[
     returnType: Type('uint32'),
   ),
   Func(
-    dartDoc: '',
+    dartDoc: 'Dispose diagnostic using [clang_disposeDiagnostic]',
     name: 'clang_getDiagnostic',
     parameters: [
       Parameter(
@@ -146,6 +148,17 @@ final functionAndTypedefsList = <Binding>[
   ),
   Func(
     dartDoc: '',
+    name: 'clang_disposeDiagnostic',
+    parameters: [
+      Parameter(
+        name: 'diagnostic',
+        type: Type(_voidPointer),
+      ),
+    ],
+    returnType: Type('void'),
+  ),
+  Func(
+    dartDoc: 'Dispose [CXString] after use using [clang_disposeString_wrap]',
     name: 'clang_formatDiagnostic_wrap',
     parameters: [
       Parameter(
@@ -166,7 +179,8 @@ final functionAndTypedefsList = <Binding>[
     returnType: Type('uint32'),
   ),
   Func(
-    dartDoc: '',
+    dartDoc:
+        'Dispose [CXString] using [clang_disposeString_wrap], it also frees the CString(const char *), do not free CString directly',
     name: 'clang_getCString_wrap',
     parameters: [
       Parameter(
@@ -177,7 +191,7 @@ final functionAndTypedefsList = <Binding>[
     returnType: Type(_charPointer),
   ),
   Func(
-    dartDoc: '',
+    dartDoc: 'Free a CXString using this (Do not use free)',
     name: 'clang_disposeString_wrap',
     parameters: [
       Parameter(
@@ -188,7 +202,8 @@ final functionAndTypedefsList = <Binding>[
     returnType: Type('void'),
   ),
   Func(
-    dartDoc: '',
+    dartDoc:
+        'Free cursor after use, dispose CXString using [clang_disposeString_wrap]',
     name: 'clang_getCursorSpelling_wrap',
     parameters: [
       Parameter(
@@ -199,7 +214,7 @@ final functionAndTypedefsList = <Binding>[
     returnType: Type('*$_cxString'),
   ),
   Func(
-    dartDoc: '',
+    dartDoc: 'Free cursor after use',
     name: 'clang_getCursorKind_wrap',
     parameters: [
       Parameter(
@@ -210,7 +225,7 @@ final functionAndTypedefsList = <Binding>[
     returnType: Type('int32'),
   ),
   Func(
-    dartDoc: '',
+    dartDoc: 'dispose CXString using [clang_disposeString_wrap]',
     name: 'clang_getCursorKindSpelling_wrap',
     parameters: [
       Parameter(
@@ -221,7 +236,7 @@ final functionAndTypedefsList = <Binding>[
     returnType: Type('*$_cxString'),
   ),
   Func(
-    dartDoc: '',
+    dartDoc: 'Free CXType after use',
     name: 'clang_getCursorType_wrap',
     parameters: [
       Parameter(
@@ -232,7 +247,8 @@ final functionAndTypedefsList = <Binding>[
     returnType: Type('*$_cxType'),
   ),
   Func(
-    dartDoc: '',
+    dartDoc:
+        'Free cxtype after use, dispose CXString using [clang_disposeString_wrap]',
     name: 'clang_getTypeSpelling_wrap',
     parameters: [
       Parameter(
@@ -243,7 +259,7 @@ final functionAndTypedefsList = <Binding>[
     returnType: Type('*$_cxString'),
   ),
   Func(
-    dartDoc: '',
+    dartDoc: 'Free cxtype after use',
     name: 'clang_getResultType_wrap',
     parameters: [
       Parameter(
@@ -254,7 +270,7 @@ final functionAndTypedefsList = <Binding>[
     returnType: Type('*$_cxType'),
   ),
   Func(
-    dartDoc: '',
+    dartDoc: 'Free cxtype after use',
     name: 'clang_getPointeeType_wrap',
     parameters: [
       Parameter(
@@ -285,7 +301,7 @@ final functionAndTypedefsList = <Binding>[
     returnType: Type('int32'),
   ),
   Func(
-    dartDoc: '',
+    dartDoc: 'Free cursor after use',
     name: 'clang_visitChildren_wrap',
     parameters: [
       Parameter(
@@ -304,7 +320,8 @@ final functionAndTypedefsList = <Binding>[
     returnType: Type('int32'),
   ),
   Func(
-    dartDoc: 'Get Arguments of a function/method, returns -1 for other cursors',
+    dartDoc:
+        'Get Arguments of a function/method, returns -1 for other cursors\n\nFree cursor after use',
     name: 'clang_Cursor_getNumArguments_wrap',
     parameters: [
       Parameter(
@@ -315,7 +332,7 @@ final functionAndTypedefsList = <Binding>[
     returnType: Type('int32'),
   ),
   Func(
-    dartDoc: '',
+    dartDoc: 'Free cursor after use,',
     name: 'clang_Cursor_getArgument_wrap',
     parameters: [
       Parameter(
@@ -345,9 +362,7 @@ final structList = <Binding>[
   Struc(
     dartDoc: '',
     name: _cxCursor,
-    members: [
-      Member(type: Type('int32'), name: 'kind'),
-    ],
+    members: [],
   ),
   Struc(
     dartDoc: '',

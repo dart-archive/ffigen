@@ -1,6 +1,5 @@
 import 'dart:ffi';
 
-import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
@@ -9,7 +8,7 @@ import '../utils.dart';
 import '../data.dart' as data;
 
 /// Visitor for a function cursor [clang.CXCursorKind.CXCursor_FunctionDecl]
-/// 
+///
 /// Invoked on every function directly under rootCursor
 int functionCursorVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
@@ -22,8 +21,8 @@ int functionCursorVisitor(Pointer<clang.CXCursor> cursor,
       default:
         print('debug: Not Implemented');
     }
-    free(parent);
-    free(cursor);
+    cursor.dispose();
+    parent.dispose();
   } catch (e, s) {
     print(e);
     print(s);
@@ -43,5 +42,5 @@ void _addParameterToLastFunc(Pointer<clang.CXCursor> cursor) {
 }
 
 Type _getParameterType(Pointer<clang.CXCursor> cursor) {
-  return cursor.type().codeGenType();
+  return cursor.type().toCodeGenTypeAndDispose();
 }

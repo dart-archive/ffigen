@@ -1,6 +1,5 @@
 import 'dart:ffi';
 
-import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
@@ -27,8 +26,8 @@ int rootCursorVisitor(Pointer<clang.CXCursor> cursor,
         print('debug: Not Implemented');
     }
 
-    free(parent);
-    free(cursor);
+    cursor.dispose();
+    parent.dispose();
   } catch (e, s) {
     print(e);
     print(s);
@@ -45,7 +44,7 @@ void _createFunc(Pointer<clang.CXCursor> cursor) {
 }
 
 Type _getFunctionReturnType(Pointer<clang.CXCursor> cursor) {
-  return cursor.returnType().codeGenType();
+  return cursor.returnType().toCodeGenTypeAndDispose();
 }
 
 void _addParameters(Pointer<clang.CXCursor> cursor) {

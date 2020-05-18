@@ -12,7 +12,7 @@ void init(ffi.DynamicLibrary dylib) {
   _dylib = dylib;
 }
 
-///
+/// Dispose index using [clang_disposeIndex]
 ffi.Pointer<ffi.Void> clang_createIndex(
   int excludeDeclarationsFromPCH,
   int displayDiagnostics,
@@ -58,7 +58,7 @@ typedef _dart_clang_disposeIndex = void Function(
   ffi.Pointer<ffi.Void> index,
 );
 
-///
+/// Dispose tu using [clang_disposeTranslationUnit]
 ffi.Pointer<CXTranslationUnitImpl> clang_parseTranslationUnit(
   ffi.Pointer<ffi.Void> cxindex,
   ffi.Pointer<ffi2.Utf8> source_filename,
@@ -126,7 +126,7 @@ typedef _dart_clang_disposeTranslationUnit = void Function(
   ffi.Pointer<CXTranslationUnitImpl> cxtranslation_unit,
 );
 
-///
+/// Free [CXcursor] after use
 ffi.Pointer<CXCursor> clang_getTranslationUnitCursor_wrap(
   ffi.Pointer<CXTranslationUnitImpl> cxtranslation_unit,
 ) {
@@ -171,7 +171,7 @@ typedef _dart_clang_getNumDiagnostics = int Function(
   ffi.Pointer<CXTranslationUnitImpl> cxtranslationunit,
 );
 
-///
+/// Dispose diagnostic using [clang_disposeDiagnostic]
 ffi.Pointer<ffi.Void> clang_getDiagnostic(
   ffi.Pointer<CXTranslationUnitImpl> cxTranslationUnit,
   int position,
@@ -197,6 +197,27 @@ typedef _dart_clang_getDiagnostic = ffi.Pointer<ffi.Void> Function(
 );
 
 ///
+void clang_disposeDiagnostic(
+  ffi.Pointer<ffi.Void> diagnostic,
+) {
+  return _clang_disposeDiagnostic(
+    diagnostic,
+  );
+}
+
+final _dart_clang_disposeDiagnostic _clang_disposeDiagnostic = _dylib
+    .lookupFunction<_c_clang_disposeDiagnostic, _dart_clang_disposeDiagnostic>(
+        'clang_disposeDiagnostic');
+
+typedef _c_clang_disposeDiagnostic = ffi.Void Function(
+  ffi.Pointer<ffi.Void> diagnostic,
+);
+
+typedef _dart_clang_disposeDiagnostic = void Function(
+  ffi.Pointer<ffi.Void> diagnostic,
+);
+
+/// Dispose [CXString] after use using [clang_disposeString_wrap]
 ffi.Pointer<CXString> clang_formatDiagnostic_wrap(
   ffi.Pointer<ffi.Void> diagnostic,
   int diagnosticOptions,
@@ -236,7 +257,7 @@ typedef _c_clang_defaultDiagnosticDisplayOptions = ffi.Uint32 Function();
 
 typedef _dart_clang_defaultDiagnosticDisplayOptions = int Function();
 
-///
+/// Dispose [CXString] using [clang_disposeString_wrap], it also frees the CString(const char *), do not free CString directly
 ffi.Pointer<ffi2.Utf8> clang_getCString_wrap(
   ffi.Pointer<CXString> cxstringPtr,
 ) {
@@ -257,7 +278,7 @@ typedef _dart_clang_getCString_wrap = ffi.Pointer<ffi2.Utf8> Function(
   ffi.Pointer<CXString> cxstringPtr,
 );
 
-///
+/// Free a CXString using this (Do not use free)
 void clang_disposeString_wrap(
   ffi.Pointer<CXString> cxstringPtr,
 ) {
@@ -278,7 +299,7 @@ typedef _dart_clang_disposeString_wrap = void Function(
   ffi.Pointer<CXString> cxstringPtr,
 );
 
-///
+/// Free cursor after use, dispose CXString using [clang_disposeString_wrap]
 ffi.Pointer<CXString> clang_getCursorSpelling_wrap(
   ffi.Pointer<CXCursor> cursor,
 ) {
@@ -299,7 +320,7 @@ typedef _dart_clang_getCursorSpelling_wrap = ffi.Pointer<CXString> Function(
   ffi.Pointer<CXCursor> cursor,
 );
 
-///
+/// Free cursor after use
 int clang_getCursorKind_wrap(
   ffi.Pointer<CXCursor> cursor,
 ) {
@@ -320,7 +341,7 @@ typedef _dart_clang_getCursorKind_wrap = int Function(
   ffi.Pointer<CXCursor> cursor,
 );
 
-///
+/// dispose CXString using [clang_disposeString_wrap]
 ffi.Pointer<CXString> clang_getCursorKindSpelling_wrap(
   int kind,
 ) {
@@ -342,7 +363,7 @@ typedef _dart_clang_getCursorKindSpelling_wrap = ffi.Pointer<CXString> Function(
   int kind,
 );
 
-///
+/// Free CXType after use
 ffi.Pointer<CXType> clang_getCursorType_wrap(
   ffi.Pointer<CXCursor> cursor,
 ) {
@@ -363,7 +384,7 @@ typedef _dart_clang_getCursorType_wrap = ffi.Pointer<CXType> Function(
   ffi.Pointer<CXCursor> cursor,
 );
 
-///
+/// Free cxtype after use, dispose CXString using [clang_disposeString_wrap]
 ffi.Pointer<CXString> clang_getTypeSpelling_wrap(
   ffi.Pointer<CXType> typePtr,
 ) {
@@ -384,7 +405,7 @@ typedef _dart_clang_getTypeSpelling_wrap = ffi.Pointer<CXString> Function(
   ffi.Pointer<CXType> typePtr,
 );
 
-///
+/// Free cxtype after use
 ffi.Pointer<CXType> clang_getResultType_wrap(
   ffi.Pointer<CXType> functionType,
 ) {
@@ -405,7 +426,7 @@ typedef _dart_clang_getResultType_wrap = ffi.Pointer<CXType> Function(
   ffi.Pointer<CXType> functionType,
 );
 
-///
+/// Free cxtype after use
 ffi.Pointer<CXType> clang_getPointeeType_wrap(
   ffi.Pointer<CXType> pointerType,
 ) {
@@ -433,7 +454,7 @@ typedef visitorFunctionSignature = ffi.Int32 Function(
   ffi.Pointer<ffi.Void> clientData,
 );
 
-///
+/// Free cursor after use
 int clang_visitChildren_wrap(
   ffi.Pointer<CXCursor> cursor,
   ffi.Pointer<ffi.NativeFunction<visitorFunctionSignature>>
@@ -466,6 +487,8 @@ typedef _dart_clang_visitChildren_wrap = int Function(
 );
 
 /// Get Arguments of a function/method, returns -1 for other cursors
+///
+/// Free cursor after use
 int clang_Cursor_getNumArguments_wrap(
   ffi.Pointer<CXCursor> cursor,
 ) {
@@ -488,7 +511,7 @@ typedef _dart_clang_Cursor_getNumArguments_wrap = int Function(
   ffi.Pointer<CXCursor> cursor,
 );
 
-///
+/// Free cursor after use,
 ffi.Pointer<CXCursor> clang_Cursor_getArgument_wrap(
   ffi.Pointer<CXCursor> cursor,
   int i,
@@ -520,10 +543,7 @@ class CXUnsavedFile extends ffi.Struct {}
 class CXString extends ffi.Struct {}
 
 ///
-class CXCursor extends ffi.Struct {
-  @ffi.Int32()
-  int kind;
-}
+class CXCursor extends ffi.Struct {}
 
 ///
 class CXType extends ffi.Struct {

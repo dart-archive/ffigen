@@ -65,7 +65,9 @@ const char *clang_getCString_wrap(CXString *string)
 
 void clang_disposeString_wrap(CXString *string)
 {
-    return clang_disposeString(*string);
+    clang_disposeString(*string);
+    free(string);
+    return;
 }
 
 enum CXCursorKind clang_getCursorKind_wrap(CXCursor *cursor)

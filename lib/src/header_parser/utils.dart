@@ -6,7 +6,6 @@ import 'clang_bindings/clang_constants.dart' as clang;
 import 'package:ffi/ffi.dart';
 
 import 'package:ffigen/src/code_generator.dart';
-import 'data.dart' as data;
 
 /// Check resultCode of [clang.clang_visitChildren_wrap]
 /// Throws exception if resultCode is not 0
@@ -23,8 +22,9 @@ String getTUDiagnostic(Pointer<clang.CXTranslationUnitImpl> tu) {
   for (var i = 0; i < total; i++) {
     var diag = clang.clang_getDiagnostic(tu, i);
     var cxstring = clang.clang_formatDiagnostic_wrap(diag, 0);
-    s.write(cxstring.toDartString());
+    s.write(cxstring.toStringAndDispose());
     s.write('\n');
+    clang.clang_disposeDiagnostic(diag);
   }
 
   return s.toString();
@@ -38,19 +38,14 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
 
   /// Name of the cursor (E.g function name, Struct name, Parameter name)
   String spelling() {
-    var cxstring = clang.clang_getCursorSpelling_wrap(this);
-    var s = cxstring.toDartString();
-    free(cxstring);
-    return s;
+    return clang.clang_getCursorSpelling_wrap(this).toStringAndDispose();
   }
 
   /// spelling for a [clang.CXCursorKind] useful for debug purposes
   String kindSpelling() {
-    var cxstring = clang
-        .clang_getCursorKindSpelling_wrap(clang.clang_getCursorKind_wrap(this));
-    var str = cxstring.toDartString();
-    free(cxstring);
-    return str;
+    return clang
+        .clang_getCursorKindSpelling_wrap(clang.clang_getCursorKind_wrap(this))
+        .toStringAndDispose();
   }
 
   /// for debug: returns [spelling] [kind] [kindSpelling] [type] [typeSpelling]
@@ -58,40 +53,68 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
     return 'spelling: ${this.spelling()}, kind: ${this.kind()}, kindSpelling: ${this.kindSpelling()}, type: ${this.type().kind()}, typeSpelling: ${this.type().spelling()}';
   }
 
+  /// Dispose type using [type.dispose]
   Pointer<clang.CXType> type() {
     return clang.clang_getCursorType_wrap(this);
   }
 
   /// Only valid for [clang.CXCursorKind.CXCursor_FunctionDecl]
+  ///
+  /// Dispose type using [type.dispose]
   Pointer<clang.CXType> returnType() {
-    return clang.clang_getResultType_wrap(this.type());
+    var t = this.type();
+    var r = clang.clang_getResultType_wrap(t);
+    t.dispose();
+    return r;
+  }
+
+  void dispose() {
+    free(this);
   }
 }
 
 extension CXTypeExt on Pointer<clang.CXType> {
   /// Get code_gen [Type] representation of [clang.CXType]
-  Type codeGenType() {
+  Type toCodeGenType() {
+    return Type(_getCodeGenTypeString(this));
+  }
+
+  /// Also Disposes the CXType
+  Type toCodeGenTypeAndDispose() {
     return Type(_getCodeGenTypeString(this));
   }
 
   /// spelling for a [clang.CXTypeKind] useful for debug purposes
   String spelling() {
-    var cxstring = clang.clang_getTypeSpelling_wrap(this);
-    var s = cxstring.toDartString();
-    free(cxstring);
-    return s;
+    return clang.clang_getTypeSpelling_wrap(this).toStringAndDispose();
   }
 
   /// returns the typeKind int from [clang.CXTypeKind]
   int kind() {
     return this.ref.kind;
   }
+
+  void dispose() {
+    free(this);
+  }
 }
 
 extension CXStringExt on Pointer<clang.CXString> {
-  String toDartString() {
-    // Note: clang_getCString_wrap returns a const char *, calling free will result in error
+  /// Dispose CXstring using dispose
+  String string() {
     return Utf8.fromUtf8(clang.clang_getCString_wrap(this));
+  }
+
+  /// Converts CXString to dart string and disposes CXString
+  String toStringAndDispose() {
+    // Note: clang_getCString_wrap returns a const char *, calling free will result in error
+    var s = Utf8.fromUtf8(clang.clang_getCString_wrap(this));
+    clang.clang_disposeString_wrap(this);
+    return s;
+  }
+
+  void dispose() {
+    clang.clang_disposeString_wrap(this);
   }
 }
 
@@ -100,11 +123,14 @@ String _getCodeGenTypeString(Pointer<clang.CXType> cxtype) {
   int kind = cxtype.kind();
 
   if (kind == clang.CXTypeKind.CXType_Pointer) {
-    return '*' + _getCodeGenTypeString(clang.clang_getPointeeType_wrap(cxtype));
+    var pt = clang.clang_getPointeeType_wrap(cxtype);
+    var ct = _getCodeGenTypeString(pt);
+    pt.dispose();
+    return '*' + ct;
   } else if (cxTypeKindMap.containsKey(kind)) {
     return cxTypeKindMap[kind];
   } else {
     throw Exception(
-        'Type (type: ${cxtype.kind()}, speling: ${cxtype.spelling()}) not implemented');
+        'Type not implemented, cxtypekind: ${cxtype.kind()}, speling: ${cxtype.spelling()}');
   }
 }

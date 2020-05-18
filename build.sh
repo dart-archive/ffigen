@@ -8,4 +8,3 @@ printf "./tool/wrapped_libclang/libwrapped_clang.so\n"
 printf "Generating LibClang Bindings..\n"
 pub get
 dart tool/libclang_binding_generator.dart
-printf "Generated bindings: ./lib/src/clang_bindings.dart\n"

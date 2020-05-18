@@ -16,9 +16,9 @@ import 'data.dart' as data;
 Library parse(Config conf) {
   initParser(conf);
 
-  parseAndStoreBindings();
+  var bindings = parseAndGenerateBindings();
 
-  return Library(bindings: data.bindings);
+  return Library(bindings: bindings);
 }
 
 // ===================================================================================
@@ -35,7 +35,7 @@ void initParser(Config c) {
 }
 
 /// Parses source files and adds generated bindings to [bindings]
-void parseAndStoreBindings() {
+List<Binding> parseAndGenerateBindings() {
   // TODO: implement for more than 1 header in list
   var headerLocation = data.config.headers[0].path;
 
@@ -67,6 +67,10 @@ void parseAndStoreBindings() {
 
   visitChildrenResultChecker(resultCode);
 
+  // cleanup
+  rootCursor.dispose();
   clang.clang_disposeTranslationUnit(tu);
   clang.clang_disposeIndex(index);
+
+  return data.bindings;
 }
