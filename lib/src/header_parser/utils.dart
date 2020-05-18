@@ -19,7 +19,7 @@ void visitChildrenResultChecker(int resultCode) {
 String getTUDiagnostic(Pointer<clang.CXTranslationUnitImpl> tu) {
   var s = StringBuffer();
   var total = clang.clang_getNumDiagnostics(tu);
-  s.write('Total errors/warnings: $total\n');
+  s.write('C header: Total errors/warnings : $total\n');
   for (var i = 0; i < total; i++) {
     var diag = clang.clang_getDiagnostic(tu, i);
     var cxstring = clang.clang_formatDiagnostic_wrap(diag, 0);
@@ -44,6 +44,7 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
     return s;
   }
 
+  /// spelling for a [clang.CXCursorKind] useful for debug purposes
   String kindSpelling() {
     var cxstring = clang
         .clang_getCursorKindSpelling_wrap(clang.clang_getCursorKind_wrap(this));
@@ -52,13 +53,9 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
     return str;
   }
 
-  String typeSpelling() {
-    return clang.clang_getCursorType_wrap(this).spelling();
-  }
-
-  /// returns [spelling] [kind] [kindSpelling] [type] [typeSpelling]
+  /// for debug: returns [spelling] [kind] [kindSpelling] [type] [typeSpelling]
   String completeStringRepr() {
-    return 'spelling: ${this.spelling()}, kind: ${this.kind()}, kindSpelling: ${this.kindSpelling()}, type: ${this.type().kind()}, typeSpelling: ${this.typeSpelling()}';
+    return 'spelling: ${this.spelling()}, kind: ${this.kind()}, kindSpelling: ${this.kindSpelling()}, type: ${this.type().kind()}, typeSpelling: ${this.type().spelling()}';
   }
 
   Pointer<clang.CXType> type() {
@@ -72,11 +69,12 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
 }
 
 extension CXTypeExt on Pointer<clang.CXType> {
+  /// Get code_gen [Type] representation of [clang.CXType]
   Type codeGenType() {
     return Type(_getCodeGenTypeString(this));
   }
 
-  /// get typeSpelling
+  /// spelling for a [clang.CXTypeKind] useful for debug purposes
   String spelling() {
     var cxstring = clang.clang_getTypeSpelling_wrap(this);
     var s = cxstring.toDartString();

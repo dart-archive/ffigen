@@ -1,4 +1,3 @@
-/// Visitor for the Root cursor [CXCursorKind.CXCursor_TranslationUnit]
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
@@ -10,6 +9,8 @@ import '../utils.dart';
 import 'function_visitor.dart';
 import '../data.dart' as data;
 
+/// Visitor for the Root cursor [CXCursorKind.CXCursor_TranslationUnit]
+///
 /// child visitor invoked on translationUnitCursor
 int rootCursorVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {

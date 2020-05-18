@@ -22,6 +22,8 @@ Library parse(Config conf) {
 }
 
 // ===================================================================================
+//           BELOW FUNCTIONS ARE MEANT FOR INTERNAL USE AND TESTING
+// ===================================================================================
 
 /// initialises parser, clears any previous values
 void initParser(Config c) {

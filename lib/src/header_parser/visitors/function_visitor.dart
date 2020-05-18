@@ -1,4 +1,3 @@
-/// Visitor for the function type cursor [clang.CXCursorKind.CXCursor_FunctionDecl]
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
@@ -9,6 +8,9 @@ import '../clang_bindings/clang_constants.dart' as clang;
 import '../utils.dart';
 import '../data.dart' as data;
 
+/// Visitor for a function cursor [clang.CXCursorKind.CXCursor_FunctionDecl]
+/// 
+/// Invoked on every function directly under rootCursor
 int functionCursorVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
   try {

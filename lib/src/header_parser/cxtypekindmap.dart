@@ -2,7 +2,7 @@ import 'package:ffigen/src/header_parser/clang_bindings/clang_constants.dart'
     as clang;
 
 /// Utility to convert CXType to [code_generator.Type]
-
+///
 /// key: CXTypekindEnum, Value: TypeString for code_generator
 final cxTypeKindMap = <int, String>{
   // clang.CXTypeKind.CXType_Invalid: '',

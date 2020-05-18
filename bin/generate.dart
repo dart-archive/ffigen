@@ -13,7 +13,9 @@ void main() {
 
   final library = parser.parse(config);
 
-  library.generateFile(File('gen.dart'));
+  File gen = File('gen.dart');
+  library.generateFile(gen);
+  print('Finished, Bindings generated in ${gen?.absolute?.path}');
 }
 
 Config getConfigFromPubspec() {
