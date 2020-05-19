@@ -40,15 +40,21 @@ List<Binding> parseAndGenerateBindings() {
   var headerLocation = data.config.headers[0].path;
 
   var index = clang.clang_createIndex(0, 0);
+
+  Pointer<Pointer<Utf8>> clangCmdArgs =
+      createDynamicStringArray(data.config.compilerOpts);
+
   var tu = clang.clang_parseTranslationUnit(
     index,
     Utf8.toUtf8(headerLocation),
-    nullptr,
-    0,
+    clangCmdArgs,
+    data.config.compilerOpts.length,
     nullptr,
     0,
     clang.CXTranslationUnit_Flags.CXTranslationUnit_None,
   );
+
+  clangCmdArgs.dispose(data.config.compilerOpts.length);
 
   // TODO: look into printing error details using `clang_parseTranslationUnit2` method
   if (tu == null) {

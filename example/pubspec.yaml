@@ -11,6 +11,6 @@ dev_dependencies:
     path: '../'
 
 ffigen:
-  libclang_dylib: '../tool/wrapped_libclang/libwrapped_clang.so'
+  libclang-dylib: '../tool/wrapped_libclang/libwrapped_clang.so'
   headers:
     - 'headers/example.h'

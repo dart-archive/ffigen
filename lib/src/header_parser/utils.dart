@@ -134,3 +134,25 @@ String _getCodeGenTypeString(Pointer<clang.CXType> cxtype) {
         'Type not implemented, cxtypekind: ${cxtype.kind()}, speling: ${cxtype.spelling()}');
   }
 }
+
+// Converts a List<String> to Pointer<Pointer<Utf8>>
+Pointer<Pointer<Utf8>> createDynamicStringArray(List<String> list) {
+  Pointer<Pointer<Utf8>> nativeCmdArgs =
+      allocate<Pointer<Utf8>>(count: list.length);
+
+  for (var i = 0; i < list.length; i++) {
+    nativeCmdArgs[i] = Utf8.toUtf8(list[i]);
+  }
+
+  return nativeCmdArgs;
+}
+
+extension DynamicCStringArray on Pointer<Pointer<Utf8>> {
+  // properly disposes a Pointer<Pointer<Utf8>, ensure that sure length is correct
+  void dispose(int length) {
+    for (var i = 0; i < length; i++) {
+      free(this[i]);
+    }
+    free(this);
+  }
+}
