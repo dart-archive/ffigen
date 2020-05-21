@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'filters/function_filter.dart';
+
 import '../strings.dart' as string;
 import 'header.dart';
 import 'package:yaml/yaml.dart';
@@ -21,6 +23,8 @@ class Config {
   /// commandLineArguments to pass to clang_compiler
   List<String> compilerOpts;
 
+  FunctionFilter functionFilters = FunctionFilter();
+
   /// [ffigenMap] has required configurations
   Config.fromYaml(YamlMap ffigenMap) : headers = [] {
     var result = checkYaml(ffigenMap);
@@ -37,6 +41,44 @@ class Config {
     }
 
     compilerOpts = (ffigenMap[string.compilerOpts] as String)?.split(' ');
+
+    var filters = ffigenMap[string.filters] as YamlMap;
+    if (filters != null) {
+      var functions = filters[string.functions] as YamlMap;
+      if (functions != null) {
+        List<String> includeMatchers, includeFull, excludeMatchers, excludeFull;
+
+        var include = functions[string.include] as YamlMap;
+        if (include != null) {
+          includeMatchers = (include[string.matches] as YamlList)
+              ?.map((dynamic e) => e as String)
+              ?.toList();
+          includeFull = (include[string.names] as YamlList)
+              ?.map((dynamic e) => e as String)
+              ?.toList();
+        }
+
+        var exclude = functions[string.exclude] as YamlMap;
+
+        if (exclude != null) {
+          excludeMatchers =
+              (functions[string.exclude][string.matches] as YamlList)
+                  ?.map((dynamic e) => e as String)
+                  ?.toList();
+          excludeFull = (filters[string.functions][string.exclude][string.names]
+                  as YamlList)
+              ?.map((dynamic e) => e as String)
+              ?.toList();
+        }
+
+        functionFilters = FunctionFilter(
+          includeMatchers: includeMatchers,
+          includeFull: includeFull,
+          excludeMatchers: excludeMatchers,
+          excludeFull: excludeFull,
+        );
+      }
+    }
   }
 
   /// Use `Config.fromYaml` if extracting info from yaml file

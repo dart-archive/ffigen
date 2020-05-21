@@ -1,0 +1,69 @@
+class FunctionFilter {
+  /// function matchers
+  List<RegExp> _includeMatchers = [];
+  Set<String> _includeFull = {};
+  List<RegExp> _excludeMatchers = [];
+  Set<String> _excludeFull = {};
+
+  FunctionFilter({
+    List<String> includeMatchers,
+    List<String> includeFull,
+    List<String> excludeMatchers,
+    List<String> excludeFull,
+  }) {
+    if (includeMatchers != null) {
+      this._includeMatchers =
+          includeMatchers.map((e) => RegExp(e, dotAll: true)).toList();
+    }
+    if (includeFull != null) {
+      this._includeFull = includeFull.map((e) => e).toSet();
+    }
+    if (excludeMatchers != null) {
+      this._excludeMatchers =
+          excludeMatchers.map((e) => RegExp(e, dotAll: true)).toList();
+    }
+    if (excludeFull != null) {
+      this._excludeFull = excludeFull.map((e) => e).toSet();
+    }
+  }
+
+  /// Checks if a function should be included based on config
+  bool shouldInclude(String name) {
+    if (_excludeFull.contains(name)) {
+      return false;
+    }
+
+    for (var em in _excludeMatchers) {
+      if (em.firstMatch(name)?.end == name.length) {
+        return false;
+      }
+    }
+
+    if (_includeFull.contains(name)) {
+      return true;
+    }
+
+    for (var im in _includeMatchers) {
+      if (im.firstMatch(name)?.end == name.length) {
+        return true;
+      }
+    }
+
+    // if user has provided what to include, then by default match is false
+    if (_includeMatchers.length > 0 || _includeFull.length > 0) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  @override
+  String toString() {
+    return ''' (includeFull, includeMatchers, excludeFull, excludeMatchers)
+$_includeFull
+$_includeMatchers
+$_excludeFull
+$_excludeMatchers
+    ''';
+  }
+}

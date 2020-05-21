@@ -6,8 +6,18 @@ import 'package:ffigen/src/header_parser.dart' as parser;
 
 import 'package:yaml/yaml.dart' as yaml;
 
-void main() {
-  final config = getConfigFromPubspec();
+void main(List<String> args) {
+  Config config;
+
+  print(args);
+  if (args.length > 1) {
+    print("Error: Expected less than or equal to 1 command line arguments");
+    exit(1);
+  } else if (args.length == 1) {
+    config = getConfigFromCustomYaml(args[0]);
+  } else {
+    config = getConfigFromPubspec();
+  }
   //TODO: debug print, delete later
   print('debug: ' + config.toString());
 
@@ -28,8 +38,9 @@ Config getConfigFromPubspec() {
   var pubspecFile = File(pubspecName);
 
   if (!pubspecFile.existsSync()) {
-    throw Exception(
+    print(
         'Error: $pubspecName not found, please run this tool from the root of your package');
+    exit(1);
   }
 
   // Casting this because pubspec is expected to be a YamlMap.
@@ -39,7 +50,29 @@ Config getConfigFromPubspec() {
       yaml.loadYaml(pubspecFile.readAsStringSync())[configKey] as yaml.YamlMap;
 
   if (bindingsConfigMap == null) {
-    throw Exception("Couldn't find an entry for $configKey in pubspec.yaml");
+    print("Couldn't find an entry for $configKey in pubspec.yaml");
+    exit(1);
   }
+  return Config.fromYaml(bindingsConfigMap);
+}
+
+Config getConfigFromCustomYaml(String yamlPath) {
+  var currentDir = Directory.current;
+  print('Running in ${currentDir}');
+
+  var yamlFile = File(yamlPath);
+
+  if (!yamlFile.existsSync()) {
+    print(
+        'Error: $yamlPath not found, please run this tool from the root of your package');
+    exit(1);
+  }
+
+  // Casting this because pubspec is expected to be a YamlMap.
+
+  // can throw YamlException() if unable to parse
+  var bindingsConfigMap =
+      yaml.loadYaml(yamlFile.readAsStringSync()) as yaml.YamlMap;
+
   return Config.fromYaml(bindingsConfigMap);
 }

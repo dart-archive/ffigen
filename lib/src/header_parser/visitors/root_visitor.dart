@@ -18,9 +18,7 @@ int rootCursorVisitor(Pointer<clang.CXCursor> cursor,
 
     switch (clang.clang_getCursorKind_wrap(cursor)) {
       case clang.CXCursorKind.CXCursor_FunctionDecl:
-        _createFunc(cursor);
-        _addParameters(cursor);
-        _addFuncToBinding();
+        _createFuncIfIncluded(cursor);
         break;
       default:
         print('debug: Not Implemented');
@@ -36,11 +34,19 @@ int rootCursorVisitor(Pointer<clang.CXCursor> cursor,
   return clang.CXChildVisitResult.CXChildVisit_Continue;
 }
 
-void _createFunc(Pointer<clang.CXCursor> cursor) {
-  data.func = Func(
-    name: cursor.spelling(),
-    returnType: _getFunctionReturnType(cursor),
-  );
+/// Returns true if functions should be created
+///
+/// Creates a function if its not excluded according to config
+void _createFuncIfIncluded(Pointer<clang.CXCursor> cursor) {
+  var name = cursor.spelling();
+  if (data.config.functionFilters.shouldInclude(name)) {
+    data.func = Func(
+      name: name,
+      returnType: _getFunctionReturnType(cursor),
+    );
+    _addParameters(cursor);
+    _addFuncToBinding();
+  }
 }
 
 Type _getFunctionReturnType(Pointer<clang.CXCursor> cursor) {

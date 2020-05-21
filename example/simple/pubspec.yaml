@@ -8,9 +8,9 @@ environment:
 
 dev_dependencies:
   ffigen: 
-    path: '../'
+    path: '../../'
 
 ffigen:
-  libclang-dylib: '../tool/wrapped_libclang/libwrapped_clang.so'
+  libclang-dylib: '../../tool/wrapped_libclang/libwrapped_clang.so'
   headers:
     - 'headers/example.h'

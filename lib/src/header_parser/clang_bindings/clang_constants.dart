@@ -1125,6 +1125,8 @@ class CXTypeKind {
   static const CXType_ULong = 10;
   static const CXType_ULongLong = 11;
   static const CXType_UInt128 = 12;
+
+  /// char
   static const CXType_Char_S = 13;
   static const CXType_SChar = 14;
   static const CXType_WChar = 15;

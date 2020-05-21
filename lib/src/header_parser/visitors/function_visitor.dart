@@ -18,8 +18,6 @@ int functionCursorVisitor(Pointer<clang.CXCursor> cursor,
       case clang.CXCursorKind.CXCursor_ParmDecl:
         _addParameterToLastFunc(cursor);
         break;
-      default:
-        print('debug: Not Implemented');
     }
     cursor.dispose();
     parent.dispose();

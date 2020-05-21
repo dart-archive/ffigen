@@ -43,6 +43,8 @@ CheckerResult checkYaml(YamlMap map) {
     _setResult(CheckerResult.error);
   }
 
+  // TODO: Validate filters
+
   // print unknown attributes
   List<String> unknownopts = [];
   for (var k in map.keys) {
