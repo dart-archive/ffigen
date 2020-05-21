@@ -14,6 +14,7 @@ ffigen:
   libclang-dylib: '../../tool/wrapped_libclang/libwrapped_clang.so'
   headers:
     - '/home/prerak/repos/ffigen/tool/wrapped_libclang/wrapper.c'
+  compiler-opts: '-I/usr/lib/llvm-9/include/ -I/usr/lib/llvm-10/include/'
   filters:
     functions:
       include:

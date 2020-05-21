@@ -39,7 +39,8 @@ int rootCursorVisitor(Pointer<clang.CXCursor> cursor,
 /// Creates a function if its not excluded according to config
 void _createFuncIfIncluded(Pointer<clang.CXCursor> cursor) {
   var name = cursor.spelling();
-  if (data.config.functionFilters.shouldInclude(name)) {
+  if (data.config.functionFilters != null &&
+      data.config.functionFilters.shouldInclude(name)) {
     data.func = Func(
       name: name,
       returnType: _getFunctionReturnType(cursor),

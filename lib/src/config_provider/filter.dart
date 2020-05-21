@@ -1,11 +1,11 @@
-class FunctionFilter {
-  /// function matchers
+class Filter {
+  /// matchers
   List<RegExp> _includeMatchers = [];
   Set<String> _includeFull = {};
   List<RegExp> _excludeMatchers = [];
   Set<String> _excludeFull = {};
 
-  FunctionFilter({
+  Filter({
     List<String> includeMatchers,
     List<String> includeFull,
     List<String> excludeMatchers,
