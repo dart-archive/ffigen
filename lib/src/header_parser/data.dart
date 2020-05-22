@@ -13,3 +13,6 @@ List<Binding> bindings = <Binding>[];
 
 /// Temporarily holds a function
 Func func;
+
+/// Temporarily holds a typestring (used by typedeclaration visitor)
+String typeString;

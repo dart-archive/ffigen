@@ -100,6 +100,21 @@ CXType *clang_getPointeeType_wrap(CXType *pointerType)
     return ptrToCXType(clang_getPointeeType(*pointerType));
 }
 
+CXType *clang_getCanonicalType_wrap(CXType *typerefType)
+{
+    return ptrToCXType(clang_getCanonicalType(*typerefType));
+}
+
+CXCursor *clang_getTypeDeclaration_wrap(CXType *cxtype)
+{
+    return ptrToCXCursor(clang_getTypeDeclaration(*cxtype));
+}
+
+CXType *clang_getTypedefDeclUnderlyingType_wrap(CXCursor *cxcursor)
+{
+    return ptrToCXType(clang_getTypedefDeclUnderlyingType(*cxcursor));
+}
+
 CXString *clang_getCursorSpelling_wrap(CXCursor *cursor)
 {
     return ptrToCXString(clang_getCursorSpelling(*cursor));

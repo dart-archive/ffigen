@@ -1,4 +1,8 @@
 import 'dart:ffi';
+import 'data.dart' as data;
+
+import 'visitors/typedeclaration_visitor.dart';
+
 import 'cxtypekindmap.dart';
 
 import 'clang_bindings/clang_bindings.dart' as clang;
@@ -79,9 +83,11 @@ extension CXTypeExt on Pointer<clang.CXType> {
     return Type(_getCodeGenTypeString(this));
   }
 
-  /// Also Disposes the CXType
+  /// Get code_gen [Type] representation of [clang.CXType] and dispose the type
   Type toCodeGenTypeAndDispose() {
-    return Type(_getCodeGenTypeString(this));
+    var t = Type(_getCodeGenTypeString(this));
+    this.dispose();
+    return t;
   }
 
   /// spelling for a [clang.CXTypeKind] useful for debug purposes
@@ -122,17 +128,42 @@ extension CXStringExt on Pointer<clang.CXString> {
 String _getCodeGenTypeString(Pointer<clang.CXType> cxtype) {
   int kind = cxtype.kind();
 
-  if (kind == clang.CXTypeKind.CXType_Pointer) {
-    var pt = clang.clang_getPointeeType_wrap(cxtype);
-    var ct = _getCodeGenTypeString(pt);
-    pt.dispose();
-    return '*' + ct;
-  } else if (cxTypeKindMap.containsKey(kind)) {
-    return cxTypeKindMap[kind];
-  } else {
-    throw Exception(
-        'Type not implemented, cxtypekind: ${cxtype.kind()}, speling: ${cxtype.spelling()}');
+  switch (kind) {
+    case clang.CXTypeKind.CXType_Pointer:
+      var pt = clang.clang_getPointeeType_wrap(cxtype);
+      var ct = _getCodeGenTypeString(pt);
+      pt.dispose();
+      return '*' + ct;
+    case clang.CXTypeKind.CXType_Typedef:
+      //TODO: replace with actual type
+      print("==========================");
+      return _extractTypeString(cxtype);
+    default:
+      if (cxTypeKindMap.containsKey(kind)) {
+        return cxTypeKindMap[kind];
+      } else {
+        throw Exception(
+            'Type not implemented, cxtypekind: ${cxtype.kind()}, speling: ${cxtype.spelling()}');
+      }
   }
+}
+
+String _extractTypeString(Pointer<clang.CXType> cxtype) {
+  var cursor = clang.clang_getTypeDeclaration_wrap(cxtype);
+
+  /// stores result in [data.typestring]
+  int resultCode = clang.clang_visitChildren_wrap(
+    cursor,
+    Pointer.fromFunction(
+      typedeclarationCursorVisitor,
+      clang.CXChildVisitResult.CXChildVisit_Break,
+    ),
+    nullptr,
+  );
+
+  visitChildrenResultChecker(resultCode);
+  cursor.dispose();
+  return data.typeString;
 }
 
 // Converts a List<String> to Pointer<Pointer<Utf8>>

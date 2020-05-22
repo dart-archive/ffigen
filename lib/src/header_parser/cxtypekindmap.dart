@@ -51,7 +51,7 @@ final cxTypeKindMap = <int, String>{
   // clang.CXTypeKind.CXType_RValueReference: '',
   // clang.CXTypeKind.CXType_Record: '',
   // clang.CXTypeKind.CXType_Enum: '',
-  clang.CXTypeKind.CXType_Typedef: '*void',
+  // clang.CXTypeKind.CXType_Typedef: '*void',
   // clang.CXTypeKind.CXType_ObjCInterface: '',
   // clang.CXTypeKind.CXType_ObjCObjectPointer: '',
   // clang.CXTypeKind.CXType_FunctionNoProto: '',

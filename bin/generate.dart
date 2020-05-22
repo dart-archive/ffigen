@@ -24,6 +24,9 @@ void main(List<String> args) {
   final library = parser.parse(config);
 
   File gen = File('gen.dart');
+
+  //TODO: give sort option to user
+  library.sort();
   library.generateFile(gen);
   print('Finished, Bindings generated in ${gen?.absolute?.path}');
 }

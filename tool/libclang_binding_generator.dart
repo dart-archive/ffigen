@@ -25,6 +25,8 @@ void main() {
           '/// Call [init(dylib)] to initialise dynamicLibrary before using \n\n/// AUTOMATICALLY GENERATED DO NOT EDIT');
 
   var f = File('lib/src/header_parser/clang_bindings/clang_bindings.dart');
+
+  library.sort();
   // Generates bindings for libclang wrapper
   library.generateFile(f);
 
@@ -276,6 +278,39 @@ final functionAndTypedefsList = <Binding>[
       Parameter(
         name: 'pointerType',
         type: Type('*$_cxType'),
+      ),
+    ],
+    returnType: Type('*$_cxType'),
+  ),
+  Func(
+    dartDoc: 'Free cxtype after use',
+    name: 'clang_getCanonicalType_wrap',
+    parameters: [
+      Parameter(
+        name: 'typerefType',
+        type: Type('*$_cxType'),
+      ),
+    ],
+    returnType: Type('*$_cxType'),
+  ),
+  Func(
+    dartDoc: 'Free cxcursor after use',
+    name: 'clang_getTypeDeclaration_wrap',
+    parameters: [
+      Parameter(
+        name: 'cxtype',
+        type: Type('*$_cxType'),
+      ),
+    ],
+    returnType: Type('*$_cxCursor'),
+  ),
+  Func(
+    dartDoc: 'Free cxtype after use',
+    name: 'clang_getTypedefDeclUnderlyingType_wrap',
+    parameters: [
+      Parameter(
+        name: 'typerefType',
+        type: Type('*$_cxCursor'),
       ),
     ],
     returnType: Type('*$_cxType'),

@@ -20,10 +20,10 @@ ffigen:
       include:
         matches:
         # should be valid regexp
-          - 'clang_.*wrap'
+          # - 'clang_.*'
         names:
         # should match exact function name
-          - 'clang_disposeIndex'
+          - 'clang_getCString_wrap'
       exclude:
         matches:
         # # should be valid regexp

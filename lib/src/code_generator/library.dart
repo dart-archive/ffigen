@@ -28,6 +28,11 @@ class Library {
   })  : assert(dylibIdentifier != null),
         assert(initFunctionIdentifier != null);
 
+  /// Sorts all bindings in alphabetical order
+  void sort() {
+    bindings.sort((b1, b2) => b1.name.compareTo(b2.name));
+  }
+
   /// Generates [file] by generating C bindings.
   /// If format is true(default) 'dartfmt -w $PATH' will be called to format the generated file.
   void generateFile(File file, {bool format = true}) {
