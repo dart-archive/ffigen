@@ -1,12 +1,10 @@
 import 'dart:ffi';
 
-import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/print.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
 import '../clang_bindings/clang_constants.dart' as clang;
 import '../utils.dart';
-import 'function_visitor.dart';
 import '../data.dart' as data;
 
 /// Visitor for the TypeDeclarations to extract typestring

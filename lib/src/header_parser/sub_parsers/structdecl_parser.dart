@@ -1,7 +1,6 @@
 import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
-import '../visitors/typedefdecl_visitor.dart';
 import 'package:ffigen/src/print.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
