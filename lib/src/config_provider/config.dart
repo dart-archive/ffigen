@@ -28,6 +28,9 @@ class Config {
   // Filter for functions
   Filter functionFilters;
 
+  // Filter for structs
+  Filter structFilters;
+
   /// [ffigenMap] has required configurations
   Config.fromYaml(YamlMap ffigenMap) : headers = [] {
     var result = checkYaml(ffigenMap);
@@ -39,17 +42,28 @@ class Config {
 
     libclang_dylib_path = ffigenMap[string.libclang_dylib] as String;
 
+    // Adding headers from Yaml
+    // TODO: support globs
     for (var header in (ffigenMap[string.headers] as YamlList)) {
       headers.add(Header(header as String));
     }
 
+    // Adding compilerOpts from yaml
     compilerOpts = (ffigenMap[string.compilerOpts] as String)?.split(' ');
 
+    // Adding filters from yaml
     var filters = ffigenMap[string.filters] as YamlMap;
     if (filters != null) {
+      // Add filter for functions from yaml
       var functions = filters[string.functions] as YamlMap;
       if (functions != null) {
         functionFilters = _extractFilter(functions);
+      }
+
+      // Add filter for structs from yaml
+      var structs = filters[string.structs] as YamlMap;
+      if (structs != null) {
+        structFilters = _extractFilter(structs);
       }
     }
   }

@@ -31,3 +31,8 @@ ffigen:
         names:
         # # should match exact function name
           # - 'clang_getCursorKind_wrap'
+    structs:
+      include:
+        names:
+        # should match exact struct name
+          - 'CXString'

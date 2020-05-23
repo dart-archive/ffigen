@@ -7,7 +7,7 @@ enum VerboseLevel {
   none,
 }
 
-VerboseLevel _verboseLevel = VerboseLevel.extra;
+VerboseLevel _verboseLevel = VerboseLevel.normal;
 
 /// Set verbose level extra, normal or none
 void setPrintOptions({VerboseLevel verboseLevel}) {
