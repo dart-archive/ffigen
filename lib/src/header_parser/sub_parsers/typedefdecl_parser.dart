@@ -1,16 +1,23 @@
 import 'dart:ffi';
 
+import 'package:ffigen/src/code_generator.dart';
+
 import '../visitors/typedefdecl_visitor.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
 import '../clang_bindings/clang_constants.dart' as clang;
 import '../utils.dart';
 
-/// Parses a typedef declaration
-void parseTypedefDeclaration(Pointer<clang.CXCursor> cursor) {
+/// Temporarily holds a binding before its returned by [parseTypedefDeclaration]
+Binding binding;
 
+/// Temporarily holds parent cursor name (used in typedefdecl_visitor.dart)
+String typedefName;
+
+/// Parses a typedef declaration
+Binding parseTypedefDeclaration(Pointer<clang.CXCursor> cursor) {
   // set name of typedef (used later)
-  typeDefNameFromParser = cursor.spelling();
+  typedefName = cursor.spelling();
 
   int resultCode = clang.clang_visitChildren_wrap(
     cursor,
@@ -20,4 +27,8 @@ void parseTypedefDeclaration(Pointer<clang.CXCursor> cursor) {
   );
 
   visitChildrenResultChecker(resultCode);
+
+  var b = binding;
+  binding = null;
+  return b;
 }

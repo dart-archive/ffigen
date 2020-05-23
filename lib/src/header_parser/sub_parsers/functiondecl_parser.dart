@@ -9,20 +9,26 @@ import '../clang_bindings/clang_constants.dart' as clang;
 import '../utils.dart';
 import '../data.dart' as data;
 
+/// Temporarily holds a function before its returned by [parseFunctionDeclaration]
+Func func;
+
 /// Parses a function declaration
-void parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
+Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
   var name = cursor.spelling();
   if (data.config.functionFilters != null &&
       data.config.functionFilters.shouldInclude(name)) {
     printVerbose("Function: ${cursor.completeStringRepr()}");
 
-    data.func = Func(
+    func = Func(
       name: name,
       returnType: _getFunctionReturnType(cursor),
     );
     _addParameters(cursor);
-    _addFuncToBinding();
   }
+
+  var f = func;
+  func = null;
+  return f;
 }
 
 Type _getFunctionReturnType(Pointer<clang.CXCursor> cursor) {
@@ -38,8 +44,4 @@ void _addParameters(Pointer<clang.CXCursor> cursor) {
   );
 
   visitChildrenResultChecker(resultCode);
-}
-
-void _addFuncToBinding() {
-  data.bindings.add(data.func);
 }

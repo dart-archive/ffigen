@@ -1,12 +1,12 @@
 import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
+import '../sub_parsers/functiondecl_parser.dart';
 import 'package:ffigen/src/print.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
 import '../clang_bindings/clang_constants.dart' as clang;
 import '../utils.dart';
-import '../data.dart' as data;
 
 /// Visitor for a function cursor [clang.CXCursorKind.CXCursor_FunctionDecl]
 ///
@@ -14,10 +14,11 @@ import '../data.dart' as data;
 int functionCursorVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
   try {
-    printExtraVerbose('--functionCursorVisitor: ${cursor.completeStringRepr()}');
+    printExtraVerbose(
+        '--functionCursorVisitor: ${cursor.completeStringRepr()}');
     switch (clang.clang_getCursorKind_wrap(cursor)) {
       case clang.CXCursorKind.CXCursor_ParmDecl:
-        _addParameterToLastFunc(cursor);
+        _addParameterToFunc(cursor);
         break;
     }
     cursor.dispose();
@@ -30,9 +31,9 @@ int functionCursorVisitor(Pointer<clang.CXCursor> cursor,
   return clang.CXChildVisitResult.CXChildVisit_Continue;
 }
 
-/// Adds the parameter to [data.func]
-void _addParameterToLastFunc(Pointer<clang.CXCursor> cursor) {
-  data.func.parameters.add(
+/// Adds the parameter to func in [functiondecl_parser.dart]
+void _addParameterToFunc(Pointer<clang.CXCursor> cursor) {
+  func.parameters.add(
     Parameter(
       name: cursor.spelling(),
       type: _getParameterType(cursor),

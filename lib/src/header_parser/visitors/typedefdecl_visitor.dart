@@ -1,6 +1,8 @@
 import 'dart:ffi';
 
-import 'package:ffigen/src/header_parser/sub_parsers/structdecl_parser.dart';
+import '../sub_parsers/typedefdecl_parser.dart';
+
+import '../sub_parsers/structdecl_parser.dart';
 import 'package:ffigen/src/print.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
@@ -20,10 +22,11 @@ int typedefdeclarationCursorVisitor(Pointer<clang.CXCursor> cursor,
 
     switch (clang.clang_getCursorKind_wrap(cursor)) {
       case clang.CXCursorKind.CXCursor_StructDecl:
-        parseStructDeclaration(cursor, name: typeDefNameFromParser);
+        binding = parseStructDeclaration(cursor, name: typedefName);
         break;
       default:
-        printExtraVerbose('----typedefdeclarationCursorVisitor: Not Implemented');
+        printExtraVerbose(
+            '----typedefdeclarationCursorVisitor: Not Implemented');
     }
 
     cursor.dispose();
@@ -35,5 +38,3 @@ int typedefdeclarationCursorVisitor(Pointer<clang.CXCursor> cursor,
   }
   return clang.CXChildVisitResult.CXChildVisit_Continue;
 }
-
-String typeDefNameFromParser;

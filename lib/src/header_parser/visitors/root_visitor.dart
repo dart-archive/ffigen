@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:ffigen/src/code_generator/binding.dart';
 import 'package:ffigen/src/header_parser/sub_parsers/functiondecl_parser.dart';
 import '../sub_parsers/typedefdecl_parser.dart';
 import 'package:ffigen/src/print.dart';
@@ -7,6 +8,7 @@ import 'package:ffigen/src/print.dart';
 import '../clang_bindings/clang_bindings.dart' as clang;
 import '../clang_bindings/clang_constants.dart' as clang;
 import '../utils.dart';
+import '../data.dart' as data;
 
 /// Visitor for the Root cursor [CXCursorKind.CXCursor_TranslationUnit]
 ///
@@ -18,10 +20,10 @@ int rootCursorVisitor(Pointer<clang.CXCursor> cursor,
 
     switch (clang.clang_getCursorKind_wrap(cursor)) {
       case clang.CXCursorKind.CXCursor_FunctionDecl:
-        parseFunctionDeclaration(cursor);
+        addToBindings(parseFunctionDeclaration(cursor));
         break;
       case clang.CXCursorKind.CXCursor_TypedefDecl:
-        parseTypedefDeclaration(cursor);
+        addToBindings(parseTypedefDeclaration(cursor));
         break;
       default:
         printExtraVerbose('rootCursorVisitor: CursorKind not implemented');
@@ -35,4 +37,11 @@ int rootCursorVisitor(Pointer<clang.CXCursor> cursor,
     rethrow;
   }
   return clang.CXChildVisitResult.CXChildVisit_Continue;
+}
+
+/// Adds to binding if not null
+void addToBindings(Binding b) {
+  if (b != null) {
+    data.bindings.add(b);
+  }
 }

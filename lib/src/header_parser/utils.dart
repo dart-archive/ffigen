@@ -138,7 +138,6 @@ String _getCodeGenTypeString(Pointer<clang.CXType> cxtype) {
       return '*' + ct;
     case clang.CXTypeKind.CXType_Typedef:
       //TODO: replace with actual type
-      printVerbose("==========================");
       return _extractTypeString(cxtype);
     default:
       if (cxTypeKindMap.containsKey(kind)) {
