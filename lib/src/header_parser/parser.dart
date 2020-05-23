@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/config_provider.dart';
+import 'package:ffigen/src/print.dart';
 
 import 'clang_bindings/clang_bindings.dart' as clang;
 import 'clang_bindings/clang_constants.dart' as clang;
@@ -68,7 +69,7 @@ List<Binding> parseAndGenerateBindings() {
     throw Exception('Error creating translation Unit');
   }
 
-  print('debug:\n' + getTUDiagnostic(tu));
+  printVerbose('TU diagnostics:\n' + getTUDiagnostic(tu));
   var rootCursor = clang.clang_getTranslationUnitCursor_wrap(tu);
 
   int resultCode = clang.clang_visitChildren_wrap(

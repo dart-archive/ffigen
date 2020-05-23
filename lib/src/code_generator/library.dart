@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:ffigen/src/print.dart';
 import 'package:meta/meta.dart';
 
 import 'binding.dart';
@@ -55,7 +56,7 @@ class Library {
     final result = Process.runSync('dartfmt', ['-w', path],
         runInShell: Platform.isWindows);
     if (result.stderr.toString().isNotEmpty) {
-      print(result.stderr);
+      printError(result.stderr);
     }
   }
 

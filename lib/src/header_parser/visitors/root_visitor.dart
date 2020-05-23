@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
+import 'package:ffigen/src/print.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
 import '../clang_bindings/clang_constants.dart' as clang;
@@ -14,21 +15,21 @@ import '../data.dart' as data;
 int rootCursorVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
   try {
-    print('debug rootCursorVisitor: ${cursor.completeStringRepr()}');
+    printExtraVerbose('rootCursorVisitor: ${cursor.completeStringRepr()}');
 
     switch (clang.clang_getCursorKind_wrap(cursor)) {
       case clang.CXCursorKind.CXCursor_FunctionDecl:
         _createFuncIfIncluded(cursor);
         break;
       default:
-        print('debug: Not Implemented');
+        printExtraVerbose('rootCursorVisitor: CursorKind not implemented');
     }
 
     cursor.dispose();
     parent.dispose();
   } catch (e, s) {
-    print(e);
-    print(s);
+    printError(e);
+    printError(s);
     rethrow;
   }
   return clang.CXChildVisitResult.CXChildVisit_Continue;
@@ -41,6 +42,8 @@ void _createFuncIfIncluded(Pointer<clang.CXCursor> cursor) {
   var name = cursor.spelling();
   if (data.config.functionFilters != null &&
       data.config.functionFilters.shouldInclude(name)) {
+    printVerbose("Function: ${cursor.completeStringRepr()}");
+
     data.func = Func(
       name: name,
       returnType: _getFunctionReturnType(cursor),

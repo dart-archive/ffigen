@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
+import 'package:ffigen/src/print.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
 import '../clang_bindings/clang_constants.dart' as clang;
@@ -13,7 +14,7 @@ import '../data.dart' as data;
 int functionCursorVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
   try {
-    print('  debug functionCursorVisitor: ${cursor.completeStringRepr()}');
+    printExtraVerbose('--functionCursorVisitor: ${cursor.completeStringRepr()}');
     switch (clang.clang_getCursorKind_wrap(cursor)) {
       case clang.CXCursorKind.CXCursor_ParmDecl:
         _addParameterToLastFunc(cursor);
@@ -22,8 +23,8 @@ int functionCursorVisitor(Pointer<clang.CXCursor> cursor,
     cursor.dispose();
     parent.dispose();
   } catch (e, s) {
-    print(e);
-    print(s);
+    printError(e);
+    printError(s);
     rethrow;
   }
   return clang.CXChildVisitResult.CXChildVisit_Continue;

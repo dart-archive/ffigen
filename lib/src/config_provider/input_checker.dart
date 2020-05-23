@@ -4,6 +4,7 @@ library input_checker;
 
 import 'dart:io';
 
+import 'package:ffigen/src/print.dart';
 import 'package:yaml/yaml.dart';
 import '../strings.dart' as strings;
 
@@ -21,15 +22,15 @@ CheckerResult checkYaml(YamlMap map) {
   // validate libclang_dylib_path attribute
   if (map.containsKey(strings.libclang_dylib)) {
     if (map[strings.libclang_dylib] is! String) {
-      print(
+      printError(
           'Error: Expected value of key=${strings.libclang_dylib} to be a string');
       _setResult(CheckerResult.error);
     } else if (!File(map[strings.libclang_dylib] as String).existsSync()) {
-      print('Error: ${map[strings.libclang_dylib] as String} does not exist');
+      printError('Error: ${map[strings.libclang_dylib] as String} does not exist');
       _setResult(CheckerResult.error);
     }
   } else {
-    print('Error: key ${strings.libclang_dylib} not found');
+    printError('Error: key ${strings.libclang_dylib} not found');
     _setResult(CheckerResult.error);
   }
 
@@ -38,7 +39,7 @@ CheckerResult checkYaml(YamlMap map) {
   // validate compiler-opts
   if (map.containsKey(strings.compilerOpts) &&
       map[strings.compilerOpts] is! String) {
-    print(
+    printInfo(
         'Warning: Expected value of key=${strings.compilerOpts} to be a string, ${strings.compilerOpts} will be ignored');
     _setResult(CheckerResult.error);
   }
@@ -54,7 +55,7 @@ CheckerResult checkYaml(YamlMap map) {
     }
   }
   if (unknownopts.length > 0) {
-    print('Warning: Unknown keys found - ' + unknownopts.join(', '));
+    printInfo('Warning: Unknown keys found - ' + unknownopts.join(', '));
     _setResult(CheckerResult.warnings);
   }
 

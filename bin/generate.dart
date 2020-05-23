@@ -3,15 +3,16 @@ import 'dart:io';
 
 import 'package:ffigen/src/config_provider.dart';
 import 'package:ffigen/src/header_parser.dart' as parser;
+import 'package:ffigen/src/print.dart';
 
 import 'package:yaml/yaml.dart' as yaml;
 
 void main(List<String> args) {
   Config config;
 
-  print(args);
+  printVerbose("Cmd args: $args");
   if (args.length > 1) {
-    print("Error: Expected less than or equal to 1 command line arguments");
+    printError("Error: Expected less than or equal to 1 command line arguments");
     exit(1);
   } else if (args.length == 1) {
     config = getConfigFromCustomYaml(args[0]);
@@ -19,7 +20,7 @@ void main(List<String> args) {
     config = getConfigFromPubspec();
   }
   //TODO: debug print, delete later
-  print('debug: ' + config.toString());
+  printExtraVerbose('Config: ' + config.toString());
 
   final library = parser.parse(config);
 
@@ -28,12 +29,12 @@ void main(List<String> args) {
   //TODO: give sort option to user
   library.sort();
   library.generateFile(gen);
-  print('Finished, Bindings generated in ${gen?.absolute?.path}');
+  printInfo('Finished, Bindings generated in ${gen?.absolute?.path}');
 }
 
 Config getConfigFromPubspec() {
   var currentDir = Directory.current;
-  print('Running in ${currentDir}');
+  printInfo('Running in ${currentDir}');
 
   var pubspecName = 'pubspec.yaml';
   var configKey = 'ffigen';
@@ -41,7 +42,7 @@ Config getConfigFromPubspec() {
   var pubspecFile = File(pubspecName);
 
   if (!pubspecFile.existsSync()) {
-    print(
+    printError(
         'Error: $pubspecName not found, please run this tool from the root of your package');
     exit(1);
   }
@@ -53,7 +54,7 @@ Config getConfigFromPubspec() {
       yaml.loadYaml(pubspecFile.readAsStringSync())[configKey] as yaml.YamlMap;
 
   if (bindingsConfigMap == null) {
-    print("Couldn't find an entry for $configKey in pubspec.yaml");
+    printError("Couldn't find an entry for $configKey in pubspec.yaml");
     exit(1);
   }
   return Config.fromYaml(bindingsConfigMap);
@@ -61,12 +62,12 @@ Config getConfigFromPubspec() {
 
 Config getConfigFromCustomYaml(String yamlPath) {
   var currentDir = Directory.current;
-  print('Running in ${currentDir}');
+  printInfo('Running in ${currentDir}');
 
   var yamlFile = File(yamlPath);
 
   if (!yamlFile.existsSync()) {
-    print(
+    printError(
         'Error: $yamlPath not found, please run this tool from the root of your package');
     exit(1);
   }

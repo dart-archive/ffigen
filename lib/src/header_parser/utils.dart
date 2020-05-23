@@ -1,4 +1,6 @@
 import 'dart:ffi';
+import 'package:ffigen/src/print.dart';
+
 import 'data.dart' as data;
 
 import 'visitors/typedeclaration_visitor.dart';
@@ -136,7 +138,7 @@ String _getCodeGenTypeString(Pointer<clang.CXType> cxtype) {
       return '*' + ct;
     case clang.CXTypeKind.CXType_Typedef:
       //TODO: replace with actual type
-      print("==========================");
+      printVerbose("==========================");
       return _extractTypeString(cxtype);
     default:
       if (cxTypeKindMap.containsKey(kind)) {

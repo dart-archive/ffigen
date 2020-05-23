@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:ffigen/src/print.dart';
+
 import 'filter.dart';
 
 import '../strings.dart' as string;
@@ -30,7 +32,7 @@ class Config {
   Config.fromYaml(YamlMap ffigenMap) : headers = [] {
     var result = checkYaml(ffigenMap);
     if (result == CheckerResult.error) {
-      print('Please fix errors in Configurations and re-run the tool');
+      printError('Please fix errors in Configurations and re-run the tool');
       exit(1);
     }
     _raw = ffigenMap;
