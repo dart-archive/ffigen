@@ -1,14 +1,14 @@
 import 'dart:io';
 
+import 'package:yaml/yaml.dart';
 import 'package:ffigen/src/print.dart';
 
+
 import 'filter.dart';
-
-import '../strings.dart' as string;
 import 'header.dart';
-import 'package:yaml/yaml.dart';
-
 import 'input_checker.dart';
+import '../strings.dart' as string;
+
 
 /// Holds all configurations.
 /// and has methods to convert various configurations

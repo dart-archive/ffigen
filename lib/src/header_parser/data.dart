@@ -1,11 +1,5 @@
-/// Container for all temp data needed by parser
-///
-/// This container is needed by visitors as they are top level functions
-/// called from C code and have fixed input arguments and return value
 import 'package:ffigen/src/config_provider.dart';
+/// Holds Global shared variables
 
 /// Holds configurations
 Config config;
-
-/// Temporarily holds a typestring (used by typedeclaration visitor)
-String typeString;

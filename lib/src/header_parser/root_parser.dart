@@ -5,19 +5,19 @@ import 'package:ffigen/src/print.dart';
 
 import 'clang_bindings/clang_bindings.dart' as clang;
 import 'clang_bindings/clang_constants.dart' as clang;
+import 'sub_parsers/functiondecl_parser.dart';
+import 'sub_parsers/structdecl_parser.dart';
+import 'sub_parsers/typedefdecl_parser.dart';
 import 'utils.dart';
-import './sub_parsers/functiondecl_parser.dart';
-import './sub_parsers/structdecl_parser.dart';
-import './sub_parsers/typedefdecl_parser.dart';
 
 List<Binding> _bindings;
 
 /// Parses the root cursor and returns the generated bindings
-List<Binding> parseRootCursor(Pointer<clang.CXCursor> cursor) {
+List<Binding> parseRootCursor(Pointer<clang.CXCursor> translationUnitCursor) {
   _bindings = [];
 
   int resultCode = clang.clang_visitChildren_wrap(
-    cursor,
+    translationUnitCursor,
     Pointer.fromFunction(
         _rootCursorVisitor, clang.CXChildVisitResult.CXChildVisit_Break),
     nullptr,

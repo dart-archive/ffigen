@@ -3,10 +3,10 @@ import 'dart:ffi';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/print.dart';
 
+import '../includer.dart';
 import '../clang_bindings/clang_bindings.dart' as clang;
 import '../clang_bindings/clang_constants.dart' as clang;
 import '../utils.dart';
-import '../data.dart' as data;
 
 /// Temporarily holds a function before its returned by [parseFunctionDeclaration]
 Func _func;
@@ -16,8 +16,7 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
   _func = null;
 
   var name = cursor.spelling();
-  if (data.config.functionFilters != null &&
-      data.config.functionFilters.shouldInclude(name)) {
+  if (shouldIncludeFunc(name)) {
     printVerbose("Function: ${cursor.completeStringRepr()}");
 
     _func = Func(
@@ -48,6 +47,7 @@ void _addParameters(Pointer<clang.CXCursor> cursor) {
 /// Visitor for a function cursor [clang.CXCursorKind.CXCursor_FunctionDecl]
 ///
 /// Invoked on every function directly under rootCursor
+/// for extracting parameters
 int _functionCursorVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
   try {

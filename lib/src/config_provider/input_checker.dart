@@ -6,6 +6,7 @@ import 'dart:io';
 
 import 'package:ffigen/src/print.dart';
 import 'package:yaml/yaml.dart';
+
 import '../strings.dart' as strings;
 
 enum CheckerResult {
@@ -26,7 +27,8 @@ CheckerResult checkYaml(YamlMap map) {
           'Error: Expected value of key=${strings.libclang_dylib} to be a string');
       _setResult(CheckerResult.error);
     } else if (!File(map[strings.libclang_dylib] as String).existsSync()) {
-      printError('Error: ${map[strings.libclang_dylib] as String} does not exist');
+      printError(
+          'Error: ${map[strings.libclang_dylib] as String} does not exist');
       _setResult(CheckerResult.error);
     }
   } else {

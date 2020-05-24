@@ -1,17 +1,12 @@
 import 'dart:ffi';
-import 'package:ffigen/src/print.dart';
 
-import 'data.dart' as data;
-
-import 'visitors/typedeclaration_visitor.dart';
-
-import 'cxtypekindmap.dart';
+import 'package:ffi/ffi.dart';
+import 'package:ffigen/src/code_generator.dart';
 
 import 'clang_bindings/clang_bindings.dart' as clang;
 import 'clang_bindings/clang_constants.dart' as clang;
-import 'package:ffi/ffi.dart';
+import 'type_extractor/extractor.dart';
 
-import 'package:ffigen/src/code_generator.dart';
 
 /// Check resultCode of [clang.clang_visitChildren_wrap]
 /// Throws exception if resultCode is not 0
@@ -82,12 +77,12 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
 extension CXTypeExt on Pointer<clang.CXType> {
   /// Get code_gen [Type] representation of [clang.CXType]
   Type toCodeGenType() {
-    return Type(_getCodeGenTypeString(this));
+    return getCodeGenType(this);
   }
 
   /// Get code_gen [Type] representation of [clang.CXType] and dispose the type
   Type toCodeGenTypeAndDispose() {
-    var t = Type(_getCodeGenTypeString(this));
+    var t = getCodeGenType(this);
     this.dispose();
     return t;
   }
@@ -124,47 +119,6 @@ extension CXStringExt on Pointer<clang.CXString> {
   void dispose() {
     clang.clang_disposeString_wrap(this);
   }
-}
-
-/// converts cxtype to a typestring code_generator can accept
-String _getCodeGenTypeString(Pointer<clang.CXType> cxtype) {
-  int kind = cxtype.kind();
-
-  switch (kind) {
-    case clang.CXTypeKind.CXType_Pointer:
-      var pt = clang.clang_getPointeeType_wrap(cxtype);
-      var ct = _getCodeGenTypeString(pt);
-      pt.dispose();
-      return '*' + ct;
-    case clang.CXTypeKind.CXType_Typedef:
-      //TODO: replace with actual type
-      return _extractTypeString(cxtype);
-    default:
-      if (cxTypeKindMap.containsKey(kind)) {
-        return cxTypeKindMap[kind];
-      } else {
-        throw Exception(
-            'Type not implemented, cxtypekind: ${cxtype.kind()}, speling: ${cxtype.spelling()}');
-      }
-  }
-}
-
-String _extractTypeString(Pointer<clang.CXType> cxtype) {
-  var cursor = clang.clang_getTypeDeclaration_wrap(cxtype);
-
-  /// stores result in [data.typestring]
-  int resultCode = clang.clang_visitChildren_wrap(
-    cursor,
-    Pointer.fromFunction(
-      typedeclarationCursorVisitor,
-      clang.CXChildVisitResult.CXChildVisit_Break,
-    ),
-    nullptr,
-  );
-
-  visitChildrenResultChecker(resultCode);
-  cursor.dispose();
-  return data.typeString;
 }
 
 // Converts a List<String> to Pointer<Pointer<Utf8>>

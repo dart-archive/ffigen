@@ -1,6 +1,6 @@
-import 'constants.dart';
 import 'package:meta/meta.dart';
 
+import 'constants.dart';
 import 'writer.dart';
 import 'binding.dart';
 import 'binding_string.dart';

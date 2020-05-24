@@ -1,13 +1,13 @@
 import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
+import 'package:ffigen/src/print.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
 import '../clang_bindings/clang_constants.dart' as clang;
+import '../sub_parsers/structdecl_parser.dart';
 import '../utils.dart';
 
-import '../sub_parsers/structdecl_parser.dart';
-import 'package:ffigen/src/print.dart';
 
 /// Temporarily holds a binding before its returned by [parseTypedefDeclaration]
 Binding _binding;
