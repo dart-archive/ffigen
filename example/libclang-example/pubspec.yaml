@@ -27,7 +27,7 @@ ffigen:
       exclude:
         matches:
         # # should be valid regexp
-          - '.*CursorKind.*'
+          # - '.*CursorKind.*'
         names:
         # # should match exact function name
           # - 'clang_getCursorKind_wrap'
@@ -36,3 +36,4 @@ ffigen:
         names:
         # should match exact struct name
           - 'CXString'
+          - 'CXUnsavedFile'

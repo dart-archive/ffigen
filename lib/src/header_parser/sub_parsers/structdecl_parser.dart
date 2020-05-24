@@ -9,7 +9,7 @@ import '../utils.dart';
 import '../data.dart' as data;
 
 /// Temporarily holds a struc before its returned by [parseStructDeclaration]
-Struc struc;
+Struc _struc;
 
 /// Parses a struct declaration
 Struc parseStructDeclaration(
@@ -18,6 +18,7 @@ Struc parseStructDeclaration(
   /// Optionally provide name (useful in case struct is inside a typedef)
   String name,
 }) {
+  _struc = null;
   if (name == null && cursor.spelling() == '') {
     printExtraVerbose('unnamed structure declaration');
   }
@@ -27,10 +28,8 @@ Struc parseStructDeclaration(
     printVerbose(
         "Structure: name:${structName} ${cursor.completeStringRepr()}");
     // TODO: also parse struct fields
-    struc = Struc(name: structName);
+    _struc = Struc(name: structName);
   }
 
-  var s = struc;
-  struc = null;
-  return s;
+  return _struc;
 }

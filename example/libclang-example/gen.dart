@@ -12,6 +12,8 @@ void init(ffi.DynamicLibrary dylib) {
 
 class CXString extends ffi.Struct {}
 
+class CXUnsavedFile extends ffi.Struct {}
+
 ffi.Pointer<ffi2.Utf8> clang_getCString_wrap(
   ffi.Pointer<CXString> string,
 ) {

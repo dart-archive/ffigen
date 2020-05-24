@@ -3,12 +3,12 @@ import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/config_provider.dart';
+import 'package:ffigen/src/header_parser/root_parser.dart';
 import 'package:ffigen/src/print.dart';
 
 import 'clang_bindings/clang_bindings.dart' as clang;
 import 'clang_bindings/clang_constants.dart' as clang;
 import 'utils.dart';
-import 'visitors/root_visitor.dart';
 
 // Holds all global data
 import 'data.dart' as data;
@@ -29,7 +29,6 @@ Library parse(Config conf) {
 /// initialises parser, clears any previous values
 void initParser(Config c) {
   data.config = c;
-  data.bindings = <Binding>[];
 
   // TODO: implement for platforms other than linux
   clang.init(DynamicLibrary.open(data.config.libclang_dylib_path));
@@ -72,19 +71,12 @@ List<Binding> parseAndGenerateBindings() {
   printVerbose('TU diagnostics:\n' + getTUDiagnostic(tu));
   var rootCursor = clang.clang_getTranslationUnitCursor_wrap(tu);
 
-  int resultCode = clang.clang_visitChildren_wrap(
-    rootCursor,
-    Pointer.fromFunction(
-        rootCursorVisitor, clang.CXChildVisitResult.CXChildVisit_Break),
-    nullptr,
-  );
-
-  visitChildrenResultChecker(resultCode);
+  var bindings = parseRootCursor(rootCursor);
 
   // cleanup
   rootCursor.dispose();
   clang.clang_disposeTranslationUnit(tu);
   clang.clang_disposeIndex(index);
 
-  return data.bindings;
+  return bindings;
 }
