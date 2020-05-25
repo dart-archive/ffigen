@@ -8,6 +8,7 @@ import 'clang_bindings/clang_constants.dart' as clang;
 import 'sub_parsers/functiondecl_parser.dart';
 import 'sub_parsers/structdecl_parser.dart';
 import 'sub_parsers/typedefdecl_parser.dart';
+import 'sub_parsers/enumdecl_parser.dart';
 import 'utils.dart';
 
 List<Binding> _bindings;
@@ -45,6 +46,9 @@ int _rootCursorVisitor(Pointer<clang.CXCursor> cursor,
         break;
       case clang.CXCursorKind.CXCursor_StructDecl:
         _addToBindings(parseStructDeclaration(cursor));
+        break;
+      case clang.CXCursorKind.CXCursor_EnumDecl:
+        _addToBindings(parseEnumDeclaration(cursor));
         break;
       default:
         printExtraVerbose('rootCursorVisitor: CursorKind not implemented');

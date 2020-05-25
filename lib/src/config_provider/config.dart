@@ -3,12 +3,10 @@ import 'dart:io';
 import 'package:yaml/yaml.dart';
 import 'package:ffigen/src/print.dart';
 
-
 import 'filter.dart';
 import 'header.dart';
 import 'input_checker.dart';
 import '../strings.dart' as string;
-
 
 /// Holds all configurations.
 /// and has methods to convert various configurations
@@ -30,6 +28,9 @@ class Config {
 
   // Filter for structs
   Filter structFilters;
+
+  // Filter for enumClass
+  Filter enumClassFilters;
 
   /// [ffigenMap] has required configurations
   Config.fromYaml(YamlMap ffigenMap) : headers = [] {
@@ -64,6 +65,12 @@ class Config {
       var structs = filters[string.structs] as YamlMap;
       if (structs != null) {
         structFilters = _extractFilter(structs);
+      }
+
+      // Add filter for enums from yaml
+      var enums = filters[string.enums] as YamlMap;
+      if (enums != null) {
+        enumClassFilters = _extractFilter(enums);
       }
     }
   }

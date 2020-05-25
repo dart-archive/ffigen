@@ -216,4 +216,9 @@ CXCursor *clang_Cursor_getArgument_wrap(CXCursor *cursor, unsigned i)
     return ptrToCXCursor(clang_Cursor_getArgument(*cursor, i));
 }
 
+long long clang_getEnumConstantDeclValue_wrap(CXCursor *cursor)
+{
+    return clang_getEnumConstantDeclValue(*cursor);
+}
+
 // END ===== WRAPPER FUNCTIONS =====================

@@ -404,6 +404,17 @@ final functionAndTypedefsList = <Binding>[
     ],
     returnType: Type('*$_cxCursor'),
   ),
+  Func(
+    dartDoc: '',
+    name: 'clang_getEnumConstantDeclValue_wrap',
+    parameters: [
+      Parameter(
+        name: 'cursor',
+        type: Type('*$_cxCursor'),
+      ),
+    ],
+    returnType: Type('int64'),
+  ),
 ];
 
 final structList = <Binding>[

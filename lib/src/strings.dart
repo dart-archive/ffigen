@@ -6,6 +6,7 @@ const filters = 'filters';
 // subfields of filter
 const functions = 'functions';
 const structs = 'structs';
+const enums = 'enums';
 
 // sub-subfields of filter (declared just above)
 const include = 'include';

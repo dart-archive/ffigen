@@ -5,6 +5,7 @@ import 'data.dart';
 // Stores binding names already scene
 Set<String> _structs = {};
 Set<String> _functions = {};
+Set<String> _enumClass = {};
 
 bool shouldIncludeStruct(String name) {
   if (_structs.contains(name) || name == '') {
@@ -26,6 +27,19 @@ bool shouldIncludeFunc(String name) {
     return true;
   } else if (config.functionFilters.shouldInclude(name)) {
     _functions.add(name);
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool shouldIncludeEnumClass(String name) {
+  if (_enumClass.contains(name) || name == '') {
+    return false;
+  } else if (config.enumClassFilters == null) {
+    return true;
+  } else if (config.enumClassFilters.shouldInclude(name)) {
+    _enumClass.add(name);
     return true;
   } else {
     return false;

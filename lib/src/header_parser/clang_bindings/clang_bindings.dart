@@ -403,6 +403,29 @@ typedef _dart_clang_getDiagnostic = ffi.Pointer<ffi.Void> Function(
 );
 
 ///
+int clang_getEnumConstantDeclValue_wrap(
+  ffi.Pointer<CXCursor> cursor,
+) {
+  return _clang_getEnumConstantDeclValue_wrap(
+    cursor,
+  );
+}
+
+final _dart_clang_getEnumConstantDeclValue_wrap
+    _clang_getEnumConstantDeclValue_wrap = _dylib.lookupFunction<
+            _c_clang_getEnumConstantDeclValue_wrap,
+            _dart_clang_getEnumConstantDeclValue_wrap>(
+        'clang_getEnumConstantDeclValue_wrap');
+
+typedef _c_clang_getEnumConstantDeclValue_wrap = ffi.Int64 Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _dart_clang_getEnumConstantDeclValue_wrap = int Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+///
 int clang_getNumDiagnostics(
   ffi.Pointer<CXTranslationUnitImpl> cxtranslationunit,
 ) {
