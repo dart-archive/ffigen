@@ -43,3 +43,4 @@ ffigen:
       include:
         names:
           - 'CXTypeKind'
+          - 'CXGlobalOptFlags'

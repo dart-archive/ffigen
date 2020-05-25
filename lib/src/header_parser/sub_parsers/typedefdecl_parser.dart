@@ -6,8 +6,8 @@ import 'package:ffigen/src/print.dart';
 import '../clang_bindings/clang_bindings.dart' as clang;
 import '../clang_bindings/clang_constants.dart' as clang;
 import '../sub_parsers/structdecl_parser.dart';
+import '../sub_parsers/enumdecl_parser.dart';
 import '../utils.dart';
-
 
 /// Temporarily holds a binding before its returned by [parseTypedefDeclaration]
 Binding _binding;
@@ -47,6 +47,9 @@ int _typedefdeclarationCursorVisitor(Pointer<clang.CXCursor> cursor,
     switch (clang.clang_getCursorKind_wrap(cursor)) {
       case clang.CXCursorKind.CXCursor_StructDecl:
         _binding = parseStructDeclaration(cursor, name: _typedefName);
+        break;
+      case clang.CXCursorKind.CXCursor_EnumDecl:
+        _binding = parseEnumDeclaration(cursor, name: _typedefName);
         break;
       default:
         printExtraVerbose(

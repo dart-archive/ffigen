@@ -10,6 +10,13 @@ void init(ffi.DynamicLibrary dylib) {
   _dylib = dylib;
 }
 
+class CXGlobalOptFlags {
+  static const int CXGlobalOpt_None = 0;
+  static const int CXGlobalOpt_ThreadBackgroundPriorityForIndexing = 1;
+  static const int CXGlobalOpt_ThreadBackgroundPriorityForEditing = 2;
+  static const int CXGlobalOpt_ThreadBackgroundPriorityForAll = 3;
+}
+
 class CXTypeKind {
   static const int CXType_Invalid = 0;
   static const int CXType_Unexposed = 1;

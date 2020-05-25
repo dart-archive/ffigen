@@ -12,15 +12,22 @@ import '../utils.dart';
 EnumClass _enumClass;
 
 /// Parses a function declaration
-EnumClass parseEnumDeclaration(Pointer<clang.CXCursor> cursor) {
+EnumClass parseEnumDeclaration(
+  Pointer<clang.CXCursor> cursor, {
+
+  /// Optionally provide name (useful in case struct is inside a typedef)
+  String name,
+}) {
   _enumClass = null;
 
-  var name = cursor.spelling();
-  if (shouldIncludeEnumClass(name)) {
+  var enumName = name ?? cursor.spelling();
+  if (enumName == '') {
+    printExtraVerbose('unnamed enum declaration');
+  } else if (shouldIncludeEnumClass(enumName)) {
     printVerbose("Enum: ${cursor.completeStringRepr()}");
 
     _enumClass = EnumClass(
-      name: name,
+      name: enumName,
     );
     _addEnumConstant(cursor);
   }

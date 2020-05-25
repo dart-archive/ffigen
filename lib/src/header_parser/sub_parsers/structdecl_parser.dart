@@ -19,16 +19,16 @@ Struc parseStructDeclaration(
   String name,
 }) {
   _struc = null;
-  if (name == null && cursor.spelling() == '') {
+  String structName = name ?? cursor.spelling();
+
+  if (structName == '') {
     printExtraVerbose('unnamed structure declaration');
-  } else {
-    String structName = name ?? cursor.spelling();
-    if (shouldIncludeStruct(structName)) {
-      printVerbose(
-          "Structure: name:${structName} ${cursor.completeStringRepr()}");
-      // TODO: also parse struct fields
-      _struc = Struc(name: structName);
-    }
+  } else if (shouldIncludeStruct(structName)) {
+    printVerbose(
+        "Structure: name:${structName} ${cursor.completeStringRepr()}");
+    // TODO: also parse struct fields
+    _struc = Struc(name: structName);
   }
+
   return _struc;
 }
