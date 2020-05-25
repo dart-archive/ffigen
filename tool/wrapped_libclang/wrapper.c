@@ -90,6 +90,11 @@ CXString *clang_getTypeSpelling_wrap(CXType *type)
     return ptrToCXString(clang_getTypeSpelling(*type));
 }
 
+CXString *clang_getTypeKindSpelling_wrap(enum CXTypeKind typeKind)
+{
+    return ptrToCXString(clang_getTypeKindSpelling(typeKind));
+}
+
 CXType *clang_getResultType_wrap(CXType *functionType)
 {
     return ptrToCXType(clang_getResultType(*functionType));
@@ -103,6 +108,11 @@ CXType *clang_getPointeeType_wrap(CXType *pointerType)
 CXType *clang_getCanonicalType_wrap(CXType *typerefType)
 {
     return ptrToCXType(clang_getCanonicalType(*typerefType));
+}
+
+CXType *clang_Type_getNamedType_wrap(CXType *elaboratedType)
+{
+    return ptrToCXType(clang_Type_getNamedType(*elaboratedType));
 }
 
 CXCursor *clang_getTypeDeclaration_wrap(CXType *cxtype)

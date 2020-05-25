@@ -15,76 +15,54 @@ Type getCodeGenType(Pointer<clang.CXType> cxtype) {
   return Type(_getCodeGenTypeString(cxtype));
 }
 
-// temporarily stores typestring before returning it
-String _typeString;
-
 String _getCodeGenTypeString(Pointer<clang.CXType> cxtype) {
+  printVerbose('...getCodeGenType ${cxtype.completeStringRepr()}');
   int kind = cxtype.kind();
 
   switch (kind) {
     case clang.CXTypeKind.CXType_Pointer:
       var pt = clang.clang_getPointeeType_wrap(cxtype);
-      var ct = _getCodeGenTypeString(pt);
+      var s = _getCodeGenTypeString(pt);
       pt.dispose();
-      return '*' + ct;
+      return '*' + s;
     case clang.CXTypeKind.CXType_Typedef:
-      //TODO: replace with actual type
-      return _extractfromTypedef(cxtype);
+      var ct = clang.clang_getCanonicalType_wrap(cxtype);
+      var s = _getCodeGenTypeString(ct);
+      ct.dispose();
+      return s;
+    case clang.CXTypeKind.CXType_Elaborated:
+      var et = clang.clang_Type_getNamedType_wrap(cxtype);
+      var s = _getCodeGenTypeString(et);
+      et.dispose();
+      return s;
+    case clang.CXTypeKind.CXType_Record:
+      return _extractfromRecord(cxtype);
+    case clang.CXTypeKind.CXType_Enum:
+      return 'int32';
     default:
       if (cxTypeKindMap.containsKey(kind)) {
         return cxTypeKindMap[kind];
       } else {
-        throw Exception(
-            'Type not implemented, cxtypekind: ${cxtype.kind()}, speling: ${cxtype.spelling()}');
+        throw Exception('Type not implemented, ${cxtype.completeStringRepr()}');
       }
   }
 }
 
-String _extractfromTypedef(Pointer<clang.CXType> cxtype) {
+String _extractfromRecord(Pointer<clang.CXType> cxtype) {
+  // default for detecting if not parsed correctly
+  String _typeString = 'UNPARSABLECXTYPERECORD';
   var cursor = clang.clang_getTypeDeclaration_wrap(cxtype);
+  printVerbose('----_extractfromRecord: ${cursor.completeStringRepr()}');
 
-  /// stores result in [_typestring]
-  int resultCode = clang.clang_visitChildren_wrap(
-    cursor,
-    Pointer.fromFunction(
-      _typedeclarationCursorVisitor,
-      clang.CXChildVisitResult.CXChildVisit_Break,
-    ),
-    nullptr,
-  );
-
-  visitChildrenResultChecker(resultCode);
+  switch (clang.clang_getCursorKind_wrap(cursor)) {
+    case clang.CXCursorKind.CXCursor_StructDecl:
+      var type = cursor.type();
+      _typeString = type.spelling();
+      type.dispose();
+      break;
+    default:
+      printVerbose('----typedeclarationCursorVisitor: Not Implemented');
+  }
   cursor.dispose();
   return _typeString;
-}
-
-/// Visitor for the TypeDeclarations to extract typestring
-/// of a [clang.CXType.CXType_Typedef]
-///
-/// visitor invoked on cursor of type declaration
-/// returned by [clang.clang_getTypeDeclaration_wrap]
-int _typedeclarationCursorVisitor(Pointer<clang.CXCursor> cursor,
-    Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
-  try {
-    printVerbose(
-        '----typedeclarationCursorVisitor: ${cursor.completeStringRepr()}');
-
-    switch (clang.clang_getCursorKind_wrap(cursor)) {
-      case clang.CXCursorKind.CXCursor_StructDecl:
-        var type = cursor.type();
-        _typeString = type.spelling();
-        type.dispose();
-        break;
-      default:
-        printVerbose('----typedeclarationCursorVisitor: Not Implemented');
-    }
-
-    cursor.dispose();
-    parent.dispose();
-  } catch (e, s) {
-    printError(e);
-    printError(s);
-    rethrow;
-  }
-  return clang.CXChildVisitResult.CXChildVisit_Continue;
 }

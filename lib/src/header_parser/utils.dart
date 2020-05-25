@@ -7,7 +7,6 @@ import 'clang_bindings/clang_bindings.dart' as clang;
 import 'clang_bindings/clang_constants.dart' as clang;
 import 'type_extractor/extractor.dart';
 
-
 /// Check resultCode of [clang.clang_visitChildren_wrap]
 /// Throws exception if resultCode is not 0
 void visitChildrenResultChecker(int resultCode) {
@@ -51,7 +50,11 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
 
   /// for debug: returns [spelling] [kind] [kindSpelling] [type] [typeSpelling]
   String completeStringRepr() {
-    return 'spelling: ${this.spelling()}, kind: ${this.kind()}, kindSpelling: ${this.kindSpelling()}, type: ${this.type().kind()}, typeSpelling: ${this.type().spelling()}';
+    var cxtype = this.type();
+    String s =
+        '(Cursor) spelling: ${this.spelling()}, kind: ${this.kind()}, kindSpelling: ${this.kindSpelling()}, type: ${cxtype.kind()}, typeSpelling: ${cxtype.spelling()}';
+    cxtype.dispose();
+    return s;
   }
 
   /// Dispose type using [type.dispose]
@@ -95,6 +98,19 @@ extension CXTypeExt on Pointer<clang.CXType> {
   /// returns the typeKind int from [clang.CXTypeKind]
   int kind() {
     return this.ref.kind;
+  }
+
+  String kindSpelling() {
+    return clang
+        .clang_getTypeKindSpelling_wrap(this.kind())
+        .toStringAndDispose();
+  }
+
+  /// for debug: returns [spelling] [kind] [kindSpelling]
+  String completeStringRepr() {
+    String s =
+        '(Type) spelling: ${this.spelling()}, kind: ${this.kind()}, kindSpelling: ${this.kindSpelling()}';
+    return s;
   }
 
   void dispose() {

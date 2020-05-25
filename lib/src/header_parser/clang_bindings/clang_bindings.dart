@@ -80,6 +80,27 @@ typedef _dart_clang_Cursor_getNumArguments_wrap = int Function(
   ffi.Pointer<CXCursor> cursor,
 );
 
+/// Free cxtype after use
+ffi.Pointer<CXType> clang_Type_getNamedType_wrap(
+  ffi.Pointer<CXType> elaboratedType,
+) {
+  return _clang_Type_getNamedType_wrap(
+    elaboratedType,
+  );
+}
+
+final _dart_clang_Type_getNamedType_wrap _clang_Type_getNamedType_wrap =
+    _dylib.lookupFunction<_c_clang_Type_getNamedType_wrap,
+        _dart_clang_Type_getNamedType_wrap>('clang_Type_getNamedType_wrap');
+
+typedef _c_clang_Type_getNamedType_wrap = ffi.Pointer<CXType> Function(
+  ffi.Pointer<CXType> elaboratedType,
+);
+
+typedef _dart_clang_Type_getNamedType_wrap = ffi.Pointer<CXType> Function(
+  ffi.Pointer<CXType> elaboratedType,
+);
+
 /// Dispose index using [clang_disposeIndex]
 ffi.Pointer<ffi.Void> clang_createIndex(
   int excludeDeclarationsFromPCH,
@@ -487,6 +508,27 @@ typedef _c_clang_getTypeDeclaration_wrap = ffi.Pointer<CXCursor> Function(
 
 typedef _dart_clang_getTypeDeclaration_wrap = ffi.Pointer<CXCursor> Function(
   ffi.Pointer<CXType> cxtype,
+);
+
+/// Dispose CXString after use
+ffi.Pointer<CXString> clang_getTypeKindSpelling_wrap(
+  int typeKind,
+) {
+  return _clang_getTypeKindSpelling_wrap(
+    typeKind,
+  );
+}
+
+final _dart_clang_getTypeKindSpelling_wrap _clang_getTypeKindSpelling_wrap =
+    _dylib.lookupFunction<_c_clang_getTypeKindSpelling_wrap,
+        _dart_clang_getTypeKindSpelling_wrap>('clang_getTypeKindSpelling_wrap');
+
+typedef _c_clang_getTypeKindSpelling_wrap = ffi.Pointer<CXString> Function(
+  ffi.Int32 typeKind,
+);
+
+typedef _dart_clang_getTypeKindSpelling_wrap = ffi.Pointer<CXString> Function(
+  int typeKind,
 );
 
 /// Free cxtype after use, dispose CXString using [clang_disposeString_wrap]

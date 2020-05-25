@@ -18,22 +18,24 @@ ffigen:
   filters:
     functions:
       include:
-        matches:
+        # matches:
         # should be valid regexp
-          # - 'clang_.*'
+          # - 'clang_.*wrap'
         names:
         # should match exact function name
-          - 'clang_getCString_wrap'
-      exclude:
-        matches:
+          - 'clang_formatDiagnostic_wrap'
+      # exclude:
+        # matches:
         # # should be valid regexp
           # - '.*CursorKind.*'
-        names:
+        # names:
         # # should match exact function name
           # - 'clang_getCursorKind_wrap'
     structs:
       include:
-        names:
+          matches:
+            - 'CX.*'
+        # names:
         # should match exact struct name
-          - 'CXString'
-          - 'CXUnsavedFile'
+          # - 'aa'
+          # - 'CXUnsavedFile'

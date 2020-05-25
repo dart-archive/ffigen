@@ -250,6 +250,17 @@ final functionAndTypedefsList = <Binding>[
     returnType: Type('*$_cxType'),
   ),
   Func(
+    dartDoc: 'Dispose CXString after use',
+    name: 'clang_getTypeKindSpelling_wrap',
+    parameters: [
+      Parameter(
+        name: 'typeKind',
+        type: Type('int32'),
+      ),
+    ],
+    returnType: Type('*$_cxString'),
+  ),
+  Func(
     dartDoc:
         'Free cxtype after use, dispose CXString using [clang_disposeString_wrap]',
     name: 'clang_getTypeSpelling_wrap',
@@ -289,6 +300,17 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'typerefType',
+        type: Type('*$_cxType'),
+      ),
+    ],
+    returnType: Type('*$_cxType'),
+  ),
+  Func(
+    dartDoc: 'Free cxtype after use',
+    name: 'clang_Type_getNamedType_wrap',
+    parameters: [
+      Parameter(
+        name: 'elaboratedType',
         type: Type('*$_cxType'),
       ),
     ],
