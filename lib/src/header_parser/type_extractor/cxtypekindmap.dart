@@ -24,7 +24,7 @@ final cxTypeKindMap = <int, String>{
   // clang.CXTypeKind.CXType_Short: '',
   clang.CXTypeKind.CXType_Int: 'int32',
   // clang.CXTypeKind.CXType_Long: '',
-  // clang.CXTypeKind.CXType_LongLong: '',
+  clang.CXTypeKind.CXType_LongLong: 'int64',
   // clang.CXTypeKind.CXType_Int128: '',
   clang.CXTypeKind.CXType_Float: 'float',
   clang.CXTypeKind.CXType_Double: 'double',

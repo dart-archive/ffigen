@@ -12,7 +12,7 @@ import '../utils.dart';
 /// Temporarily holds a binding before its returned by [parseTypedefDeclaration]
 Binding _binding;
 
-/// Temporarily holds parent cursor name (used in typedefdecl_visitor.dart)
+/// Temporarily holds parent cursor name
 String _typedefName;
 
 /// Parses a typedef declaration

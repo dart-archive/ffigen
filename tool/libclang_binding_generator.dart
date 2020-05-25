@@ -415,6 +415,17 @@ final functionAndTypedefsList = <Binding>[
     ],
     returnType: Type('int64'),
   ),
+  Func(
+    dartDoc: '',
+    name: 'clang_Cursor_getBriefCommentText_wrap',
+    parameters: [
+      Parameter(
+        name: 'cursor',
+        type: Type('*$_cxCursor'),
+      ),
+    ],
+    returnType: Type('*$_cxString'),
+  ),
 ];
 
 final structList = <Binding>[

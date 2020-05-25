@@ -75,6 +75,8 @@ int _enumCursorVisitor(Pointer<clang.CXCursor> cursor,
 void _addEnumConstantToEnumClass(Pointer<clang.CXCursor> cursor) {
   _enumClass.enumConstants.add(
     EnumConstant(
+        // Extracting doc comment doesn't always give the right comment
+        // so we are skipping dartdoc for individual enum constants
         name: cursor.spelling(),
         value: clang.clang_getEnumConstantDeclValue_wrap(cursor)),
   );

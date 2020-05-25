@@ -27,7 +27,12 @@ Struc parseStructDeclaration(
     printVerbose(
         "Structure: name:${structName} ${cursor.completeStringRepr()}");
     // TODO: also parse struct fields
-    _struc = Struc(name: structName);
+    _struc = Struc(
+      dartDoc: clang
+          .clang_Cursor_getBriefCommentText_wrap(cursor)
+          .toStringAndDispose(),
+      name: structName,
+    );
   }
 
   return _struc;

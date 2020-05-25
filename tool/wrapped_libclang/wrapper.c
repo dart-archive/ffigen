@@ -125,6 +125,7 @@ CXType *clang_getTypedefDeclUnderlyingType_wrap(CXCursor *cxcursor)
     return ptrToCXType(clang_getTypedefDeclUnderlyingType(*cxcursor));
 }
 
+/** The name of parameter, struct, typedef */
 CXString *clang_getCursorSpelling_wrap(CXCursor *cursor)
 {
     return ptrToCXString(clang_getCursorSpelling(*cursor));
@@ -196,8 +197,8 @@ _visitorwrap(CXCursor cursor, CXCursor parent, CXClientData clientData)
     return e;
 }
 
-// visitor is a function pointer with parameters having pointers to cxcursor
-// instead of cxcursor by default
+/** visitor is a function pointer with parameters having pointers to cxcursor
+* instead of cxcursor by default*/
 unsigned clang_visitChildren_wrap(CXCursor *parent, ModifiedCXCursorVisitor _modifiedVisitor, CXClientData clientData)
 {
     _push(_modifiedVisitor);
@@ -219,6 +220,12 @@ CXCursor *clang_Cursor_getArgument_wrap(CXCursor *cursor, unsigned i)
 long long clang_getEnumConstantDeclValue_wrap(CXCursor *cursor)
 {
     return clang_getEnumConstantDeclValue(*cursor);
+}
+
+/** Returns the first paragraph of doxygen doc comment */
+CXString *clang_Cursor_getBriefCommentText_wrap(CXCursor *cursor)
+{
+    return ptrToCXString(clang_Cursor_getBriefCommentText(*cursor));
 }
 
 // END ===== WRAPPER FUNCTIONS =====================

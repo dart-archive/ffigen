@@ -20,6 +20,9 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
     printVerbose("Function: ${cursor.completeStringRepr()}");
 
     _func = Func(
+      dartDoc: clang
+          .clang_Cursor_getBriefCommentText_wrap(cursor)
+          .toStringAndDispose(),
       name: name,
       returnType: _getFunctionReturnType(cursor),
     );

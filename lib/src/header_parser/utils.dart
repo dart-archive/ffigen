@@ -121,13 +121,18 @@ extension CXTypeExt on Pointer<clang.CXType> {
 extension CXStringExt on Pointer<clang.CXString> {
   /// Dispose CXstring using dispose
   String string() {
-    return Utf8.fromUtf8(clang.clang_getCString_wrap(this));
+    String s;
+    var cstring = clang.clang_getCString_wrap(this);
+    if (cstring != nullptr) {
+      s = Utf8.fromUtf8(cstring);
+    }
+    return s;
   }
 
   /// Converts CXString to dart string and disposes CXString
   String toStringAndDispose() {
     // Note: clang_getCString_wrap returns a const char *, calling free will result in error
-    var s = Utf8.fromUtf8(clang.clang_getCString_wrap(this));
+    String s = this.string();
     clang.clang_disposeString_wrap(this);
     return s;
   }

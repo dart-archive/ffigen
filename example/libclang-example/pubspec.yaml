@@ -18,12 +18,12 @@ ffigen:
   filters:
     functions:
       include:
-        # matches:
+        matches:
         # should be valid regexp
-          # - 'clang_.*wrap'
-        names:
+          - 'clang_.*wrap'
+        # names:
         # should match exact function name
-          - 'aaa'
+          # - 'aaa'
       exclude:
         # matches:
         # # should be valid regexp
@@ -33,11 +33,11 @@ ffigen:
           - 'clang_visitChildren_wrap'
     structs:
       include:
-          # matches:
-            # - 'CX.*'
-        names:
+          matches:
+            - 'CX.*'
+        # names:
         # should match exact struct name
-          - 'aa'
+          # - 'aa'
           # - 'CXUnsavedFile'
     enums:
       include:
