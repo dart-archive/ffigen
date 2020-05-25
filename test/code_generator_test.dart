@@ -372,9 +372,7 @@ const double test2 = 20.0;
             name: 'test1',
             returnType: Type('int32'),
           ),
-          Struc(
-            name: 'SomeStruct'
-          ),
+          Struc(name: 'SomeStruct'),
           TypedefC(
             name: 'test2',
             returnType: Type('*int32'),
@@ -420,6 +418,49 @@ typedef test2 = ffi.Pointer<ffi.Int32> Function(
   ffi.Pointer<SomeStruct> param1,
   ffi.Uint8 param2,
 );
+
+''');
+    });
+
+    test('enum_class', () {
+      final library = Library(
+        bindings: [
+          EnumClass(
+            name: 'Constants',
+            dartDoc: 'test line 1\ntest line 2',
+            enumConstants: [
+              EnumConstant(name: 'a', value: 10),
+              EnumConstant(name: 'b', value: -1, dartDoc: 'negative'),
+            ],
+          ),
+        ],
+      );
+
+      var gen = library.toString();
+
+      // writing to file for debug purpose
+      File(
+        'test/debug_generated/enum-class-test-output.dart',
+      )..writeAsStringSync(gen);
+
+      expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
+import 'dart:ffi' as ffi;
+import 'package:ffi/ffi.dart' as ffi2;
+
+/// Dynamic library
+ffi.DynamicLibrary _dylib;
+
+/// Initialises dynamic library
+void init(ffi.DynamicLibrary dylib){
+  _dylib = dylib;
+}
+/// test line 1
+/// test line 2
+class Constants {
+  static const int a = 10;
+  /// negative
+  static const int b = -1;
+}
 
 ''');
     });
