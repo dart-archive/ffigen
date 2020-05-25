@@ -57,7 +57,10 @@ String _extractfromRecord(Pointer<clang.CXType> cxtype) {
   switch (clang.clang_getCursorKind_wrap(cursor)) {
     case clang.CXCursorKind.CXCursor_StructDecl:
       var type = cursor.type();
-      _typeString = type.spelling();
+      _typeString = cursor.spelling();
+      if (_typeString == '') { // incase of anonymous structs defined inside a typedef 
+        _typeString = type.spelling();
+      }
       type.dispose();
       break;
     default:

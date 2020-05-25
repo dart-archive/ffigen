@@ -18,19 +18,19 @@ ffigen:
   filters:
     functions:
       include:
-        # matches:
+        matches:
         # should be valid regexp
-          # - 'clang_.*wrap'
-        names:
+          - 'clang_.*wrap'
+        # names:
         # should match exact function name
-          - 'clang_formatDiagnostic_wrap'
-      # exclude:
+          # - 'clang_getTranslationUnitCursor_wrap'
+      exclude:
         # matches:
         # # should be valid regexp
           # - '.*CursorKind.*'
-        # names:
+        names:
         # # should match exact function name
-          # - 'clang_getCursorKind_wrap'
+          - 'clang_visitChildren_wrap'
     structs:
       include:
           matches:
