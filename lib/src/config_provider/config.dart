@@ -1,12 +1,14 @@
 import 'dart:io';
 
+import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart';
-import 'package:ffigen/src/print.dart';
 
 import 'filter.dart';
 import 'header.dart';
 import 'input_checker.dart';
 import '../strings.dart' as string;
+
+var _logger = Logger('config_provider');
 
 /// Holds all configurations.
 /// and has methods to convert various configurations
@@ -36,7 +38,7 @@ class Config {
   Config.fromYaml(YamlMap ffigenMap) : headers = [] {
     var result = checkYaml(ffigenMap);
     if (result == CheckerResult.error) {
-      printError('Please fix errors in Configurations and re-run the tool');
+      _logger.severe('Please fix errors in Configurations and re-run the tool');
       exit(1);
     }
     _raw = ffigenMap;

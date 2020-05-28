@@ -4,7 +4,7 @@ import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/config_provider.dart';
 import 'package:ffigen/src/header_parser/root_parser.dart';
-import 'package:ffigen/src/print.dart';
+import 'package:logging/logging.dart';
 
 import 'clang_bindings/clang_bindings.dart' as clang;
 import 'clang_bindings/clang_constants.dart' as clang;
@@ -25,6 +25,8 @@ Library parse(Config conf) {
 // ===================================================================================
 //           BELOW FUNCTIONS ARE MEANT FOR INTERNAL USE AND TESTING
 // ===================================================================================
+
+var _logger = Logger('parser:parser');
 
 /// initialises parser, clears any previous values
 void initParser(Config c) {
@@ -68,7 +70,7 @@ List<Binding> parseAndGenerateBindings() {
     throw Exception('Error creating translation Unit');
   }
 
-  printVerbose('TU diagnostics:\n' + getTUDiagnostic(tu));
+  _logger.fine('TU diagnostics:\n' + getTUDiagnostic(tu));
   var rootCursor = clang.clang_getTranslationUnitCursor_wrap(tu);
 
   var bindings = parseRootCursor(rootCursor);

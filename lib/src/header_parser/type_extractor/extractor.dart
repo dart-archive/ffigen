@@ -2,21 +2,22 @@
 import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/print.dart';
+import 'package:logging/logging.dart';
 
 import '../type_extractor/cxtypekindmap.dart';
 import '../clang_bindings/clang_bindings.dart' as clang;
 import '../clang_bindings/clang_constants.dart' as clang;
 import '../utils.dart';
 
-/// converts cxtype to a typestring code_generator can accept
+var _logger = Logger('parser:extractor');
 
+/// converts cxtype to a typestring code_generator can accept
 Type getCodeGenType(Pointer<clang.CXType> cxtype) {
   return Type(_getCodeGenTypeString(cxtype));
 }
 
 String _getCodeGenTypeString(Pointer<clang.CXType> cxtype) {
-  printVerbose('...getCodeGenType ${cxtype.completeStringRepr()}');
+  _logger.fine('...getCodeGenType ${cxtype.completeStringRepr()}');
   int kind = cxtype.kind();
 
   switch (kind) {
@@ -52,19 +53,20 @@ String _extractfromRecord(Pointer<clang.CXType> cxtype) {
   // default for detecting if not parsed correctly
   String _typeString = 'UNPARSABLECXTYPERECORD';
   var cursor = clang.clang_getTypeDeclaration_wrap(cxtype);
-  printVerbose('----_extractfromRecord: ${cursor.completeStringRepr()}');
+  _logger.fine('----_extractfromRecord: ${cursor.completeStringRepr()}');
 
   switch (clang.clang_getCursorKind_wrap(cursor)) {
     case clang.CXCursorKind.CXCursor_StructDecl:
       var type = cursor.type();
       _typeString = cursor.spelling();
-      if (_typeString == '') { // incase of anonymous structs defined inside a typedef 
+      if (_typeString == '') {
+        // incase of anonymous structs defined inside a typedef
         _typeString = type.spelling();
       }
       type.dispose();
       break;
     default:
-      printVerbose('----typedeclarationCursorVisitor: Not Implemented');
+      _logger.fine('----typedeclarationCursorVisitor: Not Implemented');
   }
   cursor.dispose();
   return _typeString;

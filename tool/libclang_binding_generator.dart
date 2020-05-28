@@ -3,7 +3,7 @@
 import 'dart:io';
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/print.dart';
+import 'package:logging/logging.dart';
 
 const _voidPointer = '*void';
 const _charPointer = '*utf8';
@@ -19,6 +19,8 @@ const _cxCursor = 'CXCursor';
 const _cxType = 'CXType';
 
 const _cxindex = _voidPointer;
+
+var _logger = Logger('tool:libclang_binding_generator');
 void main() {
   final library = Library(
       bindings: bindings,
@@ -31,7 +33,7 @@ void main() {
   // Generates bindings for libclang wrapper
   library.generateFile(f);
 
-  printInfo("Generated bindings: ${f.absolute.path}");
+  _logger.info("Generated bindings: ${f.absolute.path}");
 }
 
 final bindings = <Binding>[

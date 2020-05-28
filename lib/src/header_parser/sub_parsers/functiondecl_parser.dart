@@ -1,12 +1,14 @@
 import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/print.dart';
+import 'package:logging/logging.dart';
 
 import '../includer.dart';
 import '../clang_bindings/clang_bindings.dart' as clang;
 import '../clang_bindings/clang_constants.dart' as clang;
 import '../utils.dart';
+
+var _logger = Logger('parser:functiondecl_parser');
 
 /// Temporarily holds a function before its returned by [parseFunctionDeclaration]
 Func _func;
@@ -17,7 +19,7 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
 
   var name = cursor.spelling();
   if (shouldIncludeFunc(name)) {
-    printVerbose("Function: ${cursor.completeStringRepr()}");
+    _logger.fine("Function: ${cursor.completeStringRepr()}");
 
     _func = Func(
       dartDoc: clang
@@ -54,8 +56,7 @@ void _addParameters(Pointer<clang.CXCursor> cursor) {
 int _functionCursorVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
   try {
-    printExtraVerbose(
-        '--functionCursorVisitor: ${cursor.completeStringRepr()}');
+    _logger.finest('--functionCursorVisitor: ${cursor.completeStringRepr()}');
     switch (clang.clang_getCursorKind_wrap(cursor)) {
       case clang.CXCursorKind.CXCursor_ParmDecl:
         _addParameterToFunc(cursor);
@@ -64,8 +65,8 @@ int _functionCursorVisitor(Pointer<clang.CXCursor> cursor,
     cursor.dispose();
     parent.dispose();
   } catch (e, s) {
-    printError(e);
-    printError(s);
+    _logger.severe(e);
+    _logger.severe(s);
     rethrow;
   }
   return clang.CXChildVisitResult.CXChildVisit_Continue;

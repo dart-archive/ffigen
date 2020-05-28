@@ -1,12 +1,14 @@
 import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/print.dart';
+import 'package:logging/logging.dart';
 
 import '../includer.dart';
 import '../clang_bindings/clang_bindings.dart' as clang;
 import '../clang_bindings/clang_constants.dart' as clang;
 import '../utils.dart';
+
+var _logger = Logger('parser:enumdecl_parser');
 
 /// Temporarily holds a enumClass before its returned by [parseEnumDeclaration]
 EnumClass _enumClass;
@@ -22,10 +24,9 @@ EnumClass parseEnumDeclaration(
 
   var enumName = name ?? cursor.spelling();
   if (enumName == '') {
-    printExtraVerbose('unnamed enum declaration');
+    _logger.finest('unnamed enum declaration');
   } else if (shouldIncludeEnumClass(enumName)) {
-    printVerbose("Enum: ${cursor.completeStringRepr()}");
-
+    _logger.fine("Enum: ${cursor.completeStringRepr()}");
     _enumClass = EnumClass(
       name: enumName,
     );
@@ -53,7 +54,7 @@ void _addEnumConstant(Pointer<clang.CXCursor> cursor) {
 int _enumCursorVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
   try {
-    printExtraVerbose('--enumCursorVisitor: ${cursor.completeStringRepr()}');
+    _logger.finest('--enumCursorVisitor: ${cursor.completeStringRepr()}');
     switch (clang.clang_getCursorKind_wrap(cursor)) {
       case clang.CXCursorKind.CXCursor_EnumConstantDecl:
         _addEnumConstantToEnumClass(cursor);
@@ -64,8 +65,8 @@ int _enumCursorVisitor(Pointer<clang.CXCursor> cursor,
     cursor.dispose();
     parent.dispose();
   } catch (e, s) {
-    printError(e);
-    printError(s);
+    _logger.severe(e);
+    _logger.severe(s);
     rethrow;
   }
   return clang.CXChildVisitResult.CXChildVisit_Continue;

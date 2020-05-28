@@ -105,7 +105,6 @@ class CXTranslationUnitImpl extends ffi.Struct {}
 /// The type of an element in the abstract syntax tree.
 class CXType extends ffi.Struct {}
 
-/// Describes the kind of type
 class CXTypeKind {
   static const int CXType_Invalid = 0;
   static const int CXType_Unexposed = 1;

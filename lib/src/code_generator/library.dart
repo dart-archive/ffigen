@@ -1,10 +1,12 @@
 import 'dart:io';
 
-import 'package:ffigen/src/print.dart';
+import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 
 import 'binding.dart';
 import 'writer.dart';
+
+var _logger = Logger('code_generator');
 
 /// Definition of a Binding object.
 class Library {
@@ -56,7 +58,7 @@ class Library {
     final result = Process.runSync('dartfmt', ['-w', path],
         runInShell: Platform.isWindows);
     if (result.stderr.toString().isNotEmpty) {
-      printError(result.stderr);
+      _logger.severe(result.stderr);
     }
   }
 

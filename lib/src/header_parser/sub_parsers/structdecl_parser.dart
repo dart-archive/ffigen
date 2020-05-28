@@ -1,12 +1,14 @@
 import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/print.dart';
+import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
 import '../clang_bindings/clang_constants.dart' as clang;
 import '../includer.dart';
 import '../utils.dart';
+
+var _logger = Logger('parser:structdecl_parser');
 
 /// Temporarily holds a struc before its returned by [parseStructDeclaration]
 Struc _struc;
@@ -22,10 +24,10 @@ Struc parseStructDeclaration(
   String structName = name ?? cursor.spelling();
 
   if (structName == '') {
-    printExtraVerbose('unnamed structure declaration');
+    _logger.finest('unnamed structure declaration');
   } else if (shouldIncludeStruct(structName)) {
-    printVerbose(
-        "Structure: name:${structName} ${cursor.completeStringRepr()}");
+    _logger
+        .fine("Structure: name:${structName} ${cursor.completeStringRepr()}");
     // TODO: also parse struct fields
     _struc = Struc(
       dartDoc: clang

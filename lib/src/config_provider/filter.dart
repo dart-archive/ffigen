@@ -27,7 +27,7 @@ class Filter {
     }
   }
 
-  /// Checks if a function should be included based on config
+  /// Checks if a name should be included based on config
   bool shouldInclude(String name) {
     if (_excludeFull.contains(name)) {
       return false;

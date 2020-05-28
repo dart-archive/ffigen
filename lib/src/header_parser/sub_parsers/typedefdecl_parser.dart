@@ -1,13 +1,15 @@
 import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/print.dart';
+import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
 import '../clang_bindings/clang_constants.dart' as clang;
 import '../sub_parsers/structdecl_parser.dart';
 import '../sub_parsers/enumdecl_parser.dart';
 import '../utils.dart';
+
+var _logger = Logger('parser:typedefdecl_parser');
 
 /// Temporarily holds a binding before its returned by [parseTypedefDeclaration]
 Binding _binding;
@@ -41,7 +43,7 @@ Binding parseTypedefDeclaration(Pointer<clang.CXCursor> cursor) {
 int _typedefdeclarationCursorVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
   try {
-    printExtraVerbose(
+    _logger.finest(
         '----typedefdeclarationCursorVisitor: ${cursor.completeStringRepr()}');
 
     switch (clang.clang_getCursorKind_wrap(cursor)) {
@@ -52,15 +54,14 @@ int _typedefdeclarationCursorVisitor(Pointer<clang.CXCursor> cursor,
         _binding = parseEnumDeclaration(cursor, name: _typedefName);
         break;
       default:
-        printExtraVerbose(
-            '----typedefdeclarationCursorVisitor: Not Implemented');
+        _logger.finest('----typedefdeclarationCursorVisitor: Not Implemented');
     }
 
     cursor.dispose();
     parent.dispose();
   } catch (e, s) {
-    printError(e);
-    printError(s);
+    _logger.severe(e);
+    _logger.severe(s);
     rethrow;
   }
   return clang.CXChildVisitResult.CXChildVisit_Continue;
