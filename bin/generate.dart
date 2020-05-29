@@ -11,26 +11,26 @@ import 'package:yaml/yaml.dart' as yaml;
 var _logger = Logger('generate.dart');
 
 void main(List<String> args) {
-  Config config;
-
   var result = getArgResults(args);
   setVerbosity(result);
 
-  config = getConfig(result);
-
-  _logger.finest('Config: ' + config.toString());
+  Config config = getConfig(result);
 
   final library = parser.parse(config);
 
-  File gen = File('gen.dart');
+  File gen = File(config.output);
 
   //TODO: give sort option to user
   library.sort();
+
   library.generateFile(gen);
   _logger.info('Finished, Bindings generated in ${gen?.absolute?.path}');
 }
 
 Config getConfig(ArgResults result) {
+  var currentDir = Directory.current;
+  _logger.info('Running in ${currentDir}');
+
   if (result.wasParsed('config')) {
     return getConfigFromCustomYaml(result['config'] as String);
   } else {
@@ -39,9 +39,6 @@ Config getConfig(ArgResults result) {
 }
 
 Config getConfigFromPubspec() {
-  var currentDir = Directory.current;
-  _logger.info('Running in ${currentDir}');
-
   var pubspecName = 'pubspec.yaml';
   var configKey = 'ffigen';
 
@@ -67,9 +64,6 @@ Config getConfigFromPubspec() {
 }
 
 Config getConfigFromCustomYaml(String yamlPath) {
-  var currentDir = Directory.current;
-  _logger.info('Running in ${currentDir}');
-
   var yamlFile = File(yamlPath);
 
   if (!yamlFile.existsSync()) {

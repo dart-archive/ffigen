@@ -16,6 +16,9 @@ var _logger = Logger('config_provider');
 class Config {
   dynamic _raw;
 
+  /// output file name
+  String output;
+
   /// libclang path
   String libclang_dylib_path;
 
@@ -42,6 +45,8 @@ class Config {
       exit(1);
     }
     _raw = ffigenMap;
+
+    output = ffigenMap[string.output] as String;
 
     libclang_dylib_path = ffigenMap[string.libclang_dylib] as String;
 
@@ -75,6 +80,7 @@ class Config {
         enumClassFilters = _extractFilter(enums);
       }
     }
+    _logger.finest('Config: ' + toString());
   }
 
   // Extracts a filter from a YamlMap

@@ -22,6 +22,8 @@ CheckerResult _result = CheckerResult.correct;
 CheckerResult checkYaml(YamlMap map) {
   _result = CheckerResult.correct;
 
+  // TODO: Validate output file
+
   // validate libclang_dylib_path attribute
   if (map.containsKey(strings.libclang_dylib)) {
     if (map[strings.libclang_dylib] is! String) {

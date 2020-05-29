@@ -11,6 +11,7 @@ dev_dependencies:
     path: '../../'
 
 ffigen:
+  output: 'gen.dart'
   libclang-dylib: '../../tool/wrapped_libclang/libwrapped_clang.so'
   headers:
     - '/home/prerak/repos/ffigen/tool/wrapped_libclang/wrapper.c'
