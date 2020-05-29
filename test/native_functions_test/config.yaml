@@ -1,0 +1,4 @@
+output: 'native_functions_bindings.dart'
+libclang-dylib: '../../tool/wrapped_libclang/libwrapped_clang.so'
+headers:
+  - 'native_functions.c'
