@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
@@ -21,14 +22,22 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
   if (shouldIncludeFunc(name)) {
     _logger.fine("Function: ${cursor.completeStringRepr()}");
 
+    Type rt = _getFunctionReturnType(cursor);
+    var parameters = _getParameters(cursor);
+
+    //TODO: remove this when support for Structs by value arrive
+    if (rt.type == BroadType.Struct || parameters == null) {
+      return null; //returning null so that [addToBindings] function excludes this
+    }
+
     _func = Func(
       dartDoc: clang
           .clang_Cursor_getBriefCommentText_wrap(cursor)
           .toStringAndDispose(),
       name: name,
-      returnType: _getFunctionReturnType(cursor),
+      returnType: rt,
+      parameters: parameters,
     );
-    _addParameters(cursor);
   }
 
   return _func;
@@ -38,48 +47,34 @@ Type _getFunctionReturnType(Pointer<clang.CXCursor> cursor) {
   return cursor.returnType().toCodeGenTypeAndDispose();
 }
 
-void _addParameters(Pointer<clang.CXCursor> cursor) {
-  int resultCode = clang.clang_visitChildren_wrap(
-    cursor,
-    Pointer.fromFunction(
-        _functionCursorVisitor, clang.CXChildVisitResult.CXChildVisit_Break),
-    nullptr,
-  );
+List<Parameter> _getParameters(Pointer<clang.CXCursor> cursor) {
+  List<Parameter> parameters = [];
 
-  visitChildrenResultChecker(resultCode);
-}
+  int totalArgs = clang.clang_Cursor_getNumArguments_wrap(cursor);
+  for (var i = 0; i < totalArgs; i++) {
+    var paramCursor = clang.clang_Cursor_getArgument_wrap(cursor, i);
 
-/// Visitor for a function cursor [clang.CXCursorKind.CXCursor_FunctionDecl]
-///
-/// Invoked on every function directly under rootCursor
-/// for extracting parameters
-int _functionCursorVisitor(Pointer<clang.CXCursor> cursor,
-    Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
-  try {
-    _logger.finest('--functionCursorVisitor: ${cursor.completeStringRepr()}');
-    switch (clang.clang_getCursorKind_wrap(cursor)) {
-      case clang.CXCursorKind.CXCursor_ParmDecl:
-        _addParameterToFunc(cursor);
-        break;
+    var pt = _getParameterType(paramCursor);
+    //TODO: remove this when support for Structs by value arrive
+    if (pt.type == BroadType.Struct) {
+      return null; //returning null so that [parseFunctionDeclaration] returns null
     }
-    cursor.dispose();
-    parent.dispose();
-  } catch (e, s) {
-    _logger.severe(e);
-    _logger.severe(s);
-    rethrow;
+    var pn = paramCursor.spelling();
+    // set name if it is null or not provided
+    // TODO: look into extracting name from definition if avaialable
+    if (pn == null || pn == '') {
+      pn = "arg$i";
+    }
+    parameters.add(
+      Parameter(
+        name: pn,
+        type: pt,
+      ),
+    );
+    paramCursor.dispose();
   }
-  return clang.CXChildVisitResult.CXChildVisit_Continue;
-}
 
-/// Adds the parameter to func in [functiondecl_parser.dart]
-void _addParameterToFunc(Pointer<clang.CXCursor> cursor) {
-  _func.parameters.add(
-    Parameter(
-      name: cursor.spelling(),
-      type: _getParameterType(cursor),
-    ),
-  );
+  return parameters;
 }
 
 Type _getParameterType(Pointer<clang.CXCursor> cursor) {

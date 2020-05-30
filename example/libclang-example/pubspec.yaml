@@ -21,10 +21,10 @@ ffigen:
       include:
         matches:
         # should be valid regexp
-          - 'clang_.*wrap'
-        # names:
+          - 'clang_.*'
+        names:
         # should match exact function name
-          # - 'aaa'
+          # - 'clang_executeOnThread'
       # exclude:
         # matches:
         # # should be valid regexp
@@ -36,10 +36,9 @@ ffigen:
       include:
           matches:
             - 'CX.*'
-        # names:
+          names:
         # should match exact struct name
-          # - 'aa'
-          # - 'CXUnsavedFile'
+            - 'IndexerCallbacks'
     enums:
       include:
         names:

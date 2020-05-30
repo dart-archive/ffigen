@@ -18,7 +18,7 @@ final cxTypeKindToSupportedNativeTypes = <int, SupportedNativeType>{
   clang.CXTypeKind.CXType_UShort: SupportedNativeType.Uint16,
   clang.CXTypeKind.CXType_UInt: SupportedNativeType.Uint32,
   clang.CXTypeKind.CXType_ULong: SupportedNativeType.Uint64,
-  // clang.CXTypeKind.CXType_ULongLong: '',
+  clang.CXTypeKind.CXType_ULongLong: SupportedNativeType.Uint64,
   // clang.CXTypeKind.CXType_UInt128: '',
   // clang.CXTypeKind.CXType_Char_S: '',
   clang.CXTypeKind.CXType_SChar: SupportedNativeType.Int8,

@@ -9,6 +9,7 @@ import '../clang_bindings/clang_bindings.dart' as clang;
 import '../clang_bindings/clang_constants.dart' as clang;
 import '../utils.dart';
 import '../root_parser.dart';
+import '../includer.dart';
 
 var _logger = Logger('parser:extractor');
 
@@ -86,20 +87,34 @@ Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
 
 Type _extractFromFunctionProto(
     Pointer<clang.CXType> cxtype, String parentName) {
-  var typedefC = TypedefC(
-    name: parentName,
-    returnType:
-        clang.clang_getResultType_wrap(cxtype).toCodeGenTypeAndDispose(),
-  );
-  int totalArgs = clang.clang_getNumArgTypes_wrap(cxtype);
-  for (var i = 0; i < totalArgs; i++) {
-    var t = clang.clang_getArgType_wrap(cxtype, i);
-    typedefC.parameters.add(
-      Parameter(name: '', type: t.toCodeGenTypeAndDispose()),
-    );
+  String name = parentName;
+
+  // set a name for typedefc incase it was null or empty
+  if (name == null || name == '') {
+    name = _getNextUniqueString('_typedefC_noname');
   }
 
-  addToBindings(typedefC);
+  if (shouldIncludeTypedefC(name)) {
+    var typedefC = TypedefC(
+      name: name,
+      returnType:
+          clang.clang_getResultType_wrap(cxtype).toCodeGenTypeAndDispose(),
+    );
+    int totalArgs = clang.clang_getNumArgTypes_wrap(cxtype);
+    for (var i = 0; i < totalArgs; i++) {
+      var t = clang.clang_getArgType_wrap(cxtype, i);
+      typedefC.parameters.add(
+        Parameter(name: '', type: t.toCodeGenTypeAndDispose()),
+      );
+    }
+    addToBindings(typedefC);
+  }
+  return Type(type: BroadType.NativeFunction, nativeFuncName: name);
+}
 
-  return Type(type: BroadType.NativeFunction, nativeFuncName: typedefC.name);
+// generates unique string
+int _i = 0;
+String _getNextUniqueString(String prefix) {
+  _i++;
+  return "${prefix}_$_i";
 }

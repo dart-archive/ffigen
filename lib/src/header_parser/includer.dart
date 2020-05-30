@@ -6,6 +6,7 @@ import 'data.dart';
 Set<String> _structs = {};
 Set<String> _functions = {};
 Set<String> _enumClass = {};
+Set<String> _typedefC = {};
 
 bool shouldIncludeStruct(String name) {
   if (_structs.contains(name) || name == '') {
@@ -43,5 +44,14 @@ bool shouldIncludeEnumClass(String name) {
     return true;
   } else {
     return false;
+  }
+}
+
+bool shouldIncludeTypedefC(String name) {
+  if (_typedefC.contains(name)) {
+    return false;
+  } else {
+    _typedefC.add(name);
+    return true;
   }
 }

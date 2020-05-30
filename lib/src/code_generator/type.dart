@@ -127,6 +127,6 @@ class Type {
 
   @override
   String toString() {
-    return 'Type: ${type}, varName: ${structName}';
+    return 'Type: ${type}';
   }
 }
