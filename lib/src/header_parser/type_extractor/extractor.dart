@@ -13,61 +13,70 @@ var _logger = Logger('parser:extractor');
 
 /// converts cxtype to a typestring code_generator can accept
 Type getCodeGenType(Pointer<clang.CXType> cxtype) {
-  return Type(_getCodeGenTypeString(cxtype));
-}
-
-String _getCodeGenTypeString(Pointer<clang.CXType> cxtype) {
   _logger.fine('...getCodeGenType ${cxtype.completeStringRepr()}');
   int kind = cxtype.kind();
 
   switch (kind) {
     case clang.CXTypeKind.CXType_Pointer:
       var pt = clang.clang_getPointeeType_wrap(cxtype);
-      var s = _getCodeGenTypeString(pt);
+      var s = getCodeGenType(pt);
       pt.dispose();
-      return '*' + s;
+      return Type(type: BroadType.Pointer, child: s);
     case clang.CXTypeKind.CXType_Typedef:
       var ct = clang.clang_getCanonicalType_wrap(cxtype);
-      var s = _getCodeGenTypeString(ct);
+      var s = getCodeGenType(ct);
       ct.dispose();
       return s;
     case clang.CXTypeKind.CXType_Elaborated:
       var et = clang.clang_Type_getNamedType_wrap(cxtype);
-      var s = _getCodeGenTypeString(et);
+      var s = getCodeGenType(et);
       et.dispose();
       return s;
     case clang.CXTypeKind.CXType_Record:
       return _extractfromRecord(cxtype);
     case clang.CXTypeKind.CXType_Enum:
-      return 'int32';
+      return Type(
+        type: BroadType.NativeType,
+        nativeType: SupportedNativeType.Int32,
+      );
     default:
-      if (cxTypeKindMap.containsKey(kind)) {
-        return cxTypeKindMap[kind];
+      if (cxTypeKindToSupportedNativeTypes.containsKey(kind)) {
+        return Type(
+          type: BroadType.NativeType,
+          nativeType: cxTypeKindToSupportedNativeTypes[kind],
+        );
+      } else if (cxTypeKindToFfiUtilType.containsKey(kind)) {
+        return Type(
+          type: BroadType.FfiUtilType,
+          ffiUtilType: cxTypeKindToFfiUtilType[kind],
+        );
       } else {
         throw Exception('Type not implemented, ${cxtype.completeStringRepr()}');
       }
   }
 }
 
-String _extractfromRecord(Pointer<clang.CXType> cxtype) {
-  // default for detecting if not parsed correctly
-  String _typeString = 'UNPARSABLECXTYPERECORD';
+Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
+  Type type;
+
   var cursor = clang.clang_getTypeDeclaration_wrap(cxtype);
   _logger.fine('----_extractfromRecord: ${cursor.completeStringRepr()}');
 
   switch (clang.clang_getCursorKind_wrap(cursor)) {
     case clang.CXCursorKind.CXCursor_StructDecl:
-      var type = cursor.type();
-      _typeString = cursor.spelling();
-      if (_typeString == '') {
+      type = Type(type: BroadType.Struct);
+
+      var cxtype = cursor.type();
+      type.structName = cursor.spelling();
+      if (type.structName == '') {
         // incase of anonymous structs defined inside a typedef
-        _typeString = type.spelling();
+        type.structName = cxtype.spelling();
       }
-      type.dispose();
+      cxtype.dispose();
       break;
     default:
       _logger.fine('----typedeclarationCursorVisitor: Not Implemented');
   }
   cursor.dispose();
-  return _typeString;
+  return type;
 }

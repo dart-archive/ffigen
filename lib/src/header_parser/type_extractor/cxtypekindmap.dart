@@ -1,33 +1,35 @@
 import 'package:ffigen/src/header_parser/clang_bindings/clang_constants.dart'
     as clang;
+import 'package:ffigen/src/code_generator.dart'
+    show SupportedNativeType, FfiUtilType;
 
 /// Utility to convert CXType to [code_generator.Type]
 ///
 /// key: CXTypekindEnum, Value: TypeString for code_generator
-final cxTypeKindMap = <int, String>{
+final cxTypeKindToSupportedNativeTypes = <int, SupportedNativeType>{
   // clang.CXTypeKind.CXType_Invalid: '',
   // clang.CXTypeKind.CXType_Unexposed: '',
-  clang.CXTypeKind.CXType_Void: 'void',
+  clang.CXTypeKind.CXType_Void: SupportedNativeType.Void,
   // clang.CXTypeKind.CXType_Bool: '',
   // clang.CXTypeKind.CXType_Char_U: '',
-  clang.CXTypeKind.CXType_UChar: 'uint8',
+  clang.CXTypeKind.CXType_UChar: SupportedNativeType.Uint8,
   // clang.CXTypeKind.CXType_Char16: '',
   // clang.CXTypeKind.CXType_Char32: '',
-  clang.CXTypeKind.CXType_UShort: 'uint16',
-  clang.CXTypeKind.CXType_UInt: 'uint32',
-  clang.CXTypeKind.CXType_ULong: 'uint64',
+  clang.CXTypeKind.CXType_UShort: SupportedNativeType.Uint16,
+  clang.CXTypeKind.CXType_UInt: SupportedNativeType.Uint32,
+  clang.CXTypeKind.CXType_ULong: SupportedNativeType.Uint64,
   // clang.CXTypeKind.CXType_ULongLong: '',
   // clang.CXTypeKind.CXType_UInt128: '',
-  clang.CXTypeKind.CXType_Char_S: 'utf8',
-  clang.CXTypeKind.CXType_SChar: 'int8',
+  // clang.CXTypeKind.CXType_Char_S: '',
+  clang.CXTypeKind.CXType_SChar: SupportedNativeType.Int8,
   // clang.CXTypeKind.CXType_WChar: '',
-  clang.CXTypeKind.CXType_Short: 'int16',
-  clang.CXTypeKind.CXType_Int: 'int32',
-  clang.CXTypeKind.CXType_Long: 'int64',
-  clang.CXTypeKind.CXType_LongLong: 'int64',
+  clang.CXTypeKind.CXType_Short: SupportedNativeType.Int16,
+  clang.CXTypeKind.CXType_Int: SupportedNativeType.Int32,
+  clang.CXTypeKind.CXType_Long: SupportedNativeType.Int64,
+  clang.CXTypeKind.CXType_LongLong: SupportedNativeType.Int64,
   // clang.CXTypeKind.CXType_Int128: '',
-  clang.CXTypeKind.CXType_Float: 'float',
-  clang.CXTypeKind.CXType_Double: 'double',
+  clang.CXTypeKind.CXType_Float: SupportedNativeType.Float,
+  clang.CXTypeKind.CXType_Double: SupportedNativeType.Double,
   // clang.CXTypeKind.CXType_LongDouble: '',
   // clang.CXTypeKind.CXType_NullPtr: '',
   // clang.CXTypeKind.CXType_Overload: '',
@@ -63,4 +65,8 @@ final cxTypeKindMap = <int, String>{
   // clang.CXTypeKind.CXType_DependentSizedArray: '',
   // clang.CXTypeKind.CXType_MemberPointer: '',
   // clang.CXTypeKind.CXType_Auto: '',
+};
+
+final cxTypeKindToFfiUtilType = <int, FfiUtilType>{
+  clang.CXTypeKind.CXType_Char_S: FfiUtilType.Utf8,
 };

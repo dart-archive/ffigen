@@ -5,20 +5,11 @@ import 'dart:io';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 
-const _voidPointer = '*void';
-const _charPointer = '*utf8';
-const _charPointerPointer = '**utf8';
-
-// TODO: this is currently a hack, function pointer int't implemented in code_generator
-const _modifiedVisitorFuncPtr = '*ffi.NativeFunction<visitorFunctionSignature>';
-
 const _cxTranslationUnitImp = 'CXTranslationUnitImpl';
 const _cxUnsavedFile = 'CXUnsavedFile';
 const _cxString = 'CXString';
 const _cxCursor = 'CXCursor';
 const _cxType = 'CXType';
-
-const _cxindex = _voidPointer;
 
 var _logger = Logger('tool:libclang_binding_generator');
 void main() {
@@ -48,14 +39,23 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'excludeDeclarationsFromPCH',
-        type: Type('int32'),
+        type: Type(
+          type: BroadType.NativeType,
+          nativeType: SupportedNativeType.Int32,
+        ),
       ),
       Parameter(
         name: 'displayDiagnostics',
-        type: Type('int32'),
+        type: Type(
+          type: BroadType.NativeType,
+          nativeType: SupportedNativeType.Int32,
+        ),
       ),
     ],
-    returnType: Type(_cxindex),
+    returnType: Type(
+        type: BroadType.Pointer,
+        child: Type(
+            type: BroadType.NativeType, nativeType: SupportedNativeType.Void)),
   ),
   Func(
     dartDoc: '',
@@ -63,10 +63,17 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'index',
-        type: Type(_cxindex),
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(
+                type: BroadType.NativeType,
+                nativeType: SupportedNativeType.Void)),
       ),
     ],
-    returnType: Type('void'),
+    returnType: Type(
+      type: BroadType.NativeType,
+      nativeType: SupportedNativeType.Void,
+    ),
   ),
   Func(
     dartDoc: 'Dispose tu using [clang_disposeTranslationUnit]',
@@ -74,34 +81,62 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'cxindex',
-        type: Type(_cxindex),
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(
+                type: BroadType.NativeType,
+                nativeType: SupportedNativeType.Void)),
       ),
       Parameter(
         name: 'source_filename',
-        type: Type(_charPointer),
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(
+                type: BroadType.FfiUtilType, ffiUtilType: FfiUtilType.Utf8)),
       ),
       Parameter(
         name: 'cmd_line_args',
-        type: Type(_charPointerPointer),
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(
+              type: BroadType.Pointer,
+              child: Type(
+                  type: BroadType.FfiUtilType, ffiUtilType: FfiUtilType.Utf8),
+            )),
       ),
       Parameter(
         name: 'num_cmd_line_args',
-        type: Type('int32'),
+        type: Type(
+          type: BroadType.NativeType,
+          nativeType: SupportedNativeType.Int32,
+        ),
       ),
       Parameter(
         name: 'unsaved_files',
-        type: Type('*$_cxUnsavedFile'),
+        type: Type(
+          type: BroadType.Pointer,
+          child: Type(type: BroadType.Struct, structName: _cxUnsavedFile),
+        ),
       ),
       Parameter(
         name: 'num_unsaved_files',
-        type: Type('uint32'),
+        type: Type(
+          type: BroadType.NativeType,
+          nativeType: SupportedNativeType.Uint32,
+        ),
       ),
       Parameter(
         name: 'options',
-        type: Type('uint32'),
+        type: Type(
+          type: BroadType.NativeType,
+          nativeType: SupportedNativeType.Uint32,
+        ),
       ),
     ],
-    returnType: Type('*$_cxTranslationUnitImp'),
+    returnType: Type(
+      type: BroadType.Pointer,
+      child: Type(type: BroadType.Struct, structName: _cxTranslationUnitImp),
+    ),
   ),
   Func(
     dartDoc: '',
@@ -109,10 +144,16 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'cxtranslation_unit',
-        type: Type('*$_cxTranslationUnitImp'),
+        type: Type(
+          type: BroadType.Pointer,
+          child: Type(type: BroadType.Struct, structName: _cxTranslationUnitImp),
+        ),
       ),
     ],
-    returnType: Type('void'),
+    returnType: Type(
+      type: BroadType.NativeType,
+      nativeType: SupportedNativeType.Void,
+    ),
   ),
   Func(
     dartDoc: 'Free [CXcursor] after use',
@@ -120,10 +161,15 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'cxtranslation_unit',
-        type: Type('*$_cxTranslationUnitImp'),
+        type: Type(
+          type: BroadType.Pointer,
+          child: Type(type: BroadType.Struct, structName: _cxTranslationUnitImp),
+        ),
       ),
     ],
-    returnType: Type('*$_cxCursor'),
+    returnType: Type(
+        type: BroadType.Pointer,
+        child: Type(type: BroadType.Struct, structName: _cxCursor)),
   ),
   Func(
     dartDoc: '',
@@ -131,10 +177,16 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'cxtranslationunit',
-        type: Type('*$_cxTranslationUnitImp'),
+        type: Type(
+          type: BroadType.Pointer,
+          child: Type(type: BroadType.Struct, structName: _cxTranslationUnitImp),
+        ),
       ),
     ],
-    returnType: Type('uint32'),
+    returnType: Type(
+      type: BroadType.NativeType,
+      nativeType: SupportedNativeType.Uint32,
+    ),
   ),
   Func(
     dartDoc: 'Dispose diagnostic using [clang_disposeDiagnostic]',
@@ -142,14 +194,24 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'cxTranslationUnit',
-        type: Type('*$_cxTranslationUnitImp'),
+        type: Type(
+          type: BroadType.Pointer,
+          child: Type(type: BroadType.Struct, structName: _cxTranslationUnitImp),
+        ),
       ),
       Parameter(
         name: 'position',
-        type: Type('int32'),
+        type: Type(
+          type: BroadType.NativeType,
+          nativeType: SupportedNativeType.Int32,
+        ),
       ),
     ],
-    returnType: Type(_voidPointer),
+    returnType: Type(
+      type: BroadType.Pointer,
+      child: Type(
+          type: BroadType.NativeType, nativeType: SupportedNativeType.Void),
+    ),
   ),
   Func(
     dartDoc: '',
@@ -157,10 +219,17 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'diagnostic',
-        type: Type(_voidPointer),
+        type: Type(
+          type: BroadType.Pointer,
+          child: Type(
+              type: BroadType.NativeType, nativeType: SupportedNativeType.Void),
+        ),
       ),
     ],
-    returnType: Type('void'),
+    returnType: Type(
+      type: BroadType.NativeType,
+      nativeType: SupportedNativeType.Void,
+    ),
   ),
   Func(
     dartDoc: 'Dispose [CXString] after use using [clang_disposeString_wrap]',
@@ -168,20 +237,32 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'diagnostic',
-        type: Type(_voidPointer),
+        type: Type(
+          type: BroadType.Pointer,
+          child: Type(
+              type: BroadType.NativeType, nativeType: SupportedNativeType.Void),
+        ),
       ),
       Parameter(
         name: 'diagnosticOptions',
-        type: Type('uint32'),
+        type: Type(
+          type: BroadType.NativeType,
+          nativeType: SupportedNativeType.Uint32,
+        ),
       ),
     ],
-    returnType: Type('*$_cxString'),
+    returnType: Type(
+        type: BroadType.Pointer,
+        child: Type(type: BroadType.Struct, structName: _cxString)),
   ),
   Func(
     dartDoc: '',
     name: 'clang_defaultDiagnosticDisplayOptions',
     parameters: [],
-    returnType: Type('uint32'),
+    returnType: Type(
+      type: BroadType.NativeType,
+      nativeType: SupportedNativeType.Uint32,
+    ),
   ),
   Func(
     dartDoc:
@@ -190,10 +271,15 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'cxstringPtr',
-        type: Type('*$_cxString'),
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(type: BroadType.Struct, structName: _cxString)),
       ),
     ],
-    returnType: Type(_charPointer),
+    returnType: Type(
+        type: BroadType.Pointer,
+        child:
+            Type(type: BroadType.FfiUtilType, ffiUtilType: FfiUtilType.Utf8)),
   ),
   Func(
     dartDoc: 'Free a CXString using this (Do not use free)',
@@ -201,10 +287,15 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'cxstringPtr',
-        type: Type('*$_cxString'),
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(type: BroadType.Struct, structName: _cxString)),
       ),
     ],
-    returnType: Type('void'),
+    returnType: Type(
+      type: BroadType.NativeType,
+      nativeType: SupportedNativeType.Void,
+    ),
   ),
   Func(
     dartDoc:
@@ -213,10 +304,14 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'cursor',
-        type: Type('*$_cxCursor'),
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(type: BroadType.Struct, structName: _cxCursor)),
       ),
     ],
-    returnType: Type('*$_cxString'),
+    returnType: Type(
+        type: BroadType.Pointer,
+        child: Type(type: BroadType.Struct, structName: _cxString)),
   ),
   Func(
     dartDoc: 'Free cursor after use',
@@ -224,10 +319,15 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'cursor',
-        type: Type('*$_cxCursor'),
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(type: BroadType.Struct, structName: _cxCursor)),
       ),
     ],
-    returnType: Type('int32'),
+    returnType: Type(
+      type: BroadType.NativeType,
+      nativeType: SupportedNativeType.Int32,
+    ),
   ),
   Func(
     dartDoc: 'dispose CXString using [clang_disposeString_wrap]',
@@ -235,10 +335,15 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'kind',
-        type: Type('int32'),
+        type: Type(
+          type: BroadType.NativeType,
+          nativeType: SupportedNativeType.Int32,
+        ),
       ),
     ],
-    returnType: Type('*$_cxString'),
+    returnType: Type(
+        type: BroadType.Pointer,
+        child: Type(type: BroadType.Struct, structName: _cxString)),
   ),
   Func(
     dartDoc: 'Free CXType after use',
@@ -246,10 +351,14 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'cursor',
-        type: Type('*$_cxCursor'),
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(type: BroadType.Struct, structName: _cxCursor)),
       ),
     ],
-    returnType: Type('*$_cxType'),
+    returnType: Type(
+        type: BroadType.Pointer,
+        child: Type(type: BroadType.Struct, structName: _cxType)),
   ),
   Func(
     dartDoc: 'Dispose CXString after use',
@@ -257,10 +366,15 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'typeKind',
-        type: Type('int32'),
+        type: Type(
+          type: BroadType.NativeType,
+          nativeType: SupportedNativeType.Int32,
+        ),
       ),
     ],
-    returnType: Type('*$_cxString'),
+    returnType: Type(
+        type: BroadType.Pointer,
+        child: Type(type: BroadType.Struct, structName: _cxString)),
   ),
   Func(
     dartDoc:
@@ -269,10 +383,14 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'typePtr',
-        type: Type('*$_cxType'),
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(type: BroadType.Struct, structName: _cxType)),
       ),
     ],
-    returnType: Type('*$_cxString'),
+    returnType: Type(
+        type: BroadType.Pointer,
+        child: Type(type: BroadType.Struct, structName: _cxString)),
   ),
   Func(
     dartDoc: 'Free cxtype after use',
@@ -280,10 +398,14 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'functionType',
-        type: Type('*$_cxType'),
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(type: BroadType.Struct, structName: _cxType)),
       ),
     ],
-    returnType: Type('*$_cxType'),
+    returnType: Type(
+        type: BroadType.Pointer,
+        child: Type(type: BroadType.Struct, structName: _cxType)),
   ),
   Func(
     dartDoc: 'Free cxtype after use',
@@ -291,10 +413,14 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'pointerType',
-        type: Type('*$_cxType'),
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(type: BroadType.Struct, structName: _cxType)),
       ),
     ],
-    returnType: Type('*$_cxType'),
+    returnType: Type(
+        type: BroadType.Pointer,
+        child: Type(type: BroadType.Struct, structName: _cxType)),
   ),
   Func(
     dartDoc: 'Free cxtype after use',
@@ -302,10 +428,14 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'typerefType',
-        type: Type('*$_cxType'),
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(type: BroadType.Struct, structName: _cxType)),
       ),
     ],
-    returnType: Type('*$_cxType'),
+    returnType: Type(
+        type: BroadType.Pointer,
+        child: Type(type: BroadType.Struct, structName: _cxType)),
   ),
   Func(
     dartDoc: 'Free cxtype after use',
@@ -313,10 +443,14 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'elaboratedType',
-        type: Type('*$_cxType'),
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(type: BroadType.Struct, structName: _cxType)),
       ),
     ],
-    returnType: Type('*$_cxType'),
+    returnType: Type(
+        type: BroadType.Pointer,
+        child: Type(type: BroadType.Struct, structName: _cxType)),
   ),
   Func(
     dartDoc: 'Free cxcursor after use',
@@ -324,10 +458,14 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'cxtype',
-        type: Type('*$_cxType'),
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(type: BroadType.Struct, structName: _cxType)),
       ),
     ],
-    returnType: Type('*$_cxCursor'),
+    returnType: Type(
+        type: BroadType.Pointer,
+        child: Type(type: BroadType.Struct, structName: _cxCursor)),
   ),
   Func(
     dartDoc: 'Free cxtype after use',
@@ -335,10 +473,14 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'typerefType',
-        type: Type('*$_cxCursor'),
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(type: BroadType.Struct, structName: _cxCursor)),
       ),
     ],
-    returnType: Type('*$_cxType'),
+    returnType: Type(
+        type: BroadType.Pointer,
+        child: Type(type: BroadType.Struct, structName: _cxType)),
   ),
   TypedefC(
     dartDoc:
@@ -347,18 +489,29 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'cursor',
-        type: Type('*$_cxCursor'),
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(type: BroadType.Struct, structName: _cxCursor)),
       ),
       Parameter(
         name: 'parent',
-        type: Type('*$_cxCursor'),
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(type: BroadType.Struct, structName: _cxCursor)),
       ),
       Parameter(
         name: 'clientData',
-        type: Type(_voidPointer),
+        type: Type(
+          type: BroadType.Pointer,
+          child: Type(
+              type: BroadType.NativeType, nativeType: SupportedNativeType.Void),
+        ),
       ),
     ],
-    returnType: Type('int32'),
+    returnType: Type(
+      type: BroadType.NativeType,
+      nativeType: SupportedNativeType.Int32,
+    ),
   ),
   Func(
     dartDoc: 'Free cursor after use',
@@ -366,18 +519,29 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'cursor',
-        type: Type('*$_cxCursor'),
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(type: BroadType.Struct, structName: _cxCursor)),
       ),
       Parameter(
         name: 'pointerToVisitorFunc',
-        type: Type(_modifiedVisitorFuncPtr),
+        type: Type(
+            type: BroadType.NativeFunction,
+            nativeFuncName: 'visitorFunctionSignature'),
       ),
       Parameter(
         name: 'clientData',
-        type: Type('*void'),
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(
+                type: BroadType.NativeType,
+                nativeType: SupportedNativeType.Void)),
       ),
     ],
-    returnType: Type('int32'),
+    returnType: Type(
+      type: BroadType.NativeType,
+      nativeType: SupportedNativeType.Int32,
+    ),
   ),
   Func(
     dartDoc:
@@ -386,10 +550,15 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'cursor',
-        type: Type('*$_cxCursor'),
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(type: BroadType.Struct, structName: _cxCursor)),
       ),
     ],
-    returnType: Type('int32'),
+    returnType: Type(
+      type: BroadType.NativeType,
+      nativeType: SupportedNativeType.Int32,
+    ),
   ),
   Func(
     dartDoc: 'Free cursor after use,',
@@ -397,36 +566,49 @@ final functionAndTypedefsList = <Binding>[
     parameters: [
       Parameter(
         name: 'cursor',
-        type: Type('*$_cxCursor'),
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(type: BroadType.Struct, structName: _cxCursor)),
       ),
       Parameter(
         name: 'i',
-        type: Type('uint32'),
+        type: Type(
+          type: BroadType.NativeType,
+          nativeType: SupportedNativeType.Uint32,
+        ),
       ),
     ],
-    returnType: Type('*$_cxCursor'),
+    returnType: Type(
+        type: BroadType.Pointer,
+        child: Type(type: BroadType.Struct, structName: _cxCursor)),
   ),
   Func(
-    dartDoc: '',
-    name: 'clang_getEnumConstantDeclValue_wrap',
-    parameters: [
-      Parameter(
-        name: 'cursor',
-        type: Type('*$_cxCursor'),
-      ),
-    ],
-    returnType: Type('int64'),
-  ),
+      dartDoc: '',
+      name: 'clang_getEnumConstantDeclValue_wrap',
+      parameters: [
+        Parameter(
+          name: 'cursor',
+          type: Type(
+              type: BroadType.Pointer,
+              child: Type(type: BroadType.Struct, structName: _cxCursor)),
+        ),
+      ],
+      returnType: Type(
+          type: BroadType.NativeType, nativeType: SupportedNativeType.Int64)),
   Func(
     dartDoc: '',
     name: 'clang_Cursor_getBriefCommentText_wrap',
     parameters: [
       Parameter(
         name: 'cursor',
-        type: Type('*$_cxCursor'),
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(type: BroadType.Struct, structName: _cxCursor)),
       ),
     ],
-    returnType: Type('*$_cxString'),
+    returnType: Type(
+        type: BroadType.Pointer,
+        child: Type(type: BroadType.Struct, structName: _cxString)),
   ),
 ];
 
@@ -450,7 +632,12 @@ final structList = <Binding>[
     dartDoc: '',
     name: _cxType,
     members: [
-      Member(type: Type('int32'), name: 'kind'),
+      Member(
+          type: Type(
+            type: BroadType.NativeType,
+            nativeType: SupportedNativeType.Int32,
+          ),
+          name: 'kind'),
     ],
   ),
   Struc(
