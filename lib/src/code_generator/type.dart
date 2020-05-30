@@ -119,7 +119,7 @@ class Type {
         return structName;
       case BroadType.NativeFunction:
         return '$ffiLibraryPrefix.NativeFunction<${nativeFuncName}>';
-      // TODO: check ffiUtilType doesn't have a dart type, it can only be inside a Pointer which redirects it to its c type
+      // TODO: check- ffiUtilType doesn't have a dart type, it can only be inside a Pointer which redirects it to its c type
       default:
         throw Exception('dart type unknown for ${type.toString()}');
     }

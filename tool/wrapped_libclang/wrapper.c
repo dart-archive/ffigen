@@ -217,6 +217,16 @@ CXCursor *clang_Cursor_getArgument_wrap(CXCursor *cursor, unsigned i)
     return ptrToCXCursor(clang_Cursor_getArgument(*cursor, i));
 }
 
+int clang_getNumArgTypes_wrap(CXType *cxtype)
+{
+    return clang_getNumArgTypes(*cxtype);
+}
+
+CXType *clang_getArgType_wrap(CXType *cxtype, unsigned i)
+{
+    return ptrToCXType(clang_getArgType(*cxtype, i));
+}
+
 long long clang_getEnumConstantDeclValue_wrap(CXCursor *cursor)
 {
     return clang_getEnumConstantDeclValue(*cursor);

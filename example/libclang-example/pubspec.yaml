@@ -25,13 +25,13 @@ ffigen:
         # names:
         # should match exact function name
           # - 'aaa'
-      exclude:
+      # exclude:
         # matches:
         # # should be valid regexp
           # - '.*CursorKind.*'
-        names:
+        # names:
         # # should match exact function name
-          - 'clang_visitChildren_wrap'
+          # - 'clang_visitChildren_wrap'
     structs:
       include:
           matches:

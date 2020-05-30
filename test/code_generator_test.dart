@@ -69,11 +69,8 @@ void main() {
             returnType: Type(
               type: BroadType.Pointer,
               child: Type(
-                type: BroadType.Pointer,
-                child: Type(
-                  type: BroadType.NativeType,
-                  nativeType: SupportedNativeType.Float64,
-                ),
+                type: BroadType.NativeType,
+                nativeType: SupportedNativeType.Float64,
               ),
             ),
           ),

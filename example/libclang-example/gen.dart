@@ -234,6 +234,12 @@ class CXVersion extends ffi.Struct {}
 
 class CXVirtualFileOverlayImpl extends ffi.Struct {}
 
+typedef ModifiedCXCursorVisitor = ffi.Int32 Function(
+  ffi.Pointer<CXCursor>,
+  ffi.Pointer<CXCursor>,
+  ffi.Pointer<ffi.Void>,
+);
+
 ffi.Pointer<CXCursor> clang_Cursor_getArgument_wrap(
   ffi.Pointer<CXCursor> cursor,
   int i,
@@ -367,6 +373,30 @@ typedef _c_clang_formatDiagnostic_wrap = ffi.Pointer<CXString> Function(
 typedef _dart_clang_formatDiagnostic_wrap = ffi.Pointer<CXString> Function(
   ffi.Pointer<ffi.Void> diag,
   int opts,
+);
+
+ffi.Pointer<CXType> clang_getArgType_wrap(
+  ffi.Pointer<CXType> cxtype,
+  int i,
+) {
+  return _clang_getArgType_wrap(
+    cxtype,
+    i,
+  );
+}
+
+final _dart_clang_getArgType_wrap _clang_getArgType_wrap = _dylib
+    .lookupFunction<_c_clang_getArgType_wrap, _dart_clang_getArgType_wrap>(
+        'clang_getArgType_wrap');
+
+typedef _c_clang_getArgType_wrap = ffi.Pointer<CXType> Function(
+  ffi.Pointer<CXType> cxtype,
+  ffi.Uint32 i,
+);
+
+typedef _dart_clang_getArgType_wrap = ffi.Pointer<CXType> Function(
+  ffi.Pointer<CXType> cxtype,
+  int i,
 );
 
 ffi.Pointer<ffi2.Utf8> clang_getCString_wrap(
@@ -511,6 +541,26 @@ typedef _c_clang_getEnumConstantDeclValue_wrap = ffi.Int64 Function(
 
 typedef _dart_clang_getEnumConstantDeclValue_wrap = int Function(
   ffi.Pointer<CXCursor> cursor,
+);
+
+int clang_getNumArgTypes_wrap(
+  ffi.Pointer<CXType> cxtype,
+) {
+  return _clang_getNumArgTypes_wrap(
+    cxtype,
+  );
+}
+
+final _dart_clang_getNumArgTypes_wrap _clang_getNumArgTypes_wrap =
+    _dylib.lookupFunction<_c_clang_getNumArgTypes_wrap,
+        _dart_clang_getNumArgTypes_wrap>('clang_getNumArgTypes_wrap');
+
+typedef _c_clang_getNumArgTypes_wrap = ffi.Int32 Function(
+  ffi.Pointer<CXType> cxtype,
+);
+
+typedef _dart_clang_getNumArgTypes_wrap = int Function(
+  ffi.Pointer<CXType> cxtype,
 );
 
 ffi.Pointer<CXType> clang_getPointeeType_wrap(
@@ -658,4 +708,33 @@ typedef _c_clang_getTypedefDeclUnderlyingType_wrap = ffi.Pointer<CXType>
 typedef _dart_clang_getTypedefDeclUnderlyingType_wrap = ffi.Pointer<CXType>
     Function(
   ffi.Pointer<CXCursor> cxcursor,
+);
+
+/// visitor is a function pointer with parameters having pointers to cxcursor instead of cxcursor by default
+int clang_visitChildren_wrap(
+  ffi.Pointer<CXCursor> parent,
+  ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor>> _modifiedVisitor,
+  ffi.Pointer<ffi.Void> clientData,
+) {
+  return _clang_visitChildren_wrap(
+    parent,
+    _modifiedVisitor,
+    clientData,
+  );
+}
+
+final _dart_clang_visitChildren_wrap _clang_visitChildren_wrap =
+    _dylib.lookupFunction<_c_clang_visitChildren_wrap,
+        _dart_clang_visitChildren_wrap>('clang_visitChildren_wrap');
+
+typedef _c_clang_visitChildren_wrap = ffi.Uint32 Function(
+  ffi.Pointer<CXCursor> parent,
+  ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor>> _modifiedVisitor,
+  ffi.Pointer<ffi.Void> clientData,
+);
+
+typedef _dart_clang_visitChildren_wrap = int Function(
+  ffi.Pointer<CXCursor> parent,
+  ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor>> _modifiedVisitor,
+  ffi.Pointer<ffi.Void> clientData,
 );

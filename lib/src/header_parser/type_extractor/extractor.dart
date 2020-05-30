@@ -8,28 +8,29 @@ import '../type_extractor/cxtypekindmap.dart';
 import '../clang_bindings/clang_bindings.dart' as clang;
 import '../clang_bindings/clang_constants.dart' as clang;
 import '../utils.dart';
+import '../root_parser.dart';
 
 var _logger = Logger('parser:extractor');
 
 /// converts cxtype to a typestring code_generator can accept
-Type getCodeGenType(Pointer<clang.CXType> cxtype) {
+Type getCodeGenType(Pointer<clang.CXType> cxtype, {String parentName}) {
   _logger.fine('...getCodeGenType ${cxtype.completeStringRepr()}');
   int kind = cxtype.kind();
 
   switch (kind) {
     case clang.CXTypeKind.CXType_Pointer:
       var pt = clang.clang_getPointeeType_wrap(cxtype);
-      var s = getCodeGenType(pt);
+      var s = getCodeGenType(pt, parentName: parentName);
       pt.dispose();
       return Type(type: BroadType.Pointer, child: s);
     case clang.CXTypeKind.CXType_Typedef:
       var ct = clang.clang_getCanonicalType_wrap(cxtype);
-      var s = getCodeGenType(ct);
+      var s = getCodeGenType(ct, parentName: parentName ?? cxtype.spelling());
       ct.dispose();
       return s;
     case clang.CXTypeKind.CXType_Elaborated:
       var et = clang.clang_Type_getNamedType_wrap(cxtype);
-      var s = getCodeGenType(et);
+      var s = getCodeGenType(et, parentName: parentName);
       et.dispose();
       return s;
     case clang.CXTypeKind.CXType_Record:
@@ -39,6 +40,8 @@ Type getCodeGenType(Pointer<clang.CXType> cxtype) {
         type: BroadType.NativeType,
         nativeType: SupportedNativeType.Int32,
       );
+    case clang.CXTypeKind.CXType_FunctionProto:
+      return _extractFromFunctionProto(cxtype, parentName);
     default:
       if (cxTypeKindToSupportedNativeTypes.containsKey(kind)) {
         return Type(
@@ -79,4 +82,24 @@ Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
   }
   cursor.dispose();
   return type;
+}
+
+Type _extractFromFunctionProto(
+    Pointer<clang.CXType> cxtype, String parentName) {
+  var typedefC = TypedefC(
+    name: parentName,
+    returnType:
+        clang.clang_getResultType_wrap(cxtype).toCodeGenTypeAndDispose(),
+  );
+  int totalArgs = clang.clang_getNumArgTypes_wrap(cxtype);
+  for (var i = 0; i < totalArgs; i++) {
+    var t = clang.clang_getArgType_wrap(cxtype, i);
+    typedefC.parameters.add(
+      Parameter(name: '', type: t.toCodeGenTypeAndDispose()),
+    );
+  }
+
+  addToBindings(typedefC);
+
+  return Type(type: BroadType.NativeFunction, nativeFuncName: typedefC.name);
 }

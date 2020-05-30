@@ -41,16 +41,16 @@ int _rootCursorVisitor(Pointer<clang.CXCursor> cursor,
 
     switch (clang.clang_getCursorKind_wrap(cursor)) {
       case clang.CXCursorKind.CXCursor_FunctionDecl:
-        _addToBindings(parseFunctionDeclaration(cursor));
+        addToBindings(parseFunctionDeclaration(cursor));
         break;
       case clang.CXCursorKind.CXCursor_TypedefDecl:
-        _addToBindings(parseTypedefDeclaration(cursor));
+        addToBindings(parseTypedefDeclaration(cursor));
         break;
       case clang.CXCursorKind.CXCursor_StructDecl:
-        _addToBindings(parseStructDeclaration(cursor));
+        addToBindings(parseStructDeclaration(cursor));
         break;
       case clang.CXCursorKind.CXCursor_EnumDecl:
-        _addToBindings(parseEnumDeclaration(cursor));
+        addToBindings(parseEnumDeclaration(cursor));
         break;
       default:
         _logger.finest('rootCursorVisitor: CursorKind not implemented');
@@ -67,7 +67,7 @@ int _rootCursorVisitor(Pointer<clang.CXCursor> cursor,
 }
 
 /// Adds to binding if not null
-void _addToBindings(Binding b) {
+void addToBindings(Binding b) {
   if (b != null) {
     _bindings.add(b);
   }

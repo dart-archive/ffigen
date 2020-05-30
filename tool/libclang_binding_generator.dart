@@ -3,7 +3,6 @@
 import 'dart:io';
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:logging/logging.dart';
 
 const _cxTranslationUnitImp = 'CXTranslationUnitImpl';
 const _cxUnsavedFile = 'CXUnsavedFile';
@@ -11,7 +10,7 @@ const _cxString = 'CXString';
 const _cxCursor = 'CXCursor';
 const _cxType = 'CXType';
 
-var _logger = Logger('tool:libclang_binding_generator');
+const _visitorFunctionSignature = 'visitorFunctionSignature';
 void main() {
   final library = Library(
       bindings: bindings,
@@ -24,7 +23,7 @@ void main() {
   // Generates bindings for libclang wrapper
   library.generateFile(f);
 
-  _logger.info("Generated bindings: ${f.absolute.path}");
+  print("Generated bindings: ${f.absolute.path}");
 }
 
 final bindings = <Binding>[
@@ -146,7 +145,8 @@ final functionAndTypedefsList = <Binding>[
         name: 'cxtranslation_unit',
         type: Type(
           type: BroadType.Pointer,
-          child: Type(type: BroadType.Struct, structName: _cxTranslationUnitImp),
+          child:
+              Type(type: BroadType.Struct, structName: _cxTranslationUnitImp),
         ),
       ),
     ],
@@ -163,7 +163,8 @@ final functionAndTypedefsList = <Binding>[
         name: 'cxtranslation_unit',
         type: Type(
           type: BroadType.Pointer,
-          child: Type(type: BroadType.Struct, structName: _cxTranslationUnitImp),
+          child:
+              Type(type: BroadType.Struct, structName: _cxTranslationUnitImp),
         ),
       ),
     ],
@@ -179,7 +180,8 @@ final functionAndTypedefsList = <Binding>[
         name: 'cxtranslationunit',
         type: Type(
           type: BroadType.Pointer,
-          child: Type(type: BroadType.Struct, structName: _cxTranslationUnitImp),
+          child:
+              Type(type: BroadType.Struct, structName: _cxTranslationUnitImp),
         ),
       ),
     ],
@@ -196,7 +198,8 @@ final functionAndTypedefsList = <Binding>[
         name: 'cxTranslationUnit',
         type: Type(
           type: BroadType.Pointer,
-          child: Type(type: BroadType.Struct, structName: _cxTranslationUnitImp),
+          child:
+              Type(type: BroadType.Struct, structName: _cxTranslationUnitImp),
         ),
       ),
       Parameter(
@@ -485,7 +488,7 @@ final functionAndTypedefsList = <Binding>[
   TypedefC(
     dartDoc:
         'C signature for `visitorFunction` parameter in [clang_visitChildren_wrap]',
-    name: 'visitorFunctionSignature',
+    name: _visitorFunctionSignature,
     parameters: [
       Parameter(
         name: 'cursor',
@@ -526,8 +529,11 @@ final functionAndTypedefsList = <Binding>[
       Parameter(
         name: 'pointerToVisitorFunc',
         type: Type(
-            type: BroadType.NativeFunction,
-            nativeFuncName: 'visitorFunctionSignature'),
+          type: BroadType.Pointer,
+          child: Type(
+              type: BroadType.NativeFunction,
+              nativeFuncName: _visitorFunctionSignature),
+        ),
       ),
       Parameter(
         name: 'clientData',
@@ -581,6 +587,45 @@ final functionAndTypedefsList = <Binding>[
     returnType: Type(
         type: BroadType.Pointer,
         child: Type(type: BroadType.Struct, structName: _cxCursor)),
+  ),
+  Func(
+    dartDoc:
+        'Get Arguments of a function type, returns -1 for other cxtypes\n\nFree cxtype after use',
+    name: 'clang_getNumArgTypes_wrap',
+    parameters: [
+      Parameter(
+        name: 'cxtype',
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(type: BroadType.Struct, structName: _cxType)),
+      ),
+    ],
+    returnType: Type(
+      type: BroadType.NativeType,
+      nativeType: SupportedNativeType.Int32,
+    ),
+  ),
+  Func(
+    dartDoc: 'Free cursor after use,',
+    name: 'clang_getArgType_wrap',
+    parameters: [
+      Parameter(
+        name: 'cxtype',
+        type: Type(
+            type: BroadType.Pointer,
+            child: Type(type: BroadType.Struct, structName: _cxType)),
+      ),
+      Parameter(
+        name: 'i',
+        type: Type(
+          type: BroadType.NativeType,
+          nativeType: SupportedNativeType.Uint32,
+        ),
+      ),
+    ],
+    returnType: Type(
+        type: BroadType.Pointer,
+        child: Type(type: BroadType.Struct, structName: _cxType)),
   ),
   Func(
       dartDoc: '',

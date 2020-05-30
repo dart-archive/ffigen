@@ -275,6 +275,31 @@ typedef _dart_clang_formatDiagnostic_wrap = ffi.Pointer<CXString> Function(
   int diagnosticOptions,
 );
 
+/// Free cursor after use,
+ffi.Pointer<CXType> clang_getArgType_wrap(
+  ffi.Pointer<CXType> cxtype,
+  int i,
+) {
+  return _clang_getArgType_wrap(
+    cxtype,
+    i,
+  );
+}
+
+final _dart_clang_getArgType_wrap _clang_getArgType_wrap = _dylib
+    .lookupFunction<_c_clang_getArgType_wrap, _dart_clang_getArgType_wrap>(
+        'clang_getArgType_wrap');
+
+typedef _c_clang_getArgType_wrap = ffi.Pointer<CXType> Function(
+  ffi.Pointer<CXType> cxtype,
+  ffi.Uint32 i,
+);
+
+typedef _dart_clang_getArgType_wrap = ffi.Pointer<CXType> Function(
+  ffi.Pointer<CXType> cxtype,
+  int i,
+);
+
 /// Dispose [CXString] using [clang_disposeString_wrap], it also frees the CString(const char *), do not free CString directly
 ffi.Pointer<ffi2.Utf8> clang_getCString_wrap(
   ffi.Pointer<CXString> cxstringPtr,
@@ -448,6 +473,29 @@ typedef _c_clang_getEnumConstantDeclValue_wrap = ffi.Int64 Function(
 
 typedef _dart_clang_getEnumConstantDeclValue_wrap = int Function(
   ffi.Pointer<CXCursor> cursor,
+);
+
+/// Get Arguments of a function type, returns -1 for other cxtypes
+///
+/// Free cxtype after use
+int clang_getNumArgTypes_wrap(
+  ffi.Pointer<CXType> cxtype,
+) {
+  return _clang_getNumArgTypes_wrap(
+    cxtype,
+  );
+}
+
+final _dart_clang_getNumArgTypes_wrap _clang_getNumArgTypes_wrap =
+    _dylib.lookupFunction<_c_clang_getNumArgTypes_wrap,
+        _dart_clang_getNumArgTypes_wrap>('clang_getNumArgTypes_wrap');
+
+typedef _c_clang_getNumArgTypes_wrap = ffi.Int32 Function(
+  ffi.Pointer<CXType> cxtype,
+);
+
+typedef _dart_clang_getNumArgTypes_wrap = int Function(
+  ffi.Pointer<CXType> cxtype,
 );
 
 ///
