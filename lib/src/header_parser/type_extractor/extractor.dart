@@ -23,7 +23,7 @@ Type getCodeGenType(Pointer<clang.CXType> cxtype, {String parentName}) {
       var pt = clang.clang_getPointeeType_wrap(cxtype);
       var s = getCodeGenType(pt, parentName: parentName);
       pt.dispose();
-      return Type(type: BroadType.Pointer, child: s);
+      return Type.pointer(child: s);
     case clang.CXTypeKind.CXType_Typedef:
       var ct = clang.clang_getCanonicalType_wrap(cxtype);
       var s = getCodeGenType(ct, parentName: parentName ?? cxtype.spelling());
@@ -37,21 +37,18 @@ Type getCodeGenType(Pointer<clang.CXType> cxtype, {String parentName}) {
     case clang.CXTypeKind.CXType_Record:
       return _extractfromRecord(cxtype);
     case clang.CXTypeKind.CXType_Enum:
-      return Type(
-        type: BroadType.NativeType,
+      return Type.nativeType(
         nativeType: SupportedNativeType.Int32,
       );
     case clang.CXTypeKind.CXType_FunctionProto:
       return _extractFromFunctionProto(cxtype, parentName);
     default:
       if (cxTypeKindToSupportedNativeTypes.containsKey(kind)) {
-        return Type(
-          type: BroadType.NativeType,
+        return Type.nativeType(
           nativeType: cxTypeKindToSupportedNativeTypes[kind],
         );
       } else if (cxTypeKindToFfiUtilType.containsKey(kind)) {
-        return Type(
-          type: BroadType.FfiUtilType,
+        return Type.ffiUtilType(
           ffiUtilType: cxTypeKindToFfiUtilType[kind],
         );
       } else {
@@ -68,7 +65,7 @@ Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
 
   switch (clang.clang_getCursorKind_wrap(cursor)) {
     case clang.CXCursorKind.CXCursor_StructDecl:
-      type = Type(type: BroadType.Struct);
+      type = Type.struct();
 
       var cxtype = cursor.type();
       type.structName = cursor.spelling();
@@ -109,7 +106,7 @@ Type _extractFromFunctionProto(
     }
     addToBindings(typedefC);
   }
-  return Type(type: BroadType.NativeFunction, nativeFuncName: name);
+  return Type.nativeFunc(nativeFuncName: name);
 }
 
 // generates unique string

@@ -1,5 +1,4 @@
 import 'dart:ffi';
-import 'dart:io';
 
 import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';

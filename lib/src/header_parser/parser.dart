@@ -58,7 +58,7 @@ List<Binding> parseAndGenerateBindings() {
     cmdLen,
     nullptr,
     0,
-    clang.CXTranslationUnit_Flags.CXTranslationUnit_None,
+    clang.CXTranslationUnit_Flags.CXTranslationUnit_SkipFunctionBodies,
   );
 
   if (data.config.compilerOpts != null) {

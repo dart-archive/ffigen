@@ -11,8 +11,7 @@ void main() {
           Func(
             name: 'noParam',
             dartDoc: 'Just a test function\nheres another line',
-            returnType: Type(
-              type: BroadType.NativeType,
+            returnType: Type.nativeType(
               nativeType: SupportedNativeType.Int32,
             ),
           ),
@@ -21,21 +20,18 @@ void main() {
             parameters: [
               Parameter(
                 name: 'a',
-                type: Type(
-                  type: BroadType.NativeType,
+                type: Type.nativeType(
                   nativeType: SupportedNativeType.Int32,
                 ),
               ),
               Parameter(
                 name: 'b',
-                type: Type(
-                  type: BroadType.NativeType,
+                type: Type.nativeType(
                   nativeType: SupportedNativeType.Uint8,
                 ),
               ),
             ],
-            returnType: Type(
-              type: BroadType.NativeType,
+            returnType: Type.nativeType(
               nativeType: SupportedNativeType.Char,
             ),
           ),
@@ -44,32 +40,25 @@ void main() {
             parameters: [
               Parameter(
                 name: 'a',
-                type: Type(
-                  type: BroadType.Pointer,
-                  child: Type(
-                    type: BroadType.NativeType,
+                type: Type.pointer(
+                  child: Type.nativeType(
                     nativeType: SupportedNativeType.Int32,
                   ),
                 ),
               ),
               Parameter(
                 name: 'b',
-                type: Type(
-                  type: BroadType.Pointer,
-                  child: Type(
-                    type: BroadType.Pointer,
-                    child: Type(
-                      type: BroadType.NativeType,
+                type: Type.pointer(
+                  child: Type.pointer(
+                    child: Type.nativeType(
                       nativeType: SupportedNativeType.Uint8,
                     ),
                   ),
                 ),
               ),
             ],
-            returnType: Type(
-              type: BroadType.Pointer,
-              child: Type(
-                type: BroadType.NativeType,
+            returnType: Type.pointer(
+              child: Type.nativeType(
                 nativeType: SupportedNativeType.Float64,
               ),
             ),
@@ -170,22 +159,19 @@ typedef _dart_withPointerParam = ffi.Pointer<ffi.Double> Function(
             members: [
               Member(
                 name: 'a',
-                type: Type(
-                  type: BroadType.NativeType,
+                type: Type.nativeType(
                   nativeType: SupportedNativeType.Int32,
                 ),
               ),
               Member(
                 name: 'b',
-                type: Type(
-                  type: BroadType.NativeType,
+                type: Type.nativeType(
                   nativeType: SupportedNativeType.Double,
                 ),
               ),
               Member(
                 name: 'c',
-                type: Type(
-                  type: BroadType.NativeType,
+                type: Type.nativeType(
                   nativeType: SupportedNativeType.Char,
                 ),
               ),
@@ -196,22 +182,17 @@ typedef _dart_withPointerParam = ffi.Pointer<ffi.Double> Function(
             members: [
               Member(
                 name: 'a',
-                type: Type(
-                  type: BroadType.Pointer,
-                  child: Type(
-                    type: BroadType.NativeType,
+                type: Type.pointer(
+                  child: Type.nativeType(
                     nativeType: SupportedNativeType.Int32,
                   ),
                 ),
               ),
               Member(
                 name: 'b',
-                type: Type(
-                  type: BroadType.Pointer,
-                  child: Type(
-                    type: BroadType.Pointer,
-                    child: Type(
-                      type: BroadType.NativeType,
+                type: Type.pointer(
+                  child: Type.pointer(
+                    child: Type.nativeType(
                       nativeType: SupportedNativeType.Double,
                     ),
                   ),
@@ -219,8 +200,7 @@ typedef _dart_withPointerParam = ffi.Pointer<ffi.Double> Function(
               ),
               Member(
                 name: 'c',
-                type: Type(
-                  type: BroadType.NativeType,
+                type: Type.nativeType(
                   nativeType: SupportedNativeType.Char,
                 ),
               ),
@@ -284,22 +264,19 @@ class WithPointerMember extends ffi.Struct{
             members: [
               Member(
                 name: 'a',
-                type: Type(
-                  type: BroadType.NativeType,
+                type: Type.nativeType(
                   nativeType: SupportedNativeType.Int32,
                 ),
               ),
               Member(
                 name: 'b',
-                type: Type(
-                  type: BroadType.NativeType,
+                type: Type.nativeType(
                   nativeType: SupportedNativeType.Double,
                 ),
               ),
               Member(
                 name: 'c',
-                type: Type(
-                  type: BroadType.NativeType,
+                type: Type.nativeType(
                   nativeType: SupportedNativeType.Char,
                 ),
               ),
@@ -310,22 +287,17 @@ class WithPointerMember extends ffi.Struct{
             parameters: [
               Parameter(
                 name: 'some',
-                type: Type(
-                  type: BroadType.Pointer,
-                  child: Type(
-                    type: BroadType.Pointer,
-                    child: Type(
-                      type: BroadType.Struct,
+                type: Type.pointer(
+                  child: Type.pointer(
+                    child: Type.struct(
                       structName: 'SomeStruc',
                     ),
                   ),
                 ),
               ),
             ],
-            returnType: Type(
-              type: BroadType.Pointer,
-              child: Type(
-                type: BroadType.Struct,
+            returnType: Type.pointer(
+              child: Type.struct(
                 structName: 'SomeStruc',
               ),
             ),
@@ -389,37 +361,30 @@ typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
         bindings: [
           Global(
             name: 'test1',
-            type: Type(
-              type: BroadType.NativeType,
+            type: Type.nativeType(
               nativeType: SupportedNativeType.Int32,
             ),
           ),
           Global(
             name: 'test2',
-            type: Type(
-              type: BroadType.Pointer,
-              child: Type(
-                type: BroadType.NativeType,
+            type: Type.pointer(
+              child: Type.nativeType(
                 nativeType: SupportedNativeType.Float,
               ),
             ),
           ),
           Global(
             name: 'test3',
-            type: Type(
-              type: BroadType.Pointer,
-              child: Type(
-                type: BroadType.FfiUtilType,
+            type: Type.pointer(
+              child: Type.ffiUtilType(
                 ffiUtilType: FfiUtilType.Utf8,
               ),
             ),
           ),
           Global(
             name: 'test4',
-            type: Type(
-              type: BroadType.Pointer,
-              child: Type(
-                type: BroadType.FfiUtilType,
+            type: Type.pointer(
+              child: Type.ffiUtilType(
                 ffiUtilType: FfiUtilType.Utf16,
               ),
             ),
@@ -429,10 +394,8 @@ typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
           ),
           Global(
             name: 'test5',
-            type: Type(
-              type: BroadType.Pointer,
-              child: Type(
-                type: BroadType.Struct,
+            type: Type.pointer(
+              child: Type.struct(
                 structName: 'Some',
               ),
             ),
@@ -479,16 +442,14 @@ final ffi.Pointer<Some> test5 = _dylib.lookup<ffi.Pointer<Some>>('test5').value;
         bindings: [
           Constant(
             name: 'test1',
-            type: Type(
-              type: BroadType.NativeType,
+            type: Type.nativeType(
               nativeType: SupportedNativeType.Int32,
             ),
             rawValue: '20',
           ),
           Constant(
             name: 'test2',
-            type: Type(
-              type: BroadType.NativeType,
+            type: Type.nativeType(
               nativeType: SupportedNativeType.Float,
             ),
             rawValue: '20.0',
@@ -527,33 +488,28 @@ const double test2 = 20.0;
           TypedefC(
             dartDoc: 'just a test',
             name: 'test1',
-            returnType: Type(
-              type: BroadType.NativeType,
+            returnType: Type.nativeType(
               nativeType: SupportedNativeType.Int32,
             ),
           ),
           Struc(name: 'SomeStruct'),
           TypedefC(
             name: 'test2',
-            returnType: Type(
-              type: BroadType.Pointer,
-              child: Type(
-                type: BroadType.NativeType,
+            returnType: Type.pointer(
+              child: Type.nativeType(
                 nativeType: SupportedNativeType.Int32,
               ),
             ),
             parameters: [
               Parameter(
                 name: 'param1',
-                type: Type(
-                  type: BroadType.Pointer,
-                  child: Type(type: BroadType.Struct, structName: 'SomeStruct'),
+                type: Type.pointer(
+                  child: Type.struct( structName: 'SomeStruct'),
                 ),
               ),
               Parameter(
                 name: 'param2',
-                type: Type(
-                  type: BroadType.NativeType,
+                type: Type.nativeType(
                   nativeType: SupportedNativeType.Char,
                 ),
               ),

@@ -16,6 +16,9 @@ void init(ffi.DynamicLibrary dylib) {
 class CXCursor extends ffi.Struct {}
 
 ///
+class CXSourceLocation extends ffi.Struct {}
+
+///
 class CXString extends ffi.Struct {}
 
 ///
@@ -385,6 +388,28 @@ typedef _dart_clang_getCursorKind_wrap = int Function(
   ffi.Pointer<CXCursor> cursor,
 );
 
+ffi.Pointer<CXSourceLocation> clang_getCursorLocation_wrap(
+  ffi.Pointer<CXCursor> cursor,
+) {
+  return _clang_getCursorLocation_wrap(
+    cursor,
+  );
+}
+
+final _dart_clang_getCursorLocation_wrap _clang_getCursorLocation_wrap =
+    _dylib.lookupFunction<_c_clang_getCursorLocation_wrap,
+        _dart_clang_getCursorLocation_wrap>('clang_getCursorLocation_wrap');
+
+typedef _c_clang_getCursorLocation_wrap = ffi.Pointer<CXSourceLocation>
+    Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _dart_clang_getCursorLocation_wrap = ffi.Pointer<CXSourceLocation>
+    Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
 /// Free cursor after use, dispose CXString using [clang_disposeString_wrap]
 ffi.Pointer<CXString> clang_getCursorSpelling_wrap(
   ffi.Pointer<CXCursor> cursor,
@@ -473,6 +498,62 @@ typedef _c_clang_getEnumConstantDeclValue_wrap = ffi.Int64 Function(
 
 typedef _dart_clang_getEnumConstantDeclValue_wrap = int Function(
   ffi.Pointer<CXCursor> cursor,
+);
+
+void clang_getFileLocation_wrap(
+  ffi.Pointer<CXSourceLocation> location,
+  ffi.Pointer<ffi.Pointer<ffi.Void>> cxfilePtr,
+  ffi.Pointer<ffi.Uint32> line,
+  ffi.Pointer<ffi.Uint32> column,
+  ffi.Pointer<ffi.Uint32> offset,
+) {
+  return _clang_getFileLocation_wrap(
+    location,
+    cxfilePtr,
+    line,
+    column,
+    offset,
+  );
+}
+
+final _dart_clang_getFileLocation_wrap _clang_getFileLocation_wrap =
+    _dylib.lookupFunction<_c_clang_getFileLocation_wrap,
+        _dart_clang_getFileLocation_wrap>('clang_getFileLocation_wrap');
+
+typedef _c_clang_getFileLocation_wrap = ffi.Void Function(
+  ffi.Pointer<CXSourceLocation> location,
+  ffi.Pointer<ffi.Pointer<ffi.Void>> cxfilePtr,
+  ffi.Pointer<ffi.Uint32> line,
+  ffi.Pointer<ffi.Uint32> column,
+  ffi.Pointer<ffi.Uint32> offset,
+);
+
+typedef _dart_clang_getFileLocation_wrap = void Function(
+  ffi.Pointer<CXSourceLocation> location,
+  ffi.Pointer<ffi.Pointer<ffi.Void>> cxfilePtr,
+  ffi.Pointer<ffi.Uint32> line,
+  ffi.Pointer<ffi.Uint32> column,
+  ffi.Pointer<ffi.Uint32> offset,
+);
+
+ffi.Pointer<CXString> clang_getFileName_wrap(
+  ffi.Pointer<ffi.Void> sfile,
+) {
+  return _clang_getFileName_wrap(
+    sfile,
+  );
+}
+
+final _dart_clang_getFileName_wrap _clang_getFileName_wrap = _dylib
+    .lookupFunction<_c_clang_getFileName_wrap, _dart_clang_getFileName_wrap>(
+        'clang_getFileName_wrap');
+
+typedef _c_clang_getFileName_wrap = ffi.Pointer<CXString> Function(
+  ffi.Pointer<ffi.Void> sfile,
+);
+
+typedef _dart_clang_getFileName_wrap = ffi.Pointer<CXString> Function(
+  ffi.Pointer<ffi.Void> sfile,
 );
 
 /// Get Arguments of a function type, returns -1 for other cxtypes

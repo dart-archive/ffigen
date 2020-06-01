@@ -2221,6 +2221,28 @@ typedef _dart_clang_getCursorKind_wrap = int Function(
   ffi.Pointer<CXCursor> cursor,
 );
 
+ffi.Pointer<CXSourceLocation> clang_getCursorLocation_wrap(
+  ffi.Pointer<CXCursor> cursor,
+) {
+  return _clang_getCursorLocation_wrap(
+    cursor,
+  );
+}
+
+final _dart_clang_getCursorLocation_wrap _clang_getCursorLocation_wrap =
+    _dylib.lookupFunction<_c_clang_getCursorLocation_wrap,
+        _dart_clang_getCursorLocation_wrap>('clang_getCursorLocation_wrap');
+
+typedef _c_clang_getCursorLocation_wrap = ffi.Pointer<CXSourceLocation>
+    Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _dart_clang_getCursorLocation_wrap = ffi.Pointer<CXSourceLocation>
+    Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
 /// The name of parameter, struct, typedef
 ffi.Pointer<CXString> clang_getCursorSpelling_wrap(
   ffi.Pointer<CXCursor> cursor,
@@ -2490,6 +2512,62 @@ typedef _dart_clang_getFileContents = ffi.Pointer<ffi2.Utf8> Function(
   ffi.Pointer<CXTranslationUnitImpl> tu,
   ffi.Pointer<ffi.Void> file,
   ffi.Pointer<ffi.Uint64> size,
+);
+
+void clang_getFileLocation_wrap(
+  ffi.Pointer<CXSourceLocation> location,
+  ffi.Pointer<ffi.Pointer<ffi.Void>> file,
+  ffi.Pointer<ffi.Uint32> line,
+  ffi.Pointer<ffi.Uint32> column,
+  ffi.Pointer<ffi.Uint32> offset,
+) {
+  return _clang_getFileLocation_wrap(
+    location,
+    file,
+    line,
+    column,
+    offset,
+  );
+}
+
+final _dart_clang_getFileLocation_wrap _clang_getFileLocation_wrap =
+    _dylib.lookupFunction<_c_clang_getFileLocation_wrap,
+        _dart_clang_getFileLocation_wrap>('clang_getFileLocation_wrap');
+
+typedef _c_clang_getFileLocation_wrap = ffi.Void Function(
+  ffi.Pointer<CXSourceLocation> location,
+  ffi.Pointer<ffi.Pointer<ffi.Void>> file,
+  ffi.Pointer<ffi.Uint32> line,
+  ffi.Pointer<ffi.Uint32> column,
+  ffi.Pointer<ffi.Uint32> offset,
+);
+
+typedef _dart_clang_getFileLocation_wrap = void Function(
+  ffi.Pointer<CXSourceLocation> location,
+  ffi.Pointer<ffi.Pointer<ffi.Void>> file,
+  ffi.Pointer<ffi.Uint32> line,
+  ffi.Pointer<ffi.Uint32> column,
+  ffi.Pointer<ffi.Uint32> offset,
+);
+
+ffi.Pointer<CXString> clang_getFileName_wrap(
+  ffi.Pointer<ffi.Void> SFile,
+) {
+  return _clang_getFileName_wrap(
+    SFile,
+  );
+}
+
+final _dart_clang_getFileName_wrap _clang_getFileName_wrap = _dylib
+    .lookupFunction<_c_clang_getFileName_wrap, _dart_clang_getFileName_wrap>(
+        'clang_getFileName_wrap');
+
+typedef _c_clang_getFileName_wrap = ffi.Pointer<CXString> Function(
+  ffi.Pointer<ffi.Void> SFile,
+);
+
+typedef _dart_clang_getFileName_wrap = ffi.Pointer<CXString> Function(
+  ffi.Pointer<ffi.Void> SFile,
 );
 
 /// Retrieve the last modification time of the given file.

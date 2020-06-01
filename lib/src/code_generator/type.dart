@@ -81,7 +81,7 @@ class Type {
   /// Child Type, e.g Pointer(Parent) to Int(Child)
   final Type child;
 
-  Type({
+  Type._({
     @required this.type,
     this.child,
     this.structName,
@@ -89,6 +89,25 @@ class Type {
     this.ffiUtilType,
     this.nativeFuncName,
   });
+
+  factory Type.pointer({Type child}) {
+    return Type._(type: BroadType.Pointer, child: child);
+  }
+  factory Type.struct({Type child, String structName}) {
+    return Type._(type: BroadType.Struct, child: child, structName: structName);
+  }
+  factory Type.nativeFunc({Type child, String nativeFuncName}) {
+    return Type._(
+        type: BroadType.NativeFunction,
+        child: child,
+        nativeFuncName: nativeFuncName);
+  }
+  factory Type.nativeType({SupportedNativeType nativeType}) {
+    return Type._(type: BroadType.NativeType, nativeType: nativeType);
+  }
+  factory Type.ffiUtilType({FfiUtilType ffiUtilType}) {
+    return Type._(type: BroadType.FfiUtilType, ffiUtilType: ffiUtilType);
+  }
 
   bool get isPrimitive => type == BroadType.NativeType;
 

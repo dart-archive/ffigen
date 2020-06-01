@@ -23,7 +23,12 @@ CXType *ptrToCXType(CXType t)
     *c = t;
     return c;
 }
-
+CXSourceLocation *ptrToCXSourceLocation(CXSourceLocation t)
+{
+    CXSourceLocation *c = aloc(CXSourceLocation);
+    *c = t;
+    return c;
+}
 // START ===== Functions for testing libclang behavior in C
 enum CXChildVisitResult visitor_for_test_in_c(CXCursor cursor, CXCursor parent, CXClientData clientData)
 {
@@ -236,6 +241,21 @@ long long clang_getEnumConstantDeclValue_wrap(CXCursor *cursor)
 CXString *clang_Cursor_getBriefCommentText_wrap(CXCursor *cursor)
 {
     return ptrToCXString(clang_Cursor_getBriefCommentText(*cursor));
+}
+
+CXSourceLocation *clang_getCursorLocation_wrap(CXCursor *cursor)
+{
+    return ptrToCXSourceLocation(clang_getCursorLocation(*cursor));
+}
+
+void clang_getFileLocation_wrap(CXSourceLocation *location, CXFile *file, unsigned *line, unsigned *column, unsigned *offset)
+{
+    return clang_getFileLocation(*location, file, line, column, offset);
+}
+
+CXString *clang_getFileName_wrap(CXFile SFile)
+{
+    return ptrToCXString(clang_getFileName(SFile));
 }
 
 // END ===== WRAPPER FUNCTIONS =====================
