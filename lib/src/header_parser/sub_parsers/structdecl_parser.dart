@@ -19,13 +19,20 @@ Struc parseStructDeclaration(
 
   /// Optionally provide name (useful in case struct is inside a typedef)
   String name,
+
+  /// to override shouldInclude methods
+  /// (useful in case of extracting structs
+  /// when they are passed/returned by an included function)
+  /// you should check if binding is not already included
+  /// before setting this to true
+  bool doInclude = false,
 }) {
   _struc = null;
   String structName = name ?? cursor.spelling();
 
   if (structName == '') {
     _logger.finest('unnamed structure declaration');
-  } else if (shouldIncludeStruct(structName)) {
+  } else if (doInclude || shouldIncludeStruct(structName)) {
     _logger
         .fine("Structure: name:${structName} ${cursor.completeStringRepr()}");
     // TODO: also parse struct fields

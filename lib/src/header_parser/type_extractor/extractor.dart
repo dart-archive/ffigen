@@ -7,6 +7,7 @@ import 'package:logging/logging.dart';
 import '../type_extractor/cxtypekindmap.dart';
 import '../clang_bindings/clang_bindings.dart' as clang;
 import '../clang_bindings/clang_constants.dart' as clang;
+import '../sub_parsers/structdecl_parser.dart';
 import '../utils.dart';
 import '../root_parser.dart';
 import '../includer.dart';
@@ -40,7 +41,8 @@ Type getCodeGenType(Pointer<clang.CXType> cxtype, {String parentName}) {
       return Type.nativeType(
         nativeType: SupportedNativeType.Int32,
       );
-    case clang.CXTypeKind.CXType_FunctionProto:
+    case clang.CXTypeKind
+        .CXType_FunctionProto: // primarily used for function pointers
       return _extractFromFunctionProto(cxtype, parentName);
     default:
       if (cxTypeKindToSupportedNativeTypes.containsKey(kind)) {
@@ -65,14 +67,21 @@ Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
 
   switch (clang.clang_getCursorKind_wrap(cursor)) {
     case clang.CXCursorKind.CXCursor_StructDecl:
-      type = Type.struct();
-
       var cxtype = cursor.type();
-      type.structName = cursor.spelling();
-      if (type.structName == '') {
+      var structName = cursor.spelling();
+      if (structName == '') {
         // incase of anonymous structs defined inside a typedef
-        type.structName = cxtype.spelling();
+        structName = cxtype.spelling();
       }
+
+      type = Type.struct(structName: structName);
+
+      // Also add a struct binding, if its unseen
+      if (isUnseenStruct(structName, addToSeen: true)) {
+        addToBindings(
+            parseStructDeclaration(cursor, name: structName, doInclude: true));
+      }
+
       cxtype.dispose();
       break;
     default:
@@ -82,6 +91,7 @@ Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
   return type;
 }
 
+// Used for function pointer arguments
 Type _extractFromFunctionProto(
     Pointer<clang.CXType> cxtype, String parentName) {
   String name = parentName;
@@ -91,7 +101,7 @@ Type _extractFromFunctionProto(
     name = _getNextUniqueString('_typedefC_noname');
   }
 
-  if (shouldIncludeTypedefC(name)) {
+  if (isUnseenTypedefC(name, addToSeen: true)) {
     var typedefC = TypedefC(
       name: name,
       returnType:

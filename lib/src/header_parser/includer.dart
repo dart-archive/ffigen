@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 import 'data.dart';
 
 /// Utility to check whether a binding should be parsed or not
@@ -47,15 +49,6 @@ bool shouldIncludeEnumClass(String name) {
   }
 }
 
-bool shouldIncludeTypedefC(String name) {
-  if (_typedefC.contains(name)) {
-    return false;
-  } else {
-    _typedefC.add(name);
-    return true;
-  }
-}
-
 /// Returns if cursor should be included based on
 /// header-exclusions, for used in root_parser
 bool shouldIncludeRootCursor(String sourceFile) {
@@ -73,6 +66,28 @@ bool shouldIncludeRootCursor(String sourceFile) {
   if (config.includedInclusionHeaders.length > 0) {
     return false;
   } else {
+    return true;
+  }
+}
+
+bool isUnseenTypedefC(String name, {@required bool addToSeen}) {
+  if (_typedefC.contains(name)) {
+    return false;
+  } else {
+    if (addToSeen) {
+      _typedefC.add(name);
+    }
+    return true;
+  }
+}
+
+bool isUnseenStruct(String name, {@required bool addToSeen}) {
+  if (_structs.contains(name)) {
+    return false;
+  } else {
+    if (addToSeen) {
+      _structs.add(name);
+    }
     return true;
   }
 }

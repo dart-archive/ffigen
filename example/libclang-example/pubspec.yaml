@@ -46,9 +46,9 @@ ffigen:
       include:
           matches:
             - 'CX.*'
-          names:
+          # names:
         # should match exact struct name
-            - 'IndexerCallbacks'
+            # - 'IndexerCallbacks'
     enums:
       include:
         names:
