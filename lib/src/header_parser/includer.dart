@@ -55,3 +55,24 @@ bool shouldIncludeTypedefC(String name) {
     return true;
   }
 }
+
+/// Returns if cursor should be included based on
+/// header-exclusions, for used in root_parser
+bool shouldIncludeRootCursor(String sourceFile) {
+  String name = sourceFile.split('/').last;
+
+  if (config.excludedInclusionHeaders.contains(name)) {
+    return false;
+  }
+
+  if (config.includedInclusionHeaders.contains(name)) {
+    return true;
+  }
+
+  // If any includedInclusionHeaders is provided, return false
+  if (config.includedInclusionHeaders.length > 0) {
+    return false;
+  } else {
+    return true;
+  }
+}

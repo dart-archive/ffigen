@@ -72,6 +72,25 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
     return r;
   }
 
+  String sourceFileName() {
+    var cxsource = clang.clang_getCursorLocation_wrap(this);
+    Pointer<Pointer<Void>> cxfilePtr = allocate<Pointer<Void>>();
+    // TODO: hardcoded type, check
+    Pointer<Uint32> line = allocate<Uint32>();
+    Pointer<Uint32> column = allocate<Uint32>();
+    Pointer<Uint32> offset = allocate<Uint32>();
+
+    // puts the values in these pointers
+    clang.clang_getFileLocation_wrap(cxsource, cxfilePtr, line, column, offset);
+    var s = clang.clang_getFileName_wrap(cxfilePtr.value).toStringAndDispose();
+    free(cxsource);
+    free(cxfilePtr);
+    free(line);
+    free(column);
+    free(offset);
+    return s;
+  }
+
   void dispose() {
     free(this);
   }

@@ -38,47 +38,50 @@ void initParser(Config c) {
 
 /// Parses source files and adds generated bindings to [bindings]
 List<Binding> parseAndGenerateBindings() {
-  // TODO: implement for more than 1 header in list
-  var headerLocation = data.config.headers[0].path;
-
   var index = clang.clang_createIndex(0, 0);
 
   Pointer<Pointer<Utf8>> clangCmdArgs = nullptr;
   int cmdLen = 0;
-
   if (data.config.compilerOpts != null) {
     clangCmdArgs = createDynamicStringArray(data.config.compilerOpts);
     cmdLen = data.config.compilerOpts.length;
   }
 
-  var tu = clang.clang_parseTranslationUnit(
-    index,
-    Utf8.toUtf8(headerLocation),
-    clangCmdArgs,
-    cmdLen,
-    nullptr,
-    0,
-    clang.CXTranslationUnit_Flags.CXTranslationUnit_SkipFunctionBodies,
-  );
+  /// Contains all bindings
+  List<Binding> bindings = [];
+
+  for (var header in data.config.headers) {
+    var headerLocation = header.path;
+    _logger.fine('Creating TranslationUnit for header: $headerLocation');
+
+    var tu = clang.clang_parseTranslationUnit(
+      index,
+      Utf8.toUtf8(headerLocation),
+      clangCmdArgs,
+      cmdLen,
+      nullptr,
+      0,
+      clang.CXTranslationUnit_Flags.CXTranslationUnit_SkipFunctionBodies,
+    );
+
+    // TODO: look into printing error details using `clang_parseTranslationUnit2` method
+    if (tu == null) {
+      throw Exception('Error creating TranslationUnit');
+    }
+
+    _logger.fine('TU diagnostics:\n' + getTUDiagnostic(tu));
+    var rootCursor = clang.clang_getTranslationUnitCursor_wrap(tu);
+
+    bindings.addAll(parseRootCursor(rootCursor));
+
+    // cleanup
+    rootCursor.dispose();
+    clang.clang_disposeTranslationUnit(tu);
+  }
 
   if (data.config.compilerOpts != null) {
     clangCmdArgs.dispose(data.config.compilerOpts.length);
   }
-
-  // TODO: look into printing error details using `clang_parseTranslationUnit2` method
-  if (tu == null) {
-    throw Exception('Error creating translation Unit');
-  }
-
-  _logger.fine('TU diagnostics:\n' + getTUDiagnostic(tu));
-  var rootCursor = clang.clang_getTranslationUnitCursor_wrap(tu);
-
-  var bindings = parseRootCursor(rootCursor);
-
-  // cleanup
-  rootCursor.dispose();
-  clang.clang_disposeTranslationUnit(tu);
   clang.clang_disposeIndex(index);
-
   return bindings;
 }

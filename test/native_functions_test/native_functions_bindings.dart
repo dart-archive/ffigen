@@ -203,5 +203,3 @@ typedef _c_Function1Uint8 = ffi.Uint8 Function(
 typedef _dart_Function1Uint8 = int Function(
   int x,
 );
-
-class __fsid_t extends ffi.Struct {}

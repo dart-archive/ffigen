@@ -78,8 +78,6 @@ typedef CXInclusionVisitor = ffi.Void Function(
   ffi.Pointer<ffi.Void>,
 );
 
-class CXModuleMapDescriptorImpl extends ffi.Struct {}
-
 /// Describes the availability of a given entity on a particular platform, e.g., a particular class might only be available on Mac OS 10.7 or newer.
 class CXPlatformAvailability extends ffi.Struct {}
 
@@ -238,8 +236,6 @@ class CXUnsavedFile extends ffi.Struct {}
 
 /// Describes a version number of the form major.minor.subminor.
 class CXVersion extends ffi.Struct {}
-
-class CXVirtualFileOverlayImpl extends ffi.Struct {}
 
 /// A group of callbacks used by #clang_indexSourceFile and #clang_indexTranslationUnit.
 class IndexerCallbacks extends ffi.Struct {}
@@ -633,143 +629,6 @@ typedef _dart_clang_IndexAction_dispose = void Function(
   ffi.Pointer<ffi.Void> arg0,
 );
 
-/// Create a CXModuleMapDescriptor object. Must be disposed with clang_ModuleMapDescriptor_dispose().
-ffi.Pointer<CXModuleMapDescriptorImpl> clang_ModuleMapDescriptor_create(
-  int options,
-) {
-  return _clang_ModuleMapDescriptor_create(
-    options,
-  );
-}
-
-final _dart_clang_ModuleMapDescriptor_create _clang_ModuleMapDescriptor_create =
-    _dylib.lookupFunction<_c_clang_ModuleMapDescriptor_create,
-            _dart_clang_ModuleMapDescriptor_create>(
-        'clang_ModuleMapDescriptor_create');
-
-typedef _c_clang_ModuleMapDescriptor_create
-    = ffi.Pointer<CXModuleMapDescriptorImpl> Function(
-  ffi.Uint32 options,
-);
-
-typedef _dart_clang_ModuleMapDescriptor_create
-    = ffi.Pointer<CXModuleMapDescriptorImpl> Function(
-  int options,
-);
-
-/// Dispose a CXModuleMapDescriptor object.
-void clang_ModuleMapDescriptor_dispose(
-  ffi.Pointer<CXModuleMapDescriptorImpl> arg0,
-) {
-  return _clang_ModuleMapDescriptor_dispose(
-    arg0,
-  );
-}
-
-final _dart_clang_ModuleMapDescriptor_dispose
-    _clang_ModuleMapDescriptor_dispose = _dylib.lookupFunction<
-            _c_clang_ModuleMapDescriptor_dispose,
-            _dart_clang_ModuleMapDescriptor_dispose>(
-        'clang_ModuleMapDescriptor_dispose');
-
-typedef _c_clang_ModuleMapDescriptor_dispose = ffi.Void Function(
-  ffi.Pointer<CXModuleMapDescriptorImpl> arg0,
-);
-
-typedef _dart_clang_ModuleMapDescriptor_dispose = void Function(
-  ffi.Pointer<CXModuleMapDescriptorImpl> arg0,
-);
-
-/// Sets the framework module name that the module.map describes.
-int clang_ModuleMapDescriptor_setFrameworkModuleName(
-  ffi.Pointer<CXModuleMapDescriptorImpl> arg0,
-  ffi.Pointer<ffi2.Utf8> name,
-) {
-  return _clang_ModuleMapDescriptor_setFrameworkModuleName(
-    arg0,
-    name,
-  );
-}
-
-final _dart_clang_ModuleMapDescriptor_setFrameworkModuleName
-    _clang_ModuleMapDescriptor_setFrameworkModuleName = _dylib.lookupFunction<
-            _c_clang_ModuleMapDescriptor_setFrameworkModuleName,
-            _dart_clang_ModuleMapDescriptor_setFrameworkModuleName>(
-        'clang_ModuleMapDescriptor_setFrameworkModuleName');
-
-typedef _c_clang_ModuleMapDescriptor_setFrameworkModuleName = ffi.Int32
-    Function(
-  ffi.Pointer<CXModuleMapDescriptorImpl> arg0,
-  ffi.Pointer<ffi2.Utf8> name,
-);
-
-typedef _dart_clang_ModuleMapDescriptor_setFrameworkModuleName = int Function(
-  ffi.Pointer<CXModuleMapDescriptorImpl> arg0,
-  ffi.Pointer<ffi2.Utf8> name,
-);
-
-/// Sets the umbrealla header name that the module.map describes.
-int clang_ModuleMapDescriptor_setUmbrellaHeader(
-  ffi.Pointer<CXModuleMapDescriptorImpl> arg0,
-  ffi.Pointer<ffi2.Utf8> name,
-) {
-  return _clang_ModuleMapDescriptor_setUmbrellaHeader(
-    arg0,
-    name,
-  );
-}
-
-final _dart_clang_ModuleMapDescriptor_setUmbrellaHeader
-    _clang_ModuleMapDescriptor_setUmbrellaHeader = _dylib.lookupFunction<
-            _c_clang_ModuleMapDescriptor_setUmbrellaHeader,
-            _dart_clang_ModuleMapDescriptor_setUmbrellaHeader>(
-        'clang_ModuleMapDescriptor_setUmbrellaHeader');
-
-typedef _c_clang_ModuleMapDescriptor_setUmbrellaHeader = ffi.Int32 Function(
-  ffi.Pointer<CXModuleMapDescriptorImpl> arg0,
-  ffi.Pointer<ffi2.Utf8> name,
-);
-
-typedef _dart_clang_ModuleMapDescriptor_setUmbrellaHeader = int Function(
-  ffi.Pointer<CXModuleMapDescriptorImpl> arg0,
-  ffi.Pointer<ffi2.Utf8> name,
-);
-
-/// Write out the CXModuleMapDescriptor object to a char buffer.
-int clang_ModuleMapDescriptor_writeToBuffer(
-  ffi.Pointer<CXModuleMapDescriptorImpl> arg0,
-  int options,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> out_buffer_ptr,
-  ffi.Pointer<ffi.Uint32> out_buffer_size,
-) {
-  return _clang_ModuleMapDescriptor_writeToBuffer(
-    arg0,
-    options,
-    out_buffer_ptr,
-    out_buffer_size,
-  );
-}
-
-final _dart_clang_ModuleMapDescriptor_writeToBuffer
-    _clang_ModuleMapDescriptor_writeToBuffer = _dylib.lookupFunction<
-            _c_clang_ModuleMapDescriptor_writeToBuffer,
-            _dart_clang_ModuleMapDescriptor_writeToBuffer>(
-        'clang_ModuleMapDescriptor_writeToBuffer');
-
-typedef _c_clang_ModuleMapDescriptor_writeToBuffer = ffi.Int32 Function(
-  ffi.Pointer<CXModuleMapDescriptorImpl> arg0,
-  ffi.Uint32 options,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> out_buffer_ptr,
-  ffi.Pointer<ffi.Uint32> out_buffer_size,
-);
-
-typedef _dart_clang_ModuleMapDescriptor_writeToBuffer = int Function(
-  ffi.Pointer<CXModuleMapDescriptorImpl> arg0,
-  int options,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> out_buffer_ptr,
-  ffi.Pointer<ffi.Uint32> out_buffer_size,
-);
-
 /// Returns the module file where the provided module object came from.
 ffi.Pointer<ffi.Void> clang_Module_getASTFile(
   ffi.Pointer<ffi.Void> Module,
@@ -1027,145 +886,6 @@ typedef _c_clang_Type_getNamedType_wrap = ffi.Pointer<CXType> Function(
 
 typedef _dart_clang_Type_getNamedType_wrap = ffi.Pointer<CXType> Function(
   ffi.Pointer<CXType> elaboratedType,
-);
-
-/// Map an absolute virtual file path to an absolute real one. The virtual path must be canonicalized (not contain "."/"..").
-int clang_VirtualFileOverlay_addFileMapping(
-  ffi.Pointer<CXVirtualFileOverlayImpl> arg0,
-  ffi.Pointer<ffi2.Utf8> virtualPath,
-  ffi.Pointer<ffi2.Utf8> realPath,
-) {
-  return _clang_VirtualFileOverlay_addFileMapping(
-    arg0,
-    virtualPath,
-    realPath,
-  );
-}
-
-final _dart_clang_VirtualFileOverlay_addFileMapping
-    _clang_VirtualFileOverlay_addFileMapping = _dylib.lookupFunction<
-            _c_clang_VirtualFileOverlay_addFileMapping,
-            _dart_clang_VirtualFileOverlay_addFileMapping>(
-        'clang_VirtualFileOverlay_addFileMapping');
-
-typedef _c_clang_VirtualFileOverlay_addFileMapping = ffi.Int32 Function(
-  ffi.Pointer<CXVirtualFileOverlayImpl> arg0,
-  ffi.Pointer<ffi2.Utf8> virtualPath,
-  ffi.Pointer<ffi2.Utf8> realPath,
-);
-
-typedef _dart_clang_VirtualFileOverlay_addFileMapping = int Function(
-  ffi.Pointer<CXVirtualFileOverlayImpl> arg0,
-  ffi.Pointer<ffi2.Utf8> virtualPath,
-  ffi.Pointer<ffi2.Utf8> realPath,
-);
-
-/// Create a CXVirtualFileOverlay object. Must be disposed with clang_VirtualFileOverlay_dispose().
-ffi.Pointer<CXVirtualFileOverlayImpl> clang_VirtualFileOverlay_create(
-  int options,
-) {
-  return _clang_VirtualFileOverlay_create(
-    options,
-  );
-}
-
-final _dart_clang_VirtualFileOverlay_create _clang_VirtualFileOverlay_create =
-    _dylib.lookupFunction<_c_clang_VirtualFileOverlay_create,
-            _dart_clang_VirtualFileOverlay_create>(
-        'clang_VirtualFileOverlay_create');
-
-typedef _c_clang_VirtualFileOverlay_create
-    = ffi.Pointer<CXVirtualFileOverlayImpl> Function(
-  ffi.Uint32 options,
-);
-
-typedef _dart_clang_VirtualFileOverlay_create
-    = ffi.Pointer<CXVirtualFileOverlayImpl> Function(
-  int options,
-);
-
-/// Dispose a CXVirtualFileOverlay object.
-void clang_VirtualFileOverlay_dispose(
-  ffi.Pointer<CXVirtualFileOverlayImpl> arg0,
-) {
-  return _clang_VirtualFileOverlay_dispose(
-    arg0,
-  );
-}
-
-final _dart_clang_VirtualFileOverlay_dispose _clang_VirtualFileOverlay_dispose =
-    _dylib.lookupFunction<_c_clang_VirtualFileOverlay_dispose,
-            _dart_clang_VirtualFileOverlay_dispose>(
-        'clang_VirtualFileOverlay_dispose');
-
-typedef _c_clang_VirtualFileOverlay_dispose = ffi.Void Function(
-  ffi.Pointer<CXVirtualFileOverlayImpl> arg0,
-);
-
-typedef _dart_clang_VirtualFileOverlay_dispose = void Function(
-  ffi.Pointer<CXVirtualFileOverlayImpl> arg0,
-);
-
-/// Set the case sensitivity for the CXVirtualFileOverlay object. The CXVirtualFileOverlay object is case-sensitive by default, this option can be used to override the default.
-int clang_VirtualFileOverlay_setCaseSensitivity(
-  ffi.Pointer<CXVirtualFileOverlayImpl> arg0,
-  int caseSensitive,
-) {
-  return _clang_VirtualFileOverlay_setCaseSensitivity(
-    arg0,
-    caseSensitive,
-  );
-}
-
-final _dart_clang_VirtualFileOverlay_setCaseSensitivity
-    _clang_VirtualFileOverlay_setCaseSensitivity = _dylib.lookupFunction<
-            _c_clang_VirtualFileOverlay_setCaseSensitivity,
-            _dart_clang_VirtualFileOverlay_setCaseSensitivity>(
-        'clang_VirtualFileOverlay_setCaseSensitivity');
-
-typedef _c_clang_VirtualFileOverlay_setCaseSensitivity = ffi.Int32 Function(
-  ffi.Pointer<CXVirtualFileOverlayImpl> arg0,
-  ffi.Int32 caseSensitive,
-);
-
-typedef _dart_clang_VirtualFileOverlay_setCaseSensitivity = int Function(
-  ffi.Pointer<CXVirtualFileOverlayImpl> arg0,
-  int caseSensitive,
-);
-
-/// Write out the CXVirtualFileOverlay object to a char buffer.
-int clang_VirtualFileOverlay_writeToBuffer(
-  ffi.Pointer<CXVirtualFileOverlayImpl> arg0,
-  int options,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> out_buffer_ptr,
-  ffi.Pointer<ffi.Uint32> out_buffer_size,
-) {
-  return _clang_VirtualFileOverlay_writeToBuffer(
-    arg0,
-    options,
-    out_buffer_ptr,
-    out_buffer_size,
-  );
-}
-
-final _dart_clang_VirtualFileOverlay_writeToBuffer
-    _clang_VirtualFileOverlay_writeToBuffer = _dylib.lookupFunction<
-            _c_clang_VirtualFileOverlay_writeToBuffer,
-            _dart_clang_VirtualFileOverlay_writeToBuffer>(
-        'clang_VirtualFileOverlay_writeToBuffer');
-
-typedef _c_clang_VirtualFileOverlay_writeToBuffer = ffi.Int32 Function(
-  ffi.Pointer<CXVirtualFileOverlayImpl> arg0,
-  ffi.Uint32 options,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> out_buffer_ptr,
-  ffi.Pointer<ffi.Uint32> out_buffer_size,
-);
-
-typedef _dart_clang_VirtualFileOverlay_writeToBuffer = int Function(
-  ffi.Pointer<CXVirtualFileOverlayImpl> arg0,
-  int options,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> out_buffer_ptr,
-  ffi.Pointer<ffi.Uint32> out_buffer_size,
 );
 
 /// Annotate the given set of tokens by providing cursors for each token that can be mapped to a specific entity within the abstract syntax tree.
@@ -1895,26 +1615,6 @@ typedef _dart_clang_formatDiagnostic_wrap = ffi.Pointer<CXString> Function(
   int opts,
 );
 
-/// free memory allocated by libclang, such as the buffer returned by CXVirtualFileOverlay() or clang_ModuleMapDescriptor_writeToBuffer().
-void clang_free(
-  ffi.Pointer<ffi.Void> buffer,
-) {
-  return _clang_free(
-    buffer,
-  );
-}
-
-final _dart_clang_free _clang_free =
-    _dylib.lookupFunction<_c_clang_free, _dart_clang_free>('clang_free');
-
-typedef _c_clang_free = ffi.Void Function(
-  ffi.Pointer<ffi.Void> buffer,
-);
-
-typedef _dart_clang_free = void Function(
-  ffi.Pointer<ffi.Void> buffer,
-);
-
 /// Retrieve all ranges from all files that were skipped by the preprocessor.
 ffi.Pointer<CXSourceRangeList> clang_getAllSkippedRanges(
   ffi.Pointer<CXTranslationUnitImpl> tu,
@@ -1960,19 +1660,6 @@ typedef _dart_clang_getArgType_wrap = ffi.Pointer<CXType> Function(
   ffi.Pointer<CXType> cxtype,
   int i,
 );
-
-/// Return the timestamp for use with Clang's -fbuild-session-timestamp= option.
-int clang_getBuildSessionTimestamp() {
-  return _clang_getBuildSessionTimestamp();
-}
-
-final _dart_clang_getBuildSessionTimestamp _clang_getBuildSessionTimestamp =
-    _dylib.lookupFunction<_c_clang_getBuildSessionTimestamp,
-        _dart_clang_getBuildSessionTimestamp>('clang_getBuildSessionTimestamp');
-
-typedef _c_clang_getBuildSessionTimestamp = ffi.Uint64 Function();
-
-typedef _dart_clang_getBuildSessionTimestamp = int Function();
 
 ffi.Pointer<ffi2.Utf8> clang_getCString_wrap(
   ffi.Pointer<CXString> string,

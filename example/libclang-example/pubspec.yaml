@@ -13,8 +13,18 @@ dev_dependencies:
 ffigen:
   output: 'gen.dart'
   libclang-dylib: '../../tool/wrapped_libclang/libwrapped_clang.so'
+  
+  # globs are supported, and only .h files are parsed (.c temporarily)
   headers:
-    - '/home/prerak/repos/ffigen/tool/wrapped_libclang/wrapper.c'
+    - '/home/prerak/repos/ffigen/tool/wrapped_libclang/*.c'
+  
+  # excludes included headers based on their names (not fullpath name)
+  header-filter:
+    include:
+      - 'wrapper.c'
+      - 'CXString.h'
+      - 'Index.h'
+  
   compiler-opts: '-I/usr/lib/llvm-9/include/ -I/usr/lib/llvm-10/include/'
   filters:
     functions:

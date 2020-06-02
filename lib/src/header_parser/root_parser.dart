@@ -9,6 +9,7 @@ import 'sub_parsers/functiondecl_parser.dart';
 import 'sub_parsers/structdecl_parser.dart';
 import 'sub_parsers/typedefdecl_parser.dart';
 import 'sub_parsers/enumdecl_parser.dart';
+import 'includer.dart';
 import 'utils.dart';
 
 var _logger = Logger('parser:root_parser');
@@ -37,23 +38,27 @@ List<Binding> parseRootCursor(Pointer<clang.CXCursor> translationUnitCursor) {
 int _rootCursorVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
   try {
-    _logger.finest('rootCursorVisitor: ${cursor.completeStringRepr()}');
-
-    switch (clang.clang_getCursorKind_wrap(cursor)) {
-      case clang.CXCursorKind.CXCursor_FunctionDecl:
-        addToBindings(parseFunctionDeclaration(cursor));
-        break;
-      case clang.CXCursorKind.CXCursor_TypedefDecl:
-        addToBindings(parseTypedefDeclaration(cursor));
-        break;
-      case clang.CXCursorKind.CXCursor_StructDecl:
-        addToBindings(parseStructDeclaration(cursor));
-        break;
-      case clang.CXCursorKind.CXCursor_EnumDecl:
-        addToBindings(parseEnumDeclaration(cursor));
-        break;
-      default:
-        _logger.finest('rootCursorVisitor: CursorKind not implemented');
+    if (shouldIncludeRootCursor(cursor.sourceFileName())) {
+      _logger.finer('rootCursorVisitor: ${cursor.completeStringRepr()}');
+      switch (clang.clang_getCursorKind_wrap(cursor)) {
+        case clang.CXCursorKind.CXCursor_FunctionDecl:
+          addToBindings(parseFunctionDeclaration(cursor));
+          break;
+        case clang.CXCursorKind.CXCursor_TypedefDecl:
+          addToBindings(parseTypedefDeclaration(cursor));
+          break;
+        case clang.CXCursorKind.CXCursor_StructDecl:
+          addToBindings(parseStructDeclaration(cursor));
+          break;
+        case clang.CXCursorKind.CXCursor_EnumDecl:
+          addToBindings(parseEnumDeclaration(cursor));
+          break;
+        default:
+          _logger.finer('rootCursorVisitor: CursorKind not implemented');
+      }
+    } else {
+      _logger.finest(
+          'rootCursorVisitor:(excluded header) ${cursor.completeStringRepr()}');
     }
 
     cursor.dispose();

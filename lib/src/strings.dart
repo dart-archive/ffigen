@@ -1,6 +1,7 @@
 const output = 'output';
 const libclang_dylib = 'libclang-dylib';
 const headers = 'headers';
+const headerFilter = 'header-filter';
 const compilerOpts = 'compiler-opts';
 const filters = 'filters';
 
@@ -22,6 +23,7 @@ const mapOfAllOptions = <String, String>{
   output: 'Output file name',
   libclang_dylib: 'Path to libclang dynamic library, used to parse C headers',
   headers: 'List of C headers to generate bindings of',
+  headerFilter: 'Include/Exclude inclusion headers',
   compilerOpts: 'Raw compiler options to pass to clang compiler',
   filters: 'filters for various bindings'
 };
