@@ -54,3 +54,17 @@ ffigen:
         names:
           - 'CXTypeKind'
           - 'CXGlobalOptFlags'
+  
+  # these are optional and also default
+  # you can leave out any and the default will be used
+  size-map:
+    char: 1
+    unsigned char: 1
+    short: 2
+    unsigned short: 2
+    int: 4
+    unsigned int: 4
+    long: 8
+    unsigned long: 8
+    long long: 8
+    unsigned long long: 8

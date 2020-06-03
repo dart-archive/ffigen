@@ -24,7 +24,44 @@ CheckerResult checkYaml(YamlMap map) {
 
   // TODO: Validate output file
 
-  // validate libclang_dylib_path attribute
+  _validateLibclangDylibPath(map);
+
+  // TODO: Validate headers
+
+  _validateCompilerOpts(map);
+
+  // TODO: Validate filters
+
+  // print unknown attributes
+  _warnUnknownConfigKeys(map);
+
+  return _result;
+}
+
+void _warnUnknownConfigKeys(YamlMap map) {
+  List<String> unknownopts = [];
+  for (var k in map.keys) {
+    String key = k as String;
+    if (!strings.mapOfAllOptions.containsKey(key)) {
+      unknownopts.add(key);
+    }
+  }
+  if (unknownopts.length > 0) {
+    _logger.warning('Warning: Unknown keys found - ' + unknownopts.join(', '));
+    _setResult(CheckerResult.warnings);
+  }
+}
+
+void _validateCompilerOpts(YamlMap map) {
+  if (map.containsKey(strings.compilerOpts) &&
+      map[strings.compilerOpts] is! String) {
+    _logger.severe(
+        'Warning: Expected value of key=${strings.compilerOpts} to be a string');
+    _setResult(CheckerResult.error);
+  }
+}
+
+void _validateLibclangDylibPath(YamlMap map) {
   if (map.containsKey(strings.libclang_dylib)) {
     if (map[strings.libclang_dylib] is! String) {
       _logger.severe(
@@ -39,33 +76,6 @@ CheckerResult checkYaml(YamlMap map) {
     _logger.severe('Error: key ${strings.libclang_dylib} not found');
     _setResult(CheckerResult.error);
   }
-
-  // TODO: Validate headers
-
-  // validate compiler-opts
-  if (map.containsKey(strings.compilerOpts) &&
-      map[strings.compilerOpts] is! String) {
-    _logger.info(
-        'Warning: Expected value of key=${strings.compilerOpts} to be a string, ${strings.compilerOpts} will be ignored');
-    _setResult(CheckerResult.error);
-  }
-
-  // TODO: Validate filters
-
-  // print unknown attributes
-  List<String> unknownopts = [];
-  for (var k in map.keys) {
-    String key = k as String;
-    if (!strings.mapOfAllOptions.containsKey(key)) {
-      unknownopts.add(key);
-    }
-  }
-  if (unknownopts.length > 0) {
-    _logger.info('Warning: Unknown keys found - ' + unknownopts.join(', '));
-    _setResult(CheckerResult.warnings);
-  }
-
-  return _result;
 }
 
 // sets result according to priority

@@ -39,7 +39,7 @@ Type getCodeGenType(Pointer<clang.CXType> cxtype, {String parentName}) {
       return _extractfromRecord(cxtype);
     case clang.CXTypeKind.CXType_Enum:
       return Type.nativeType(
-        nativeType: SupportedNativeType.Int32,
+        nativeType: enumNativeType,
       );
     case clang.CXTypeKind
         .CXType_FunctionProto: // primarily used for function pointers

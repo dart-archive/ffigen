@@ -18,6 +18,19 @@ const exclude = 'exclude';
 const matches = 'matches';
 const names = 'names';
 
+const sizemap = 'size-map';
+
+const SChar = 'char';
+const UChar = 'unsigned char';
+const Short = 'short';
+const UShort = 'unsigned short';
+const Int = 'int';
+const UInt = 'unsigned int';
+const Long = 'long';
+const ULong = 'unsigned long';
+const LongLong = 'long long';
+const ULongLong = 'unsigned long long';
+
 /// contains all options and their description
 const mapOfAllOptions = <String, String>{
   output: 'Output file name',
@@ -25,5 +38,6 @@ const mapOfAllOptions = <String, String>{
   headers: 'List of C headers to generate bindings of',
   headerFilter: 'Include/Exclude inclusion headers',
   compilerOpts: 'Raw compiler options to pass to clang compiler',
-  filters: 'filters for various bindings'
+  filters: 'filters for various bindings',
+  sizemap: 'map of types: byte size in int'
 };
