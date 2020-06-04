@@ -16,7 +16,14 @@ class Func extends Binding {
     @required this.returnType,
     List<Parameter> parameters,
   })  : this.parameters = parameters ?? [],
-        super(name: name, dartDoc: dartDoc);
+        super(name: name, dartDoc: dartDoc) {
+    for (var i = 0; i < this.parameters.length; i++) {
+      if (this.parameters[i].name == null ||
+          this.parameters[i].name.trim() == '') {
+        this.parameters[i].name = "arg$i";
+      }
+    }
+  }
 
   @override
   BindingString toBindingString(Writer w) {
@@ -68,8 +75,8 @@ class Func extends Binding {
 }
 
 class Parameter {
-  final String name;
+  String name;
   final Type type;
 
-  const Parameter({@required this.name, @required this.type});
+  Parameter({this.name, @required this.type});
 }

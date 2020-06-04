@@ -59,11 +59,8 @@ List<Parameter> _getParameters(Pointer<clang.CXCursor> cursor) {
       return null; //returning null so that [parseFunctionDeclaration] returns null
     }
     var pn = paramCursor.spelling();
-    // set name if it is null or not provided
-    // TODO: look into extracting name from definition if avaialable
-    if (pn == null || pn == '') {
-      pn = "arg$i";
-    }
+
+    // if pn is null or ' ', its set to 'arg$i' by code_generator
     parameters.add(
       Parameter(
         name: pn,

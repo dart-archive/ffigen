@@ -71,4 +71,6 @@ class Library {
     _generate(w);
     return w.toString();
   }
+
+  bool operator ==(Object o) => o is Library && o.toString() == this.toString();
 }

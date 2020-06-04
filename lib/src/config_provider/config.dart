@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:glob/glob.dart';
+import 'package:logging/logging.dart';
+import 'package:meta/meta.dart';
+import 'package:yaml/yaml.dart';
+
 import 'package:ffigen/src/code_generator/type.dart';
 import 'package:ffigen/src/header_parser/clang_bindings/clang_constants.dart';
 import 'package:ffigen/src/header_parser/type_extractor/cxtypekindmap.dart';
-import 'package:glob/glob.dart';
-import 'package:logging/logging.dart';
-import 'package:yaml/yaml.dart';
 
 import 'filter.dart';
 import 'header.dart';
@@ -45,11 +47,14 @@ class Config {
   Filter enumClassFilters;
 
   /// Use `Config.fromYaml` if extracting info from yaml file
-  Config(
-      {this.libclang_dylib_path,
-      this.headers,
-      this.excludedInclusionHeaders,
-      this.includedInclusionHeaders});
+  Config({
+    @required this.libclang_dylib_path,
+    @required this.headers,
+    this.excludedInclusionHeaders = const {},
+    this.includedInclusionHeaders = const {},
+    this.compilerOpts,
+  })  : assert(libclang_dylib_path != null),
+        assert(headers != null);
 
   /// [ffigenMap] has required configurations
   Config.fromYaml(YamlMap ffigenMap)

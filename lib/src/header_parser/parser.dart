@@ -14,12 +14,17 @@ import 'utils.dart';
 import 'data.dart' as data;
 
 /// Main entrypoint for header_parser
-Library parse(Config conf) {
+Library parse(Config conf, {bool sort = false}) {
   initParser(conf);
 
   var bindings = parseAndGenerateBindings();
 
-  return Library(bindings: bindings);
+  var library = Library(bindings: bindings);
+
+  if (sort) {
+    library.sort();
+  }
+  return library;
 }
 
 // ===================================================================================

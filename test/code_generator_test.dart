@@ -69,11 +69,11 @@ void main() {
       var gen = library.toString();
 
       // writing to file for debug purpose
-      File(
+      var file = File(
         'test/debug_generated/Function-Binding-test-output.dart',
-      )..writeAsStringSync(gen);
-
-      expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
+      );
+      try {
+        expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
 import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart' as ffi2;
 
@@ -145,6 +145,14 @@ typedef _dart_withPointerParam = ffi.Pointer<ffi.Double> Function(
 );
 
 ''');
+        if (file.existsSync()) {
+          file.delete();
+        }
+      } catch (e) {
+        file.writeAsStringSync(gen);
+        print("Failed test, Debug output: ${file.absolute?.path}");
+        rethrow;
+      }
     });
 
     test('Struct Binding (primitives, pointers)', () {
@@ -212,10 +220,10 @@ typedef _dart_withPointerParam = ffi.Pointer<ffi.Double> Function(
       var gen = library.toString();
 
       // writing to file for debug purpose
-      File('test/debug_generated/Struct-Binding-test-output.dart')
-        ..writeAsStringSync(gen);
+      var file = File('test/debug_generated/Struct-Binding-test-output.dart');
 
-      expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
+      try {
+        expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
 import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart' as ffi2;
 
@@ -254,6 +262,14 @@ class WithPointerMember extends ffi.Struct{
 }
 
 ''');
+        if (file.existsSync()) {
+          file.delete();
+        }
+      } catch (e) {
+        file.writeAsStringSync(gen);
+        print("Failed test, Debug output: ${file.absolute?.path}");
+        rethrow;
+      }
     });
 
     test('Function and Struct Binding (pointer to Struct)', () {
@@ -308,10 +324,11 @@ class WithPointerMember extends ffi.Struct{
       var gen = library.toString();
 
       // writing to file for debug purpose
-      File('test/debug_generated/Func-n-Struct-Binding-test-output.dart')
-        ..writeAsStringSync(gen);
-
-      expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
+      var file =
+          File('test/debug_generated/Func-n-Struct-Binding-test-output.dart');
+      try {
+        //expect
+        expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
 import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart' as ffi2;
 
@@ -353,6 +370,14 @@ typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
 );
 
 ''');
+        if (file.existsSync()) {
+          file.delete();
+        }
+      } catch (e) {
+        file.writeAsStringSync(gen);
+        print("Failed test, Debug output: ${file.absolute?.path}");
+        rethrow;
+      }
     });
 
     test('global (primitives, pointers, pointer to struct, pointer to ffiUtil)',
@@ -406,11 +431,11 @@ typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
       var gen = library.toString();
 
       // writing to file for debug purpose
-      File(
+      var file = File(
         'test/debug_generated/Global-Binding-test-output.dart',
-      )..writeAsStringSync(gen);
-
-      expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
+      );
+      try {
+        expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
 import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart' as ffi2;
 
@@ -435,6 +460,14 @@ class Some extends ffi.Struct{
 final ffi.Pointer<Some> test5 = _dylib.lookup<ffi.Pointer<Some>>('test5').value;
 
 ''');
+        if (file.existsSync()) {
+          file.delete();
+        }
+      } catch (e) {
+        file.writeAsStringSync(gen);
+        print("Failed test, Debug output: ${file.absolute?.path}");
+        rethrow;
+      }
     });
 
     test('constant', () {
@@ -460,11 +493,11 @@ final ffi.Pointer<Some> test5 = _dylib.lookup<ffi.Pointer<Some>>('test5').value;
       var gen = library.toString();
 
       // writing to file for debug purpose
-      File(
+      var file = File(
         'test/debug_generated/Constant-test-output.dart',
-      )..writeAsStringSync(gen);
-
-      expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
+      );
+      try {
+        expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
 import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart' as ffi2;
 
@@ -480,6 +513,14 @@ const int test1 = 20;
 const double test2 = 20.0;
 
 ''');
+        if (file.existsSync()) {
+          file.delete();
+        }
+      } catch (e) {
+        file.writeAsStringSync(gen);
+        print("Failed test, Debug output: ${file.absolute?.path}");
+        rethrow;
+      }
     });
 
     test('TypedefC (primitive, pointers, pointer to struct)', () {
@@ -504,7 +545,7 @@ const double test2 = 20.0;
               Parameter(
                 name: 'param1',
                 type: Type.pointer(
-                  child: Type.struct( structName: 'SomeStruct'),
+                  child: Type.struct(structName: 'SomeStruct'),
                 ),
               ),
               Parameter(
@@ -521,10 +562,9 @@ const double test2 = 20.0;
       var gen = library.toString();
 
       // writing to file for debug purpose
-      File('test/debug_generated/typedef-Binding-test-output.dart')
-        ..writeAsStringSync(gen);
-
-      expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
+      var file = File('test/debug_generated/typedef-Binding-test-output.dart');
+      try {
+        expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
 import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart' as ffi2;
 
@@ -548,6 +588,14 @@ typedef test2 = ffi.Pointer<ffi.Int32> Function(
 );
 
 ''');
+        if (file.existsSync()) {
+          file.delete();
+        }
+      } catch (e) {
+        file.writeAsStringSync(gen);
+        print("Failed test, Debug output: ${file.absolute?.path}");
+        rethrow;
+      }
     });
 
     test('enum_class', () {
@@ -570,11 +618,11 @@ typedef test2 = ffi.Pointer<ffi.Int32> Function(
       var gen = library.toString();
 
       // writing to file for debug purpose
-      File(
+      var file = File(
         'test/debug_generated/enum-class-test-output.dart',
-      )..writeAsStringSync(gen);
-
-      expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
+      );
+      try {
+        expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
 import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart' as ffi2;
 
@@ -594,6 +642,14 @@ class Constants {
 }
 
 ''');
+        if (file.existsSync()) {
+          file.delete();
+        }
+      } catch (e) {
+        file.writeAsStringSync(gen);
+        print("Failed test, Debug output: ${file.absolute?.path}");
+        rethrow;
+      }
     });
   });
 }
