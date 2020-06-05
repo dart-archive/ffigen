@@ -13,9 +13,8 @@ Set<String> _typedefC = {};
 bool shouldIncludeStruct(String name) {
   if (_structs.contains(name) || name == '') {
     return false;
-  } else if (config.structFilters == null) {
-    return true;
-  } else if (config.structFilters.shouldInclude(name)) {
+  } else if (config.structFilters == null ||
+      config.structFilters.shouldInclude(name)) {
     _structs.add(name);
     return true;
   } else {
@@ -26,9 +25,8 @@ bool shouldIncludeStruct(String name) {
 bool shouldIncludeFunc(String name) {
   if (_functions.contains(name) || name == '') {
     return false;
-  } else if (config.functionFilters == null) {
-    return true;
-  } else if (config.functionFilters.shouldInclude(name)) {
+  } else if (config.functionFilters == null ||
+      config.functionFilters.shouldInclude(name)) {
     _functions.add(name);
     return true;
   } else {
@@ -39,9 +37,8 @@ bool shouldIncludeFunc(String name) {
 bool shouldIncludeEnumClass(String name) {
   if (_enumClass.contains(name) || name == '') {
     return false;
-  } else if (config.enumClassFilters == null) {
-    return true;
-  } else if (config.enumClassFilters.shouldInclude(name)) {
+  } else if (config.enumClassFilters == null ||
+      config.enumClassFilters.shouldInclude(name)) {
     _enumClass.add(name);
     return true;
   } else {

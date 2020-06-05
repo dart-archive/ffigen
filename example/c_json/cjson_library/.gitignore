@@ -1,0 +1,20 @@
+# CMake generated files and directories
+CMakeCache.txt
+CMakeFiles/
+CmakeScripts/
+Makefile
+cmake_install.cmake
+
+# Xcode tooling generated via `cmake -G Xcode .`
+blurhash_library.xcodeproj/
+
+# Xcode generated build and output directories
+blurhash_library.build/
+
+# Generated test binary
+blurhash_test
+
+# Generated shared library files
+*.dylib
+*.so.*
+*.dll

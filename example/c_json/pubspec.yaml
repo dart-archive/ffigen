@@ -1,0 +1,27 @@
+name: c_json_example
+
+environment:
+  sdk: '>=2.8.1 <3.0.0'
+
+dev_dependencies:
+  ffigen: 
+    path: '../../'
+
+ffigen:
+  output: 'cjson_generated_bindings.dart'
+  libclang-dylib: '../../tool/wrapped_libclang/libwrapped_clang.so'
+  headers:
+    - './cjson_library/cJSON.h'
+  header-filter:
+    include:
+      - 'cJSON.h'
+  # filters:
+  #   functions:
+  #     include:
+  #       names: 
+  #         - ''
+  #   # structs:
+  #   #   include:
+  #   #     names: 
+  #   #       - 'cJSON'
+  #   #       - 'cJSON_Hooks'

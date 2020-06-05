@@ -1,0 +1,737 @@
+INFO: Running in Directory: '/home/prerak/repos/ffigen/example/c_json'
+FINEST: Config: {output: cjson_generated_bindings.dart, libclang-dylib: ../../tool/wrapped_libclang/libwrapped_clang.so, headers: [./cjson_library/cJSON.h], header-filter: {include: [cJSON.h]}}
+FINE: Creating TranslationUnit for header: ././cjson_library/cJSON.h
+FINE: TU diagnostics:
+C header: Total errors/warnings : 0
+
+FINEST: rootCursorVisitor:(excluded header) (Cursor) spelling: ptrdiff_t, kind: 20, kindSpelling: TypedefDecl, type: 107, typeSpelling: ptrdiff_t
+FINEST: rootCursorVisitor:(excluded header) (Cursor) spelling: size_t, kind: 20, kindSpelling: TypedefDecl, type: 107, typeSpelling: size_t
+FINEST: rootCursorVisitor:(excluded header) (Cursor) spelling: wchar_t, kind: 20, kindSpelling: TypedefDecl, type: 107, typeSpelling: wchar_t
+FINEST: rootCursorVisitor:(excluded header) (Cursor) spelling: , kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: max_align_t
+FINEST: rootCursorVisitor:(excluded header) (Cursor) spelling: max_align_t, kind: 20, kindSpelling: TypedefDecl, type: 107, typeSpelling: max_align_t
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: Structure: name:cJSON (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON, kind: 20, kindSpelling: TypedefDecl, type: 107, typeSpelling: cJSON
+FINEST: ----typedefdeclarationCursorVisitor: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_Hooks, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON_Hooks
+FINE: Structure: name:cJSON_Hooks (Cursor) spelling: cJSON_Hooks, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON_Hooks
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_Hooks, kind: 20, kindSpelling: TypedefDecl, type: 107, typeSpelling: cJSON_Hooks
+FINEST: ----typedefdeclarationCursorVisitor: (Cursor) spelling: cJSON_Hooks, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON_Hooks
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_bool, kind: 20, kindSpelling: TypedefDecl, type: 107, typeSpelling: cJSON_bool
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_Version, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: const char *(void)
+FINE: Function: (Cursor) spelling: cJSON_Version, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: const char *(void)
+FINE: ...getCodeGenType (Type) spelling: const char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_InitHooks, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON_Hooks *)
+FINE: Function: (Cursor) spelling: cJSON_InitHooks, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON_Hooks *)
+FINE: ...getCodeGenType (Type) spelling: void, kind: 2, kindSpelling: Void
+FINE: ...getCodeGenType (Type) spelling: cJSON_Hooks *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON_Hooks, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON_Hooks, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON_Hooks, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON_Hooks
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_Parse, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const char *)
+FINE: Function: (Cursor) spelling: cJSON_Parse, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const char *)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_ParseWithOpts, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const char *, const char **, cJSON_bool)
+FINE: Function: (Cursor) spelling: cJSON_ParseWithOpts, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const char *, const char **, cJSON_bool)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINE: ...getCodeGenType (Type) spelling: const char **, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINE: ...getCodeGenType (Type) spelling: cJSON_bool, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_Print, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: char *(const cJSON *)
+FINE: Function: (Cursor) spelling: cJSON_Print, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: char *(const cJSON *)
+FINE: ...getCodeGenType (Type) spelling: char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: char, kind: 13, kindSpelling: Char_S
+FINE: ...getCodeGenType (Type) spelling: const cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_PrintUnformatted, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: char *(const cJSON *)
+FINE: Function: (Cursor) spelling: cJSON_PrintUnformatted, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: char *(const cJSON *)
+FINE: ...getCodeGenType (Type) spelling: char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: char, kind: 13, kindSpelling: Char_S
+FINE: ...getCodeGenType (Type) spelling: const cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_PrintBuffered, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: char *(const cJSON *, int, cJSON_bool)
+FINE: Function: (Cursor) spelling: cJSON_PrintBuffered, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: char *(const cJSON *, int, cJSON_bool)
+FINE: ...getCodeGenType (Type) spelling: char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: char, kind: 13, kindSpelling: Char_S
+FINE: ...getCodeGenType (Type) spelling: const cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINE: ...getCodeGenType (Type) spelling: cJSON_bool, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_PrintPreallocated, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (cJSON *, char *, const int, const cJSON_bool)
+FINE: Function: (Cursor) spelling: cJSON_PrintPreallocated, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (cJSON *, char *, const int, const cJSON_bool)
+FINE: ...getCodeGenType (Type) spelling: cJSON_bool, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: char, kind: 13, kindSpelling: Char_S
+FINE: ...getCodeGenType (Type) spelling: const int, kind: 17, kindSpelling: Int
+FINE: ...getCodeGenType (Type) spelling: const cJSON_bool, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const int, kind: 17, kindSpelling: Int
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_Delete, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *)
+FINE: Function: (Cursor) spelling: cJSON_Delete, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *)
+FINE: ...getCodeGenType (Type) spelling: void, kind: 2, kindSpelling: Void
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_GetArraySize, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: int (const cJSON *)
+FINE: Function: (Cursor) spelling: cJSON_GetArraySize, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: int (const cJSON *)
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINE: ...getCodeGenType (Type) spelling: const cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_GetArrayItem, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const cJSON *, int)
+FINE: Function: (Cursor) spelling: cJSON_GetArrayItem, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const cJSON *, int)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_GetObjectItem, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const cJSON *const, const char *const)
+FINE: Function: (Cursor) spelling: cJSON_GetObjectItem, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const cJSON *const, const char *const)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_GetObjectItemCaseSensitive, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const cJSON *const, const char *const)
+FINE: Function: (Cursor) spelling: cJSON_GetObjectItemCaseSensitive, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const cJSON *const, const char *const)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_HasObjectItem, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *, const char *)
+FINE: Function: (Cursor) spelling: cJSON_HasObjectItem, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *, const char *)
+FINE: ...getCodeGenType (Type) spelling: cJSON_bool, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINE: ...getCodeGenType (Type) spelling: const cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_GetErrorPtr, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: const char *(void)
+FINE: Function: (Cursor) spelling: cJSON_GetErrorPtr, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: const char *(void)
+FINE: ...getCodeGenType (Type) spelling: const char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_GetStringValue, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: char *(const cJSON *const)
+FINE: Function: (Cursor) spelling: cJSON_GetStringValue, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: char *(const cJSON *const)
+FINE: ...getCodeGenType (Type) spelling: char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: char, kind: 13, kindSpelling: Char_S
+FINE: ...getCodeGenType (Type) spelling: const cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_IsInvalid, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *const)
+FINE: Function: (Cursor) spelling: cJSON_IsInvalid, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *const)
+FINE: ...getCodeGenType (Type) spelling: cJSON_bool, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINE: ...getCodeGenType (Type) spelling: const cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_IsFalse, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *const)
+FINE: Function: (Cursor) spelling: cJSON_IsFalse, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *const)
+FINE: ...getCodeGenType (Type) spelling: cJSON_bool, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINE: ...getCodeGenType (Type) spelling: const cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_IsTrue, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *const)
+FINE: Function: (Cursor) spelling: cJSON_IsTrue, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *const)
+FINE: ...getCodeGenType (Type) spelling: cJSON_bool, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINE: ...getCodeGenType (Type) spelling: const cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_IsBool, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *const)
+FINE: Function: (Cursor) spelling: cJSON_IsBool, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *const)
+FINE: ...getCodeGenType (Type) spelling: cJSON_bool, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINE: ...getCodeGenType (Type) spelling: const cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_IsNull, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *const)
+FINE: Function: (Cursor) spelling: cJSON_IsNull, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *const)
+FINE: ...getCodeGenType (Type) spelling: cJSON_bool, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINE: ...getCodeGenType (Type) spelling: const cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_IsNumber, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *const)
+FINE: Function: (Cursor) spelling: cJSON_IsNumber, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *const)
+FINE: ...getCodeGenType (Type) spelling: cJSON_bool, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINE: ...getCodeGenType (Type) spelling: const cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_IsString, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *const)
+FINE: Function: (Cursor) spelling: cJSON_IsString, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *const)
+FINE: ...getCodeGenType (Type) spelling: cJSON_bool, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINE: ...getCodeGenType (Type) spelling: const cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_IsArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *const)
+FINE: Function: (Cursor) spelling: cJSON_IsArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *const)
+FINE: ...getCodeGenType (Type) spelling: cJSON_bool, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINE: ...getCodeGenType (Type) spelling: const cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_IsObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *const)
+FINE: Function: (Cursor) spelling: cJSON_IsObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *const)
+FINE: ...getCodeGenType (Type) spelling: cJSON_bool, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINE: ...getCodeGenType (Type) spelling: const cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_IsRaw, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *const)
+FINE: Function: (Cursor) spelling: cJSON_IsRaw, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *const)
+FINE: ...getCodeGenType (Type) spelling: cJSON_bool, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINE: ...getCodeGenType (Type) spelling: const cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_CreateNull, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(void)
+FINE: Function: (Cursor) spelling: cJSON_CreateNull, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(void)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_CreateTrue, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(void)
+FINE: Function: (Cursor) spelling: cJSON_CreateTrue, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(void)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_CreateFalse, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(void)
+FINE: Function: (Cursor) spelling: cJSON_CreateFalse, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(void)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_CreateBool, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON_bool)
+FINE: Function: (Cursor) spelling: cJSON_CreateBool, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON_bool)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: cJSON_bool, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_CreateNumber, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(double)
+FINE: Function: (Cursor) spelling: cJSON_CreateNumber, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(double)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: double, kind: 22, kindSpelling: Double
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_CreateString, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const char *)
+FINE: Function: (Cursor) spelling: cJSON_CreateString, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const char *)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_CreateRaw, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const char *)
+FINE: Function: (Cursor) spelling: cJSON_CreateRaw, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const char *)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_CreateArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(void)
+FINE: Function: (Cursor) spelling: cJSON_CreateArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(void)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_CreateObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(void)
+FINE: Function: (Cursor) spelling: cJSON_CreateObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(void)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_CreateStringReference, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const char *)
+FINE: Function: (Cursor) spelling: cJSON_CreateStringReference, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const char *)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_CreateObjectReference, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const cJSON *)
+FINE: Function: (Cursor) spelling: cJSON_CreateObjectReference, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const cJSON *)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_CreateArrayReference, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const cJSON *)
+FINE: Function: (Cursor) spelling: cJSON_CreateArrayReference, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const cJSON *)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_CreateIntArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const int *, int)
+FINE: Function: (Cursor) spelling: cJSON_CreateIntArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const int *, int)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const int *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const int, kind: 17, kindSpelling: Int
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_CreateFloatArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const float *, int)
+FINE: Function: (Cursor) spelling: cJSON_CreateFloatArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const float *, int)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const float *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const float, kind: 21, kindSpelling: Float
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_CreateDoubleArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const double *, int)
+FINE: Function: (Cursor) spelling: cJSON_CreateDoubleArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const double *, int)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const double *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const double, kind: 22, kindSpelling: Double
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_CreateStringArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const char *const *, int)
+FINE: Function: (Cursor) spelling: cJSON_CreateStringArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const char *const *, int)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *const *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_AddItemToArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, cJSON *)
+FINE: Function: (Cursor) spelling: cJSON_AddItemToArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, cJSON *)
+FINE: ...getCodeGenType (Type) spelling: void, kind: 2, kindSpelling: Void
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_AddItemToObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, const char *, cJSON *)
+FINE: Function: (Cursor) spelling: cJSON_AddItemToObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, const char *, cJSON *)
+FINE: ...getCodeGenType (Type) spelling: void, kind: 2, kindSpelling: Void
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_AddItemToObjectCS, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, const char *, cJSON *)
+FINE: Function: (Cursor) spelling: cJSON_AddItemToObjectCS, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, const char *, cJSON *)
+FINE: ...getCodeGenType (Type) spelling: void, kind: 2, kindSpelling: Void
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_AddItemReferenceToArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, cJSON *)
+FINE: Function: (Cursor) spelling: cJSON_AddItemReferenceToArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, cJSON *)
+FINE: ...getCodeGenType (Type) spelling: void, kind: 2, kindSpelling: Void
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_AddItemReferenceToObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, const char *, cJSON *)
+FINE: Function: (Cursor) spelling: cJSON_AddItemReferenceToObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, const char *, cJSON *)
+FINE: ...getCodeGenType (Type) spelling: void, kind: 2, kindSpelling: Void
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_DetachItemViaPointer, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *, cJSON *const)
+FINE: Function: (Cursor) spelling: cJSON_DetachItemViaPointer, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *, cJSON *const)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_DetachItemFromArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *, int)
+FINE: Function: (Cursor) spelling: cJSON_DetachItemFromArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *, int)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_DeleteItemFromArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, int)
+FINE: Function: (Cursor) spelling: cJSON_DeleteItemFromArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, int)
+FINE: ...getCodeGenType (Type) spelling: void, kind: 2, kindSpelling: Void
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_DetachItemFromObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *, const char *)
+FINE: Function: (Cursor) spelling: cJSON_DetachItemFromObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *, const char *)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_DetachItemFromObjectCaseSensitive, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *, const char *)
+FINE: Function: (Cursor) spelling: cJSON_DetachItemFromObjectCaseSensitive, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *, const char *)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_DeleteItemFromObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, const char *)
+FINE: Function: (Cursor) spelling: cJSON_DeleteItemFromObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, const char *)
+FINE: ...getCodeGenType (Type) spelling: void, kind: 2, kindSpelling: Void
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_DeleteItemFromObjectCaseSensitive, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, const char *)
+FINE: Function: (Cursor) spelling: cJSON_DeleteItemFromObjectCaseSensitive, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, const char *)
+FINE: ...getCodeGenType (Type) spelling: void, kind: 2, kindSpelling: Void
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_InsertItemInArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, int, cJSON *)
+FINE: Function: (Cursor) spelling: cJSON_InsertItemInArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, int, cJSON *)
+FINE: ...getCodeGenType (Type) spelling: void, kind: 2, kindSpelling: Void
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_ReplaceItemViaPointer, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (cJSON *const, cJSON *const, cJSON *)
+FINE: Function: (Cursor) spelling: cJSON_ReplaceItemViaPointer, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (cJSON *const, cJSON *const, cJSON *)
+FINE: ...getCodeGenType (Type) spelling: cJSON_bool, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINE: ...getCodeGenType (Type) spelling: cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_ReplaceItemInArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, int, cJSON *)
+FINE: Function: (Cursor) spelling: cJSON_ReplaceItemInArray, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, int, cJSON *)
+FINE: ...getCodeGenType (Type) spelling: void, kind: 2, kindSpelling: Void
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_ReplaceItemInObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, const char *, cJSON *)
+FINE: Function: (Cursor) spelling: cJSON_ReplaceItemInObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, const char *, cJSON *)
+FINE: ...getCodeGenType (Type) spelling: void, kind: 2, kindSpelling: Void
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_ReplaceItemInObjectCaseSensitive, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, const char *, cJSON *)
+FINE: Function: (Cursor) spelling: cJSON_ReplaceItemInObjectCaseSensitive, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (cJSON *, const char *, cJSON *)
+FINE: ...getCodeGenType (Type) spelling: void, kind: 2, kindSpelling: Void
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_Duplicate, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const cJSON *, cJSON_bool)
+FINE: Function: (Cursor) spelling: cJSON_Duplicate, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(const cJSON *, cJSON_bool)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: cJSON_bool, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_Compare, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *const, const cJSON *const, const cJSON_bool)
+FINE: Function: (Cursor) spelling: cJSON_Compare, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON_bool (const cJSON *const, const cJSON *const, const cJSON_bool)
+FINE: ...getCodeGenType (Type) spelling: cJSON_bool, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: int, kind: 17, kindSpelling: Int
+FINE: ...getCodeGenType (Type) spelling: const cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const cJSON_bool, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const int, kind: 17, kindSpelling: Int
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_Minify, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (char *)
+FINE: Function: (Cursor) spelling: cJSON_Minify, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (char *)
+FINE: ...getCodeGenType (Type) spelling: void, kind: 2, kindSpelling: Void
+FINE: ...getCodeGenType (Type) spelling: char *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: char, kind: 13, kindSpelling: Char_S
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_AddNullToObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *const, const char *const)
+FINE: Function: (Cursor) spelling: cJSON_AddNullToObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *const, const char *const)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_AddTrueToObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *const, const char *const)
+FINE: Function: (Cursor) spelling: cJSON_AddTrueToObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *const, const char *const)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_AddFalseToObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *const, const char *const)
+FINE: Function: (Cursor) spelling: cJSON_AddFalseToObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *const, const char *const)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_AddBoolToObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *const, const char *const, const cJSON_bool)
+FINE: Function: (Cursor) spelling: cJSON_AddBoolToObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *const, const char *const, const cJSON_bool)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINE: ...getCodeGenType (Type) spelling: const cJSON_bool, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: const int, kind: 17, kindSpelling: Int
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_AddNumberToObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *const, const char *const, const double)
+FINE: Function: (Cursor) spelling: cJSON_AddNumberToObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *const, const char *const, const double)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINE: ...getCodeGenType (Type) spelling: const double, kind: 22, kindSpelling: Double
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_AddStringToObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *const, const char *const, const char *const)
+FINE: Function: (Cursor) spelling: cJSON_AddStringToObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *const, const char *const, const char *const)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINE: ...getCodeGenType (Type) spelling: const char *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_AddRawToObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *const, const char *const, const char *const)
+FINE: Function: (Cursor) spelling: cJSON_AddRawToObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *const, const char *const, const char *const)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINE: ...getCodeGenType (Type) spelling: const char *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_AddObjectToObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *const, const char *const)
+FINE: Function: (Cursor) spelling: cJSON_AddObjectToObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *const, const char *const)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_AddArrayToObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *const, const char *const)
+FINE: Function: (Cursor) spelling: cJSON_AddArrayToObject, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: cJSON *(cJSON *const, const char *const)
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: cJSON *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: const char *const, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: const char, kind: 13, kindSpelling: Char_S
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_SetNumberHelper, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: double (cJSON *, double)
+FINE: Function: (Cursor) spelling: cJSON_SetNumberHelper, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: double (cJSON *, double)
+FINE: ...getCodeGenType (Type) spelling: double, kind: 22, kindSpelling: Double
+FINE: ...getCodeGenType (Type) spelling: cJSON *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: cJSON, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: struct cJSON, kind: 105, kindSpelling: Record
+FINE: ----_extractfromRecord: (Cursor) spelling: cJSON, kind: 2, kindSpelling: StructDecl, type: 105, typeSpelling: struct cJSON
+FINE: ...getCodeGenType (Type) spelling: double, kind: 22, kindSpelling: Double
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_malloc, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void *(size_t)
+FINE: Function: (Cursor) spelling: cJSON_malloc, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void *(size_t)
+FINE: ...getCodeGenType (Type) spelling: void *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: void, kind: 2, kindSpelling: Void
+FINE: ...getCodeGenType (Type) spelling: size_t, kind: 107, kindSpelling: Typedef
+FINE: ...getCodeGenType (Type) spelling: unsigned long, kind: 10, kindSpelling: ULong
+FINER: rootCursorVisitor: (Cursor) spelling: cJSON_free, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (void *)
+FINE: Function: (Cursor) spelling: cJSON_free, kind: 8, kindSpelling: FunctionDecl, type: 111, typeSpelling: void (void *)
+FINE: ...getCodeGenType (Type) spelling: void, kind: 2, kindSpelling: Void
+FINE: ...getCodeGenType (Type) spelling: void *, kind: 101, kindSpelling: Pointer
+FINE: ...getCodeGenType (Type) spelling: void, kind: 2, kindSpelling: Void
+INFO: Finished, Bindings generated in /home/prerak/repos/ffigen/example/c_json/cjson_generated_bindings.dart
