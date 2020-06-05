@@ -46,6 +46,9 @@ class Config {
   // Filter for enumClass
   Filter enumClassFilters;
 
+  // If generated bindings should be alphabetically sorted
+  bool sort;
+
   /// Use `Config.fromYaml` if extracting info from yaml file
   Config({
     @required this.libclang_dylib_path,
@@ -53,8 +56,10 @@ class Config {
     this.excludedInclusionHeaders = const {},
     this.includedInclusionHeaders = const {},
     this.compilerOpts,
+    this.sort = false,
   })  : assert(libclang_dylib_path != null),
-        assert(headers != null);
+        assert(headers != null),
+        assert(sort != null);
 
   /// [ffigenMap] has required configurations
   Config.fromYaml(YamlMap ffigenMap)
@@ -71,6 +76,7 @@ class Config {
     _extractCompilerOpts(ffigenMap);
     _extractAllFilters(ffigenMap);
     _extractSizeMap(ffigenMap);
+    _extractSort(ffigenMap);
 
     _logger.finest('Config: ' + toString());
   }
@@ -81,6 +87,11 @@ class Config {
       _logger.severe('Please fix errors in Configurations and re-run the tool');
       exit(1);
     }
+  }
+
+  void _extractSort(YamlMap ffigenMap) {
+    var sort = ffigenMap[string.sort] as bool;
+    this.sort = sort ?? false;
   }
 
   void _extractSizeMap(YamlMap ffigenMap) {

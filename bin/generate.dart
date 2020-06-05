@@ -11,18 +11,24 @@ import 'package:yaml/yaml.dart' as yaml;
 var _logger = Logger('generate.dart');
 
 void main(List<String> args) {
+  // get cmd Args
   var result = getArgResults(args);
+
+  // set logger level
   setVerbosity(result);
 
+  // create config
   Config config = getConfig(result);
 
+  // parse the bindings according to config
   final library = parser.parse(config);
 
+  if (config.sort) {
+    library.sort();
+  }
+
+  // Generate file for parsed bindings
   File gen = File(config.output);
-
-  //TODO: give sort option to user
-  library.sort();
-
   library.generateFile(gen);
   _logger.info('Finished, Bindings generated in ${gen?.absolute?.path}');
 }

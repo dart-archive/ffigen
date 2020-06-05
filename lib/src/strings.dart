@@ -31,6 +31,8 @@ const ULong = 'unsigned long';
 const LongLong = 'long long';
 const ULongLong = 'unsigned long long';
 
+const sort = 'sort';
+
 /// contains all options and their description
 const mapOfAllOptions = <String, String>{
   output: 'Output file name',
@@ -39,5 +41,6 @@ const mapOfAllOptions = <String, String>{
   headerFilter: 'Include/Exclude inclusion headers',
   compilerOpts: 'Raw compiler options to pass to clang compiler',
   filters: 'filters for various bindings',
-  sizemap: 'map of types: byte size in int'
+  sizemap: 'map of types: byte size in int',
+  sort: 'whether or not to sort the bindings alphabetically'
 };

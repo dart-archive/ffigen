@@ -32,6 +32,8 @@ CheckerResult checkYaml(YamlMap map) {
 
   // TODO: Validate filters
 
+  // TODO: Validate sort
+
   // print unknown attributes
   _warnUnknownConfigKeys(map);
 
