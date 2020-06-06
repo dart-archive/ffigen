@@ -15,14 +15,15 @@ void visitChildrenResultChecker(int resultCode) {
   }
 }
 
-String getTUDiagnostic(Pointer<clang.CXTranslationUnitImpl> tu) {
+String getTUDiagnostic(Pointer<clang.CXTranslationUnitImpl> tu,
+    {String padding = ''}) {
   var s = StringBuffer();
   var total = clang.clang_getNumDiagnostics(tu);
-  s.write('C header: Total errors/warnings : $total\n');
+  s.write('${padding}C header: Total errors/warnings : $total\n');
   for (var i = 0; i < total; i++) {
     var diag = clang.clang_getDiagnostic(tu, i);
     var cxstring = clang.clang_formatDiagnostic_wrap(diag, 0);
-    s.write(cxstring.toStringAndDispose());
+    s.write(padding + cxstring.toStringAndDispose());
     s.write('\n');
     clang.clang_disposeDiagnostic(diag);
   }
@@ -120,9 +121,7 @@ extension CXTypeExt on Pointer<clang.CXType> {
   }
 
   String kindSpelling() {
-    return clang
-        .clang_getTypeKindSpelling_wrap(kind())
-        .toStringAndDispose();
+    return clang.clang_getTypeKindSpelling_wrap(kind()).toStringAndDispose();
   }
 
   /// for debug: returns [spelling] [kind] [kindSpelling]
@@ -163,8 +162,7 @@ extension CXStringExt on Pointer<clang.CXString> {
 
 // Converts a List<String> to Pointer<Pointer<Utf8>>
 Pointer<Pointer<Utf8>> createDynamicStringArray(List<String> list) {
-  var nativeCmdArgs =
-      allocate<Pointer<Utf8>>(count: list.length);
+  var nativeCmdArgs = allocate<Pointer<Utf8>>(count: list.length);
 
   for (var i = 0; i < list.length; i++) {
     nativeCmdArgs[i] = Utf8.toUtf8(list[i]);

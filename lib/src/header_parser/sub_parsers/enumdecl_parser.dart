@@ -26,7 +26,7 @@ EnumClass parseEnumDeclaration(
   if (enumName == '') {
     _logger.finest('unnamed enum declaration');
   } else if (shouldIncludeEnumClass(enumName)) {
-    _logger.fine('Enum: ${cursor.completeStringRepr()}');
+    _logger.fine('++++ Adding Enum: ${cursor.completeStringRepr()}');
     _enumClass = EnumClass(
       name: enumName,
     );
@@ -54,13 +54,13 @@ void _addEnumConstant(Pointer<clang.CXCursor> cursor) {
 int _enumCursorVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
   try {
-    _logger.finest('enumCursorVisitor: ${cursor.completeStringRepr()}');
+    _logger.finest('  enumCursorVisitor: ${cursor.completeStringRepr()}');
     switch (clang.clang_getCursorKind_wrap(cursor)) {
       case clang.CXCursorKind.CXCursor_EnumConstantDecl:
         _addEnumConstantToEnumClass(cursor);
         break;
       default:
-        print('unknown enum constant');
+        print('invalid enum constant');
     }
     cursor.dispose();
     parent.dispose();

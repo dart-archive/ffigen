@@ -39,7 +39,7 @@ int _rootCursorVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
   try {
     if (shouldIncludeRootCursor(cursor.sourceFileName())) {
-      _logger.finer('rootCursorVisitor: ${cursor.completeStringRepr()}');
+      _logger.finest('rootCursorVisitor: ${cursor.completeStringRepr()}');
       switch (clang.clang_getCursorKind_wrap(cursor)) {
         case clang.CXCursorKind.CXCursor_FunctionDecl:
           addToBindings(parseFunctionDeclaration(cursor));

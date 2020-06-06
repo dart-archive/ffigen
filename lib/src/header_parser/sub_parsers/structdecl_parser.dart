@@ -31,10 +31,10 @@ Struc parseStructDeclaration(
   var structName = name ?? cursor.spelling();
 
   if (structName == '') {
-    _logger.finest('unnamed structure declaration');
+    _logger.finest('unnamed or typedef structure declaration:');
   } else if (doInclude || shouldIncludeStruct(structName)) {
-    _logger
-        .fine('Structure: name:${structName} ${cursor.completeStringRepr()}');
+    _logger.fine(
+        '++++ Adding Structure: name:${structName} ${cursor.completeStringRepr()}');
     // TODO: also parse struct fields
     _struc = Struc(
       dartDoc: clang

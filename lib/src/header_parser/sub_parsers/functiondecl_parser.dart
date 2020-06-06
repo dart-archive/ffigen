@@ -19,13 +19,15 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
 
   var name = cursor.spelling();
   if (shouldIncludeFunc(name)) {
-    _logger.fine('Function: ${cursor.completeStringRepr()}');
+    _logger.fine('++++ Adding Function: ${cursor.completeStringRepr()}');
 
     var rt = _getFunctionReturnType(cursor);
     var parameters = _getParameters(cursor);
 
     //TODO: remove this when support for Structs by value arrive
     if (rt.type == BroadType.Struct || parameters == null) {
+      _logger.fine(
+          '---- Removed Function, reason: struct pass/return by value: ${cursor.completeStringRepr()}');
       return null; //returning null so that [addToBindings] function excludes this
     }
 

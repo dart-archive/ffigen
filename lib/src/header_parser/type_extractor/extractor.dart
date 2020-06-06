@@ -13,10 +13,11 @@ import '../type_extractor/cxtypekindmap.dart';
 import '../utils.dart';
 
 var _logger = Logger('parser:extractor');
+const _padding = '  ';
 
 /// converts cxtype to a typestring code_generator can accept
 Type getCodeGenType(Pointer<clang.CXType> cxtype, {String parentName}) {
-  _logger.fine('...getCodeGenType ${cxtype.completeStringRepr()}');
+  _logger.fine('${_padding}getCodeGenType ${cxtype.completeStringRepr()}');
   var kind = cxtype.kind();
 
   switch (kind) {
@@ -63,7 +64,7 @@ Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
   Type type;
 
   var cursor = clang.clang_getTypeDeclaration_wrap(cxtype);
-  _logger.fine('_extractfromRecord: ${cursor.completeStringRepr()}');
+  _logger.fine('${_padding}_extractfromRecord: ${cursor.completeStringRepr()}');
 
   switch (clang.clang_getCursorKind_wrap(cursor)) {
     case clang.CXCursorKind.CXCursor_StructDecl:
@@ -85,7 +86,8 @@ Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
       cxtype.dispose();
       break;
     default:
-      _logger.fine('typedeclarationCursorVisitor: Not Implemented');
+      throw Exception(
+          'typedeclarationCursorVisitor: _extractfromRecord: Not Implemented, ${cursor.completeStringRepr()}');
   }
   cursor.dispose();
   return type;

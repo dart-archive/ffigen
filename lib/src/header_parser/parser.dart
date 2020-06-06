@@ -72,7 +72,8 @@ List<Binding> parseAndGenerateBindings() {
       throw Exception('Error creating TranslationUnit');
     }
 
-    _logger.fine('TU diagnostics:\n' + getTUDiagnostic(tu));
+    _logger
+        .fine('TU diagnostics:\n' + getTUDiagnostic(tu, padding: '> '));
     var rootCursor = clang.clang_getTranslationUnitCursor_wrap(tu);
 
     bindings.addAll(parseRootCursor(rootCursor));

@@ -157,7 +157,7 @@ void setVerbosity(ArgResults result) {
     }
     // setup logger for printing
     Logger.root.onRecord.listen((record) {
-      print('${record.level.name}: ${record.message}');
+      print('${record.level.name.padRight(8)}: ${record.message}');
     });
   } else {
     // setup logger for printing
