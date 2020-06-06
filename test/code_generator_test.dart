@@ -150,7 +150,7 @@ typedef _dart_withPointerParam = ffi.Pointer<ffi.Double> Function(
         }
       } catch (e) {
         file.writeAsStringSync(gen);
-        print("Failed test, Debug output: ${file.absolute?.path}");
+        print('Failed test, Debug output: ${file.absolute?.path}');
         rethrow;
       }
     });
@@ -267,7 +267,7 @@ class WithPointerMember extends ffi.Struct{
         }
       } catch (e) {
         file.writeAsStringSync(gen);
-        print("Failed test, Debug output: ${file.absolute?.path}");
+        print('Failed test, Debug output: ${file.absolute?.path}');
         rethrow;
       }
     });
@@ -375,7 +375,7 @@ typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
         }
       } catch (e) {
         file.writeAsStringSync(gen);
-        print("Failed test, Debug output: ${file.absolute?.path}");
+        print('Failed test, Debug output: ${file.absolute?.path}');
         rethrow;
       }
     });
@@ -465,7 +465,7 @@ final ffi.Pointer<Some> test5 = _dylib.lookup<ffi.Pointer<Some>>('test5').value;
         }
       } catch (e) {
         file.writeAsStringSync(gen);
-        print("Failed test, Debug output: ${file.absolute?.path}");
+        print('Failed test, Debug output: ${file.absolute?.path}');
         rethrow;
       }
     });
@@ -518,7 +518,7 @@ const double test2 = 20.0;
         }
       } catch (e) {
         file.writeAsStringSync(gen);
-        print("Failed test, Debug output: ${file.absolute?.path}");
+        print('Failed test, Debug output: ${file.absolute?.path}');
         rethrow;
       }
     });
@@ -593,7 +593,7 @@ typedef test2 = ffi.Pointer<ffi.Int32> Function(
         }
       } catch (e) {
         file.writeAsStringSync(gen);
-        print("Failed test, Debug output: ${file.absolute?.path}");
+        print('Failed test, Debug output: ${file.absolute?.path}');
         rethrow;
       }
     });
@@ -647,7 +647,7 @@ class Constants {
         }
       } catch (e) {
         file.writeAsStringSync(gen);
-        print("Failed test, Debug output: ${file.absolute?.path}");
+        print('Failed test, Debug output: ${file.absolute?.path}');
         rethrow;
       }
     });

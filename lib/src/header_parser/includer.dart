@@ -49,7 +49,7 @@ bool shouldIncludeEnumClass(String name) {
 /// Returns if cursor should be included based on
 /// header-exclusions, for used in root_parser
 bool shouldIncludeRootCursor(String sourceFile) {
-  String name = sourceFile.split('/').last;
+  var name = sourceFile.split('/').last;
 
   if (config.excludedInclusionHeaders.contains(name)) {
     return false;
@@ -60,7 +60,7 @@ bool shouldIncludeRootCursor(String sourceFile) {
   }
 
   // If any includedInclusionHeaders is provided, return false
-  if (config.includedInclusionHeaders.length > 0) {
+  if (config.includedInclusionHeaders.isNotEmpty) {
     return false;
   } else {
     return true;

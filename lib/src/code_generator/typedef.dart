@@ -1,10 +1,10 @@
 import 'package:meta/meta.dart';
 
-import 'writer.dart';
 import 'binding.dart';
 import 'binding_string.dart';
-import 'type.dart';
 import 'func.dart' show Parameter;
+import 'type.dart';
+import 'writer.dart';
 
 /// A simple typedef function for C functions, Expands to -
 ///
@@ -26,7 +26,7 @@ class TypedefC extends Binding {
     String dartDoc,
     @required this.returnType,
     List<Parameter> parameters,
-  })  : this.parameters = parameters ?? [],
+  })  : parameters = parameters ?? [],
         super(name: name, dartDoc: dartDoc);
 
   @override

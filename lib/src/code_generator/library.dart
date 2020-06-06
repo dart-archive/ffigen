@@ -72,5 +72,6 @@ class Library {
     return w.toString();
   }
 
-  bool operator ==(Object o) => o is Library && o.toString() == this.toString();
+  @override
+  bool operator ==(Object o) => o is Library && o.toString() == toString();
 }

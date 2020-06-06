@@ -24,7 +24,7 @@ void main() {
   // Generates bindings for libclang wrapper
   library.generateFile(f);
 
-  print("Generated bindings: ${f.absolute.path}");
+  print('Generated bindings: ${f.absolute.path}');
 }
 
 final bindings = <Binding>[

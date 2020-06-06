@@ -1,3 +1,5 @@
+// ignore_for_file: slash_for_doc_comments
+
 class CXTranslationUnit_Flags {
   /**
    * Used to indicate that no special translation-unit options are

@@ -1,10 +1,10 @@
 import 'package:meta/meta.dart';
 
-import 'constants.dart';
-import 'writer.dart';
 import 'binding.dart';
 import 'binding_string.dart';
+import 'constants.dart';
 import 'type.dart';
+import 'writer.dart';
 
 /// A binding for C function
 class Struc extends Binding {
@@ -14,7 +14,7 @@ class Struc extends Binding {
     @required String name,
     String dartDoc,
     List<Member> members,
-  })  : this.members = members ?? [],
+  })  : members = members ?? [],
         super(name: name, dartDoc: dartDoc);
 
   @override

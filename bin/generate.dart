@@ -5,7 +5,6 @@ import 'package:args/args.dart';
 import 'package:ffigen/src/config_provider.dart';
 import 'package:ffigen/src/header_parser.dart' as parser;
 import 'package:logging/logging.dart';
-
 import 'package:yaml/yaml.dart' as yaml;
 
 var _logger = Logger('generate.dart');
@@ -18,7 +17,7 @@ void main(List<String> args) {
   setVerbosity(result);
 
   // create config
-  Config config = getConfig(result);
+  var config = getConfig(result);
 
   // parse the bindings according to config
   final library = parser.parse(config);
@@ -28,7 +27,7 @@ void main(List<String> args) {
   }
 
   // Generate file for parsed bindings
-  File gen = File(config.output);
+  var gen = File(config.output);
   library.generateFile(gen);
   _logger.info('Finished, Bindings generated in ${gen?.absolute?.path}');
 }

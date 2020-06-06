@@ -5,10 +5,10 @@ analyzer:
     implicit-casts: false
     implicit-dynamic: false
 
-#   exclude:
-#     - path/to/excluded/files/**
+  # this doesn't work
+  # exclude:
+    # -lib/src/header_parser/clang_bindings/clang_constants.dart
 
 linter:
   rules:
-    exclude:
-      -lib/src/header_parser/clang_bindings/clang_constants.dart
+    - directives_ordering

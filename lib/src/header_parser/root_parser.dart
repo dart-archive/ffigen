@@ -5,11 +5,11 @@ import 'package:logging/logging.dart';
 
 import 'clang_bindings/clang_bindings.dart' as clang;
 import 'clang_bindings/clang_constants.dart' as clang;
+import 'includer.dart';
+import 'sub_parsers/enumdecl_parser.dart';
 import 'sub_parsers/functiondecl_parser.dart';
 import 'sub_parsers/structdecl_parser.dart';
 import 'sub_parsers/typedefdecl_parser.dart';
-import 'sub_parsers/enumdecl_parser.dart';
-import 'includer.dart';
 import 'utils.dart';
 
 var _logger = Logger('parser:root_parser');
@@ -20,7 +20,7 @@ List<Binding> _bindings;
 List<Binding> parseRootCursor(Pointer<clang.CXCursor> translationUnitCursor) {
   _bindings = [];
 
-  int resultCode = clang.clang_visitChildren_wrap(
+  var resultCode = clang.clang_visitChildren_wrap(
     translationUnitCursor,
     Pointer.fromFunction(
         _rootCursorVisitor, clang.CXChildVisitResult.CXChildVisit_Break),

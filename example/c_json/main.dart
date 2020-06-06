@@ -1,7 +1,8 @@
-import 'dart:io';
-import 'dart:ffi';
-import 'package:ffi/ffi.dart';
 import 'dart:convert';
+import 'dart:ffi';
+import 'dart:io';
+
+import 'package:ffi/ffi.dart';
 
 import 'cjson_generated_bindings.dart' as cjson;
 
@@ -48,11 +49,11 @@ void main() {
   // check if the converted json is correct
   // by comparing the result with json converted by dart:convert
   if (dartJson.toString() == json.decode(jsonString).toString()) {
-    print("Json converted successfully");
+    print('Json converted successfully');
   } else {
     print("Converted json doesn't match\n");
-    print("Actual:\n" + dartJson.toString() + "\n");
-    print("Expected:\n" + json.decode(jsonString).toString());
+    print('Actual:\n' + dartJson.toString() + '\n');
+    print('Expected:\n' + json.decode(jsonString).toString());
   }
 }
 

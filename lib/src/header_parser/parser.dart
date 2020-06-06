@@ -8,10 +8,8 @@ import 'package:logging/logging.dart';
 
 import 'clang_bindings/clang_bindings.dart' as clang;
 import 'clang_bindings/clang_constants.dart' as clang;
-import 'utils.dart';
-
-// Holds all global data
 import 'data.dart' as data;
+import 'utils.dart';
 
 /// Main entrypoint for header_parser
 Library parse(Config conf, {bool sort = false}) {
@@ -46,14 +44,14 @@ List<Binding> parseAndGenerateBindings() {
   var index = clang.clang_createIndex(0, 0);
 
   Pointer<Pointer<Utf8>> clangCmdArgs = nullptr;
-  int cmdLen = 0;
+  var cmdLen = 0;
   if (data.config.compilerOpts != null) {
     clangCmdArgs = createDynamicStringArray(data.config.compilerOpts);
     cmdLen = data.config.compilerOpts.length;
   }
 
   /// Contains all bindings
-  List<Binding> bindings = [];
+  var bindings = <Binding>[];
 
   for (var header in data.config.headers) {
     var headerLocation = header.path;

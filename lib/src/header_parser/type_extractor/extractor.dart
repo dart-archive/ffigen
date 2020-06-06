@@ -4,20 +4,20 @@ import 'dart:ffi';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 
-import '../type_extractor/cxtypekindmap.dart';
 import '../clang_bindings/clang_bindings.dart' as clang;
 import '../clang_bindings/clang_constants.dart' as clang;
-import '../sub_parsers/structdecl_parser.dart';
-import '../utils.dart';
-import '../root_parser.dart';
 import '../includer.dart';
+import '../root_parser.dart';
+import '../sub_parsers/structdecl_parser.dart';
+import '../type_extractor/cxtypekindmap.dart';
+import '../utils.dart';
 
 var _logger = Logger('parser:extractor');
 
 /// converts cxtype to a typestring code_generator can accept
 Type getCodeGenType(Pointer<clang.CXType> cxtype, {String parentName}) {
   _logger.fine('...getCodeGenType ${cxtype.completeStringRepr()}');
-  int kind = cxtype.kind();
+  var kind = cxtype.kind();
 
   switch (kind) {
     case clang.CXTypeKind.CXType_Pointer:
@@ -94,7 +94,7 @@ Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
 // Used for function pointer arguments
 Type _extractFromFunctionProto(
     Pointer<clang.CXType> cxtype, String parentName) {
-  String name = parentName;
+  var name = parentName;
 
   // set a name for typedefc incase it was null or empty
   if (name == null || name == '') {
@@ -107,7 +107,7 @@ Type _extractFromFunctionProto(
       returnType:
           clang.clang_getResultType_wrap(cxtype).toCodeGenTypeAndDispose(),
     );
-    int totalArgs = clang.clang_getNumArgTypes_wrap(cxtype);
+    var totalArgs = clang.clang_getNumArgTypes_wrap(cxtype);
     for (var i = 0; i < totalArgs; i++) {
       var t = clang.clang_getArgType_wrap(cxtype, i);
       typedefC.parameters.add(
@@ -123,5 +123,5 @@ Type _extractFromFunctionProto(
 int _i = 0;
 String _getNextUniqueString(String prefix) {
   _i++;
-  return "${prefix}_$_i";
+  return '${prefix}_$_i';
 }

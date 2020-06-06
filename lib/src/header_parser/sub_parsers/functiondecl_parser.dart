@@ -3,9 +3,9 @@ import 'dart:ffi';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 
-import '../includer.dart';
 import '../clang_bindings/clang_bindings.dart' as clang;
 import '../clang_bindings/clang_constants.dart' as clang;
+import '../includer.dart';
 import '../utils.dart';
 
 var _logger = Logger('parser:functiondecl_parser');
@@ -19,9 +19,9 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
 
   var name = cursor.spelling();
   if (shouldIncludeFunc(name)) {
-    _logger.fine("Function: ${cursor.completeStringRepr()}");
+    _logger.fine('Function: ${cursor.completeStringRepr()}');
 
-    Type rt = _getFunctionReturnType(cursor);
+    var rt = _getFunctionReturnType(cursor);
     var parameters = _getParameters(cursor);
 
     //TODO: remove this when support for Structs by value arrive
@@ -47,9 +47,9 @@ Type _getFunctionReturnType(Pointer<clang.CXCursor> cursor) {
 }
 
 List<Parameter> _getParameters(Pointer<clang.CXCursor> cursor) {
-  List<Parameter> parameters = [];
+  var parameters = <Parameter>[];
 
-  int totalArgs = clang.clang_Cursor_getNumArguments_wrap(cursor);
+  var totalArgs = clang.clang_Cursor_getNumArguments_wrap(cursor);
   for (var i = 0; i < totalArgs; i++) {
     var paramCursor = clang.clang_Cursor_getArgument_wrap(cursor, i);
 

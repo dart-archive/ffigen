@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 
-import 'writer.dart';
 import 'binding_string.dart';
+import 'writer.dart';
 
 /// A binding class, parent class of all possible types
 abstract class Binding {

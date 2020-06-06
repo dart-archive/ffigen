@@ -41,14 +41,14 @@ CheckerResult checkYaml(YamlMap map) {
 }
 
 void _warnUnknownConfigKeys(YamlMap map) {
-  List<String> unknownopts = [];
+  var unknownopts = <String>[];
   for (var k in map.keys) {
-    String key = k as String;
+    var key = k as String;
     if (!strings.mapOfAllOptions.containsKey(key)) {
       unknownopts.add(key);
     }
   }
-  if (unknownopts.length > 0) {
+  if (unknownopts.isNotEmpty) {
     _logger.warning('Warning: Unknown keys found - ' + unknownopts.join(', '));
     _setResult(CheckerResult.warnings);
   }

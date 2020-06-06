@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 void main() {
   group('header_parser', () {
     test('functions', () {
-      Config config = Config(
+      var config = Config(
         compilerOpts:
             '-I/usr/lib/llvm-9/include/ -I/usr/lib/llvm-10/include/'.split(' '),
         libclang_dylib_path: 'tool/wrapped_libclang/libwrapped_clang.so',
@@ -19,7 +19,7 @@ void main() {
           'functions.h',
         },
       );
-      Library testLib = parser.parse(config, sort: true);
+      var testLib = parser.parse(config, sort: true);
       var file = File('test/debug_generated/header_parser_function.dart');
       try {
         expect(testLib.toString(), functionLibrary().toString());
@@ -28,7 +28,7 @@ void main() {
         }
       } catch (e) {
         testLib.generateFile(file);
-        print("Failed test, Debug output: ${file.absolute?.path}");
+        print('Failed test, Debug output: ${file.absolute?.path}');
         rethrow;
       }
     });

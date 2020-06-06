@@ -1,9 +1,9 @@
 import 'package:meta/meta.dart';
 
-import 'writer.dart';
 import 'binding.dart';
 import 'binding_string.dart';
 import 'type.dart';
+import 'writer.dart';
 
 /// A binding to a global variable
 class Global extends Binding {

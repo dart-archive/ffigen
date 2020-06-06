@@ -5,8 +5,8 @@ import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
 import '../clang_bindings/clang_constants.dart' as clang;
-import '../sub_parsers/structdecl_parser.dart';
 import '../sub_parsers/enumdecl_parser.dart';
+import '../sub_parsers/structdecl_parser.dart';
 import '../utils.dart';
 
 var _logger = Logger('parser:typedefdecl_parser');
@@ -23,7 +23,7 @@ Binding parseTypedefDeclaration(Pointer<clang.CXCursor> cursor) {
   // set name of typedef (used later)
   _typedefName = cursor.spelling();
 
-  int resultCode = clang.clang_visitChildren_wrap(
+  var resultCode = clang.clang_visitChildren_wrap(
     cursor,
     Pointer.fromFunction(_typedefdeclarationCursorVisitor,
         clang.CXChildVisitResult.CXChildVisit_Break),

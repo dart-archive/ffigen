@@ -1,5 +1,5 @@
-import 'constants.dart';
 import 'binding_string.dart';
+import 'constants.dart';
 
 /// To store generated String bindings.
 class Writer {

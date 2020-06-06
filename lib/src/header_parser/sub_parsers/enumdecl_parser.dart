@@ -3,9 +3,9 @@ import 'dart:ffi';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 
-import '../includer.dart';
 import '../clang_bindings/clang_bindings.dart' as clang;
 import '../clang_bindings/clang_constants.dart' as clang;
+import '../includer.dart';
 import '../utils.dart';
 
 var _logger = Logger('parser:enumdecl_parser');
@@ -26,7 +26,7 @@ EnumClass parseEnumDeclaration(
   if (enumName == '') {
     _logger.finest('unnamed enum declaration');
   } else if (shouldIncludeEnumClass(enumName)) {
-    _logger.fine("Enum: ${cursor.completeStringRepr()}");
+    _logger.fine('Enum: ${cursor.completeStringRepr()}');
     _enumClass = EnumClass(
       name: enumName,
     );
@@ -37,7 +37,7 @@ EnumClass parseEnumDeclaration(
 }
 
 void _addEnumConstant(Pointer<clang.CXCursor> cursor) {
-  int resultCode = clang.clang_visitChildren_wrap(
+  var resultCode = clang.clang_visitChildren_wrap(
     cursor,
     Pointer.fromFunction(
         _enumCursorVisitor, clang.CXChildVisitResult.CXChildVisit_Break),

@@ -1,8 +1,8 @@
 import 'package:meta/meta.dart';
 
-import 'writer.dart';
 import 'binding.dart';
 import 'binding_string.dart';
+import 'writer.dart';
 
 /// A binding for enums in C
 class EnumClass extends Binding {
@@ -12,7 +12,7 @@ class EnumClass extends Binding {
     @required String name,
     String dartDoc,
     List<EnumConstant> enumConstants,
-  })  : this.enumConstants = enumConstants ?? [],
+  })  : enumConstants = enumConstants ?? [],
         super(name: name, dartDoc: dartDoc);
 
   @override

@@ -1,18 +1,17 @@
 import 'dart:io';
 
+import 'package:ffigen/src/code_generator/type.dart';
+import 'package:ffigen/src/header_parser/clang_bindings/clang_constants.dart';
+import 'package:ffigen/src/header_parser/type_extractor/cxtypekindmap.dart';
 import 'package:glob/glob.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 import 'package:yaml/yaml.dart';
 
-import 'package:ffigen/src/code_generator/type.dart';
-import 'package:ffigen/src/header_parser/clang_bindings/clang_constants.dart';
-import 'package:ffigen/src/header_parser/type_extractor/cxtypekindmap.dart';
-
+import '../strings.dart' as string;
 import 'filter.dart';
 import 'header.dart';
 import 'input_checker.dart';
-import '../strings.dart' as string;
 
 var _logger = Logger('config_provider');
 
@@ -142,7 +141,7 @@ class Config {
 
   SupportedNativeType nativeSupportedType(dynamic scalar,
       {bool signed = true}) {
-    int value = scalar as int;
+    var value = scalar as int;
     switch (value) {
       case 1:
         return signed ? SupportedNativeType.Int8 : SupportedNativeType.Uint8;

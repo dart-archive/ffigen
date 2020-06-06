@@ -1,9 +1,9 @@
 import 'package:meta/meta.dart';
 
-import 'writer.dart';
 import 'binding.dart';
 import 'binding_string.dart';
 import 'type.dart';
+import 'writer.dart';
 
 /// A binding for C function
 class Func extends Binding {
@@ -15,12 +15,12 @@ class Func extends Binding {
     String dartDoc,
     @required this.returnType,
     List<Parameter> parameters,
-  })  : this.parameters = parameters ?? [],
+  })  : parameters = parameters ?? [],
         super(name: name, dartDoc: dartDoc) {
     for (var i = 0; i < this.parameters.length; i++) {
       if (this.parameters[i].name == null ||
           this.parameters[i].name.trim() == '') {
-        this.parameters[i].name = "arg$i";
+        this.parameters[i].name = 'arg$i';
       }
     }
   }

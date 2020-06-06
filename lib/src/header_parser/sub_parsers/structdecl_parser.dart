@@ -28,13 +28,13 @@ Struc parseStructDeclaration(
   bool doInclude = false,
 }) {
   _struc = null;
-  String structName = name ?? cursor.spelling();
+  var structName = name ?? cursor.spelling();
 
   if (structName == '') {
     _logger.finest('unnamed structure declaration');
   } else if (doInclude || shouldIncludeStruct(structName)) {
     _logger
-        .fine("Structure: name:${structName} ${cursor.completeStringRepr()}");
+        .fine('Structure: name:${structName} ${cursor.completeStringRepr()}');
     // TODO: also parse struct fields
     _struc = Struc(
       dartDoc: clang

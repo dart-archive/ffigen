@@ -50,9 +50,9 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
 
   /// for debug: returns [spelling] [kind] [kindSpelling] [type] [typeSpelling]
   String completeStringRepr() {
-    var cxtype = this.type();
-    String s =
-        '(Cursor) spelling: ${this.spelling()}, kind: ${this.kind()}, kindSpelling: ${this.kindSpelling()}, type: ${cxtype.kind()}, typeSpelling: ${cxtype.spelling()}';
+    var cxtype = type();
+    var s =
+        '(Cursor) spelling: ${spelling()}, kind: ${kind()}, kindSpelling: ${kindSpelling()}, type: ${cxtype.kind()}, typeSpelling: ${cxtype.spelling()}';
     cxtype.dispose();
     return s;
   }
@@ -66,7 +66,7 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
   ///
   /// Dispose type using [type.dispose]
   Pointer<clang.CXType> returnType() {
-    var t = this.type();
+    var t = type();
     var r = clang.clang_getResultType_wrap(t);
     t.dispose();
     return r;
@@ -74,11 +74,11 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
 
   String sourceFileName() {
     var cxsource = clang.clang_getCursorLocation_wrap(this);
-    Pointer<Pointer<Void>> cxfilePtr = allocate<Pointer<Void>>();
+    var cxfilePtr = allocate<Pointer<Void>>();
     // TODO: hardcoded type, check
-    Pointer<Uint32> line = allocate<Uint32>();
-    Pointer<Uint32> column = allocate<Uint32>();
-    Pointer<Uint32> offset = allocate<Uint32>();
+    var line = allocate<Uint32>();
+    var column = allocate<Uint32>();
+    var offset = allocate<Uint32>();
 
     // puts the values in these pointers
     clang.clang_getFileLocation_wrap(cxsource, cxfilePtr, line, column, offset);
@@ -105,7 +105,7 @@ extension CXTypeExt on Pointer<clang.CXType> {
   /// Get code_gen [Type] representation of [clang.CXType] and dispose the type
   Type toCodeGenTypeAndDispose() {
     var t = getCodeGenType(this);
-    this.dispose();
+    dispose();
     return t;
   }
 
@@ -116,19 +116,19 @@ extension CXTypeExt on Pointer<clang.CXType> {
 
   /// returns the typeKind int from [clang.CXTypeKind]
   int kind() {
-    return this.ref.kind;
+    return ref.kind;
   }
 
   String kindSpelling() {
     return clang
-        .clang_getTypeKindSpelling_wrap(this.kind())
+        .clang_getTypeKindSpelling_wrap(kind())
         .toStringAndDispose();
   }
 
   /// for debug: returns [spelling] [kind] [kindSpelling]
   String completeStringRepr() {
-    String s =
-        '(Type) spelling: ${this.spelling()}, kind: ${this.kind()}, kindSpelling: ${this.kindSpelling()}';
+    var s =
+        '(Type) spelling: ${spelling()}, kind: ${kind()}, kindSpelling: ${kindSpelling()}';
     return s;
   }
 
@@ -151,7 +151,7 @@ extension CXStringExt on Pointer<clang.CXString> {
   /// Converts CXString to dart string and disposes CXString
   String toStringAndDispose() {
     // Note: clang_getCString_wrap returns a const char *, calling free will result in error
-    String s = this.string();
+    var s = string();
     clang.clang_disposeString_wrap(this);
     return s;
   }
@@ -163,7 +163,7 @@ extension CXStringExt on Pointer<clang.CXString> {
 
 // Converts a List<String> to Pointer<Pointer<Utf8>>
 Pointer<Pointer<Utf8>> createDynamicStringArray(List<String> list) {
-  Pointer<Pointer<Utf8>> nativeCmdArgs =
+  var nativeCmdArgs =
       allocate<Pointer<Utf8>>(count: list.length);
 
   for (var i = 0; i < list.length; i++) {
