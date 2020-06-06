@@ -28,6 +28,6 @@ class Global extends Binding {
     s.write(
         "final ${type.dartType} $name = ${w.dylibIdentifier}.lookup<${type.cType}>('$name').value;\n\n");
 
-    return BindingString(type: BindingStringType.func, string: s.toString());
+    return BindingString(type: BindingStringType.global, string: s.toString());
   }
 }

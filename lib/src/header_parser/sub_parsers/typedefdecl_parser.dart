@@ -44,7 +44,7 @@ int _typedefdeclarationCursorVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
   try {
     _logger.finest(
-        '----typedefdeclarationCursorVisitor: ${cursor.completeStringRepr()}');
+        'typedefdeclarationCursorVisitor: ${cursor.completeStringRepr()}');
 
     switch (clang.clang_getCursorKind_wrap(cursor)) {
       case clang.CXCursorKind.CXCursor_StructDecl:
@@ -54,7 +54,7 @@ int _typedefdeclarationCursorVisitor(Pointer<clang.CXCursor> cursor,
         _binding = parseEnumDeclaration(cursor, name: _typedefName);
         break;
       default:
-        _logger.finest('----typedefdeclarationCursorVisitor: Not Implemented');
+        _logger.finest('typedefdeclarationCursorVisitor: Not Implemented');
     }
 
     cursor.dispose();

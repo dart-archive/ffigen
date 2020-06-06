@@ -17,7 +17,7 @@ EnumClass _enumClass;
 EnumClass parseEnumDeclaration(
   Pointer<clang.CXCursor> cursor, {
 
-  /// Optionally provide name (useful in case struct is inside a typedef)
+  /// Optionally provide name to use (useful in case struct is inside a typedef)
   String name,
 }) {
   _enumClass = null;
@@ -54,7 +54,7 @@ void _addEnumConstant(Pointer<clang.CXCursor> cursor) {
 int _enumCursorVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
   try {
-    _logger.finest('--enumCursorVisitor: ${cursor.completeStringRepr()}');
+    _logger.finest('enumCursorVisitor: ${cursor.completeStringRepr()}');
     switch (clang.clang_getCursorKind_wrap(cursor)) {
       case clang.CXCursorKind.CXCursor_EnumConstantDecl:
         _addEnumConstantToEnumClass(cursor);

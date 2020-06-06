@@ -2,7 +2,8 @@ import 'package:meta/meta.dart';
 
 import 'data.dart';
 
-/// Utility to check whether a binding should be parsed or not
+/// Utility functions to check whether a binding should be parsed or not
+/// based on filters and if a binding is seen already
 
 // Stores binding names already scene
 Set<String> _structs = {};
@@ -46,8 +47,8 @@ bool shouldIncludeEnumClass(String name) {
   }
 }
 
-/// Returns if cursor should be included based on
-/// header-exclusions, for used in root_parser
+/// True if cursor should be included based on
+/// header-filter, use for root declarations
 bool shouldIncludeRootCursor(String sourceFile) {
   var name = sourceFile.split('/').last;
 

@@ -38,7 +38,7 @@ class EnumClass extends Binding {
     }
     s.write('}\n\n');
 
-    return BindingString(type: BindingStringType.func, string: s.toString());
+    return BindingString(type: BindingStringType.enumClass, string: s.toString());
   }
 }
 

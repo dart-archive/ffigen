@@ -31,6 +31,7 @@ enum FfiUtilType {
   Utf16,
 }
 
+/// The basic types in which all types can be classified
 enum BroadType {
   NativeType,
   FfiUtilType,

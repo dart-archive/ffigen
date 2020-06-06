@@ -58,7 +58,7 @@ int _rootCursorVisitor(Pointer<clang.CXCursor> cursor,
       }
     } else {
       _logger.finest(
-          'rootCursorVisitor:(excluded header) ${cursor.completeStringRepr()}');
+          'rootCursorVisitor:(excluded in header-filter) ${cursor.completeStringRepr()}');
     }
 
     cursor.dispose();

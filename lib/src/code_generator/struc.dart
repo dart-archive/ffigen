@@ -37,7 +37,7 @@ class Struc extends Binding {
     }
     s.write('}\n\n');
 
-    return BindingString(type: BindingStringType.func, string: s.toString());
+    return BindingString(type: BindingStringType.struc, string: s.toString());
   }
 }
 

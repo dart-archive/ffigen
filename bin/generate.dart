@@ -125,7 +125,7 @@ ArgResults getArgResults(List<String> args) {
   } catch (e) {
     print(e);
     print(parser.usage);
-    exit(0);
+    exit(1);
   }
 
   return results;

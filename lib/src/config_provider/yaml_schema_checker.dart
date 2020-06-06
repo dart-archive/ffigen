@@ -1,7 +1,5 @@
 /// Validates the yaml input by the user,
 /// prints useful info for the user
-library input_checker;
-
 import 'dart:io';
 
 import 'package:logging/logging.dart';
@@ -19,11 +17,14 @@ enum CheckerResult {
 
 CheckerResult _result = CheckerResult.correct;
 
+/// Validates the given yaml schema and returns [CheckerResult]
+///
+/// logs warning for unknown config options (if any)
 CheckerResult checkYaml(YamlMap map) {
   _result = CheckerResult.correct;
 
   // TODO: Validate output file
-
+  
   _validateLibclangDylibPath(map);
 
   // TODO: Validate headers
@@ -32,12 +33,20 @@ CheckerResult checkYaml(YamlMap map) {
 
   // TODO: Validate filters
 
-  // TODO: Validate sort
+  _validateSort(map);
 
   // print unknown attributes
   _warnUnknownConfigKeys(map);
 
   return _result;
+}
+
+void _validateSort(YamlMap map) {
+  if (map.containsKey(strings.sort) && map[strings.sort] is! bool) {
+    _logger
+        .severe('Warning: Expected value of key=${strings.sort} to be a bool');
+    _setResult(CheckerResult.error);
+  }
 }
 
 void _warnUnknownConfigKeys(YamlMap map) {

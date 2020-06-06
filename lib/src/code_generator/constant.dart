@@ -34,6 +34,6 @@ class Constant extends Binding {
 
     s.write('const ${type.dartType} $name = $rawValue;\n\n');
 
-    return BindingString(type: BindingStringType.func, string: s.toString());
+    return BindingString(type: BindingStringType.constant, string: s.toString());
   }
 }

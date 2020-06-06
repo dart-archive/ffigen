@@ -34,6 +34,8 @@ const ULongLong = 'unsigned long long';
 const sort = 'sort';
 
 /// contains all options and their description
+///
+/// also used to determine if a config option is unknown
 const mapOfAllOptions = <String, String>{
   output: 'Output file name',
   libclang_dylib: 'Path to libclang dynamic library, used to parse C headers',

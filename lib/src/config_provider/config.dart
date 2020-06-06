@@ -11,7 +11,7 @@ import 'package:yaml/yaml.dart';
 import '../strings.dart' as string;
 import 'filter.dart';
 import 'header.dart';
-import 'input_checker.dart';
+import 'yaml_schema_checker.dart';
 
 var _logger = Logger('config_provider');
 
@@ -19,8 +19,6 @@ var _logger = Logger('config_provider');
 /// and has methods to convert various configurations
 /// to a format requested by submodules
 class Config {
-  dynamic _raw;
-
   /// output file name
   String output;
 
@@ -259,4 +257,7 @@ class Config {
   String toString() {
     return _raw != null ? _raw.toString() : 'Instance of `${runtimeType}`';
   }
+
+  /// stores raw yaml
+  dynamic _raw;
 }

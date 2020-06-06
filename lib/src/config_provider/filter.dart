@@ -1,3 +1,8 @@
+/// A generic filter
+///
+/// User can provide fiters for
+/// functions, structs, enums and include/exclude
+/// them using regexp, full name matching
 class Filter {
   /// matchers
   List<RegExp> _includeMatchers = [];
@@ -27,7 +32,7 @@ class Filter {
     }
   }
 
-  /// Checks if a name should be included based on config
+  /// Checks if a name is allowed by a filter
   bool shouldInclude(String name) {
     if (_excludeFull.contains(name)) {
       return false;

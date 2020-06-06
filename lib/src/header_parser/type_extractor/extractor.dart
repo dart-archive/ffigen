@@ -63,7 +63,7 @@ Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
   Type type;
 
   var cursor = clang.clang_getTypeDeclaration_wrap(cxtype);
-  _logger.fine('----_extractfromRecord: ${cursor.completeStringRepr()}');
+  _logger.fine('_extractfromRecord: ${cursor.completeStringRepr()}');
 
   switch (clang.clang_getCursorKind_wrap(cursor)) {
     case clang.CXCursorKind.CXCursor_StructDecl:
@@ -85,7 +85,7 @@ Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
       cxtype.dispose();
       break;
     default:
-      _logger.fine('----typedeclarationCursorVisitor: Not Implemented');
+      _logger.fine('typedeclarationCursorVisitor: Not Implemented');
   }
   cursor.dispose();
   return type;
