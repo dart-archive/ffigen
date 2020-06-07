@@ -35,14 +35,81 @@ Struc parseStructDeclaration(
   } else if (doInclude || shouldIncludeStruct(structName)) {
     _logger.fine(
         '++++ Adding Structure: name:${structName} ${cursor.completeStringRepr()}');
-    // TODO: also parse struct fields
+
+    var members = _getMembers(cursor);
     _struc = Struc(
       dartDoc: clang
           .clang_Cursor_getBriefCommentText_wrap(cursor)
           .toStringAndDispose(),
       name: structName,
+      members: members,
     );
   }
 
   return _struc;
+}
+
+List<Member> _members;
+List<Member> _getMembers(Pointer<clang.CXCursor> cursor) {
+  _members = [];
+  isStructByValue = false;
+
+  var resultCode = clang.clang_visitChildren_wrap(
+      cursor,
+      Pointer.fromFunction(
+          _structMembersVisitor, clang.CXChildVisitResult.CXChildVisit_Break),
+      nullptr);
+
+  visitChildrenResultChecker(resultCode);
+
+  // returning null to exclude the struct members as it has a struct by value field
+  if (isStructByValue) {
+    _logger.fine(
+        '---- Removed Struct members, reason: struct by value members: ${cursor.completeStringRepr()}');
+    return null;
+  }
+
+  return _members;
+}
+
+bool isStructByValue = false;
+
+/// Visitor for the struct cursor [CXCursorKind.CXCursor_StructDecl]
+///
+/// child visitor invoked on struct cursor
+int _structMembersVisitor(Pointer<clang.CXCursor> cursor,
+    Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
+  try {
+    if (cursor.kind() == clang.CXCursorKind.CXCursor_FieldDecl) {
+      _logger.finer('===== member: ${cursor.completeStringRepr()}');
+
+      var mt = cursor.type().toCodeGenTypeAndDispose();
+
+      //TODO: remove this when support for Structs by value arrive
+      if (mt.type == BroadType.Struct) {
+        isStructByValue =
+            true; // setting this flag will exclude adding members for this struct's bindings
+      }
+
+      //TODO: remove this when support for constant arrays arrive
+      if (mt.type == BroadType.Array) {
+        isStructByValue =
+            true; // setting this flag will exclude adding members for this struct's bindings
+      }
+
+      _members.add(
+        Member(
+          name: cursor.spelling(),
+          type: mt,
+        ),
+      );
+    }
+    cursor.dispose();
+    parent.dispose();
+  } catch (e, s) {
+    _logger.severe(e);
+    _logger.severe(s);
+    rethrow;
+  }
+  return clang.CXChildVisitResult.CXChildVisit_Continue;
 }

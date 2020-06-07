@@ -11,15 +11,29 @@ void init(ffi.DynamicLibrary dylib) {
 }
 
 /// Contains the results of code-completion.
-class CXCodeCompleteResults extends ffi.Struct {}
+class CXCodeCompleteResults extends ffi.Struct {
+  ffi.Pointer<CXCompletionResult> Results;
+
+  @ffi.Uint32()
+  int NumResults;
+}
 
 /// A single result of code completion.
-class CXCompletionResult extends ffi.Struct {}
+class CXCompletionResult extends ffi.Struct {
+  @ffi.Int32()
+  int CursorKind;
+
+  ffi.Pointer<ffi.Void> CompletionString;
+}
 
 /// A cursor representing some element in the abstract syntax tree for a translation unit.
 class CXCursor extends ffi.Struct {}
 
-class CXCursorAndRangeVisitor extends ffi.Struct {}
+class CXCursorAndRangeVisitor extends ffi.Struct {
+  ffi.Pointer<ffi.Void> context;
+
+  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_2>> visit;
+}
 
 class CXCursorSetImpl extends ffi.Struct {}
 
@@ -37,7 +51,14 @@ class CXIdxAttrInfo extends ffi.Struct {}
 
 class CXIdxBaseClassInfo extends ffi.Struct {}
 
-class CXIdxCXXClassDeclInfo extends ffi.Struct {}
+class CXIdxCXXClassDeclInfo extends ffi.Struct {
+  ffi.Pointer<CXIdxDeclInfo> declInfo;
+
+  ffi.Pointer<ffi.Pointer<CXIdxBaseClassInfo>> bases;
+
+  @ffi.Uint32()
+  int numBases;
+}
 
 class CXIdxContainerInfo extends ffi.Struct {}
 
@@ -61,15 +82,37 @@ class CXIdxLoc extends ffi.Struct {}
 
 class CXIdxObjCCategoryDeclInfo extends ffi.Struct {}
 
-class CXIdxObjCContainerDeclInfo extends ffi.Struct {}
+class CXIdxObjCContainerDeclInfo extends ffi.Struct {
+  ffi.Pointer<CXIdxDeclInfo> declInfo;
 
-class CXIdxObjCInterfaceDeclInfo extends ffi.Struct {}
+  @ffi.Int32()
+  int kind;
+}
 
-class CXIdxObjCPropertyDeclInfo extends ffi.Struct {}
+class CXIdxObjCInterfaceDeclInfo extends ffi.Struct {
+  ffi.Pointer<CXIdxObjCContainerDeclInfo> containerInfo;
+
+  ffi.Pointer<CXIdxBaseClassInfo> superInfo;
+
+  ffi.Pointer<CXIdxObjCProtocolRefListInfo> protocols;
+}
+
+class CXIdxObjCPropertyDeclInfo extends ffi.Struct {
+  ffi.Pointer<CXIdxDeclInfo> declInfo;
+
+  ffi.Pointer<CXIdxEntityInfo> getter;
+
+  ffi.Pointer<CXIdxEntityInfo> setter;
+}
 
 class CXIdxObjCProtocolRefInfo extends ffi.Struct {}
 
-class CXIdxObjCProtocolRefListInfo extends ffi.Struct {}
+class CXIdxObjCProtocolRefListInfo extends ffi.Struct {
+  ffi.Pointer<ffi.Pointer<CXIdxObjCProtocolRefInfo>> protocols;
+
+  @ffi.Uint32()
+  int numProtocols;
+}
 
 typedef CXInclusionVisitor = ffi.Void Function(
   ffi.Pointer<ffi.Void>,
@@ -88,17 +131,45 @@ class CXSourceLocation extends ffi.Struct {}
 class CXSourceRange extends ffi.Struct {}
 
 /// Identifies an array of ranges.
-class CXSourceRangeList extends ffi.Struct {}
+class CXSourceRangeList extends ffi.Struct {
+  @ffi.Uint32()
+  int count;
+
+  ffi.Pointer<CXSourceRange> ranges;
+}
 
 /// A character string.
-class CXString extends ffi.Struct {}
+class CXString extends ffi.Struct {
+  ffi.Pointer<ffi.Void> data;
 
-class CXStringSet extends ffi.Struct {}
+  @ffi.Uint32()
+  int private_flags;
+}
+
+class CXStringSet extends ffi.Struct {
+  ffi.Pointer<CXString> Strings;
+
+  @ffi.Uint32()
+  int Count;
+}
 
 /// The memory usage of a CXTranslationUnit, broken into categories.
-class CXTUResourceUsage extends ffi.Struct {}
+class CXTUResourceUsage extends ffi.Struct {
+  ffi.Pointer<ffi.Void> data;
 
-class CXTUResourceUsageEntry extends ffi.Struct {}
+  @ffi.Uint32()
+  int numEntries;
+
+  ffi.Pointer<CXTUResourceUsageEntry> entries;
+}
+
+class CXTUResourceUsageEntry extends ffi.Struct {
+  @ffi.Int32()
+  int kind;
+
+  @ffi.Uint64()
+  int amount;
+}
 
 class CXTargetInfoImpl extends ffi.Struct {}
 
@@ -232,13 +303,45 @@ class CXTypeKind {
 }
 
 /// Provides the contents of a file that has not yet been saved to disk.
-class CXUnsavedFile extends ffi.Struct {}
+class CXUnsavedFile extends ffi.Struct {
+  ffi.Pointer<ffi2.Utf8> Filename;
+
+  ffi.Pointer<ffi2.Utf8> Contents;
+
+  @ffi.Uint64()
+  int Length;
+}
 
 /// Describes a version number of the form major.minor.subminor.
-class CXVersion extends ffi.Struct {}
+class CXVersion extends ffi.Struct {
+  @ffi.Int32()
+  int Major;
+
+  @ffi.Int32()
+  int Minor;
+
+  @ffi.Int32()
+  int Subminor;
+}
 
 /// A group of callbacks used by #clang_indexSourceFile and #clang_indexTranslationUnit.
-class IndexerCallbacks extends ffi.Struct {}
+class IndexerCallbacks extends ffi.Struct {
+  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_3>> abortQuery;
+
+  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_4>> diagnostic;
+
+  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_5>> enteredMainFile;
+
+  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_6>> ppIncludedFile;
+
+  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_7>> importedASTFile;
+
+  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_8>> startedTranslationUnit;
+
+  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_9>> indexDeclaration;
+
+  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_10>> indexEntityReference;
+}
 
 typedef ModifiedCXCursorVisitor = ffi.Int32 Function(
   ffi.Pointer<CXCursor>,
@@ -248,6 +351,54 @@ typedef ModifiedCXCursorVisitor = ffi.Int32 Function(
 
 typedef _typedefC_noname_1 = ffi.Void Function(
   ffi.Pointer<ffi.Void>,
+);
+
+typedef _typedefC_noname_10 = ffi.Void Function(
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<CXIdxEntityRefInfo>,
+);
+
+typedef _typedefC_noname_2 = ffi.Int32 Function(
+  ffi.Pointer<ffi.Void>,
+  CXCursor,
+  CXSourceRange,
+);
+
+typedef _typedefC_noname_3 = ffi.Int32 Function(
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void>,
+);
+
+typedef _typedefC_noname_4 = ffi.Void Function(
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void>,
+);
+
+typedef _typedefC_noname_5 = ffi.Pointer<ffi.Void> Function(
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void>,
+);
+
+typedef _typedefC_noname_6 = ffi.Pointer<ffi.Void> Function(
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<CXIdxIncludedFileInfo>,
+);
+
+typedef _typedefC_noname_7 = ffi.Pointer<ffi.Void> Function(
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<CXIdxImportedASTFileInfo>,
+);
+
+typedef _typedefC_noname_8 = ffi.Pointer<ffi.Void> Function(
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void>,
+);
+
+typedef _typedefC_noname_9 = ffi.Void Function(
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<CXIdxDeclInfo>,
 );
 
 /// Gets the general options associated with a CXIndex.
@@ -1661,6 +1812,26 @@ typedef _dart_clang_getArgType_wrap = ffi.Pointer<CXType> Function(
   int i,
 );
 
+ffi.Pointer<CXType> clang_getArrayElementType_wrap(
+  ffi.Pointer<CXType> cxtype,
+) {
+  return _clang_getArrayElementType_wrap(
+    cxtype,
+  );
+}
+
+final _dart_clang_getArrayElementType_wrap _clang_getArrayElementType_wrap =
+    _dylib.lookupFunction<_c_clang_getArrayElementType_wrap,
+        _dart_clang_getArrayElementType_wrap>('clang_getArrayElementType_wrap');
+
+typedef _c_clang_getArrayElementType_wrap = ffi.Pointer<CXType> Function(
+  ffi.Pointer<CXType> cxtype,
+);
+
+typedef _dart_clang_getArrayElementType_wrap = ffi.Pointer<CXType> Function(
+  ffi.Pointer<CXType> cxtype,
+);
+
 ffi.Pointer<ffi2.Utf8> clang_getCString_wrap(
   ffi.Pointer<CXString> string,
 ) {
@@ -2438,6 +2609,26 @@ typedef _c_clang_getNumDiagnosticsInSet = ffi.Uint32 Function(
 
 typedef _dart_clang_getNumDiagnosticsInSet = int Function(
   ffi.Pointer<ffi.Void> Diags,
+);
+
+int clang_getNumElements_wrap(
+  ffi.Pointer<CXType> cxtype,
+) {
+  return _clang_getNumElements_wrap(
+    cxtype,
+  );
+}
+
+final _dart_clang_getNumElements_wrap _clang_getNumElements_wrap =
+    _dylib.lookupFunction<_c_clang_getNumElements_wrap,
+        _dart_clang_getNumElements_wrap>('clang_getNumElements_wrap');
+
+typedef _c_clang_getNumElements_wrap = ffi.Uint64 Function(
+  ffi.Pointer<CXType> cxtype,
+);
+
+typedef _dart_clang_getNumElements_wrap = int Function(
+  ffi.Pointer<CXType> cxtype,
 );
 
 ffi.Pointer<CXType> clang_getPointeeType_wrap(

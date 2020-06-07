@@ -258,4 +258,14 @@ CXString *clang_getFileName_wrap(CXFile SFile)
     return ptrToCXString(clang_getFileName(SFile));
 }
 
+unsigned long long clang_getNumElements_wrap(CXType *cxtype)
+{
+    return clang_getNumElements(*cxtype);
+}
+
+CXType *clang_getArrayElementType_wrap(CXType *cxtype)
+{
+    return ptrToCXType(clang_getArrayElementType(*cxtype));
+}
+
 // END ===== WRAPPER FUNCTIONS =====================

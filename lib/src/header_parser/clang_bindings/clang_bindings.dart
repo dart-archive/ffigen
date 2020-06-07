@@ -303,6 +303,27 @@ typedef _dart_clang_getArgType_wrap = ffi.Pointer<CXType> Function(
   int i,
 );
 
+/// Free cxtype after use
+ffi.Pointer<CXType> clang_getArrayElementType_wrap(
+  ffi.Pointer<CXType> cxtype,
+) {
+  return _clang_getArrayElementType_wrap(
+    cxtype,
+  );
+}
+
+final _dart_clang_getArrayElementType_wrap _clang_getArrayElementType_wrap =
+    _dylib.lookupFunction<_c_clang_getArrayElementType_wrap,
+        _dart_clang_getArrayElementType_wrap>('clang_getArrayElementType_wrap');
+
+typedef _c_clang_getArrayElementType_wrap = ffi.Pointer<CXType> Function(
+  ffi.Pointer<CXType> cxtype,
+);
+
+typedef _dart_clang_getArrayElementType_wrap = ffi.Pointer<CXType> Function(
+  ffi.Pointer<CXType> cxtype,
+);
+
 /// Dispose [CXString] using [clang_disposeString_wrap], it also frees the CString(const char *), do not free CString directly
 ffi.Pointer<ffi2.Utf8> clang_getCString_wrap(
   ffi.Pointer<CXString> cxstringPtr,
@@ -598,6 +619,26 @@ typedef _c_clang_getNumDiagnostics = ffi.Uint32 Function(
 
 typedef _dart_clang_getNumDiagnostics = int Function(
   ffi.Pointer<CXTranslationUnitImpl> cxtranslationunit,
+);
+
+int clang_getNumElements_wrap(
+  ffi.Pointer<CXType> cxtype,
+) {
+  return _clang_getNumElements_wrap(
+    cxtype,
+  );
+}
+
+final _dart_clang_getNumElements_wrap _clang_getNumElements_wrap =
+    _dylib.lookupFunction<_c_clang_getNumElements_wrap,
+        _dart_clang_getNumElements_wrap>('clang_getNumElements_wrap');
+
+typedef _c_clang_getNumElements_wrap = ffi.Uint64 Function(
+  ffi.Pointer<CXType> cxtype,
+);
+
+typedef _dart_clang_getNumElements_wrap = int Function(
+  ffi.Pointer<CXType> cxtype,
 );
 
 /// Free cxtype after use

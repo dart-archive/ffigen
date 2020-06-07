@@ -55,6 +55,8 @@ List<Parameter> _getParameters(Pointer<clang.CXCursor> cursor) {
   for (var i = 0; i < totalArgs; i++) {
     var paramCursor = clang.clang_Cursor_getArgument_wrap(cursor, i);
 
+    _logger.finer('===== parameter: ${paramCursor.completeStringRepr()}');
+
     var pt = _getParameterType(paramCursor);
     //TODO: remove this when support for Structs by value arrive
     if (pt.type == BroadType.Struct) {

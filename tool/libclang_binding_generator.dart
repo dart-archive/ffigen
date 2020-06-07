@@ -560,6 +560,27 @@ final functionAndTypedefsList = <Binding>[
     ],
     returnType: Type.pointer(Type.struct(_cxString)),
   ),
+  Func(
+    name: 'clang_getNumElements_wrap',
+    parameters: [
+      Parameter(
+        name: 'cxtype',
+        type: Type.pointer(Type.struct(_cxType)),
+      ),
+    ],
+    returnType: Type.nativeType(SupportedNativeType.Uint64),
+  ),
+  Func(
+    dartDoc: 'Free cxtype after use',
+    name: 'clang_getArrayElementType_wrap',
+    parameters: [
+      Parameter(
+        name: 'cxtype',
+        type: Type.pointer(Type.struct(_cxType)),
+      ),
+    ],
+    returnType: Type.pointer(Type.struct(_cxType)),
+  ),
 ];
 
 final structList = <Binding>[

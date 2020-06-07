@@ -38,6 +38,9 @@ enum BroadType {
   Pointer,
   Struct,
   NativeFunction,
+
+  /// stores its element type in NativeType as only those are supported
+  Array,
 }
 
 /// Type class for return types, variable types, etc
@@ -106,6 +109,9 @@ class Type {
   }
   factory Type.ffiUtilType(FfiUtilType ffiUtilType) {
     return Type._(type: BroadType.FfiUtilType, ffiUtilType: ffiUtilType);
+  }
+  factory Type.array(SupportedNativeType nativeType) {
+    return Type._(type: BroadType.Array, nativeType: nativeType);
   }
 
   bool get isPrimitive => type == BroadType.NativeType;
