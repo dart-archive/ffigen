@@ -15,8 +15,8 @@ class Writer {
   final List<BindingString> _bindings = [];
 
   Writer({
-    this.dylibIdentifier,
-    this.initFunctionIdentifier,
+    this.dylibIdentifier = '_dylib',
+    this.initFunctionIdentifier = 'init',
     this.ffiLibraryPrefix = 'ffi',
     this.ffiUtilLibPrefix = 'ffi2',
   });

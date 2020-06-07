@@ -91,22 +91,20 @@ class Type {
     this.nativeFuncName,
   });
 
-  factory Type.pointer({Type child}) {
+  factory Type.pointer(Type child) {
     return Type._(type: BroadType.Pointer, child: child);
   }
-  factory Type.struct({Type child, String structName}) {
-    return Type._(type: BroadType.Struct, child: child, structName: structName);
+  factory Type.struct(String structName) {
+    return Type._(type: BroadType.Struct, structName: structName);
   }
-  factory Type.nativeFunc({Type child, String nativeFuncName}) {
+  factory Type.nativeFunc(String nativeFuncName) {
     return Type._(
-        type: BroadType.NativeFunction,
-        child: child,
-        nativeFuncName: nativeFuncName);
+        type: BroadType.NativeFunction, nativeFuncName: nativeFuncName);
   }
-  factory Type.nativeType({SupportedNativeType nativeType}) {
+  factory Type.nativeType(SupportedNativeType nativeType) {
     return Type._(type: BroadType.NativeType, nativeType: nativeType);
   }
-  factory Type.ffiUtilType({FfiUtilType ffiUtilType}) {
+  factory Type.ffiUtilType(FfiUtilType ffiUtilType) {
     return Type._(type: BroadType.FfiUtilType, ffiUtilType: ffiUtilType);
   }
 

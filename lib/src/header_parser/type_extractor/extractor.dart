@@ -25,7 +25,7 @@ Type getCodeGenType(Pointer<clang.CXType> cxtype, {String parentName}) {
       var pt = clang.clang_getPointeeType_wrap(cxtype);
       var s = getCodeGenType(pt, parentName: parentName);
       pt.dispose();
-      return Type.pointer(child: s);
+      return Type.pointer(s);
     case clang.CXTypeKind.CXType_Typedef:
       var ct = clang.clang_getCanonicalType_wrap(cxtype);
       var s = getCodeGenType(ct, parentName: parentName ?? cxtype.spelling());
@@ -40,7 +40,7 @@ Type getCodeGenType(Pointer<clang.CXType> cxtype, {String parentName}) {
       return _extractfromRecord(cxtype);
     case clang.CXTypeKind.CXType_Enum:
       return Type.nativeType(
-        nativeType: enumNativeType,
+        enumNativeType,
       );
     case clang.CXTypeKind
         .CXType_FunctionProto: // primarily used for function pointers
@@ -48,11 +48,11 @@ Type getCodeGenType(Pointer<clang.CXType> cxtype, {String parentName}) {
     default:
       if (cxTypeKindToSupportedNativeTypes.containsKey(kind)) {
         return Type.nativeType(
-          nativeType: cxTypeKindToSupportedNativeTypes[kind],
+          cxTypeKindToSupportedNativeTypes[kind],
         );
       } else if (cxTypeKindToFfiUtilType.containsKey(kind)) {
         return Type.ffiUtilType(
-          ffiUtilType: cxTypeKindToFfiUtilType[kind],
+          cxTypeKindToFfiUtilType[kind],
         );
       } else {
         throw Exception('Type not implemented, ${cxtype.completeStringRepr()}');
@@ -75,7 +75,7 @@ Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
         structName = cxtype.spelling();
       }
 
-      type = Type.struct(structName: structName);
+      type = Type.struct(structName);
 
       // Also add a struct binding, if its unseen
       if (isUnseenStruct(structName, addToSeen: true)) {
@@ -118,7 +118,7 @@ Type _extractFromFunctionProto(
     }
     addToBindings(typedefC);
   }
-  return Type.nativeFunc(nativeFuncName: name);
+  return Type.nativeFunc(name);
 }
 
 // generates unique string

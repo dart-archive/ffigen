@@ -12,7 +12,7 @@ void main() {
             name: 'noParam',
             dartDoc: 'Just a test function\nheres another line',
             returnType: Type.nativeType(
-              nativeType: SupportedNativeType.Int32,
+              SupportedNativeType.Int32,
             ),
           ),
           Func(
@@ -21,18 +21,18 @@ void main() {
               Parameter(
                 name: 'a',
                 type: Type.nativeType(
-                  nativeType: SupportedNativeType.Int32,
+                  SupportedNativeType.Int32,
                 ),
               ),
               Parameter(
                 name: 'b',
                 type: Type.nativeType(
-                  nativeType: SupportedNativeType.Uint8,
+                  SupportedNativeType.Uint8,
                 ),
               ),
             ],
             returnType: Type.nativeType(
-              nativeType: SupportedNativeType.Char,
+              SupportedNativeType.Char,
             ),
           ),
           Func(
@@ -41,25 +41,25 @@ void main() {
               Parameter(
                 name: 'a',
                 type: Type.pointer(
-                  child: Type.nativeType(
-                    nativeType: SupportedNativeType.Int32,
+                  Type.nativeType(
+                    SupportedNativeType.Int32,
                   ),
                 ),
               ),
               Parameter(
                 name: 'b',
                 type: Type.pointer(
-                  child: Type.pointer(
-                    child: Type.nativeType(
-                      nativeType: SupportedNativeType.Uint8,
+                  Type.pointer(
+                    Type.nativeType(
+                      SupportedNativeType.Uint8,
                     ),
                   ),
                 ),
               ),
             ],
             returnType: Type.pointer(
-              child: Type.nativeType(
-                nativeType: SupportedNativeType.Float64,
+              Type.nativeType(
+                SupportedNativeType.Float64,
               ),
             ),
           ),
@@ -168,19 +168,19 @@ typedef _dart_withPointerParam = ffi.Pointer<ffi.Double> Function(
               Member(
                 name: 'a',
                 type: Type.nativeType(
-                  nativeType: SupportedNativeType.Int32,
+                  SupportedNativeType.Int32,
                 ),
               ),
               Member(
                 name: 'b',
                 type: Type.nativeType(
-                  nativeType: SupportedNativeType.Double,
+                  SupportedNativeType.Double,
                 ),
               ),
               Member(
                 name: 'c',
                 type: Type.nativeType(
-                  nativeType: SupportedNativeType.Char,
+                  SupportedNativeType.Char,
                 ),
               ),
             ],
@@ -191,17 +191,17 @@ typedef _dart_withPointerParam = ffi.Pointer<ffi.Double> Function(
               Member(
                 name: 'a',
                 type: Type.pointer(
-                  child: Type.nativeType(
-                    nativeType: SupportedNativeType.Int32,
+                  Type.nativeType(
+                    SupportedNativeType.Int32,
                   ),
                 ),
               ),
               Member(
                 name: 'b',
                 type: Type.pointer(
-                  child: Type.pointer(
-                    child: Type.nativeType(
-                      nativeType: SupportedNativeType.Double,
+                  Type.pointer(
+                    Type.nativeType(
+                      SupportedNativeType.Double,
                     ),
                   ),
                 ),
@@ -209,7 +209,7 @@ typedef _dart_withPointerParam = ffi.Pointer<ffi.Double> Function(
               Member(
                 name: 'c',
                 type: Type.nativeType(
-                  nativeType: SupportedNativeType.Char,
+                  SupportedNativeType.Char,
                 ),
               ),
             ],
@@ -281,19 +281,19 @@ class WithPointerMember extends ffi.Struct{
               Member(
                 name: 'a',
                 type: Type.nativeType(
-                  nativeType: SupportedNativeType.Int32,
+                  SupportedNativeType.Int32,
                 ),
               ),
               Member(
                 name: 'b',
                 type: Type.nativeType(
-                  nativeType: SupportedNativeType.Double,
+                  SupportedNativeType.Double,
                 ),
               ),
               Member(
                 name: 'c',
                 type: Type.nativeType(
-                  nativeType: SupportedNativeType.Char,
+                  SupportedNativeType.Char,
                 ),
               ),
             ],
@@ -304,17 +304,17 @@ class WithPointerMember extends ffi.Struct{
               Parameter(
                 name: 'some',
                 type: Type.pointer(
-                  child: Type.pointer(
-                    child: Type.struct(
-                      structName: 'SomeStruc',
+                  Type.pointer(
+                    Type.struct(
+                      'SomeStruc',
                     ),
                   ),
                 ),
               ),
             ],
             returnType: Type.pointer(
-              child: Type.struct(
-                structName: 'SomeStruc',
+              Type.struct(
+                'SomeStruc',
               ),
             ),
           ),
@@ -387,30 +387,30 @@ typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
           Global(
             name: 'test1',
             type: Type.nativeType(
-              nativeType: SupportedNativeType.Int32,
+              SupportedNativeType.Int32,
             ),
           ),
           Global(
             name: 'test2',
             type: Type.pointer(
-              child: Type.nativeType(
-                nativeType: SupportedNativeType.Float,
+              Type.nativeType(
+                SupportedNativeType.Float,
               ),
             ),
           ),
           Global(
             name: 'test3',
             type: Type.pointer(
-              child: Type.ffiUtilType(
-                ffiUtilType: FfiUtilType.Utf8,
+              Type.ffiUtilType(
+                FfiUtilType.Utf8,
               ),
             ),
           ),
           Global(
             name: 'test4',
             type: Type.pointer(
-              child: Type.ffiUtilType(
-                ffiUtilType: FfiUtilType.Utf16,
+              Type.ffiUtilType(
+                FfiUtilType.Utf16,
               ),
             ),
           ),
@@ -420,8 +420,8 @@ typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
           Global(
             name: 'test5',
             type: Type.pointer(
-              child: Type.struct(
-                structName: 'Some',
+              Type.struct(
+                'Some',
               ),
             ),
           ),
@@ -476,14 +476,14 @@ final ffi.Pointer<Some> test5 = _dylib.lookup<ffi.Pointer<Some>>('test5').value;
           Constant(
             name: 'test1',
             type: Type.nativeType(
-              nativeType: SupportedNativeType.Int32,
+              SupportedNativeType.Int32,
             ),
             rawValue: '20',
           ),
           Constant(
             name: 'test2',
             type: Type.nativeType(
-              nativeType: SupportedNativeType.Float,
+              SupportedNativeType.Float,
             ),
             rawValue: '20.0',
           ),
@@ -530,28 +530,28 @@ const double test2 = 20.0;
             dartDoc: 'just a test',
             name: 'test1',
             returnType: Type.nativeType(
-              nativeType: SupportedNativeType.Int32,
+              SupportedNativeType.Int32,
             ),
           ),
           Struc(name: 'SomeStruct'),
           TypedefC(
             name: 'test2',
             returnType: Type.pointer(
-              child: Type.nativeType(
-                nativeType: SupportedNativeType.Int32,
+              Type.nativeType(
+                SupportedNativeType.Int32,
               ),
             ),
             parameters: [
               Parameter(
                 name: 'param1',
                 type: Type.pointer(
-                  child: Type.struct(structName: 'SomeStruct'),
+                  Type.struct('SomeStruct'),
                 ),
               ),
               Parameter(
                 name: 'param2',
                 type: Type.nativeType(
-                  nativeType: SupportedNativeType.Char,
+                  SupportedNativeType.Char,
                 ),
               ),
             ],
