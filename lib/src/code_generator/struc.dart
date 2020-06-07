@@ -2,7 +2,6 @@ import 'package:meta/meta.dart';
 
 import 'binding.dart';
 import 'binding_string.dart';
-import 'constants.dart';
 import 'type.dart';
 import 'writer.dart';
 
@@ -28,12 +27,12 @@ class Struc extends Binding {
     }
 
     // write class declaration
-    s.write('class $name extends ${ffiLibraryPrefix}.Struct{\n');
+    s.write('class $name extends ${w.ffiLibraryPrefix}.Struct{\n');
     for (var m in members) {
       if (m.type.isPrimitive) {
-        s.write('  @${m.type.cType}()\n');
+        s.write('  @${m.type.getCType(w)}()\n');
       }
-      s.write('  ${m.type.dartType} ${m.name};\n\n');
+      s.write('  ${m.type.getDartType(w)} ${m.name};\n\n');
     }
     s.write('}\n\n');
 

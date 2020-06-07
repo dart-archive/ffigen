@@ -1,5 +1,4 @@
 import 'binding_string.dart';
-import 'constants.dart';
 
 /// To store generated String bindings.
 class Writer {
@@ -7,12 +6,20 @@ class Writer {
   String dylibIdentifier;
   String initFunctionIdentifier;
 
-  static const _p1 = ffiLibraryPrefix;
-  static const _p2 = ffiUtilLibPrefix;
+  /// dart:ffi library prefix
+  String ffiLibraryPrefix;
+
+  /// package:ffi/ffi.dart prefix
+  String ffiUtilLibPrefix;
 
   final List<BindingString> _bindings = [];
 
-  Writer({this.dylibIdentifier, this.initFunctionIdentifier});
+  Writer({
+    this.dylibIdentifier,
+    this.initFunctionIdentifier,
+    this.ffiLibraryPrefix = 'ffi',
+    this.ffiUtilLibPrefix = 'ffi2',
+  });
 
   @override
   String toString() {
@@ -25,16 +32,17 @@ class Writer {
     }
 
     // write neccesary imports
-    s.write("import 'dart:ffi' as $_p1;\n");
-    s.write("import 'package:ffi/ffi.dart' as $_p2;\n");
+    s.write("import 'dart:ffi' as $ffiLibraryPrefix;\n");
+    s.write("import 'package:ffi/ffi.dart' as $ffiUtilLibPrefix;\n");
     s.write('\n');
 
     // Write dylib
     s.write('/// Dynamic library\n');
-    s.write('$_p1.DynamicLibrary ${dylibIdentifier};\n');
+    s.write('$ffiLibraryPrefix.DynamicLibrary ${dylibIdentifier};\n');
     s.write('\n');
     s.write('/// Initialises dynamic library\n');
-    s.write('void $initFunctionIdentifier($_p1.DynamicLibrary dylib){\n');
+    s.write(
+        'void $initFunctionIdentifier($ffiLibraryPrefix.DynamicLibrary dylib){\n');
     s.write('  ${dylibIdentifier} = dylib;\n');
     s.write('}\n');
 

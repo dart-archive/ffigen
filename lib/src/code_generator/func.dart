@@ -40,9 +40,9 @@ class Func extends Binding {
     }
 
     // write enclosing function
-    s.write('${returnType.dartType} $name(\n');
+    s.write('${returnType.getDartType(w)} $name(\n');
     for (var p in parameters) {
-      s.write('  ${p.type.dartType} ${p.name},\n');
+      s.write('  ${p.type.getDartType(w)} ${p.name},\n');
     }
     s.write(') {\n');
     s.write('  return $funcVarName(\n');
@@ -57,16 +57,16 @@ class Func extends Binding {
         "final $typedefDart $funcVarName = ${w.dylibIdentifier}.lookupFunction<$typedefC,$typedefDart>('$name');\n\n");
 
     // write typdef for C
-    s.write('typedef $typedefC = ${returnType.cType} Function(\n');
+    s.write('typedef $typedefC = ${returnType.getCType(w)} Function(\n');
     for (var p in parameters) {
-      s.write('  ${p.type.cType} ${p.name},\n');
+      s.write('  ${p.type.getCType(w)} ${p.name},\n');
     }
     s.write(');\n\n');
 
     // write typdef for dart
-    s.write('typedef $typedefDart = ${returnType.dartType} Function(\n');
+    s.write('typedef $typedefDart = ${returnType.getDartType(w)} Function(\n');
     for (var p in parameters) {
-      s.write('  ${p.type.dartType} ${p.name},\n');
+      s.write('  ${p.type.getDartType(w)} ${p.name},\n');
     }
     s.write(');\n\n');
 

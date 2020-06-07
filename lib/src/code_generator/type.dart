@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-import 'constants.dart';
+import 'writer.dart';
 
 class _SubType {
   final String c;
@@ -112,33 +112,33 @@ class Type {
 
   bool get isPrimitive => type == BroadType.NativeType;
 
-  String get cType {
+  String getCType(Writer w) {
     switch (type) {
       case BroadType.NativeType:
-        return '$ffiLibraryPrefix.${_primitives[nativeType].c}';
+        return '${w.ffiLibraryPrefix}.${_primitives[nativeType].c}';
       case BroadType.FfiUtilType:
-        return '$ffiUtilLibPrefix.${_ffiUtils[ffiUtilType].c}';
+        return '${w.ffiUtilLibPrefix}.${_ffiUtils[ffiUtilType].c}';
       case BroadType.Pointer:
-        return '$ffiLibraryPrefix.Pointer<${child.cType}>';
+        return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
       case BroadType.Struct:
         return structName;
       case BroadType.NativeFunction:
-        return '$ffiLibraryPrefix.NativeFunction<${nativeFuncName}>';
+        return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFuncName}>';
       default:
         throw Exception('cType unknown');
     }
   }
 
-  String get dartType {
+  String getDartType(Writer w) {
     switch (type) {
       case BroadType.NativeType:
         return _primitives[nativeType].dart;
       case BroadType.Pointer:
-        return '$ffiLibraryPrefix.Pointer<${child.cType}>';
+        return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
       case BroadType.Struct:
         return structName;
       case BroadType.NativeFunction:
-        return '$ffiLibraryPrefix.NativeFunction<${nativeFuncName}>';
+        return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFuncName}>';
       // TODO: check- ffiUtilType doesn't have a dart type, it can only be inside a Pointer which redirects it to its c type
       default:
         throw Exception('dart type unknown for ${type.toString()}');
