@@ -125,6 +125,26 @@ typedef _dart_Function1Int8 = int Function(
   int x,
 );
 
+int Function1IntPtr(
+  int x,
+) {
+  return _Function1IntPtr(
+    x,
+  );
+}
+
+final _dart_Function1IntPtr _Function1IntPtr =
+    _dylib.lookupFunction<_c_Function1IntPtr, _dart_Function1IntPtr>(
+        'Function1IntPtr');
+
+typedef _c_Function1IntPtr = ffi.IntPtr Function(
+  ffi.IntPtr x,
+);
+
+typedef _dart_Function1IntPtr = int Function(
+  int x,
+);
+
 int Function1Uint16(
   int x,
 ) {

@@ -16,6 +16,8 @@ int32_t Function1Int32(int32_t x) { return x + 42; }
 
 int64_t Function1Int64(int64_t x) { return x + 42; }
 
+intptr_t Function1IntPtr(intptr_t x) { return x + 42; }
+
 float Function1Float(float x) { return x + 42.0f; }
 
 double Function1Double(double x) { return x + 42.0; }

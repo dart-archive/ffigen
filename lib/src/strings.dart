@@ -32,6 +32,7 @@ const LongLong = 'long long';
 const ULongLong = 'unsigned long long';
 
 const sort = 'sort';
+const useSupportedTypedefs = 'use-supported-typedefs';
 
 /// contains all options and their description
 ///
@@ -44,5 +45,7 @@ const mapOfAllOptions = <String, String>{
   compilerOpts: 'Raw compiler options to pass to clang compiler',
   filters: 'filters for various bindings',
   sizemap: 'map of types: byte size in int',
-  sort: 'whether or not to sort the bindings alphabetically'
+  sort: 'whether or not to sort the bindings alphabetically',
+  useSupportedTypedefs:
+      'whether or not to directly map supported typedef by name',
 };

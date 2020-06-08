@@ -46,6 +46,9 @@ class Config {
   // If generated bindings should be alphabetically sorted
   bool sort;
 
+  // If typedef of supported types(int8_t) should be directly used
+  bool useSupportedTypedefs;
+
   /// Use `Config.fromYaml` if extracting info from yaml file
   Config({
     @required this.libclang_dylib_path,
@@ -54,6 +57,7 @@ class Config {
     this.includedInclusionHeaders = const {},
     this.compilerOpts,
     this.sort = false,
+    this.useSupportedTypedefs = true,
   })  : assert(libclang_dylib_path != null),
         assert(headers != null),
         assert(sort != null);
@@ -74,6 +78,7 @@ class Config {
     _extractAllFilters(ffigenMap);
     _extractSizeMap(ffigenMap);
     _extractSort(ffigenMap);
+    _extractUseSupportedTypedefs(ffigenMap);
 
     _logger.finest('Config: ' + toString());
   }
@@ -84,6 +89,11 @@ class Config {
       _logger.severe('Please fix errors in Configurations and re-run the tool');
       exit(1);
     }
+  }
+
+  void _extractUseSupportedTypedefs(YamlMap ffigenMap) {
+    var useSupportedTypedefs = ffigenMap[string.useSupportedTypedefs] as bool;
+    this.useSupportedTypedefs = useSupportedTypedefs ?? true;
   }
 
   void _extractSort(YamlMap ffigenMap) {

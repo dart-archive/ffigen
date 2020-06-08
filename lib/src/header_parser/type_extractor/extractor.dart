@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
 import '../clang_bindings/clang_constants.dart' as clang;
+import '../data.dart';
 import '../includer.dart';
 import '../root_parser.dart';
 import '../sub_parsers/structdecl_parser.dart';
@@ -27,6 +28,17 @@ Type getCodeGenType(Pointer<clang.CXType> cxtype, {String parentName}) {
       pt.dispose();
       return Type.pointer(s);
     case clang.CXTypeKind.CXType_Typedef:
+      // get name from typedef name if config allows
+      if (config.useSupportedTypedefs) {
+        var spelling = cxtype.spelling();
+        if (suportedTypedefToSuportedNativeType.containsKey(spelling)) {
+          _logger.fine('  Type Mapped from supported typedef');
+          return Type.nativeType(suportedTypedefToSuportedNativeType[spelling]);
+        }
+      }
+
+      // TODO test what happens if typedef definition isn't given
+      // this is important or we get stuck in infinite loop
       var ct = clang.clang_getCanonicalType_wrap(cxtype);
       var s = getCodeGenType(ct, parentName: parentName ?? cxtype.spelling());
       ct.dispose();

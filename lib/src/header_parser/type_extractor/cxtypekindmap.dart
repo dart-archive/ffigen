@@ -28,3 +28,15 @@ var cxTypeKindToFfiUtilType = <int, FfiUtilType>{
 
 // TODO: check type to use for enums
 var enumNativeType = SupportedNativeType.Int32;
+
+var suportedTypedefToSuportedNativeType = <String, SupportedNativeType>{
+  'uint8_t': SupportedNativeType.Uint8,
+  'uint16_t': SupportedNativeType.Uint16,
+  'uint32_t': SupportedNativeType.Uint32,
+  'uint64_t': SupportedNativeType.Uint64,
+  'int8_t': SupportedNativeType.Int8,
+  'int16_t': SupportedNativeType.Int16,
+  'int32_t': SupportedNativeType.Int32,
+  'int64_t': SupportedNativeType.Int64,
+  'intptr_t': SupportedNativeType.IntPtr,
+};

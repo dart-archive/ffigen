@@ -24,6 +24,7 @@ enum SupportedNativeType {
   Float32,
   Float64,
   Double,
+  IntPtr,
 }
 
 enum FfiUtilType {
@@ -57,10 +58,11 @@ class Type {
     SupportedNativeType.Uint32: _SubType(c: 'Uint32', dart: 'int'),
     SupportedNativeType.Uint64: _SubType(c: 'Uint64', dart: 'int'),
     SupportedNativeType.Float: _SubType(c: 'Float', dart: 'double'),
+    SupportedNativeType.Double: _SubType(c: 'Double', dart: 'double'),
+    SupportedNativeType.IntPtr: _SubType(c: 'IntPtr', dart: 'int'),
     //TODO: check float32,64
     SupportedNativeType.Float32: _SubType(c: 'Float', dart: 'double'),
     SupportedNativeType.Float64: _SubType(c: 'Double', dart: 'double'),
-    SupportedNativeType.Double: _SubType(c: 'Double', dart: 'double'),
   };
 
   static const _ffiUtils = <FfiUtilType, _SubType>{
