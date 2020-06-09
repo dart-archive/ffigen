@@ -85,10 +85,15 @@ int _structMembersVisitor(Pointer<clang.CXCursor> cursor,
 
       var mt = cursor.type().toCodeGenTypeAndDispose();
 
-      //TODO: remove this when support for Structs by value arrive
-      if (mt.type == BroadType.Struct) {
+      //TODO: remove these when support for Structs by value arrive
+      if (mt.broadType == BroadType.Struct) {
         isStructByValue =
             true; // setting this flag will exclude adding members for this struct's bindings
+      } else if (mt.broadType == BroadType.ConstantArray) {
+        if (mt.elementType.broadType == BroadType.Struct) {
+          isStructByValue =
+              true; // setting this flag will exclude adding members for this struct's bindings
+        }
       }
 
       _members.add(

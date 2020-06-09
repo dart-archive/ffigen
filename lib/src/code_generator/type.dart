@@ -83,7 +83,7 @@ class Type {
   final FfiUtilType ffiUtilType;
 
   /// The BroadType of this Type
-  final BroadType type;
+  final BroadType broadType;
 
   /// Child Type, e.g Pointer(Parent) to Int(Child)
   final Type child;
@@ -93,7 +93,7 @@ class Type {
   final Type elementType;
 
   Type._({
-    @required this.type,
+    @required this.broadType,
     this.child,
     this.structName,
     this.nativeType,
@@ -104,29 +104,29 @@ class Type {
   });
 
   factory Type.pointer(Type child) {
-    return Type._(type: BroadType.Pointer, child: child);
+    return Type._(broadType: BroadType.Pointer, child: child);
   }
   factory Type.struct(String structName) {
-    return Type._(type: BroadType.Struct, structName: structName);
+    return Type._(broadType: BroadType.Struct, structName: structName);
   }
   factory Type.nativeFunc(String nativeFuncName) {
     return Type._(
-        type: BroadType.NativeFunction, nativeFuncName: nativeFuncName);
+        broadType: BroadType.NativeFunction, nativeFuncName: nativeFuncName);
   }
   factory Type.nativeType(SupportedNativeType nativeType) {
-    return Type._(type: BroadType.NativeType, nativeType: nativeType);
+    return Type._(broadType: BroadType.NativeType, nativeType: nativeType);
   }
   factory Type.ffiUtilType(FfiUtilType ffiUtilType) {
-    return Type._(type: BroadType.FfiUtilType, ffiUtilType: ffiUtilType);
+    return Type._(broadType: BroadType.FfiUtilType, ffiUtilType: ffiUtilType);
   }
   factory Type.constantArray(int arrayLength, Type elementType) {
-    return Type._(type: BroadType.ConstantArray, elementType: elementType);
+    return Type._(broadType: BroadType.ConstantArray, elementType: elementType);
   }
 
-  bool get isPrimitive => type == BroadType.NativeType;
+  bool get isPrimitive => broadType == BroadType.NativeType;
 
   String getCType(Writer w) {
-    switch (type) {
+    switch (broadType) {
       case BroadType.NativeType:
         return '${w.ffiLibraryPrefix}.${_primitives[nativeType].c}';
       case BroadType.FfiUtilType:
@@ -143,7 +143,7 @@ class Type {
   }
 
   String getDartType(Writer w) {
-    switch (type) {
+    switch (broadType) {
       case BroadType.NativeType:
         return _primitives[nativeType].dart;
       case BroadType.Pointer:
@@ -154,12 +154,12 @@ class Type {
         return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFuncName}>';
       // TODO: check- ffiUtilType doesn't have a dart type, it can only be inside a Pointer which redirects it to its c type
       default:
-        throw Exception('dart type unknown for ${type.toString()}');
+        throw Exception('dart type unknown for ${broadType.toString()}');
     }
   }
 
   @override
   String toString() {
-    return 'Type: ${type}';
+    return 'Type: ${broadType}';
   }
 }

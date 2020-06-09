@@ -31,7 +31,7 @@ class Struc extends Binding {
     // write class declaration
     s.write('class $name extends ${w.ffiLibraryPrefix}.Struct{\n');
     for (var m in members) {
-      if (m.type.type == BroadType.ConstantArray) {
+      if (m.type.broadType == BroadType.ConstantArray) {
         var arrayHelper = ArrayHelper(
           helperClassName: '_ArrayHelper_${name}_${m.name}',
           elementType: m.type.elementType,

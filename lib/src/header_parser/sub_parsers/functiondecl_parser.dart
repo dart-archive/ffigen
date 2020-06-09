@@ -25,7 +25,7 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
     var parameters = _getParameters(cursor);
 
     //TODO: remove this when support for Structs by value arrive
-    if (rt.type == BroadType.Struct || parameters == null) {
+    if (rt.broadType == BroadType.Struct || parameters == null) {
       _logger.fine(
           '---- Removed Function, reason: struct pass/return by value: ${cursor.completeStringRepr()}');
       return null; //returning null so that [addToBindings] function excludes this
@@ -59,7 +59,7 @@ List<Parameter> _getParameters(Pointer<clang.CXCursor> cursor) {
 
     var pt = _getParameterType(paramCursor);
     //TODO: remove this when support for Structs by value arrive
-    if (pt.type == BroadType.Struct) {
+    if (pt.broadType == BroadType.Struct) {
       return null; //returning null so that [parseFunctionDeclaration] returns null
     }
     var pn = paramCursor.spelling();
