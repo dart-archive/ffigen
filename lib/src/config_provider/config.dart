@@ -1,23 +1,23 @@
 import 'dart:io';
 
-import 'package:ffigen/src/code_generator/type.dart';
-import 'package:ffigen/src/header_parser/clang_bindings/clang_constants.dart';
+/// Validates the yaml input by the user,
+/// prints useful info for the user
+
+import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser/type_extractor/cxtypekindmap.dart';
-import 'package:glob/glob.dart';
+
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 import 'package:yaml/yaml.dart';
 
-import '../strings.dart' as string;
+import '../strings.dart' as strings;
 import 'filter.dart';
 import 'header.dart';
-import 'yaml_schema_checker.dart';
+import 'spec_utils.dart';
 
-var _logger = Logger('config_provider');
+var _logger = Logger('config_provider/config');
 
-/// Holds all configurations.
-/// and has methods to convert various configurations
-/// to a format requested by submodules
+/// Contains all config spec
 class Config {
   /// output file name
   String output;
@@ -26,10 +26,9 @@ class Config {
   String libclang_dylib_path;
 
   /// path to headers
-  final List<Header> headers;
+  List<Header> headers;
 
-  final Set<String> includedInclusionHeaders;
-  final Set<String> excludedInclusionHeaders;
+  HeaderFilter headerFilter;
 
   /// commandLineArguments to pass to clang_compiler
   List<String> compilerOpts;
@@ -49,12 +48,13 @@ class Config {
   // If typedef of supported types(int8_t) should be directly used
   bool useSupportedTypedefs;
 
+  // contains map of all config
+  // Map<String, Spec> _map;
   /// Use `Config.fromYaml` if extracting info from yaml file
   Config({
     @required this.libclang_dylib_path,
     @required this.headers,
-    this.excludedInclusionHeaders = const {},
-    this.includedInclusionHeaders = const {},
+    this.headerFilter,
     this.compilerOpts,
     this.sort = false,
     this.useSupportedTypedefs = true,
@@ -62,212 +62,193 @@ class Config {
         assert(headers != null),
         assert(sort != null);
 
-  /// [ffigenMap] has required configurations
-  Config.fromYaml(YamlMap ffigenMap)
-      : headers = [],
-        includedInclusionHeaders = {},
-        excludedInclusionHeaders = {} {
-    _validateYamlFormat(ffigenMap);
-    _raw = ffigenMap;
+  Config._();
 
-    _extractOutputFileName(ffigenMap);
-    _extractLibclangDylibPath(ffigenMap);
-    _extractHeaders(ffigenMap);
-    _extractHeaderFilter(ffigenMap);
-    _extractCompilerOpts(ffigenMap);
-    _extractAllFilters(ffigenMap);
-    _extractSizeMap(ffigenMap);
-    _extractSort(ffigenMap);
-    _extractUseSupportedTypedefs(ffigenMap);
+  /// Create config from Yaml map
+  factory Config.fromYaml(YamlMap map) {
+    var configspecs = Config._();
+    _logger.finest('Config Map: ' + map.toString());
 
-    _logger.finest('Config: ' + toString());
-  }
+    var specs = configspecs._getSpecs();
 
-  void _validateYamlFormat(YamlMap ffigenMap) {
-    var result = checkYaml(ffigenMap);
-    if (result == CheckerResult.error) {
+    var result = configspecs._checkConfigs(map, specs);
+    if (!result) {
       _logger.severe('Please fix errors in Configurations and re-run the tool');
       exit(1);
     }
+
+    configspecs._extract(map, specs);
+    return configspecs;
   }
 
-  void _extractUseSupportedTypedefs(YamlMap ffigenMap) {
-    var useSupportedTypedefs = ffigenMap[string.useSupportedTypedefs] as bool;
-    this.useSupportedTypedefs = useSupportedTypedefs ?? true;
+  /// Validates Yaml according to given specs
+  bool _checkConfigs(YamlMap map, Map<String, Spec> specs) {
+    var _result = true;
+    for (var key in specs.keys) {
+      var spec = specs[key];
+      if (spec.isRequired && !map.containsKey(key)) {
+        _logger.severe('Key=${key} is required');
+        _result = false;
+      } else if (map.containsKey(key)) {
+        _result = _result && spec.validator(key, map[key]);
+      }
+    }
+    //warn about unknown keys
+    for (var key in map.keys) {
+      if (!specs.containsKey(key)) {
+        _logger.warning('Unknown key found: $key');
+      }
+    }
+
+    return _result;
   }
 
-  void _extractSort(YamlMap ffigenMap) {
-    var sort = ffigenMap[string.sort] as bool;
-    this.sort = sort ?? false;
-  }
-
-  void _extractSizeMap(YamlMap ffigenMap) {
-    var sizemap = ffigenMap[string.sizemap] as YamlMap;
-    if (sizemap != null) {
-      if (sizemap.containsKey(string.SChar)) {
-        cxTypeKindToSupportedNativeTypes[CXTypeKind.CXType_SChar] =
-            nativeSupportedType(sizemap[string.SChar]);
-      }
-      if (sizemap.containsKey(string.UChar)) {
-        cxTypeKindToSupportedNativeTypes[CXTypeKind.CXType_UChar] =
-            nativeSupportedType(sizemap[string.UChar], signed: false);
-      }
-      if (sizemap.containsKey(string.Short)) {
-        cxTypeKindToSupportedNativeTypes[CXTypeKind.CXType_Short] =
-            nativeSupportedType(sizemap[string.Short]);
-      }
-      if (sizemap.containsKey(string.UShort)) {
-        cxTypeKindToSupportedNativeTypes[CXTypeKind.CXType_UShort] =
-            nativeSupportedType(sizemap[string.UShort], signed: false);
-      }
-      if (sizemap.containsKey(string.Int)) {
-        cxTypeKindToSupportedNativeTypes[CXTypeKind.CXType_Int] =
-            nativeSupportedType(sizemap[string.Int]);
-      }
-      if (sizemap.containsKey(string.UInt)) {
-        cxTypeKindToSupportedNativeTypes[CXTypeKind.CXType_UInt] =
-            nativeSupportedType(sizemap[string.UInt], signed: false);
-      }
-      if (sizemap.containsKey(string.Long)) {
-        cxTypeKindToSupportedNativeTypes[CXTypeKind.CXType_Long] =
-            nativeSupportedType(sizemap[string.Long]);
-      }
-      if (sizemap.containsKey(string.ULong)) {
-        cxTypeKindToSupportedNativeTypes[CXTypeKind.CXType_ULong] =
-            nativeSupportedType(sizemap[string.ULong], signed: false);
-      }
-      if (sizemap.containsKey(string.LongLong)) {
-        cxTypeKindToSupportedNativeTypes[CXTypeKind.CXType_LongLong] =
-            nativeSupportedType(sizemap[string.LongLong]);
-      }
-      if (sizemap.containsKey(string.ULongLong)) {
-        cxTypeKindToSupportedNativeTypes[CXTypeKind.CXType_ULongLong] =
-            nativeSupportedType(sizemap[string.ULongLong], signed: false);
+  /// Extracts variables from Yaml according to given specs
+  ///
+  /// Validation must be done
+  void _extract(YamlMap map, Map<String, Spec> specs) {
+    for (var key in specs.keys) {
+      var spec = specs[key];
+      if (map.containsKey(key)) {
+        spec.extractedResult(spec.extractor(map[key]));
+      } else {
+        spec.extractedResult(spec.defaultValue);
       }
     }
   }
 
-  SupportedNativeType nativeSupportedType(dynamic scalar,
-      {bool signed = true}) {
-    var value = scalar as int;
-    switch (value) {
-      case 1:
-        return signed ? SupportedNativeType.Int8 : SupportedNativeType.Uint8;
-      case 2:
-        return signed ? SupportedNativeType.Int16 : SupportedNativeType.Uint16;
-      case 4:
-        return signed ? SupportedNativeType.Int32 : SupportedNativeType.Uint32;
-      case 8:
-        return signed ? SupportedNativeType.Int64 : SupportedNativeType.Uint64;
-      default:
-        throw Exception('Unknown Config Value');
-    }
+  /// The specs avaialble for our tool
+  ///
+  /// Key: Name, Value: Spec
+  Map<String, Spec> _getSpecs() {
+    return <String, Spec>{
+      strings.output: Spec(
+        description: 'Output file name',
+        isRequired: true,
+        validator: outputValidator,
+        extractor: outputExtractor,
+        defaultValue: null,
+        extractedResult: (dynamic result) => output = result as String,
+      ),
+      strings.libclang_dylib: Spec(
+        description:
+            'Path to libclang dynamic library, used to parse C headers',
+        isRequired: true,
+        validator: libclangDylibValidator,
+        extractor: libclangDylibExtractor,
+        extractedResult: (dynamic result) =>
+            libclang_dylib_path = result as String,
+      ),
+      strings.headers: Spec(
+        description: 'List of C headers to generate bindings of',
+        isRequired: true,
+        validator: headersValidator,
+        extractor: headersExtractor,
+        extractedResult: (dynamic result) => headers = result as List<Header>,
+      ),
+      strings.headerFilter: Spec(
+        description: 'Include/Exclude inclusion headers',
+        validator: headerFilterValidator,
+        extractor: headerFilterExtractor,
+        defaultValue: HeaderFilter(),
+        extractedResult: (dynamic result) {
+          return headerFilter = result as HeaderFilter;
+        },
+      ),
+      strings.compilerOpts: Spec(
+        description: 'Raw compiler options to pass to clang compiler',
+        isRequired: false,
+        validator: compilerOptsValidator,
+        extractor: compilerOptsExtractor,
+        defaultValue: null,
+        extractedResult: (dynamic result) =>
+            compilerOpts = result as List<String>,
+      ),
+      strings.functions: Spec(
+        description: 'Filter for functions',
+        isRequired: false,
+        validator: filterValidator,
+        extractor: filterExtractor,
+        defaultValue: null,
+        extractedResult: (dynamic result) => functionFilters = result as Filter,
+      ),
+      strings.structs: Spec(
+        description: 'Filter for Structs',
+        isRequired: false,
+        validator: filterValidator,
+        extractor: filterExtractor,
+        defaultValue: null,
+        extractedResult: (dynamic result) => structFilters = result as Filter,
+      ),
+      strings.enums: Spec(
+        description: 'Filter for enums',
+        isRequired: false,
+        validator: filterValidator,
+        extractor: filterExtractor,
+        defaultValue: null,
+        extractedResult: (dynamic result) =>
+            enumClassFilters = result as Filter,
+      ),
+      strings.sizemap: Spec(
+        description: 'map of types: byte size in int',
+        validator: sizemapValidator,
+        extractor: sizemapExtractor,
+        defaultValue: <int, SupportedNativeType>{},
+        extractedResult: (dynamic result) {
+          var map = result as Map<int, SupportedNativeType>;
+          for (var key in map.keys) {
+            if (cxTypeKindToSupportedNativeTypes.containsKey(key)) {
+              cxTypeKindToSupportedNativeTypes[key] = map[key];
+            }
+          }
+        },
+      ),
+      strings.sort: Spec(
+        description: 'whether or not to sort the bindings alphabetically',
+        isRequired: false,
+        validator: sortValidator,
+        extractor: sortExtractor,
+        defaultValue: false,
+        extractedResult: (dynamic result) => sort = result as bool,
+      ),
+      strings.useSupportedTypedefs: Spec(
+        description: 'whether or not to directly map supported typedef by name',
+        isRequired: false,
+        validator: useSupportedTypedefValidator,
+        extractor: useSupportedTypedefExtractor,
+        defaultValue: true,
+        extractedResult: (dynamic result) =>
+            useSupportedTypedefs = result as bool,
+      ),
+    };
   }
+}
 
-  void _extractAllFilters(YamlMap ffigenMap) {
-    var filters = ffigenMap[string.filters] as YamlMap;
-    if (filters != null) {
-      // Add filter for functions from yaml
-      var functions = filters[string.functions] as YamlMap;
-      if (functions != null) {
-        functionFilters = _extractFilter(functions);
-      }
+/// Represents a spec in a config
+class Spec {
+  final String description;
+  final bool Function(String name, dynamic value) validator;
+  final dynamic Function(dynamic map) extractor;
+  final dynamic defaultValue;
+  final bool isRequired;
+  final void Function(dynamic result) extractedResult;
 
-      // Add filter for structs from yaml
-      var structs = filters[string.structs] as YamlMap;
-      if (structs != null) {
-        structFilters = _extractFilter(structs);
-      }
+  Spec({
+    @required this.extractedResult,
+    @required this.description,
+    @required this.validator,
+    @required this.extractor,
+    this.defaultValue,
+    this.isRequired = false,
+  });
+}
 
-      // Add filter for enums from yaml
-      var enums = filters[string.enums] as YamlMap;
-      if (enums != null) {
-        enumClassFilters = _extractFilter(enums);
-      }
-    }
-  }
+class HeaderFilter {
+  Set<String> includedInclusionHeaders;
+  Set<String> excludedInclusionHeaders;
 
-  List<String> _extractCompilerOpts(YamlMap ffigenMap) =>
-      compilerOpts = (ffigenMap[string.compilerOpts] as String)?.split(' ');
-
-  void _extractHeaderFilter(YamlMap ffigenMap) {
-    var headerFilter = ffigenMap[string.headerFilter] as YamlMap;
-    if (headerFilter != null) {
-      var include = headerFilter[string.include] as YamlList;
-      // Add included header-filter from Yaml
-      if (include != null) {
-        for (var header in include) {
-          includedInclusionHeaders.add(header as String);
-        }
-      }
-      var exclude = headerFilter[string.exclude] as YamlList;
-      // Add excluded header-filter from Yaml
-      if (exclude != null) {
-        for (var header in exclude) {
-          excludedInclusionHeaders.add(header as String);
-        }
-      }
-    }
-  }
-
-  void _extractHeaders(YamlMap ffigenMap) {
-    for (var header in (ffigenMap[string.headers] as YamlList)) {
-      var glob = Glob(header as String);
-      for (var file in glob.listSync(followLinks: true)) {
-        // TODO remove .c files later
-        if (file.path.endsWith('.h') || file.path.endsWith('.c')) {
-          headers.add(Header(file.path));
-        }
-      }
-    }
-  }
-
-  void _extractLibclangDylibPath(YamlMap ffigenMap) {
-    libclang_dylib_path = ffigenMap[string.libclang_dylib] as String;
-  }
-
-  void _extractOutputFileName(YamlMap ffigenMap) {
-    output = ffigenMap[string.output] as String;
-  }
-
-  /// Extracts a filter from filters in YamlMap
-  Filter _extractFilter(YamlMap map) {
-    List<String> includeMatchers, includeFull, excludeMatchers, excludeFull;
-
-    var include = map[string.include] as YamlMap;
-    if (include != null) {
-      includeMatchers = (include[string.matches] as YamlList)
-          ?.map((dynamic e) => e as String)
-          ?.toList();
-      includeFull = (include[string.names] as YamlList)
-          ?.map((dynamic e) => e as String)
-          ?.toList();
-    }
-
-    var exclude = map[string.exclude] as YamlMap;
-
-    if (exclude != null) {
-      excludeMatchers = (map[string.exclude][string.matches] as YamlList)
-          ?.map((dynamic e) => e as String)
-          ?.toList();
-      excludeFull = (map[string.exclude][string.names] as YamlList)
-          ?.map((dynamic e) => e as String)
-          ?.toList();
-    }
-
-    return Filter(
-      includeMatchers: includeMatchers,
-      includeFull: includeFull,
-      excludeMatchers: excludeMatchers,
-      excludeFull: excludeFull,
-    );
-  }
-
-  @override
-  String toString() {
-    return _raw != null ? _raw.toString() : 'Instance of `${runtimeType}`';
-  }
-
-  /// stores raw yaml
-  dynamic _raw;
+  HeaderFilter({
+    this.includedInclusionHeaders = const {},
+    this.excludedInclusionHeaders = const {},
+  });
 }

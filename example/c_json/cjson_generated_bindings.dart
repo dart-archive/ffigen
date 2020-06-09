@@ -10,9 +10,40 @@ void init(ffi.DynamicLibrary dylib) {
   _dylib = dylib;
 }
 
-class cJSON extends ffi.Struct {}
+class cJSON extends ffi.Struct {
+  ffi.Pointer<cJSON> next;
 
-class cJSON_Hooks extends ffi.Struct {}
+  ffi.Pointer<cJSON> prev;
+
+  ffi.Pointer<cJSON> child;
+
+  @ffi.Int32()
+  int type;
+
+  ffi.Pointer<ffi2.Utf8> valuestring;
+
+  @ffi.Int32()
+  int valueint;
+
+  @ffi.Double()
+  double valuedouble;
+
+  ffi.Pointer<ffi2.Utf8> string;
+}
+
+typedef _typedefC_noname_1 = ffi.Pointer<ffi.Void> Function(
+  ffi.Uint64,
+);
+
+typedef _typedefC_noname_2 = ffi.Void Function(
+  ffi.Pointer<ffi.Void>,
+);
+
+class cJSON_Hooks extends ffi.Struct {
+  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_1>> malloc_fn;
+
+  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_2>> free_fn;
+}
 
 ffi.Pointer<ffi2.Utf8> cJSON_Version() {
   return _cJSON_Version();

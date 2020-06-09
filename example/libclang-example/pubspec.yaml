@@ -24,34 +24,33 @@ ffigen:
       - 'Index.h'
   
   compiler-opts: '-I/usr/lib/llvm-9/include/ -I/usr/lib/llvm-10/include/'
-  filters:
-    functions:
-      include:
+  functions:
+    include:
+      matches:
+      # should be valid regexp
+        - 'clang_.*'
+      # names:
+      # should match exact function name
+        # - 'clang_executeOnThread'
+    # exclude:
+      # matches:
+      # # should be valid regexp
+        # - '.*CursorKind.*'
+      # names:
+      # # should match exact function name
+        # - 'clang_visitChildren_wrap'
+  structs:
+    include:
         matches:
-        # should be valid regexp
-          - 'clang_.*'
-        names:
-        # should match exact function name
-          # - 'clang_executeOnThread'
-      # exclude:
-        # matches:
-        # # should be valid regexp
-          # - '.*CursorKind.*'
+          - 'CX.*'
         # names:
-        # # should match exact function name
-          # - 'clang_visitChildren_wrap'
-    structs:
-      include:
-          matches:
-            - 'CX.*'
-          # names:
-        # should match exact struct name
-            # - 'IndexerCallbacks'
-    enums:
-      include:
-        names:
-          - 'CXTypeKind'
-          - 'CXGlobalOptFlags'
+      # should match exact struct name
+          # - 'IndexerCallbacks'
+  enums:
+    include:
+      names:
+        - 'CXTypeKind'
+        - 'CXGlobalOptFlags'
   
   # these are optional and also default
   # you can leave out any and the default will be used

@@ -52,16 +52,16 @@ bool shouldIncludeEnumClass(String name) {
 bool shouldIncludeRootCursor(String sourceFile) {
   var name = sourceFile.split('/').last;
 
-  if (config.excludedInclusionHeaders.contains(name)) {
+  if (config.headerFilter.excludedInclusionHeaders.contains(name)) {
     return false;
   }
 
-  if (config.includedInclusionHeaders.contains(name)) {
+  if (config.headerFilter.includedInclusionHeaders.contains(name)) {
     return true;
   }
 
   // If any includedInclusionHeaders is provided, return false
-  if (config.includedInclusionHeaders.isNotEmpty) {
+  if (config.headerFilter.includedInclusionHeaders.isNotEmpty) {
     return false;
   } else {
     return true;

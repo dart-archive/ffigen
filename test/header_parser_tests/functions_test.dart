@@ -20,9 +20,11 @@ void main() {
           headers: [
             Header('test/header_parser_tests/functions.h'),
           ],
-          includedInclusionHeaders: {
-            'functions.h',
-          },
+          headerFilter: HeaderFilter(
+            includedInclusionHeaders: {
+              'functions.h',
+            },
+          ),
         ),
       );
     });
