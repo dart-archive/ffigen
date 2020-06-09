@@ -91,12 +91,6 @@ int _structMembersVisitor(Pointer<clang.CXCursor> cursor,
             true; // setting this flag will exclude adding members for this struct's bindings
       }
 
-      //TODO: remove this when support for constant arrays arrive
-      if (mt.type == BroadType.Array) {
-        isStructByValue =
-            true; // setting this flag will exclude adding members for this struct's bindings
-      }
-
       _members.add(
         Member(
           name: cursor.spelling(),

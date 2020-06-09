@@ -59,10 +59,10 @@ Type getCodeGenType(Pointer<clang.CXType> cxtype, {String parentName}) {
       return _extractFromFunctionProto(cxtype, parentName);
     case clang.CXTypeKind
         .CXType_ConstantArray: // primarily used for constant array in struct members
-      return Type.array(clang
-          .clang_getArrayElementType_wrap(cxtype)
-          .toCodeGenTypeAndDispose()
-          .nativeType);
+      return Type.constantArray(
+        clang.clang_getNumElements_wrap(cxtype),
+        clang.clang_getArrayElementType_wrap(cxtype).toCodeGenTypeAndDispose(),
+      );
     default:
       if (cxTypeKindToSupportedNativeTypes.containsKey(kind)) {
         return Type.nativeType(

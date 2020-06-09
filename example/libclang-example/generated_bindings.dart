@@ -27,7 +27,68 @@ class CXCompletionResult extends ffi.Struct {
 }
 
 /// A cursor representing some element in the abstract syntax tree for a translation unit.
-class CXCursor extends ffi.Struct {}
+class CXCursor extends ffi.Struct {
+  @ffi.Int32()
+  int kind;
+
+  @ffi.Int32()
+  int xdata;
+
+  ffi.Pointer<ffi.Void> _data_item_0;
+  ffi.Pointer<ffi.Void> _data_item_1;
+  ffi.Pointer<ffi.Void> _data_item_2;
+
+  /// helper for array, supports `[]` operator
+  _ArrayHelper_CXCursor_data get data => _ArrayHelper_CXCursor_data(this, 3);
+}
+
+/// Helper for array data in struct CXCursor
+class _ArrayHelper_CXCursor_data {
+  final CXCursor _struct;
+  final int length;
+  _ArrayHelper_CXCursor_data(this._struct, this.length);
+  void operator []=(int index, ffi.Pointer<ffi.Void> value) {
+    switch (index) {
+      case 0:
+        _struct._data_item_0 = value;
+        break;
+      case 1:
+        _struct._data_item_1 = value;
+        break;
+      case 2:
+        _struct._data_item_2 = value;
+        break;
+      default:
+        throw RangeError('Index $index must be in the range [0..2].');
+    }
+  }
+
+  ffi.Pointer<ffi.Void> operator [](int index) {
+    switch (index) {
+      case 0:
+        return _struct._data_item_0;
+      case 1:
+        return _struct._data_item_1;
+      case 2:
+        return _struct._data_item_2;
+      default:
+        throw RangeError('Index $index must be in the range [0..2].');
+    }
+  }
+
+  @override
+  String toString() {
+    if (length == 0) return '[]';
+    var sb = StringBuffer('[');
+    sb.write(this[0]);
+    for (var i = 1; i < length; i++) {
+      sb.write(',');
+      sb.write(this[i]);
+    }
+    sb.write(']');
+    return sb.toString();
+  }
+}
 
 class CXCursorAndRangeVisitor extends ffi.Struct {
   ffi.Pointer<ffi.Void> context;
@@ -38,7 +99,66 @@ class CXCursorAndRangeVisitor extends ffi.Struct {
 class CXCursorSetImpl extends ffi.Struct {}
 
 /// Uniquely identifies a CXFile, that refers to the same underlying file, across an indexing session.
-class CXFileUniqueID extends ffi.Struct {}
+class CXFileUniqueID extends ffi.Struct {
+  @ffi.Uint64()
+  int _data_item_0;
+  @ffi.Uint64()
+  int _data_item_1;
+  @ffi.Uint64()
+  int _data_item_2;
+
+  /// helper for array, supports `[]` operator
+  _ArrayHelper_CXFileUniqueID_data get data =>
+      _ArrayHelper_CXFileUniqueID_data(this, 3);
+}
+
+/// Helper for array data in struct CXFileUniqueID
+class _ArrayHelper_CXFileUniqueID_data {
+  final CXFileUniqueID _struct;
+  final int length;
+  _ArrayHelper_CXFileUniqueID_data(this._struct, this.length);
+  void operator []=(int index, int value) {
+    switch (index) {
+      case 0:
+        _struct._data_item_0 = value;
+        break;
+      case 1:
+        _struct._data_item_1 = value;
+        break;
+      case 2:
+        _struct._data_item_2 = value;
+        break;
+      default:
+        throw RangeError('Index $index must be in the range [0..2].');
+    }
+  }
+
+  int operator [](int index) {
+    switch (index) {
+      case 0:
+        return _struct._data_item_0;
+      case 1:
+        return _struct._data_item_1;
+      case 2:
+        return _struct._data_item_2;
+      default:
+        throw RangeError('Index $index must be in the range [0..2].');
+    }
+  }
+
+  @override
+  String toString() {
+    if (length == 0) return '[]';
+    var sb = StringBuffer('[');
+    sb.write(this[0]);
+    for (var i = 1; i < length; i++) {
+      sb.write(',');
+      sb.write(this[i]);
+    }
+    sb.write(']');
+    return sb.toString();
+  }
+}
 
 class CXGlobalOptFlags {
   static const int CXGlobalOpt_None = 0;
@@ -78,7 +198,65 @@ class CXIdxImportedASTFileInfo extends ffi.Struct {}
 class CXIdxIncludedFileInfo extends ffi.Struct {}
 
 /// Source location passed to index callbacks.
-class CXIdxLoc extends ffi.Struct {}
+class CXIdxLoc extends ffi.Struct {
+  ffi.Pointer<ffi.Void> _ptr_data_item_0;
+  ffi.Pointer<ffi.Void> _ptr_data_item_1;
+  ffi.Pointer<ffi.Void> _ptr_data_item_2;
+
+  /// helper for array, supports `[]` operator
+  _ArrayHelper_CXIdxLoc_ptr_data get ptr_data =>
+      _ArrayHelper_CXIdxLoc_ptr_data(this, 3);
+  @ffi.Uint32()
+  int int_data;
+}
+
+/// Helper for array ptr_data in struct CXIdxLoc
+class _ArrayHelper_CXIdxLoc_ptr_data {
+  final CXIdxLoc _struct;
+  final int length;
+  _ArrayHelper_CXIdxLoc_ptr_data(this._struct, this.length);
+  void operator []=(int index, ffi.Pointer<ffi.Void> value) {
+    switch (index) {
+      case 0:
+        _struct._ptr_data_item_0 = value;
+        break;
+      case 1:
+        _struct._ptr_data_item_1 = value;
+        break;
+      case 2:
+        _struct._ptr_data_item_2 = value;
+        break;
+      default:
+        throw RangeError('Index $index must be in the range [0..2].');
+    }
+  }
+
+  ffi.Pointer<ffi.Void> operator [](int index) {
+    switch (index) {
+      case 0:
+        return _struct._ptr_data_item_0;
+      case 1:
+        return _struct._ptr_data_item_1;
+      case 2:
+        return _struct._ptr_data_item_2;
+      default:
+        throw RangeError('Index $index must be in the range [0..2].');
+    }
+  }
+
+  @override
+  String toString() {
+    if (length == 0) return '[]';
+    var sb = StringBuffer('[');
+    sb.write(this[0]);
+    for (var i = 1; i < length; i++) {
+      sb.write(',');
+      sb.write(this[i]);
+    }
+    sb.write(']');
+    return sb.toString();
+  }
+}
 
 class CXIdxObjCCategoryDeclInfo extends ffi.Struct {}
 
@@ -125,10 +303,129 @@ typedef CXInclusionVisitor = ffi.Void Function(
 class CXPlatformAvailability extends ffi.Struct {}
 
 /// Identifies a specific source location within a translation unit.
-class CXSourceLocation extends ffi.Struct {}
+class CXSourceLocation extends ffi.Struct {
+  ffi.Pointer<ffi.Void> _ptr_data_item_0;
+  ffi.Pointer<ffi.Void> _ptr_data_item_1;
+  ffi.Pointer<ffi.Void> _ptr_data_item_2;
+
+  /// helper for array, supports `[]` operator
+  _ArrayHelper_CXSourceLocation_ptr_data get ptr_data =>
+      _ArrayHelper_CXSourceLocation_ptr_data(this, 3);
+  @ffi.Uint32()
+  int int_data;
+}
+
+/// Helper for array ptr_data in struct CXSourceLocation
+class _ArrayHelper_CXSourceLocation_ptr_data {
+  final CXSourceLocation _struct;
+  final int length;
+  _ArrayHelper_CXSourceLocation_ptr_data(this._struct, this.length);
+  void operator []=(int index, ffi.Pointer<ffi.Void> value) {
+    switch (index) {
+      case 0:
+        _struct._ptr_data_item_0 = value;
+        break;
+      case 1:
+        _struct._ptr_data_item_1 = value;
+        break;
+      case 2:
+        _struct._ptr_data_item_2 = value;
+        break;
+      default:
+        throw RangeError('Index $index must be in the range [0..2].');
+    }
+  }
+
+  ffi.Pointer<ffi.Void> operator [](int index) {
+    switch (index) {
+      case 0:
+        return _struct._ptr_data_item_0;
+      case 1:
+        return _struct._ptr_data_item_1;
+      case 2:
+        return _struct._ptr_data_item_2;
+      default:
+        throw RangeError('Index $index must be in the range [0..2].');
+    }
+  }
+
+  @override
+  String toString() {
+    if (length == 0) return '[]';
+    var sb = StringBuffer('[');
+    sb.write(this[0]);
+    for (var i = 1; i < length; i++) {
+      sb.write(',');
+      sb.write(this[i]);
+    }
+    sb.write(']');
+    return sb.toString();
+  }
+}
 
 /// Identifies a half-open character range in the source code.
-class CXSourceRange extends ffi.Struct {}
+class CXSourceRange extends ffi.Struct {
+  ffi.Pointer<ffi.Void> _ptr_data_item_0;
+  ffi.Pointer<ffi.Void> _ptr_data_item_1;
+  ffi.Pointer<ffi.Void> _ptr_data_item_2;
+
+  /// helper for array, supports `[]` operator
+  _ArrayHelper_CXSourceRange_ptr_data get ptr_data =>
+      _ArrayHelper_CXSourceRange_ptr_data(this, 3);
+  @ffi.Uint32()
+  int begin_int_data;
+
+  @ffi.Uint32()
+  int end_int_data;
+}
+
+/// Helper for array ptr_data in struct CXSourceRange
+class _ArrayHelper_CXSourceRange_ptr_data {
+  final CXSourceRange _struct;
+  final int length;
+  _ArrayHelper_CXSourceRange_ptr_data(this._struct, this.length);
+  void operator []=(int index, ffi.Pointer<ffi.Void> value) {
+    switch (index) {
+      case 0:
+        _struct._ptr_data_item_0 = value;
+        break;
+      case 1:
+        _struct._ptr_data_item_1 = value;
+        break;
+      case 2:
+        _struct._ptr_data_item_2 = value;
+        break;
+      default:
+        throw RangeError('Index $index must be in the range [0..2].');
+    }
+  }
+
+  ffi.Pointer<ffi.Void> operator [](int index) {
+    switch (index) {
+      case 0:
+        return _struct._ptr_data_item_0;
+      case 1:
+        return _struct._ptr_data_item_1;
+      case 2:
+        return _struct._ptr_data_item_2;
+      default:
+        throw RangeError('Index $index must be in the range [0..2].');
+    }
+  }
+
+  @override
+  String toString() {
+    if (length == 0) return '[]';
+    var sb = StringBuffer('[');
+    sb.write(this[0]);
+    for (var i = 1; i < length; i++) {
+      sb.write(',');
+      sb.write(this[i]);
+    }
+    sb.write(']');
+    return sb.toString();
+  }
+}
 
 /// Identifies an array of ranges.
 class CXSourceRangeList extends ffi.Struct {
@@ -174,12 +471,130 @@ class CXTUResourceUsageEntry extends ffi.Struct {
 class CXTargetInfoImpl extends ffi.Struct {}
 
 /// Describes a single preprocessing token.
-class CXToken extends ffi.Struct {}
+class CXToken extends ffi.Struct {
+  @ffi.Uint32()
+  int _int_data_item_0;
+  @ffi.Uint32()
+  int _int_data_item_1;
+  @ffi.Uint32()
+  int _int_data_item_2;
+
+  /// helper for array, supports `[]` operator
+  _ArrayHelper_CXToken_int_data get int_data =>
+      _ArrayHelper_CXToken_int_data(this, 3);
+  ffi.Pointer<ffi.Void> ptr_data;
+}
+
+/// Helper for array int_data in struct CXToken
+class _ArrayHelper_CXToken_int_data {
+  final CXToken _struct;
+  final int length;
+  _ArrayHelper_CXToken_int_data(this._struct, this.length);
+  void operator []=(int index, int value) {
+    switch (index) {
+      case 0:
+        _struct._int_data_item_0 = value;
+        break;
+      case 1:
+        _struct._int_data_item_1 = value;
+        break;
+      case 2:
+        _struct._int_data_item_2 = value;
+        break;
+      default:
+        throw RangeError('Index $index must be in the range [0..2].');
+    }
+  }
+
+  int operator [](int index) {
+    switch (index) {
+      case 0:
+        return _struct._int_data_item_0;
+      case 1:
+        return _struct._int_data_item_1;
+      case 2:
+        return _struct._int_data_item_2;
+      default:
+        throw RangeError('Index $index must be in the range [0..2].');
+    }
+  }
+
+  @override
+  String toString() {
+    if (length == 0) return '[]';
+    var sb = StringBuffer('[');
+    sb.write(this[0]);
+    for (var i = 1; i < length; i++) {
+      sb.write(',');
+      sb.write(this[i]);
+    }
+    sb.write(']');
+    return sb.toString();
+  }
+}
 
 class CXTranslationUnitImpl extends ffi.Struct {}
 
 /// The type of an element in the abstract syntax tree.
-class CXType extends ffi.Struct {}
+class CXType extends ffi.Struct {
+  @ffi.Int32()
+  int kind;
+
+  ffi.Pointer<ffi.Void> _data_item_0;
+  ffi.Pointer<ffi.Void> _data_item_1;
+  ffi.Pointer<ffi.Void> _data_item_2;
+
+  /// helper for array, supports `[]` operator
+  _ArrayHelper_CXType_data get data => _ArrayHelper_CXType_data(this, 3);
+}
+
+/// Helper for array data in struct CXType
+class _ArrayHelper_CXType_data {
+  final CXType _struct;
+  final int length;
+  _ArrayHelper_CXType_data(this._struct, this.length);
+  void operator []=(int index, ffi.Pointer<ffi.Void> value) {
+    switch (index) {
+      case 0:
+        _struct._data_item_0 = value;
+        break;
+      case 1:
+        _struct._data_item_1 = value;
+        break;
+      case 2:
+        _struct._data_item_2 = value;
+        break;
+      default:
+        throw RangeError('Index $index must be in the range [0..2].');
+    }
+  }
+
+  ffi.Pointer<ffi.Void> operator [](int index) {
+    switch (index) {
+      case 0:
+        return _struct._data_item_0;
+      case 1:
+        return _struct._data_item_1;
+      case 2:
+        return _struct._data_item_2;
+      default:
+        throw RangeError('Index $index must be in the range [0..2].');
+    }
+  }
+
+  @override
+  String toString() {
+    if (length == 0) return '[]';
+    var sb = StringBuffer('[');
+    sb.write(this[0]);
+    for (var i = 1; i < length; i++) {
+      sb.write(',');
+      sb.write(this[i]);
+    }
+    sb.write(']');
+    return sb.toString();
+  }
+}
 
 class CXTypeKind {
   static const int CXType_Invalid = 0;

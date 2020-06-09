@@ -41,7 +41,7 @@ enum BroadType {
   NativeFunction,
 
   /// stores its element type in NativeType as only those are supported
-  Array,
+  ConstantArray,
 }
 
 /// Type class for return types, variable types, etc
@@ -73,6 +73,7 @@ class Type {
   /// For providing name of Struct
   String structName;
 
+  /// For providing name of nativeFunc
   String nativeFuncName;
 
   /// For providing [SupportedNativeType] only
@@ -87,6 +88,10 @@ class Type {
   /// Child Type, e.g Pointer(Parent) to Int(Child)
   final Type child;
 
+  /// For ConstantArray type
+  final int arrayLength;
+  final Type elementType;
+
   Type._({
     @required this.type,
     this.child,
@@ -94,6 +99,8 @@ class Type {
     this.nativeType,
     this.ffiUtilType,
     this.nativeFuncName,
+    this.arrayLength,
+    this.elementType,
   });
 
   factory Type.pointer(Type child) {
@@ -112,8 +119,8 @@ class Type {
   factory Type.ffiUtilType(FfiUtilType ffiUtilType) {
     return Type._(type: BroadType.FfiUtilType, ffiUtilType: ffiUtilType);
   }
-  factory Type.array(SupportedNativeType nativeType) {
-    return Type._(type: BroadType.Array, nativeType: nativeType);
+  factory Type.constantArray(int arrayLength, Type elementType) {
+    return Type._(type: BroadType.ConstantArray, elementType: elementType);
   }
 
   bool get isPrimitive => type == BroadType.NativeType;
