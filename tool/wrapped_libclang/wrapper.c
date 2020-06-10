@@ -1,7 +1,6 @@
 #include <clang-c/Index.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 // utility
 #define aloc(T) ((T *)malloc(sizeof(T)))
