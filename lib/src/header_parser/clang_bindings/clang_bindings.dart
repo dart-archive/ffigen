@@ -325,7 +325,7 @@ typedef _dart_clang_getArrayElementType_wrap = ffi.Pointer<CXType> Function(
 );
 
 /// Dispose [CXString] using [clang_disposeString_wrap], it also frees the CString(const char *), do not free CString directly
-ffi.Pointer<ffi2.Utf8> clang_getCString_wrap(
+ffi.Pointer<ffi.Int8> clang_getCString_wrap(
   ffi.Pointer<CXString> cxstringPtr,
 ) {
   return _clang_getCString_wrap(
@@ -337,11 +337,11 @@ final _dart_clang_getCString_wrap _clang_getCString_wrap = _dylib
     .lookupFunction<_c_clang_getCString_wrap, _dart_clang_getCString_wrap>(
         'clang_getCString_wrap');
 
-typedef _c_clang_getCString_wrap = ffi.Pointer<ffi2.Utf8> Function(
+typedef _c_clang_getCString_wrap = ffi.Pointer<ffi.Int8> Function(
   ffi.Pointer<CXString> cxstringPtr,
 );
 
-typedef _dart_clang_getCString_wrap = ffi.Pointer<ffi2.Utf8> Function(
+typedef _dart_clang_getCString_wrap = ffi.Pointer<ffi.Int8> Function(
   ffi.Pointer<CXString> cxstringPtr,
 );
 
@@ -798,8 +798,8 @@ typedef _dart_clang_getTypedefDeclUnderlyingType_wrap = ffi.Pointer<CXType>
 /// Dispose tu using [clang_disposeTranslationUnit]
 ffi.Pointer<CXTranslationUnitImpl> clang_parseTranslationUnit(
   ffi.Pointer<ffi.Void> cxindex,
-  ffi.Pointer<ffi2.Utf8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> cmd_line_args,
+  ffi.Pointer<ffi.Int8> source_filename,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> cmd_line_args,
   int num_cmd_line_args,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
   int num_unsaved_files,
@@ -823,8 +823,8 @@ final _dart_clang_parseTranslationUnit _clang_parseTranslationUnit =
 typedef _c_clang_parseTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
     Function(
   ffi.Pointer<ffi.Void> cxindex,
-  ffi.Pointer<ffi2.Utf8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> cmd_line_args,
+  ffi.Pointer<ffi.Int8> source_filename,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> cmd_line_args,
   ffi.Int32 num_cmd_line_args,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
   ffi.Uint32 num_unsaved_files,
@@ -834,8 +834,8 @@ typedef _c_clang_parseTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
 typedef _dart_clang_parseTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
     Function(
   ffi.Pointer<ffi.Void> cxindex,
-  ffi.Pointer<ffi2.Utf8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> cmd_line_args,
+  ffi.Pointer<ffi.Int8> source_filename,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> cmd_line_args,
   int num_cmd_line_args,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
   int num_unsaved_files,

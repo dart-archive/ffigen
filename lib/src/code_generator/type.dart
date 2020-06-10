@@ -27,15 +27,9 @@ enum SupportedNativeType {
   IntPtr,
 }
 
-enum FfiUtilType {
-  Utf8,
-  Utf16,
-}
-
 /// The basic types in which all types can be classified
 enum BroadType {
   NativeType,
-  FfiUtilType,
   Pointer,
   Struct,
   NativeFunction,
@@ -65,11 +59,6 @@ class Type {
     SupportedNativeType.Float64: _SubType(c: 'Double', dart: 'double'),
   };
 
-  static const _ffiUtils = <FfiUtilType, _SubType>{
-    FfiUtilType.Utf8: _SubType(c: 'Utf8', dart: 'Utf8'),
-    FfiUtilType.Utf16: _SubType(c: 'Utf16', dart: 'Utf16'),
-  };
-
   /// For providing name of Struct
   String structName;
 
@@ -78,9 +67,6 @@ class Type {
 
   /// For providing [SupportedNativeType] only
   final SupportedNativeType nativeType;
-
-  /// For providing [FfiUtilType] only
-  final FfiUtilType ffiUtilType;
 
   /// The BroadType of this Type
   final BroadType broadType;
@@ -97,7 +83,6 @@ class Type {
     this.child,
     this.structName,
     this.nativeType,
-    this.ffiUtilType,
     this.nativeFuncName,
     this.arrayLength,
     this.elementType,
@@ -116,9 +101,6 @@ class Type {
   factory Type.nativeType(SupportedNativeType nativeType) {
     return Type._(broadType: BroadType.NativeType, nativeType: nativeType);
   }
-  factory Type.ffiUtilType(FfiUtilType ffiUtilType) {
-    return Type._(broadType: BroadType.FfiUtilType, ffiUtilType: ffiUtilType);
-  }
   factory Type.constantArray(int arrayLength, Type elementType) {
     return Type._(broadType: BroadType.ConstantArray, elementType: elementType);
   }
@@ -129,8 +111,6 @@ class Type {
     switch (broadType) {
       case BroadType.NativeType:
         return '${w.ffiLibraryPrefix}.${_primitives[nativeType].c}';
-      case BroadType.FfiUtilType:
-        return '${w.ffiUtilLibPrefix}.${_ffiUtils[ffiUtilType].c}';
       case BroadType.Pointer:
         return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
       case BroadType.Struct:
@@ -152,7 +132,6 @@ class Type {
         return structName;
       case BroadType.NativeFunction:
         return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFuncName}>';
-      // TODO: check- ffiUtilType doesn't have a dart type, it can only be inside a Pointer which redirects it to its c type
       default:
         throw Exception('dart type unknown for ${broadType.toString()}');
     }

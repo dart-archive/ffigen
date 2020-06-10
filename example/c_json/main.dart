@@ -33,7 +33,7 @@ void main() {
   var jsonString = File('./example.json').readAsStringSync();
 
   // parse this json string using our cJSON library
-  var cjsonParsedJson = cjson.cJSON_Parse(Utf8.toUtf8(jsonString));
+  var cjsonParsedJson = cjson.cJSON_Parse(Utf8.toUtf8(jsonString).cast());
   if (cjsonParsedJson == null) {
     print('Error parsing cjson');
     exit(1);

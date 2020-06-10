@@ -1,7 +1,6 @@
 import 'package:ffigen/src/header_parser/clang_bindings/clang_constants.dart'
     as clang;
-import 'package:ffigen/src/code_generator.dart'
-    show SupportedNativeType, FfiUtilType;
+import 'package:ffigen/src/code_generator.dart' show SupportedNativeType;
 
 /// Utility to convert CXType to [code_generator.Type]
 ///
@@ -20,10 +19,9 @@ var cxTypeKindToSupportedNativeTypes = <int, SupportedNativeType>{
   clang.CXTypeKind.CXType_LongLong: SupportedNativeType.Int64,
   clang.CXTypeKind.CXType_Float: SupportedNativeType.Float,
   clang.CXTypeKind.CXType_Double: SupportedNativeType.Double,
-};
 
-var cxTypeKindToFfiUtilType = <int, FfiUtilType>{
-  clang.CXTypeKind.CXType_Char_S: FfiUtilType.Utf8,
+  //
+  clang.CXTypeKind.CXType_Char_S: SupportedNativeType.Int8,
 };
 
 // TODO: check type to use for enums

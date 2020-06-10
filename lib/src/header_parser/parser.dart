@@ -59,8 +59,8 @@ List<Binding> parseAndGenerateBindings() {
 
     var tu = clang.clang_parseTranslationUnit(
       index,
-      Utf8.toUtf8(headerLocation),
-      clangCmdArgs,
+      Utf8.toUtf8(headerLocation).cast(),
+      clangCmdArgs.cast(),
       cmdLen,
       nullptr,
       0,

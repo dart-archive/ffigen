@@ -75,12 +75,12 @@ final functionAndTypedefsList = <Binding>[
       ),
       Parameter(
         name: 'source_filename',
-        type: Type.pointer(Type.ffiUtilType(FfiUtilType.Utf8)),
+        type: Type.pointer(Type.nativeType(SupportedNativeType.Int8)),
       ),
       Parameter(
         name: 'cmd_line_args',
         type: Type.pointer(Type.pointer(
-          Type.ffiUtilType(FfiUtilType.Utf8),
+          Type.nativeType(SupportedNativeType.Int8),
         )),
       ),
       Parameter(
@@ -228,7 +228,7 @@ final functionAndTypedefsList = <Binding>[
         type: Type.pointer(Type.struct(_cxString)),
       ),
     ],
-    returnType: Type.pointer(Type.ffiUtilType(FfiUtilType.Utf8)),
+    returnType: Type.pointer(Type.nativeType(SupportedNativeType.Int8)),
   ),
   Func(
     dartDoc: 'Free a CXString using this (Do not use free)',

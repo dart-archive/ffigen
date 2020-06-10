@@ -68,10 +68,6 @@ Type getCodeGenType(Pointer<clang.CXType> cxtype, {String parentName}) {
         return Type.nativeType(
           cxTypeKindToSupportedNativeTypes[kind],
         );
-      } else if (cxTypeKindToFfiUtilType.containsKey(kind)) {
-        return Type.ffiUtilType(
-          cxTypeKindToFfiUtilType[kind],
-        );
       } else {
         throw Exception('Type not implemented, ${cxtype.completeStringRepr()}');
       }

@@ -1,6 +1,5 @@
 /// AUTO GENERATED FILE, DO NOT EDIT
 import 'dart:ffi' as ffi;
-import 'package:ffi/ffi.dart' as ffi2;
 
 /// Dynamic library
 ffi.DynamicLibrary _dylib;
@@ -719,9 +718,9 @@ class CXTypeKind {
 
 /// Provides the contents of a file that has not yet been saved to disk.
 class CXUnsavedFile extends ffi.Struct {
-  ffi.Pointer<ffi2.Utf8> Filename;
+  ffi.Pointer<ffi.Int8> Filename;
 
-  ffi.Pointer<ffi2.Utf8> Contents;
+  ffi.Pointer<ffi.Int8> Contents;
 
   @ffi.Uint64()
   int Length;
@@ -865,7 +864,7 @@ typedef _dart_clang_CXIndex_setGlobalOptions = void Function(
 /// Sets the invocation emission path option in a CXIndex.
 void clang_CXIndex_setInvocationEmissionPathOption(
   ffi.Pointer<ffi.Void> arg0,
-  ffi.Pointer<ffi2.Utf8> Path,
+  ffi.Pointer<ffi.Int8> Path,
 ) {
   return _clang_CXIndex_setInvocationEmissionPathOption(
     arg0,
@@ -881,12 +880,12 @@ final _dart_clang_CXIndex_setInvocationEmissionPathOption
 
 typedef _c_clang_CXIndex_setInvocationEmissionPathOption = ffi.Void Function(
   ffi.Pointer<ffi.Void> arg0,
-  ffi.Pointer<ffi2.Utf8> Path,
+  ffi.Pointer<ffi.Int8> Path,
 );
 
 typedef _dart_clang_CXIndex_setInvocationEmissionPathOption = void Function(
   ffi.Pointer<ffi.Void> arg0,
-  ffi.Pointer<ffi2.Utf8> Path,
+  ffi.Pointer<ffi.Int8> Path,
 );
 
 ffi.Pointer<CXCursor> clang_Cursor_getArgument_wrap(
@@ -1045,7 +1044,7 @@ typedef _dart_clang_EvalResult_getAsLongLong = int Function(
 );
 
 /// Returns the evaluation result as a constant string if the kind is other than Int or float. User must not free this pointer, instead call clang_EvalResult_dispose on the CXEvalResult returned by clang_Cursor_Evaluate.
-ffi.Pointer<ffi2.Utf8> clang_EvalResult_getAsStr(
+ffi.Pointer<ffi.Int8> clang_EvalResult_getAsStr(
   ffi.Pointer<ffi.Void> E,
 ) {
   return _clang_EvalResult_getAsStr(
@@ -1057,11 +1056,11 @@ final _dart_clang_EvalResult_getAsStr _clang_EvalResult_getAsStr =
     _dylib.lookupFunction<_c_clang_EvalResult_getAsStr,
         _dart_clang_EvalResult_getAsStr>('clang_EvalResult_getAsStr');
 
-typedef _c_clang_EvalResult_getAsStr = ffi.Pointer<ffi2.Utf8> Function(
+typedef _c_clang_EvalResult_getAsStr = ffi.Pointer<ffi.Int8> Function(
   ffi.Pointer<ffi.Void> E,
 );
 
-typedef _dart_clang_EvalResult_getAsStr = ffi.Pointer<ffi2.Utf8> Function(
+typedef _dart_clang_EvalResult_getAsStr = ffi.Pointer<ffi.Int8> Function(
   ffi.Pointer<ffi.Void> E,
 );
 
@@ -1490,7 +1489,7 @@ typedef _dart_clang_annotateTokens = void Function(
 /// Perform code completion at a given location in a translation unit.
 ffi.Pointer<CXCodeCompleteResults> clang_codeCompleteAt(
   ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<ffi2.Utf8> complete_filename,
+  ffi.Pointer<ffi.Int8> complete_filename,
   int complete_line,
   int complete_column,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
@@ -1514,7 +1513,7 @@ final _dart_clang_codeCompleteAt _clang_codeCompleteAt =
 
 typedef _c_clang_codeCompleteAt = ffi.Pointer<CXCodeCompleteResults> Function(
   ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<ffi2.Utf8> complete_filename,
+  ffi.Pointer<ffi.Int8> complete_filename,
   ffi.Uint32 complete_line,
   ffi.Uint32 complete_column,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
@@ -1525,7 +1524,7 @@ typedef _c_clang_codeCompleteAt = ffi.Pointer<CXCodeCompleteResults> Function(
 typedef _dart_clang_codeCompleteAt = ffi.Pointer<CXCodeCompleteResults>
     Function(
   ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<ffi2.Utf8> complete_filename,
+  ffi.Pointer<ffi.Int8> complete_filename,
   int complete_line,
   int complete_column,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
@@ -1671,7 +1670,7 @@ typedef _dart_clang_createIndex = ffi.Pointer<ffi.Void> Function(
 /// Same as clang_createTranslationUnit2, but returns the CXTranslationUnit instead of an error code. In case of an error this routine returns a NULL CXTranslationUnit, without further detailed error codes.
 ffi.Pointer<CXTranslationUnitImpl> clang_createTranslationUnit(
   ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi2.Utf8> ast_filename,
+  ffi.Pointer<ffi.Int8> ast_filename,
 ) {
   return _clang_createTranslationUnit(
     CIdx,
@@ -1686,19 +1685,19 @@ final _dart_clang_createTranslationUnit _clang_createTranslationUnit =
 typedef _c_clang_createTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
     Function(
   ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi2.Utf8> ast_filename,
+  ffi.Pointer<ffi.Int8> ast_filename,
 );
 
 typedef _dart_clang_createTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
     Function(
   ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi2.Utf8> ast_filename,
+  ffi.Pointer<ffi.Int8> ast_filename,
 );
 
 /// Create a translation unit from an AST file ( -emit-ast).
 int clang_createTranslationUnit2(
   ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi2.Utf8> ast_filename,
+  ffi.Pointer<ffi.Int8> ast_filename,
   ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
 ) {
   return _clang_createTranslationUnit2(
@@ -1714,22 +1713,22 @@ final _dart_clang_createTranslationUnit2 _clang_createTranslationUnit2 =
 
 typedef _c_clang_createTranslationUnit2 = ffi.Int32 Function(
   ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi2.Utf8> ast_filename,
+  ffi.Pointer<ffi.Int8> ast_filename,
   ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
 );
 
 typedef _dart_clang_createTranslationUnit2 = int Function(
   ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi2.Utf8> ast_filename,
+  ffi.Pointer<ffi.Int8> ast_filename,
   ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
 );
 
 /// Return the CXTranslationUnit for a given source file and the provided command line arguments one would pass to the compiler.
 ffi.Pointer<CXTranslationUnitImpl> clang_createTranslationUnitFromSourceFile(
   ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi2.Utf8> source_filename,
+  ffi.Pointer<ffi.Int8> source_filename,
   int num_clang_command_line_args,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> clang_command_line_args,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> clang_command_line_args,
   int num_unsaved_files,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
 ) {
@@ -1752,9 +1751,9 @@ final _dart_clang_createTranslationUnitFromSourceFile
 typedef _c_clang_createTranslationUnitFromSourceFile
     = ffi.Pointer<CXTranslationUnitImpl> Function(
   ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi2.Utf8> source_filename,
+  ffi.Pointer<ffi.Int8> source_filename,
   ffi.Int32 num_clang_command_line_args,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> clang_command_line_args,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> clang_command_line_args,
   ffi.Uint32 num_unsaved_files,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
 );
@@ -1762,9 +1761,9 @@ typedef _c_clang_createTranslationUnitFromSourceFile
 typedef _dart_clang_createTranslationUnitFromSourceFile
     = ffi.Pointer<CXTranslationUnitImpl> Function(
   ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi2.Utf8> source_filename,
+  ffi.Pointer<ffi.Int8> source_filename,
   int num_clang_command_line_args,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> clang_command_line_args,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> clang_command_line_args,
   int num_unsaved_files,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
 );
@@ -2247,7 +2246,7 @@ typedef _dart_clang_getArrayElementType_wrap = ffi.Pointer<CXType> Function(
   ffi.Pointer<CXType> cxtype,
 );
 
-ffi.Pointer<ffi2.Utf8> clang_getCString_wrap(
+ffi.Pointer<ffi.Int8> clang_getCString_wrap(
   ffi.Pointer<CXString> string,
 ) {
   return _clang_getCString_wrap(
@@ -2259,11 +2258,11 @@ final _dart_clang_getCString_wrap _clang_getCString_wrap = _dylib
     .lookupFunction<_c_clang_getCString_wrap, _dart_clang_getCString_wrap>(
         'clang_getCString_wrap');
 
-typedef _c_clang_getCString_wrap = ffi.Pointer<ffi2.Utf8> Function(
+typedef _c_clang_getCString_wrap = ffi.Pointer<ffi.Int8> Function(
   ffi.Pointer<CXString> string,
 );
 
-typedef _dart_clang_getCString_wrap = ffi.Pointer<ffi2.Utf8> Function(
+typedef _dart_clang_getCString_wrap = ffi.Pointer<ffi.Int8> Function(
   ffi.Pointer<CXString> string,
 );
 
@@ -2737,7 +2736,7 @@ typedef _dart_clang_getEnumConstantDeclValue_wrap = int Function(
 /// Retrieve a file handle within the given translation unit.
 ffi.Pointer<ffi.Void> clang_getFile(
   ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi2.Utf8> file_name,
+  ffi.Pointer<ffi.Int8> file_name,
 ) {
   return _clang_getFile(
     tu,
@@ -2750,16 +2749,16 @@ final _dart_clang_getFile _clang_getFile = _dylib
 
 typedef _c_clang_getFile = ffi.Pointer<ffi.Void> Function(
   ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi2.Utf8> file_name,
+  ffi.Pointer<ffi.Int8> file_name,
 );
 
 typedef _dart_clang_getFile = ffi.Pointer<ffi.Void> Function(
   ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi2.Utf8> file_name,
+  ffi.Pointer<ffi.Int8> file_name,
 );
 
 /// Retrieve the buffer associated with the given file.
-ffi.Pointer<ffi2.Utf8> clang_getFileContents(
+ffi.Pointer<ffi.Int8> clang_getFileContents(
   ffi.Pointer<CXTranslationUnitImpl> tu,
   ffi.Pointer<ffi.Void> file,
   ffi.Pointer<ffi.Uint64> size,
@@ -2775,13 +2774,13 @@ final _dart_clang_getFileContents _clang_getFileContents = _dylib
     .lookupFunction<_c_clang_getFileContents, _dart_clang_getFileContents>(
         'clang_getFileContents');
 
-typedef _c_clang_getFileContents = ffi.Pointer<ffi2.Utf8> Function(
+typedef _c_clang_getFileContents = ffi.Pointer<ffi.Int8> Function(
   ffi.Pointer<CXTranslationUnitImpl> tu,
   ffi.Pointer<ffi.Void> file,
   ffi.Pointer<ffi.Uint64> size,
 );
 
-typedef _dart_clang_getFileContents = ffi.Pointer<ffi2.Utf8> Function(
+typedef _dart_clang_getFileContents = ffi.Pointer<ffi.Int8> Function(
   ffi.Pointer<CXTranslationUnitImpl> tu,
   ffi.Pointer<ffi.Void> file,
   ffi.Pointer<ffi.Uint64> size,
@@ -3068,7 +3067,7 @@ typedef _dart_clang_getPointeeType_wrap = ffi.Pointer<CXType> Function(
 
 /// Retrieve a remapping.
 ffi.Pointer<ffi.Void> clang_getRemappings(
-  ffi.Pointer<ffi2.Utf8> path,
+  ffi.Pointer<ffi.Int8> path,
 ) {
   return _clang_getRemappings(
     path,
@@ -3080,16 +3079,16 @@ final _dart_clang_getRemappings _clang_getRemappings =
         'clang_getRemappings');
 
 typedef _c_clang_getRemappings = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi2.Utf8> path,
+  ffi.Pointer<ffi.Int8> path,
 );
 
 typedef _dart_clang_getRemappings = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi2.Utf8> path,
+  ffi.Pointer<ffi.Int8> path,
 );
 
 /// Retrieve a remapping.
 ffi.Pointer<ffi.Void> clang_getRemappingsFromFileList(
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> filePaths,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> filePaths,
   int numFiles,
 ) {
   return _clang_getRemappingsFromFileList(
@@ -3104,12 +3103,12 @@ final _dart_clang_getRemappingsFromFileList _clang_getRemappingsFromFileList =
         'clang_getRemappingsFromFileList');
 
 typedef _c_clang_getRemappingsFromFileList = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> filePaths,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> filePaths,
   ffi.Uint32 numFiles,
 );
 
 typedef _dart_clang_getRemappingsFromFileList = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> filePaths,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> filePaths,
   int numFiles,
 );
 
@@ -3159,7 +3158,7 @@ typedef _dart_clang_getSkippedRanges = ffi.Pointer<CXSourceRangeList> Function(
 );
 
 /// Returns the human-readable null-terminated C string that represents the name of the memory category. This string should never be freed.
-ffi.Pointer<ffi2.Utf8> clang_getTUResourceUsageName(
+ffi.Pointer<ffi.Int8> clang_getTUResourceUsageName(
   int kind,
 ) {
   return _clang_getTUResourceUsageName(
@@ -3171,11 +3170,11 @@ final _dart_clang_getTUResourceUsageName _clang_getTUResourceUsageName =
     _dylib.lookupFunction<_c_clang_getTUResourceUsageName,
         _dart_clang_getTUResourceUsageName>('clang_getTUResourceUsageName');
 
-typedef _c_clang_getTUResourceUsageName = ffi.Pointer<ffi2.Utf8> Function(
+typedef _c_clang_getTUResourceUsageName = ffi.Pointer<ffi.Int8> Function(
   ffi.Int32 kind,
 );
 
-typedef _dart_clang_getTUResourceUsageName = ffi.Pointer<ffi2.Utf8> Function(
+typedef _dart_clang_getTUResourceUsageName = ffi.Pointer<ffi.Int8> Function(
   int kind,
 );
 
@@ -3318,8 +3317,8 @@ int clang_indexSourceFile(
   ffi.Pointer<IndexerCallbacks> index_callbacks,
   int index_callbacks_size,
   int index_options,
-  ffi.Pointer<ffi2.Utf8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> command_line_args,
+  ffi.Pointer<ffi.Int8> source_filename,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
   int num_command_line_args,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
   int num_unsaved_files,
@@ -3352,8 +3351,8 @@ typedef _c_clang_indexSourceFile = ffi.Int32 Function(
   ffi.Pointer<IndexerCallbacks> index_callbacks,
   ffi.Uint32 index_callbacks_size,
   ffi.Uint32 index_options,
-  ffi.Pointer<ffi2.Utf8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> command_line_args,
+  ffi.Pointer<ffi.Int8> source_filename,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
   ffi.Int32 num_command_line_args,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
   ffi.Uint32 num_unsaved_files,
@@ -3367,8 +3366,8 @@ typedef _dart_clang_indexSourceFile = int Function(
   ffi.Pointer<IndexerCallbacks> index_callbacks,
   int index_callbacks_size,
   int index_options,
-  ffi.Pointer<ffi2.Utf8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> command_line_args,
+  ffi.Pointer<ffi.Int8> source_filename,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
   int num_command_line_args,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
   int num_unsaved_files,
@@ -3383,8 +3382,8 @@ int clang_indexSourceFileFullArgv(
   ffi.Pointer<IndexerCallbacks> index_callbacks,
   int index_callbacks_size,
   int index_options,
-  ffi.Pointer<ffi2.Utf8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> command_line_args,
+  ffi.Pointer<ffi.Int8> source_filename,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
   int num_command_line_args,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
   int num_unsaved_files,
@@ -3417,8 +3416,8 @@ typedef _c_clang_indexSourceFileFullArgv = ffi.Int32 Function(
   ffi.Pointer<IndexerCallbacks> index_callbacks,
   ffi.Uint32 index_callbacks_size,
   ffi.Uint32 index_options,
-  ffi.Pointer<ffi2.Utf8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> command_line_args,
+  ffi.Pointer<ffi.Int8> source_filename,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
   ffi.Int32 num_command_line_args,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
   ffi.Uint32 num_unsaved_files,
@@ -3432,8 +3431,8 @@ typedef _dart_clang_indexSourceFileFullArgv = int Function(
   ffi.Pointer<IndexerCallbacks> index_callbacks,
   int index_callbacks_size,
   int index_options,
-  ffi.Pointer<ffi2.Utf8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> command_line_args,
+  ffi.Pointer<ffi.Int8> source_filename,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
   int num_command_line_args,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
   int num_unsaved_files,
@@ -3983,7 +3982,7 @@ typedef _dart_clang_isUnexposed = int Function(
 
 /// Deserialize a set of diagnostics from a Clang diagnostics bitcode file.
 ffi.Pointer<ffi.Void> clang_loadDiagnostics(
-  ffi.Pointer<ffi2.Utf8> file,
+  ffi.Pointer<ffi.Int8> file,
   ffi.Pointer<ffi.Int32> error,
   ffi.Pointer<CXString> errorString,
 ) {
@@ -3999,13 +3998,13 @@ final _dart_clang_loadDiagnostics _clang_loadDiagnostics = _dylib
         'clang_loadDiagnostics');
 
 typedef _c_clang_loadDiagnostics = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi2.Utf8> file,
+  ffi.Pointer<ffi.Int8> file,
   ffi.Pointer<ffi.Int32> error,
   ffi.Pointer<CXString> errorString,
 );
 
 typedef _dart_clang_loadDiagnostics = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi2.Utf8> file,
+  ffi.Pointer<ffi.Int8> file,
   ffi.Pointer<ffi.Int32> error,
   ffi.Pointer<CXString> errorString,
 );
@@ -4013,8 +4012,8 @@ typedef _dart_clang_loadDiagnostics = ffi.Pointer<ffi.Void> Function(
 /// Same as clang_parseTranslationUnit2, but returns the CXTranslationUnit instead of an error code. In case of an error this routine returns a NULL CXTranslationUnit, without further detailed error codes.
 ffi.Pointer<CXTranslationUnitImpl> clang_parseTranslationUnit(
   ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi2.Utf8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> command_line_args,
+  ffi.Pointer<ffi.Int8> source_filename,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
   int num_command_line_args,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
   int num_unsaved_files,
@@ -4038,8 +4037,8 @@ final _dart_clang_parseTranslationUnit _clang_parseTranslationUnit =
 typedef _c_clang_parseTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
     Function(
   ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi2.Utf8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> command_line_args,
+  ffi.Pointer<ffi.Int8> source_filename,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
   ffi.Int32 num_command_line_args,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
   ffi.Uint32 num_unsaved_files,
@@ -4049,8 +4048,8 @@ typedef _c_clang_parseTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
 typedef _dart_clang_parseTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
     Function(
   ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi2.Utf8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> command_line_args,
+  ffi.Pointer<ffi.Int8> source_filename,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
   int num_command_line_args,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
   int num_unsaved_files,
@@ -4060,8 +4059,8 @@ typedef _dart_clang_parseTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
 /// Parse the given source file and the translation unit corresponding to that file.
 int clang_parseTranslationUnit2(
   ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi2.Utf8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> command_line_args,
+  ffi.Pointer<ffi.Int8> source_filename,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
   int num_command_line_args,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
   int num_unsaved_files,
@@ -4086,8 +4085,8 @@ final _dart_clang_parseTranslationUnit2 _clang_parseTranslationUnit2 =
 
 typedef _c_clang_parseTranslationUnit2 = ffi.Int32 Function(
   ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi2.Utf8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> command_line_args,
+  ffi.Pointer<ffi.Int8> source_filename,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
   ffi.Int32 num_command_line_args,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
   ffi.Uint32 num_unsaved_files,
@@ -4097,8 +4096,8 @@ typedef _c_clang_parseTranslationUnit2 = ffi.Int32 Function(
 
 typedef _dart_clang_parseTranslationUnit2 = int Function(
   ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi2.Utf8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> command_line_args,
+  ffi.Pointer<ffi.Int8> source_filename,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
   int num_command_line_args,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
   int num_unsaved_files,
@@ -4109,8 +4108,8 @@ typedef _dart_clang_parseTranslationUnit2 = int Function(
 /// Same as clang_parseTranslationUnit2 but requires a full command line for command_line_args including argv[0]. This is useful if the standard library paths are relative to the binary.
 int clang_parseTranslationUnit2FullArgv(
   ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi2.Utf8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> command_line_args,
+  ffi.Pointer<ffi.Int8> source_filename,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
   int num_command_line_args,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
   int num_unsaved_files,
@@ -4137,8 +4136,8 @@ final _dart_clang_parseTranslationUnit2FullArgv
 
 typedef _c_clang_parseTranslationUnit2FullArgv = ffi.Int32 Function(
   ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi2.Utf8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> command_line_args,
+  ffi.Pointer<ffi.Int8> source_filename,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
   ffi.Int32 num_command_line_args,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
   ffi.Uint32 num_unsaved_files,
@@ -4148,8 +4147,8 @@ typedef _c_clang_parseTranslationUnit2FullArgv = ffi.Int32 Function(
 
 typedef _dart_clang_parseTranslationUnit2FullArgv = int Function(
   ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi2.Utf8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi2.Utf8>> command_line_args,
+  ffi.Pointer<ffi.Int8> source_filename,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
   int num_command_line_args,
   ffi.Pointer<CXUnsavedFile> unsaved_files,
   int num_unsaved_files,
@@ -4268,7 +4267,7 @@ typedef _dart_clang_reparseTranslationUnit = int Function(
 /// Saves a translation unit into a serialized representation of that translation unit on disk.
 int clang_saveTranslationUnit(
   ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<ffi2.Utf8> FileName,
+  ffi.Pointer<ffi.Int8> FileName,
   int options,
 ) {
   return _clang_saveTranslationUnit(
@@ -4284,13 +4283,13 @@ final _dart_clang_saveTranslationUnit _clang_saveTranslationUnit =
 
 typedef _c_clang_saveTranslationUnit = ffi.Int32 Function(
   ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<ffi2.Utf8> FileName,
+  ffi.Pointer<ffi.Int8> FileName,
   ffi.Uint32 options,
 );
 
 typedef _dart_clang_saveTranslationUnit = int Function(
   ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<ffi2.Utf8> FileName,
+  ffi.Pointer<ffi.Int8> FileName,
   int options,
 );
 

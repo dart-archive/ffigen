@@ -75,7 +75,6 @@ void main() {
       try {
         expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
 import 'dart:ffi' as ffi;
-import 'package:ffi/ffi.dart' as ffi2;
 
 /// Dynamic library
 ffi.DynamicLibrary _dylib;
@@ -225,7 +224,6 @@ typedef _dart_withPointerParam = ffi.Pointer<ffi.Double> Function(
       try {
         expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
 import 'dart:ffi' as ffi;
-import 'package:ffi/ffi.dart' as ffi2;
 
 /// Dynamic library
 ffi.DynamicLibrary _dylib;
@@ -330,7 +328,6 @@ class WithPointerMember extends ffi.Struct{
         //expect
         expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
 import 'dart:ffi' as ffi;
-import 'package:ffi/ffi.dart' as ffi2;
 
 /// Dynamic library
 ffi.DynamicLibrary _dylib;
@@ -380,7 +377,7 @@ typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
       }
     });
 
-    test('global (primitives, pointers, pointer to struct, pointer to ffiUtil)',
+    test('global (primitives, pointers, pointer to struct)',
         () {
       final library = Library(
         bindings: [
@@ -395,22 +392,6 @@ typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
             type: Type.pointer(
               Type.nativeType(
                 SupportedNativeType.Float,
-              ),
-            ),
-          ),
-          Global(
-            name: 'test3',
-            type: Type.pointer(
-              Type.ffiUtilType(
-                FfiUtilType.Utf8,
-              ),
-            ),
-          ),
-          Global(
-            name: 'test4',
-            type: Type.pointer(
-              Type.ffiUtilType(
-                FfiUtilType.Utf16,
               ),
             ),
           ),
@@ -437,7 +418,6 @@ typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
       try {
         expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
 import 'dart:ffi' as ffi;
-import 'package:ffi/ffi.dart' as ffi2;
 
 /// Dynamic library
 ffi.DynamicLibrary _dylib;
@@ -449,10 +429,6 @@ void init(ffi.DynamicLibrary dylib){
 final int test1 = _dylib.lookup<ffi.Int32>('test1').value;
 
 final ffi.Pointer<ffi.Float> test2 = _dylib.lookup<ffi.Pointer<ffi.Float>>('test2').value;
-
-final ffi.Pointer<ffi2.Utf8> test3 = _dylib.lookup<ffi.Pointer<ffi2.Utf8>>('test3').value;
-
-final ffi.Pointer<ffi2.Utf16> test4 = _dylib.lookup<ffi.Pointer<ffi2.Utf16>>('test4').value;
 
 class Some extends ffi.Struct{
 }
@@ -499,7 +475,6 @@ final ffi.Pointer<Some> test5 = _dylib.lookup<ffi.Pointer<Some>>('test5').value;
       try {
         expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
 import 'dart:ffi' as ffi;
-import 'package:ffi/ffi.dart' as ffi2;
 
 /// Dynamic library
 ffi.DynamicLibrary _dylib;
@@ -566,7 +541,6 @@ const double test2 = 20.0;
       try {
         expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
 import 'dart:ffi' as ffi;
-import 'package:ffi/ffi.dart' as ffi2;
 
 /// Dynamic library
 ffi.DynamicLibrary _dylib;
@@ -624,7 +598,6 @@ typedef test2 = ffi.Pointer<ffi.Int32> Function(
       try {
         expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
 import 'dart:ffi' as ffi;
-import 'package:ffi/ffi.dart' as ffi2;
 
 /// Dynamic library
 ffi.DynamicLibrary _dylib;

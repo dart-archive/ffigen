@@ -10,7 +10,7 @@ class Writer {
   String ffiLibraryPrefix;
 
   /// package:ffi/ffi.dart prefix
-  String ffiUtilLibPrefix;
+  // String ffiUtilLibPrefix;
 
   final List<BindingString> _bindings = [];
 
@@ -18,7 +18,7 @@ class Writer {
     this.dylibIdentifier = '_dylib',
     this.initFunctionIdentifier = 'init',
     this.ffiLibraryPrefix = 'ffi',
-    this.ffiUtilLibPrefix = 'ffi2',
+    // this.ffiUtilLibPrefix = 'ffi2',
   });
 
   @override
@@ -33,7 +33,7 @@ class Writer {
 
     // write neccesary imports
     s.write("import 'dart:ffi' as $ffiLibraryPrefix;\n");
-    s.write("import 'package:ffi/ffi.dart' as $ffiUtilLibPrefix;\n");
+    // s.write("import 'package:ffi/ffi.dart' as $ffiUtilLibPrefix;\n");
     s.write('\n');
 
     // Write dylib

@@ -142,7 +142,7 @@ extension CXStringExt on Pointer<clang.CXString> {
     String s;
     var cstring = clang.clang_getCString_wrap(this);
     if (cstring != nullptr) {
-      s = Utf8.fromUtf8(cstring);
+      s = Utf8.fromUtf8(cstring.cast());
     }
     return s;
   }
