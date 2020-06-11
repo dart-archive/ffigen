@@ -1,5 +1,5 @@
 output: 'native_functions_bindings.dart'
-libclang-dylib: '../../tool/wrapped_libclang/libwrapped_clang.so'
+libclang-dylib-folder: '../../tool/wrapped_libclang/libwrapped_clang.so'
 sort: true
 headers:
   - 'native_functions.c'

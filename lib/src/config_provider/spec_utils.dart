@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/config_provider/header.dart';
 import 'package:ffigen/src/header_parser/clang_bindings/clang_constants.dart';
 import 'package:glob/glob.dart';
 import 'package:logging/logging.dart';
@@ -13,8 +12,7 @@ import 'filter.dart';
 
 var _logger = Logger('config_provider/utils');
 
-dynamic useSupportedTypedefExtractor(dynamic value) =>
-    value as bool;
+dynamic useSupportedTypedefExtractor(dynamic value) => value as bool;
 
 bool useSupportedTypedefValidator(String name, dynamic value) {
   if (value is! bool) {
@@ -94,8 +92,7 @@ bool sizemapValidator(String name, dynamic value) {
   }
 }
 
-dynamic compilerOptsExtractor(dynamic value) =>
-    (value as String)?.split(' ');
+dynamic compilerOptsExtractor(dynamic value) => (value as String)?.split(' ');
 
 bool compilerOptsValidator(String name, dynamic value) {
   if (value is! String) {
@@ -145,13 +142,13 @@ bool headerFilterValidator(String name, dynamic value) {
 }
 
 dynamic headersExtractor(dynamic value) {
-  var headers = <Header>[];
+  var headers = <String>[];
   for (var header in (value as YamlList)) {
     var glob = Glob(header as String);
     for (var file in glob.listSync(followLinks: true)) {
       // TODO remove .c files later
       if (file.path.endsWith('.h') || file.path.endsWith('.c')) {
-        headers.add(Header(file.path));
+        headers.add(file.path);
       }
     }
   }
@@ -168,19 +165,36 @@ bool headersValidator(String name, dynamic value) {
   }
 }
 
-dynamic libclangDylibExtractor(dynamic value) => value as String;
+dynamic libclangDylibExtractor(dynamic value) => getDylibPath(value as String);
 
 bool libclangDylibValidator(String name, dynamic value) {
   if (value is! String) {
     _logger.severe(
-        'Expected value of key=${strings.libclang_dylib} to be a string');
-    return false;
-  } else if (!File(value as String).existsSync()) {
-    _logger.severe('File: ${value as String} does not exist');
+        'Expected value of key=${strings.libclang_dylib_folder} to be a string');
     return false;
   } else {
-    return true;
+    var dylibPath = getDylibPath(value as String);
+    if (!File(dylibPath).existsSync()) {
+      _logger.severe(
+          'Dynamic library: $dylibPath does not exist or is corrupt, input folder: $value');
+      return false;
+    } else {
+      return true;
+    }
   }
+}
+
+String getDylibPath(String value) {
+  String dylibPath;
+  if (Platform.isMacOS) {
+    dylibPath = value + '/${strings.libclang_dylib_macos}';
+  } else if (Platform.isWindows) {
+    dylibPath =
+        value.replaceAll('/', r'\') + r'\' + strings.libclang_dylib_windows;
+  } else {
+    dylibPath = value + '/${strings.libclang_dylib_linux}';
+  }
+  return dylibPath;
 }
 
 dynamic outputExtractor(dynamic value) => value as String;

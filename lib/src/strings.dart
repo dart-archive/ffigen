@@ -1,5 +1,5 @@
 const output = 'output';
-const libclang_dylib = 'libclang-dylib';
+const libclang_dylib_folder = 'libclang-dylib-folder';
 const headers = 'headers';
 const headerFilter = 'header-filter';
 const compilerOpts = 'compiler-opts';
@@ -34,18 +34,6 @@ const ULongLong = 'unsigned long long';
 const sort = 'sort';
 const useSupportedTypedefs = 'use-supported-typedefs';
 
-/// contains all options and their description
-///
-/// also used to determine if a config option is unknown
-const mapOfAllOptions = <String, String>{
-  output: 'Output file name',
-  libclang_dylib: 'Path to libclang dynamic library, used to parse C headers',
-  headers: 'List of C headers to generate bindings of',
-  headerFilter: 'Include/Exclude inclusion headers',
-  compilerOpts: 'Raw compiler options to pass to clang compiler',
-  filters: 'filters for various bindings',
-  sizemap: 'map of types: byte size in int',
-  sort: 'whether or not to sort the bindings alphabetically',
-  useSupportedTypedefs:
-      'whether or not to directly map supported typedef by name',
-};
+const libclang_dylib_linux = 'libwrapped_clang.so';
+const libclang_dylib_macos = 'libwrapped_clang.dylib';
+const libclang_dylib_windows = 'wrapped_clang.dll';

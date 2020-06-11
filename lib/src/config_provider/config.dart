@@ -12,7 +12,6 @@ import 'package:yaml/yaml.dart';
 
 import '../strings.dart' as strings;
 import 'filter.dart';
-import 'header.dart';
 import 'spec_utils.dart';
 
 var _logger = Logger('config_provider/config');
@@ -22,11 +21,11 @@ class Config {
   /// output file name
   String output;
 
-  /// libclang path
+  /// libclang path (in accordance with the platform)
   String libclang_dylib_path;
 
   /// path to headers
-  List<Header> headers;
+  List<String> headers;
 
   HeaderFilter headerFilter;
 
@@ -130,7 +129,7 @@ class Config {
         defaultValue: null,
         extractedResult: (dynamic result) => output = result as String,
       ),
-      strings.libclang_dylib: Spec(
+      strings.libclang_dylib_folder: Spec(
         description:
             'Path to libclang dynamic library, used to parse C headers',
         isRequired: true,
@@ -144,7 +143,7 @@ class Config {
         isRequired: true,
         validator: headersValidator,
         extractor: headersExtractor,
-        extractedResult: (dynamic result) => headers = result as List<Header>,
+        extractedResult: (dynamic result) => headers = result as List<String>,
       ),
       strings.headerFilter: Spec(
         description: 'Include/Exclude inclusion headers',

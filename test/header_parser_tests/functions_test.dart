@@ -18,7 +18,7 @@ void main() {
               .split(' '),
           libclang_dylib_path: 'tool/wrapped_libclang/libwrapped_clang.so',
           headers: [
-            Header('test/header_parser_tests/functions.h'),
+            'test/header_parser_tests/functions.h',
           ],
           headerFilter: HeaderFilter(
             includedInclusionHeaders: {

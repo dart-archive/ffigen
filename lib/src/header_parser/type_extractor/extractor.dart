@@ -8,8 +8,8 @@ import '../clang_bindings/clang_bindings.dart' as clang;
 import '../clang_bindings/clang_constants.dart' as clang;
 import '../data.dart';
 import '../includer.dart';
-import '../root_parser.dart';
 import '../sub_parsers/structdecl_parser.dart';
+import '../translation_unit_parser.dart';
 import '../type_extractor/cxtypekindmap.dart';
 import '../utils.dart';
 

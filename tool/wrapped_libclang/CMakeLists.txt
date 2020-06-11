@@ -1,13 +1,26 @@
 cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
-project(wrapped_libclang VERSION 1.0.0 LANGUAGES C)
+project(wrapped_libclang LANGUAGES C)
 
-add_library(wrapped_libclang SHARED wrapper.c)
-add_executable(wrapped_clang_test wrapper.c)
+find_package(Clang REQUIRED)
+
+# Add path to LLVM modules
+set(CMAKE_MODULE_PATH
+  ${CMAKE_MODULE_PATH}
+  "${LLVM_CMAKE_DIR}"
+  )
+
+include(AddLLVM)
+
+include_directories(${LLVM_INCLUDE_DIRS})
+include_directories(${CLANG_INCLUDE_DIRS})
+
+add_definitions(${LLVM_DEFINITIONS})
+add_definitions(${CLANG_DEFINITIONS})
+
+add_llvm_library(wrapped_libclang SHARED wrapper.c)
 
 set_target_properties(wrapped_libclang PROPERTIES
-    PUBLIC_HEADER wrapper.h
-    VERSION ${PROJECT_VERSION}
-    SOVERSION 1
+    PUBLIC_HEADER wrapper.c
     OUTPUT_NAME "wrapped_clang"
     XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "Hex_Identity_ID_Goes_Here"
 )

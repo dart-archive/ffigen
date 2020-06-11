@@ -1,9 +1,10 @@
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/config_provider.dart';
-import 'package:ffigen/src/header_parser/root_parser.dart';
+import 'package:ffigen/src/header_parser/translation_unit_parser.dart';
 import 'package:logging/logging.dart';
 
 import 'clang_bindings/clang_bindings.dart' as clang;
@@ -35,7 +36,6 @@ var _logger = Logger('parser:parser');
 void initParser(Config c) {
   data.config = c;
 
-  // TODO: implement for platforms other than linux
   clang.init(DynamicLibrary.open(data.config.libclang_dylib_path));
 }
 
@@ -54,7 +54,7 @@ List<Binding> parseAndGenerateBindings() {
   var bindings = <Binding>[];
 
   for (var header in data.config.headers) {
-    var headerLocation = header.path;
+    var headerLocation = header;
     _logger.fine('Creating TranslationUnit for header: $headerLocation');
 
     var tu = clang.clang_parseTranslationUnit(
@@ -72,11 +72,10 @@ List<Binding> parseAndGenerateBindings() {
       throw Exception('Error creating TranslationUnit');
     }
 
-    _logger
-        .fine('TU diagnostics:\n' + getTUDiagnostic(tu, padding: '> '));
+    _logger.fine('TU diagnostics:\n' + getTUDiagnostic(tu, padding: '> '));
     var rootCursor = clang.clang_getTranslationUnitCursor_wrap(tu);
 
-    bindings.addAll(parseRootCursor(rootCursor));
+    bindings.addAll(parseTranslationUnitCursor(rootCursor));
 
     // cleanup
     rootCursor.dispose();

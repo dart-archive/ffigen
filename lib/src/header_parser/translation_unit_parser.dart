@@ -16,8 +16,8 @@ var _logger = Logger('parser:root_parser');
 
 List<Binding> _bindings;
 
-/// Parses the root cursor and returns the generated bindings
-List<Binding> parseRootCursor(Pointer<clang.CXCursor> translationUnitCursor) {
+/// Parses the translation unit and returns the generated bindings
+List<Binding> parseTranslationUnitCursor(Pointer<clang.CXCursor> translationUnitCursor) {
   _bindings = [];
 
   var resultCode = clang.clang_visitChildren_wrap(
@@ -32,9 +32,7 @@ List<Binding> parseRootCursor(Pointer<clang.CXCursor> translationUnitCursor) {
   return _bindings;
 }
 
-/// Visitor for the Root cursor [CXCursorKind.CXCursor_TranslationUnit]
-///
-/// child visitor invoked on translationUnitCursor
+/// child visitor invoked on translationUnitCursor [CXCursorKind.CXCursor_TranslationUnit]
 int _rootCursorVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
   try {
