@@ -4,6 +4,7 @@ import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser/clang_bindings/clang_constants.dart';
 import 'package:glob/glob.dart';
 import 'package:logging/logging.dart';
+import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 
 import '../strings.dart' as strings;
@@ -143,16 +144,30 @@ bool headerFilterValidator(String name, dynamic value) {
 
 dynamic headersExtractor(dynamic value) {
   var headers = <String>[];
-  for (var header in (value as YamlList)) {
-    var glob = Glob(header as String);
-    for (var file in glob.listSync(followLinks: true)) {
-      // TODO remove .c files later
-      if (file.path.endsWith('.h') || file.path.endsWith('.c')) {
-        headers.add(file.path);
+  for (var h in (value as YamlList)) {
+    var headerGlob = h as String;
+    // add file directly to header if it's not a Glob
+    if (File(headerGlob).existsSync()) {
+      if (hasValidExtension(headerGlob)) {
+        headers.add(headerGlob);
+      }
+      // else ignore
+    } else {
+      var glob = Glob(headerGlob);
+      for (var file in glob.listSync(followLinks: true)) {
+        if (hasValidExtension(file.path)) {
+          headers.add(file.path);
+        }
       }
     }
   }
   return headers;
+}
+
+bool hasValidExtension(String filePath) {
+  var ext = p.extension(filePath);
+  // TODO remove .c files later maybe?
+  return ext == '.h' || ext == '.c';
 }
 
 bool headersValidator(String name, dynamic value) {

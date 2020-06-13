@@ -1,5 +1,5 @@
 import 'package:meta/meta.dart';
-
+import 'package:path/path.dart' as p;
 import 'data.dart';
 
 /// Utility functions to check whether a binding should be parsed or not
@@ -50,7 +50,7 @@ bool shouldIncludeEnumClass(String name) {
 /// True if cursor should be included based on
 /// header-filter, use for root declarations
 bool shouldIncludeRootCursor(String sourceFile) {
-  var name = sourceFile.split('/').last;
+  var name = p.basename(sourceFile);
 
   if (config.headerFilter.excludedInclusionHeaders.contains(name)) {
     return false;

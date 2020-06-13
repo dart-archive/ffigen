@@ -13,8 +13,9 @@ ffigen:
   libclang-dylib-folder: '../../tool/wrapped_libclang'
   
   # globs are supported, and only .h files are parsed (.c temporarily)
+  # globs dont work in windows if they begin with '.' or '..'
   headers:
-    - '/home/prerak/repos/ffigen/tool/wrapped_libclang/*.c'
+    - '../../tool/wrapped_libclang/wrapper.c'
   
   # excludes included headers based on their names (not fullpath name)
   header-filter:

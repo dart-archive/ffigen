@@ -1,0 +1,12 @@
+EXPORTS
+Function1Uint8
+Function1Uint16
+Function1Uint32
+Function1Uint64
+Function1Int8
+Function1Int16
+Function1Int32
+Function1Int64
+Function1IntPtr
+Function1Float
+Function1Double

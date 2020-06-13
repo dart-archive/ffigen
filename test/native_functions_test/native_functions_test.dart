@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:test/test.dart';
@@ -7,8 +8,13 @@ import 'native_functions_bindings.dart' as bindings;
 void main() {
   group('Tests for native functions', () {
     setUpAll(() {
-      bindings.init(DynamicLibrary.open(
-          'test/native_functions_test/native_functions.so'));
+      var dylibName = 'test/native_functions_test/native_functions.so';
+      if (Platform.isMacOS) {
+        dylibName = 'test/native_functions_test/native_functions.dylib';
+      } else if (Platform.isWindows) {
+        dylibName = r'test\native_functions_test\native_functions.dll';
+      }
+      bindings.init(DynamicLibrary.open(dylibName));
     });
     test('uint8_t', () {
       expect(bindings.Function1Uint8(pow(2, 8).toInt()), 42);

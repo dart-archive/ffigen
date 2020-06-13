@@ -22,14 +22,24 @@ class Config {
   String output;
 
   /// libclang path (in accordance with the platform)
+  ///
+  /// contains .so / .dll / .dylib, as extracted by configspec
+  /// 
+  /// cannot be null
   String libclang_dylib_path;
 
   /// path to headers
+  /// 
+  /// This contains all the headers, after extraction from Globs
+  /// 
+  /// Cannot be null
   List<String> headers;
 
   HeaderFilter headerFilter;
 
   /// commandLineArguments to pass to clang_compiler
+  /// 
+  /// can be null
   List<String> compilerOpts;
 
   // Filter for functions

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/code_generator/writer.dart';
 import 'package:ffigen/src/header_parser.dart' as parser;
@@ -12,11 +14,17 @@ void main() {
 
     setUpAll(() {
       expected = expectedLibrary();
+
+      var dylibPath = 'tool/wrapped_libclang/libwrapped_clang.so';
+      if (Platform.isMacOS) {
+        dylibPath = 'tool/wrapped_libclang/libwrapped_clang.dylib';
+      } else if (Platform.isWindows) {
+        dylibPath = 'tool/wrapped_libclang/wrapped_clang.dll';
+      }
+
       actual = parser.parse(
         Config(
-          compilerOpts: '-I/usr/lib/llvm-9/include/ -I/usr/lib/llvm-10/include/'
-              .split(' '),
-          libclang_dylib_path: 'tool/wrapped_libclang/libwrapped_clang.so',
+          libclang_dylib_path: dylibPath,
           headers: [
             'test/header_parser_tests/functions.h',
           ],
