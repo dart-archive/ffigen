@@ -36,7 +36,7 @@ Struc parseStructDeclaration(
     _logger.fine(
         '++++ Adding Structure: name:${structName} ${cursor.completeStringRepr()}');
 
-    var members = _getMembers(cursor);
+    var members = _getMembers(cursor, structName);
     _struc = Struc(
       dartDoc: clang
           .clang_Cursor_getBriefCommentText_wrap(cursor)
@@ -50,7 +50,7 @@ Struc parseStructDeclaration(
 }
 
 List<Member> _members;
-List<Member> _getMembers(Pointer<clang.CXCursor> cursor) {
+List<Member> _getMembers(Pointer<clang.CXCursor> cursor, String structName) {
   _members = [];
   isStructByValue = false;
 
@@ -66,6 +66,8 @@ List<Member> _getMembers(Pointer<clang.CXCursor> cursor) {
   if (isStructByValue) {
     _logger.fine(
         '---- Removed Struct members, reason: struct by value members: ${cursor.completeStringRepr()}');
+    _logger.warning(
+        'Removed All Struct Members from: $structName, Nested Structures not supported');
     return null;
   }
 

@@ -28,6 +28,8 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
     if (rt.broadType == BroadType.Struct || parameters == null) {
       _logger.fine(
           '---- Removed Function, reason: struct pass/return by value: ${cursor.completeStringRepr()}');
+      _logger.warning(
+          'Removed Function: $name, struct pass/return by value not supported');
       return null; //returning null so that [addToBindings] function excludes this
     }
 

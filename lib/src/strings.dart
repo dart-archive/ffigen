@@ -33,6 +33,8 @@ const ULongLong = 'unsigned long long';
 
 const sort = 'sort';
 const useSupportedTypedefs = 'use-supported-typedefs';
+const warnWhenRemoving = 'warn-when-removing';
+
 
 const libclang_dylib_linux = 'libwrapped_clang.so';
 const libclang_dylib_macos = 'libwrapped_clang.dylib';

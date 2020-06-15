@@ -24,21 +24,21 @@ class Config {
   /// libclang path (in accordance with the platform)
   ///
   /// contains .so / .dll / .dylib, as extracted by configspec
-  /// 
+  ///
   /// cannot be null
   String libclang_dylib_path;
 
   /// path to headers
-  /// 
+  ///
   /// This contains all the headers, after extraction from Globs
-  /// 
+  ///
   /// Cannot be null
   List<String> headers;
 
   HeaderFilter headerFilter;
 
   /// commandLineArguments to pass to clang_compiler
-  /// 
+  ///
   /// can be null
   List<String> compilerOpts;
 
@@ -215,16 +215,16 @@ class Config {
       strings.sort: Spec(
         description: 'whether or not to sort the bindings alphabetically',
         isRequired: false,
-        validator: sortValidator,
-        extractor: sortExtractor,
+        validator: booleanValidator,
+        extractor: booleanExtractor,
         defaultValue: false,
         extractedResult: (dynamic result) => sort = result as bool,
       ),
       strings.useSupportedTypedefs: Spec(
         description: 'whether or not to directly map supported typedef by name',
         isRequired: false,
-        validator: useSupportedTypedefValidator,
-        extractor: useSupportedTypedefExtractor,
+        validator: booleanValidator,
+        extractor: booleanExtractor,
         defaultValue: true,
         extractedResult: (dynamic result) =>
             useSupportedTypedefs = result as bool,

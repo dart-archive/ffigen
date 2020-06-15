@@ -14,7 +14,7 @@ void main(List<String> args) {
   var result = getArgResults(args);
 
   // set logger level
-  setVerbosity(result);
+  setupLogger(result);
 
   // create config
   var config = getConfig(result);
@@ -131,7 +131,7 @@ ArgResults getArgResults(List<String> args) {
   return results;
 }
 
-void setVerbosity(ArgResults result) {
+void setupLogger(ArgResults result) {
   if (result.wasParsed('verbose')) {
     switch (result['verbose'] as String) {
       case 'all':
@@ -155,14 +155,19 @@ void setVerbosity(ArgResults result) {
         Logger.root.level = Level.SEVERE;
         break;
     }
-    // setup logger for printing
+    // setup logger for printing (verbosity set by user)
     Logger.root.onRecord.listen((record) {
       print('${record.level.name.padRight(8)}: ${record.message}');
     });
   } else {
-    // setup logger for printing
+    // setup logger for printing (verbosity not set by user)
     Logger.root.onRecord.listen((record) {
-      print(record.message);
+      if (record.level.value >= 900) {
+        print('${record.level.name.padRight(8)}: ${record.message}');
+      } else {
+        // printing info
+        print(record.message);
+      }
     });
   }
 }

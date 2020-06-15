@@ -13,23 +13,12 @@ import 'filter.dart';
 
 var _logger = Logger('config_provider/utils');
 
-dynamic useSupportedTypedefExtractor(dynamic value) => value as bool;
+dynamic booleanExtractor(dynamic value) => value as bool;
 
-bool useSupportedTypedefValidator(String name, dynamic value) {
+bool booleanValidator(String name, dynamic value) {
   if (value is! bool) {
     _logger.severe(
-        'Expected value of key=${strings.useSupportedTypedefs} to be a bool');
-    return false;
-  } else {
-    return true;
-  }
-}
-
-dynamic sortExtractor(dynamic value) => value as bool;
-
-bool sortValidator(String name, dynamic value) {
-  if (value is! bool) {
-    _logger.severe('Expected value of key=${strings.sort} to be a bool');
+        'Expected value of key=${name} to be a bool');
     return false;
   } else {
     return true;

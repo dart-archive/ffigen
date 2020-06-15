@@ -54,9 +54,6 @@ class Type {
     SupportedNativeType.Float: _SubType(c: 'Float', dart: 'double'),
     SupportedNativeType.Double: _SubType(c: 'Double', dart: 'double'),
     SupportedNativeType.IntPtr: _SubType(c: 'IntPtr', dart: 'int'),
-    //TODO: check float32,64
-    SupportedNativeType.Float32: _SubType(c: 'Float', dart: 'double'),
-    SupportedNativeType.Float64: _SubType(c: 'Double', dart: 'double'),
   };
 
   /// For providing name of Struct
