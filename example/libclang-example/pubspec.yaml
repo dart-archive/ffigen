@@ -66,3 +66,7 @@ ffigen:
     unsigned long: 8
     long long: 8
     unsigned long long: 8
+    enum: 4
+  
+  # true by default
+  extract-comments: true

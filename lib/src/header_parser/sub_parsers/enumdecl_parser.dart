@@ -28,6 +28,7 @@ EnumClass parseEnumDeclaration(
   } else if (shouldIncludeEnumClass(enumName)) {
     _logger.fine('++++ Adding Enum: ${cursor.completeStringRepr()}');
     _enumClass = EnumClass(
+      dartDoc: getCursorDocComment(cursor),
       name: enumName,
     );
     _addEnumConstant(cursor);

@@ -6,6 +6,7 @@ import 'package:ffigen/src/code_generator.dart';
 import 'clang_bindings/clang_bindings.dart' as clang;
 import 'clang_bindings/clang_constants.dart' as clang;
 import 'type_extractor/extractor.dart';
+import 'data.dart';
 
 /// Check resultCode of [clang.clang_visitChildren_wrap]
 /// Throws exception if resultCode is not 0
@@ -95,6 +96,12 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
   void dispose() {
     free(this);
   }
+}
+
+String getCursorDocComment(Pointer<clang.CXCursor> cursor) {
+  return config.extractComments
+      ? clang.clang_Cursor_getBriefCommentText_wrap(cursor).toStringAndDispose()
+      : null;
 }
 
 extension CXTypeExt on Pointer<clang.CXType> {

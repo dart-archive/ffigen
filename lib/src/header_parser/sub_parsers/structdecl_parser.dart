@@ -38,9 +38,7 @@ Struc parseStructDeclaration(
 
     var members = _getMembers(cursor, structName);
     _struc = Struc(
-      dartDoc: clang
-          .clang_Cursor_getBriefCommentText_wrap(cursor)
-          .toStringAndDispose(),
+      dartDoc: getCursorDocComment(cursor),
       name: structName,
       members: members,
     );

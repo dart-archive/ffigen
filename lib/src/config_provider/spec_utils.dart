@@ -17,8 +17,7 @@ dynamic booleanExtractor(dynamic value) => value as bool;
 
 bool booleanValidator(String name, dynamic value) {
   if (value is! bool) {
-    _logger.severe(
-        'Expected value of key=${name} to be a bool');
+    _logger.severe('Expected value of key=${name} to be a bool');
     return false;
   } else {
     return true;
@@ -69,17 +68,27 @@ dynamic sizemapExtractor(dynamic value) {
       resultMap[CXTypeKind.CXType_ULongLong] =
           nativeSupportedType(sizemap[strings.ULongLong], signed: false);
     }
+    if (sizemap.containsKey(strings.Enum)) {
+      resultMap[CXTypeKind.CXType_Enum] = nativeSupportedType(
+          sizemap[strings.Enum],
+          signed: true); // enums are signed ints
+    }
   }
   return resultMap;
 }
 
 bool sizemapValidator(String name, dynamic value) {
   if (value is! YamlMap) {
-    _logger.severe('Expected value of key=${strings.sizemap} to be a Map');
+    _logger.severe('Expected value of key=$name to be a Map');
     return false;
-  } else {
-    return true;
   }
+  for (var key in (value as YamlMap).keys) {
+    if (!strings.sizemap_expected_values.contains(key)) {
+      _logger.warning('Unknown subkey in $name: $key');
+    }
+  }
+
+  return true;
 }
 
 dynamic compilerOptsExtractor(dynamic value) => (value as String)?.split(' ');

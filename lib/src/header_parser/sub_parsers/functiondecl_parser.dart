@@ -34,9 +34,7 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
     }
 
     _func = Func(
-      dartDoc: clang
-          .clang_Cursor_getBriefCommentText_wrap(cursor)
-          .toStringAndDispose(),
+      dartDoc: getCursorDocComment(cursor),
       name: name,
       returnType: rt,
       parameters: parameters,

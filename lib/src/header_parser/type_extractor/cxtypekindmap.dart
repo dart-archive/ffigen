@@ -22,10 +22,11 @@ var cxTypeKindToSupportedNativeTypes = <int, SupportedNativeType>{
 
   //
   clang.CXTypeKind.CXType_Char_S: SupportedNativeType.Int8,
+  clang.CXTypeKind.CXType_Enum: SupportedNativeType.Int32,
 };
 
-// TODO: check type to use for enums
-var enumNativeType = SupportedNativeType.Int32;
+SupportedNativeType get enumNativeType =>
+    cxTypeKindToSupportedNativeTypes[clang.CXTypeKind.CXType_Enum];
 
 var suportedTypedefToSuportedNativeType = <String, SupportedNativeType>{
   'uint8_t': SupportedNativeType.Uint8,

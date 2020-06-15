@@ -595,6 +595,7 @@ class _ArrayHelper_CXType_data {
   }
 }
 
+/// Describes the kind of type
 class CXTypeKind {
   static const int CXType_Invalid = 0;
   static const int CXType_Unexposed = 1;

@@ -57,6 +57,9 @@ class Config {
   // If typedef of supported types(int8_t) should be directly used
   bool useSupportedTypedefs;
 
+  // should extract doc comment from bindings
+  bool extractComments;
+
   // contains map of all config
   // Map<String, Spec> _map;
   /// Use `Config.fromYaml` if extracting info from yaml file
@@ -228,6 +231,15 @@ class Config {
         defaultValue: true,
         extractedResult: (dynamic result) =>
             useSupportedTypedefs = result as bool,
+      ),
+      strings.extractComments: Spec(
+        description: 'whether or not to extract comments from bindings',
+        isRequired: false,
+        validator: booleanValidator,
+        extractor: booleanExtractor,
+        defaultValue: true,
+        extractedResult: (dynamic result) =>
+            extractComments = result as bool,
       ),
     };
   }

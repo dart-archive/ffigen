@@ -30,11 +30,27 @@ const Long = 'long';
 const ULong = 'unsigned long';
 const LongLong = 'long long';
 const ULongLong = 'unsigned long long';
+const Enum = 'enum';
+
+// Used for validation of sizemap
+const sizemap_expected_values = <String>{
+  SChar,
+  UChar,
+  Short,
+  UShort,
+  Int,
+  UInt,
+  Long,
+  ULong,
+  LongLong,
+  ULongLong,
+  Enum
+};
 
 const sort = 'sort';
 const useSupportedTypedefs = 'use-supported-typedefs';
 const warnWhenRemoving = 'warn-when-removing';
-
+const extractComments = 'extract-comments';
 
 const libclang_dylib_linux = 'libwrapped_clang.so';
 const libclang_dylib_macos = 'libwrapped_clang.dylib';
