@@ -16,6 +16,9 @@ Func _func;
 /// Parses a function declaration
 Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
   _func = null;
+  structByValueParameter = false;
+  unimplementedParameterType = false;
+  constantArrayParameterType = false;
 
   var name = cursor.spelling();
   if (shouldIncludeFunc(name)) {
@@ -25,11 +28,29 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
     var parameters = _getParameters(cursor);
 
     //TODO: remove this when support for Structs by value arrive
-    if (rt.broadType == BroadType.Struct || parameters == null) {
+    if (rt.broadType == BroadType.Struct || structByValueParameter) {
       _logger.fine(
           '---- Removed Function, reason: struct pass/return by value: ${cursor.completeStringRepr()}');
       _logger.warning(
           'Removed Function: $name, struct pass/return by value not supported');
+      return null; //returning null so that [addToBindings] function excludes this
+    }
+
+    // TODO: check, handling arrays in function parameters
+    if (constantArrayParameterType) {
+      _logger.fine(
+          '---- Removed Function, reason: constant array passed to function parameter: ${cursor.completeStringRepr()}');
+      _logger.warning(
+          'Removed Function: $name, constant array in function parameter not supported');
+      return null; //returning null so that [addToBindings] function excludes this
+    }
+
+    if (rt.getBaseBroadType() == BroadType.Unimplemented ||
+        unimplementedParameterType) {
+      _logger.fine(
+          '---- Removed Function, reason: unsupported return type or parameter type: ${cursor.completeStringRepr()}');
+      _logger.warning(
+          'Removed Function: $name, function has unsupported return type or parameter type');
       return null; //returning null so that [addToBindings] function excludes this
     }
 
@@ -44,6 +65,9 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
   return _func;
 }
 
+bool structByValueParameter = false;
+bool constantArrayParameterType = false;
+bool unimplementedParameterType = false;
 Type _getFunctionReturnType(Pointer<clang.CXCursor> cursor) {
   return cursor.returnType().toCodeGenTypeAndDispose();
 }
@@ -60,8 +84,14 @@ List<Parameter> _getParameters(Pointer<clang.CXCursor> cursor) {
     var pt = _getParameterType(paramCursor);
     //TODO: remove this when support for Structs by value arrive
     if (pt.broadType == BroadType.Struct) {
-      return null; //returning null so that [parseFunctionDeclaration] returns null
+      structByValueParameter = true;
+    } else if (pt.broadType == BroadType.ConstantArray) {
+      //TODO: remove this when support for constant array in function arrives
+      constantArrayParameterType = true;
+    } else if (pt.getBaseBroadType() == BroadType.Unimplemented) {
+      unimplementedParameterType = true;
     }
+
     var pn = paramCursor.spelling();
 
     // if pn is null or ' ', its set to 'arg$i' by code_generator

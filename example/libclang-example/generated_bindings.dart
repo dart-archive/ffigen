@@ -97,6 +97,17 @@ class CXCursorAndRangeVisitor extends ffi.Struct {
 
 class CXCursorSetImpl extends ffi.Struct {}
 
+typedef CXCursorVisitor = ffi.Int32 Function(
+  CXCursor,
+  CXCursor,
+  ffi.Pointer<ffi.Void>,
+);
+
+typedef CXFieldVisitor = ffi.Int32 Function(
+  CXCursor,
+  ffi.Pointer<ffi.Void>,
+);
+
 /// Uniquely identifies a CXFile, that refers to the same underlying file, across an indexing session.
 class CXFileUniqueID extends ffi.Struct {
   @ffi.Uint64()

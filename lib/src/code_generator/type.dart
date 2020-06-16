@@ -1,3 +1,4 @@
+import 'package:ffigen/src/code_generator.dart';
 import 'package:meta/meta.dart';
 
 import 'writer.dart';
@@ -34,6 +35,9 @@ enum BroadType {
 
   /// stores its element type in NativeType as only those are supported
   ConstantArray,
+
+  /// used as a marker, so that functions/structs having unions can exclude them
+  Unimplemented,
 }
 
 /// Type class for return types, variable types, etc
@@ -73,6 +77,11 @@ class Type {
   final int arrayLength;
   final Type elementType;
 
+  /// For storing cursor type info for an unimplemented type
+  ///
+  /// used for printing details to user
+  String unimplementedReason;
+
   Type._({
     @required this.broadType,
     this.child,
@@ -81,6 +90,7 @@ class Type {
     this.nativeFuncName,
     this.arrayLength,
     this.elementType,
+    this.unimplementedReason,
   });
 
   factory Type.pointer(Type child) {
@@ -98,6 +108,21 @@ class Type {
   }
   factory Type.constantArray(int arrayLength, Type elementType) {
     return Type._(broadType: BroadType.ConstantArray, elementType: elementType);
+  }
+  factory Type.unimplemented(String reason) {
+    return Type._(
+        broadType: BroadType.Unimplemented, unimplementedReason: reason);
+  }
+
+  /// Get base broad type for any type
+  ///
+  /// E.g int** has base Broadtype as NativeType
+  BroadType getBaseBroadType() {
+    if (broadType == BroadType.Pointer) {
+      return child.getBaseBroadType();
+    } else {
+      return broadType;
+    }
   }
 
   bool get isPrimitive => broadType == BroadType.NativeType;

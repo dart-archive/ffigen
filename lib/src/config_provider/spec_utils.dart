@@ -144,17 +144,21 @@ dynamic headersExtractor(dynamic value) {
   var headers = <String>[];
   for (var h in (value as YamlList)) {
     var headerGlob = h as String;
-    // add file directly to header if it's not a Glob
+    // add file directly to header if it's not a Glob but a File
     if (File(headerGlob).existsSync()) {
       if (hasValidExtension(headerGlob)) {
         headers.add(headerGlob);
+        _logger.fine('Found header/file: $headerGlob');
+      } else {
+        _logger.warning(
+            'Ignoring file: $headerGlob, not a valid extension (only ".c" or ".h" allowed)');
       }
-      // else ignore
     } else {
       var glob = Glob(headerGlob);
       for (var file in glob.listSync(followLinks: true)) {
         if (hasValidExtension(file.path)) {
           headers.add(file.path);
+          _logger.fine('Found header/file: ${file.path}');
         }
       }
     }
@@ -297,6 +301,7 @@ SupportedNativeType nativeSupportedType(dynamic scalar, {bool signed = true}) {
     case 8:
       return signed ? SupportedNativeType.Int64 : SupportedNativeType.Uint64;
     default:
-      throw Exception('Unknown Config Value');
+      throw Exception(
+          'Unsupported value given to sizemap, Allowed values for sizes are: 1, 2, 4, 8');
   }
 }

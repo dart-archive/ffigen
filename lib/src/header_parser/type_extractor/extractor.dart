@@ -69,7 +69,10 @@ Type getCodeGenType(Pointer<clang.CXType> cxtype, {String parentName}) {
           cxTypeKindToSupportedNativeTypes[kind],
         );
       } else {
-        throw Exception('Type not implemented, ${cxtype.completeStringRepr()}');
+        _logger.fine(
+            'typedeclarationCursorVisitor: getCodeGenType: Type Not Implemented, ${cxtype.completeStringRepr()}');
+        return Type.unimplemented(
+            'Type: ${cxtype.kindSpelling()} not implemented');
       }
   }
 }
@@ -100,8 +103,10 @@ Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
       cxtype.dispose();
       break;
     default:
-      throw Exception(
+      _logger.fine(
           'typedeclarationCursorVisitor: _extractfromRecord: Not Implemented, ${cursor.completeStringRepr()}');
+      return Type.unimplemented(
+          'Type: ${cxtype.kindSpelling()} not implemented');
   }
   cursor.dispose();
   return type;

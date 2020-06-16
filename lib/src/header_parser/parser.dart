@@ -66,9 +66,9 @@ List<Binding> parseAndGenerateBindings() {
       clang.CXTranslationUnit_Flags.CXTranslationUnit_SkipFunctionBodies,
     );
 
-    // TODO: look into printing error details using `clang_parseTranslationUnit2` method
     if (tu == null) {
-      throw Exception('Error creating TranslationUnit');
+      throw Exception(
+          'Error creating parsing header: $headerLocation');
     }
 
     logTuDiagnostics(tu, _logger, headerLocation);

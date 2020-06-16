@@ -50,7 +50,8 @@ Struc parseStructDeclaration(
 List<Member> _members;
 List<Member> _getMembers(Pointer<clang.CXCursor> cursor, String structName) {
   _members = [];
-  isStructByValue = false;
+  nestedStructMember = false;
+  unimplementedMemberType = false;
 
   var resultCode = clang.clang_visitChildren_wrap(
       cursor,
@@ -61,18 +62,25 @@ List<Member> _getMembers(Pointer<clang.CXCursor> cursor, String structName) {
   visitChildrenResultChecker(resultCode);
 
   // returning null to exclude the struct members as it has a struct by value field
-  if (isStructByValue) {
+  if (nestedStructMember) {
     _logger.fine(
-        '---- Removed Struct members, reason: struct by value members: ${cursor.completeStringRepr()}');
+        '---- Removed Struct members, reason: struct has struct members ${cursor.completeStringRepr()}');
     _logger.warning(
         'Removed All Struct Members from: $structName, Nested Structures not supported');
+    return null;
+  } else if (unimplementedMemberType) {
+    _logger.fine(
+        '---- Removed Struct members, reason: member with unimplementedtype ${cursor.completeStringRepr()}');
+    _logger.warning(
+        'Removed All Struct Members from: $structName, struct member has an unsupported type');
     return null;
   }
 
   return _members;
 }
 
-bool isStructByValue = false;
+bool nestedStructMember = false;
+bool unimplementedMemberType = false;
 
 /// Visitor for the struct cursor [CXCursorKind.CXCursor_StructDecl]
 ///
@@ -87,13 +95,17 @@ int _structMembersVisitor(Pointer<clang.CXCursor> cursor,
 
       //TODO: remove these when support for Structs by value arrive
       if (mt.broadType == BroadType.Struct) {
-        isStructByValue =
+        nestedStructMember =
             true; // setting this flag will exclude adding members for this struct's bindings
       } else if (mt.broadType == BroadType.ConstantArray) {
         if (mt.elementType.broadType == BroadType.Struct) {
-          isStructByValue =
+          nestedStructMember =
               true; // setting this flag will exclude adding members for this struct's bindings
         }
+      }
+
+      if (mt.getBaseBroadType() == BroadType.Unimplemented) {
+        unimplementedMemberType = true;
       }
 
       _members.add(

@@ -13,7 +13,8 @@ import 'type_extractor/extractor.dart';
 /// Throws exception if resultCode is not 0
 void visitChildrenResultChecker(int resultCode) {
   if (resultCode != 0) {
-    throw Exception('Exception thrown in a dart function called via C');
+    throw Exception(
+        'Exception thrown in a dart function called via C, use --verbose to see more details');
   }
 }
 
