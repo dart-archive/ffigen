@@ -37,9 +37,9 @@ Type getCodeGenType(Pointer<clang.CXType> cxtype, {String parentName}) {
         }
       }
 
-      // TODO test what happens if typedef definition isn't given
-      // this is important or we get stuck in infinite loop
+      // this is important or we get stuck in infinite recursion
       var ct = clang.clang_getCanonicalType_wrap(cxtype);
+
       var s = getCodeGenType(ct, parentName: parentName ?? cxtype.spelling());
       ct.dispose();
       return s;

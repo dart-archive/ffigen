@@ -52,8 +52,8 @@ List<Binding> parseAndGenerateBindings() {
   /// Contains all bindings
   var bindings = <Binding>[];
 
-  for (var header in data.config.headers) {
-    var headerLocation = header;
+  for (var h in data.config.headers) {
+    var headerLocation = h;
     _logger.fine('Creating TranslationUnit for header: $headerLocation');
 
     var tu = clang.clang_parseTranslationUnit(
@@ -71,7 +71,7 @@ List<Binding> parseAndGenerateBindings() {
       throw Exception('Error creating TranslationUnit');
     }
 
-    _logger.fine('TU diagnostics:\n' + getTUDiagnostic(tu, padding: '> '));
+    logTuDiagnostics(tu, _logger, headerLocation);
     var rootCursor = clang.clang_getTranslationUnitCursor_wrap(tu);
 
     bindings.addAll(parseTranslationUnitCursor(rootCursor));

@@ -94,7 +94,7 @@ class Config {
 
     var result = configspecs._checkConfigs(map, specs);
     if (!result) {
-      _logger.severe('Please fix errors in Configurations and re-run the tool');
+      _logger.info('Please fix errors in Configurations and re-run the tool');
       exit(1);
     }
 

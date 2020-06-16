@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
+import 'package:logging/logging.dart';
 
 import 'clang_bindings/clang_bindings.dart' as clang;
 import 'clang_bindings/clang_constants.dart' as clang;
@@ -16,20 +17,28 @@ void visitChildrenResultChecker(int resultCode) {
   }
 }
 
-String getTUDiagnostic(Pointer<clang.CXTranslationUnitImpl> tu,
-    {String padding = ''}) {
-  var s = StringBuffer();
+void logTuDiagnostics(
+  Pointer<clang.CXTranslationUnitImpl> tu,
+  Logger logger,
+  String header,
+) {
   var total = clang.clang_getNumDiagnostics(tu);
-  s.write('${padding}C header: Total errors/warnings : $total\n');
-  for (var i = 0; i < total; i++) {
-    var diag = clang.clang_getDiagnostic(tu, i);
-    var cxstring = clang.clang_formatDiagnostic_wrap(diag, 0);
-    s.write(padding + cxstring.toStringAndDispose());
-    s.write('\n');
-    clang.clang_disposeDiagnostic(diag);
+  if (total == 0) {
+    return;
   }
 
-  return s.toString();
+  logger.warning('Header $header: Total errors/warnings : $total');
+  for (var i = 0; i < total; i++) {
+    var diag = clang.clang_getDiagnostic(tu, i);
+    var cxstring = clang.clang_formatDiagnostic_wrap(
+      diag,
+      clang.CXDiagnosticDisplayOptions.CXDiagnostic_DisplaySourceLocation |
+          clang.CXDiagnosticDisplayOptions.CXDiagnostic_DisplayColumn |
+          clang.CXDiagnosticDisplayOptions.CXDiagnostic_DisplayCategoryName,
+    );
+    logger.warning('    ' + cxstring.toStringAndDispose());
+    clang.clang_disposeDiagnostic(diag);
+  }
 }
 
 extension CXCursorExt on Pointer<clang.CXCursor> {
@@ -77,7 +86,6 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
   String sourceFileName() {
     var cxsource = clang.clang_getCursorLocation_wrap(this);
     var cxfilePtr = allocate<Pointer<Void>>();
-    // TODO: hardcoded type, check
     var line = allocate<Uint32>();
     var column = allocate<Uint32>();
     var offset = allocate<Uint32>();
