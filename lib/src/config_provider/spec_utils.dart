@@ -200,12 +200,14 @@ bool libclangDylibValidator(String name, dynamic value) {
 String getDylibPath(String value) {
   String dylibPath;
   if (Platform.isMacOS) {
-    dylibPath = value + '/${strings.libclang_dylib_macos}';
+    dylibPath = p.join(value, strings.libclang_dylib_macos);
   } else if (Platform.isWindows) {
-    dylibPath =
-        value.replaceAll('/', r'\') + r'\' + strings.libclang_dylib_windows;
+    // Fix path for windows if '/' is used as seperator instead of '\'
+    // because our examples input path like this
+    var newValue = value.replaceAll('/', r'\');
+    dylibPath = p.join(newValue, strings.libclang_dylib_windows);
   } else {
-    dylibPath = value + '/${strings.libclang_dylib_linux}';
+    dylibPath = p.join(value, strings.libclang_dylib_linux);
   }
   return dylibPath;
 }

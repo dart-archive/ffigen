@@ -1,18 +1,14 @@
 {
-    "name": "Prerak Mann",
+    "name": "CoolGuy",
     "age": 21,
     "nicknames": [
         {
-            "name": "Mr. P",
-            "length": 5
+            "name": "Mr. Cool",
+            "useed": 8
         },
         {
-            "name": "Witch Burner",
-            "length": 12
-        },
-        {
-            "name": "mannprerak2",
-            "length": 11
+            "name": "Ice Cold",
+            "length": 8
         }
     ]
 }

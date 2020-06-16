@@ -162,8 +162,8 @@ void setupLogger(ArgResults result) {
   } else {
     // setup logger for printing (verbosity not set by user)
     Logger.root.onRecord.listen((record) {
-      if (record.level.value >= 900) {
-        print('${record.level.name.padRight(8)}: ${record.message}');
+      if (record.level.value > Level.INFO.value) {
+        print('  ${record.level.name.padRight(8)}: ${record.message}');
       } else {
         // printing info
         print(record.message);

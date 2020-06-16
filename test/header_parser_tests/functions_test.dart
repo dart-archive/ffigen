@@ -4,6 +4,7 @@ import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/code_generator/writer.dart';
 import 'package:ffigen/src/header_parser.dart' as parser;
 import 'package:ffigen/src/config_provider.dart';
+import 'package:logging/logging.dart';
 import 'package:test/test.dart';
 
 final writer = Writer();
@@ -22,8 +23,12 @@ void main() {
         dylibPath = 'tool/wrapped_libclang/wrapped_clang.dll';
       }
 
+      Logger.root.onRecord.listen((log) {
+        print('${log.level.name.padRight(8)}: ${log.message}');
+      });
+
       actual = parser.parse(
-        Config(
+        Config.raw(
           libclang_dylib_path: dylibPath,
           headers: [
             'test/header_parser_tests/functions.h',

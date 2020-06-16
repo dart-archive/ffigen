@@ -63,20 +63,29 @@ class Config {
   // contains map of all config
   // Map<String, Spec> _map;
   /// Use `Config.fromYaml` if extracting info from yaml file
-  Config({
+  ///
+  /// Make sure Logger is setup before using this
+  /// or log messages aren't printed
+  Config.raw({
+    this.output,
     @required this.libclang_dylib_path,
     @required this.headers,
     this.headerFilter,
     this.compilerOpts,
+    this.functionFilters,
+    this.structFilters,
+    this.enumClassFilters,
     this.sort = false,
     this.useSupportedTypedefs = true,
-  })  : assert(libclang_dylib_path != null),
-        assert(headers != null),
-        assert(sort != null);
+    this.extractComments = true,
+  });
 
   Config._();
 
   /// Create config from Yaml map
+  ///
+  /// Make sure Logger is setup before using this
+  /// or log messages aren't printed
   factory Config.fromYaml(YamlMap map) {
     var configspecs = Config._();
     _logger.finest('Config Map: ' + map.toString());
@@ -238,8 +247,7 @@ class Config {
         validator: booleanValidator,
         extractor: booleanExtractor,
         defaultValue: true,
-        extractedResult: (dynamic result) =>
-            extractComments = result as bool,
+        extractedResult: (dynamic result) => extractComments = result as bool,
       ),
     };
   }

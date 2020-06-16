@@ -21,8 +21,6 @@ enum SupportedNativeType {
   Uint32,
   Uint64,
   Float,
-  Float32,
-  Float64,
   Double,
   IntPtr,
 }

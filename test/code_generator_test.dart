@@ -59,7 +59,7 @@ void main() {
             ],
             returnType: Type.pointer(
               Type.nativeType(
-                SupportedNativeType.Float64,
+                SupportedNativeType.Double,
               ),
             ),
           ),
