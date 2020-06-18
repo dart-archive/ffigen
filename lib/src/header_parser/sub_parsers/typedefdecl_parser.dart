@@ -54,7 +54,7 @@ int _typedefdeclarationCursorVisitor(Pointer<clang.CXCursor> cursor,
         _binding = parseEnumDeclaration(cursor, name: _typedefName);
         break;
       default:
-        _logger.finest('typedefdeclarationCursorVisitor: Not Implemented');
+        _logger.finest('typedefdeclarationCursorVisitor: Ignored');
     }
 
     cursor.dispose();

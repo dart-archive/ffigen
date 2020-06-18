@@ -5,21 +5,22 @@ const headerFilter = 'header-filter';
 const compilerOpts = 'compiler-opts';
 const filters = 'filters';
 
-// subfields of filter
+// Declarations
 const functions = 'functions';
 const structs = 'structs';
 const enums = 'enums';
 
-// sub-subfields of filter (declared just above)
+// include/exclude: sub-fields of Declarations
 const include = 'include';
 const exclude = 'exclude';
 
-// sub-sub-subfields of filter (declared just above)
-const matches = 'matches';
-const names = 'names';
+// matches: and names :sub-fields of include/exclude
+const matches = 'matches'; // regex
+const names = 'names'; // hashset
 
 const sizemap = 'size-map';
 
+// sizemap values
 const SChar = 'char';
 const UChar = 'unsigned char';
 const Short = 'short';
@@ -47,11 +48,13 @@ const sizemap_expected_values = <String>{
   Enum
 };
 
+// boolean flags
 const sort = 'sort';
 const useSupportedTypedefs = 'use-supported-typedefs';
 const warnWhenRemoving = 'warn-when-removing';
 const extractComments = 'extract-comments';
 
+// dynamic library names
 const libclang_dylib_linux = 'libwrapped_clang.so';
 const libclang_dylib_macos = 'libwrapped_clang.dylib';
 const libclang_dylib_windows = 'wrapped_clang.dll';

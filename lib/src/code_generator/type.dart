@@ -1,4 +1,3 @@
-import 'package:ffigen/src/code_generator.dart';
 import 'package:meta/meta.dart';
 
 import 'writer.dart';
@@ -36,7 +35,7 @@ enum BroadType {
   /// stores its element type in NativeType as only those are supported
   ConstantArray,
 
-  /// used as a marker, so that functions/structs having unions can exclude them
+  /// used as a marker, so that functions/structs having these can exclude them
   Unimplemented,
 }
 

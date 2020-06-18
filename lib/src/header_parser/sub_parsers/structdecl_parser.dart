@@ -31,10 +31,11 @@ Struc parseStructDeclaration(
   var structName = name ?? cursor.spelling();
 
   if (structName == '') {
-    _logger.finest('unnamed or typedef structure declaration:');
+    _logger.finest('unnamed structure or typedef structure declaration');
+    return null;
   } else if (doInclude || shouldIncludeStruct(structName)) {
     _logger.fine(
-        '++++ Adding Structure: name:${structName} ${cursor.completeStringRepr()}');
+        '++++ Adding Structure: structNname: ${structName}, ${cursor.completeStringRepr()}');
 
     var members = _getMembers(cursor, structName);
     _struc = Struc(
