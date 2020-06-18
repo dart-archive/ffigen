@@ -168,7 +168,7 @@ dynamic headersExtractor(dynamic value) {
 
 bool hasValidExtension(String filePath) {
   var ext = p.extension(filePath);
-  // TODO remove .c files later maybe?
+  // TODO check remove .c files later maybe?
   return ext == '.h' || ext == '.c';
 }
 

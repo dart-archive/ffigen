@@ -5,10 +5,6 @@ analyzer:
     implicit-casts: false
     implicit-dynamic: false
 
-  # this doesn't work
-  # exclude:
-    # -lib/src/header_parser/clang_bindings/clang_constants.dart
-
 linter:
   rules:
     - directives_ordering

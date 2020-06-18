@@ -94,7 +94,7 @@ int _structMembersVisitor(Pointer<clang.CXCursor> cursor,
 
       var mt = cursor.type().toCodeGenTypeAndDispose();
 
-      //TODO: remove these when support for Structs by value arrive
+      //TODO(4): remove these when support for Structs by value arrive
       if (mt.broadType == BroadType.Struct) {
         nestedStructMember =
             true; // setting this flag will exclude adding members for this struct's bindings

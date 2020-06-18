@@ -12,6 +12,7 @@ make
 ```
 
 ## Generating bindings
+At the root of this example (`example/c_json`), run -
 ```
 pub run ffigen:generate
 ```
