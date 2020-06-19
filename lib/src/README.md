@@ -1,7 +1,21 @@
-# Overview - 
-- `code_generator` - Generates binding files.
-- `config_provider` - Holds configurations to be passed to other modules.
-- `header_parser` - Parses header files, utilises clang_bindings.
+## Project Structure
+
+- `bin` - Contains generate.dart script which end user will execute.
+- `tool` - Contains script to generate LibClang bindings using Code_Generator submodule (dev use only).
+- `example` - Example projects which demonstrate generation of bindings for given C header files.
+- `lib/src/code_generator` - Generates binding files.
+- `lib/src/config_provider` - Holds configurations to be passed to other modules.
+- `lib/src/header_parser` - Parses header files, utilises clang_bindings.
+
+## Basic Workflow
+1. The User provides the location all the header files (as a list of globs or filepaths),
+For each header file, we create a translation unit and parse the `declarations` in it
+to the bindings.
+2. User can provide `header filters` to select which declaration from a particular header file should be added to the generated bindings. The can provide a list of header 'names' to include/exclude.
+We compare the header file name (not the exact path) to decide.
+The default behaviour is to include everything that's included when parsing a header.
+3. Use can provide Compiler options, which are passed to clang compiler as it is.
+4. All bindings are generated in a single file.
 
 # Code Details
 ## Modules

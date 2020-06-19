@@ -1,4 +1,4 @@
-/// AUTO GENERATED FILE, DO NOT EDIT
+/// AUTO GENERATED FILE, DO NOT EDIT.
 import 'dart:ffi' as ffi;
 
 /// Dynamic library
@@ -9,6 +9,7 @@ void init(ffi.DynamicLibrary dylib) {
   _dylib = dylib;
 }
 
+/// Add 2 integers
 int sum(
   int a,
   int b,
@@ -31,6 +32,7 @@ typedef _dart_sum = int Function(
   int b,
 );
 
+/// Subtract 2 integers
 int subtract(
   ffi.Pointer<ffi.Int32> a,
   int b,
@@ -54,6 +56,7 @@ typedef _dart_subtract = int Function(
   int b,
 );
 
+/// Multiply 2 integers, returns pointer to an integer
 ffi.Pointer<ffi.Int32> multiply(
   int a,
   int b,
@@ -77,6 +80,7 @@ typedef _dart_multiply = ffi.Pointer<ffi.Int32> Function(
   int b,
 );
 
+/// Divide 2 integers, returns pointer to a float
 ffi.Pointer<ffi.Float> divide(
   int a,
   int b,
@@ -100,6 +104,7 @@ typedef _dart_divide = ffi.Pointer<ffi.Float> Function(
   int b,
 );
 
+/// Divide 2 floats, returns a pointer to double
 ffi.Pointer<ffi.Double> dividePercision(
   ffi.Pointer<ffi.Float> a,
   ffi.Pointer<ffi.Float> b,

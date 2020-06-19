@@ -1,3 +1,7 @@
+// Copyright (c) 2020, the Dart project authors. Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io';
@@ -16,7 +20,7 @@ void main() {
 
   // parse this json string using our cJSON library
   var cjsonParsedJson = cjson.cJSON_Parse(Utf8.toUtf8(jsonString).cast());
-  if (cjsonParsedJson == null) {
+  if (cjsonParsedJson == nullptr) {
     print('Error parsing cjson');
     exit(1);
   }
@@ -42,9 +46,9 @@ void main() {
 }
 
 String _getPath() {
-  var path = './cjson_library/libcjson.so';
-  if (Platform.isMacOS) path = './cjson_library/libstructs.dylib';
-  if (Platform.isWindows) path = r'cjson_library\Debug\structs.dll';
+  var path = './third_party/cjson_library/libcjson.so';
+  if (Platform.isMacOS) path = './third_party/cjson_library/libstructs.dylib';
+  if (Platform.isWindows) path = r'third_party\cjson_library\Debug\structs.dll';
   return path;
 }
 

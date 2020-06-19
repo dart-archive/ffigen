@@ -1,3 +1,7 @@
+# Copyright (c) 2020, the Dart project authors. Please see the AUTHORS file
+# for details. All rights reserved. Use of this source code is governed by a
+# BSD-style license that can be found in the LICENSE file.
+
 name: c_json_example
 
 environment:
@@ -14,17 +18,7 @@ ffigen:
   output: 'cjson_generated_bindings.dart'
   libclang-dylib-folder: '../../tool/wrapped_libclang'
   headers:
-    - './cjson_library/cJSON.h'
+    - './third_party/cjson_library/cJSON.h'
   header-filter:
     include:
       - 'cJSON.h'
-  # filters:
-  #   functions:
-  #     include:
-  #       names: 
-  #         - ''
-  #   # structs:
-  #   #   include:
-  #   #     names: 
-  #   #       - 'cJSON'
-  #   #       - 'cJSON_Hooks'

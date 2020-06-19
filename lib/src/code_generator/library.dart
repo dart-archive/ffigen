@@ -1,3 +1,7 @@
+// Copyright (c) 2020, the Dart project authors. Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'dart:io';
 
 import 'package:logging/logging.dart';
@@ -27,7 +31,7 @@ class Library {
     @required this.bindings,
     this.dylibIdentifier = '_dylib',
     this.initFunctionIdentifier = 'init',
-    this.header = '/// AUTO GENERATED FILE, DO NOT EDIT',
+    this.header = '/// AUTO GENERATED FILE, DO NOT EDIT.',
   })  : assert(dylibIdentifier != null),
         assert(initFunctionIdentifier != null);
 

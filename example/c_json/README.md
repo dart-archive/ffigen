@@ -6,7 +6,7 @@ to parse some json.
 
 ## Building the cJson dynamic library
 ```
-cd ./example/c_json/cjson_library
+cd ./example/c_json/third_party/cjson_library
 cmake .
 make
 ```

@@ -1,3 +1,7 @@
+// Copyright (c) 2020, the Dart project authors. Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 // Dev tool for generating libclang bindings using the code_generator submodule
 // file generated is lib/src/header_parser/clang_bindings/clang_bindings.dart
 import 'dart:io';
