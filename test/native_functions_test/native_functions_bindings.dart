@@ -1,4 +1,4 @@
-/// AUTO GENERATED FILE, DO NOT EDIT
+/// AUTO GENERATED FILE, DO NOT EDIT.
 import 'dart:ffi' as ffi;
 
 /// Dynamic library

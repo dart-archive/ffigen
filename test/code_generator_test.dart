@@ -77,7 +77,7 @@ void main() {
         'test/debug_generated/Function-Binding-test-output.dart',
       );
       try {
-        expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
+        expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT.
 import 'dart:ffi' as ffi;
 
 /// Dynamic library
@@ -226,7 +226,7 @@ typedef _dart_withPointerParam = ffi.Pointer<ffi.Double> Function(
       var file = File('test/debug_generated/Struct-Binding-test-output.dart');
 
       try {
-        expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
+        expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT.
 import 'dart:ffi' as ffi;
 
 /// Dynamic library
@@ -330,7 +330,7 @@ class WithPointerMember extends ffi.Struct{
           File('test/debug_generated/Func-n-Struct-Binding-test-output.dart');
       try {
         //expect
-        expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
+        expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT.
 import 'dart:ffi' as ffi;
 
 /// Dynamic library
@@ -420,7 +420,7 @@ typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
         'test/debug_generated/Global-Binding-test-output.dart',
       );
       try {
-        expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
+        expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT.
 import 'dart:ffi' as ffi;
 
 /// Dynamic library
@@ -477,7 +477,7 @@ final ffi.Pointer<Some> test5 = _dylib.lookup<ffi.Pointer<Some>>('test5').value;
         'test/debug_generated/Constant-test-output.dart',
       );
       try {
-        expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
+        expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT.
 import 'dart:ffi' as ffi;
 
 /// Dynamic library
@@ -543,7 +543,7 @@ const double test2 = 20.0;
       // writing to file for debug purpose
       var file = File('test/debug_generated/typedef-Binding-test-output.dart');
       try {
-        expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
+        expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT.
 import 'dart:ffi' as ffi;
 
 /// Dynamic library
@@ -600,7 +600,7 @@ typedef test2 = ffi.Pointer<ffi.Int32> Function(
         'test/debug_generated/enum-class-test-output.dart',
       );
       try {
-        expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT
+        expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT.
 import 'dart:ffi' as ffi;
 
 /// Dynamic library

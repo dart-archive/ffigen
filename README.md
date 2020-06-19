@@ -52,12 +52,16 @@ A dynamic library for a wrapper to libclang needs to be generated as it is used 
 
 #### ubuntu/linux
 1. Install libclangdev - `sudo apt-get install libclang-dev`.
-2. cd to tool/wrapped_libclang, then run the `build_dylib_linux.sh` script.
+2. cd to tool/wrapped_libclang, then run the `dart build.dart` script.
 
 #### Windows
 1. Install Visual Studio with C++ development support.
 2. Install LLVM.
-3. cd to tool/wrapped_libclang, then run the `build_dylib_windows.bat` script.
+3. cd to tool/wrapped_libclang, then run the `dart build.dart` script.
+
+#### MacOS
+1. Install LLVM.
+2. cd to tool/wrapped_libclang, then run the `dart build.dart` script.
 
 ## Trying out examples
 1. `cd` to examples/<example_u_want_to_run>, Run `pub get`.
