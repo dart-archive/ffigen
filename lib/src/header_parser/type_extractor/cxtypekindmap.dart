@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:ffigen/src/header_parser/clang_bindings/clang_constants.dart'
+import 'package:ffigen/src/header_parser/clang_bindings/clang_bindings.dart'
     as clang;
 import 'package:ffigen/src/code_generator.dart' show SupportedNativeType;
 

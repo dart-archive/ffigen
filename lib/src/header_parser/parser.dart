@@ -11,7 +11,6 @@ import 'package:ffigen/src/header_parser/translation_unit_parser.dart';
 import 'package:logging/logging.dart';
 
 import 'clang_bindings/clang_bindings.dart' as clang;
-import 'clang_bindings/clang_constants.dart' as clang;
 import 'data.dart' as data;
 import 'utils.dart';
 

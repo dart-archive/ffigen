@@ -5,7 +5,7 @@
 import 'dart:io';
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/header_parser/clang_bindings/clang_constants.dart';
+import 'package:ffigen/src/header_parser/clang_bindings/clang_bindings.dart' as clang;
 import 'package:glob/glob.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
@@ -33,47 +33,47 @@ dynamic sizemapExtractor(dynamic value) {
   var sizemap = value as YamlMap;
   if (sizemap != null) {
     if (sizemap.containsKey(strings.SChar)) {
-      resultMap[CXTypeKind.CXType_SChar] =
+      resultMap[clang.CXTypeKind.CXType_SChar] =
           nativeSupportedType(sizemap[strings.SChar]);
     }
     if (sizemap.containsKey(strings.UChar)) {
-      resultMap[CXTypeKind.CXType_UChar] =
+      resultMap[clang.CXTypeKind.CXType_UChar] =
           nativeSupportedType(sizemap[strings.UChar], signed: false);
     }
     if (sizemap.containsKey(strings.Short)) {
-      resultMap[CXTypeKind.CXType_Short] =
+      resultMap[clang.CXTypeKind.CXType_Short] =
           nativeSupportedType(sizemap[strings.Short]);
     }
     if (sizemap.containsKey(strings.UShort)) {
-      resultMap[CXTypeKind.CXType_UShort] =
+      resultMap[clang.CXTypeKind.CXType_UShort] =
           nativeSupportedType(sizemap[strings.UShort], signed: false);
     }
     if (sizemap.containsKey(strings.Int)) {
-      resultMap[CXTypeKind.CXType_Int] =
+      resultMap[clang.CXTypeKind.CXType_Int] =
           nativeSupportedType(sizemap[strings.Int]);
     }
     if (sizemap.containsKey(strings.UInt)) {
-      resultMap[CXTypeKind.CXType_UInt] =
+      resultMap[clang.CXTypeKind.CXType_UInt] =
           nativeSupportedType(sizemap[strings.UInt], signed: false);
     }
     if (sizemap.containsKey(strings.Long)) {
-      resultMap[CXTypeKind.CXType_Long] =
+      resultMap[clang.CXTypeKind.CXType_Long] =
           nativeSupportedType(sizemap[strings.Long]);
     }
     if (sizemap.containsKey(strings.ULong)) {
-      resultMap[CXTypeKind.CXType_ULong] =
+      resultMap[clang.CXTypeKind.CXType_ULong] =
           nativeSupportedType(sizemap[strings.ULong], signed: false);
     }
     if (sizemap.containsKey(strings.LongLong)) {
-      resultMap[CXTypeKind.CXType_LongLong] =
+      resultMap[clang.CXTypeKind.CXType_LongLong] =
           nativeSupportedType(sizemap[strings.LongLong]);
     }
     if (sizemap.containsKey(strings.ULongLong)) {
-      resultMap[CXTypeKind.CXType_ULongLong] =
+      resultMap[clang.CXTypeKind.CXType_ULongLong] =
           nativeSupportedType(sizemap[strings.ULongLong], signed: false);
     }
     if (sizemap.containsKey(strings.Enum)) {
-      resultMap[CXTypeKind.CXType_Enum] = nativeSupportedType(
+      resultMap[clang.CXTypeKind.CXType_Enum] = nativeSupportedType(
           sizemap[strings.Enum],
           signed: true); // enums are signed ints
     }

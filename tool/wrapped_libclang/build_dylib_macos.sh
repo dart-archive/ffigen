@@ -1,0 +1,1 @@
+clang -I/usr/local/opt/llvm/include/ -L/usr/local/opt/llvm/lib/ -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/ -v -lclang -shared -fpic tool/wrapped_libclang/wrapper.c -o tool/wrapped_libclang/libwrapped_clang.dylib

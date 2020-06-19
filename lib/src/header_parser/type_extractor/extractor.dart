@@ -9,7 +9,6 @@ import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
-import '../clang_bindings/clang_constants.dart' as clang;
 import '../data.dart';
 import '../includer.dart';
 import '../sub_parsers/structdecl_parser.dart';
