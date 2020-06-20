@@ -15,13 +15,13 @@ var _logger = Logger('generate.dart');
 
 void main(List<String> args) {
   // parser the cmd Args.
-  var result = getArgResults(args);
+  final result = getArgResults(args);
 
   // setup logging level and printing.
   setupLogger(result);
 
   // create config object.
-  var config = getConfig(result);
+  final config = getConfig(result);
 
   // parse the bindings according to config object provided.
   final library = parser.parse(config);
@@ -31,14 +31,13 @@ void main(List<String> args) {
   }
 
   // Generate file for the parsed bindings.
-  var gen = File(config.output);
+  final gen = File(config.output);
   library.generateFile(gen);
   _logger.info('Finished, Bindings generated in ${gen?.absolute?.path}');
 }
 
 Config getConfig(ArgResults result) {
-  var currentDir = Directory.current;
-  _logger.info('Running in ${currentDir}');
+  _logger.info('Running in ${Directory.current}');
 
   if (result.wasParsed('config')) {
     return getConfigFromCustomYaml(result['config'] as String);
@@ -49,10 +48,10 @@ Config getConfig(ArgResults result) {
 
 /// Extracts configuration from pubspec file
 Config getConfigFromPubspec() {
-  var pubspecName = 'pubspec.yaml';
-  var configKey = 'ffigen';
+  final pubspecName = 'pubspec.yaml';
+  final configKey = 'ffigen';
 
-  var pubspecFile = File(pubspecName);
+  final pubspecFile = File(pubspecName);
 
   if (!pubspecFile.existsSync()) {
     _logger.severe(
@@ -63,7 +62,7 @@ Config getConfigFromPubspec() {
   // Casting this because pubspec is expected to be a YamlMap.
 
   // can throw YamlException() if unable to parse
-  var bindingsConfigMap =
+  final bindingsConfigMap =
       yaml.loadYaml(pubspecFile.readAsStringSync())[configKey] as yaml.YamlMap;
 
   if (bindingsConfigMap == null) {
@@ -75,7 +74,7 @@ Config getConfigFromPubspec() {
 
 /// Extracts configuration from a custom yaml file.
 Config getConfigFromCustomYaml(String yamlPath) {
-  var yamlFile = File(yamlPath);
+  final yamlFile = File(yamlPath);
 
   if (!yamlFile.existsSync()) {
     _logger.severe(
@@ -86,7 +85,7 @@ Config getConfigFromCustomYaml(String yamlPath) {
   // Casting this because pubspec is expected to be a YamlMap.
 
   // can throw YamlException() if unable to parse
-  var bindingsConfigMap =
+  final bindingsConfigMap =
       yaml.loadYaml(yamlFile.readAsStringSync()) as yaml.YamlMap;
 
   return Config.fromYaml(bindingsConfigMap);
@@ -94,7 +93,7 @@ Config getConfigFromCustomYaml(String yamlPath) {
 
 /// Parse cmd line arguments.
 ArgResults getArgResults(List<String> args) {
-  var parser = ArgParser(allowTrailingOptions: true);
+  final parser = ArgParser(allowTrailingOptions: true);
 
   parser.addSeparator(
       'FFIGEN: Generate dart bindings from C header files\nUsage:');

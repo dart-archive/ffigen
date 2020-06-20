@@ -28,15 +28,15 @@ void logTuDiagnostics(
   Logger logger,
   String header,
 ) {
-  var total = clang.clang_getNumDiagnostics(tu);
+  final total = clang.clang_getNumDiagnostics(tu);
   if (total == 0) {
     return;
   }
 
   logger.warning('Header $header: Total errors/warnings : $total');
   for (var i = 0; i < total; i++) {
-    var diag = clang.clang_getDiagnostic(tu, i);
-    var cxstring = clang.clang_formatDiagnostic_wrap(
+    final diag = clang.clang_getDiagnostic(tu, i);
+    final cxstring = clang.clang_formatDiagnostic_wrap(
       diag,
       clang.CXDiagnosticDisplayOptions.CXDiagnostic_DisplaySourceLocation |
           clang.CXDiagnosticDisplayOptions.CXDiagnostic_DisplayColumn |
@@ -67,8 +67,8 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
 
   /// for debug: returns [spelling] [kind] [kindSpelling] [type] [typeSpelling].
   String completeStringRepr() {
-    var cxtype = type();
-    var s =
+    final cxtype = type();
+    final s =
         '(Cursor) spelling: ${spelling()}, kind: ${kind()}, kindSpelling: ${kindSpelling()}, type: ${cxtype.kind()}, typeSpelling: ${cxtype.spelling()}';
     cxtype.dispose();
     return s;
@@ -83,22 +83,22 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
   ///
   /// Dispose type using [type.dispose].
   Pointer<clang.CXType> returnType() {
-    var t = type();
-    var r = clang.clang_getResultType_wrap(t);
+    final t = type();
+    final r = clang.clang_getResultType_wrap(t);
     t.dispose();
     return r;
   }
 
   String sourceFileName() {
-    var cxsource = clang.clang_getCursorLocation_wrap(this);
-    var cxfilePtr = allocate<Pointer<Void>>();
-    var line = allocate<Uint32>();
-    var column = allocate<Uint32>();
-    var offset = allocate<Uint32>();
+    final cxsource = clang.clang_getCursorLocation_wrap(this);
+    final cxfilePtr = allocate<Pointer<Void>>();
+    final line = allocate<Uint32>();
+    final column = allocate<Uint32>();
+    final offset = allocate<Uint32>();
 
     // puts the values in these pointers.
     clang.clang_getFileLocation_wrap(cxsource, cxfilePtr, line, column, offset);
-    var s = clang.clang_getFileName_wrap(cxfilePtr.value).toStringAndDispose();
+    final s = clang.clang_getFileName_wrap(cxfilePtr.value).toStringAndDispose();
     free(cxsource);
     free(cxfilePtr);
     free(line);
@@ -126,7 +126,7 @@ extension CXTypeExt on Pointer<clang.CXType> {
 
   /// Get code_gen [Type] representation of [clang.CXType] and dispose the type.
   Type toCodeGenTypeAndDispose() {
-    var t = getCodeGenType(this);
+    final t = getCodeGenType(this);
     dispose();
     return t;
   }
@@ -147,7 +147,7 @@ extension CXTypeExt on Pointer<clang.CXType> {
 
   /// for debug: returns [spelling] [kind] [kindSpelling].
   String completeStringRepr() {
-    var s =
+    final s =
         '(Type) spelling: ${spelling()}, kind: ${kind()}, kindSpelling: ${kindSpelling()}';
     return s;
   }
@@ -161,7 +161,7 @@ extension CXStringExt on Pointer<clang.CXString> {
   /// Dispose CXstring using dispose.
   String string() {
     String s;
-    var cstring = clang.clang_getCString_wrap(this);
+    final cstring = clang.clang_getCString_wrap(this);
     if (cstring != nullptr) {
       s = Utf8.fromUtf8(cstring.cast());
     }
@@ -171,7 +171,7 @@ extension CXStringExt on Pointer<clang.CXString> {
   /// Converts CXString to dart string and disposes CXString.
   String toStringAndDispose() {
     // Note: clang_getCString_wrap returns a const char *, calling free will result in error.
-    var s = string();
+    final s = string();
     clang.clang_disposeString_wrap(this);
     return s;
   }
@@ -183,7 +183,7 @@ extension CXStringExt on Pointer<clang.CXString> {
 
 // Converts a List<String> to Pointer<Pointer<Utf8>>.
 Pointer<Pointer<Utf8>> createDynamicStringArray(List<String> list) {
-  var nativeCmdArgs = allocate<Pointer<Utf8>>(count: list.length);
+  final nativeCmdArgs = allocate<Pointer<Utf8>>(count: list.length);
 
   for (var i = 0; i < list.length; i++) {
     nativeCmdArgs[i] = Utf8.toUtf8(list[i]);

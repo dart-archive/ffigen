@@ -25,7 +25,7 @@ EnumClass parseEnumDeclaration(
 }) {
   _enumClass = null;
 
-  var enumName = name ?? cursor.spelling();
+  final enumName = name ?? cursor.spelling();
   if (enumName == '') {
     _logger.finest('unnamed enum declaration');
   } else if (shouldIncludeEnumClass(enumName)) {
@@ -41,7 +41,7 @@ EnumClass parseEnumDeclaration(
 }
 
 void _addEnumConstant(Pointer<clang.CXCursor> cursor) {
-  var resultCode = clang.clang_visitChildren_wrap(
+  final resultCode = clang.clang_visitChildren_wrap(
     cursor,
     Pointer.fromFunction(
         _enumCursorVisitor, clang.CXChildVisitResult.CXChildVisit_Break),

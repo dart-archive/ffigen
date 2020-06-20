@@ -42,7 +42,7 @@ class Filter {
       return false;
     }
 
-    for (var em in _excludeMatchers) {
+    for (final em in _excludeMatchers) {
       if (em.firstMatch(name)?.end == name.length) {
         return false;
       }
@@ -52,7 +52,7 @@ class Filter {
       return true;
     }
 
-    for (var im in _includeMatchers) {
+    for (final im in _includeMatchers) {
       if (im.firstMatch(name)?.end == name.length) {
         return true;
       }

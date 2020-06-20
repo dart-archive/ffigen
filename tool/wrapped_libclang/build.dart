@@ -63,13 +63,13 @@ void main(List<String> arguments) {
   changeIncludesUsingCmdArgs(arguments);
 
   // Run clang compiler to generate the dynamic library
-  ProcessResult result = runClangProcess();
+  final ProcessResult result = runClangProcess();
   printSuccess(result);
 }
 
 /// Calls clang process
 ProcessResult runClangProcess() {
-  var result = Process.runSync(
+  final result = Process.runSync(
     'clang',
     [
       ...headerIncludes,
@@ -98,7 +98,7 @@ void printSuccess(ProcessResult result) {
 
 /// Use cmd args(if any) to change default paths
 void changeIncludesUsingCmdArgs(List<String> arguments) {
-  var argResult = getArgResults(arguments);
+  final argResult = getArgResults(arguments);
   if (argResult.wasParsed('include-header')) {
     headerIncludes = (argResult['include-header'] as List<String>)
         .map((header) => '-I$header')
@@ -131,7 +131,7 @@ void changeDefaultsBasedOnPlatform() {
 }
 
 ArgResults getArgResults(List<String> args) {
-  var parser = ArgParser(allowTrailingOptions: true);
+  final parser = ArgParser(allowTrailingOptions: true);
   parser.addSeparator(
       'Build Script to generate dynamic library used by this package:');
   parser.addMultiOption('include-header',

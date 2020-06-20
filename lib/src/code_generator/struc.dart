@@ -53,14 +53,14 @@ class Struc extends Binding {
       s.write('\n');
     }
 
-    var helpers = <ArrayHelper>[];
+    final helpers = <ArrayHelper>[];
 
     // write class declaration.
     s.write('class $name extends ${w.ffiLibraryPrefix}.Struct{\n');
-    for (var m in members) {
+    for (final m in members) {
       if (m.type.broadType == BroadType.ConstantArray) {
         // TODO(5): remove array helpers when inline array support arives
-        var arrayHelper = ArrayHelper(
+        final arrayHelper = ArrayHelper(
           helperClassName: '_ArrayHelper_${name}_${m.name}',
           elementType: m.type.elementType,
           length: 3,
@@ -80,7 +80,7 @@ class Struc extends Binding {
     }
     s.write('}\n\n');
 
-    for (var helper in helpers) {
+    for (final helper in helpers) {
       s.write(helper.helperClassString(w));
     }
 
@@ -115,7 +115,7 @@ class ArrayHelper {
   });
 
   String declarationString(Writer w) {
-    var s = StringBuffer();
+    final s = StringBuffer();
     final arrayDartType = elementType.getDartType(w);
     final arrayCType = elementType.getCType(w);
 
@@ -134,7 +134,7 @@ class ArrayHelper {
   }
 
   String helperClassString(Writer w) {
-    var s = StringBuffer();
+    final s = StringBuffer();
 
     final arrayType = elementType.getDartType(w);
 

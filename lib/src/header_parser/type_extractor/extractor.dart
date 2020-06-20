@@ -22,18 +22,18 @@ const _padding = '  ';
 /// converts cxtype to a typestring code_generator can accept.
 Type getCodeGenType(Pointer<clang.CXType> cxtype, {String parentName}) {
   _logger.fine('${_padding}getCodeGenType ${cxtype.completeStringRepr()}');
-  var kind = cxtype.kind();
+  final kind = cxtype.kind();
 
   switch (kind) {
     case clang.CXTypeKind.CXType_Pointer:
-      var pt = clang.clang_getPointeeType_wrap(cxtype);
-      var s = getCodeGenType(pt, parentName: parentName);
+      final pt = clang.clang_getPointeeType_wrap(cxtype);
+      final s = getCodeGenType(pt, parentName: parentName);
       pt.dispose();
       return Type.pointer(s);
     case clang.CXTypeKind.CXType_Typedef:
       // get name from typedef name if config allows.
       if (config.useSupportedTypedefs) {
-        var spelling = cxtype.spelling();
+        final spelling = cxtype.spelling();
         if (suportedTypedefToSuportedNativeType.containsKey(spelling)) {
           _logger.fine('  Type Mapped from supported typedef');
           return Type.nativeType(suportedTypedefToSuportedNativeType[spelling]);
@@ -41,14 +41,14 @@ Type getCodeGenType(Pointer<clang.CXType> cxtype, {String parentName}) {
       }
 
       // this is important or we get stuck in infinite recursion.
-      var ct = clang.clang_getCanonicalType_wrap(cxtype);
+      final ct = clang.clang_getCanonicalType_wrap(cxtype);
 
-      var s = getCodeGenType(ct, parentName: parentName ?? cxtype.spelling());
+      final s = getCodeGenType(ct, parentName: parentName ?? cxtype.spelling());
       ct.dispose();
       return s;
     case clang.CXTypeKind.CXType_Elaborated:
-      var et = clang.clang_Type_getNamedType_wrap(cxtype);
-      var s = getCodeGenType(et, parentName: parentName);
+      final et = clang.clang_Type_getNamedType_wrap(cxtype);
+      final s = getCodeGenType(et, parentName: parentName);
       et.dispose();
       return s;
     case clang.CXTypeKind.CXType_Record:
@@ -83,12 +83,12 @@ Type getCodeGenType(Pointer<clang.CXType> cxtype, {String parentName}) {
 Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
   Type type;
 
-  var cursor = clang.clang_getTypeDeclaration_wrap(cxtype);
+  final cursor = clang.clang_getTypeDeclaration_wrap(cxtype);
   _logger.fine('${_padding}_extractfromRecord: ${cursor.completeStringRepr()}');
 
   switch (clang.clang_getCursorKind_wrap(cursor)) {
     case clang.CXCursorKind.CXCursor_StructDecl:
-      var cxtype = cursor.type();
+      final cxtype = cursor.type();
       var structName = cursor.spelling();
       if (structName == '') {
         // incase of anonymous structs defined inside a typedef.
@@ -126,14 +126,14 @@ Type _extractFromFunctionProto(
   }
 
   if (isUnseenTypedefC(name, addToSeen: true)) {
-    var typedefC = TypedefC(
+    final typedefC = TypedefC(
       name: name,
       returnType:
           clang.clang_getResultType_wrap(cxtype).toCodeGenTypeAndDispose(),
     );
-    var totalArgs = clang.clang_getNumArgTypes_wrap(cxtype);
+    final totalArgs = clang.clang_getNumArgTypes_wrap(cxtype);
     for (var i = 0; i < totalArgs; i++) {
-      var t = clang.clang_getArgType_wrap(cxtype, i);
+      final t = clang.clang_getArgType_wrap(cxtype, i);
       typedefC.parameters.add(
         Parameter(name: '', type: t.toCodeGenTypeAndDispose()),
       );

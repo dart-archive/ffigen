@@ -86,12 +86,12 @@ class Config {
   ///
   /// Ensure that log printing is setup before using this.
   factory Config.fromYaml(YamlMap map) {
-    var configspecs = Config._();
+    final configspecs = Config._();
     _logger.finest('Config Map: ' + map.toString());
 
-    var specs = configspecs._getSpecs();
+    final specs = configspecs._getSpecs();
 
-    var result = configspecs._checkConfigs(map, specs);
+    final result = configspecs._checkConfigs(map, specs);
     if (!result) {
       _logger.info('Please fix errors in Configurations and re-run the tool');
       exit(1);
@@ -104,8 +104,8 @@ class Config {
   /// Validates Yaml according to given specs.
   bool _checkConfigs(YamlMap map, Map<String, Specification> specs) {
     var _result = true;
-    for (var key in specs.keys) {
-      var spec = specs[key];
+    for (final key in specs.keys) {
+      final spec = specs[key];
       if (spec.isRequired && !map.containsKey(key)) {
         _logger.severe('Key=${key} is required');
         _result = false;
@@ -114,7 +114,7 @@ class Config {
       }
     }
     //warn about unknown keys.
-    for (var key in map.keys) {
+    for (final key in map.keys) {
       if (!specs.containsKey(key)) {
         _logger.warning('Unknown key found: $key');
       }
@@ -127,8 +127,8 @@ class Config {
   ///
   /// Validation must be done beforehand, using [_checkConfigs].
   void _extract(YamlMap map, Map<String, Specification> specs) {
-    for (var key in specs.keys) {
-      var spec = specs[key];
+    for (final key in specs.keys) {
+      final spec = specs[key];
       if (map.containsKey(key)) {
         spec.extractedResult(spec.extractor(map[key]));
       } else {
@@ -215,8 +215,8 @@ class Config {
         extractor: sizemapExtractor,
         defaultValue: <int, SupportedNativeType>{},
         extractedResult: (dynamic result) {
-          var map = result as Map<int, SupportedNativeType>;
-          for (var key in map.keys) {
+          final map = result as Map<int, SupportedNativeType>;
+          for (final key in map.keys) {
             if (cxTypeKindToSupportedNativeTypes.containsKey(key)) {
               cxTypeKindToSupportedNativeTypes[key] = map[key];
             }

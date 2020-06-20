@@ -44,8 +44,8 @@ class EnumClass extends Binding {
 
     // print enclosing class.
     s.write('class $name {\n');
-    var depth = '  ';
-    for (var ec in enumConstants) {
+    const depth = '  ';
+    for (final ec in enumConstants) {
       if (ec.dartDoc != null) {
         s.write(depth + '/// ');
         s.writeAll(ec.dartDoc.split('\n'), '\n' + depth + '/// ');

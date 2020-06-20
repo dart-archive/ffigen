@@ -26,7 +26,7 @@ Binding parseTypedefDeclaration(Pointer<clang.CXCursor> cursor) {
   // set name of typedef (used later).
   _typedefName = cursor.spelling();
 
-  var resultCode = clang.clang_visitChildren_wrap(
+  final resultCode = clang.clang_visitChildren_wrap(
     cursor,
     Pointer.fromFunction(_typedefdeclarationCursorVisitor,
         clang.CXChildVisitResult.CXChildVisit_Break),

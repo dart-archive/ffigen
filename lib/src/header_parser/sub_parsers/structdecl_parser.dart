@@ -32,7 +32,7 @@ Struc parseStructDeclaration(
   bool doInclude = false,
 }) {
   _struc = null;
-  var structName = name ?? cursor.spelling();
+  final structName = name ?? cursor.spelling();
 
   if (structName == '') {
     _logger.finest('unnamed structure or typedef structure declaration');
@@ -41,7 +41,7 @@ Struc parseStructDeclaration(
     _logger.fine(
         '++++ Adding Structure: structNname: ${structName}, ${cursor.completeStringRepr()}');
 
-    var members = _getMembers(cursor, structName);
+    final members = _getMembers(cursor, structName);
     _struc = Struc(
       dartDoc: getCursorDocComment(cursor),
       name: structName,
@@ -58,7 +58,7 @@ List<Member> _getMembers(Pointer<clang.CXCursor> cursor, String structName) {
   nestedStructMember = false;
   unimplementedMemberType = false;
 
-  var resultCode = clang.clang_visitChildren_wrap(
+  final resultCode = clang.clang_visitChildren_wrap(
       cursor,
       Pointer.fromFunction(
           _structMembersVisitor, clang.CXChildVisitResult.CXChildVisit_Break),
@@ -96,7 +96,7 @@ int _structMembersVisitor(Pointer<clang.CXCursor> cursor,
     if (cursor.kind() == clang.CXCursorKind.CXCursor_FieldDecl) {
       _logger.finer('===== member: ${cursor.completeStringRepr()}');
 
-      var mt = cursor.type().toCodeGenTypeAndDispose();
+      final mt = cursor.type().toCodeGenTypeAndDispose();
 
       //TODO(4): remove these when support for Structs by value arrive
       if (mt.broadType == BroadType.Struct) {

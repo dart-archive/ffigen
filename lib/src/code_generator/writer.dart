@@ -46,7 +46,7 @@ class Writer {
     s.write('}\n');
 
     // Write bindings
-    for (var bs in _bindings) {
+    for (final bs in _bindings) {
       s.write(bs.toString());
     }
 

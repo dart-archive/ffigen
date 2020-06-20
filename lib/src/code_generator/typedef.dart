@@ -44,7 +44,7 @@ class TypedefC extends Binding {
     }
 
     s.write('typedef $name = ${returnType.getCType(w)} Function(\n');
-    for (var p in parameters) {
+    for (final p in parameters) {
       s.write('  ${p.type.getCType(w)} ${p.name},\n');
     }
     s.write(');\n\n');

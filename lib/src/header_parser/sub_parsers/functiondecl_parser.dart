@@ -23,12 +23,12 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
   unimplementedParameterType = false;
   constantArrayParameterType = false;
 
-  var name = cursor.spelling();
+  final name = cursor.spelling();
   if (shouldIncludeFunc(name)) {
     _logger.fine('++++ Adding Function: ${cursor.completeStringRepr()}');
 
-    var rt = _getFunctionReturnType(cursor);
-    var parameters = _getParameters(cursor);
+    final rt = _getFunctionReturnType(cursor);
+    final parameters = _getParameters(cursor);
 
     //TODO(3): remove this when support for Structs by value arrive
     if (rt.broadType == BroadType.Struct || structByValueParameter) {
@@ -76,15 +76,15 @@ Type _getFunctionReturnType(Pointer<clang.CXCursor> cursor) {
 }
 
 List<Parameter> _getParameters(Pointer<clang.CXCursor> cursor) {
-  var parameters = <Parameter>[];
+  final parameters = <Parameter>[];
 
-  var totalArgs = clang.clang_Cursor_getNumArguments_wrap(cursor);
+  final totalArgs = clang.clang_Cursor_getNumArguments_wrap(cursor);
   for (var i = 0; i < totalArgs; i++) {
-    var paramCursor = clang.clang_Cursor_getArgument_wrap(cursor, i);
+    final paramCursor = clang.clang_Cursor_getArgument_wrap(cursor, i);
 
     _logger.finer('===== parameter: ${paramCursor.completeStringRepr()}');
 
-    var pt = _getParameterType(paramCursor);
+    final pt = _getParameterType(paramCursor);
     //TODO(3): remove this when support for Structs by value arrive
     if (pt.broadType == BroadType.Struct) {
       structByValueParameter = true;
@@ -95,7 +95,7 @@ List<Parameter> _getParameters(Pointer<clang.CXCursor> cursor) {
       unimplementedParameterType = true;
     }
 
-    var pn = paramCursor.spelling();
+    final pn = paramCursor.spelling();
 
     /// if pn is null or empty, its set to `arg$i` by code_generator.
     parameters.add(

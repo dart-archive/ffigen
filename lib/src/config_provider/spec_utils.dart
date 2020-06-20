@@ -28,13 +28,13 @@ bool booleanValidator(String name, dynamic value) {
 }
 
 Map<int, SupportedNativeType> sizemapExtractor(dynamic yamlConfig) {
-  var resultMap = <int, SupportedNativeType>{};
-  var sizemap = yamlConfig as YamlMap;
+  final resultMap = <int, SupportedNativeType>{};
+  final sizemap = yamlConfig as YamlMap;
   if (sizemap != null) {
-    for (var typeName in strings.sizemap_native_mapping.keys) {
+    for (final typeName in strings.sizemap_native_mapping.keys) {
       if (sizemap.containsKey(typeName)) {
-        var cxTypeInt = strings.sizemap_native_mapping[typeName];
-        var byteSize = sizemap[typeName] as int;
+        final cxTypeInt = strings.sizemap_native_mapping[typeName];
+        final byteSize = sizemap[typeName] as int;
         resultMap[cxTypeInt] = nativeSupportedType(byteSize,
             signed: typeName.contains('unsigned') ? false : true);
       }
@@ -48,7 +48,7 @@ bool sizemapValidator(String name, dynamic yamlConfig) {
     _logger.severe('Expected value of key=$name to be a Map');
     return false;
   }
-  for (var key in (yamlConfig as YamlMap).keys) {
+  for (final key in (yamlConfig as YamlMap).keys) {
     if (!strings.sizemap_native_mapping.containsKey(key)) {
       _logger.warning('Unknown subkey in $name: $key');
     }
@@ -71,16 +71,16 @@ bool compilerOptsValidator(String name, dynamic value) {
 }
 
 HeaderFilter headerFilterExtractor(dynamic yamlConfig) {
-  var includedInclusionHeaders = <String>{};
-  var excludedInclusionHeaders = <String>{};
+  final includedInclusionHeaders = <String>{};
+  final excludedInclusionHeaders = <String>{};
 
-  var headerFilter = yamlConfig as YamlMap;
+  final headerFilter = yamlConfig as YamlMap;
   if (headerFilter != null) {
     // Add include/excluded header-filter from Yaml.
-    var include = headerFilter[strings.include] as YamlList;
+    final include = headerFilter[strings.include] as YamlList;
     include?.cast<String>()?.forEach(includedInclusionHeaders.add);
 
-    var exclude = headerFilter[strings.exclude] as YamlList;
+    final exclude = headerFilter[strings.exclude] as YamlList;
     exclude?.cast<String>()?.forEach(excludedInclusionHeaders.add);
   }
 
@@ -100,9 +100,9 @@ bool headerFilterValidator(String name, dynamic value) {
 }
 
 List<String> headersExtractor(dynamic yamlConfig) {
-  var headers = <String>[];
-  for (var h in (yamlConfig as YamlList)) {
-    var headerGlob = h as String;
+  final headers = <String>[];
+  for (final h in (yamlConfig as YamlList)) {
+    final headerGlob = h as String;
     // add file directly to header if it's not a Glob but a File.
     if (File(headerGlob).existsSync()) {
       if (hasValidExtension(headerGlob)) {
@@ -113,8 +113,8 @@ List<String> headersExtractor(dynamic yamlConfig) {
             'Ignoring file: $headerGlob, not a valid extension (only ".c" or ".h" allowed)');
       }
     } else {
-      var glob = Glob(headerGlob);
-      for (var file in glob.listSync(followLinks: true)) {
+      final glob = Glob(headerGlob);
+      for (final file in glob.listSync(followLinks: true)) {
         if (hasValidExtension(file.path)) {
           headers.add(file.path);
           _logger.fine('Found header/file: ${file.path}');
@@ -126,7 +126,7 @@ List<String> headersExtractor(dynamic yamlConfig) {
 }
 
 bool hasValidExtension(String filePath) {
-  var ext = p.extension(filePath);
+  final ext = p.extension(filePath);
   // TODO check remove .c files later maybe?
   return ext == '.h' || ext == '.c';
 }
@@ -149,7 +149,7 @@ bool libclangDylibValidator(String name, dynamic value) {
         'Expected value of key=$name to be a string');
     return false;
   } else {
-    var dylibPath = getDylibPath(value as String);
+    final dylibPath = getDylibPath(value as String);
     if (!File(dylibPath).existsSync()) {
       _logger.severe(
           'Dynamic library: $dylibPath does not exist or is corrupt, input folder: $value');
@@ -167,7 +167,7 @@ String getDylibPath(String value) {
   } else if (Platform.isWindows) {
     // Fix path for windows if '/' is used as seperator instead of '\'
     // because our examples input path like this.
-    var newValue = value.replaceAll('/', r'\');
+    final newValue = value.replaceAll('/', r'\');
     dylibPath = p.join(newValue, strings.libclang_dylib_windows);
   } else {
     dylibPath = p.join(value, strings.libclang_dylib_linux);
@@ -189,13 +189,13 @@ bool outputValidator(String name, dynamic value) {
 Filter filterExtractor(dynamic yamlMap) {
   List<String> includeMatchers, includeFull, excludeMatchers, excludeFull;
 
-  var include = yamlMap[strings.include] as YamlMap;
+  final include = yamlMap[strings.include] as YamlMap;
   if (include != null) {
     includeMatchers = (include[strings.matches] as YamlList)?.cast<String>();
     includeFull = (include[strings.names] as YamlList)?.cast<String>();
   }
 
-  var exclude = yamlMap[strings.exclude] as YamlMap;
+  final exclude = yamlMap[strings.exclude] as YamlMap;
   if (exclude != null) {
     excludeMatchers = (include[strings.matches] as YamlList)?.cast<String>();
     excludeFull = (include[strings.names] as YamlList)?.cast<String>();
@@ -212,12 +212,12 @@ Filter filterExtractor(dynamic yamlMap) {
 bool filterValidator(String name, dynamic value) {
   var _result = true;
   if (value is YamlMap) {
-    for (var key in value.keys) {
+    for (final key in value.keys) {
       if (key == strings.include || key == strings.exclude) {
         if (value[key] is! YamlMap) {
           _logger.severe('Expected $name->$key to be a Map');
         }
-        for (var subkey in value[key].keys) {
+        for (final subkey in value[key].keys) {
           if (subkey == strings.matches || subkey == strings.names) {
             if (value[key][subkey] is! YamlList) {
               _logger.severe('Expected $name->$key->$subkey to be a List');
@@ -240,7 +240,7 @@ bool filterValidator(String name, dynamic value) {
 }
 
 SupportedNativeType nativeSupportedType(dynamic scalar, {bool signed = true}) {
-  var value = scalar as int;
+  final value = scalar as int;
   switch (value) {
     case 1:
       return signed ? SupportedNativeType.Int8 : SupportedNativeType.Uint8;

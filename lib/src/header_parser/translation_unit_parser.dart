@@ -23,7 +23,7 @@ List<Binding> _bindings;
 List<Binding> parseTranslationUnitCursor(Pointer<clang.CXCursor> translationUnitCursor) {
   _bindings = [];
 
-  var resultCode = clang.clang_visitChildren_wrap(
+  final resultCode = clang.clang_visitChildren_wrap(
     translationUnitCursor,
     Pointer.fromFunction(
         _rootCursorVisitor, clang.CXChildVisitResult.CXChildVisit_Break),

@@ -18,9 +18,9 @@ import 'utils.dart';
 Library parse(Config conf, {bool sort = false}) {
   initParser(conf);
 
-  var bindings = parseAndGenerateBindings();
+  final bindings = parseAndGenerateBindings();
 
-  var library = Library(bindings: bindings);
+  final library = Library(bindings: bindings);
 
   if (sort) {
     library.sort();
@@ -43,7 +43,7 @@ void initParser(Config c) {
 
 /// Parses source files and adds generated bindings to [bindings].
 List<Binding> parseAndGenerateBindings() {
-  var index = clang.clang_createIndex(0, 0);
+  final index = clang.clang_createIndex(0, 0);
 
   Pointer<Pointer<Utf8>> clangCmdArgs = nullptr;
   var cmdLen = 0;
@@ -53,13 +53,13 @@ List<Binding> parseAndGenerateBindings() {
   }
 
   // Contains all bindings.
-  var bindings = <Binding>[];
+  final bindings = <Binding>[];
 
-  for (var h in data.config.headers) {
-    var headerLocation = h;
+  for (final h in data.config.headers) {
+    final headerLocation = h;
     _logger.fine('Creating TranslationUnit for header: $headerLocation');
 
-    var tu = clang.clang_parseTranslationUnit(
+    final tu = clang.clang_parseTranslationUnit(
       index,
       Utf8.toUtf8(headerLocation).cast(),
       clangCmdArgs.cast(),
@@ -75,7 +75,7 @@ List<Binding> parseAndGenerateBindings() {
     }
 
     logTuDiagnostics(tu, _logger, headerLocation);
-    var rootCursor = clang.clang_getTranslationUnitCursor_wrap(tu);
+    final rootCursor = clang.clang_getTranslationUnitCursor_wrap(tu);
 
     bindings.addAll(parseTranslationUnitCursor(rootCursor));
 

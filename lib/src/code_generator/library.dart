@@ -52,7 +52,7 @@ class Library {
   /// generates bindings and stores it in given [Writer]
   void _generate(Writer w) {
     w.header = header;
-    for (var b in bindings) {
+    for (final b in bindings) {
       w.addBindingString(b.toBindingString(w));
     }
   }

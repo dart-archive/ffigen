@@ -62,12 +62,12 @@ class Func extends Binding {
 
     // write enclosing function.
     s.write('${returnType.getDartType(w)} $name(\n');
-    for (var p in parameters) {
+    for (final p in parameters) {
       s.write('  ${p.type.getDartType(w)} ${p.name},\n');
     }
     s.write(') {\n');
     s.write('  return $funcVarName(\n');
-    for (var p in parameters) {
+    for (final p in parameters) {
       s.write('    ${p.name},\n');
     }
     s.write('  );\n');
@@ -79,14 +79,14 @@ class Func extends Binding {
 
     // write typdef for C.
     s.write('typedef $typedefC = ${returnType.getCType(w)} Function(\n');
-    for (var p in parameters) {
+    for (final p in parameters) {
       s.write('  ${p.type.getCType(w)} ${p.name},\n');
     }
     s.write(');\n\n');
 
     // write typdef for dart.
     s.write('typedef $typedefDart = ${returnType.getDartType(w)} Function(\n');
-    for (var p in parameters) {
+    for (final p in parameters) {
       s.write('  ${p.type.getDartType(w)} ${p.name},\n');
     }
     s.write(');\n\n');
