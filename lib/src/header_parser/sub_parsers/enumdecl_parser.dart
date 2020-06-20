@@ -13,14 +13,14 @@ import '../utils.dart';
 
 var _logger = Logger('parser:enumdecl_parser');
 
-/// Temporarily holds a enumClass before its returned by [parseEnumDeclaration]
+/// Temporarily holds a enumClass before its returned by [parseEnumDeclaration].
 EnumClass _enumClass;
 
-/// Parses a function declaration
+/// Parses a function declaration.
 EnumClass parseEnumDeclaration(
   Pointer<clang.CXCursor> cursor, {
 
-  /// Optionally provide name to use (useful in case struct is inside a typedef)
+  /// Optionally provide name to use (useful in case struct is inside a typedef).
   String name,
 }) {
   _enumClass = null;
@@ -51,10 +51,10 @@ void _addEnumConstant(Pointer<clang.CXCursor> cursor) {
   visitChildrenResultChecker(resultCode);
 }
 
-/// Visitor for a function cursor [clang.CXCursorKind.CXCursor_EnumDecl]
+/// Visitor for a enum cursor [clang.CXCursorKind.CXCursor_EnumDecl].
 ///
-/// Invoked on every function directly under rootCursor
-/// for extracting parameters
+/// Invoked on every enum directly under rootCursor.
+/// Used for for extracting enum values.
 int _enumCursorVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
   try {
@@ -76,12 +76,12 @@ int _enumCursorVisitor(Pointer<clang.CXCursor> cursor,
   return clang.CXChildVisitResult.CXChildVisit_Continue;
 }
 
-/// Adds the parameter to func in [functiondecl_parser.dart]
+/// Adds the parameter to func in [functiondecl_parser.dart].
 void _addEnumConstantToEnumClass(Pointer<clang.CXCursor> cursor) {
   _enumClass.enumConstants.add(
     EnumConstant(
         // Extracting doc comment doesn't always give the right comment
-        // so we are skipping dartdoc for individual enum constants
+        // so we are skipping dartdoc for individual enum constants.
         name: cursor.spelling(),
         value: clang.clang_getEnumConstantDeclValue_wrap(cursor)),
   );

@@ -8,11 +8,11 @@ int sum(int a, int b);
 /** Subtract 2 integers */
 int subtract(int *a, int b);
 
-/** Multiply 2 integers, returns pointer to an integer*/
+/** Multiply 2 integers, returns pointer to an integer */
 int *multiply(int a, int b);
 
-/** Divide 2 integers, returns pointer to a float*/
+/** Divide 2 integers, returns pointer to a float */
 float *divide(int a, int b);
 
-/** Divide 2 floats, returns a pointer to double*/
+/** Divide 2 floats, returns a pointer to double */
 double *dividePercision(float *a, float *b);

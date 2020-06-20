@@ -14,23 +14,23 @@ import 'package:yaml/yaml.dart' as yaml;
 var _logger = Logger('generate.dart');
 
 void main(List<String> args) {
-  // get cmd Args
+  // parser the cmd Args.
   var result = getArgResults(args);
 
-  // set logger level
+  // setup logging level and printing.
   setupLogger(result);
 
-  // create config
+  // create config object.
   var config = getConfig(result);
 
-  // parse the bindings according to config
+  // parse the bindings according to config object provided.
   final library = parser.parse(config);
 
   if (config.sort) {
     library.sort();
   }
 
-  // Generate file for parsed bindings
+  // Generate file for the parsed bindings.
   var gen = File(config.output);
   library.generateFile(gen);
   _logger.info('Finished, Bindings generated in ${gen?.absolute?.path}');
@@ -47,6 +47,7 @@ Config getConfig(ArgResults result) {
   }
 }
 
+/// Extracts configuration from pubspec file
 Config getConfigFromPubspec() {
   var pubspecName = 'pubspec.yaml';
   var configKey = 'ffigen';
@@ -72,6 +73,7 @@ Config getConfigFromPubspec() {
   return Config.fromYaml(bindingsConfigMap);
 }
 
+/// Extracts configuration from a custom yaml file.
 Config getConfigFromCustomYaml(String yamlPath) {
   var yamlFile = File(yamlPath);
 
@@ -90,6 +92,7 @@ Config getConfigFromCustomYaml(String yamlPath) {
   return Config.fromYaml(bindingsConfigMap);
 }
 
+/// Parse cmd line arguments.
 ArgResults getArgResults(List<String> args) {
   var parser = ArgParser(allowTrailingOptions: true);
 
@@ -135,41 +138,41 @@ ArgResults getArgResults(List<String> args) {
   return results;
 }
 
+/// Setup logging level and printing.
 void setupLogger(ArgResults result) {
   if (result.wasParsed('verbose')) {
     switch (result['verbose'] as String) {
       case 'all':
-        // everything, entire AST touched by our parser
+        // logs everything, entire AST touched by our parser.
         Logger.root.level = Level.ALL;
         break;
       case 'fine':
-        // AST parts relevant to user (i.e included in filter)
+        // logs AST parts relevant to user (i.e included in filter).
         Logger.root.level = Level.FINE;
         break;
       case 'info':
-        // relevant info for general user (default)
+        // logs relevant info for general user (default).
         Logger.root.level = Level.INFO;
         break;
       case 'warning':
-        // warnings for relevant stuff
+        // logs warnings for relevant stuff.
         Logger.root.level = Level.WARNING;
         break;
       case 'severe':
-        // severe warnings and errors
+        // logs severe warnings and errors.
         Logger.root.level = Level.SEVERE;
         break;
     }
-    // setup logger for printing (verbosity set by user)
+    // setup logger for printing (if verbosity was set by user).
     Logger.root.onRecord.listen((record) {
       print('${record.level.name.padRight(8)}: ${record.message}');
     });
   } else {
-    // setup logger for printing (verbosity not set by user)
+    // setup logger for printing (if verbosity was not set by user).
     Logger.root.onRecord.listen((record) {
       if (record.level.value > Level.INFO.value) {
         print('  ${record.level.name.padRight(8)}: ${record.message}');
       } else {
-        // printing info
         print(record.message);
       }
     });

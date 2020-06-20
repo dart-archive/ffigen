@@ -20,7 +20,7 @@ import 'writer.dart';
 ///   .
 /// );`
 /// ```
-/// Note: This doesn't bind with anything
+/// Note: This doesn't bind with anything.
 class TypedefC extends Binding {
   final Type returnType;
   final List<Parameter> parameters;

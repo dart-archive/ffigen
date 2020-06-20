@@ -10,6 +10,15 @@ import 'type.dart';
 import 'writer.dart';
 
 /// A binding to a global variable
+///
+/// For a C global variable -
+/// ```c
+/// int a;
+/// ```
+/// The generated dart is -
+/// ```dart
+/// final int a = _dylib.lookup<ffi.Int32>('a').value;
+/// ```
 class Global extends Binding {
   final Type type;
 

@@ -13,10 +13,10 @@ import '../utils.dart';
 
 var _logger = Logger('parser:functiondecl_parser');
 
-/// Temporarily holds a function before its returned by [parseFunctionDeclaration]
+/// Temporarily holds a function before its returned by [parseFunctionDeclaration].
 Func _func;
 
-/// Parses a function declaration
+/// Parses a function declaration.
 Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
   _func = null;
   structByValueParameter = false;
@@ -36,7 +36,7 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
           '---- Removed Function, reason: struct pass/return by value: ${cursor.completeStringRepr()}');
       _logger.warning(
           'Removed Function: $name, struct pass/return by value not supported');
-      return null; //returning null so that [addToBindings] function excludes this
+      return null; //returning null so that [addToBindings] function excludes this.
     }
 
     // TODO: check, handling arrays in function parameters
@@ -45,7 +45,7 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
           '---- Removed Function, reason: constant array passed to function parameter: ${cursor.completeStringRepr()}');
       _logger.warning(
           'Removed Function: $name, constant array in function parameter not supported');
-      return null; //returning null so that [addToBindings] function excludes this
+      return null; //returning null so that [addToBindings] function excludes this.
     }
 
     if (rt.getBaseBroadType() == BroadType.Unimplemented ||
@@ -54,7 +54,7 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
           '---- Removed Function, reason: unsupported return type or parameter type: ${cursor.completeStringRepr()}');
       _logger.warning(
           'Removed Function: $name, function has unsupported return type or parameter type');
-      return null; //returning null so that [addToBindings] function excludes this
+      return null; //returning null so that [addToBindings] function excludes this.
     }
 
     _func = Func(
@@ -97,7 +97,7 @@ List<Parameter> _getParameters(Pointer<clang.CXCursor> cursor) {
 
     var pn = paramCursor.spelling();
 
-    // if pn is null or ' ', its set to 'arg$i' by code_generator
+    /// if pn is null or empty, its set to `arg$i` by code_generator.
     parameters.add(
       Parameter(
         name: pn,

@@ -9,14 +9,24 @@ import 'binding_string.dart';
 import 'type.dart';
 import 'writer.dart';
 
-/// A simple Constant
-/// ```dart 
+/// A simple Constant.
+///
+/// Expands to -
+/// ```dart
+/// const <type> <name> = <rawValue>;
+/// ```
+///
+/// Example -
+/// ```dart
 /// const int name = 10;
 /// ```
-/// rawValue is pasted as it is, so make sure to add quotes 
-/// for a string constant
 class Constant extends Binding {
   final Type type;
+
+  /// The rawValue is pasted as it is.
+  ///
+  /// Make sure you put quotes
+  /// when constant's type is string
   final String rawValue;
 
   const Constant({
@@ -38,6 +48,7 @@ class Constant extends Binding {
 
     s.write('const ${type.getDartType(w)} $name = $rawValue;\n\n');
 
-    return BindingString(type: BindingStringType.constant, string: s.toString());
+    return BindingString(
+        type: BindingStringType.constant, string: s.toString());
   }
 }

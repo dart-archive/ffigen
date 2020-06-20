@@ -8,7 +8,20 @@ import 'binding.dart';
 import 'binding_string.dart';
 import 'writer.dart';
 
-/// A binding for enums in C
+/// A binding for enums in C.
+///
+/// For a C enum -
+/// ```c
+/// enum Fruits {apple, banana = 10};
+/// ```
+/// The generated dart is
+///
+/// ```dart
+/// class Fruits {
+///   static const apple = 0;
+///   static const banana = 10;
+/// }
+/// ```
 class EnumClass extends Binding {
   final List<EnumConstant> enumConstants;
 
@@ -29,7 +42,7 @@ class EnumClass extends Binding {
       s.write('\n');
     }
 
-    // print enclosing class
+    // print enclosing class.
     s.write('class $name {\n');
     var depth = '  ';
     for (var ec in enumConstants) {
@@ -42,11 +55,12 @@ class EnumClass extends Binding {
     }
     s.write('}\n\n');
 
-    return BindingString(type: BindingStringType.enumClass, string: s.toString());
+    return BindingString(
+        type: BindingStringType.enumClass, string: s.toString());
   }
 }
 
-/// Represents a single value in an enum
+/// Represents a single value in an enum.
 class EnumConstant {
   final String dartDoc;
   final String name;

@@ -1,7 +1,7 @@
 # cJson example
 
-Demonstrates generation of bindings for a C library called 
-[cJson](https://github.com/DaveGamble/cJSON) and then using these bindings 
+Demonstrates generation of bindings for a C library called
+[cJson](https://github.com/DaveGamble/cJSON) and then using these bindings
 to parse some json.
 
 ## Building the cJson dynamic library

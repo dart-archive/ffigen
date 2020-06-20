@@ -6,7 +6,7 @@ import 'package:meta/meta.dart';
 
 /// A Binding's String representation
 class BindingString {
-  // meta data, not used for generation
+  // meta data, (not used for generation).
   final BindingStringType type;
   final String string;
 
@@ -16,7 +16,7 @@ class BindingString {
   String toString() => string;
 }
 
-/// A type of BindingString
+/// A BindingString's type
 enum BindingStringType {
   func,
   struc,

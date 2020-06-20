@@ -12,21 +12,21 @@ import 'writer.dart';
 
 var _logger = Logger('code_generator');
 
-/// Definition of a Binding object.
+/// Container for all Bindings
 class Library {
   /// variable name of dynamicLibrary, defaults to `_dylib`,
-  /// you can rename it in case of name conflicts with something else.
   final String dylibIdentifier;
 
   /// init function for providing dynamic library, defaults to `init`,
   /// you can rename it in case of name conflicts with something else.
   final String initFunctionIdentifier;
 
-  /// Header of file
+  /// Header of file.
   final String header;
 
-  /// bindings in this
+  /// List of bindings in this library.
   final List<Binding> bindings;
+
   Library({
     @required this.bindings,
     this.dylibIdentifier = '_dylib',
@@ -35,13 +35,13 @@ class Library {
   })  : assert(dylibIdentifier != null),
         assert(initFunctionIdentifier != null);
 
-  /// Sorts all bindings in alphabetical order
+  /// Sort all bindings in alphabetical order.
   void sort() {
     bindings.sort((b1, b2) => b1.name.compareTo(b2.name));
   }
 
   /// Generates [file] by generating C bindings.
-  /// If format is true(default) 'dartfmt -w $PATH' will be called to format the generated file.
+  /// If format is true(default), 'dartfmt -w $PATH' will be called to format the generated file.
   void generateFile(File file, {bool format = true}) {
     file.writeAsStringSync(toString());
     if (format) {

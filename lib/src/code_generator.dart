@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-/// Generates 'dart:ffi' bindings for C libraries.
+/// Generates FFI bindings for a given [Library].
 library code_generator;
 
 export 'code_generator/binding.dart';

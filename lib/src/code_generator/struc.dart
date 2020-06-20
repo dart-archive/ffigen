@@ -9,7 +9,30 @@ import 'binding_string.dart';
 import 'type.dart';
 import 'writer.dart';
 
-/// A binding for C function
+/// A binding for C Struct.
+///
+/// For a C structure -
+/// ```c
+/// struct C {
+///   int a;
+///   double b;
+///   int c;
+/// };
+/// ```
+/// The generated dart is -
+/// ```dart
+/// class Struct extends ffi.Struct{
+///  @ffi.Int32()
+///  int a;
+///
+///  @ffi.Double()
+///  double b;
+///
+///  @ffi.Uint8()
+///  int c;
+///
+/// }
+/// ```
 class Struc extends Binding {
   final List<Member> members;
 
@@ -32,7 +55,7 @@ class Struc extends Binding {
 
     var helpers = <ArrayHelper>[];
 
-    // write class declaration
+    // write class declaration.
     s.write('class $name extends ${w.ffiLibraryPrefix}.Struct{\n');
     for (var m in members) {
       if (m.type.broadType == BroadType.ConstantArray) {
@@ -72,7 +95,7 @@ class Member {
   const Member({this.name, this.type});
 }
 
-// creates an Array helper binding for a Struct Array
+// creates an Array helper binding for a Struct Array.
 class ArrayHelper {
   final Type elementType;
   final int length;
@@ -117,13 +140,13 @@ class ArrayHelper {
 
     s.write('/// Helper for array $name in struct $structName\n');
 
-    // write class declaration
+    // write class declaration.
     s.write('class $helperClassName{\n');
     s.write('final $structName _struct;\n');
     s.write('final int length;\n');
     s.write('$helperClassName(this._struct, this.length);\n');
 
-    // override []= operator
+    // override []= operator.
     s.write('void operator []=(int index, $arrayType value) {\n');
     s.write('switch(index) {\n');
     for (var i = 0; i < length; i++) {
@@ -137,7 +160,7 @@ class ArrayHelper {
     s.write('}\n');
     s.write('}\n');
 
-    // override [] operator
+    // override [] operator.
     s.write('$arrayType operator [](int index) {\n');
     s.write('switch(index) {\n');
     for (var i = 0; i < length; i++) {
@@ -150,7 +173,7 @@ class ArrayHelper {
     s.write('}\n');
     s.write('}\n');
 
-    // override toString()
+    // override toString().
     s.write('@override\n');
     s.write('String toString() {\n');
     s.write("if (length == 0) return '[]';\n");

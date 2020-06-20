@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/config_provider.dart';
-/// Holds Global shared variables
+/// Holds all Global shared variables.
 
-/// Holds configurations
+/// Holds configurations.
 Config config;

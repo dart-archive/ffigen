@@ -8,57 +8,45 @@ environment:
   sdk: '>=2.8.1 <3.0.0'
 
 dev_dependencies:
-  ffigen: 
+  ffigen:
     path: '../../'
 
 ffigen:
   output: 'generated_bindings.dart'
   sort: true
   libclang-dylib-folder: '../../tool/wrapped_libclang'
-  
+
   # globs are supported, and only .h files are parsed (.c temporarily)
   # globs dont work in windows if they begin with '.' or '..'
   headers:
     - '../../tool/wrapped_libclang/wrapper.c'
-  
-  # excludes included headers based on their names (not fullpath name)
+
+  # excludes included headers based on their names (not fullpath name).
   header-filter:
     include:
       - 'wrapper.c'
       - 'CXString.h'
       - 'Index.h'
-  
-  compiler-opts: '-I/usr/lib/llvm-9/include/ -I/usr/lib/llvm-10/include/'
+
+  compiler-opts: '-I/usr/lib/llvm-9/include/ -I/usr/lib/llvm-10/include/ -IC:\Progra~1\LLVM\include -I/usr/local/opt/llvm/include/ -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/'
   functions:
     include:
       matches:
-      # should be valid regexp
+      # should be valid regexp.
         - 'clang_.*'
-      # names:
-      # should match exact function name
-        # - 'clang_executeOnThread'
-    # exclude:
-      # matches:
-      # # should be valid regexp
-        # - '.*CursorKind.*'
-      # names:
-      # # should match exact function name
-        # - 'clang_visitChildren_wrap'
   structs:
     include:
         matches:
           - 'CX.*'
-        # names:
-      # should match exact struct name
-          # - 'IndexerCallbacks'
   enums:
     include:
+      # compares the exact name.
       names:
         - 'CXTypeKind'
         - 'CXGlobalOptFlags'
-  
-  # these are optional and also default
-  # you can leave out any and the default will be used
+
+  # these are optional and also default,
+  # you can leave out any and the default will be used.
   size-map:
     char: 1
     unsigned char: 1
@@ -71,6 +59,6 @@ ffigen:
     long long: 8
     unsigned long long: 8
     enum: 4
-  
+
   # true by default
   extract-comments: true

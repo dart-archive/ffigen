@@ -9,7 +9,24 @@ import 'binding_string.dart';
 import 'type.dart';
 import 'writer.dart';
 
-/// A binding for C function
+/// A binding for C function.
+///
+/// For a C function -
+/// ```c
+/// int sum(int a, int b);
+/// ```
+/// The Generated dart is -
+/// ```dart
+/// int sum(int a, int b) {
+///   return _sum(a, b);
+/// }
+///
+/// final _dart_sum _sum = _dylib.lookupFunction<_c_sum, _dart_sum>('sum');
+///
+/// typedef _c_sum = ffi.Int32 Function(ffi.Int32 a, ffi.Int32 b);
+///
+/// typedef _dart_sum = int Function(int a, int b);
+/// ```
 class Func extends Binding {
   final Type returnType;
   final List<Parameter> parameters;
@@ -43,7 +60,7 @@ class Func extends Binding {
       s.write('\n');
     }
 
-    // write enclosing function
+    // write enclosing function.
     s.write('${returnType.getDartType(w)} $name(\n');
     for (var p in parameters) {
       s.write('  ${p.type.getDartType(w)} ${p.name},\n');
@@ -56,18 +73,18 @@ class Func extends Binding {
     s.write('  );\n');
     s.write('}\n\n');
 
-    // write function with dylib lookup
+    // write function with dylib lookup.
     s.write(
         "final $typedefDart $funcVarName = ${w.dylibIdentifier}.lookupFunction<$typedefC,$typedefDart>('$name');\n\n");
 
-    // write typdef for C
+    // write typdef for C.
     s.write('typedef $typedefC = ${returnType.getCType(w)} Function(\n');
     for (var p in parameters) {
       s.write('  ${p.type.getCType(w)} ${p.name},\n');
     }
     s.write(');\n\n');
 
-    // write typdef for dart
+    // write typdef for dart.
     s.write('typedef $typedefDart = ${returnType.getDartType(w)} Function(\n');
     for (var p in parameters) {
       s.write('  ${p.type.getDartType(w)} ${p.name},\n');
@@ -78,6 +95,7 @@ class Func extends Binding {
   }
 }
 
+/// Represents a Function's parameter.
 class Parameter {
   String name;
   final Type type;

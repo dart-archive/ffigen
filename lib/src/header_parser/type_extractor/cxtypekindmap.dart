@@ -6,7 +6,7 @@ import 'package:ffigen/src/header_parser/clang_bindings/clang_bindings.dart'
     as clang;
 import 'package:ffigen/src/code_generator.dart' show SupportedNativeType;
 
-/// Utility to convert CXType to [code_generator.Type]
+/// Utility to convert CXType to [code_generator.Type].
 ///
 /// key: CXTypekindEnum, Value: TypeString for code_generator
 var cxTypeKindToSupportedNativeTypes = <int, SupportedNativeType>{

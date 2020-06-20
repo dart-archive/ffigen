@@ -20,56 +20,52 @@ import 'spec_utils.dart';
 
 var _logger = Logger('config_provider/config');
 
-/// Contains all config spec
+/// Provides configurations to other modules
+///
+/// Handles validation, extraction of confiurations from yaml file.
 class Config {
-  /// output file name
+  /// output file name.
   String output;
 
-  /// libclang path (in accordance with the platform)
+  /// libclang path (in accordance with the platform).
   ///
-  /// contains .so / .dll / .dylib, as extracted by configspec
-  ///
-  /// cannot be null
+  /// File may have the following extensions - `.so` / `.dll` / `.dylib`
+  /// as extracted by configspec.
   String libclang_dylib_path;
 
-  /// path to headers
+  /// Path to headers.
   ///
-  /// This contains all the headers, after extraction from Globs
-  ///
-  /// Cannot be null
+  /// This contains all the headers, after extraction from Globs.
   List<String> headers;
 
+  /// Filter for headers.
   HeaderFilter headerFilter;
 
-  /// commandLineArguments to pass to clang_compiler
-  ///
-  /// can be null
+  /// commandLineArguments to pass to clang_compiler.
   List<String> compilerOpts;
 
-  // Filter for functions
+  /// Filter for functions.
   Filter functionFilters;
 
-  // Filter for structs
+  /// Filter for structs.
   Filter structFilters;
 
-  // Filter for enumClass
+  /// Filter for enumClass.
   Filter enumClassFilters;
 
-  // If generated bindings should be alphabetically sorted
+  /// If generated bindings should be sorted alphabetically.
   bool sort;
 
-  // If typedef of supported types(int8_t) should be directly used
+  /// If typedef of supported types(int8_t) should be directly used.
   bool useSupportedTypedefs;
 
-  // should extract doc comment from bindings
+  /// should extract doc comment from bindings.
   bool extractComments;
 
-  // contains map of all config
-  // Map<String, Spec> _map;
-  /// Use `Config.fromYaml` if extracting info from yaml file
+  /// Manually creating configurations.
+  /// Use [Config.fromYaml] if extracting info from a yaml file.
   ///
-  /// Make sure Logger is setup before using this
-  /// or log messages aren't printed
+  /// Ensure that log printing is setup before using this.
   Config.raw({
     this.output,
     @required this.libclang_dylib_path,
@@ -86,10 +82,9 @@ class Config {
 
   Config._();
 
-  /// Create config from Yaml map
+  /// Create config from Yaml map.
   ///
-  /// Make sure Logger is setup before using this
-  /// or log messages aren't printed
+  /// Ensure that log printing is setup before using this.
   factory Config.fromYaml(YamlMap map) {
     var configspecs = Config._();
     _logger.finest('Config Map: ' + map.toString());
@@ -106,8 +101,8 @@ class Config {
     return configspecs;
   }
 
-  /// Validates Yaml according to given specs
-  bool _checkConfigs(YamlMap map, Map<String, Spec> specs) {
+  /// Validates Yaml according to given specs.
+  bool _checkConfigs(YamlMap map, Map<String, Specification> specs) {
     var _result = true;
     for (var key in specs.keys) {
       var spec = specs[key];
@@ -118,7 +113,7 @@ class Config {
         _result = _result && spec.validator(key, map[key]);
       }
     }
-    //warn about unknown keys
+    //warn about unknown keys.
     for (var key in map.keys) {
       if (!specs.containsKey(key)) {
         _logger.warning('Unknown key found: $key');
@@ -128,10 +123,10 @@ class Config {
     return _result;
   }
 
-  /// Extracts variables from Yaml according to given specs
+  /// Extracts variables from Yaml according to given specs.
   ///
-  /// Validation must be done
-  void _extract(YamlMap map, Map<String, Spec> specs) {
+  /// Validation must be done beforehand, using [_checkConfigs].
+  void _extract(YamlMap map, Map<String, Specification> specs) {
     for (var key in specs.keys) {
       var spec = specs[key];
       if (map.containsKey(key)) {
@@ -142,12 +137,12 @@ class Config {
     }
   }
 
-  /// The specs avaialble for our tool
+  /// Returns map of various specifications avaialble for our tool.
   ///
-  /// Key: Name, Value: Spec
-  Map<String, Spec> _getSpecs() {
-    return <String, Spec>{
-      strings.output: Spec(
+  /// Key: Name, Value: [Specification]
+  Map<String, Specification> _getSpecs() {
+    return <String, Specification>{
+      strings.output: Specification(
         description: 'Output file name',
         isRequired: true,
         validator: outputValidator,
@@ -155,7 +150,7 @@ class Config {
         defaultValue: null,
         extractedResult: (dynamic result) => output = result as String,
       ),
-      strings.libclang_dylib_folder: Spec(
+      strings.libclang_dylib_folder: Specification(
         description:
             'Path to libclang dynamic library, used to parse C headers',
         isRequired: true,
@@ -164,14 +159,14 @@ class Config {
         extractedResult: (dynamic result) =>
             libclang_dylib_path = result as String,
       ),
-      strings.headers: Spec(
+      strings.headers: Specification(
         description: 'List of C headers to generate bindings of',
         isRequired: true,
         validator: headersValidator,
         extractor: headersExtractor,
         extractedResult: (dynamic result) => headers = result as List<String>,
       ),
-      strings.headerFilter: Spec(
+      strings.headerFilter: Specification(
         description: 'Include/Exclude inclusion headers',
         validator: headerFilterValidator,
         extractor: headerFilterExtractor,
@@ -180,7 +175,7 @@ class Config {
           return headerFilter = result as HeaderFilter;
         },
       ),
-      strings.compilerOpts: Spec(
+      strings.compilerOpts: Specification(
         description: 'Raw compiler options to pass to clang compiler',
         isRequired: false,
         validator: compilerOptsValidator,
@@ -189,7 +184,7 @@ class Config {
         extractedResult: (dynamic result) =>
             compilerOpts = result as List<String>,
       ),
-      strings.functions: Spec(
+      strings.functions: Specification(
         description: 'Filter for functions',
         isRequired: false,
         validator: filterValidator,
@@ -197,7 +192,7 @@ class Config {
         defaultValue: null,
         extractedResult: (dynamic result) => functionFilters = result as Filter,
       ),
-      strings.structs: Spec(
+      strings.structs: Specification(
         description: 'Filter for Structs',
         isRequired: false,
         validator: filterValidator,
@@ -205,7 +200,7 @@ class Config {
         defaultValue: null,
         extractedResult: (dynamic result) => structFilters = result as Filter,
       ),
-      strings.enums: Spec(
+      strings.enums: Specification(
         description: 'Filter for enums',
         isRequired: false,
         validator: filterValidator,
@@ -214,7 +209,7 @@ class Config {
         extractedResult: (dynamic result) =>
             enumClassFilters = result as Filter,
       ),
-      strings.sizemap: Spec(
+      strings.sizemap: Specification(
         description: 'map of types: byte size in int',
         validator: sizemapValidator,
         extractor: sizemapExtractor,
@@ -228,7 +223,7 @@ class Config {
           }
         },
       ),
-      strings.sort: Spec(
+      strings.sort: Specification(
         description: 'whether or not to sort the bindings alphabetically',
         isRequired: false,
         validator: booleanValidator,
@@ -236,7 +231,7 @@ class Config {
         defaultValue: false,
         extractedResult: (dynamic result) => sort = result as bool,
       ),
-      strings.useSupportedTypedefs: Spec(
+      strings.useSupportedTypedefs: Specification(
         description: 'whether or not to directly map supported typedef by name',
         isRequired: false,
         validator: booleanValidator,
@@ -245,7 +240,7 @@ class Config {
         extractedResult: (dynamic result) =>
             useSupportedTypedefs = result as bool,
       ),
-      strings.extractComments: Spec(
+      strings.extractComments: Specification(
         description: 'whether or not to extract comments from bindings',
         isRequired: false,
         validator: booleanValidator,
@@ -257,8 +252,8 @@ class Config {
   }
 }
 
-/// Represents a spec in a config
-class Spec {
+/// Represents a single specification in configurations.
+class Specification {
   final String description;
   final bool Function(String name, dynamic value) validator;
   final dynamic Function(dynamic map) extractor;
@@ -266,7 +261,7 @@ class Spec {
   final bool isRequired;
   final void Function(dynamic result) extractedResult;
 
-  Spec({
+  Specification({
     @required this.extractedResult,
     @required this.description,
     @required this.validator,

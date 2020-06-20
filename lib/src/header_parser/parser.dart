@@ -14,7 +14,7 @@ import 'clang_bindings/clang_bindings.dart' as clang;
 import 'data.dart' as data;
 import 'utils.dart';
 
-/// Main entrypoint for header_parser
+/// Main entrypoint for header_parser.
 Library parse(Config conf, {bool sort = false}) {
   initParser(conf);
 
@@ -34,14 +34,14 @@ Library parse(Config conf, {bool sort = false}) {
 
 var _logger = Logger('parser:parser');
 
-/// initialises parser, clears any previous values
+/// initialises parser, clears any previous values.
 void initParser(Config c) {
   data.config = c;
 
   clang.init(DynamicLibrary.open(data.config.libclang_dylib_path));
 }
 
-/// Parses source files and adds generated bindings to [bindings]
+/// Parses source files and adds generated bindings to [bindings].
 List<Binding> parseAndGenerateBindings() {
   var index = clang.clang_createIndex(0, 0);
 
@@ -52,7 +52,7 @@ List<Binding> parseAndGenerateBindings() {
     cmdLen = data.config.compilerOpts.length;
   }
 
-  /// Contains all bindings
+  // Contains all bindings.
   var bindings = <Binding>[];
 
   for (var h in data.config.headers) {

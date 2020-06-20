@@ -2,13 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-/// A generic filter
+/// A generic filter.
 ///
 /// User can provide fiters for
 /// functions, structs, enums and include/exclude
-/// them using regexp, full name matching
+/// them using regexp, full name matching.
 class Filter {
-  /// matchers
+  // matchers
   List<RegExp> _includeMatchers = [];
   Set<String> _includeFull = {};
   List<RegExp> _excludeMatchers = [];
@@ -36,7 +36,7 @@ class Filter {
     }
   }
 
-  /// Checks if a name is allowed by a filter
+  /// Checks if a name is allowed by a filter.
   bool shouldInclude(String name) {
     if (_excludeFull.contains(name)) {
       return false;
@@ -58,7 +58,7 @@ class Filter {
       }
     }
 
-    // if user has provided what to include, then by default match is false
+    // if user has provided what to include, then by default match is false.
     if (_includeMatchers.isNotEmpty || _includeFull.isNotEmpty) {
       return false;
     } else {

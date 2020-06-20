@@ -13,20 +13,21 @@ import '../utils.dart';
 
 var _logger = Logger('parser:structdecl_parser');
 
-/// Temporarily holds a struc before its returned by [parseStructDeclaration]
+/// Temporarily holds a struc before its returned by [parseStructDeclaration].
 Struc _struc;
 
-/// Parses a struct declaration
+/// Parses a struct declaration.
 Struc parseStructDeclaration(
   Pointer<clang.CXCursor> cursor, {
 
-  /// Optionally provide name (useful in case struct is inside a typedef)
+  /// Optionally provide name (useful in case struct is inside a typedef).
   String name,
 
-  /// to override shouldInclude methods
+  /// to override shouldInclude methods.
   /// (useful in case of extracting structs
   /// when they are passed/returned by an included function)
-  /// you should check if binding is not already included
+  ///
+  /// you should manually check if binding is not already included
   /// before setting this to true
   bool doInclude = false,
 }) {
@@ -65,7 +66,7 @@ List<Member> _getMembers(Pointer<clang.CXCursor> cursor, String structName) {
 
   visitChildrenResultChecker(resultCode);
 
-  // returning null to exclude the struct members as it has a struct by value field
+  // returning null to exclude the struct members as it has a struct by value field.
   if (nestedStructMember) {
     _logger.fine(
         '---- Removed Struct members, reason: struct has struct members ${cursor.completeStringRepr()}');
@@ -86,9 +87,9 @@ List<Member> _getMembers(Pointer<clang.CXCursor> cursor, String structName) {
 bool nestedStructMember = false;
 bool unimplementedMemberType = false;
 
-/// Visitor for the struct cursor [CXCursorKind.CXCursor_StructDecl]
+/// Visitor for the struct cursor [CXCursorKind.CXCursor_StructDecl].
 ///
-/// child visitor invoked on struct cursor
+/// child visitor invoked on struct cursor.
 int _structMembersVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
   try {
@@ -100,11 +101,11 @@ int _structMembersVisitor(Pointer<clang.CXCursor> cursor,
       //TODO(4): remove these when support for Structs by value arrive
       if (mt.broadType == BroadType.Struct) {
         nestedStructMember =
-            true; // setting this flag will exclude adding members for this struct's bindings
+            true; // setting this flag will exclude adding members for this struct's bindings.
       } else if (mt.broadType == BroadType.ConstantArray) {
         if (mt.elementType.broadType == BroadType.Struct) {
           nestedStructMember =
-              true; // setting this flag will exclude adding members for this struct's bindings
+              true; // setting this flag will exclude adding members for this struct's bindings.
         }
       }
 

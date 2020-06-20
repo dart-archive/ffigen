@@ -72,7 +72,7 @@ void main() {
 
       var gen = library.toString();
 
-      // writing to file for debug purpose
+      // writing to file for debug purpose.
       var file = File(
         'test/debug_generated/Function-Binding-test-output.dart',
       );
@@ -222,7 +222,7 @@ typedef _dart_withPointerParam = ffi.Pointer<ffi.Double> Function(
 
       var gen = library.toString();
 
-      // writing to file for debug purpose
+      // writing to file for debug purpose.
       var file = File('test/debug_generated/Struct-Binding-test-output.dart');
 
       try {
@@ -325,7 +325,7 @@ class WithPointerMember extends ffi.Struct{
 
       var gen = library.toString();
 
-      // writing to file for debug purpose
+      // writing to file for debug purpose.
       var file =
           File('test/debug_generated/Func-n-Struct-Binding-test-output.dart');
       try {
@@ -415,7 +415,7 @@ typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
 
       var gen = library.toString();
 
-      // writing to file for debug purpose
+      // writing to file for debug purpose.
       var file = File(
         'test/debug_generated/Global-Binding-test-output.dart',
       );
@@ -472,7 +472,7 @@ final ffi.Pointer<Some> test5 = _dylib.lookup<ffi.Pointer<Some>>('test5').value;
 
       var gen = library.toString();
 
-      // writing to file for debug purpose
+      // writing to file for debug purpose.
       var file = File(
         'test/debug_generated/Constant-test-output.dart',
       );
@@ -540,7 +540,7 @@ const double test2 = 20.0;
 
       var gen = library.toString();
 
-      // writing to file for debug purpose
+      // writing to file for debug purpose.
       var file = File('test/debug_generated/typedef-Binding-test-output.dart');
       try {
         expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT.
@@ -595,7 +595,7 @@ typedef test2 = ffi.Pointer<ffi.Int32> Function(
 
       var gen = library.toString();
 
-      // writing to file for debug purpose
+      // writing to file for debug purpose.
       var file = File(
         'test/debug_generated/enum-class-test-output.dart',
       );

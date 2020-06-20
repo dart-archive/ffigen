@@ -29,7 +29,7 @@ enum SupportedNativeType {
   IntPtr,
 }
 
-/// The basic types in which all types can be classified
+/// The basic types in which all types can be broadly classified into.
 enum BroadType {
   NativeType,
   Pointer,
@@ -43,7 +43,7 @@ enum BroadType {
   Unimplemented,
 }
 
-/// Type class for return types, variable types, etc
+/// Type class for return types, variable types, etc.
 class Type {
   static const _primitives = <SupportedNativeType, _SubType>{
     SupportedNativeType.Void: _SubType(c: 'Void', dart: 'void'),
@@ -61,28 +61,26 @@ class Type {
     SupportedNativeType.IntPtr: _SubType(c: 'IntPtr', dart: 'int'),
   };
 
-  /// For providing name of Struct
+  /// For providing name of Struct.
   String structName;
 
-  /// For providing name of nativeFunc
+  /// For providing name of nativeFunc.
   String nativeFuncName;
 
-  /// For providing [SupportedNativeType] only
+  /// For providing [SupportedNativeType] only.
   final SupportedNativeType nativeType;
 
-  /// The BroadType of this Type
+  /// The BroadType of this Type.
   final BroadType broadType;
 
-  /// Child Type, e.g Pointer(Parent) to Int(Child)
+  /// Child Type, e.g Pointer(Parent) to Int(Child).
   final Type child;
 
-  /// For ConstantArray type
+  /// For ConstantArray type.
   final int arrayLength;
   final Type elementType;
 
-  /// For storing cursor type info for an unimplemented type
-  ///
-  /// used for printing details to user
+  /// For storing cursor type info for an unimplemented type.
   String unimplementedReason;
 
   Type._({
@@ -117,9 +115,9 @@ class Type {
         broadType: BroadType.Unimplemented, unimplementedReason: reason);
   }
 
-  /// Get base broad type for any type
+  /// Get base broad type for any type.
   ///
-  /// E.g int** has base Broadtype as NativeType
+  /// E.g int** has base Broadtype as NativeType.
   BroadType getBaseBroadType() {
     if (broadType == BroadType.Pointer) {
       return child.getBaseBroadType();

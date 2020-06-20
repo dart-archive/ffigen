@@ -19,7 +19,7 @@ var _logger = Logger('parser:root_parser');
 
 List<Binding> _bindings;
 
-/// Parses the translation unit and returns the generated bindings
+/// Parses the translation unit and returns the generated bindings.
 List<Binding> parseTranslationUnitCursor(Pointer<clang.CXCursor> translationUnitCursor) {
   _bindings = [];
 
@@ -35,7 +35,7 @@ List<Binding> parseTranslationUnitCursor(Pointer<clang.CXCursor> translationUnit
   return _bindings;
 }
 
-/// child visitor invoked on translationUnitCursor [CXCursorKind.CXCursor_TranslationUnit]
+/// child visitor invoked on translationUnitCursor [CXCursorKind.CXCursor_TranslationUnit].
 int _rootCursorVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
   try {
@@ -72,7 +72,7 @@ int _rootCursorVisitor(Pointer<clang.CXCursor> cursor,
   return clang.CXChildVisitResult.CXChildVisit_Continue;
 }
 
-/// Adds to binding if not null
+/// Adds to binding if not null.
 void addToBindings(Binding b) {
   if (b != null) {
     _bindings.add(b);

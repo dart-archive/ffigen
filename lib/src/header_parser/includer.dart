@@ -7,9 +7,9 @@ import 'package:path/path.dart' as p;
 import 'data.dart';
 
 /// Utility functions to check whether a binding should be parsed or not
-/// based on filters and if a binding is seen already
+/// based on filters and if a binding is seen already.
 
-// Stores binding names already scene
+// Stores binding names already scene.
 Set<String> _structs = {};
 Set<String> _functions = {};
 Set<String> _enumClass = {};
@@ -51,8 +51,8 @@ bool shouldIncludeEnumClass(String name) {
   }
 }
 
-/// True if cursor should be included based on
-/// header-filter, use for root declarations
+/// True if a cursor should be included based on
+/// header-filter, use for root declarations.
 bool shouldIncludeRootCursor(String sourceFile) {
   var name = p.basename(sourceFile);
 

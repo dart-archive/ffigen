@@ -5,7 +5,8 @@
 import 'dart:io';
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/header_parser/clang_bindings/clang_bindings.dart' as clang;
+import 'package:ffigen/src/header_parser/clang_bindings/clang_bindings.dart'
+    as clang;
 import 'package:glob/glob.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
@@ -75,7 +76,7 @@ dynamic sizemapExtractor(dynamic value) {
     if (sizemap.containsKey(strings.Enum)) {
       resultMap[clang.CXTypeKind.CXType_Enum] = nativeSupportedType(
           sizemap[strings.Enum],
-          signed: true); // enums are signed ints
+          signed: true); // enums are signed ints.
     }
   }
   return resultMap;
@@ -114,14 +115,14 @@ dynamic headerFilterExtractor(dynamic value) {
   var headerFilter = value as YamlMap;
   if (headerFilter != null) {
     var include = headerFilter[strings.include] as YamlList;
-    // Add included header-filter from Yaml
+    // Add included header-filter from Yaml.
     if (include != null) {
       for (var header in include) {
         includedInclusionHeaders.add(header as String);
       }
     }
     var exclude = headerFilter[strings.exclude] as YamlList;
-    // Add excluded header-filter from Yaml
+    // Add excluded header-filter from Yaml.
     if (exclude != null) {
       for (var header in exclude) {
         excludedInclusionHeaders.add(header as String);
@@ -148,7 +149,7 @@ dynamic headersExtractor(dynamic value) {
   var headers = <String>[];
   for (var h in (value as YamlList)) {
     var headerGlob = h as String;
-    // add file directly to header if it's not a Glob but a File
+    // add file directly to header if it's not a Glob but a File.
     if (File(headerGlob).existsSync()) {
       if (hasValidExtension(headerGlob)) {
         headers.add(headerGlob);
@@ -211,7 +212,7 @@ String getDylibPath(String value) {
     dylibPath = p.join(value, strings.libclang_dylib_macos);
   } else if (Platform.isWindows) {
     // Fix path for windows if '/' is used as seperator instead of '\'
-    // because our examples input path like this
+    // because our examples input path like this.
     var newValue = value.replaceAll('/', r'\');
     dylibPath = p.join(newValue, strings.libclang_dylib_windows);
   } else {

@@ -10,31 +10,31 @@ import 'package:ffi/ffi.dart';
 
 import 'cjson_generated_bindings.dart' as cjson;
 
-/// Using the generated C_JSON bindings
+/// Using the generated C_JSON bindings.
 void main() {
-  //init cjson bindings
+  // init cjson bindings.
   cjson.init(DynamicLibrary.open(_getPath()));
 
-  // load json from [example.json] file
+  // load json from [example.json] file.
   var jsonString = File('./example.json').readAsStringSync();
 
-  // parse this json string using our cJSON library
+  // parse this json string using our cJSON library.
   var cjsonParsedJson = cjson.cJSON_Parse(Utf8.toUtf8(jsonString).cast());
   if (cjsonParsedJson == nullptr) {
     print('Error parsing cjson');
     exit(1);
   }
   // the json is now stored in some C data structure which we need
-  // to iterate and convert to a dart object (map/list)
+  // to iterate and convert to a dart object (map/list).
 
-  // converting cjson object to a dart object
+  // converting cjson object to a dart object.
   dynamic dartJson = convertCJsonToDartObj(cjsonParsedJson.cast());
 
-  // delete the cjsonParsedJson object
+  // delete the cjsonParsedJson object.
   cjson.cJSON_Delete(cjsonParsedJson);
 
   // check if the converted json is correct
-  // by comparing the result with json converted by dart:convert
+  // by comparing the result with json converted by dart:convert.
   if (dartJson.toString() == json.decode(jsonString).toString()) {
     print('Parsed Json: $dartJson');
     print('Json converted successfully');

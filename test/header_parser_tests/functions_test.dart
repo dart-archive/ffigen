@@ -65,7 +65,7 @@ void main() {
   });
 }
 
-/// Extracts a binding's string from a library
+/// Extracts a binding's string from a library.
 String binding(Library lib, String name) {
   return lib.bindings
       .firstWhere((element) => element.name == name)

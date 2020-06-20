@@ -11,7 +11,7 @@ dependencies:
   ffi: ^0.1.3
 
 dev_dependencies:
-  ffigen: 
+  ffigen:
     path: '../../'
 
 ffigen:
