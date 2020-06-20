@@ -1,6 +1,8 @@
 // Copyright (c) 2020, the Dart project authors. Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+import 'package:ffigen/src/header_parser/clang_bindings/clang_bindings.dart'
+    as clang;
 
 const output = 'output';
 const libclang_dylib_folder = 'libclang-dylib-folder';
@@ -37,19 +39,19 @@ const LongLong = 'long long';
 const ULongLong = 'unsigned long long';
 const Enum = 'enum';
 
-// Used for validation of sizemap.
-const sizemap_expected_values = <String>{
-  SChar,
-  UChar,
-  Short,
-  UShort,
-  Int,
-  UInt,
-  Long,
-  ULong,
-  LongLong,
-  ULongLong,
-  Enum
+// Used for validation and extraction of sizemap.
+const sizemap_native_mapping = <String, int>{
+  SChar: clang.CXTypeKind.CXType_SChar,
+  UChar: clang.CXTypeKind.CXType_UChar,
+  Short: clang.CXTypeKind.CXType_Short,
+  UShort: clang.CXTypeKind.CXType_UShort,
+  Int: clang.CXTypeKind.CXType_Int,
+  UInt: clang.CXTypeKind.CXType_UInt,
+  Long: clang.CXTypeKind.CXType_Long,
+  ULong: clang.CXTypeKind.CXType_ULong,
+  LongLong: clang.CXTypeKind.CXType_LongLong,
+  ULongLong: clang.CXTypeKind.CXType_ULongLong,
+  Enum: clang.CXTypeKind.CXType_Enum
 };
 
 // boolean flags.

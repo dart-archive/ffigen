@@ -5,8 +5,6 @@
 import 'dart:io';
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/header_parser/clang_bindings/clang_bindings.dart'
-    as clang;
 import 'package:glob/glob.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
@@ -18,77 +16,40 @@ import 'filter.dart';
 
 var _logger = Logger('config_provider/utils');
 
-dynamic booleanExtractor(dynamic value) => value as bool;
+bool booleanExtractor(dynamic value) => value as bool;
 
 bool booleanValidator(String name, dynamic value) {
   if (value is! bool) {
-    _logger.severe('Expected value of key=${name} to be a bool');
+    _logger.severe('Expected value of key=$name to be a bool');
     return false;
   } else {
     return true;
   }
 }
 
-dynamic sizemapExtractor(dynamic value) {
+Map<int, SupportedNativeType> sizemapExtractor(dynamic yamlConfig) {
   var resultMap = <int, SupportedNativeType>{};
-  var sizemap = value as YamlMap;
+  var sizemap = yamlConfig as YamlMap;
   if (sizemap != null) {
-    if (sizemap.containsKey(strings.SChar)) {
-      resultMap[clang.CXTypeKind.CXType_SChar] =
-          nativeSupportedType(sizemap[strings.SChar]);
-    }
-    if (sizemap.containsKey(strings.UChar)) {
-      resultMap[clang.CXTypeKind.CXType_UChar] =
-          nativeSupportedType(sizemap[strings.UChar], signed: false);
-    }
-    if (sizemap.containsKey(strings.Short)) {
-      resultMap[clang.CXTypeKind.CXType_Short] =
-          nativeSupportedType(sizemap[strings.Short]);
-    }
-    if (sizemap.containsKey(strings.UShort)) {
-      resultMap[clang.CXTypeKind.CXType_UShort] =
-          nativeSupportedType(sizemap[strings.UShort], signed: false);
-    }
-    if (sizemap.containsKey(strings.Int)) {
-      resultMap[clang.CXTypeKind.CXType_Int] =
-          nativeSupportedType(sizemap[strings.Int]);
-    }
-    if (sizemap.containsKey(strings.UInt)) {
-      resultMap[clang.CXTypeKind.CXType_UInt] =
-          nativeSupportedType(sizemap[strings.UInt], signed: false);
-    }
-    if (sizemap.containsKey(strings.Long)) {
-      resultMap[clang.CXTypeKind.CXType_Long] =
-          nativeSupportedType(sizemap[strings.Long]);
-    }
-    if (sizemap.containsKey(strings.ULong)) {
-      resultMap[clang.CXTypeKind.CXType_ULong] =
-          nativeSupportedType(sizemap[strings.ULong], signed: false);
-    }
-    if (sizemap.containsKey(strings.LongLong)) {
-      resultMap[clang.CXTypeKind.CXType_LongLong] =
-          nativeSupportedType(sizemap[strings.LongLong]);
-    }
-    if (sizemap.containsKey(strings.ULongLong)) {
-      resultMap[clang.CXTypeKind.CXType_ULongLong] =
-          nativeSupportedType(sizemap[strings.ULongLong], signed: false);
-    }
-    if (sizemap.containsKey(strings.Enum)) {
-      resultMap[clang.CXTypeKind.CXType_Enum] = nativeSupportedType(
-          sizemap[strings.Enum],
-          signed: true); // enums are signed ints.
+    for (var typeName in strings.sizemap_native_mapping.keys) {
+      if (sizemap.containsKey(typeName)) {
+        var cxTypeInt = strings.sizemap_native_mapping[typeName];
+        var byteSize = sizemap[typeName] as int;
+        resultMap[cxTypeInt] = nativeSupportedType(byteSize,
+            signed: typeName.contains('unsigned') ? false : true);
+      }
     }
   }
   return resultMap;
 }
 
-bool sizemapValidator(String name, dynamic value) {
-  if (value is! YamlMap) {
+bool sizemapValidator(String name, dynamic yamlConfig) {
+  if (yamlConfig is! YamlMap) {
     _logger.severe('Expected value of key=$name to be a Map');
     return false;
   }
-  for (var key in (value as YamlMap).keys) {
-    if (!strings.sizemap_expected_values.contains(key)) {
+  for (var key in (yamlConfig as YamlMap).keys) {
+    if (!strings.sizemap_native_mapping.containsKey(key)) {
       _logger.warning('Unknown subkey in $name: $key');
     }
   }
@@ -96,38 +57,31 @@ bool sizemapValidator(String name, dynamic value) {
   return true;
 }
 
-dynamic compilerOptsExtractor(dynamic value) => (value as String)?.split(' ');
+List<String> compilerOptsExtractor(dynamic value) =>
+    (value as String)?.split(' ');
 
 bool compilerOptsValidator(String name, dynamic value) {
   if (value is! String) {
     _logger.severe(
-        'Warning: Expected value of key=${strings.compilerOpts} to be a string');
+        'Warning: Expected value of key=$name to be a string');
     return false;
   } else {
     return true;
   }
 }
 
-dynamic headerFilterExtractor(dynamic value) {
+HeaderFilter headerFilterExtractor(dynamic yamlConfig) {
   var includedInclusionHeaders = <String>{};
   var excludedInclusionHeaders = <String>{};
 
-  var headerFilter = value as YamlMap;
+  var headerFilter = yamlConfig as YamlMap;
   if (headerFilter != null) {
+    // Add include/excluded header-filter from Yaml.
     var include = headerFilter[strings.include] as YamlList;
-    // Add included header-filter from Yaml.
-    if (include != null) {
-      for (var header in include) {
-        includedInclusionHeaders.add(header as String);
-      }
-    }
+    include?.cast<String>()?.forEach(includedInclusionHeaders.add);
+
     var exclude = headerFilter[strings.exclude] as YamlList;
-    // Add excluded header-filter from Yaml.
-    if (exclude != null) {
-      for (var header in exclude) {
-        excludedInclusionHeaders.add(header as String);
-      }
-    }
+    exclude?.cast<String>()?.forEach(excludedInclusionHeaders.add);
   }
 
   return HeaderFilter(
@@ -138,16 +92,16 @@ dynamic headerFilterExtractor(dynamic value) {
 
 bool headerFilterValidator(String name, dynamic value) {
   if (value is! YamlMap) {
-    _logger.severe('Expected value of key=${strings.headerFilter} to be a Map');
+    _logger.severe('Expected value of key=$name to be a Map');
     return false;
   } else {
     return true;
   }
 }
 
-dynamic headersExtractor(dynamic value) {
+List<String> headersExtractor(dynamic yamlConfig) {
   var headers = <String>[];
-  for (var h in (value as YamlList)) {
+  for (var h in (yamlConfig as YamlList)) {
     var headerGlob = h as String;
     // add file directly to header if it's not a Glob but a File.
     if (File(headerGlob).existsSync()) {
@@ -187,12 +141,12 @@ bool headersValidator(String name, dynamic value) {
   }
 }
 
-dynamic libclangDylibExtractor(dynamic value) => getDylibPath(value as String);
+String libclangDylibExtractor(dynamic value) => getDylibPath(value as String);
 
 bool libclangDylibValidator(String name, dynamic value) {
   if (value is! String) {
     _logger.severe(
-        'Expected value of key=${strings.libclang_dylib_folder} to be a string');
+        'Expected value of key=$name to be a string');
     return false;
   } else {
     var dylibPath = getDylibPath(value as String);
@@ -221,7 +175,7 @@ String getDylibPath(String value) {
   return dylibPath;
 }
 
-dynamic outputExtractor(dynamic value) => value as String;
+String outputExtractor(dynamic value) => value as String;
 
 bool outputValidator(String name, dynamic value) {
   if (value is String) {
@@ -232,28 +186,19 @@ bool outputValidator(String name, dynamic value) {
   }
 }
 
-dynamic filterExtractor(dynamic map) {
+Filter filterExtractor(dynamic yamlMap) {
   List<String> includeMatchers, includeFull, excludeMatchers, excludeFull;
 
-  var include = map[strings.include] as YamlMap;
+  var include = yamlMap[strings.include] as YamlMap;
   if (include != null) {
-    includeMatchers = (include[strings.matches] as YamlList)
-        ?.map((dynamic e) => e as String)
-        ?.toList();
-    includeFull = (include[strings.names] as YamlList)
-        ?.map((dynamic e) => e as String)
-        ?.toList();
+    includeMatchers = (include[strings.matches] as YamlList)?.cast<String>();
+    includeFull = (include[strings.names] as YamlList)?.cast<String>();
   }
 
-  var exclude = map[strings.exclude] as YamlMap;
-
+  var exclude = yamlMap[strings.exclude] as YamlMap;
   if (exclude != null) {
-    excludeMatchers = (map[strings.exclude][strings.matches] as YamlList)
-        ?.map((dynamic e) => e as String)
-        ?.toList();
-    excludeFull = (map[strings.exclude][strings.names] as YamlList)
-        ?.map((dynamic e) => e as String)
-        ?.toList();
+    excludeMatchers = (include[strings.matches] as YamlList)?.cast<String>();
+    excludeFull = (include[strings.names] as YamlList)?.cast<String>();
   }
 
   return Filter(
@@ -270,16 +215,16 @@ bool filterValidator(String name, dynamic value) {
     for (var key in value.keys) {
       if (key == strings.include || key == strings.exclude) {
         if (value[key] is! YamlMap) {
-          _logger.severe('Expected $name>$key to be a Map');
+          _logger.severe('Expected $name->$key to be a Map');
         }
         for (var subkey in value[key].keys) {
           if (subkey == strings.matches || subkey == strings.names) {
             if (value[key][subkey] is! YamlList) {
-              _logger.severe('Expected $name>$key>$subkey to be a List');
+              _logger.severe('Expected $name->$key->$subkey to be a List');
               _result = false;
             }
           } else {
-            _logger.severe('Unknown key found in $name>$key: $subkey');
+            _logger.severe('Unknown key found in $name->$key: $subkey');
           }
         }
       } else {

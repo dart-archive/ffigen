@@ -142,7 +142,7 @@ class Config {
   /// Key: Name, Value: [Specification]
   Map<String, Specification> _getSpecs() {
     return <String, Specification>{
-      strings.output: Specification(
+      strings.output: Specification<String>(
         description: 'Output file name',
         isRequired: true,
         validator: outputValidator,
@@ -150,7 +150,7 @@ class Config {
         defaultValue: null,
         extractedResult: (dynamic result) => output = result as String,
       ),
-      strings.libclang_dylib_folder: Specification(
+      strings.libclang_dylib_folder: Specification<String>(
         description:
             'Path to libclang dynamic library, used to parse C headers',
         isRequired: true,
@@ -159,14 +159,14 @@ class Config {
         extractedResult: (dynamic result) =>
             libclang_dylib_path = result as String,
       ),
-      strings.headers: Specification(
+      strings.headers: Specification<List<String>>(
         description: 'List of C headers to generate bindings of',
         isRequired: true,
         validator: headersValidator,
         extractor: headersExtractor,
         extractedResult: (dynamic result) => headers = result as List<String>,
       ),
-      strings.headerFilter: Specification(
+      strings.headerFilter: Specification<HeaderFilter>(
         description: 'Include/Exclude inclusion headers',
         validator: headerFilterValidator,
         extractor: headerFilterExtractor,
@@ -175,7 +175,7 @@ class Config {
           return headerFilter = result as HeaderFilter;
         },
       ),
-      strings.compilerOpts: Specification(
+      strings.compilerOpts: Specification<List<String>>(
         description: 'Raw compiler options to pass to clang compiler',
         isRequired: false,
         validator: compilerOptsValidator,
@@ -184,7 +184,7 @@ class Config {
         extractedResult: (dynamic result) =>
             compilerOpts = result as List<String>,
       ),
-      strings.functions: Specification(
+      strings.functions: Specification<Filter>(
         description: 'Filter for functions',
         isRequired: false,
         validator: filterValidator,
@@ -192,7 +192,7 @@ class Config {
         defaultValue: null,
         extractedResult: (dynamic result) => functionFilters = result as Filter,
       ),
-      strings.structs: Specification(
+      strings.structs: Specification<Filter>(
         description: 'Filter for Structs',
         isRequired: false,
         validator: filterValidator,
@@ -200,7 +200,7 @@ class Config {
         defaultValue: null,
         extractedResult: (dynamic result) => structFilters = result as Filter,
       ),
-      strings.enums: Specification(
+      strings.enums: Specification<Filter>(
         description: 'Filter for enums',
         isRequired: false,
         validator: filterValidator,
@@ -209,7 +209,7 @@ class Config {
         extractedResult: (dynamic result) =>
             enumClassFilters = result as Filter,
       ),
-      strings.sizemap: Specification(
+      strings.sizemap: Specification<Map<int, SupportedNativeType>>(
         description: 'map of types: byte size in int',
         validator: sizemapValidator,
         extractor: sizemapExtractor,
@@ -223,7 +223,7 @@ class Config {
           }
         },
       ),
-      strings.sort: Specification(
+      strings.sort: Specification<bool>(
         description: 'whether or not to sort the bindings alphabetically',
         isRequired: false,
         validator: booleanValidator,
@@ -231,7 +231,7 @@ class Config {
         defaultValue: false,
         extractedResult: (dynamic result) => sort = result as bool,
       ),
-      strings.useSupportedTypedefs: Specification(
+      strings.useSupportedTypedefs: Specification<bool>(
         description: 'whether or not to directly map supported typedef by name',
         isRequired: false,
         validator: booleanValidator,
@@ -240,7 +240,7 @@ class Config {
         extractedResult: (dynamic result) =>
             useSupportedTypedefs = result as bool,
       ),
-      strings.extractComments: Specification(
+      strings.extractComments: Specification<bool>(
         description: 'whether or not to extract comments from bindings',
         isRequired: false,
         validator: booleanValidator,
@@ -253,11 +253,13 @@ class Config {
 }
 
 /// Represents a single specification in configurations.
-class Specification {
+///
+/// [E] is the return type of the extractedResult
+class Specification<E> {
   final String description;
   final bool Function(String name, dynamic value) validator;
-  final dynamic Function(dynamic map) extractor;
-  final dynamic defaultValue;
+  final E Function(dynamic map) extractor;
+  final E defaultValue;
   final bool isRequired;
   final void Function(dynamic result) extractedResult;
 
