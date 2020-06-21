@@ -62,8 +62,7 @@ List<String> compilerOptsExtractor(dynamic value) =>
 
 bool compilerOptsValidator(String name, dynamic value) {
   if (value is! String) {
-    _logger.severe(
-        'Warning: Expected value of key=$name to be a string');
+    _logger.severe('Warning: Expected value of key=$name to be a string');
     return false;
   } else {
     return true;
@@ -105,30 +104,17 @@ List<String> headersExtractor(dynamic yamlConfig) {
     final headerGlob = h as String;
     // add file directly to header if it's not a Glob but a File.
     if (File(headerGlob).existsSync()) {
-      if (hasValidExtension(headerGlob)) {
-        headers.add(headerGlob);
-        _logger.fine('Found header/file: $headerGlob');
-      } else {
-        _logger.warning(
-            'Ignoring file: $headerGlob, not a valid extension (only ".c" or ".h" allowed)');
-      }
+      headers.add(headerGlob);
+      _logger.fine('Adding header/file: $headerGlob');
     } else {
       final glob = Glob(headerGlob);
       for (final file in glob.listSync(followLinks: true)) {
-        if (hasValidExtension(file.path)) {
-          headers.add(file.path);
-          _logger.fine('Found header/file: ${file.path}');
-        }
+        headers.add(file.path);
+        _logger.fine('Adding header/file: ${file.path}');
       }
     }
   }
   return headers;
-}
-
-bool hasValidExtension(String filePath) {
-  final ext = p.extension(filePath);
-  // TODO check remove .c files later maybe?
-  return ext == '.h' || ext == '.c';
 }
 
 bool headersValidator(String name, dynamic value) {
@@ -145,8 +131,7 @@ String libclangDylibExtractor(dynamic value) => getDylibPath(value as String);
 
 bool libclangDylibValidator(String name, dynamic value) {
   if (value is! String) {
-    _logger.severe(
-        'Expected value of key=$name to be a string');
+    _logger.severe('Expected value of key=$name to be a string');
     return false;
   } else {
     final dylibPath = getDylibPath(value as String);

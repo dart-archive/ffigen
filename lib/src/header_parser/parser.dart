@@ -55,6 +55,9 @@ List<Binding> parseAndGenerateBindings() {
   // Contains all bindings.
   final bindings = <Binding>[];
 
+  // Log all headers for user
+  _logger.info('Input Headers: ${data.config.headers}');
+
   for (final h in data.config.headers) {
     final headerLocation = h;
     _logger.fine('Creating TranslationUnit for header: $headerLocation');
@@ -70,8 +73,9 @@ List<Binding> parseAndGenerateBindings() {
     );
 
     if (tu == nullptr) {
-      throw Exception(
-          'Error creating Translation unit for header: $headerLocation');
+      _logger.severe('Unable to parse header: $headerLocation');
+      // Skip parsing this header
+      continue;
     }
 
     logTuDiagnostics(tu, _logger, headerLocation);
