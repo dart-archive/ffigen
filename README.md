@@ -15,7 +15,6 @@ Add configurations to Pubspec File:
 ...
 ffigen:
   output: 'generated_bindings.dart'
-  libclang-dylib-folder: '../../tool/wrapped_libclang'
   headers:
     - 'example.h'
 ```

@@ -12,6 +12,7 @@ import 'package:ffigen/src/header_parser/type_extractor/cxtypekindmap.dart';
 
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
+import 'package:path/path.dart' as path;
 import 'package:yaml/yaml.dart';
 
 import '../strings.dart' as strings;
@@ -152,8 +153,11 @@ class Config {
       ),
       strings.libclang_dylib_folder: Specification<String>(
         description:
-            'Path to libclang dynamic library, used to parse C headers',
-        isRequired: true,
+            'Path to folder containing libclang dynamic library, used to parse C headers',
+        isRequired: false,
+        defaultValue: getDylibPath(Platform.script
+            .resolve(path.join('..', 'tool', 'wrapped_libclang'))
+            .toFilePath()),
         validator: libclangDylibValidator,
         extractor: libclangDylibExtractor,
         extractedResult: (dynamic result) =>

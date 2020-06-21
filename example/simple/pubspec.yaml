@@ -13,6 +13,5 @@ dev_dependencies:
 
 ffigen:
   output: 'generated_bindings.dart'
-  libclang-dylib-folder: '../../tool/wrapped_libclang'
   headers:
     - 'headers/example.h'
