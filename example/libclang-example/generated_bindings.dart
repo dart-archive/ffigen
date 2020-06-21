@@ -78,7 +78,7 @@ class _ArrayHelper_CXCursor_data {
   @override
   String toString() {
     if (length == 0) return '[]';
-    var sb = StringBuffer('[');
+    final sb = StringBuffer('[');
     sb.write(this[0]);
     for (var i = 1; i < length; i++) {
       sb.write(',');
@@ -159,7 +159,7 @@ class _ArrayHelper_CXFileUniqueID_data {
   @override
   String toString() {
     if (length == 0) return '[]';
-    var sb = StringBuffer('[');
+    final sb = StringBuffer('[');
     sb.write(this[0]);
     for (var i = 1; i < length; i++) {
       sb.write(',');
@@ -257,7 +257,7 @@ class _ArrayHelper_CXIdxLoc_ptr_data {
   @override
   String toString() {
     if (length == 0) return '[]';
-    var sb = StringBuffer('[');
+    final sb = StringBuffer('[');
     sb.write(this[0]);
     for (var i = 1; i < length; i++) {
       sb.write(',');
@@ -362,7 +362,7 @@ class _ArrayHelper_CXSourceLocation_ptr_data {
   @override
   String toString() {
     if (length == 0) return '[]';
-    var sb = StringBuffer('[');
+    final sb = StringBuffer('[');
     sb.write(this[0]);
     for (var i = 1; i < length; i++) {
       sb.write(',');
@@ -426,7 +426,7 @@ class _ArrayHelper_CXSourceRange_ptr_data {
   @override
   String toString() {
     if (length == 0) return '[]';
-    var sb = StringBuffer('[');
+    final sb = StringBuffer('[');
     sb.write(this[0]);
     for (var i = 1; i < length; i++) {
       sb.write(',');
@@ -532,7 +532,7 @@ class _ArrayHelper_CXToken_int_data {
   @override
   String toString() {
     if (length == 0) return '[]';
-    var sb = StringBuffer('[');
+    final sb = StringBuffer('[');
     sb.write(this[0]);
     for (var i = 1; i < length; i++) {
       sb.write(',');
@@ -595,7 +595,7 @@ class _ArrayHelper_CXType_data {
   @override
   String toString() {
     if (length == 0) return '[]';
-    var sb = StringBuffer('[');
+    final sb = StringBuffer('[');
     sb.write(this[0]);
     for (var i = 1; i < length; i++) {
       sb.write(',');

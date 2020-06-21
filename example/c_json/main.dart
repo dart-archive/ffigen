@@ -16,10 +16,10 @@ void main() {
   cjson.init(DynamicLibrary.open(_getPath()));
 
   // load json from [example.json] file.
-  var jsonString = File('./example.json').readAsStringSync();
+  final jsonString = File('./example.json').readAsStringSync();
 
   // parse this json string using our cJSON library.
-  var cjsonParsedJson = cjson.cJSON_Parse(Utf8.toUtf8(jsonString).cast());
+  final cjsonParsedJson = cjson.cJSON_Parse(Utf8.toUtf8(jsonString).cast());
   if (cjsonParsedJson == nullptr) {
     print('Error parsing cjson');
     exit(1);
@@ -28,7 +28,7 @@ void main() {
   // to iterate and convert to a dart object (map/list).
 
   // converting cjson object to a dart object.
-  dynamic dartJson = convertCJsonToDartObj(cjsonParsedJson.cast());
+  final dynamic dartJson = convertCJsonToDartObj(cjsonParsedJson.cast());
 
   // delete the cjsonParsedJson object.
   cjson.cJSON_Delete(cjsonParsedJson);
@@ -60,7 +60,7 @@ dynamic convertCJsonToDartObj(Pointer<cjson.cJSON> parsedcjson) {
     Pointer<cjson.cJSON> ptr;
     ptr = parsedcjson.ref.child;
     while (ptr != nullptr) {
-      dynamic o = convertCJsonToDartObj(ptr);
+      final dynamic o = convertCJsonToDartObj(ptr);
       _addToObj(obj, o, ptr.ref.string.cast());
       ptr = ptr.ref.next;
     }
@@ -70,7 +70,7 @@ dynamic convertCJsonToDartObj(Pointer<cjson.cJSON> parsedcjson) {
     Pointer<cjson.cJSON> ptr;
     ptr = parsedcjson.ref.child;
     while (ptr != nullptr) {
-      dynamic o = convertCJsonToDartObj(ptr);
+      final dynamic o = convertCJsonToDartObj(ptr);
       _addToObj(obj, o);
       ptr = ptr.ref.next;
     }

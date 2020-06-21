@@ -182,8 +182,8 @@ Filter filterExtractor(dynamic yamlMap) {
 
   final exclude = yamlMap[strings.exclude] as YamlMap;
   if (exclude != null) {
-    excludeMatchers = (include[strings.matches] as YamlList)?.cast<String>();
-    excludeFull = (include[strings.names] as YamlList)?.cast<String>();
+    excludeMatchers = (exclude[strings.matches] as YamlList)?.cast<String>();
+    excludeFull = (exclude[strings.names] as YamlList)?.cast<String>();
   }
 
   return Filter(

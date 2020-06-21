@@ -177,7 +177,7 @@ class ArrayHelper {
     s.write('@override\n');
     s.write('String toString() {\n');
     s.write("if (length == 0) return '[]';\n");
-    s.write("var sb = StringBuffer('[');\n");
+    s.write("final sb = StringBuffer('[');\n");
     s.write('sb.write(this[0]);\n');
     s.write('for (var i = 1; i < length; i++) {\n');
     s.write("  sb.write(',');\n");
