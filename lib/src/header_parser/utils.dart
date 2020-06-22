@@ -33,7 +33,7 @@ void logTuDiagnostics(
     return;
   }
 
-  logger.warning('Header $header: Total errors/warnings : $total');
+  logger.warning('Header $header: Total errors/warnings: $total.');
   for (var i = 0; i < total; i++) {
     final diag = clang.clang_getDiagnostic(tu, i);
     final cxstring = clang.clang_formatDiagnostic_wrap(

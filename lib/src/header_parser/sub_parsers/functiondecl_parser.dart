@@ -35,7 +35,7 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
       _logger.fine(
           '---- Removed Function, reason: struct pass/return by value: ${cursor.completeStringRepr()}');
       _logger.warning(
-          'Removed Function: $name, struct pass/return by value not supported');
+          "Skipped Function '$name', struct pass/return by value not supported.");
       return null; //returning null so that [addToBindings] function excludes this.
     }
 
@@ -44,7 +44,7 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
       _logger.fine(
           '---- Removed Function, reason: constant array passed to function parameter: ${cursor.completeStringRepr()}');
       _logger.warning(
-          'Removed Function: $name, constant array in function parameter not supported');
+          "Skipped Function '$name', constant array in function parameter not supported.");
       return null; //returning null so that [addToBindings] function excludes this.
     }
 
@@ -53,7 +53,7 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
       _logger.fine(
           '---- Removed Function, reason: unsupported return type or parameter type: ${cursor.completeStringRepr()}');
       _logger.warning(
-          'Removed Function: $name, function has unsupported return type or parameter type');
+          "Skipped Function '$name', function has unsupported return type or parameter type.");
       return null; //returning null so that [addToBindings] function excludes this.
     }
 

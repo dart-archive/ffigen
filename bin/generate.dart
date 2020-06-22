@@ -55,7 +55,7 @@ Config getConfigFromPubspec() {
 
   if (!pubspecFile.existsSync()) {
     _logger.severe(
-        'Error: $pubspecName not found, please run this tool from the root of your package');
+        'Error: $pubspecName not found, please run this tool from the root of your package.');
     exit(1);
   }
 
@@ -66,7 +66,7 @@ Config getConfigFromPubspec() {
       yaml.loadYaml(pubspecFile.readAsStringSync())[configKey] as yaml.YamlMap;
 
   if (bindingsConfigMap == null) {
-    _logger.severe("Couldn't find an entry for $configKey in pubspec.yaml");
+    _logger.severe("Couldn't find an entry for '$configKey' in $pubspecName.");
     exit(1);
   }
   return Config.fromYaml(bindingsConfigMap);
@@ -78,7 +78,7 @@ Config getConfigFromCustomYaml(String yamlPath) {
 
   if (!yamlFile.existsSync()) {
     _logger.severe(
-        'Error: $yamlPath not found, please run this tool from the root of your package');
+        'Error: $yamlPath not found.');
     exit(1);
   }
 

@@ -20,7 +20,7 @@ bool booleanExtractor(dynamic value) => value as bool;
 
 bool booleanValidator(String name, dynamic value) {
   if (value is! bool) {
-    _logger.severe('Expected value of key=$name to be a bool');
+    _logger.severe("Expected value of key '$name' to be a bool.");
     return false;
   } else {
     return true;
@@ -45,12 +45,12 @@ Map<int, SupportedNativeType> sizemapExtractor(dynamic yamlConfig) {
 
 bool sizemapValidator(String name, dynamic yamlConfig) {
   if (yamlConfig is! YamlMap) {
-    _logger.severe('Expected value of key=$name to be a Map');
+    _logger.severe("Expected value of key '$name' to be a Map.");
     return false;
   }
   for (final key in (yamlConfig as YamlMap).keys) {
     if (!strings.sizemap_native_mapping.containsKey(key)) {
-      _logger.warning('Unknown subkey in $name: $key');
+      _logger.warning("Unknown subkey '$key' in '$name'.");
     }
   }
 
@@ -62,7 +62,7 @@ List<String> compilerOptsExtractor(dynamic value) =>
 
 bool compilerOptsValidator(String name, dynamic value) {
   if (value is! String) {
-    _logger.severe('Warning: Expected value of key=$name to be a string');
+    _logger.severe("Expected value of key '$name' to be a string.");
     return false;
   } else {
     return true;
@@ -91,7 +91,7 @@ HeaderFilter headerFilterExtractor(dynamic yamlConfig) {
 
 bool headerFilterValidator(String name, dynamic value) {
   if (value is! YamlMap) {
-    _logger.severe('Expected value of key=$name to be a Map');
+    _logger.severe("Expected value of key '$name' to be a Map.");
     return false;
   } else {
     return true;
@@ -120,7 +120,7 @@ List<String> headersExtractor(dynamic yamlConfig) {
 bool headersValidator(String name, dynamic value) {
   if (value is! YamlList) {
     _logger.severe(
-        'Expected value of key=${strings.headers} to be a List of Strings');
+        "Expected value of key '${strings.headers}' to be a List of String.");
     return false;
   } else {
     return true;
@@ -131,13 +131,13 @@ String libclangDylibExtractor(dynamic value) => getDylibPath(value as String);
 
 bool libclangDylibValidator(String name, dynamic value) {
   if (value is! String) {
-    _logger.severe('Expected value of key=$name to be a string');
+    _logger.severe("Expected value of key '$name' to be a string.");
     return false;
   } else {
     final dylibPath = getDylibPath(value as String);
     if (!File(dylibPath).existsSync()) {
       _logger.severe(
-          'Dynamic library: $dylibPath does not exist or is corrupt, input folder: $value');
+          'Dynamic library: $dylibPath does not exist or is corrupt, input folder: $value.');
       return false;
     } else {
       return true;
@@ -166,7 +166,7 @@ bool outputValidator(String name, dynamic value) {
   if (value is String) {
     return true;
   } else {
-    _logger.severe('Expected value of key=${strings.output} to be a String');
+    _logger.severe("Expected value of key '${strings.output}' to be a String.");
     return false;
   }
 }
@@ -200,25 +200,25 @@ bool filterValidator(String name, dynamic value) {
     for (final key in value.keys) {
       if (key == strings.include || key == strings.exclude) {
         if (value[key] is! YamlMap) {
-          _logger.severe('Expected $name->$key to be a Map');
+          _logger.severe("Expected '$name -> $key' to be a Map.");
         }
         for (final subkey in value[key].keys) {
           if (subkey == strings.matches || subkey == strings.names) {
             if (value[key][subkey] is! YamlList) {
-              _logger.severe('Expected $name->$key->$subkey to be a List');
+              _logger.severe("Expected '$name -> $key -> $subkey' to be a List.");
               _result = false;
             }
           } else {
-            _logger.severe('Unknown key found in $name->$key: $subkey');
+            _logger.severe("Unknown key '$subkey' in '$name -> $key'.");
           }
         }
       } else {
-        _logger.severe('Unknown key found $name: $key');
+        _logger.severe("Unknown key '$key' in '$name'.");
         _result = false;
       }
     }
   } else {
-    _logger.severe('Expected value $name to be a Map');
+    _logger.severe("Expected value '$name' to be a Map.");
     _result = false;
   }
   return _result;

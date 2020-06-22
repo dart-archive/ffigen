@@ -108,7 +108,7 @@ class Config {
     for (final key in specs.keys) {
       final spec = specs[key];
       if (spec.isRequired && !map.containsKey(key)) {
-        _logger.severe('Key=${key} is required');
+        _logger.severe("Key '${key}' is required.");
         _result = false;
       } else if (map.containsKey(key)) {
         _result = _result && spec.validator(key, map[key]);
@@ -117,7 +117,7 @@ class Config {
     //warn about unknown keys.
     for (final key in map.keys) {
       if (!specs.containsKey(key)) {
-        _logger.warning('Unknown key found: $key');
+        _logger.warning("Unknown key '$key' found.");
       }
     }
 

@@ -73,7 +73,8 @@ List<Binding> parseAndGenerateBindings() {
     );
 
     if (tu == nullptr) {
-      _logger.severe('Unable to parse header: $headerLocation');
+      _logger
+          .severe("Skipped header/file: $headerLocation, couldn't parse source.");
       // Skip parsing this header
       continue;
     }

@@ -71,13 +71,13 @@ List<Member> _getMembers(Pointer<clang.CXCursor> cursor, String structName) {
     _logger.fine(
         '---- Removed Struct members, reason: struct has struct members ${cursor.completeStringRepr()}');
     _logger.warning(
-        'Removed All Struct Members from: $structName, Nested Structures not supported');
+        "Removed All Struct Members from '$structName', Nested Structures not supported.");
     return null;
   } else if (unimplementedMemberType) {
     _logger.fine(
         '---- Removed Struct members, reason: member with unimplementedtype ${cursor.completeStringRepr()}');
     _logger.warning(
-        'Removed All Struct Members from: $structName, struct member has an unsupported type');
+        "Removed All Struct Members from '$structName', struct member has an unsupported type.");
     return null;
   }
 
