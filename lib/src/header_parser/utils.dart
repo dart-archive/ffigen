@@ -13,6 +13,7 @@ import 'data.dart';
 import 'type_extractor/extractor.dart';
 
 /// Check resultCode of [clang.clang_visitChildren_wrap]
+///
 /// Throws exception if resultCode is not 0.
 void visitChildrenResultChecker(int resultCode) {
   if (resultCode != 0) {
@@ -21,8 +22,7 @@ void visitChildrenResultChecker(int resultCode) {
   }
 }
 
-/// Logs the warnings/errors returned by clang
-/// for a translation unit.
+/// Logs the warnings/errors returned by clang for a translation unit.
 void logTuDiagnostics(
   Pointer<clang.CXTranslationUnitImpl> tu,
   Logger logger,

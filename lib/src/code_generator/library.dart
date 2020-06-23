@@ -18,6 +18,7 @@ class Library {
   final String dylibIdentifier;
 
   /// Init function for providing dynamic library, defaults to `init`,
+  ///
   /// you can rename it in case of name conflicts with something else.
   final String initFunctionIdentifier;
 
@@ -41,6 +42,7 @@ class Library {
   }
 
   /// Generates [file] by generating C bindings.
+  ///
   /// If format is true(default), 'dartfmt -w $PATH' will be called to format the generated file.
   void generateFile(File file, {bool format = true}) {
     file.writeAsStringSync(toString());

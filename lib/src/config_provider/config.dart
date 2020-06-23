@@ -4,8 +4,7 @@
 
 import 'dart:io';
 
-/// Validates the yaml input by the user,
-/// prints useful info for the user
+/// Validates the yaml input by the user, prints useful info for the user
 
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser/type_extractor/cxtypekindmap.dart';
@@ -64,8 +63,8 @@ class Config {
   bool extractComments;
 
   /// Manually creating configurations.
-  /// Use [Config.fromYaml] if extracting info from a yaml file.
   ///
+  /// Use [Config.fromYaml] if extracting info from a yaml file.
   /// Ensure that log printing is setup before using this.
   Config.raw({
     this.output,
