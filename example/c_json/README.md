@@ -5,8 +5,9 @@ Demonstrates generation of bindings for a C library called
 to parse some json.
 
 ## Building the cJson dynamic library
+From the root of this repository -
 ```
-cd ./example/c_json/third_party/cjson_library
+cd third_party/cjson_library
 cmake .
 make
 ```

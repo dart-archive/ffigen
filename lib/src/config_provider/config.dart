@@ -42,7 +42,7 @@ class Config {
   /// Filter for headers.
   HeaderFilter headerFilter;
 
-  /// commandLineArguments to pass to clang_compiler.
+  /// CommandLine Arguments to pass to clang_compiler.
   List<String> compilerOpts;
 
   /// Filter for functions.
@@ -60,7 +60,7 @@ class Config {
   /// If typedef of supported types(int8_t) should be directly used.
   bool useSupportedTypedefs;
 
-  /// should extract doc comment from bindings.
+  /// If tool should extract doc comment from bindings.
   bool extractComments;
 
   /// Manually creating configurations.
@@ -114,7 +114,7 @@ class Config {
         _result = _result && spec.validator(key, map[key]);
       }
     }
-    //warn about unknown keys.
+    // Warn about unknown keys.
     for (final key in map.keys) {
       if (!specs.containsKey(key)) {
         _logger.warning("Unknown key '$key' found.");

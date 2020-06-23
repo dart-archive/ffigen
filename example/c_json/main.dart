@@ -12,28 +12,28 @@ import 'cjson_generated_bindings.dart' as cjson;
 
 /// Using the generated C_JSON bindings.
 void main() {
-  // init cjson bindings.
+  // Initialise cjson bindings.
   cjson.init(DynamicLibrary.open(_getPath()));
 
-  // load json from [example.json] file.
+  // Load json from [example.json] file.
   final jsonString = File('./example.json').readAsStringSync();
 
-  // parse this json string using our cJSON library.
+  // Parse this json string using our cJSON library.
   final cjsonParsedJson = cjson.cJSON_Parse(Utf8.toUtf8(jsonString).cast());
   if (cjsonParsedJson == nullptr) {
-    print('Error parsing cjson');
+    print('Error parsing cjson.');
     exit(1);
   }
-  // the json is now stored in some C data structure which we need
+  // The json is now stored in some C data structure which we need
   // to iterate and convert to a dart object (map/list).
 
-  // converting cjson object to a dart object.
+  // Converting cjson object to a dart object.
   final dynamic dartJson = convertCJsonToDartObj(cjsonParsedJson.cast());
 
-  // delete the cjsonParsedJson object.
+  // Delete the cjsonParsedJson object.
   cjson.cJSON_Delete(cjsonParsedJson);
 
-  // check if the converted json is correct
+  // Check if the converted json is correct
   // by comparing the result with json converted by dart:convert.
   if (dartJson.toString() == json.decode(jsonString).toString()) {
     print('Parsed Json: $dartJson');
@@ -46,9 +46,9 @@ void main() {
 }
 
 String _getPath() {
-  var path = './third_party/cjson_library/libcjson.so';
-  if (Platform.isMacOS) path = './third_party/cjson_library/libstructs.dylib';
-  if (Platform.isWindows) path = r'third_party\cjson_library\Debug\structs.dll';
+  var path = '../../third_party/cjson_library/libcjson.so';
+  if (Platform.isMacOS) path = '../../third_party/cjson_library/libstructs.dylib';
+  if (Platform.isWindows) path = r'..\..\third_party\cjson_library\Debug\structs.dll';
   return path;
 }
 

@@ -15,7 +15,7 @@ import 'writer.dart';
 /// ```c
 /// int a;
 /// ```
-/// The generated dart is -
+/// The generated dart code is -
 /// ```dart
 /// final int a = _dylib.lookup<ffi.Int32>('a').value;
 /// ```

@@ -14,7 +14,7 @@ import 'writer.dart';
 /// ```c
 /// enum Fruits {apple, banana = 10};
 /// ```
-/// The generated dart is
+/// The generated dart code is
 ///
 /// ```dart
 /// class Fruits {

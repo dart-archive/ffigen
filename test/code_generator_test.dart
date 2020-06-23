@@ -72,7 +72,7 @@ void main() {
 
       final gen = library.toString();
 
-      // writing to file for debug purpose.
+      // Writing to file for debug purpose.
       final file = File(
         'test/debug_generated/Function-Binding-test-output.dart',
       );
@@ -80,10 +80,10 @@ void main() {
         expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT.
 import 'dart:ffi' as ffi;
 
-/// Dynamic library
+/// Holds the Dynamic library.
 ffi.DynamicLibrary _dylib;
 
-/// Initialises dynamic library
+/// Initialises the Dynamic library.
 void init(ffi.DynamicLibrary dylib){
   _dylib = dylib;
 }
@@ -222,17 +222,17 @@ typedef _dart_withPointerParam = ffi.Pointer<ffi.Double> Function(
 
       final gen = library.toString();
 
-      // writing to file for debug purpose.
+      // Writing to file for debug purpose.
       final file = File('test/debug_generated/Struct-Binding-test-output.dart');
 
       try {
         expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT.
 import 'dart:ffi' as ffi;
 
-/// Dynamic library
+/// Holds the Dynamic library.
 ffi.DynamicLibrary _dylib;
 
-/// Initialises dynamic library
+/// Initialises the Dynamic library.
 void init(ffi.DynamicLibrary dylib){
   _dylib = dylib;
 }
@@ -325,7 +325,7 @@ class WithPointerMember extends ffi.Struct{
 
       final gen = library.toString();
 
-      // writing to file for debug purpose.
+      // Writing to file for debug purpose.
       final file =
           File('test/debug_generated/Func-n-Struct-Binding-test-output.dart');
       try {
@@ -333,10 +333,10 @@ class WithPointerMember extends ffi.Struct{
         expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT.
 import 'dart:ffi' as ffi;
 
-/// Dynamic library
+/// Holds the Dynamic library.
 ffi.DynamicLibrary _dylib;
 
-/// Initialises dynamic library
+/// Initialises the Dynamic library.
 void init(ffi.DynamicLibrary dylib){
   _dylib = dylib;
 }
@@ -415,7 +415,7 @@ typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
 
       final gen = library.toString();
 
-      // writing to file for debug purpose.
+      // Writing to file for debug purpose.
       final file = File(
         'test/debug_generated/Global-Binding-test-output.dart',
       );
@@ -423,10 +423,10 @@ typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
         expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT.
 import 'dart:ffi' as ffi;
 
-/// Dynamic library
+/// Holds the Dynamic library.
 ffi.DynamicLibrary _dylib;
 
-/// Initialises dynamic library
+/// Initialises the Dynamic library.
 void init(ffi.DynamicLibrary dylib){
   _dylib = dylib;
 }
@@ -472,7 +472,7 @@ final ffi.Pointer<Some> test5 = _dylib.lookup<ffi.Pointer<Some>>('test5').value;
 
       final gen = library.toString();
 
-      // writing to file for debug purpose.
+      // Writing to file for debug purpose.
       final file = File(
         'test/debug_generated/Constant-test-output.dart',
       );
@@ -480,10 +480,10 @@ final ffi.Pointer<Some> test5 = _dylib.lookup<ffi.Pointer<Some>>('test5').value;
         expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT.
 import 'dart:ffi' as ffi;
 
-/// Dynamic library
+/// Holds the Dynamic library.
 ffi.DynamicLibrary _dylib;
 
-/// Initialises dynamic library
+/// Initialises the Dynamic library.
 void init(ffi.DynamicLibrary dylib){
   _dylib = dylib;
 }
@@ -540,16 +540,16 @@ const double test2 = 20.0;
 
       final gen = library.toString();
 
-      // writing to file for debug purpose.
+      // Writing to file for debug purpose.
       final file = File('test/debug_generated/typedef-Binding-test-output.dart');
       try {
         expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT.
 import 'dart:ffi' as ffi;
 
-/// Dynamic library
+/// Holds the Dynamic library.
 ffi.DynamicLibrary _dylib;
 
-/// Initialises dynamic library
+/// Initialises the Dynamic library.
 void init(ffi.DynamicLibrary dylib){
   _dylib = dylib;
 }
@@ -595,7 +595,7 @@ typedef test2 = ffi.Pointer<ffi.Int32> Function(
 
       final gen = library.toString();
 
-      // writing to file for debug purpose.
+      // Writing to file for debug purpose.
       final file = File(
         'test/debug_generated/enum-class-test-output.dart',
       );
@@ -603,10 +603,10 @@ typedef test2 = ffi.Pointer<ffi.Int32> Function(
         expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT.
 import 'dart:ffi' as ffi;
 
-/// Dynamic library
+/// Holds the Dynamic library.
 ffi.DynamicLibrary _dylib;
 
-/// Initialises dynamic library
+/// Initialises the Dynamic library.
 void init(ffi.DynamicLibrary dylib){
   _dylib = dylib;
 }

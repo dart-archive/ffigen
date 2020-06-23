@@ -8,7 +8,7 @@ import 'package:ffigen/src/code_generator.dart' show SupportedNativeType;
 
 /// Utility to convert CXType to [code_generator.Type].
 ///
-/// key: CXTypekindEnum, Value: TypeString for code_generator
+/// Key: CXTypekindEnum, Value: TypeString for code_generator
 var cxTypeKindToSupportedNativeTypes = <int, SupportedNativeType>{
   clang.CXTypeKind.CXType_Void: SupportedNativeType.Void,
   clang.CXTypeKind.CXType_UChar: SupportedNativeType.Uint8,

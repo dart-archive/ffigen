@@ -51,24 +51,24 @@ A dynamic library for a wrapper to libclang needs to be generated as it is used 
 
 #### ubuntu/linux
 1. Install libclangdev - `sudo apt-get install libclang-dev`.
-2. cd to tool/wrapped_libclang, then run the `dart build.dart` script.
+2. `cd tool/wrapped_libclang`, then run `dart build.dart`.
 
 #### Windows
 1. Install Visual Studio with C++ development support.
 2. Install LLVM.
-3. cd to tool/wrapped_libclang, then run the `dart build.dart` script.
+3. `cd tool\wrapped_libclang`, then run `dart build.dart`.
 
 #### MacOS
 1. Install LLVM.
-2. cd to tool/wrapped_libclang, then run the `dart build.dart` script.
+2. `cd tool/wrapped_libclang`, then run `dart build.dart`.
 
 ## Trying out examples
-1. `cd` to examples/<example_u_want_to_run>, Run `pub get`.
+1. `cd examples/<example_u_want_to_run>`, Run `pub get`.
 2. Run `pub run ffigen:generate`.
 
 ## Running Tests
 Dynamic library for some tests need to be built before running the examples.
 1. `cd test/native_functions_test`.
-2. Run `./build_test_dylib_linux.sh` on linux, or `.\build_test_dylib_windows.bat` for windows.
+2. Run `dart build_test_dylib.dart`.
 
 Run tests from the root of the package with `pub run test`.

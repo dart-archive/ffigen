@@ -1,4 +1,4 @@
-# general gitignore for CMake
+# general gitignore for CMake.
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles

@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// utility
+// utility.
 #define aloc(T) ((T *)malloc(sizeof(T)))
 CXCursor *ptrToCXCursor(CXCursor t)
 {
@@ -32,7 +32,7 @@ CXSourceLocation *ptrToCXSourceLocation(CXSourceLocation t)
     *c = t;
     return c;
 }
-// START ===== Functions for testing libclang behavior in C
+// START ===== Functions for testing libclang behavior in C.
 enum CXChildVisitResult visitor_for_test_in_c(CXCursor cursor, CXCursor parent, CXClientData clientData)
 {
     printf("Cursor- kind: %s, name: %s\n", clang_getCString(clang_getCursorKindSpelling(clang_getCursorKind(cursor))), clang_getCString(clang_getCursorSpelling(cursor)));
@@ -133,7 +133,7 @@ CXType *clang_getTypedefDeclUnderlyingType_wrap(CXCursor *cxcursor)
     return ptrToCXType(clang_getTypedefDeclUnderlyingType(*cxcursor));
 }
 
-/** The name of parameter, struct, typedef */
+/** The name of parameter, struct, typedef. */
 CXString *clang_getCursorSpelling_wrap(CXCursor *cursor)
 {
     return ptrToCXString(clang_getCursorSpelling(*cursor));
@@ -196,8 +196,8 @@ ModifiedCXCursorVisitor _top()
 {
     return _visitorTop->modifiedVisitor;
 }
-// do not write binding for this function
-// used by [clang_visitChildren_wrap]
+// Do not write binding for this function.
+// used by [clang_visitChildren_wrap].
 enum CXChildVisitResult
 _visitorwrap(CXCursor cursor, CXCursor parent, CXClientData clientData)
 {
@@ -205,8 +205,8 @@ _visitorwrap(CXCursor cursor, CXCursor parent, CXClientData clientData)
     return e;
 }
 
-/** visitor is a function pointer with parameters having pointers to cxcursor
-* instead of cxcursor by default*/
+/** Visitor is a function pointer with parameters having pointers to cxcursor
+* instead of cxcursor by default. */
 unsigned clang_visitChildren_wrap(CXCursor *parent, ModifiedCXCursorVisitor _modifiedVisitor, CXClientData clientData)
 {
     _push(_modifiedVisitor);
@@ -240,7 +240,7 @@ long long clang_getEnumConstantDeclValue_wrap(CXCursor *cursor)
     return clang_getEnumConstantDeclValue(*cursor);
 }
 
-/** Returns the first paragraph of doxygen doc comment */
+/** Returns the first paragraph of doxygen doc comment. */
 CXString *clang_Cursor_getBriefCommentText_wrap(CXCursor *cursor)
 {
     return ptrToCXString(clang_Cursor_getBriefCommentText(*cursor));

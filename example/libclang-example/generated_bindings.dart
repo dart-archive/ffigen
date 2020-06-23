@@ -1,10 +1,10 @@
 /// AUTO GENERATED FILE, DO NOT EDIT.
 import 'dart:ffi' as ffi;
 
-/// Dynamic library
+/// Holds the Dynamic library.
 ffi.DynamicLibrary _dylib;
 
-/// Initialises dynamic library
+/// Initialises the Dynamic library.
 void init(ffi.DynamicLibrary dylib) {
   _dylib = dylib;
 }
@@ -924,7 +924,7 @@ typedef _dart_clang_Cursor_getArgument_wrap = ffi.Pointer<CXCursor> Function(
   int i,
 );
 
-/// Returns the first paragraph of doxygen doc comment
+/// Returns the first paragraph of doxygen doc comment.
 ffi.Pointer<CXString> clang_Cursor_getBriefCommentText_wrap(
   ffi.Pointer<CXCursor> cursor,
 ) {
@@ -2527,7 +2527,7 @@ typedef _dart_clang_getCursorLocation_wrap = ffi.Pointer<CXSourceLocation>
   ffi.Pointer<CXCursor> cursor,
 );
 
-/// The name of parameter, struct, typedef
+/// The name of parameter, struct, typedef.
 ffi.Pointer<CXString> clang_getCursorSpelling_wrap(
   ffi.Pointer<CXCursor> cursor,
 ) {
@@ -4373,7 +4373,7 @@ typedef _dart_clang_toggleCrashRecovery = void Function(
   int isEnabled,
 );
 
-/// visitor is a function pointer with parameters having pointers to cxcursor instead of cxcursor by default
+/// Visitor is a function pointer with parameters having pointers to cxcursor instead of cxcursor by default.
 int clang_visitChildren_wrap(
   ffi.Pointer<CXCursor> parent,
   ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor>> _modifiedVisitor,

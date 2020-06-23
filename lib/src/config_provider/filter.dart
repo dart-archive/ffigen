@@ -6,7 +6,7 @@
 ///
 /// User can provide fiters for
 /// functions, structs, enums and include/exclude
-/// them using regexp, full name matching.
+/// them using regexp and full name matching.
 class Filter {
   // matchers
   List<RegExp> _includeMatchers = [];
@@ -58,7 +58,7 @@ class Filter {
       }
     }
 
-    // if user has provided what to include, then by default match is false.
+    // If user has provided 'include' field in the filter, then default matching is false.
     if (_includeMatchers.isNotEmpty || _includeFull.isNotEmpty) {
       return false;
     } else {

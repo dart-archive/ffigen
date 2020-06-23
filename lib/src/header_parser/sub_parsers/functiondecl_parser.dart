@@ -36,7 +36,7 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
           '---- Removed Function, reason: struct pass/return by value: ${cursor.completeStringRepr()}');
       _logger.warning(
           "Skipped Function '$name', struct pass/return by value not supported.");
-      return null; //returning null so that [addToBindings] function excludes this.
+      return null; // Returning null so that [addToBindings] function excludes this.
     }
 
     // TODO: check, handling arrays in function parameters
@@ -45,7 +45,7 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
           '---- Removed Function, reason: constant array passed to function parameter: ${cursor.completeStringRepr()}');
       _logger.warning(
           "Skipped Function '$name', constant array in function parameter not supported.");
-      return null; //returning null so that [addToBindings] function excludes this.
+      return null; // Returning null so that [addToBindings] function excludes this.
     }
 
     if (rt.getBaseBroadType() == BroadType.Unimplemented ||
@@ -54,7 +54,7 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
           '---- Removed Function, reason: unsupported return type or parameter type: ${cursor.completeStringRepr()}');
       _logger.warning(
           "Skipped Function '$name', function has unsupported return type or parameter type.");
-      return null; //returning null so that [addToBindings] function excludes this.
+      return null; // Returning null so that [addToBindings] function excludes this.
     }
 
     _func = Func(
@@ -97,7 +97,7 @@ List<Parameter> _getParameters(Pointer<clang.CXCursor> cursor) {
 
     final pn = paramCursor.spelling();
 
-    /// if pn is null or empty, its set to `arg$i` by code_generator.
+    /// If pn is null or empty, its set to `arg$i` by code_generator.
     parameters.add(
       Parameter(
         name: pn,

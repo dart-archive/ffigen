@@ -1,10 +1,10 @@
 /// AUTO GENERATED FILE, DO NOT EDIT.
 import 'dart:ffi' as ffi;
 
-/// Dynamic library
+/// Holds the Dynamic library.
 ffi.DynamicLibrary _dylib;
 
-/// Initialises dynamic library
+/// Initialises the Dynamic library.
 void init(ffi.DynamicLibrary dylib) {
   _dylib = dylib;
 }

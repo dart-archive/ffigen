@@ -48,7 +48,7 @@ void logTuDiagnostics(
 }
 
 extension CXCursorExt on Pointer<clang.CXCursor> {
-  /// returns the kind int from [clang.CXCursorKind].
+  /// Returns the kind int from [clang.CXCursorKind].
   int kind() {
     return clang.clang_getCursorKind_wrap(this);
   }
@@ -58,7 +58,7 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
     return clang.clang_getCursorSpelling_wrap(this).toStringAndDispose();
   }
 
-  /// spelling for a [clang.CXCursorKind] useful for debug purposes.
+  /// Spelling for a [clang.CXCursorKind], useful for debug purposes.
   String kindSpelling() {
     return clang
         .clang_getCursorKindSpelling_wrap(clang.clang_getCursorKind_wrap(this))
@@ -96,7 +96,7 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
     final column = allocate<Uint32>();
     final offset = allocate<Uint32>();
 
-    // puts the values in these pointers.
+    // Puts the values in these pointers.
     clang.clang_getFileLocation_wrap(cxsource, cxfilePtr, line, column, offset);
     final s = clang.clang_getFileName_wrap(cxfilePtr.value).toStringAndDispose();
     free(cxsource);
@@ -131,12 +131,12 @@ extension CXTypeExt on Pointer<clang.CXType> {
     return t;
   }
 
-  /// spelling for a [clang.CXTypeKind] useful for debug purposes.
+  /// Spelling for a [clang.CXTypeKind], useful for debug purposes.
   String spelling() {
     return clang.clang_getTypeSpelling_wrap(this).toStringAndDispose();
   }
 
-  /// returns the typeKind int from [clang.CXTypeKind].
+  /// Returns the typeKind int from [clang.CXTypeKind].
   int kind() {
     return ref.kind;
   }
@@ -145,7 +145,7 @@ extension CXTypeExt on Pointer<clang.CXType> {
     return clang.clang_getTypeKindSpelling_wrap(kind()).toStringAndDispose();
   }
 
-  /// for debug: returns [spelling] [kind] [kindSpelling].
+  /// For debugging: returns [spelling] [kind] [kindSpelling].
   String completeStringRepr() {
     final s =
         '(Type) spelling: ${spelling()}, kind: ${kind()}, kindSpelling: ${kindSpelling()}';
@@ -193,7 +193,7 @@ Pointer<Pointer<Utf8>> createDynamicStringArray(List<String> list) {
 }
 
 extension DynamicCStringArray on Pointer<Pointer<Utf8>> {
-  // properly disposes a Pointer<Pointer<Utf8>, ensure that sure length is correct.
+  // Properly disposes a Pointer<Pointer<Utf8>, ensure that sure length is correct.
   void dispose(int length) {
     for (var i = 0; i < length; i++) {
       free(this[i]);

@@ -26,7 +26,7 @@ class Constant extends Binding {
   /// The rawValue is pasted as it is.
   ///
   /// Make sure you put quotes
-  /// when constant's type is string
+  /// if type is a string.
   final String rawValue;
 
   const Constant({

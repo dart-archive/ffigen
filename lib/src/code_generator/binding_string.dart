@@ -6,7 +6,7 @@ import 'package:meta/meta.dart';
 
 /// A Binding's String representation
 class BindingString {
-  // meta data, (not used for generation).
+  // Meta data, (not used for generation).
   final BindingStringType type;
   final String string;
 

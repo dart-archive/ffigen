@@ -14,10 +14,10 @@ var _logger = Logger('code_generator');
 
 /// Container for all Bindings
 class Library {
-  /// variable name of dynamicLibrary, defaults to `_dylib`,
+  /// Variable identifier used for dynamicLibrary, defaults to `_dylib`,
   final String dylibIdentifier;
 
-  /// init function for providing dynamic library, defaults to `init`,
+  /// Init function for providing dynamic library, defaults to `init`,
   /// you can rename it in case of name conflicts with something else.
   final String initFunctionIdentifier;
 
@@ -49,7 +49,7 @@ class Library {
     }
   }
 
-  /// generates bindings and stores it in given [Writer]
+  /// Generates bindings and stores it in given [Writer].
   void _generate(Writer w) {
     w.header = header;
     for (final b in bindings) {
@@ -57,7 +57,7 @@ class Library {
     }
   }
 
-  /// Formats a file using 'dartfmt'
+  /// Formats a file using `dartfmt`.
   void _dartFmt(String path) {
     final result = Process.runSync('dartfmt', ['-w', path],
         runInShell: Platform.isWindows);

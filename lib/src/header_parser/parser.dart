@@ -55,7 +55,7 @@ List<Binding> parseAndGenerateBindings() {
   // Contains all bindings.
   final bindings = <Binding>[];
 
-  // Log all headers for user
+  // Log all headers for user.
   _logger.info('Input Headers: ${data.config.headers}');
 
   for (final h in data.config.headers) {
@@ -75,7 +75,7 @@ List<Binding> parseAndGenerateBindings() {
     if (tu == nullptr) {
       _logger
           .severe("Skipped header/file: $headerLocation, couldn't parse source.");
-      // Skip parsing this header
+      // Skip parsing this header.
       continue;
     }
 
@@ -84,7 +84,7 @@ List<Binding> parseAndGenerateBindings() {
 
     bindings.addAll(parseTranslationUnitCursor(rootCursor));
 
-    // cleanup
+    // Cleanup.
     rootCursor.dispose();
     clang.clang_disposeTranslationUnit(tu);
   }

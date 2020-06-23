@@ -2,7 +2,7 @@
 # for details. All rights reserved. Use of this source code is governed by a
 # BSD-style license that can be found in the LICENSE file.
 
-# Config file for generating the libclang bindings used by this package
+# Config file for generating the libclang bindings used by this package.
 
 # ===================== GENERATING BINDINGS =====================
 #    cd to `tool`, and run -

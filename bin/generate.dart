@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// Executable script to be called by user to generate bindings for some C library
+// Executable script to generate bindings for some C library.
 import 'dart:io';
 
 import 'package:args/args.dart';
@@ -14,16 +14,16 @@ import 'package:yaml/yaml.dart' as yaml;
 var _logger = Logger('generate.dart');
 
 void main(List<String> args) {
-  // parser the cmd Args.
+  // Parses the cmd args.
   final result = getArgResults(args);
 
-  // setup logging level and printing.
+  // Setup logging level and printing.
   setupLogger(result);
 
-  // create config object.
+  // Create a config object.
   final config = getConfig(result);
 
-  // parse the bindings according to config object provided.
+  // Parse the bindings according to config object provided.
   final library = parser.parse(config);
 
   if (config.sort) {
@@ -46,7 +46,7 @@ Config getConfig(ArgResults result) {
   }
 }
 
-/// Extracts configuration from pubspec file
+/// Extracts configuration from pubspec file.
 Config getConfigFromPubspec() {
   final pubspecName = 'pubspec.yaml';
   final configKey = 'ffigen';
@@ -61,7 +61,7 @@ Config getConfigFromPubspec() {
 
   // Casting this because pubspec is expected to be a YamlMap.
 
-  // can throw YamlException() if unable to parse
+  // Throws a [YamlException] if it's unable to parse the Yaml.
   final bindingsConfigMap =
       yaml.loadYaml(pubspecFile.readAsStringSync())[configKey] as yaml.YamlMap;
 
@@ -77,21 +77,20 @@ Config getConfigFromCustomYaml(String yamlPath) {
   final yamlFile = File(yamlPath);
 
   if (!yamlFile.existsSync()) {
-    _logger.severe(
-        'Error: $yamlPath not found.');
+    _logger.severe('Error: $yamlPath not found.');
     exit(1);
   }
 
   // Casting this because pubspec is expected to be a YamlMap.
 
-  // can throw YamlException() if unable to parse
+  // Throws a [YamlException] if it's unable to parse the Yaml.
   final bindingsConfigMap =
       yaml.loadYaml(yamlFile.readAsStringSync()) as yaml.YamlMap;
 
   return Config.fromYaml(bindingsConfigMap);
 }
 
-/// Parse cmd line arguments.
+/// Parses the cmd line arguments.
 ArgResults getArgResults(List<String> args) {
   final parser = ArgParser(allowTrailingOptions: true);
 
@@ -137,37 +136,37 @@ ArgResults getArgResults(List<String> args) {
   return results;
 }
 
-/// Setup logging level and printing.
+/// Sets up the logging level and printing.
 void setupLogger(ArgResults result) {
   if (result.wasParsed('verbose')) {
     switch (result['verbose'] as String) {
       case 'all':
-        // logs everything, entire AST touched by our parser.
+        // Logs everything, the entire AST touched by our parser.
         Logger.root.level = Level.ALL;
         break;
       case 'fine':
-        // logs AST parts relevant to user (i.e included in filter).
+        // Logs AST parts relevant to user (i.e those included in filters).
         Logger.root.level = Level.FINE;
         break;
       case 'info':
-        // logs relevant info for general user (default).
+        // Logs relevant info for general user (default).
         Logger.root.level = Level.INFO;
         break;
       case 'warning':
-        // logs warnings for relevant stuff.
+        // Logs warnings for relevant stuff.
         Logger.root.level = Level.WARNING;
         break;
       case 'severe':
-        // logs severe warnings and errors.
+        // Logs severe warnings and errors.
         Logger.root.level = Level.SEVERE;
         break;
     }
-    // setup logger for printing (if verbosity was set by user).
+    // Setup logger for printing (if verbosity was set by user).
     Logger.root.onRecord.listen((record) {
       print('${record.level.name.padRight(8)}: ${record.message}');
     });
   } else {
-    // setup logger for printing (if verbosity was not set by user).
+    // Setup logger for printing (if verbosity was not set by user).
     Logger.root.onRecord.listen((record) {
       if (record.level.value > Level.INFO.value) {
         print('  ${record.level.name.padRight(8)}: ${record.message}');

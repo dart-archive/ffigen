@@ -10,7 +10,7 @@ class Writer {
   String dylibIdentifier;
   String initFunctionIdentifier;
 
-  /// dart:ffi library prefix.
+  /// dart:ffi library import prefix.
   String ffiLibraryPrefix;
 
   final List<BindingString> _bindings = [];
@@ -31,15 +31,15 @@ class Writer {
       s.write('\n');
     }
 
-    // write neccesary imports.
+    // Write neccesary imports.
     s.write("import 'dart:ffi' as $ffiLibraryPrefix;\n");
     s.write('\n');
 
     // Write dylib
-    s.write('/// Dynamic library\n');
+    s.write('/// Holds the Dynamic library.\n');
     s.write('$ffiLibraryPrefix.DynamicLibrary ${dylibIdentifier};\n');
     s.write('\n');
-    s.write('/// Initialises dynamic library\n');
+    s.write('/// Initialises the Dynamic library.\n');
     s.write(
         'void $initFunctionIdentifier($ffiLibraryPrefix.DynamicLibrary dylib){\n');
     s.write('  ${dylibIdentifier} = dylib;\n');

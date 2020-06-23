@@ -102,7 +102,7 @@ List<String> headersExtractor(dynamic yamlConfig) {
   final headers = <String>[];
   for (final h in (yamlConfig as YamlList)) {
     final headerGlob = h as String;
-    // add file directly to header if it's not a Glob but a File.
+    // Add file directly to header if it's not a Glob but a File.
     if (File(headerGlob).existsSync()) {
       headers.add(headerGlob);
       _logger.fine('Adding header/file: $headerGlob');

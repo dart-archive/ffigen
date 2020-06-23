@@ -36,10 +36,10 @@ enum BroadType {
   Struct,
   NativeFunction,
 
-  /// stores its element type in NativeType as only those are supported
+  /// Stores its element type in NativeType as only those are supported.
   ConstantArray,
 
-  /// used as a marker, so that functions/structs having these can exclude them
+  /// Used as a marker, so that functions/structs having these can exclude them.
   Unimplemented,
 }
 

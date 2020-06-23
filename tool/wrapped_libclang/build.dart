@@ -62,12 +62,12 @@ void main(List<String> arguments) {
   changeDefaultsBasedOnPlatform();
   changeIncludesUsingCmdArgs(arguments);
 
-  // Run clang compiler to generate the dynamic library
+  // Run clang compiler to generate the dynamic library.
   final ProcessResult result = runClangProcess();
   printSuccess(result);
 }
 
-/// Calls clang process
+/// Calls the clang compiler.
 ProcessResult runClangProcess() {
   final result = Process.runSync(
     'clang',
@@ -96,7 +96,7 @@ void printSuccess(ProcessResult result) {
   }
 }
 
-/// Use cmd args(if any) to change default paths
+/// Use cmd args(if any) to change default paths.
 void changeIncludesUsingCmdArgs(List<String> arguments) {
   final argResult = getArgResults(arguments);
   if (argResult.wasParsed('include-header')) {

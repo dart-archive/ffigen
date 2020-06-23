@@ -19,7 +19,7 @@ import 'writer.dart';
 ///   int c;
 /// };
 /// ```
-/// The generated dart is -
+/// The generated dart code is -
 /// ```dart
 /// class Struct extends ffi.Struct{
 ///  @ffi.Int32()

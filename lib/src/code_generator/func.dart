@@ -15,7 +15,7 @@ import 'writer.dart';
 /// ```c
 /// int sum(int a, int b);
 /// ```
-/// The Generated dart is -
+/// The Generated dart code is -
 /// ```dart
 /// int sum(int a, int b) {
 ///   return _sum(a, b);
@@ -60,7 +60,7 @@ class Func extends Binding {
       s.write('\n');
     }
 
-    // write enclosing function.
+    // Write enclosing function.
     s.write('${returnType.getDartType(w)} $name(\n');
     for (final p in parameters) {
       s.write('  ${p.type.getDartType(w)} ${p.name},\n');
@@ -73,18 +73,18 @@ class Func extends Binding {
     s.write('  );\n');
     s.write('}\n\n');
 
-    // write function with dylib lookup.
+    // Write function with dylib lookup.
     s.write(
         "final $typedefDart $funcVarName = ${w.dylibIdentifier}.lookupFunction<$typedefC,$typedefDart>('$name');\n\n");
 
-    // write typdef for C.
+    // Write typdef for C.
     s.write('typedef $typedefC = ${returnType.getCType(w)} Function(\n');
     for (final p in parameters) {
       s.write('  ${p.type.getCType(w)} ${p.name},\n');
     }
     s.write(');\n\n');
 
-    // write typdef for dart.
+    // Write typdef for dart.
     s.write('typedef $typedefDart = ${returnType.getDartType(w)} Function(\n');
     for (final p in parameters) {
       s.write('  ${p.type.getDartType(w)} ${p.name},\n');

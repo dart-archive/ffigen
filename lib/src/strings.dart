@@ -16,17 +16,17 @@ const functions = 'functions';
 const structs = 'structs';
 const enums = 'enums';
 
-// include/exclude: sub-fields of Declarations.
+// Sub-fields of Declarations.
 const include = 'include';
 const exclude = 'exclude';
 
-// matches: and names :sub-fields of include/exclude.
+// Sub-fields of include/exclude.
 const matches = 'matches'; // regex
 const names = 'names'; // hashset
 
 const sizemap = 'size-map';
 
-// sizemap values.
+// Sizemap values.
 const SChar = 'char';
 const UChar = 'unsigned char';
 const Short = 'short';
@@ -54,13 +54,13 @@ const sizemap_native_mapping = <String, int>{
   Enum: clang.CXTypeKind.CXType_Enum
 };
 
-// boolean flags.
+// Boolean flags.
 const sort = 'sort';
 const useSupportedTypedefs = 'use-supported-typedefs';
 const warnWhenRemoving = 'warn-when-removing';
 const extractComments = 'extract-comments';
 
-// dynamic library names.
+// Dynamic library names.
 const libclang_dylib_linux = 'libwrapped_clang.so';
 const libclang_dylib_macos = 'libwrapped_clang.dylib';
 const libclang_dylib_windows = 'wrapped_clang.dll';
