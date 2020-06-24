@@ -184,7 +184,7 @@ extension CXStringExt on Pointer<clang.CXString> {
   }
 }
 
-// Converts a List<String> to Pointer<Pointer<Utf8>>.
+/// Converts a [List<String>] to [Pointer<Pointer<Utf8>>].
 Pointer<Pointer<Utf8>> createDynamicStringArray(List<String> list) {
   final nativeCmdArgs = allocate<Pointer<Utf8>>(count: list.length);
 

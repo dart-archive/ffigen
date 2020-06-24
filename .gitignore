@@ -18,8 +18,11 @@ doc/api/
 *.js.deps
 *.js.map
 
-# Any Dynamic Library, including one for libclang wrapper.
+# Generated shared libraries.
 *.so
+*.so.*
+*.dylib
+*.dll
 
 # Directory for quick experiments.
 experiments/

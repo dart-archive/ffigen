@@ -143,9 +143,12 @@ Type _extractFromFunctionProto(
   return Type.nativeFunc(name);
 }
 
-/// Generates a unique string for naming in [TypedefC].
-int _i = 0;
+/// Generate a unique string for naming in [TypedefC].
 String _getNextUniqueString(String prefix) {
-  _i++;
-  return '${prefix}_$_i';
+  int i = _uniqueStringCounters[prefix] ?? 0;
+  i++;
+  _uniqueStringCounters[prefix] = i;
+  return '${prefix}_$i';
 }
+
+Map<String, int> _uniqueStringCounters = {};
