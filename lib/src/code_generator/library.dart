@@ -32,7 +32,7 @@ class Library {
     @required this.bindings,
     this.dylibIdentifier = '_dylib',
     this.initFunctionIdentifier = 'init',
-    this.header = '/// AUTO GENERATED FILE, DO NOT EDIT.',
+    this.header,
   })  : assert(dylibIdentifier != null),
         assert(initFunctionIdentifier != null);
 
