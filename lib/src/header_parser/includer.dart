@@ -51,7 +51,8 @@ bool shouldIncludeEnumClass(String name) {
   }
 }
 
-/// True if a cursor should be included based on header-filter, use for root declarations.
+/// True if a cursor should be included based on header-filter, use for root
+/// declarations.
 bool shouldIncludeRootCursor(String sourceFile) {
   final name = p.basename(sourceFile);
 
@@ -63,7 +64,7 @@ bool shouldIncludeRootCursor(String sourceFile) {
     return true;
   }
 
-  // If any includedInclusionHeaders is provided, return false
+  // If any includedInclusionHeaders is provided, return false.
   if (config.headerFilter.includedInclusionHeaders.isNotEmpty) {
     return false;
   } else {

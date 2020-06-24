@@ -12,14 +12,14 @@ import 'writer.dart';
 
 var _logger = Logger('code_generator');
 
-/// Container for all Bindings
+/// Container for all Bindings.
 class Library {
-  /// Variable identifier used for dynamicLibrary, defaults to `_dylib`,
+  /// Variable identifier used for dynamicLibrary. Defaults to `_dylib`,
   final String dylibIdentifier;
 
-  /// Init function for providing dynamic library, defaults to `init`,
+  /// Init function for providing dynamic library. Defaults to `init`,
   ///
-  /// you can rename it in case of name conflicts with something else.
+  /// Can be renamed in case of name conflicts with something else.
   final String initFunctionIdentifier;
 
   /// Header of file.

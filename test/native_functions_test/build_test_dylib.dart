@@ -28,64 +28,103 @@
 
 import 'dart:io';
 
-// Default values are for linux.
-// Name of dynamic library to generate.
-String outputfilename = 'native_functions.so';
+import 'package:meta/meta.dart';
 
-// Tells compiler to generate a shared library.
-String sharedFlag = '-shared';
+const MACOS = 'macos';
+const WINDOWS = 'windows';
+const LINUX = 'linux';
 
-// Flag for generating Position Independant Code (Not used on windows).
-String fPIC = '-fpic';
-
-// Input file.
-String inputHeader = 'native_functions.c';
-
-// Path to `.def` file containing symbols to export, windows use only.
-String moduleDefPath = '';
+Map<String, Options> platformOptions = {
+  LINUX: Options(
+    outputfilename: 'native_functions.so',
+    sharedFlag: '-shared',
+    inputHeader: 'native_functions.c',
+    fPIC: '-fpic',
+  ),
+  WINDOWS: Options(
+    outputfilename: 'native_functions.dll',
+    sharedFlag: '-shared',
+    inputHeader: 'native_functions.c',
+    moduleDefPath: '-Wl,/DEF:native_functions.def',
+  ),
+  MACOS: Options(
+    outputfilename: 'native_functions.dylib',
+    sharedFlag: '-shared',
+    inputHeader: 'native_functions.c',
+    fPIC: '-fpic',
+  ),
+};
 
 void main(List<String> arguments) {
   print('Building Dynamic Library for Native Tests... ');
-  changeDefaultsBasedOnPlatform();
+  final options = getPlatformOptions();
 
   // Run clang compiler to generate the dynamic library.
-  final ProcessResult result = runClangProcess();
-  printSuccess(result);
+  final ProcessResult result = runClangProcess(options);
+  printSuccess(result, options);
 }
 
 /// Calls the clang compiler.
-ProcessResult runClangProcess() {
+ProcessResult runClangProcess(Options options) {
   final result = Process.runSync(
     'clang',
     [
-      sharedFlag,
-      fPIC,
-      inputHeader,
+      options.sharedFlag,
+      options.fPIC,
+      options.inputHeader,
       '-o',
-      outputfilename,
-      moduleDefPath,
+      options.outputfilename,
+      options.moduleDefPath,
     ],
   );
   return result;
 }
 
 /// Prints success message (or process error if any).
-void printSuccess(ProcessResult result) {
+void printSuccess(ProcessResult result, Options options) {
   print(result.stdout);
   if ((result.stderr as String).isEmpty) {
-    print('Generated file: $outputfilename');
+    print('Generated file: ${options.outputfilename}');
   } else {
     print(result.stderr);
   }
 }
 
-/// Changing defaults for Mac and Windows.
-void changeDefaultsBasedOnPlatform() {
+/// Get options based on current platform.
+Options getPlatformOptions() {
   if (Platform.isMacOS) {
-    outputfilename = 'native_functions.dylib';
+    return platformOptions[MACOS];
   } else if (Platform.isWindows) {
-    outputfilename = 'native_functions.dll';
-    moduleDefPath = '-Wl,/DEF:native_functions.def';
-    fPIC = '';
+    return platformOptions[WINDOWS];
+  } else if (Platform.isLinux) {
+    return platformOptions[LINUX];
+  } else {
+    throw Exception('Unknown Platform.');
   }
+}
+
+/// Hold options which would be passed to clang.
+class Options {
+  /// Name of dynamic library to generate.
+  final String outputfilename;
+
+  /// Tells compiler to generate a shared library.
+  final String sharedFlag;
+
+  /// Flag for generating Position Independant Code (Not used on windows).
+  final String fPIC;
+
+  /// Input file.
+  final String inputHeader;
+
+  /// Path to `.def` file containing symbols to export, windows use only.
+  final String moduleDefPath;
+
+  Options({
+    @required this.outputfilename,
+    @required this.sharedFlag,
+    @required this.inputHeader,
+    this.fPIC = '',
+    this.moduleDefPath = '',
+  });
 }

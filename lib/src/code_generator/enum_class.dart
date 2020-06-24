@@ -42,7 +42,7 @@ class EnumClass extends Binding {
       s.write('\n');
     }
 
-    // print enclosing class.
+    // Print enclosing class.
     s.write('class $name {\n');
     const depth = '  ';
     for (final ec in enumConstants) {

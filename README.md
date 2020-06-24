@@ -8,19 +8,16 @@ bindings.
 For some header file _example.h_:
 ```C
 int sum(int a, int b);
-...
 ```
 Add configurations to Pubspec File:
 ```yaml
-...
 ffigen:
   output: 'generated_bindings.dart'
   headers:
     - 'example.h'
 ```
-Output (_generated_bindings.dart_)
+Output (_generated_bindings.dart_).
 ```dart
-...
 DynamicLibrary _dylib;
 
 /// Initialises dynamic library
@@ -37,7 +34,6 @@ final _dart_sum _sum = _dylib.lookupFunction<_c_sum, _dart_sum>('sum');
 typedef _c_sum = Int32 Function(Int32 a,Int32 b);
 
 typedef _dart_sum = int Function(int a,int b);
-...
 ```
 ## Using this package
 - clone/download this repository.

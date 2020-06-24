@@ -45,7 +45,7 @@ ffigen:
         - 'CXGlobalOptFlags'
 
   # These are optional and also default,
-  # you can leave out any and the default will be used.
+  # Omitting any and the default will be used.
   size-map:
     char: 1
     unsigned char: 1

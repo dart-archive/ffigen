@@ -12,7 +12,7 @@ import 'clang_bindings/clang_bindings.dart' as clang;
 import 'data.dart';
 import 'type_extractor/extractor.dart';
 
-/// Check resultCode of [clang.clang_visitChildren_wrap]
+/// Check resultCode of [clang.clang_visitChildren_wrap].
 ///
 /// Throws exception if resultCode is not 0.
 void visitChildrenResultChecker(int resultCode) {
@@ -158,7 +158,10 @@ extension CXTypeExt on Pointer<clang.CXType> {
 }
 
 extension CXStringExt on Pointer<clang.CXString> {
-  /// Dispose CXstring using dispose.
+  /// Convert CXString to a Dart string
+  ///
+  /// Make sure to dispose CXstring using dispose method, or use the
+  /// [toStringAndDispose] method.
   String string() {
     String s;
     final cstring = clang.clang_getCString_wrap(this);

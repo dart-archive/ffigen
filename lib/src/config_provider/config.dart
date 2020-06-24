@@ -20,7 +20,7 @@ import 'spec_utils.dart';
 
 var _logger = Logger('config_provider/config');
 
-/// Provides configurations to other modules
+/// Provides configurations to other modules.
 ///
 /// Handles validation, extraction of confiurations from yaml file.
 class Config {
@@ -257,7 +257,7 @@ class Config {
 
 /// Represents a single specification in configurations.
 ///
-/// [E] is the return type of the extractedResult
+/// [E] is the return type of the extractedResult.
 class Specification<E> {
   final String description;
   final bool Function(String name, dynamic value) validator;

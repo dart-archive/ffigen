@@ -23,12 +23,10 @@ Struc parseStructDeclaration(
   /// Optionally provide name (useful in case struct is inside a typedef).
   String name,
 
-  /// to override shouldInclude methods.
-  /// (useful in case of extracting structs
-  /// when they are passed/returned by an included function)
+  /// Option to override shouldInclude methods. (Useful in case of extracting
+  /// structs when they are passed/returned by an included function.)
   ///
-  /// you should manually check if binding is not already included
-  /// before setting this to true
+  /// Check if binding is not already included before setting this to true.
   bool doInclude = false,
 }) {
   _struc = null;
@@ -66,7 +64,7 @@ List<Member> _getMembers(Pointer<clang.CXCursor> cursor, String structName) {
 
   visitChildrenResultChecker(resultCode);
 
-  // returning null to exclude the struct members as it has a struct by value field.
+  // Returning null to exclude the struct members as it has a struct by value field.
   if (nestedStructMember) {
     _logger.fine(
         '---- Removed Struct members, reason: struct has struct members ${cursor.completeStringRepr()}');
@@ -89,7 +87,7 @@ bool unimplementedMemberType = false;
 
 /// Visitor for the struct cursor [CXCursorKind.CXCursor_StructDecl].
 ///
-/// child visitor invoked on struct cursor.
+/// Child visitor invoked on struct cursor.
 int _structMembersVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
   try {
@@ -98,14 +96,14 @@ int _structMembersVisitor(Pointer<clang.CXCursor> cursor,
 
       final mt = cursor.type().toCodeGenTypeAndDispose();
 
-      //TODO(4): remove these when support for Structs by value arrive
+      //TODO(4): Remove these when support for Structs by value arrives.
       if (mt.broadType == BroadType.Struct) {
-        nestedStructMember =
-            true; // setting this flag will exclude adding members for this struct's bindings.
+        // Setting this flag will exclude adding members for this struct's bindings.
+        nestedStructMember = true;
       } else if (mt.broadType == BroadType.ConstantArray) {
         if (mt.elementType.broadType == BroadType.Struct) {
-          nestedStructMember =
-              true; // setting this flag will exclude adding members for this struct's bindings.
+          // Setting this flag will exclude adding members for this struct's bindings.
+          nestedStructMember = true;
         }
       }
 

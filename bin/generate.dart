@@ -81,8 +81,6 @@ Config getConfigFromCustomYaml(String yamlPath) {
     exit(1);
   }
 
-  // Casting this because pubspec is expected to be a YamlMap.
-
   // Throws a [YamlException] if it's unable to parse the Yaml.
   final bindingsConfigMap =
       yaml.loadYaml(yamlFile.readAsStringSync()) as yaml.YamlMap;

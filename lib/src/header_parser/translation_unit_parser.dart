@@ -35,7 +35,7 @@ List<Binding> parseTranslationUnitCursor(Pointer<clang.CXCursor> translationUnit
   return _bindings;
 }
 
-/// child visitor invoked on translationUnitCursor [CXCursorKind.CXCursor_TranslationUnit].
+/// Child visitor invoked on translationUnitCursor [CXCursorKind.CXCursor_TranslationUnit].
 int _rootCursorVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
   try {

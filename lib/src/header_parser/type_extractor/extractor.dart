@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-/// Extracts code_gen Type from type
+/// Extracts code_gen Type from type.
 import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
@@ -143,7 +143,7 @@ Type _extractFromFunctionProto(
   return Type.nativeFunc(name);
 }
 
-/// Generates a unique string. Used in naming [TypedefC]
+/// Generates a unique string for naming in [TypedefC].
 int _i = 0;
 String _getNextUniqueString(String prefix) {
   _i++;

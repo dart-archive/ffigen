@@ -2,10 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-/// A generic filter.
+/// A generic filter for filtering strings based on regexes and prefixes.
 ///
-/// User can provide fiters for
-/// functions, structs, enums and include/exclude
+/// Excludes override includes.
+///
+/// User can provide fiters for functions, structs, enums and include/exclude
 /// them using regexp and full name matching.
 class Filter {
   // matchers
@@ -58,7 +59,8 @@ class Filter {
       }
     }
 
-    // If user has provided 'include' field in the filter, then default matching is false.
+    // If user has provided 'include' field in the filter, then default
+    // matching is false.
     if (_includeMatchers.isNotEmpty || _includeFull.isNotEmpty) {
       return false;
     } else {

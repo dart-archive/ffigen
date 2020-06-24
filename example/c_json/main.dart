@@ -47,8 +47,12 @@ void main() {
 
 String _getPath() {
   var path = '../../third_party/cjson_library/libcjson.so';
-  if (Platform.isMacOS) path = '../../third_party/cjson_library/libstructs.dylib';
-  if (Platform.isWindows) path = r'..\..\third_party\cjson_library\Debug\structs.dll';
+  if (Platform.isMacOS) {
+    path = '../../third_party/cjson_library/libstructs.dylib';
+  }
+  if (Platform.isWindows) {
+    path = r'..\..\third_party\cjson_library\Debug\structs.dll';
+  }
   return path;
 }
 

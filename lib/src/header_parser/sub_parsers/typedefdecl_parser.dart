@@ -23,7 +23,7 @@ String _typedefName;
 /// Parses a typedef declaration.
 Binding parseTypedefDeclaration(Pointer<clang.CXCursor> cursor) {
   _binding = null;
-  // set name of typedef (used later).
+  // Name of typedef.
   _typedefName = cursor.spelling();
 
   final resultCode = clang.clang_visitChildren_wrap(
@@ -38,11 +38,11 @@ Binding parseTypedefDeclaration(Pointer<clang.CXCursor> cursor) {
   return _binding;
 }
 
-/// Visitor for extracting binding for a TypedefDeclarations
-/// of a [clang.CXCursorKind.CXCursor_TypedefDecl].
+/// Visitor for extracting binding for a TypedefDeclarations of a
+/// [clang.CXCursorKind.CXCursor_TypedefDecl].
 ///
-/// visitor invoked on cursor of type declaration
-/// returned by [clang.clang_getTypeDeclaration_wrap].
+/// Visitor invoked on cursor of type declaration returned by
+/// [clang.clang_getTypeDeclaration_wrap].
 int _typedefdeclarationCursorVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
   try {
