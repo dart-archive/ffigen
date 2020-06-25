@@ -18,7 +18,7 @@ import 'utils.dart';
 Library parse(Config conf, {bool sort = false}) {
   initParser(conf);
 
-  final bindings = parseAndGenerateBindings();
+  final bindings = parseToBindings();
 
   final library = Library(bindings: bindings);
 
@@ -42,7 +42,7 @@ void initParser(Config c) {
 }
 
 /// Parses source files and adds generated bindings to [bindings].
-List<Binding> parseAndGenerateBindings() {
+List<Binding> parseToBindings() {
   final index = clang.clang_createIndex(0, 0);
 
   Pointer<Pointer<Utf8>> clangCmdArgs = nullptr;
@@ -58,8 +58,7 @@ List<Binding> parseAndGenerateBindings() {
   // Log all headers for user.
   _logger.info('Input Headers: ${data.config.headers}');
 
-  for (final h in data.config.headers) {
-    final headerLocation = h;
+  for (final headerLocation in data.config.headers) {
     _logger.fine('Creating TranslationUnit for header: $headerLocation');
 
     final tu = clang.clang_parseTranslationUnit(
@@ -73,8 +72,8 @@ List<Binding> parseAndGenerateBindings() {
     );
 
     if (tu == nullptr) {
-      _logger
-          .severe("Skipped header/file: $headerLocation, couldn't parse source.");
+      _logger.severe(
+          "Skipped header/file: $headerLocation, couldn't parse source.");
       // Skip parsing this header.
       continue;
     }
@@ -82,7 +81,7 @@ List<Binding> parseAndGenerateBindings() {
     logTuDiagnostics(tu, _logger, headerLocation);
     final rootCursor = clang.clang_getTranslationUnitCursor_wrap(tu);
 
-    bindings.addAll(parseTranslationUnitCursor(rootCursor));
+    bindings.addAll(parseTranslationUnit(rootCursor));
 
     // Cleanup.
     rootCursor.dispose();

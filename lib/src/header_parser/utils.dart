@@ -12,7 +12,7 @@ import 'clang_bindings/clang_bindings.dart' as clang;
 import 'data.dart';
 import 'type_extractor/extractor.dart';
 
-/// Check resultCode of [clang.clang_visitChildren_wrap].
+/// Check [resultCode] of [clang.clang_visitChildren_wrap].
 ///
 /// Throws exception if resultCode is not 0.
 void visitChildrenResultChecker(int resultCode) {
@@ -98,7 +98,8 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
 
     // Puts the values in these pointers.
     clang.clang_getFileLocation_wrap(cxsource, cxfilePtr, line, column, offset);
-    final s = clang.clang_getFileName_wrap(cxfilePtr.value).toStringAndDispose();
+    final s =
+        clang.clang_getFileName_wrap(cxfilePtr.value).toStringAndDispose();
     free(cxsource);
     free(cxfilePtr);
     free(line);
@@ -112,6 +113,7 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
   }
 }
 
+// TODO(13): Improve generated doc comment.
 String getCursorDocComment(Pointer<clang.CXCursor> cursor) {
   return config.extractComments
       ? clang.clang_Cursor_getBriefCommentText_wrap(cursor).toStringAndDispose()

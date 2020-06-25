@@ -45,7 +45,7 @@ class Library {
   ///
   /// If format is true(default), 'dartfmt -w $PATH' will be called to format the generated file.
   void generateFile(File file, {bool format = true}) {
-    file.writeAsStringSync(toString());
+    file.writeAsStringSync(generate());
     if (format) {
       _dartFmt(file.path);
     }
@@ -68,16 +68,16 @@ class Library {
     }
   }
 
-  @override
-  String toString() {
+  /// Generates the bindings.
+  String generate() {
     final w = Writer(
       dylibIdentifier: dylibIdentifier,
       initFunctionIdentifier: initFunctionIdentifier,
     );
     _generate(w);
-    return w.toString();
+    return w.generate();
   }
 
   @override
-  bool operator ==(Object o) => o is Library && o.toString() == toString();
+  bool operator ==(Object o) => o is Library && o.generate() == generate();
 }

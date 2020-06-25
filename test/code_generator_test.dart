@@ -70,7 +70,7 @@ void main() {
         ],
       );
 
-      final gen = library.toString();
+      final gen = library.generate();
 
       // Writing to file for debug purpose.
       final file = File(
@@ -222,7 +222,7 @@ typedef _dart_withPointerParam = ffi.Pointer<ffi.Double> Function(
         ],
       );
 
-      final gen = library.toString();
+      final gen = library.generate();
 
       // Writing to file for debug purpose.
       final file = File('test/debug_generated/Struct-Binding-test-output.dart');
@@ -327,7 +327,7 @@ class WithPointerMember extends ffi.Struct{
         ],
       );
 
-      final gen = library.toString();
+      final gen = library.generate();
 
       // Writing to file for debug purpose.
       final file =
@@ -418,7 +418,7 @@ typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
         ],
       );
 
-      final gen = library.toString();
+      final gen = library.generate();
 
       // Writing to file for debug purpose.
       final file = File(
@@ -477,7 +477,7 @@ final ffi.Pointer<Some> test5 = _dylib.lookup<ffi.Pointer<Some>>('test5').value;
         ],
       );
 
-      final gen = library.toString();
+      final gen = library.generate();
 
       // Writing to file for debug purpose.
       final file = File(
@@ -547,7 +547,7 @@ const double test2 = 20.0;
         ],
       );
 
-      final gen = library.toString();
+      final gen = library.generate();
 
       // Writing to file for debug purpose.
       final file =
@@ -605,7 +605,7 @@ typedef test2 = ffi.Pointer<ffi.Int32> Function(
         ],
       );
 
-      final gen = library.toString();
+      final gen = library.generate();
 
       // Writing to file for debug purpose.
       final file = File(

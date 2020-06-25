@@ -95,7 +95,7 @@ List<Parameter> _getParameters(Pointer<clang.CXCursor> cursor) {
 
     final pn = paramCursor.spelling();
 
-    /// If pn is null or empty, its set to `arg$i` by code_generator.
+    /// If [pn] is null or empty, its set to `arg$i` by code_generator.
     parameters.add(
       Parameter(
         name: pn,

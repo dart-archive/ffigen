@@ -34,7 +34,7 @@ void main() {
   cjson.cJSON_Delete(cjsonParsedJson);
 
   // Check if the converted json is correct
-  // by comparing the result with json converted by dart:convert.
+  // by comparing the result with json converted by `dart:convert`.
   if (dartJson.toString() == json.decode(jsonString).toString()) {
     print('Parsed Json: $dartJson');
     print('Json converted successfully');

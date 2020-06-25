@@ -37,7 +37,7 @@ Struc parseStructDeclaration(
     return null;
   } else if (doInclude || shouldIncludeStruct(structName)) {
     _logger.fine(
-        '++++ Adding Structure: structNname: ${structName}, ${cursor.completeStringRepr()}');
+        '++++ Adding Structure: structName: ${structName}, ${cursor.completeStringRepr()}');
 
     final members = _getMembers(cursor, structName);
     _struc = Struc(

@@ -20,7 +20,7 @@ var _logger = Logger('parser:root_parser');
 List<Binding> _bindings;
 
 /// Parses the translation unit and returns the generated bindings.
-List<Binding> parseTranslationUnitCursor(Pointer<clang.CXCursor> translationUnitCursor) {
+List<Binding> parseTranslationUnit(Pointer<clang.CXCursor> translationUnitCursor) {
   _bindings = [];
 
   final resultCode = clang.clang_visitChildren_wrap(

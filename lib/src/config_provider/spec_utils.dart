@@ -224,8 +224,7 @@ bool filterValidator(String name, dynamic value) {
   return _result;
 }
 
-SupportedNativeType nativeSupportedType(dynamic scalar, {bool signed = true}) {
-  final value = scalar as int;
+SupportedNativeType nativeSupportedType(int value, {bool signed = true}) {
   switch (value) {
     case 1:
       return signed ? SupportedNativeType.Int8 : SupportedNativeType.Uint8;

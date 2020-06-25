@@ -21,8 +21,7 @@ class Writer {
     this.ffiLibraryPrefix = 'ffi',
   });
 
-  @override
-  String toString() {
+  String generate() {
     final s = StringBuffer();
 
     // Write header (if any)
@@ -41,7 +40,7 @@ class Writer {
     s.write("import 'dart:ffi' as $ffiLibraryPrefix;\n");
     s.write('\n');
 
-    // Write dylib
+    // Write dylib.
     s.write('/// Holds the Dynamic library.\n');
     s.write('$ffiLibraryPrefix.DynamicLibrary ${dylibIdentifier};\n');
     s.write('\n');
@@ -51,9 +50,9 @@ class Writer {
     s.write('  ${dylibIdentifier} = dylib;\n');
     s.write('}\n');
 
-    // Write bindings
+    // Write bindings.
     for (final bs in _bindings) {
-      s.write(bs.toString());
+      s.write(bs.string);
     }
 
     return s.toString();
