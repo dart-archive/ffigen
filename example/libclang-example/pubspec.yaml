@@ -1,0 +1,63 @@
+# Copyright (c) 2020, the Dart project authors. Please see the AUTHORS file
+# for details. All rights reserved. Use of this source code is governed by a
+# BSD-style license that can be found in the LICENSE file.
+
+name: libclang_example
+
+environment:
+  sdk: '>=2.8.1 <3.0.0'
+
+dev_dependencies:
+  ffigen:
+    path: '../../'
+
+ffigen:
+  output: 'generated_bindings.dart'
+  sort: true
+
+  # Bash style Glob matching is also supported.
+  # TODO(11): Globs dont work on windows if they begin with '.' or '..'.
+  headers:
+    - '../../tool/wrapped_libclang/wrapper.c'
+
+  # Excludes included headers based on their names (not fullpath name).
+  header-filter:
+    include:
+      - 'wrapper.c'
+      - 'CXString.h'
+      - 'Index.h'
+
+  compiler-opts: '-I/usr/lib/llvm-9/include/ -I/usr/lib/llvm-10/include/ -IC:\Progra~1\LLVM\include -I/usr/local/opt/llvm/include/ -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/'
+  functions:
+    include:
+      matches:
+      # Should be valid regexp.
+        - 'clang_.*'
+  structs:
+    include:
+        matches:
+          - 'CX.*'
+  enums:
+    include:
+      # Compares the exact name.
+      names:
+        - 'CXTypeKind'
+        - 'CXGlobalOptFlags'
+
+  # These are optional and also default,
+  # Omitting any and the default will be used.
+  size-map:
+    char: 1
+    unsigned char: 1
+    short: 2
+    unsigned short: 2
+    int: 4
+    unsigned int: 4
+    long: 8
+    unsigned long: 8
+    long long: 8
+    unsigned long long: 8
+    enum: 4
+
+  # True by default
+  extract-comments: true
