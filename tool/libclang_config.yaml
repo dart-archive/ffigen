@@ -6,7 +6,7 @@
 
 # ===================== GENERATING BINDINGS =====================
 #    cd to `tool`, and run -
-#    dart ../bin/generate.dart --config libclang_config.yaml
+#    dart ../bin/ffigen.dart --config libclang_config.yaml
 # ===============================================================
 
 output: '../lib/src/header_parser/clang_bindings/clang_bindings.dart'

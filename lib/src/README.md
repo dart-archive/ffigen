@@ -1,6 +1,6 @@
 ## Project Structure
 
-- `bin` - Contains generate.dart script which end user will execute.
+- `bin` - Contains ffigen.dart script which end user will execute.
 - `tool` - Contains script to generate LibClang bindings using Code_Generator submodule (dev use only).
 - `example` - Example projects which demonstrate generation of bindings for given C header files.
 - `lib/src/code_generator` - Generates binding files.

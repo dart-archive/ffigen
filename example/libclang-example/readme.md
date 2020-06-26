@@ -6,6 +6,6 @@ This example actually uses a C file used in this package itself, ([wrapper.c](..
 ## Generating bindings
 At the root of this example (`example/libclang-example`), run -
 ```
-pub run ffigen:generate
+pub run ffigen
 ```
 This will generate bindings in a file: [generated_bindings.dart](./generated_bindings.dart).

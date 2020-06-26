@@ -11,7 +11,7 @@ import 'package:ffigen/src/header_parser.dart' as parser;
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart' as yaml;
 
-var _logger = Logger('generate.dart');
+var _logger = Logger('ffigen.dart');
 
 void main(List<String> args) {
   // Parses the cmd args.

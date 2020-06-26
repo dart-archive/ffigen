@@ -40,7 +40,7 @@ typedef _dart_sum = int Function(int a,int b);
 - Build it (see [building](#building)).
 - Add this package as dev_dependency in your `pubspec.yaml`.
 - Configurations must be provided in the pubspec.yaml file under the key `ffigen` (or directly under a seperate yaml file which when u specify it passing `--config filename` when running the tool)
-- Run the tool- `pub run ffigen:generate`.
+- Run the tool- `pub run ffigen`.
 
 ## Building
 A dynamic library for a wrapper to libclang needs to be generated as it is used by the parser submodule.
@@ -60,7 +60,7 @@ A dynamic library for a wrapper to libclang needs to be generated as it is used 
 
 ## Trying out examples
 1. `cd examples/<example_u_want_to_run>`, Run `pub get`.
-2. Run `pub run ffigen:generate`.
+2. Run `pub run ffigen`.
 
 ## Running Tests
 Dynamic library for some tests need to be built before running the examples.
