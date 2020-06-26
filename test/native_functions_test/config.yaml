@@ -3,7 +3,7 @@
 # BSD-style license that can be found in the LICENSE file.
 
 # =================== GENERATING TEST BINDINGS ==================
-#    dart ../../bin/generate.dart --config config.yaml
+#    dart ../../bin/ffigen.dart --config config.yaml
 # ===============================================================
 
 output: 'native_functions_bindings.dart'
