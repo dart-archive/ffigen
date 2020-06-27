@@ -166,7 +166,7 @@ bool outputValidator(String name, dynamic value) {
   if (value is String) {
     return true;
   } else {
-    _logger.severe("Expected value of key '${strings.output}' to be a String.");
+    _logger.severe("Expected value of key '$name' to be a String.");
     return false;
   }
 }
@@ -205,7 +205,8 @@ bool filterValidator(String name, dynamic value) {
         for (final subkey in value[key].keys) {
           if (subkey == strings.matches || subkey == strings.names) {
             if (value[key][subkey] is! YamlList) {
-              _logger.severe("Expected '$name -> $key -> $subkey' to be a List.");
+              _logger
+                  .severe("Expected '$name -> $key -> $subkey' to be a List.");
               _result = false;
             }
           } else {
@@ -237,5 +238,16 @@ SupportedNativeType nativeSupportedType(int value, {bool signed = true}) {
     default:
       throw Exception(
           'Unsupported value given to sizemap, Allowed values for sizes are: 1, 2, 4, 8');
+  }
+}
+
+String stringExtractor(dynamic value) => value as String;
+
+bool stringValidator(String name, dynamic value) {
+  if (value is String && value.isNotEmpty) {
+    return true;
+  } else {
+    _logger.severe("Expected value of key '$name' to be a non-empty String.");
+    return false;
   }
 }

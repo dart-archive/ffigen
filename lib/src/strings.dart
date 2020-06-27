@@ -60,6 +60,20 @@ const useSupportedTypedefs = 'use-supported-typedefs';
 const warnWhenRemoving = 'warn-when-removing';
 const extractComments = 'extract-comments';
 
+// Library input.
+const initFunctionName = 'init-function-name';
+const dylibVariableName = 'dylib-variable-name';
+const ffiLibraryPrefix = 'ffi-import-prefix';
+const preamble = 'preamble';
+
+// General Prefix and Suffix.
+const functionPrefix = 'function-prefix';
+const functionSuffix = 'function-suffix';
+const structPrefix = 'struct-prefix';
+const structSuffix = 'struct-suffix';
+const enumPrefix = 'enum-prefix';
+const enumSuffix = 'enum-suffix';
+
 // Dynamic library names.
 const libclang_dylib_linux = 'libwrapped_clang.so';
 const libclang_dylib_macos = 'libwrapped_clang.dylib';

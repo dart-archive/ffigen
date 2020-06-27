@@ -4,6 +4,7 @@
 
 import 'dart:io';
 
+import 'package:ffigen/src/strings.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 
@@ -22,6 +23,27 @@ class Library {
   /// Can be renamed in case of name conflicts with something else.
   final String initFunctionIdentifier;
 
+  /// Name of the import prefix to use for dart:ffi
+  final String ffiLibraryPrefix;
+
+  /// Prefix for functions
+  final String functionPrefix;
+
+  /// Suffix for functions
+  final String functionSuffix;
+
+  /// Prefix for structs
+  final String structPrefix;
+
+  /// Suffix for structs
+  final String structSuffix;
+
+  /// Prefix for enums
+  final String enumPrefix;
+
+  /// Sufix for enums
+  final String enumSuffix;
+
   /// Header of file.
   final String header;
 
@@ -32,6 +54,13 @@ class Library {
     @required this.bindings,
     this.dylibIdentifier = '_dylib',
     this.initFunctionIdentifier = 'init',
+    this.ffiLibraryPrefix = 'ffi',
+    this.functionPrefix = '',
+    this.functionSuffix = '',
+    this.structPrefix = '',
+    this.structSuffix = '',
+    this.enumPrefix = '',
+    this.enumSuffix = '',
     this.header,
   })  : assert(dylibIdentifier != null),
         assert(initFunctionIdentifier != null);
@@ -73,6 +102,13 @@ class Library {
     final w = Writer(
       dylibIdentifier: dylibIdentifier,
       initFunctionIdentifier: initFunctionIdentifier,
+      ffiLibraryPrefix: ffiLibraryPrefix,
+      functionPrefix: functionPrefix,
+      functionSuffix: functionSuffix,
+      structPrefix: structPrefix,
+      structSuffix: structSuffix,
+      enumPrefix: enumPrefix,
+      enumSuffix: enumSuffix,
     );
     _generate(w);
     return w.generate();

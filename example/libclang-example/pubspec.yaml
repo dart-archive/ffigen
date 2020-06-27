@@ -61,3 +61,15 @@ ffigen:
 
   # True by default
   extract-comments: true
+
+  # default is ffi
+  ffi-import-prefix: ffi
+
+  # default is _dylib
+  dylib-variable-name: _dylib
+
+  # default is init
+  init-function-name: init
+
+  # header string for generated file
+  preamble: '/// AUTO GENERATED FILE, DO NOT EDIT.'

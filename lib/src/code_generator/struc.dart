@@ -46,6 +46,7 @@ class Struc extends Binding {
   @override
   BindingString toBindingString(Writer w) {
     final s = StringBuffer();
+    final nameWithPrefixAndSuffix = '${w.structPrefix}$name${w.structSuffix}';
 
     if (dartDoc != null) {
       s.write('/// ');
@@ -56,16 +57,17 @@ class Struc extends Binding {
     final helpers = <ArrayHelper>[];
 
     // Write class declaration.
-    s.write('class $name extends ${w.ffiLibraryPrefix}.Struct{\n');
+    s.write(
+        'class $nameWithPrefixAndSuffix extends ${w.ffiLibraryPrefix}.Struct{\n');
     for (final m in members) {
       if (m.type.broadType == BroadType.ConstantArray) {
         // TODO(5): Remove array helpers when inline array support arives.
         final arrayHelper = ArrayHelper(
-          helperClassName: '_ArrayHelper_${name}_${m.name}',
+          helperClassName: '_ArrayHelper_${nameWithPrefixAndSuffix}_${m.name}',
           elementType: m.type.elementType,
           length: 3,
           name: m.name,
-          structName: name,
+          structName: nameWithPrefixAndSuffix,
           elementNamePrefix: '_${m.name}_item_',
         );
         s.write(arrayHelper.declarationString(w));

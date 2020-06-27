@@ -20,7 +20,19 @@ Library parse(Config conf, {bool sort = false}) {
 
   final bindings = parseToBindings();
 
-  final library = Library(bindings: bindings);
+  final library = Library(
+    bindings: bindings,
+    initFunctionIdentifier: data.config.initFunctionName,
+    dylibIdentifier: data.config.dylibVariableName,
+    ffiLibraryPrefix: data.config.ffiLibraryPrefix,
+    header: data.config.preamble,
+    functionPrefix: data.config.functionPrefix,
+    functionSuffix: data.config.functionSuffix,
+    structPrefix: data.config.structPrefix,
+    structSuffix: data.config.structSuffix,
+    enumPrefix: data.config.enumPrefix,
+    enumSuffix: data.config.enumSuffix,
+  );
 
   if (sort) {
     library.sort();

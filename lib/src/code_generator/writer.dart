@@ -10,7 +10,25 @@ class Writer {
   String dylibIdentifier;
   String initFunctionIdentifier;
 
-  /// dart:ffi library import prefix.
+  /// Prefix for functions.
+  String functionPrefix;
+
+  /// Suffix for functions.
+  String functionSuffix;
+
+  /// Prefix for structs.
+  String structPrefix;
+
+  /// Suffix for structs.
+  String structSuffix;
+
+  /// Prefix for enums.
+  String enumPrefix;
+
+  /// Sufix for enums.
+  String enumSuffix;
+
+  /// dart:ffi library prefix.
   String ffiLibraryPrefix;
 
   final List<BindingString> _bindings = [];
@@ -19,12 +37,18 @@ class Writer {
     this.dylibIdentifier = '_dylib',
     this.initFunctionIdentifier = 'init',
     this.ffiLibraryPrefix = 'ffi',
+    this.functionPrefix = '',
+    this.functionSuffix = '',
+    this.structPrefix = '',
+    this.structSuffix = '',
+    this.enumPrefix = '',
+    this.enumSuffix = '',
   });
 
   String generate() {
     final s = StringBuffer();
 
-    // Write header (if any)
+    // Write file header (if any).
     if (header != null) {
       s.write(header);
       s.write('\n');

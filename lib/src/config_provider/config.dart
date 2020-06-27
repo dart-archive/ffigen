@@ -62,6 +62,36 @@ class Config {
   /// If tool should extract doc comment from bindings.
   bool extractComments;
 
+  /// Name of the init function used to initialise the dynamic library.
+  String initFunctionName;
+
+  /// Name of the dylib variable name used in bindings.
+  String dylibVariableName;
+
+  /// Header of the generated bindings.
+  String preamble;
+
+  /// The import prefix used when importing dart:ffi in bindings.
+  String ffiLibraryPrefix;
+
+  /// Prefix for functions.
+  String functionPrefix;
+
+  /// Suffix for functions.
+  String functionSuffix;
+
+  /// Prefix for structs.
+  String structPrefix;
+
+  /// Suffix for structs.
+  String structSuffix;
+
+  /// Prefix for enums.
+  String enumPrefix;
+
+  /// Sufix for enums.
+  String enumSuffix;
+
   /// Manually creating configurations.
   ///
   /// Use [Config.fromYaml] if extracting info from a yaml file.
@@ -250,6 +280,89 @@ class Config {
         extractor: booleanExtractor,
         defaultValue: true,
         extractedResult: (dynamic result) => extractComments = result as bool,
+      ),
+      strings.initFunctionName: Specification<String>(
+        description: 'Name of the init function to use',
+        isRequired: false,
+        validator: stringValidator,
+        extractor: stringExtractor,
+        defaultValue: 'init',
+        extractedResult: (dynamic result) =>
+            initFunctionName = result as String,
+      ),
+      strings.dylibVariableName: Specification<String>(
+        description: 'Name of the dylib variable used in bindings',
+        isRequired: false,
+        validator: stringValidator,
+        extractor: stringExtractor,
+        defaultValue: '_dylib',
+        extractedResult: (dynamic result) =>
+            dylibVariableName = result as String,
+      ),
+      strings.ffiLibraryPrefix: Specification<String>(
+        description: 'Import prefix for dart:ffi used in bindings',
+        isRequired: false,
+        validator: stringValidator,
+        extractor: stringExtractor,
+        defaultValue: 'ffi',
+        extractedResult: (dynamic result) =>
+            ffiLibraryPrefix = result as String,
+      ),
+      strings.preamble: Specification<String>(
+        description: 'Header String for the generated bindings',
+        isRequired: false,
+        validator: stringValidator,
+        extractor: stringExtractor,
+        defaultValue: '/// AUTO GENERATED FILE, DO NOT EDIT.',
+        extractedResult: (dynamic result) => preamble = result as String,
+      ),
+      strings.functionPrefix: Specification<String>(
+        description: 'Prefix for generated Functions',
+        isRequired: false,
+        validator: stringValidator,
+        extractor: stringExtractor,
+        defaultValue: '',
+        extractedResult: (dynamic result) => functionPrefix = result as String,
+      ),
+      strings.functionSuffix: Specification<String>(
+        description: 'Suffix for generated Functions',
+        isRequired: false,
+        validator: stringValidator,
+        extractor: stringExtractor,
+        defaultValue: '',
+        extractedResult: (dynamic result) => functionSuffix = result as String,
+      ),
+      strings.structPrefix: Specification<String>(
+        description: 'Prefix for generated Structs',
+        isRequired: false,
+        validator: stringValidator,
+        extractor: stringExtractor,
+        defaultValue: '',
+        extractedResult: (dynamic result) => structPrefix = result as String,
+      ),
+      strings.structSuffix: Specification<String>(
+        description: 'Sufix for generated Structs',
+        isRequired: false,
+        validator: stringValidator,
+        extractor: stringExtractor,
+        defaultValue: '',
+        extractedResult: (dynamic result) => structSuffix = result as String,
+      ),
+      strings.enumPrefix: Specification<String>(
+        description: 'Prefix for generated Enums',
+        isRequired: false,
+        validator: stringValidator,
+        extractor: stringExtractor,
+        defaultValue: '',
+        extractedResult: (dynamic result) => enumPrefix = result as String,
+      ),
+      strings.enumSuffix: Specification<String>(
+        description: 'Sufix for generated Enums',
+        isRequired: false,
+        validator: stringValidator,
+        extractor: stringExtractor,
+        defaultValue: '',
+        extractedResult: (dynamic result) => enumSuffix = result as String,
       ),
     };
   }
