@@ -8,6 +8,7 @@ import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 
+import '../strings.dart' as strings;
 import 'clang_bindings/clang_bindings.dart' as clang;
 import 'data.dart';
 import 'type_extractor/extractor.dart';
@@ -113,11 +114,73 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
   }
 }
 
-// TODO(13): Improve generated doc comment.
-String getCursorDocComment(Pointer<clang.CXCursor> cursor) {
-  return config.extractComments
-      ? clang.clang_Cursor_getBriefCommentText_wrap(cursor).toStringAndDispose()
-      : null;
+/// Returns a cursor's associated comment.
+///
+/// The given string is wrapped at line width = 80 - [indent]. The [indent] is 4
+/// by default because a comment starts with ```///<space>```.
+String getCursorDocComment(Pointer<clang.CXCursor> cursor, [int indent = 4]) {
+  switch (config.comment) {
+    case strings.full:
+      return removeRawCommentMarkups(clang
+          .clang_Cursor_getRawCommentText_wrap(cursor)
+          .toStringAndDispose());
+    case strings.brief:
+      return _wrapNoNewLineString(
+          clang
+              .clang_Cursor_getBriefCommentText_wrap(cursor)
+              .toStringAndDispose(),
+          80 - 4 - indent);
+    default:
+      return null;
+  }
+}
+
+/// Wraps [string] according to given [lineWidth].
+///
+/// Wrapping will work properly only when String has no new lines
+/// characters(\n).
+String _wrapNoNewLineString(String string, int lineWidth) {
+  if (string == null || string.isEmpty) {
+    return null;
+  }
+  final sb = StringBuffer();
+
+  final words = string.split(' ');
+
+  sb.write(words[0]);
+  int trackLineWidth = words[0].length;
+  for (var i = 1; i < words.length; i++) {
+    final word = words[i];
+    if (trackLineWidth + word.length < lineWidth) {
+      sb.write(' ');
+      sb.write(word);
+      trackLineWidth += word.length + 1;
+    } else {
+      sb.write('\n');
+      sb.write(word);
+      trackLineWidth = word.length;
+    }
+  }
+  return sb.toString();
+}
+
+/// Removes /*, */ and any *'s in the beginning of a line.
+String removeRawCommentMarkups(String string) {
+  if (string == null || string.isEmpty) {
+    return null;
+  }
+  final sb = StringBuffer();
+
+  // Remove comment identifiers.
+  string = string.replaceAll('/*', '');
+  string = string.replaceAll('*/', '');
+
+  // Reove any *'s in the beginning of a every line.
+  string.split('\n').forEach((element) {
+    element = element.trim().replaceFirst(RegExp(r'\**'), '').trim();
+    sb.writeln(element);
+  });
+  return sb.toString().trim();
 }
 
 extension CXTypeExt on Pointer<clang.CXType> {

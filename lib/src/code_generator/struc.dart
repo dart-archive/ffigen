@@ -71,10 +71,16 @@ class Struc extends Binding {
         s.write(arrayHelper.declarationString(w));
         helpers.add(arrayHelper);
       } else {
-        if (m.type.isPrimitive) {
-          s.write('  @${m.type.getCType(w)}()\n');
+        const depth = '  ';
+        if (m.dartDoc != null) {
+          s.write(depth + '/// ');
+          s.writeAll(m.dartDoc.split('\n'), '\n' + depth + '/// ');
+          s.write('\n');
         }
-        s.write('  ${m.type.getDartType(w)} ${m.name};\n\n');
+        if (m.type.isPrimitive) {
+          s.write('$depth@${m.type.getCType(w)}()\n');
+        }
+        s.write('$depth${m.type.getDartType(w)} ${m.name};\n\n');
       }
     }
     s.write('}\n\n');
@@ -88,10 +94,11 @@ class Struc extends Binding {
 }
 
 class Member {
+  final String dartDoc;
   final String name;
   final Type type;
 
-  const Member({this.name, this.type});
+  const Member({this.name, this.type, this.dartDoc});
 }
 
 // Helper bindings for struct array.

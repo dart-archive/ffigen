@@ -240,6 +240,12 @@ long long clang_getEnumConstantDeclValue_wrap(CXCursor *cursor)
     return clang_getEnumConstantDeclValue(*cursor);
 }
 
+/** Returns the raw comment. */
+CXString *clang_Cursor_getRawCommentText_wrap(CXCursor *cursor)
+{
+    return ptrToCXString(clang_Cursor_getRawCommentText(*cursor));
+}
+
 /** Returns the first paragraph of doxygen doc comment. */
 CXString *clang_Cursor_getBriefCommentText_wrap(CXCursor *cursor)
 {

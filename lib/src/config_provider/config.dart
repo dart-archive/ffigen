@@ -59,8 +59,8 @@ class Config {
   /// If typedef of supported types(int8_t) should be directly used.
   bool useSupportedTypedefs;
 
-  /// If tool should extract doc comment from bindings.
-  bool extractComments;
+  /// Extracted Doc comment type.
+  String comment;
 
   /// Manually creating configurations.
   ///
@@ -77,7 +77,7 @@ class Config {
     this.enumClassFilters,
     this.sort = false,
     this.useSupportedTypedefs = true,
-    this.extractComments = true,
+    this.comment,
   });
 
   Config._();
@@ -243,13 +243,13 @@ class Config {
         extractedResult: (dynamic result) =>
             useSupportedTypedefs = result as bool,
       ),
-      strings.extractComments: Specification<bool>(
-        description: 'whether or not to extract comments from bindings',
+      strings.comments: Specification<String>(
+        description: 'Type of comment to extract',
         isRequired: false,
-        validator: booleanValidator,
-        extractor: booleanExtractor,
-        defaultValue: true,
-        extractedResult: (dynamic result) => extractComments = result as bool,
+        validator: commentValidator,
+        extractor: commentExtractor,
+        defaultValue: strings.brief,
+        extractedResult: (dynamic result) => comment = result as String,
       ),
     };
   }

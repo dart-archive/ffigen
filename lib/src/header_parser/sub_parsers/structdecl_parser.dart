@@ -113,6 +113,7 @@ int _structMembersVisitor(Pointer<clang.CXCursor> cursor,
 
       _members.add(
         Member(
+          dartDoc: getCursorDocComment(cursor, 6),
           name: cursor.spelling(),
           type: mt,
         ),
