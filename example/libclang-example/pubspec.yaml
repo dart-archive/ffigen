@@ -61,3 +61,6 @@ ffigen:
 
   # True by default
   extract-comments: true
+
+  # false by default
+  array-workaround: true

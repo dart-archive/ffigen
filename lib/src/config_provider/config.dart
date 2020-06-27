@@ -62,6 +62,11 @@ class Config {
   /// If tool should extract doc comment from bindings.
   bool extractComments;
 
+  /// should create array workarounds
+  ///
+  /// if false(default), structs with inline array members will have all its members removed
+  bool arrayWorkaround;
+
   /// Manually creating configurations.
   ///
   /// Use [Config.fromYaml] if extracting info from a yaml file.
@@ -250,6 +255,15 @@ class Config {
         extractor: booleanExtractor,
         defaultValue: true,
         extractedResult: (dynamic result) => extractComments = result as bool,
+      ),
+      strings.arrayWorkaround: Specification<bool>(
+        description:
+            'whether or not to generate workarounds for inline arrays in structures',
+        isRequired: false,
+        validator: booleanValidator,
+        extractor: booleanExtractor,
+        defaultValue: false,
+        extractedResult: (dynamic result) => arrayWorkaround = result as bool,
       ),
     };
   }

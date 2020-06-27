@@ -59,6 +59,7 @@ const sort = 'sort';
 const useSupportedTypedefs = 'use-supported-typedefs';
 const warnWhenRemoving = 'warn-when-removing';
 const extractComments = 'extract-comments';
+const arrayWorkaround = 'array-workaround';
 
 // Dynamic library names.
 const libclang_dylib_linux = 'libwrapped_clang.so';

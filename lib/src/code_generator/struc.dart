@@ -43,6 +43,16 @@ class Struc extends Binding {
   })  : members = members ?? [],
         super(name: name, dartDoc: dartDoc);
 
+  List<int> _getArrayDimensionLengths(Type type) {
+    final array = <int>[];
+    var startType = type;
+    while (startType.broadType == BroadType.ConstantArray) {
+      array.add(startType.length);
+      startType = startType.child;
+    }
+    return array;
+  }
+
   @override
   BindingString toBindingString(Writer w) {
     final s = StringBuffer();
@@ -61,9 +71,9 @@ class Struc extends Binding {
       if (m.type.broadType == BroadType.ConstantArray) {
         // TODO(5): Remove array helpers when inline array support arives.
         final arrayHelper = ArrayHelper(
-          helperClassName: '_ArrayHelper_${name}_${m.name}',
-          elementType: m.type.elementType,
-          length: 3,
+          helperClassName: 'ArrayHelper_${name}_${m.name}',
+          elementType: m.type.getBaseArrayType(),
+          length: _getArrayDimensionLengths(m.type),
           name: m.name,
           structName: name,
           elementNamePrefix: '_${m.name}_item_',
@@ -97,12 +107,18 @@ class Member {
 // Helper bindings for struct array.
 class ArrayHelper {
   final Type elementType;
-  final int length;
+  final List<int> length;
   final String structName;
 
   final String name;
   final String helperClassName;
   final String elementNamePrefix;
+
+  List<String> _expandedElements;
+  List<String> get expandedElements {
+    _expandedElements ??= length.isEmpty ? [] : _expandElements(length, 0);
+    return _expandedElements;
+  }
 
   ArrayHelper({
     @required this.elementType,
@@ -119,14 +135,14 @@ class ArrayHelper {
     final arrayDartType = elementType.getDartType(w);
     final arrayCType = elementType.getCType(w);
 
-    for (var i = 0; i < length; i++) {
+    for (final arrayString in expandedElements) {
       if (elementType.isPrimitive) {
         s.write('  @${arrayCType}()\n');
       }
-      s.write('  ${arrayDartType} ${elementNamePrefix}$i;\n');
+      s.write('  ${arrayDartType} ${elementNamePrefix}$arrayString;\n');
     }
 
-    s.write('/// helper for array, supports `[]` operator\n');
+    s.write('/// Helper for array `$name`\n');
     s.write(
         '$helperClassName get $name => ${helperClassName}(this, $length);\n');
 
@@ -144,51 +160,80 @@ class ArrayHelper {
     // Write class declaration.
     s.write('class $helperClassName{\n');
     s.write('final $structName _struct;\n');
-    s.write('final int length;\n');
+    s.write('final List<int> length;\n');
     s.write('$helperClassName(this._struct, this.length);\n');
 
-    // Override []= operator.
-    s.write('void operator []=(int index, $arrayType value) {\n');
-    s.write('switch(index) {\n');
-    for (var i = 0; i < length; i++) {
-      s.write('case $i:\n');
-      s.write('  _struct.${elementNamePrefix}$i = value;\n');
+    // add setValue method.
+    s.write('void setValue(${_getIndexParameters()}$arrayType value) {\n');
+    s.write('switch(\'${_getIndexSwitchKey()}\') {\n');
+    for (final arrayElement in expandedElements) {
+      s.write('case \'$arrayElement\':\n');
+      s.write('  _struct.${elementNamePrefix}$arrayElement = value;\n');
       s.write('  break;\n');
     }
     s.write('default:\n');
-    s.write(
-        "  throw RangeError('Index \$index must be in the range [0..${length - 1}].');");
+    s.write("  throw RangeError('Index(s) not in range');");
     s.write('}\n');
     s.write('}\n');
 
-    // Override [] operator.
-    s.write('$arrayType operator [](int index) {\n');
-    s.write('switch(index) {\n');
-    for (var i = 0; i < length; i++) {
-      s.write('case $i:\n');
-      s.write('  return _struct.${elementNamePrefix}$i;\n');
+    // add getValue method.
+    s.write('$arrayType getValue(${_getIndexParameters()}) {\n');
+    s.write('switch(\'${_getIndexSwitchKey()}\') {\n');
+    for (final arrayElement in expandedElements) {
+      s.write('case \'$arrayElement\':\n');
+      s.write('  return _struct.${elementNamePrefix}$arrayElement;\n');
     }
     s.write('default:\n');
-    s.write(
-        "  throw RangeError('Index \$index must be in the range [0..${length - 1}].');");
+    s.write("  throw RangeError('Index(s) not in range');");
     s.write('}\n');
-    s.write('}\n');
-
-    // Override toString().
-    s.write('@override\n');
-    s.write('String toString() {\n');
-    s.write("if (length == 0) return '[]';\n");
-    s.write("final sb = StringBuffer('[');\n");
-    s.write('sb.write(this[0]);\n');
-    s.write('for (var i = 1; i < length; i++) {\n');
-    s.write("  sb.write(',');\n");
-    s.write('  sb.write(this[i]);');
-    s.write('}\n');
-    s.write("sb.write(']');");
-    s.write('return sb.toString();\n');
     s.write('}\n');
 
     s.write('}\n\n');
     return s.toString();
+  }
+
+  /// Expands a List to cover all permutations sequentially
+  ///
+  /// E.g -> input: [2,2], output: ['0_0','0_1','1_0','1_1']
+  ///
+  /// Ensure that list isn't empty
+  List<String> _expandElements(List<int> list, int startIndex) {
+    final returnString = <String>[];
+    for (var i = 0; i < list[startIndex]; i++) {
+      if (startIndex == list.length - 1) {
+        // base case for recursion.
+        returnString.add('$i');
+      } else {
+        for (final s in _expandElements(list, startIndex + 1)) {
+          returnString.add('${i}_${s}');
+        }
+      }
+    }
+    return returnString;
+  }
+
+  /// Returns index parameters to use direct
+  ///
+  /// E.g -> If [length.length] = 3,
+  /// output: "int i1, int i2, int i3,"
+  String _getIndexParameters() {
+    final sb = StringBuffer();
+    for (var i = 0; i < length.length; i++) {
+      sb.write('int i${i + 1}, ');
+    }
+    return sb.toString();
+  }
+
+  /// Returns index switch key
+  ///
+  /// E.g -> If [length.length] = 3,
+  /// output: "${i1}_${i2}_${i3}"
+  String _getIndexSwitchKey() {
+    final sb = StringBuffer();
+    sb.write(r'${i1}');
+    for (var i = 1; i < length.length; i++) {
+      sb.write(r'_${i2}');
+    }
+    return sb.toString();
   }
 }
