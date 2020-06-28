@@ -10,6 +10,8 @@ import 'package:ffigen/src/header_parser.dart' as parser;
 import 'package:ffigen/src/config_provider.dart';
 import 'package:logging/logging.dart';
 import 'package:test/test.dart';
+import 'package:yaml/yaml.dart' as yaml;
+import 'package:ffigen/src/strings.dart' as strings;
 
 final writer = Writer();
 
@@ -20,29 +22,20 @@ void main() {
     setUpAll(() {
       expected = expectedLibrary();
 
-      var dylibPath = 'tool/wrapped_libclang/libwrapped_clang.so';
-      if (Platform.isMacOS) {
-        dylibPath = 'tool/wrapped_libclang/libwrapped_clang.dylib';
-      } else if (Platform.isWindows) {
-        dylibPath = 'tool/wrapped_libclang/wrapped_clang.dll';
-      }
-
       Logger.root.onRecord.listen((log) {
-        print('${log.level.name.padRight(8)}: ${log.message}');
+        print(
+            'test: header_parser: ${log.level.name.padRight(8)}: ${log.message}');
       });
-
       actual = parser.parse(
-        Config.raw(
-          libclang_dylib_path: dylibPath,
-          headers: [
-            'test/header_parser_tests/functions.h',
-          ],
-          headerFilter: HeaderFilter(
-            includedInclusionHeaders: {
-              'functions.h',
-            },
-          ),
-        ),
+        Config.fromYaml(yaml.loadYaml('''
+${strings.output}: 'unused'
+${strings.libclang_dylib_folder}: 'tool/wrapped_libclang'
+${strings.headers}:
+  - 'test/header_parser_tests/functions.h'
+${strings.headerFilter}:
+  ${strings.include}:
+    - 'functions.h'
+        ''') as yaml.YamlMap),
       );
     });
     test('Total bindings count', () {

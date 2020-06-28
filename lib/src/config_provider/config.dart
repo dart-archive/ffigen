@@ -92,24 +92,6 @@ class Config {
   /// Sufix for enums.
   String enumSuffix;
 
-  /// Manually creating configurations.
-  ///
-  /// Use [Config.fromYaml] if extracting info from a yaml file.
-  /// Ensure that log printing is setup before using this.
-  Config.raw({
-    this.output,
-    @required this.libclang_dylib_path,
-    @required this.headers,
-    this.headerFilter,
-    this.compilerOpts,
-    this.functionFilters,
-    this.structFilters,
-    this.enumClassFilters,
-    this.sort = false,
-    this.useSupportedTypedefs = true,
-    this.extractComments = true,
-  });
-
   Config._();
 
   /// Create config from Yaml map.
@@ -162,7 +144,7 @@ class Config {
       if (map.containsKey(key)) {
         spec.extractedResult(spec.extractor(map[key]));
       } else {
-        spec.extractedResult(spec.defaultValue);
+        spec.extractedResult(spec.defaultValue?.call());
       }
     }
   }
@@ -177,14 +159,13 @@ class Config {
         isRequired: true,
         validator: outputValidator,
         extractor: outputExtractor,
-        defaultValue: null,
         extractedResult: (dynamic result) => output = result as String,
       ),
       strings.libclang_dylib_folder: Specification<String>(
         description:
             'Path to folder containing libclang dynamic library, used to parse C headers',
         isRequired: false,
-        defaultValue: getDylibPath(Platform.script
+        defaultValue: () => getDylibPath(Platform.script
             .resolve(path.join('..', 'tool', 'wrapped_libclang'))
             .toFilePath()),
         validator: libclangDylibValidator,
@@ -203,7 +184,7 @@ class Config {
         description: 'Include/Exclude inclusion headers',
         validator: headerFilterValidator,
         extractor: headerFilterExtractor,
-        defaultValue: HeaderFilter(),
+        defaultValue: () => HeaderFilter(),
         extractedResult: (dynamic result) {
           return headerFilter = result as HeaderFilter;
         },
@@ -213,7 +194,6 @@ class Config {
         isRequired: false,
         validator: compilerOptsValidator,
         extractor: compilerOptsExtractor,
-        defaultValue: null,
         extractedResult: (dynamic result) =>
             compilerOpts = result as List<String>,
       ),
@@ -222,7 +202,6 @@ class Config {
         isRequired: false,
         validator: filterValidator,
         extractor: filterExtractor,
-        defaultValue: null,
         extractedResult: (dynamic result) => functionFilters = result as Filter,
       ),
       strings.structs: Specification<Filter>(
@@ -230,7 +209,6 @@ class Config {
         isRequired: false,
         validator: filterValidator,
         extractor: filterExtractor,
-        defaultValue: null,
         extractedResult: (dynamic result) => structFilters = result as Filter,
       ),
       strings.enums: Specification<Filter>(
@@ -238,7 +216,6 @@ class Config {
         isRequired: false,
         validator: filterValidator,
         extractor: filterExtractor,
-        defaultValue: null,
         extractedResult: (dynamic result) =>
             enumClassFilters = result as Filter,
       ),
@@ -246,7 +223,7 @@ class Config {
         description: 'map of types: byte size in int',
         validator: sizemapValidator,
         extractor: sizemapExtractor,
-        defaultValue: <int, SupportedNativeType>{},
+        defaultValue: () => <int, SupportedNativeType>{},
         extractedResult: (dynamic result) {
           final map = result as Map<int, SupportedNativeType>;
           for (final key in map.keys) {
@@ -261,7 +238,7 @@ class Config {
         isRequired: false,
         validator: booleanValidator,
         extractor: booleanExtractor,
-        defaultValue: false,
+        defaultValue: () => false,
         extractedResult: (dynamic result) => sort = result as bool,
       ),
       strings.useSupportedTypedefs: Specification<bool>(
@@ -269,7 +246,7 @@ class Config {
         isRequired: false,
         validator: booleanValidator,
         extractor: booleanExtractor,
-        defaultValue: true,
+        defaultValue: () => true,
         extractedResult: (dynamic result) =>
             useSupportedTypedefs = result as bool,
       ),
@@ -278,7 +255,7 @@ class Config {
         isRequired: false,
         validator: booleanValidator,
         extractor: booleanExtractor,
-        defaultValue: true,
+        defaultValue: () => true,
         extractedResult: (dynamic result) => extractComments = result as bool,
       ),
       strings.initFunctionName: Specification<String>(
@@ -286,7 +263,7 @@ class Config {
         isRequired: false,
         validator: stringValidator,
         extractor: stringExtractor,
-        defaultValue: 'init',
+        defaultValue: () => 'init',
         extractedResult: (dynamic result) =>
             initFunctionName = result as String,
       ),
@@ -295,7 +272,7 @@ class Config {
         isRequired: false,
         validator: stringValidator,
         extractor: stringExtractor,
-        defaultValue: '_dylib',
+        defaultValue: () => '_dylib',
         extractedResult: (dynamic result) =>
             dylibVariableName = result as String,
       ),
@@ -304,7 +281,7 @@ class Config {
         isRequired: false,
         validator: stringValidator,
         extractor: stringExtractor,
-        defaultValue: 'ffi',
+        defaultValue: () => 'ffi',
         extractedResult: (dynamic result) =>
             ffiLibraryPrefix = result as String,
       ),
@@ -313,7 +290,7 @@ class Config {
         isRequired: false,
         validator: stringValidator,
         extractor: stringExtractor,
-        defaultValue: '/// AUTO GENERATED FILE, DO NOT EDIT.',
+        defaultValue: () => '/// AUTO GENERATED FILE, DO NOT EDIT.',
         extractedResult: (dynamic result) => preamble = result as String,
       ),
       strings.functionPrefix: Specification<String>(
@@ -321,7 +298,7 @@ class Config {
         isRequired: false,
         validator: stringValidator,
         extractor: stringExtractor,
-        defaultValue: '',
+        defaultValue: () => '',
         extractedResult: (dynamic result) => functionPrefix = result as String,
       ),
       strings.functionSuffix: Specification<String>(
@@ -329,7 +306,7 @@ class Config {
         isRequired: false,
         validator: stringValidator,
         extractor: stringExtractor,
-        defaultValue: '',
+        defaultValue: () => '',
         extractedResult: (dynamic result) => functionSuffix = result as String,
       ),
       strings.structPrefix: Specification<String>(
@@ -337,7 +314,7 @@ class Config {
         isRequired: false,
         validator: stringValidator,
         extractor: stringExtractor,
-        defaultValue: '',
+        defaultValue: () => '',
         extractedResult: (dynamic result) => structPrefix = result as String,
       ),
       strings.structSuffix: Specification<String>(
@@ -345,7 +322,7 @@ class Config {
         isRequired: false,
         validator: stringValidator,
         extractor: stringExtractor,
-        defaultValue: '',
+        defaultValue: () => '',
         extractedResult: (dynamic result) => structSuffix = result as String,
       ),
       strings.enumPrefix: Specification<String>(
@@ -353,7 +330,7 @@ class Config {
         isRequired: false,
         validator: stringValidator,
         extractor: stringExtractor,
-        defaultValue: '',
+        defaultValue: () => '',
         extractedResult: (dynamic result) => enumPrefix = result as String,
       ),
       strings.enumSuffix: Specification<String>(
@@ -361,7 +338,7 @@ class Config {
         isRequired: false,
         validator: stringValidator,
         extractor: stringExtractor,
-        defaultValue: '',
+        defaultValue: () => '',
         extractedResult: (dynamic result) => enumSuffix = result as String,
       ),
     };
@@ -375,7 +352,8 @@ class Specification<E> {
   final String description;
   final bool Function(String name, dynamic value) validator;
   final E Function(dynamic map) extractor;
-  final E defaultValue;
+  final E Function() defaultValue;
+
   final bool isRequired;
   final void Function(dynamic result) extractedResult;
 
