@@ -48,6 +48,12 @@ void logTuDiagnostics(
   }
 }
 
+extension CXSourceRangeExt on Pointer<clang.CXSourceRange> {
+  void dispose() {
+    free(this);
+  }
+}
+
 extension CXCursorExt on Pointer<clang.CXCursor> {
   /// Returns the kind int from [clang.CXCursorKind].
   int kind() {
@@ -116,6 +122,9 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
 
 const _commentPrefix = '/// ';
 
+/// Stores the [clang.CXSourceRange] of the last comment.
+Pointer<clang.CXSourceRange> lastCommentRange = nullptr;
+
 /// Returns a cursor's associated comment.
 ///
 /// The given string is wrapped at line width = 80 - [indent]. The [indent] is
@@ -123,20 +132,37 @@ const _commentPrefix = '/// ';
 /// [commentPrefix].
 String getCursorDocComment(Pointer<clang.CXCursor> cursor,
     [int indent = _commentPrefix.length]) {
-  switch (config.comment) {
-    case strings.full:
-      return removeRawCommentMarkups(clang
-          .clang_Cursor_getRawCommentText_wrap(cursor)
-          .toStringAndDispose());
-    case strings.brief:
-      return _wrapNoNewLineString(
-          clang
-              .clang_Cursor_getBriefCommentText_wrap(cursor)
-              .toStringAndDispose(),
-          80 - indent);
-    default:
-      return null;
+  String formattedDocComment;
+  final currentCommentRange = clang.clang_Cursor_getCommentRange_wrap(cursor);
+
+  // See if this comment and the last comment both point to the same source
+  // range.
+  if (lastCommentRange != nullptr &&
+      currentCommentRange != nullptr &&
+      clang.clang_equalRanges_wrap(lastCommentRange, currentCommentRange) !=
+          0) {
+    formattedDocComment = null;
+  } else {
+    switch (config.comment) {
+      case strings.full:
+        formattedDocComment = removeRawCommentMarkups(clang
+            .clang_Cursor_getRawCommentText_wrap(cursor)
+            .toStringAndDispose());
+        break;
+      case strings.brief:
+        formattedDocComment = _wrapNoNewLineString(
+            clang
+                .clang_Cursor_getBriefCommentText_wrap(cursor)
+                .toStringAndDispose(),
+            80 - indent);
+        break;
+      default:
+        formattedDocComment = null;
+    }
   }
+  lastCommentRange.dispose();
+  lastCommentRange = currentCommentRange;
+  return formattedDocComment;
 }
 
 /// Wraps [string] according to given [lineWidth].
