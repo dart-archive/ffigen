@@ -114,11 +114,15 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
   }
 }
 
+const _commentPrefix = '/// ';
+
 /// Returns a cursor's associated comment.
 ///
-/// The given string is wrapped at line width = 80 - [indent]. The [indent] is 4
-/// by default because a comment starts with ```///<space>```.
-String getCursorDocComment(Pointer<clang.CXCursor> cursor, [int indent = 4]) {
+/// The given string is wrapped at line width = 80 - [indent]. The [indent] is
+/// [_commentPrefix.length] by default because a comment starts with
+/// [commentPrefix].
+String getCursorDocComment(Pointer<clang.CXCursor> cursor,
+    [int indent = _commentPrefix.length]) {
   switch (config.comment) {
     case strings.full:
       return removeRawCommentMarkups(clang
@@ -129,7 +133,7 @@ String getCursorDocComment(Pointer<clang.CXCursor> cursor, [int indent = 4]) {
           clang
               .clang_Cursor_getBriefCommentText_wrap(cursor)
               .toStringAndDispose(),
-          80 - 4 - indent);
+          80 - indent);
     default:
       return null;
   }
@@ -175,7 +179,7 @@ String removeRawCommentMarkups(String string) {
   string = string.replaceAll('/*', '');
   string = string.replaceAll('*/', '');
 
-  // Reove any *'s in the beginning of a every line.
+  // Remove any *'s in the beginning of a every line.
   string.split('\n').forEach((element) {
     element = element.trim().replaceFirst(RegExp(r'\**'), '').trim();
     sb.writeln(element);

@@ -11,18 +11,18 @@ void init(ffi.DynamicLibrary dylib) {
   _dylib = dylib;
 }
 
-/// Describes how the traversal of the children of a particular cursor
-/// should proceed after visiting a particular child cursor.
+/// Describes how the traversal of the children of a particular cursor should
+/// proceed after visiting a particular child cursor.
 class CXChildVisitResult {
   /// Terminates the cursor traversal.
   static const int CXChildVisit_Break = 0;
 
-  /// Continues the cursor traversal with the next sibling of the cursor
-  /// just visited, without visiting its children.
+  /// Continues the cursor traversal with the next sibling of the cursor just
+  /// visited, without visiting its children.
   static const int CXChildVisit_Continue = 1;
 
-  /// Recursively traverse the children of this cursor, using the same
-  /// visitor and client data.
+  /// Recursively traverse the children of this cursor, using the same visitor
+  /// and client data.
   static const int CXChildVisit_Recurse = 2;
 }
 
@@ -108,8 +108,8 @@ class CXCursorKind {
   /// An enumeration.
   static const int CXCursor_EnumDecl = 5;
 
-  /// A field (in C) or non-static data member (in C++) in a struct, union,
-  /// or C++ class.
+  /// A field (in C) or non-static data member (in C++) in a struct, union, or
+  /// C++ class.
   static const int CXCursor_FieldDecl = 6;
 
   /// An enumerator constant.
@@ -242,16 +242,15 @@ class CXCursorKind {
   /// A reference to a namespace or namespace alias.
   static const int CXCursor_NamespaceRef = 46;
 
-  /// A reference to a member of a struct, union, or class that occurs in
-  /// some non-expression context, e.g., a designated initializer.
+  /// A reference to a member of a struct, union, or class that occurs in some
+  /// non-expression context, e.g., a designated initializer.
   static const int CXCursor_MemberRef = 47;
 
   /// A reference to a labeled statement.
   static const int CXCursor_LabelRef = 48;
 
-  /// A reference to a set of overloaded functions or function templates
-  /// that has not yet been resolved to a specific function or function
-  /// template.
+  /// A reference to a set of overloaded functions or function templates that
+  /// has not yet been resolved to a specific function or function template.
   static const int CXCursor_OverloadedDeclRef = 49;
 
   /// A reference to a variable that occurs in some non-expression context,
@@ -293,8 +292,8 @@ class CXCursorKind {
   /// An expression whose specific kind is not exposed via this interface.
   static const int CXCursor_UnexposedExpr = 100;
 
-  /// An expression that refers to some value declaration, such as a
-  /// function, variable, or enumerator.
+  /// An expression that refers to some value declaration, such as a function,
+  /// variable, or enumerator.
   static const int CXCursor_DeclRefExpr = 101;
 
   /// An expression that refers to a member of a struct, union, class,
@@ -362,9 +361,9 @@ class CXCursorKind {
   /// Represents a C11 generic selection.
   static const int CXCursor_GenericSelectionExpr = 122;
 
-  /// Implements the GNU __null extension, which is a name for a null
-  /// pointer constant that has integral type (e.g., int or long) and is the
-  /// same size and alignment as a pointer.
+  /// Implements the GNU __null extension, which is a name for a null pointer
+  /// constant that has integral type (e.g., int or long) and is the same size
+  /// and alignment as a pointer.
   static const int CXCursor_GNUNullExpr = 123;
 
   /// C++'s static_cast<> expression.
@@ -379,8 +378,8 @@ class CXCursorKind {
   /// C++'s const_cast<> expression.
   static const int CXCursor_CXXConstCastExpr = 127;
 
-  /// Represents an explicit C++ type conversion that uses "functional"
-  /// notion (C++ [expr.type.conv]).
+  /// Represents an explicit C++ type conversion that uses "functional" notion
+  /// (C++ [expr.type.conv]).
   static const int CXCursor_CXXFunctionalCastExpr = 128;
 
   /// A C++ typeid expression (C++ [expr.typeid]).
@@ -398,8 +397,8 @@ class CXCursorKind {
   /// [C++ 15] C++ Throw Expression.
   static const int CXCursor_CXXThrowExpr = 133;
 
-  /// A new expression for memory allocation and constructor calls, e.g:
-  /// "new CXXNewExpr(foo)".
+  /// A new expression for memory allocation and constructor calls, e.g: "new
+  /// CXXNewExpr(foo)".
   static const int CXCursor_CXXNewExpr = 134;
 
   /// A delete expression for memory deallocation and destructor calls, e.g.
@@ -421,13 +420,11 @@ class CXCursorKind {
   /// An Objective-C @protocol expression.
   static const int CXCursor_ObjCProtocolExpr = 140;
 
-  /// An Objective-C "bridged" cast expression, which casts between
-  /// Objective-C pointers and C pointers, transferring ownership in the
-  /// process.
+  /// An Objective-C "bridged" cast expression, which casts between Objective-C
+  /// pointers and C pointers, transferring ownership in the process.
   static const int CXCursor_ObjCBridgedCastExpr = 141;
 
-  /// Represents a C++0x pack expansion that produces a sequence of
-  /// expressions.
+  /// Represents a C++0x pack expansion that produces a sequence of expressions.
   static const int CXCursor_PackExpansionExpr = 142;
 
   /// Represents an expression that computes the length of a parameter pack.
@@ -900,8 +897,7 @@ class CXCursorKind {
 
 /// Options to control the display of diagnostics.
 class CXDiagnosticDisplayOptions {
-  /// Display the source-location information where the diagnostic was
-  /// located.
+  /// Display the source-location information where the diagnostic was located.
   static const int CXDiagnostic_DisplaySourceLocation = 1;
 
   /// If displaying the source-location information of the diagnostic, also
@@ -999,8 +995,7 @@ class CXTranslationUnit_Flags {
   static const int CXTranslationUnit_None = 0;
 
   /// Used to indicate that the parser should construct a "detailed"
-  /// preprocessing record, including all macro definitions and
-  /// instantiations.
+  /// preprocessing record, including all macro definitions and instantiations.
   static const int CXTranslationUnit_DetailedPreprocessingRecord = 1;
 
   /// Used to indicate that the translation unit is incomplete.
@@ -1025,15 +1020,14 @@ class CXTranslationUnit_Flags {
   /// parsing.
   static const int CXTranslationUnit_SkipFunctionBodies = 64;
 
-  /// Used to indicate that brief documentation comments should be included
-  /// into the set of code completions returned from this translation unit.
+  /// Used to indicate that brief documentation comments should be included into
+  /// the set of code completions returned from this translation unit.
   static const int CXTranslationUnit_IncludeBriefCommentsInCodeCompletion = 128;
 
-  /// Used to indicate that the precompiled preamble should be created on
-  /// the first parse. Otherwise it will be created on the first reparse.
-  /// This trades runtime on the first parse (serializing the preamble takes
-  /// time) for reduced runtime on the second parse (can now reuse the
-  /// preamble).
+  /// Used to indicate that the precompiled preamble should be created on the
+  /// first parse. Otherwise it will be created on the first reparse. This
+  /// trades runtime on the first parse (serializing the preamble takes time)
+  /// for reduced runtime on the second parse (can now reuse the preamble).
   static const int CXTranslationUnit_CreatePreambleOnFirstParse = 256;
 
   /// Do not stop processing when fatal errors are encountered.
@@ -1042,8 +1036,8 @@ class CXTranslationUnit_Flags {
   /// Sets the preprocessor in a mode for parsing a single file only.
   static const int CXTranslationUnit_SingleFileParse = 1024;
 
-  /// Used in combination with CXTranslationUnit_SkipFunctionBodies to
-  /// constrain the skipping of function bodies to the preamble.
+  /// Used in combination with CXTranslationUnit_SkipFunctionBodies to constrain
+  /// the skipping of function bodies to the preamble.
   static const int CXTranslationUnit_LimitSkipFunctionBodiesToPreamble = 2048;
 
   /// Used to indicate that attributed types should be included in CXType.
@@ -1052,8 +1046,7 @@ class CXTranslationUnit_Flags {
   /// Used to indicate that implicit attributes should be visited.
   static const int CXTranslationUnit_VisitImplicitAttributes = 8192;
 
-  /// Used to indicate that non-errors from included files should be
-  /// ignored.
+  /// Used to indicate that non-errors from included files should be ignored.
   static const int CXTranslationUnit_IgnoreNonErrorsFromIncludedFiles = 16384;
 
   /// Tells the preprocessor not to skip excluded conditional blocks.
@@ -1303,236 +1296,178 @@ class CXTypeKind {
   /// A type whose specific kind is not exposed via this interface.
   static const int CXType_Auto = 118;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_Elaborated = 119;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_Pipe = 120;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage1dRO = 121;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage1dArrayRO = 122;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage1dBufferRO = 123;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dRO = 124;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dArrayRO = 125;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dDepthRO = 126;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dArrayDepthRO = 127;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dMSAARO = 128;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dArrayMSAARO = 129;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dMSAADepthRO = 130;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dArrayMSAADepthRO = 131;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage3dRO = 132;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage1dWO = 133;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage1dArrayWO = 134;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage1dBufferWO = 135;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dWO = 136;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dArrayWO = 137;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dDepthWO = 138;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dArrayDepthWO = 139;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dMSAAWO = 140;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dArrayMSAAWO = 141;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dMSAADepthWO = 142;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dArrayMSAADepthWO = 143;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage3dWO = 144;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage1dRW = 145;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage1dArrayRW = 146;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage1dBufferRW = 147;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dRW = 148;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dArrayRW = 149;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dDepthRW = 150;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dArrayDepthRW = 151;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dMSAARW = 152;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dArrayMSAARW = 153;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dMSAADepthRW = 154;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage2dArrayMSAADepthRW = 155;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLImage3dRW = 156;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLSampler = 157;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLEvent = 158;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLQueue = 159;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLReserveID = 160;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_ObjCObject = 161;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_ObjCTypeParam = 162;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_Attributed = 163;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLIntelSubgroupAVCMcePayload = 164;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLIntelSubgroupAVCImePayload = 165;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLIntelSubgroupAVCRefPayload = 166;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLIntelSubgroupAVCSicPayload = 167;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLIntelSubgroupAVCMceResult = 168;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLIntelSubgroupAVCImeResult = 169;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLIntelSubgroupAVCRefResult = 170;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLIntelSubgroupAVCSicResult = 171;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLIntelSubgroupAVCImeResultSingleRefStreamout = 172;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLIntelSubgroupAVCImeResultDualRefStreamout = 173;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLIntelSubgroupAVCImeSingleRefStreamin = 174;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_OCLIntelSubgroupAVCImeDualRefStreamin = 175;
 
-  /// Represents a type that was referred to using an elaborated type
-  /// keyword.
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_ExtVector = 176;
 }
 
@@ -2113,8 +2048,7 @@ typedef _dart_clang_getNumArgTypes_wrap = int Function(
   ffi.Pointer<CXType> cxtype,
 );
 
-/// Determine the number of diagnostics produced for the given translation
-/// unit.
+/// Determine the number of diagnostics produced for the given translation unit.
 int clang_getNumDiagnostics(
   ffi.Pointer<CXTranslationUnitImpl> Unit,
 ) {
@@ -2303,8 +2237,8 @@ typedef _dart_clang_getTypedefDeclUnderlyingType_wrap = ffi.Pointer<CXType>
 );
 
 /// Same as clang_parseTranslationUnit2, but returns the CXTranslationUnit
-/// instead of an error code. In case of an error this routine returns a
-/// NULL CXTranslationUnit, without further detailed error codes.
+/// instead of an error code. In case of an error this routine returns a NULL
+/// CXTranslationUnit, without further detailed error codes.
 ffi.Pointer<CXTranslationUnitImpl> clang_parseTranslationUnit(
   ffi.Pointer<ffi.Void> CIdx,
   ffi.Pointer<ffi.Int8> source_filename,
@@ -2351,8 +2285,8 @@ typedef _dart_clang_parseTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
   int options,
 );
 
-/// Visitor is a function pointer with parameters having pointers to
-/// cxcursor instead of cxcursor by default.
+/// Visitor is a function pointer with parameters having pointers to cxcursor
+/// instead of cxcursor by default.
 int clang_visitChildren_wrap(
   ffi.Pointer<CXCursor> parent,
   ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor>> _modifiedVisitor,
