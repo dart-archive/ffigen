@@ -29,20 +29,17 @@ class Library {
   /// Prefix for functions
   final String functionPrefix;
 
-  /// Suffix for functions
-  final String functionSuffix;
-
   /// Prefix for structs
   final String structPrefix;
 
-  /// Suffix for structs
-  final String structSuffix;
+  /// Prefix for struct members.
+  String structMemberPrefix;
 
-  /// Prefix for enums
-  final String enumPrefix;
+  /// Prefix for enums.
+  String enumPrefix;
 
-  /// Sufix for enums
-  final String enumSuffix;
+  /// Prefix for enum members.
+  String enumMemberPrefix;
 
   /// Header of file.
   final String header;
@@ -56,11 +53,10 @@ class Library {
     this.initFunctionIdentifier = 'init',
     this.ffiLibraryPrefix = 'ffi',
     this.functionPrefix = '',
-    this.functionSuffix = '',
     this.structPrefix = '',
-    this.structSuffix = '',
+    this.structMemberPrefix = '',
     this.enumPrefix = '',
-    this.enumSuffix = '',
+    this.enumMemberPrefix = '',
     this.header,
   })  : assert(dylibIdentifier != null),
         assert(initFunctionIdentifier != null);
@@ -104,11 +100,10 @@ class Library {
       initFunctionIdentifier: initFunctionIdentifier,
       ffiLibraryPrefix: ffiLibraryPrefix,
       functionPrefix: functionPrefix,
-      functionSuffix: functionSuffix,
       structPrefix: structPrefix,
-      structSuffix: structSuffix,
+      structMemberPrefix: structMemberPrefix,
       enumPrefix: enumPrefix,
-      enumSuffix: enumSuffix,
+      enumMemberPrefix: enumMemberPrefix,
     );
     _generate(w);
     return w.generate();

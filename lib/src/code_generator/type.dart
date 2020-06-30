@@ -135,7 +135,7 @@ class Type {
       case BroadType.Pointer:
         return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
       case BroadType.Struct:
-        return '${w.structPrefix}$structName${w.structSuffix}';
+        return '${w.structPrefix}$structName';
       case BroadType.NativeFunction:
         return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFuncName}>';
       default:
@@ -150,7 +150,7 @@ class Type {
       case BroadType.Pointer:
         return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
       case BroadType.Struct:
-        return '${w.structPrefix}$structName${w.structSuffix}';
+        return '${w.structPrefix}$structName';
       case BroadType.NativeFunction:
         return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFuncName}>';
       default:

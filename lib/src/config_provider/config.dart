@@ -77,20 +77,17 @@ class Config {
   /// Prefix for functions.
   String functionPrefix;
 
-  /// Suffix for functions.
-  String functionSuffix;
-
   /// Prefix for structs.
   String structPrefix;
 
-  /// Suffix for structs.
-  String structSuffix;
+  /// Prefix for struct members.
+  String structMemberPrefix;
 
   /// Prefix for enums.
   String enumPrefix;
 
-  /// Sufix for enums.
-  String enumSuffix;
+  /// Prefix for enum members.
+  String enumMemberPrefix;
 
   Config._();
 
@@ -290,7 +287,6 @@ class Config {
         isRequired: false,
         validator: stringValidator,
         extractor: stringExtractor,
-        defaultValue: () => '/// AUTO GENERATED FILE, DO NOT EDIT.',
         extractedResult: (dynamic result) => preamble = result as String,
       ),
       strings.functionPrefix: Specification<String>(
@@ -301,14 +297,6 @@ class Config {
         defaultValue: () => '',
         extractedResult: (dynamic result) => functionPrefix = result as String,
       ),
-      strings.functionSuffix: Specification<String>(
-        description: 'Suffix for generated Functions',
-        isRequired: false,
-        validator: stringValidator,
-        extractor: stringExtractor,
-        defaultValue: () => '',
-        extractedResult: (dynamic result) => functionSuffix = result as String,
-      ),
       strings.structPrefix: Specification<String>(
         description: 'Prefix for generated Structs',
         isRequired: false,
@@ -317,13 +305,14 @@ class Config {
         defaultValue: () => '',
         extractedResult: (dynamic result) => structPrefix = result as String,
       ),
-      strings.structSuffix: Specification<String>(
-        description: 'Sufix for generated Structs',
+      strings.structMemberPrefix: Specification<String>(
+        description: 'Prefix for generated Struct Members',
         isRequired: false,
         validator: stringValidator,
         extractor: stringExtractor,
         defaultValue: () => '',
-        extractedResult: (dynamic result) => structSuffix = result as String,
+        extractedResult: (dynamic result) =>
+            structMemberPrefix = result as String,
       ),
       strings.enumPrefix: Specification<String>(
         description: 'Prefix for generated Enums',
@@ -333,13 +322,23 @@ class Config {
         defaultValue: () => '',
         extractedResult: (dynamic result) => enumPrefix = result as String,
       ),
-      strings.enumSuffix: Specification<String>(
-        description: 'Sufix for generated Enums',
+      strings.enumMemberPrefix: Specification<String>(
+        description: 'Prefix for generated Enums Members',
         isRequired: false,
         validator: stringValidator,
         extractor: stringExtractor,
         defaultValue: () => '',
-        extractedResult: (dynamic result) => enumSuffix = result as String,
+        extractedResult: (dynamic result) =>
+            enumMemberPrefix = result as String,
+      ),
+      strings.arrayHelperClassPrefix: Specification<String>(
+        description: 'Prefix for generated ArrayHelper class',
+        isRequired: false,
+        validator: stringValidator,
+        extractor: stringExtractor,
+        defaultValue: () => 'ArrayHelper',
+        extractedResult: (dynamic result) =>
+            enumMemberPrefix = result as String,
       ),
     };
   }

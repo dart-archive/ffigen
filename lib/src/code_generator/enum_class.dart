@@ -35,7 +35,7 @@ class EnumClass extends Binding {
   @override
   BindingString toBindingString(Writer w) {
     final s = StringBuffer();
-    final nameWithPrefixAndSuffix = '${w.enumPrefix}$name${w.enumSuffix}';
+    final nameWithPrefix = '${w.enumPrefix}$name';
 
     if (dartDoc != null) {
       s.write('/// ');
@@ -44,7 +44,7 @@ class EnumClass extends Binding {
     }
 
     // Print enclosing class.
-    s.write('class $nameWithPrefixAndSuffix {\n');
+    s.write('class $nameWithPrefix {\n');
     const depth = '  ';
     for (final ec in enumConstants) {
       if (ec.dartDoc != null) {
@@ -52,7 +52,8 @@ class EnumClass extends Binding {
         s.writeAll(ec.dartDoc.split('\n'), '\n' + depth + '/// ');
         s.write('\n');
       }
-      s.write(depth + 'static const int ${ec.name} = ${ec.value};\n');
+      s.write(depth +
+          'static const int ${w.enumMemberPrefix}${ec.name} = ${ec.value};\n');
     }
     s.write('}\n\n');
 

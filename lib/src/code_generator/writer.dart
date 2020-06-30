@@ -19,14 +19,14 @@ class Writer {
   /// Prefix for structs.
   String structPrefix;
 
-  /// Suffix for structs.
-  String structSuffix;
+  /// Prefix for struct members.
+  String structMemberPrefix;
 
   /// Prefix for enums.
   String enumPrefix;
 
-  /// Sufix for enums.
-  String enumSuffix;
+  /// Prefix for enum members.
+  String enumMemberPrefix;
 
   /// dart:ffi library prefix.
   String ffiLibraryPrefix;
@@ -40,9 +40,9 @@ class Writer {
     this.functionPrefix = '',
     this.functionSuffix = '',
     this.structPrefix = '',
-    this.structSuffix = '',
+    this.structMemberPrefix = '',
     this.enumPrefix = '',
-    this.enumSuffix = '',
+    this.enumMemberPrefix = '',
   });
 
   String generate() {

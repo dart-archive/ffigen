@@ -27,11 +27,10 @@ Library parse(Config conf, {bool sort = false}) {
     ffiLibraryPrefix: data.config.ffiLibraryPrefix,
     header: data.config.preamble,
     functionPrefix: data.config.functionPrefix,
-    functionSuffix: data.config.functionSuffix,
     structPrefix: data.config.structPrefix,
-    structSuffix: data.config.structSuffix,
+    structMemberPrefix: data.config.structMemberPrefix,
     enumPrefix: data.config.enumPrefix,
-    enumSuffix: data.config.enumSuffix,
+    enumMemberPrefix: data.config.enumMemberPrefix,
   );
 
   if (sort) {

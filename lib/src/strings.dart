@@ -66,13 +66,13 @@ const dylibVariableName = 'dylib-variable-name';
 const ffiLibraryPrefix = 'ffi-import-prefix';
 const preamble = 'preamble';
 
-// General Prefix and Suffix.
+// General Prefix.
 const functionPrefix = 'function-prefix';
-const functionSuffix = 'function-suffix';
 const structPrefix = 'struct-prefix';
-const structSuffix = 'struct-suffix';
+const structMemberPrefix = 'struct-member-prefix';
 const enumPrefix = 'enum-prefix';
-const enumSuffix = 'enum-suffix';
+const enumMemberPrefix = 'enum-member-prefix';
+const arrayHelperClassPrefix = 'array-helper-prefix';
 
 // Dynamic library names.
 const libclang_dylib_linux = 'libwrapped_clang.so';

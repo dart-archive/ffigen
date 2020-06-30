@@ -70,6 +70,3 @@ ffigen:
 
   # default is init
   init-function-name: init
-
-  # header string for generated file
-  preamble: '/// AUTO GENERATED FILE, DO NOT EDIT.'

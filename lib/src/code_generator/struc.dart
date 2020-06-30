@@ -46,7 +46,7 @@ class Struc extends Binding {
   @override
   BindingString toBindingString(Writer w) {
     final s = StringBuffer();
-    final nameWithPrefixAndSuffix = '${w.structPrefix}$name${w.structSuffix}';
+    final nameWithPrefix = '${w.structPrefix}$name';
 
     if (dartDoc != null) {
       s.write('/// ');
@@ -57,18 +57,17 @@ class Struc extends Binding {
     final helpers = <ArrayHelper>[];
 
     // Write class declaration.
-    s.write(
-        'class $nameWithPrefixAndSuffix extends ${w.ffiLibraryPrefix}.Struct{\n');
+    s.write('class $nameWithPrefix extends ${w.ffiLibraryPrefix}.Struct{\n');
     for (final m in members) {
       if (m.type.broadType == BroadType.ConstantArray) {
         // TODO(5): Remove array helpers when inline array support arives.
         final arrayHelper = ArrayHelper(
-          helperClassName: '_ArrayHelper_${nameWithPrefixAndSuffix}_${m.name}',
+          helperClassName: '_ArrayHelper_${nameWithPrefix}_${m.name}',
           elementType: m.type.elementType,
           length: 3,
           name: m.name,
-          structName: nameWithPrefixAndSuffix,
-          elementNamePrefix: '_${m.name}_item_',
+          structName: nameWithPrefix,
+          elementNamePrefix: '_${w.structMemberPrefix}${m.name}_item_',
         );
         s.write(arrayHelper.declarationString(w));
         helpers.add(arrayHelper);
@@ -76,7 +75,8 @@ class Struc extends Binding {
         if (m.type.isPrimitive) {
           s.write('  @${m.type.getCType(w)}()\n');
         }
-        s.write('  ${m.type.getDartType(w)} ${m.name};\n\n');
+        s.write(
+            '  ${m.type.getDartType(w)} ${w.structMemberPrefix}${m.name};\n\n');
       }
     }
     s.write('}\n\n');
@@ -130,7 +130,7 @@ class ArrayHelper {
 
     s.write('/// helper for array, supports `[]` operator\n');
     s.write(
-        '$helperClassName get $name => ${helperClassName}(this, $length);\n');
+        '$helperClassName get ${w.structMemberPrefix}$name => ${helperClassName}(this, $length);\n');
 
     return s.toString();
   }
