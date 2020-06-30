@@ -67,7 +67,7 @@ Type getCodeGenType(Pointer<clang.CXType> cxtype, {String parentName}) {
         clang.clang_getArrayElementType_wrap(cxtype).toCodeGenTypeAndDispose(),
       );
     case clang.CXTypeKind
-        .CXType_IncompleteArray: // primarily used for incomplete array in function parameters.
+        .CXType_IncompleteArray: // P`rimarily used for incomplete array in function parameters.
       return Type.incompleteArray(
         clang.clang_getArrayElementType_wrap(cxtype).toCodeGenTypeAndDispose(),
       );

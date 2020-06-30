@@ -149,7 +149,7 @@ class ArrayHelper {
       s.write('  ${arrayDartType} ${elementNamePrefix}$arrayString;\n');
     }
 
-    s.write('/// Helper for array `$name`\n');
+    s.write('/// Helper for array `$name`.\n');
     s.write(
         '$helperClassName get $name => ${helperClassName}(this, $length);\n');
 
@@ -162,7 +162,7 @@ class ArrayHelper {
 
     final arrayType = elementType.getDartType(w);
 
-    s.write('/// Helper for array $name in struct $structName\n');
+    s.write('/// Helper for array `$name` in struct `$structName`.\n');
 
     // Write class declaration.
     s.write('class $helperClassName{\n');
@@ -199,11 +199,11 @@ class ArrayHelper {
     return s.toString();
   }
 
-  /// Expands a List to cover all permutations sequentially
+  /// Expands a List to cover all permutations sequentially.
   ///
   /// E.g -> input: [2,2], output: ['0_0','0_1','1_0','1_1']
   ///
-  /// Ensure that list isn't empty
+  /// Ensure that list isn't empty.
   List<String> _expandElements(List<int> list, int startIndex) {
     final returnString = <String>[];
     for (var i = 0; i < list[startIndex]; i++) {
@@ -219,7 +219,7 @@ class ArrayHelper {
     return returnString;
   }
 
-  /// Returns index parameters to use direct
+  /// Returns raw index parameters as string.
   ///
   /// E.g -> If [length.length] = 3,
   /// output: "int i1, int i2, int i3,"
@@ -231,7 +231,7 @@ class ArrayHelper {
     return sb.toString();
   }
 
-  /// Returns index switch key
+  /// Returns index switch key.
   ///
   /// E.g -> If [length.length] = 3,
   /// output: "${i1}_${i2}_${i3}"

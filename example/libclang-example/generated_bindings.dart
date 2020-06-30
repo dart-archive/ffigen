@@ -71,11 +71,11 @@ class CXCursor extends ffi.Struct {
   ffi.Pointer<ffi.Void> _data_item_1;
   ffi.Pointer<ffi.Void> _data_item_2;
 
-  /// Helper for array `data`
+  /// Helper for array `data`.
   ArrayHelper_CXCursor_data get data => ArrayHelper_CXCursor_data(this, [3]);
 }
 
-/// Helper for array data in struct CXCursor
+/// Helper for array `data` in struct `CXCursor`.
 class ArrayHelper_CXCursor_data {
   final CXCursor _struct;
   final List<int> length;
@@ -141,12 +141,12 @@ class CXFileUniqueID extends ffi.Struct {
   @ffi.Uint64()
   int _data_item_2;
 
-  /// Helper for array `data`
+  /// Helper for array `data`.
   ArrayHelper_CXFileUniqueID_data get data =>
       ArrayHelper_CXFileUniqueID_data(this, [3]);
 }
 
-/// Helper for array data in struct CXFileUniqueID
+/// Helper for array `data` in struct `CXFileUniqueID`.
 class ArrayHelper_CXFileUniqueID_data {
   final CXFileUniqueID _struct;
   final List<int> length;
@@ -241,14 +241,14 @@ class CXIdxLoc extends ffi.Struct {
   ffi.Pointer<ffi.Void> _ptr_data_item_0;
   ffi.Pointer<ffi.Void> _ptr_data_item_1;
 
-  /// Helper for array `ptr_data`
+  /// Helper for array `ptr_data`.
   ArrayHelper_CXIdxLoc_ptr_data get ptr_data =>
       ArrayHelper_CXIdxLoc_ptr_data(this, [2]);
   @ffi.Uint32()
   int int_data;
 }
 
-/// Helper for array ptr_data in struct CXIdxLoc
+/// Helper for array `ptr_data` in struct `CXIdxLoc`.
 class ArrayHelper_CXIdxLoc_ptr_data {
   final CXIdxLoc _struct;
   final List<int> length;
@@ -334,14 +334,14 @@ class CXSourceLocation extends ffi.Struct {
   ffi.Pointer<ffi.Void> _ptr_data_item_0;
   ffi.Pointer<ffi.Void> _ptr_data_item_1;
 
-  /// Helper for array `ptr_data`
+  /// Helper for array `ptr_data`.
   ArrayHelper_CXSourceLocation_ptr_data get ptr_data =>
       ArrayHelper_CXSourceLocation_ptr_data(this, [2]);
   @ffi.Uint32()
   int int_data;
 }
 
-/// Helper for array ptr_data in struct CXSourceLocation
+/// Helper for array `ptr_data` in struct `CXSourceLocation`.
 class ArrayHelper_CXSourceLocation_ptr_data {
   final CXSourceLocation _struct;
   final List<int> length;
@@ -381,7 +381,7 @@ class CXSourceRange extends ffi.Struct {
   ffi.Pointer<ffi.Void> _ptr_data_item_0;
   ffi.Pointer<ffi.Void> _ptr_data_item_1;
 
-  /// Helper for array `ptr_data`
+  /// Helper for array `ptr_data`.
   ArrayHelper_CXSourceRange_ptr_data get ptr_data =>
       ArrayHelper_CXSourceRange_ptr_data(this, [2]);
   @ffi.Uint32()
@@ -391,7 +391,7 @@ class CXSourceRange extends ffi.Struct {
   int end_int_data;
 }
 
-/// Helper for array ptr_data in struct CXSourceRange
+/// Helper for array `ptr_data` in struct `CXSourceRange`.
 class ArrayHelper_CXSourceRange_ptr_data {
   final CXSourceRange _struct;
   final List<int> length;
@@ -484,13 +484,13 @@ class CXToken extends ffi.Struct {
   @ffi.Uint32()
   int _int_data_item_3;
 
-  /// Helper for array `int_data`
+  /// Helper for array `int_data`.
   ArrayHelper_CXToken_int_data get int_data =>
       ArrayHelper_CXToken_int_data(this, [4]);
   ffi.Pointer<ffi.Void> ptr_data;
 }
 
-/// Helper for array int_data in struct CXToken
+/// Helper for array `int_data` in struct `CXToken`.
 class ArrayHelper_CXToken_int_data {
   final CXToken _struct;
   final List<int> length;
@@ -542,11 +542,11 @@ class CXType extends ffi.Struct {
   ffi.Pointer<ffi.Void> _data_item_0;
   ffi.Pointer<ffi.Void> _data_item_1;
 
-  /// Helper for array `data`
+  /// Helper for array `data`.
   ArrayHelper_CXType_data get data => ArrayHelper_CXType_data(this, [2]);
 }
 
-/// Helper for array data in struct CXType
+/// Helper for array `data` in struct `CXType`.
 class ArrayHelper_CXType_data {
   final CXType _struct;
   final List<int> length;
@@ -2478,6 +2478,7 @@ typedef _c_clang_enableStackTraces = ffi.Void Function();
 
 typedef _dart_clang_enableStackTraces = void Function();
 
+/// Returns non-zero if the ranges are the same, zero if they differ.
 int clang_equalRanges_wrap(
   ffi.Pointer<CXSourceRange> c1,
   ffi.Pointer<CXSourceRange> c2,

@@ -74,7 +74,7 @@ class Type {
   /// The BroadType of this Type.
   final BroadType broadType;
 
-  /// Child Type, e.g Pointer(Parent) to Int(Child). Or Child Type of an Array
+  /// Child Type, e.g Pointer(Parent) to Int(Child), or Child Type of an Array.
   final Type child;
 
   /// For ConstantArray and IncompleteArray type.
@@ -127,7 +127,7 @@ class Type {
   /// Get base broad type for any type.
   ///
   /// E.g int** has base Broadtype as NativeType,
-  /// double[2][3] has base broadtype as double
+  /// double[2][3] has base broadtype as double.
   BroadType getBaseBroadType() {
     if (child != null) {
       return child.getBaseBroadType();
@@ -161,10 +161,10 @@ class Type {
       case BroadType.NativeFunction:
         return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFuncName}>';
       case BroadType
-          .IncompleteArray: // Array parameters are treated as Pointers in C
+          .IncompleteArray: // Array parameters are treated as Pointers in C.
         return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
       case BroadType
-          .ConstantArray: // Array parameters are treated as Pointers in C
+          .ConstantArray: // Array parameters are treated as Pointers in C.
         return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
       default:
         throw Exception('cType unknown');
@@ -182,10 +182,10 @@ class Type {
       case BroadType.NativeFunction:
         return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFuncName}>';
       case BroadType
-          .IncompleteArray: // Array parameters are treated as Pointers in C
+          .IncompleteArray: // Array parameters are treated as Pointers in C.
         return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
       case BroadType
-          .ConstantArray: // Array parameters are treated as Pointers in C
+          .ConstantArray: // Array parameters are treated as Pointers in C.
         return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
       default:
         throw Exception('dart type unknown for ${broadType.toString()}');

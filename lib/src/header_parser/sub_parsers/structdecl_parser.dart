@@ -66,7 +66,7 @@ List<Member> _getMembers(Pointer<clang.CXCursor> cursor, String structName) {
 
   visitChildrenResultChecker(resultCode);
 
-  // returning null to exclude the struct members as it has a struct by value field.
+  // Returning null to exclude the struct members as it has a struct by value field.
   if (arrayMember && !config.arrayWorkaround) {
     _logger.fine(
         '---- Removed Struct members, reason: struct has array members ${cursor.completeStringRepr()}');
@@ -107,13 +107,15 @@ int _structMembersVisitor(Pointer<clang.CXCursor> cursor,
 
       //TODO(4): Remove these when support for Structs by value arrives.
       if (mt.broadType == BroadType.Struct) {
-        // Setting this flag will exclude adding members for this struct's bindings.
+        // Setting this flag will exclude adding members for this struct's
+        // bindings.
         nestedStructMember = true;
       } else if (mt.broadType == BroadType.ConstantArray) {
         arrayMember = true;
         if (mt.child.broadType == BroadType.Struct) {
-          nestedStructMember =
-              true; // setting this flag will exclude adding members for this struct's bindings.
+          // Setting this flag will exclude adding members for this struct's
+          // bindings.
+          nestedStructMember = true;
         }
       }
 

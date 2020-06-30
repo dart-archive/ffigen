@@ -62,9 +62,9 @@ class Config {
   /// Extracted Doc comment type.
   String comment;
 
-  /// should create array workarounds
+  /// If tool should generate array workarounds.
   ///
-  /// if false(default), structs with inline array members will have all its members removed
+  /// If false(default), structs with inline array members will have all its members removed.
   bool arrayWorkaround;
 
   /// Manually creating configurations.

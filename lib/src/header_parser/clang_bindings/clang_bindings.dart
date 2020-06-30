@@ -39,11 +39,11 @@ class CXCursor extends ffi.Struct {
   ffi.Pointer<ffi.Void> _data_item_1;
   ffi.Pointer<ffi.Void> _data_item_2;
 
-  /// Helper for array `data`
+  /// Helper for array `data`.
   ArrayHelper_CXCursor_data get data => ArrayHelper_CXCursor_data(this, [3]);
 }
 
-/// Helper for array data in struct CXCursor
+/// Helper for array `data` in struct `CXCursor`.
 class ArrayHelper_CXCursor_data {
   final CXCursor _struct;
   final List<int> length;
@@ -760,14 +760,14 @@ class CXSourceLocation extends ffi.Struct {
   ffi.Pointer<ffi.Void> _ptr_data_item_0;
   ffi.Pointer<ffi.Void> _ptr_data_item_1;
 
-  /// Helper for array `ptr_data`
+  /// Helper for array `ptr_data`.
   ArrayHelper_CXSourceLocation_ptr_data get ptr_data =>
       ArrayHelper_CXSourceLocation_ptr_data(this, [2]);
   @ffi.Uint32()
   int int_data;
 }
 
-/// Helper for array ptr_data in struct CXSourceLocation
+/// Helper for array `ptr_data` in struct `CXSourceLocation`.
 class ArrayHelper_CXSourceLocation_ptr_data {
   final CXSourceLocation _struct;
   final List<int> length;
@@ -803,11 +803,10 @@ class ArrayHelper_CXSourceLocation_ptr_data {
 class CXSourceRange extends ffi.Struct {
   ffi.Pointer<ffi.Void> _ptr_data_item_0;
   ffi.Pointer<ffi.Void> _ptr_data_item_1;
-  ffi.Pointer<ffi.Void> _ptr_data_item_2;
 
-  /// helper for array, supports `[]` operator
-  _ArrayHelper_CXSourceRange_ptr_data get ptr_data =>
-      _ArrayHelper_CXSourceRange_ptr_data(this, 3);
+  /// Helper for array `ptr_data`.
+  ArrayHelper_CXSourceRange_ptr_data get ptr_data =>
+      ArrayHelper_CXSourceRange_ptr_data(this, [2]);
   @ffi.Uint32()
   int begin_int_data;
 
@@ -815,51 +814,35 @@ class CXSourceRange extends ffi.Struct {
   int end_int_data;
 }
 
-/// Helper for array ptr_data in struct CXSourceRange
-class _ArrayHelper_CXSourceRange_ptr_data {
+/// Helper for array `ptr_data` in struct `CXSourceRange`.
+class ArrayHelper_CXSourceRange_ptr_data {
   final CXSourceRange _struct;
-  final int length;
-  _ArrayHelper_CXSourceRange_ptr_data(this._struct, this.length);
-  void operator []=(int index, ffi.Pointer<ffi.Void> value) {
-    switch (index) {
-      case 0:
+  final List<int> length;
+  ArrayHelper_CXSourceRange_ptr_data(this._struct, this.length);
+  void setValue(int i1, ffi.Pointer<ffi.Void> value) {
+    switch ('${i1}') {
+      case '0':
         _struct._ptr_data_item_0 = value;
         break;
-      case 1:
+      case '1':
         _struct._ptr_data_item_1 = value;
         break;
-      case 2:
-        _struct._ptr_data_item_2 = value;
-        break;
       default:
-        throw RangeError('Index $index must be in the range [0..2].');
+        throw RangeError('Index(s) not in range');
     }
   }
 
-  ffi.Pointer<ffi.Void> operator [](int index) {
-    switch (index) {
-      case 0:
+  ffi.Pointer<ffi.Void> getValue(
+    int i1,
+  ) {
+    switch ('${i1}') {
+      case '0':
         return _struct._ptr_data_item_0;
-      case 1:
+      case '1':
         return _struct._ptr_data_item_1;
-      case 2:
-        return _struct._ptr_data_item_2;
       default:
-        throw RangeError('Index $index must be in the range [0..2].');
+        throw RangeError('Index(s) not in range');
     }
-  }
-
-  @override
-  String toString() {
-    if (length == 0) return '[]';
-    final sb = StringBuffer('[');
-    sb.write(this[0]);
-    for (var i = 1; i < length; i++) {
-      sb.write(',');
-      sb.write(this[i]);
-    }
-    sb.write(']');
-    return sb.toString();
   }
 }
 
@@ -945,11 +928,11 @@ class CXType extends ffi.Struct {
   ffi.Pointer<ffi.Void> _data_item_0;
   ffi.Pointer<ffi.Void> _data_item_1;
 
-  /// Helper for array `data`
+  /// Helper for array `data`.
   ArrayHelper_CXType_data get data => ArrayHelper_CXType_data(this, [2]);
 }
 
-/// Helper for array data in struct CXType
+/// Helper for array `data` in struct `CXType`.
 class ArrayHelper_CXType_data {
   final CXType _struct;
   final List<int> length;
