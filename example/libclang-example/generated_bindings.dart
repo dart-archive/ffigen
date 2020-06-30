@@ -78,9 +78,20 @@ class CXCursor extends ffi.Struct {
 /// Helper for array `data` in struct `CXCursor`.
 class ArrayHelper_CXCursor_data {
   final CXCursor _struct;
-  final List<int> length;
-  ArrayHelper_CXCursor_data(this._struct, this.length);
+  final List<int> dimensions;
+  ArrayHelper_CXCursor_data(this._struct, this.dimensions);
+  void _checkArrayBounds(
+    int i1,
+  ) {
+    if (i1 < 0 || i1 >= dimensions[0]) {
+      throw RangeError('i1 not in range 0..3 exclusive.');
+    }
+  }
+
   void setValue(int i1, ffi.Pointer<ffi.Void> value) {
+    _checkArrayBounds(
+      i1,
+    );
     switch (i1) {
       case 0:
         _struct._data_item_0 = value;
@@ -99,6 +110,9 @@ class ArrayHelper_CXCursor_data {
   ffi.Pointer<ffi.Void> getValue(
     int i1,
   ) {
+    _checkArrayBounds(
+      i1,
+    );
     switch (i1) {
       case 0:
         return _struct._data_item_0;
@@ -149,9 +163,20 @@ class CXFileUniqueID extends ffi.Struct {
 /// Helper for array `data` in struct `CXFileUniqueID`.
 class ArrayHelper_CXFileUniqueID_data {
   final CXFileUniqueID _struct;
-  final List<int> length;
-  ArrayHelper_CXFileUniqueID_data(this._struct, this.length);
+  final List<int> dimensions;
+  ArrayHelper_CXFileUniqueID_data(this._struct, this.dimensions);
+  void _checkArrayBounds(
+    int i1,
+  ) {
+    if (i1 < 0 || i1 >= dimensions[0]) {
+      throw RangeError('i1 not in range 0..3 exclusive.');
+    }
+  }
+
   void setValue(int i1, int value) {
+    _checkArrayBounds(
+      i1,
+    );
     switch (i1) {
       case 0:
         _struct._data_item_0 = value;
@@ -170,6 +195,9 @@ class ArrayHelper_CXFileUniqueID_data {
   int getValue(
     int i1,
   ) {
+    _checkArrayBounds(
+      i1,
+    );
     switch (i1) {
       case 0:
         return _struct._data_item_0;
@@ -251,9 +279,20 @@ class CXIdxLoc extends ffi.Struct {
 /// Helper for array `ptr_data` in struct `CXIdxLoc`.
 class ArrayHelper_CXIdxLoc_ptr_data {
   final CXIdxLoc _struct;
-  final List<int> length;
-  ArrayHelper_CXIdxLoc_ptr_data(this._struct, this.length);
+  final List<int> dimensions;
+  ArrayHelper_CXIdxLoc_ptr_data(this._struct, this.dimensions);
+  void _checkArrayBounds(
+    int i1,
+  ) {
+    if (i1 < 0 || i1 >= dimensions[0]) {
+      throw RangeError('i1 not in range 0..2 exclusive.');
+    }
+  }
+
   void setValue(int i1, ffi.Pointer<ffi.Void> value) {
+    _checkArrayBounds(
+      i1,
+    );
     switch (i1) {
       case 0:
         _struct._ptr_data_item_0 = value;
@@ -269,6 +308,9 @@ class ArrayHelper_CXIdxLoc_ptr_data {
   ffi.Pointer<ffi.Void> getValue(
     int i1,
   ) {
+    _checkArrayBounds(
+      i1,
+    );
     switch (i1) {
       case 0:
         return _struct._ptr_data_item_0;
@@ -344,9 +386,20 @@ class CXSourceLocation extends ffi.Struct {
 /// Helper for array `ptr_data` in struct `CXSourceLocation`.
 class ArrayHelper_CXSourceLocation_ptr_data {
   final CXSourceLocation _struct;
-  final List<int> length;
-  ArrayHelper_CXSourceLocation_ptr_data(this._struct, this.length);
+  final List<int> dimensions;
+  ArrayHelper_CXSourceLocation_ptr_data(this._struct, this.dimensions);
+  void _checkArrayBounds(
+    int i1,
+  ) {
+    if (i1 < 0 || i1 >= dimensions[0]) {
+      throw RangeError('i1 not in range 0..2 exclusive.');
+    }
+  }
+
   void setValue(int i1, ffi.Pointer<ffi.Void> value) {
+    _checkArrayBounds(
+      i1,
+    );
     switch (i1) {
       case 0:
         _struct._ptr_data_item_0 = value;
@@ -362,6 +415,9 @@ class ArrayHelper_CXSourceLocation_ptr_data {
   ffi.Pointer<ffi.Void> getValue(
     int i1,
   ) {
+    _checkArrayBounds(
+      i1,
+    );
     switch (i1) {
       case 0:
         return _struct._ptr_data_item_0;
@@ -394,9 +450,20 @@ class CXSourceRange extends ffi.Struct {
 /// Helper for array `ptr_data` in struct `CXSourceRange`.
 class ArrayHelper_CXSourceRange_ptr_data {
   final CXSourceRange _struct;
-  final List<int> length;
-  ArrayHelper_CXSourceRange_ptr_data(this._struct, this.length);
+  final List<int> dimensions;
+  ArrayHelper_CXSourceRange_ptr_data(this._struct, this.dimensions);
+  void _checkArrayBounds(
+    int i1,
+  ) {
+    if (i1 < 0 || i1 >= dimensions[0]) {
+      throw RangeError('i1 not in range 0..2 exclusive.');
+    }
+  }
+
   void setValue(int i1, ffi.Pointer<ffi.Void> value) {
+    _checkArrayBounds(
+      i1,
+    );
     switch (i1) {
       case 0:
         _struct._ptr_data_item_0 = value;
@@ -412,6 +479,9 @@ class ArrayHelper_CXSourceRange_ptr_data {
   ffi.Pointer<ffi.Void> getValue(
     int i1,
   ) {
+    _checkArrayBounds(
+      i1,
+    );
     switch (i1) {
       case 0:
         return _struct._ptr_data_item_0;
@@ -493,9 +563,20 @@ class CXToken extends ffi.Struct {
 /// Helper for array `int_data` in struct `CXToken`.
 class ArrayHelper_CXToken_int_data {
   final CXToken _struct;
-  final List<int> length;
-  ArrayHelper_CXToken_int_data(this._struct, this.length);
+  final List<int> dimensions;
+  ArrayHelper_CXToken_int_data(this._struct, this.dimensions);
+  void _checkArrayBounds(
+    int i1,
+  ) {
+    if (i1 < 0 || i1 >= dimensions[0]) {
+      throw RangeError('i1 not in range 0..4 exclusive.');
+    }
+  }
+
   void setValue(int i1, int value) {
+    _checkArrayBounds(
+      i1,
+    );
     switch (i1) {
       case 0:
         _struct._int_data_item_0 = value;
@@ -517,6 +598,9 @@ class ArrayHelper_CXToken_int_data {
   int getValue(
     int i1,
   ) {
+    _checkArrayBounds(
+      i1,
+    );
     switch (i1) {
       case 0:
         return _struct._int_data_item_0;
@@ -549,9 +633,20 @@ class CXType extends ffi.Struct {
 /// Helper for array `data` in struct `CXType`.
 class ArrayHelper_CXType_data {
   final CXType _struct;
-  final List<int> length;
-  ArrayHelper_CXType_data(this._struct, this.length);
+  final List<int> dimensions;
+  ArrayHelper_CXType_data(this._struct, this.dimensions);
+  void _checkArrayBounds(
+    int i1,
+  ) {
+    if (i1 < 0 || i1 >= dimensions[0]) {
+      throw RangeError('i1 not in range 0..2 exclusive.');
+    }
+  }
+
   void setValue(int i1, ffi.Pointer<ffi.Void> value) {
+    _checkArrayBounds(
+      i1,
+    );
     switch (i1) {
       case 0:
         _struct._data_item_0 = value;
@@ -567,6 +662,9 @@ class ArrayHelper_CXType_data {
   ffi.Pointer<ffi.Void> getValue(
     int i1,
   ) {
+    _checkArrayBounds(
+      i1,
+    );
     switch (i1) {
       case 0:
         return _struct._data_item_0;

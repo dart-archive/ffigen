@@ -224,3 +224,116 @@ typedef _c_Function1Uint8 = ffi.Uint8 Function(
 typedef _dart_Function1Uint8 = int Function(
   int x,
 );
+
+class Struct1 extends ffi.Struct {
+  @ffi.Int8()
+  int a;
+
+  @ffi.Int32()
+  int _data_item_0;
+  @ffi.Int32()
+  int _data_item_1;
+  @ffi.Int32()
+  int _data_item_2;
+  @ffi.Int32()
+  int _data_item_3;
+  @ffi.Int32()
+  int _data_item_4;
+  @ffi.Int32()
+  int _data_item_5;
+
+  /// Helper for array `data`.
+  ArrayHelper_Struct1_data get data =>
+      ArrayHelper_Struct1_data(this, [3, 1, 2]);
+}
+
+/// Helper for array `data` in struct `Struct1`.
+class ArrayHelper_Struct1_data {
+  final Struct1 _struct;
+  final List<int> dimensions;
+  ArrayHelper_Struct1_data(this._struct, this.dimensions);
+  void _checkArrayBounds(
+    int i1,
+    int i2,
+    int i3,
+  ) {
+    if (i1 < 0 || i1 >= dimensions[0]) {
+      throw RangeError('i1 not in range 0..3 exclusive.');
+    }
+    if (i2 < 0 || i2 >= dimensions[1]) {
+      throw RangeError('i2 not in range 0..1 exclusive.');
+    }
+    if (i3 < 0 || i3 >= dimensions[2]) {
+      throw RangeError('i3 not in range 0..2 exclusive.');
+    }
+  }
+
+  void setValue(int i1, int i2, int i3, int value) {
+    _checkArrayBounds(
+      i1,
+      i2,
+      i3,
+    );
+    switch (i1 * dimensions[1] * dimensions[2] + i2 * dimensions[2] + i3) {
+      case 0:
+        _struct._data_item_0 = value;
+        break;
+      case 1:
+        _struct._data_item_1 = value;
+        break;
+      case 2:
+        _struct._data_item_2 = value;
+        break;
+      case 3:
+        _struct._data_item_3 = value;
+        break;
+      case 4:
+        _struct._data_item_4 = value;
+        break;
+      case 5:
+        _struct._data_item_5 = value;
+        break;
+      default:
+        throw RangeError('Index(s) not in range');
+    }
+  }
+
+  int getValue(
+    int i1,
+    int i2,
+    int i3,
+  ) {
+    _checkArrayBounds(
+      i1,
+      i2,
+      i3,
+    );
+    switch (i1 * dimensions[1] * dimensions[2] + i2 * dimensions[2] + i3) {
+      case 0:
+        return _struct._data_item_0;
+      case 1:
+        return _struct._data_item_1;
+      case 2:
+        return _struct._data_item_2;
+      case 3:
+        return _struct._data_item_3;
+      case 4:
+        return _struct._data_item_4;
+      case 5:
+        return _struct._data_item_5;
+      default:
+        throw RangeError('Index(s) not in range');
+    }
+  }
+}
+
+ffi.Pointer<Struct1> getStruct1() {
+  return _getStruct1();
+}
+
+final _dart_getStruct1 _getStruct1 =
+    _dylib.lookupFunction<_c_getStruct1, _dart_getStruct1>('getStruct1');
+
+typedef _c_getStruct1 = ffi.Pointer<Struct1> Function();
+
+typedef _dart_getStruct1 = ffi.Pointer<Struct1> Function();

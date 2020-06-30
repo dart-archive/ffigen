@@ -10,17 +10,17 @@
 ///
 /// Linux:
 /// ```
-/// clang -shared -fpic native_functions.c -o native_functions.so
+/// clang -shared -fpic native_test.c -o native_test.so
 /// ```
 /// MacOS:
 /// ```
-/// clang -shared -fpic native_functions.c -o native_functions.dylib
+/// clang -shared -fpic native_test.c -o native_test.dylib
 /// ```
 /// Windows:
 /// ```
-/// call clang -shared native_functions.c -o native_functions.dll -Wl,"/DEF:native_functions.def"
-/// del native_functions.exp
-/// del native_functions.lib
+/// call clang -shared native_test.c -o native_test.dll -Wl,"/DEF:native_test.def"
+/// del native_test.exp
+/// del native_test.lib
 /// ```
 /// =======================================================================
 /// =======================================================================
@@ -36,21 +36,21 @@ const LINUX = 'linux';
 
 Map<String, Options> platformOptions = {
   LINUX: Options(
-    outputfilename: 'native_functions.so',
+    outputfilename: 'native_test.so',
     sharedFlag: '-shared',
-    inputHeader: 'native_functions.c',
+    inputHeader: 'native_test.c',
     fPIC: '-fpic',
   ),
   WINDOWS: Options(
-    outputfilename: 'native_functions.dll',
+    outputfilename: 'native_test.dll',
     sharedFlag: '-shared',
-    inputHeader: 'native_functions.c',
-    moduleDefPath: '-Wl,/DEF:native_functions.def',
+    inputHeader: 'native_test.c',
+    moduleDefPath: '-Wl,/DEF:native_test.def',
   ),
   MACOS: Options(
-    outputfilename: 'native_functions.dylib',
+    outputfilename: 'native_test.dylib',
     sharedFlag: '-shared',
-    inputHeader: 'native_functions.c',
+    inputHeader: 'native_test.c',
     fPIC: '-fpic',
   ),
 };

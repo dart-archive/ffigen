@@ -73,7 +73,7 @@ class Struc extends Binding {
         final arrayHelper = ArrayHelper(
           helperClassName: 'ArrayHelper_${name}_${m.name}',
           elementType: m.type.getBaseArrayType(),
-          length: _getArrayDimensionLengths(m.type),
+          dimensions: _getArrayDimensionLengths(m.type),
           name: m.name,
           structName: name,
           elementNamePrefix: '_${m.name}_item_',
@@ -114,7 +114,7 @@ class Member {
 // Helper bindings for struct array.
 class ArrayHelper {
   final Type elementType;
-  final List<int> length;
+  final List<int> dimensions;
   final String structName;
 
   final String name;
@@ -126,7 +126,7 @@ class ArrayHelper {
     if (_expandedArrayLength != null) return _expandedArrayLength;
 
     int arrayLength = 1;
-    for (final i in length) {
+    for (final i in dimensions) {
       arrayLength = arrayLength * i;
     }
     return arrayLength;
@@ -134,7 +134,7 @@ class ArrayHelper {
 
   ArrayHelper({
     @required this.elementType,
-    @required this.length,
+    @required this.dimensions,
     @required this.structName,
     @required this.name,
     @required this.helperClassName,
@@ -156,7 +156,7 @@ class ArrayHelper {
 
     s.write('/// Helper for array `$name`.\n');
     s.write(
-        '$helperClassName get $name => ${helperClassName}(this, $length);\n');
+        '$helperClassName get $name => ${helperClassName}(this, $dimensions);\n');
 
     return s.toString();
   }
@@ -172,12 +172,23 @@ class ArrayHelper {
     // Write class declaration.
     s.write('class $helperClassName{\n');
     s.write('final $structName _struct;\n');
-    s.write('final List<int> length;\n');
-    s.write('$helperClassName(this._struct, this.length);\n');
+    s.write('final List<int> dimensions;\n');
+    s.write('$helperClassName(this._struct, this.dimensions);\n');
 
     final indexSwitchKey = _getIndexSwitchKey();
-    // add setValue method.
+    // Add _checkArrayBounds method
+    s.write('void _checkArrayBounds(${_getIndexParameters()}) {\n');
+    for (int i = 0; i < dimensions.length; i++) {
+      s.write('if(i${i + 1}<0 || i${i + 1}>=dimensions[$i]){\n');
+      s.write(
+          "throw RangeError('i${i + 1} not in range 0..${dimensions[i]} exclusive.');");
+      s.write('}');
+    }
+    s.write('}\n');
+
+    // Add setValue method.
     s.write('void setValue(${_getIndexParameters()}$arrayType value) {\n');
+    s.write('_checkArrayBounds(${_getIndexParameters(false)});\n');
     s.write('switch(${indexSwitchKey}) {\n');
     for (int i = 0; i < expandedArrayLength; i++) {
       s.write('case $i:\n');
@@ -189,8 +200,9 @@ class ArrayHelper {
     s.write('}\n');
     s.write('}\n');
 
-    // add getValue method.
+    // Add getValue method.
     s.write('$arrayType getValue(${_getIndexParameters()}) {\n');
+    s.write('_checkArrayBounds(${_getIndexParameters(false)});\n');
     s.write('switch(${indexSwitchKey}) {\n');
     for (int i = 0; i < expandedArrayLength; i++) {
       s.write('case $i:\n');
@@ -207,12 +219,21 @@ class ArrayHelper {
 
   /// Returns raw index parameters as string.
   ///
-  /// E.g -> If [length.length] = 3,
+  /// E.g -> If [dimensions.dimensions] = 3,
   /// output: "int i1, int i2, int i3,"
-  String _getIndexParameters() {
+  ///
+  /// If [addType] is false types are removed.
+  ///
+  /// E.g -> If [dimensions.dimensions] = 3,
+  /// output: "i1,i2,i3,"
+  String _getIndexParameters([bool addType = true]) {
     final sb = StringBuffer();
-    for (var i = 0; i < length.length; i++) {
-      sb.write('int i${i + 1}, ');
+    for (var i = 0; i < dimensions.length; i++) {
+      if (addType) {
+        sb.write('int i${i + 1}, ');
+      } else {
+        sb.write('i${i + 1}, ');
+      }
     }
     return sb.toString();
   }
@@ -220,14 +241,14 @@ class ArrayHelper {
   /// Maps n-D array to 1-D array.
   String _getIndexSwitchKey() {
     final sb = StringBuffer();
-    for (int i = 0; i < length.length - 1; i++) {
+    for (int i = 0; i < dimensions.length - 1; i++) {
       sb.write('i${i + 1}');
-      for (int j = i + 1; j < length.length; j++) {
-        sb.write('*length[${j}]');
+      for (int j = i + 1; j < dimensions.length; j++) {
+        sb.write('*dimensions[${j}]');
       }
       sb.write('+');
     }
-    sb.write('i${length.length}');
+    sb.write('i${dimensions.length}');
     return sb.toString();
   }
 }
