@@ -5,6 +5,13 @@
 .packages
 pubspec.lock
 
+# IDE and debugger files.
+.clangd
+.gdb_history
+.history
+.vscode
+compile_commands.json
+
 # Directory created by dartdoc.
 # If you don't generate documentation locally you can remove this line.
 doc/api/
