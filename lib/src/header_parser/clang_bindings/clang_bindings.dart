@@ -11,14 +11,23 @@ void init(ffi.DynamicLibrary dylib) {
   _dylib = dylib;
 }
 
-/// Describes how the traversal of the children of a particular cursor should proceed after visiting a particular child cursor.
+/// Describes how the traversal of the children of a particular cursor should
+/// proceed after visiting a particular child cursor.
 class CXChildVisitResult {
+  /// Terminates the cursor traversal.
   static const int CXChildVisit_Break = 0;
+
+  /// Continues the cursor traversal with the next sibling of the cursor just
+  /// visited, without visiting its children.
   static const int CXChildVisit_Continue = 1;
+
+  /// Recursively traverse the children of this cursor, using the same visitor
+  /// and client data.
   static const int CXChildVisit_Recurse = 2;
 }
 
-/// A cursor representing some element in the abstract syntax tree for a translation unit.
+/// A cursor representing some element in the abstract syntax tree for a
+/// translation unit.
 class CXCursor extends ffi.Struct {
   @ffi.Int32()
   int kind;
@@ -84,44 +93,122 @@ class _ArrayHelper_CXCursor_data {
 
 /// Describes the kind of entity that a cursor refers to.
 class CXCursorKind {
+  /// A declaration whose specific kind is not exposed via this interface.
   static const int CXCursor_UnexposedDecl = 1;
+
+  /// A C or C++ struct.
   static const int CXCursor_StructDecl = 2;
+
+  /// A C or C++ union.
   static const int CXCursor_UnionDecl = 3;
+
+  /// A C++ class.
   static const int CXCursor_ClassDecl = 4;
+
+  /// An enumeration.
   static const int CXCursor_EnumDecl = 5;
+
+  /// A field (in C) or non-static data member (in C++) in a struct, union, or
+  /// C++ class.
   static const int CXCursor_FieldDecl = 6;
+
+  /// An enumerator constant.
   static const int CXCursor_EnumConstantDecl = 7;
+
+  /// A function.
   static const int CXCursor_FunctionDecl = 8;
+
+  /// A variable.
   static const int CXCursor_VarDecl = 9;
+
+  /// A function or method parameter.
   static const int CXCursor_ParmDecl = 10;
+
+  /// An Objective-C @interface.
   static const int CXCursor_ObjCInterfaceDecl = 11;
+
+  /// An Objective-C @interface for a category.
   static const int CXCursor_ObjCCategoryDecl = 12;
+
+  /// An Objective-C @protocol declaration.
   static const int CXCursor_ObjCProtocolDecl = 13;
+
+  /// An Objective-C @property declaration.
   static const int CXCursor_ObjCPropertyDecl = 14;
+
+  /// An Objective-C instance variable.
   static const int CXCursor_ObjCIvarDecl = 15;
+
+  /// An Objective-C instance method.
   static const int CXCursor_ObjCInstanceMethodDecl = 16;
+
+  /// An Objective-C class method.
   static const int CXCursor_ObjCClassMethodDecl = 17;
+
+  /// An Objective-C @implementation.
   static const int CXCursor_ObjCImplementationDecl = 18;
+
+  /// An Objective-C @implementation for a category.
   static const int CXCursor_ObjCCategoryImplDecl = 19;
+
+  /// A typedef.
   static const int CXCursor_TypedefDecl = 20;
+
+  /// A C++ class method.
   static const int CXCursor_CXXMethod = 21;
+
+  /// A C++ namespace.
   static const int CXCursor_Namespace = 22;
+
+  /// A linkage specification, e.g. 'extern "C"'.
   static const int CXCursor_LinkageSpec = 23;
+
+  /// A C++ constructor.
   static const int CXCursor_Constructor = 24;
+
+  /// A C++ destructor.
   static const int CXCursor_Destructor = 25;
+
+  /// A C++ conversion function.
   static const int CXCursor_ConversionFunction = 26;
+
+  /// A C++ template type parameter.
   static const int CXCursor_TemplateTypeParameter = 27;
+
+  /// A C++ non-type template parameter.
   static const int CXCursor_NonTypeTemplateParameter = 28;
+
+  /// A C++ template template parameter.
   static const int CXCursor_TemplateTemplateParameter = 29;
+
+  /// A C++ function template.
   static const int CXCursor_FunctionTemplate = 30;
+
+  /// A C++ class template.
   static const int CXCursor_ClassTemplate = 31;
+
+  /// A C++ class template partial specialization.
   static const int CXCursor_ClassTemplatePartialSpecialization = 32;
+
+  /// A C++ namespace alias declaration.
   static const int CXCursor_NamespaceAlias = 33;
+
+  /// A C++ using directive.
   static const int CXCursor_UsingDirective = 34;
+
+  /// A C++ using declaration.
   static const int CXCursor_UsingDeclaration = 35;
+
+  /// A C++ alias declaration
   static const int CXCursor_TypeAliasDecl = 36;
+
+  /// An Objective-C @synthesize definition.
   static const int CXCursor_ObjCSynthesizeDecl = 37;
+
+  /// An Objective-C @dynamic definition.
   static const int CXCursor_ObjCDynamicDecl = 38;
+
+  /// An access specifier.
   static const int CXCursor_CXXAccessSpecifier = 39;
   static const int CXCursor_FirstDecl = 1;
   static const int CXCursor_LastDecl = 39;
@@ -129,13 +216,31 @@ class CXCursorKind {
   static const int CXCursor_ObjCSuperClassRef = 40;
   static const int CXCursor_ObjCProtocolRef = 41;
   static const int CXCursor_ObjCClassRef = 42;
+
+  /// A reference to a type declaration.
   static const int CXCursor_TypeRef = 43;
   static const int CXCursor_CXXBaseSpecifier = 44;
+
+  /// A reference to a class template, function template, template template
+  /// parameter, or class template partial specialization.
   static const int CXCursor_TemplateRef = 45;
+
+  /// A reference to a namespace or namespace alias.
   static const int CXCursor_NamespaceRef = 46;
+
+  /// A reference to a member of a struct, union, or class that occurs in some
+  /// non-expression context, e.g., a designated initializer.
   static const int CXCursor_MemberRef = 47;
+
+  /// A reference to a labeled statement.
   static const int CXCursor_LabelRef = 48;
+
+  /// A reference to a set of overloaded functions or function templates that
+  /// has not yet been resolved to a specific function or function template.
   static const int CXCursor_OverloadedDeclRef = 49;
+
+  /// A reference to a variable that occurs in some non-expression context,
+  /// e.g., a C++ lambda capture list.
   static const int CXCursor_VariableRef = 50;
   static const int CXCursor_LastRef = 50;
   static const int CXCursor_FirstInvalid = 70;
@@ -145,149 +250,432 @@ class CXCursorKind {
   static const int CXCursor_InvalidCode = 73;
   static const int CXCursor_LastInvalid = 73;
   static const int CXCursor_FirstExpr = 100;
+
+  /// An expression whose specific kind is not exposed via this interface.
   static const int CXCursor_UnexposedExpr = 100;
+
+  /// An expression that refers to some value declaration, such as a function,
+  /// variable, or enumerator.
   static const int CXCursor_DeclRefExpr = 101;
+
+  /// An expression that refers to a member of a struct, union, class,
+  /// Objective-C class, etc.
   static const int CXCursor_MemberRefExpr = 102;
+
+  /// An expression that calls a function.
   static const int CXCursor_CallExpr = 103;
+
+  /// An expression that sends a message to an Objective-C object or class.
   static const int CXCursor_ObjCMessageExpr = 104;
+
+  /// An expression that represents a block literal.
   static const int CXCursor_BlockExpr = 105;
+
+  /// An integer literal.
   static const int CXCursor_IntegerLiteral = 106;
+
+  /// A floating point number literal.
   static const int CXCursor_FloatingLiteral = 107;
+
+  /// An imaginary number literal.
   static const int CXCursor_ImaginaryLiteral = 108;
+
+  /// A string literal.
   static const int CXCursor_StringLiteral = 109;
+
+  /// A character literal.
   static const int CXCursor_CharacterLiteral = 110;
+
+  /// A parenthesized expression, e.g. "(1)".
   static const int CXCursor_ParenExpr = 111;
+
+  /// This represents the unary-expression's (except sizeof and alignof).
   static const int CXCursor_UnaryOperator = 112;
+
+  /// [C99 6.5.2.1] Array Subscripting.
   static const int CXCursor_ArraySubscriptExpr = 113;
+
+  /// A builtin binary operation expression such as "x + y" or "x <= y".
   static const int CXCursor_BinaryOperator = 114;
+
+  /// Compound assignment such as "+=".
   static const int CXCursor_CompoundAssignOperator = 115;
+
+  /// The ?: ternary operator.
   static const int CXCursor_ConditionalOperator = 116;
+
+  /// An explicit cast in C (C99 6.5.4) or a C-style cast in C++ (C++
+  /// [expr.cast]), which uses the syntax (Type)expr.
   static const int CXCursor_CStyleCastExpr = 117;
+
+  /// [C99 6.5.2.5]
   static const int CXCursor_CompoundLiteralExpr = 118;
+
+  /// Describes an C or C++ initializer list.
   static const int CXCursor_InitListExpr = 119;
+
+  /// The GNU address of label extension, representing &&label.
   static const int CXCursor_AddrLabelExpr = 120;
+
+  /// This is the GNU Statement Expression extension: ({int X=4; X;})
   static const int CXCursor_StmtExpr = 121;
+
+  /// Represents a C11 generic selection.
   static const int CXCursor_GenericSelectionExpr = 122;
+
+  /// Implements the GNU __null extension, which is a name for a null pointer
+  /// constant that has integral type (e.g., int or long) and is the same size
+  /// and alignment as a pointer.
   static const int CXCursor_GNUNullExpr = 123;
+
+  /// C++'s static_cast<> expression.
   static const int CXCursor_CXXStaticCastExpr = 124;
+
+  /// C++'s dynamic_cast<> expression.
   static const int CXCursor_CXXDynamicCastExpr = 125;
+
+  /// C++'s reinterpret_cast<> expression.
   static const int CXCursor_CXXReinterpretCastExpr = 126;
+
+  /// C++'s const_cast<> expression.
   static const int CXCursor_CXXConstCastExpr = 127;
+
+  /// Represents an explicit C++ type conversion that uses "functional" notion
+  /// (C++ [expr.type.conv]).
   static const int CXCursor_CXXFunctionalCastExpr = 128;
+
+  /// A C++ typeid expression (C++ [expr.typeid]).
   static const int CXCursor_CXXTypeidExpr = 129;
+
+  /// [C++ 2.13.5] C++ Boolean Literal.
   static const int CXCursor_CXXBoolLiteralExpr = 130;
+
+  /// [C++0x 2.14.7] C++ Pointer Literal.
   static const int CXCursor_CXXNullPtrLiteralExpr = 131;
+
+  /// Represents the "this" expression in C++
   static const int CXCursor_CXXThisExpr = 132;
+
+  /// [C++ 15] C++ Throw Expression.
   static const int CXCursor_CXXThrowExpr = 133;
+
+  /// A new expression for memory allocation and constructor calls, e.g: "new
+  /// CXXNewExpr(foo)".
   static const int CXCursor_CXXNewExpr = 134;
+
+  /// A delete expression for memory deallocation and destructor calls, e.g.
+  /// "delete[] pArray".
   static const int CXCursor_CXXDeleteExpr = 135;
+
+  /// A unary expression. (noexcept, sizeof, or other traits)
   static const int CXCursor_UnaryExpr = 136;
+
+  /// An Objective-C string literal i.e. "foo".
   static const int CXCursor_ObjCStringLiteral = 137;
+
+  /// An Objective-C @encode expression.
   static const int CXCursor_ObjCEncodeExpr = 138;
+
+  /// An Objective-C @selector expression.
   static const int CXCursor_ObjCSelectorExpr = 139;
+
+  /// An Objective-C @protocol expression.
   static const int CXCursor_ObjCProtocolExpr = 140;
+
+  /// An Objective-C "bridged" cast expression, which casts between Objective-C
+  /// pointers and C pointers, transferring ownership in the process.
   static const int CXCursor_ObjCBridgedCastExpr = 141;
+
+  /// Represents a C++0x pack expansion that produces a sequence of expressions.
   static const int CXCursor_PackExpansionExpr = 142;
+
+  /// Represents an expression that computes the length of a parameter pack.
   static const int CXCursor_SizeOfPackExpr = 143;
   static const int CXCursor_LambdaExpr = 144;
+
+  /// Objective-c Boolean Literal.
   static const int CXCursor_ObjCBoolLiteralExpr = 145;
+
+  /// Represents the "self" expression in an Objective-C method.
   static const int CXCursor_ObjCSelfExpr = 146;
+
+  /// OpenMP 4.0 [2.4, Array Section].
   static const int CXCursor_OMPArraySectionExpr = 147;
+
+  /// Represents an (...) check.
   static const int CXCursor_ObjCAvailabilityCheckExpr = 148;
+
+  /// Fixed point literal
   static const int CXCursor_FixedPointLiteral = 149;
   static const int CXCursor_LastExpr = 149;
   static const int CXCursor_FirstStmt = 200;
+
+  /// A statement whose specific kind is not exposed via this interface.
   static const int CXCursor_UnexposedStmt = 200;
+
+  /// A labelled statement in a function.
   static const int CXCursor_LabelStmt = 201;
+
+  /// A group of statements like { stmt stmt }.
   static const int CXCursor_CompoundStmt = 202;
+
+  /// A case statement.
   static const int CXCursor_CaseStmt = 203;
+
+  /// A default statement.
   static const int CXCursor_DefaultStmt = 204;
+
+  /// An if statement
   static const int CXCursor_IfStmt = 205;
+
+  /// A switch statement.
   static const int CXCursor_SwitchStmt = 206;
+
+  /// A while statement.
   static const int CXCursor_WhileStmt = 207;
+
+  /// A do statement.
   static const int CXCursor_DoStmt = 208;
+
+  /// A for statement.
   static const int CXCursor_ForStmt = 209;
+
+  /// A goto statement.
   static const int CXCursor_GotoStmt = 210;
+
+  /// An indirect goto statement.
   static const int CXCursor_IndirectGotoStmt = 211;
+
+  /// A continue statement.
   static const int CXCursor_ContinueStmt = 212;
+
+  /// A break statement.
   static const int CXCursor_BreakStmt = 213;
+
+  /// A return statement.
   static const int CXCursor_ReturnStmt = 214;
+
+  /// A GCC inline assembly statement extension.
   static const int CXCursor_GCCAsmStmt = 215;
   static const int CXCursor_AsmStmt = 215;
+
+  /// Objective-C's overall @try-@catch-@finally statement.
   static const int CXCursor_ObjCAtTryStmt = 216;
+
+  /// Objective-C's @catch statement.
   static const int CXCursor_ObjCAtCatchStmt = 217;
+
+  /// Objective-C's @finally statement.
   static const int CXCursor_ObjCAtFinallyStmt = 218;
+
+  /// Objective-C's @throw statement.
   static const int CXCursor_ObjCAtThrowStmt = 219;
+
+  /// Objective-C's @synchronized statement.
   static const int CXCursor_ObjCAtSynchronizedStmt = 220;
+
+  /// Objective-C's autorelease pool statement.
   static const int CXCursor_ObjCAutoreleasePoolStmt = 221;
+
+  /// Objective-C's collection statement.
   static const int CXCursor_ObjCForCollectionStmt = 222;
+
+  /// C++'s catch statement.
   static const int CXCursor_CXXCatchStmt = 223;
+
+  /// C++'s try statement.
   static const int CXCursor_CXXTryStmt = 224;
+
+  /// C++'s for (* : *) statement.
   static const int CXCursor_CXXForRangeStmt = 225;
+
+  /// Windows Structured Exception Handling's try statement.
   static const int CXCursor_SEHTryStmt = 226;
+
+  /// Windows Structured Exception Handling's except statement.
   static const int CXCursor_SEHExceptStmt = 227;
+
+  /// Windows Structured Exception Handling's finally statement.
   static const int CXCursor_SEHFinallyStmt = 228;
+
+  /// A MS inline assembly statement extension.
   static const int CXCursor_MSAsmStmt = 229;
+
+  /// The null statement ";": C99 6.8.3p3.
   static const int CXCursor_NullStmt = 230;
+
+  /// Adaptor class for mixing declarations with statements and expressions.
   static const int CXCursor_DeclStmt = 231;
+
+  /// OpenMP parallel directive.
   static const int CXCursor_OMPParallelDirective = 232;
+
+  /// OpenMP SIMD directive.
   static const int CXCursor_OMPSimdDirective = 233;
+
+  /// OpenMP for directive.
   static const int CXCursor_OMPForDirective = 234;
+
+  /// OpenMP sections directive.
   static const int CXCursor_OMPSectionsDirective = 235;
+
+  /// OpenMP section directive.
   static const int CXCursor_OMPSectionDirective = 236;
+
+  /// OpenMP single directive.
   static const int CXCursor_OMPSingleDirective = 237;
+
+  /// OpenMP parallel for directive.
   static const int CXCursor_OMPParallelForDirective = 238;
+
+  /// OpenMP parallel sections directive.
   static const int CXCursor_OMPParallelSectionsDirective = 239;
+
+  /// OpenMP task directive.
   static const int CXCursor_OMPTaskDirective = 240;
+
+  /// OpenMP master directive.
   static const int CXCursor_OMPMasterDirective = 241;
+
+  /// OpenMP critical directive.
   static const int CXCursor_OMPCriticalDirective = 242;
+
+  /// OpenMP taskyield directive.
   static const int CXCursor_OMPTaskyieldDirective = 243;
+
+  /// OpenMP barrier directive.
   static const int CXCursor_OMPBarrierDirective = 244;
+
+  /// OpenMP taskwait directive.
   static const int CXCursor_OMPTaskwaitDirective = 245;
+
+  /// OpenMP flush directive.
   static const int CXCursor_OMPFlushDirective = 246;
+
+  /// Windows Structured Exception Handling's leave statement.
   static const int CXCursor_SEHLeaveStmt = 247;
+
+  /// OpenMP ordered directive.
   static const int CXCursor_OMPOrderedDirective = 248;
+
+  /// OpenMP atomic directive.
   static const int CXCursor_OMPAtomicDirective = 249;
+
+  /// OpenMP for SIMD directive.
   static const int CXCursor_OMPForSimdDirective = 250;
+
+  /// OpenMP parallel for SIMD directive.
   static const int CXCursor_OMPParallelForSimdDirective = 251;
+
+  /// OpenMP target directive.
   static const int CXCursor_OMPTargetDirective = 252;
+
+  /// OpenMP teams directive.
   static const int CXCursor_OMPTeamsDirective = 253;
+
+  /// OpenMP taskgroup directive.
   static const int CXCursor_OMPTaskgroupDirective = 254;
+
+  /// OpenMP cancellation point directive.
   static const int CXCursor_OMPCancellationPointDirective = 255;
+
+  /// OpenMP cancel directive.
   static const int CXCursor_OMPCancelDirective = 256;
+
+  /// OpenMP target data directive.
   static const int CXCursor_OMPTargetDataDirective = 257;
+
+  /// OpenMP taskloop directive.
   static const int CXCursor_OMPTaskLoopDirective = 258;
+
+  /// OpenMP taskloop simd directive.
   static const int CXCursor_OMPTaskLoopSimdDirective = 259;
+
+  /// OpenMP distribute directive.
   static const int CXCursor_OMPDistributeDirective = 260;
+
+  /// OpenMP target enter data directive.
   static const int CXCursor_OMPTargetEnterDataDirective = 261;
+
+  /// OpenMP target exit data directive.
   static const int CXCursor_OMPTargetExitDataDirective = 262;
+
+  /// OpenMP target parallel directive.
   static const int CXCursor_OMPTargetParallelDirective = 263;
+
+  /// OpenMP target parallel for directive.
   static const int CXCursor_OMPTargetParallelForDirective = 264;
+
+  /// OpenMP target update directive.
   static const int CXCursor_OMPTargetUpdateDirective = 265;
+
+  /// OpenMP distribute parallel for directive.
   static const int CXCursor_OMPDistributeParallelForDirective = 266;
+
+  /// OpenMP distribute parallel for simd directive.
   static const int CXCursor_OMPDistributeParallelForSimdDirective = 267;
+
+  /// OpenMP distribute simd directive.
   static const int CXCursor_OMPDistributeSimdDirective = 268;
+
+  /// OpenMP target parallel for simd directive.
   static const int CXCursor_OMPTargetParallelForSimdDirective = 269;
+
+  /// OpenMP target simd directive.
   static const int CXCursor_OMPTargetSimdDirective = 270;
+
+  /// OpenMP teams distribute directive.
   static const int CXCursor_OMPTeamsDistributeDirective = 271;
+
+  /// OpenMP teams distribute simd directive.
   static const int CXCursor_OMPTeamsDistributeSimdDirective = 272;
+
+  /// OpenMP teams distribute parallel for simd directive.
   static const int CXCursor_OMPTeamsDistributeParallelForSimdDirective = 273;
+
+  /// OpenMP teams distribute parallel for directive.
   static const int CXCursor_OMPTeamsDistributeParallelForDirective = 274;
+
+  /// OpenMP target teams directive.
   static const int CXCursor_OMPTargetTeamsDirective = 275;
+
+  /// OpenMP target teams distribute directive.
   static const int CXCursor_OMPTargetTeamsDistributeDirective = 276;
+
+  /// OpenMP target teams distribute parallel for directive.
   static const int CXCursor_OMPTargetTeamsDistributeParallelForDirective = 277;
+
+  /// OpenMP target teams distribute parallel for simd directive.
   static const int CXCursor_OMPTargetTeamsDistributeParallelForSimdDirective =
       278;
+
+  /// OpenMP target teams distribute simd directive.
   static const int CXCursor_OMPTargetTeamsDistributeSimdDirective = 279;
+
+  /// C++2a std::bit_cast expression.
   static const int CXCursor_BuiltinBitCastExpr = 280;
+
+  /// OpenMP master taskloop directive.
   static const int CXCursor_OMPMasterTaskLoopDirective = 281;
+
+  /// OpenMP parallel master taskloop directive.
   static const int CXCursor_OMPParallelMasterTaskLoopDirective = 282;
+
+  /// OpenMP master taskloop simd directive.
   static const int CXCursor_OMPMasterTaskLoopSimdDirective = 283;
+
+  /// OpenMP parallel master taskloop simd directive.
   static const int CXCursor_OMPParallelMasterTaskLoopSimdDirective = 284;
+
+  /// OpenMP parallel master directive.
   static const int CXCursor_OMPParallelMasterDirective = 285;
   static const int CXCursor_LastStmt = 285;
+
+  /// Cursor that represents the translation unit itself.
   static const int CXCursor_TranslationUnit = 300;
   static const int CXCursor_FirstAttr = 400;
+
+  /// An attribute whose specific kind is not exposed via this interface.
   static const int CXCursor_UnexposedAttr = 400;
   static const int CXCursor_IBActionAttr = 401;
   static const int CXCursor_IBOutletAttr = 402;
@@ -338,22 +726,43 @@ class CXCursorKind {
   static const int CXCursor_InclusionDirective = 503;
   static const int CXCursor_FirstPreprocessing = 500;
   static const int CXCursor_LastPreprocessing = 503;
+
+  /// A module import declaration.
   static const int CXCursor_ModuleImportDecl = 600;
   static const int CXCursor_TypeAliasTemplateDecl = 601;
+
+  /// A static_assert or _Static_assert node
   static const int CXCursor_StaticAssert = 602;
+
+  /// a friend declaration.
   static const int CXCursor_FriendDecl = 603;
   static const int CXCursor_FirstExtraDecl = 600;
   static const int CXCursor_LastExtraDecl = 603;
+
+  /// A code completion overload candidate.
   static const int CXCursor_OverloadCandidate = 700;
 }
 
 /// Options to control the display of diagnostics.
 class CXDiagnosticDisplayOptions {
+  /// Display the source-location information where the diagnostic was located.
   static const int CXDiagnostic_DisplaySourceLocation = 1;
+
+  /// If displaying the source-location information of the diagnostic, also
+  /// include the column number.
   static const int CXDiagnostic_DisplayColumn = 2;
+
+  /// If displaying the source-location information of the diagnostic, also
+  /// include information about source ranges in a machine-parsable format.
   static const int CXDiagnostic_DisplaySourceRanges = 4;
+
+  /// Display the option name associated with this diagnostic, if any.
   static const int CXDiagnostic_DisplayOption = 8;
+
+  /// Display the category number associated with this diagnostic, if any.
   static const int CXDiagnostic_DisplayCategoryId = 16;
+
+  /// Display the category name associated with this diagnostic, if any.
   static const int CXDiagnostic_DisplayCategoryName = 32;
 }
 
@@ -418,6 +827,70 @@ class _ArrayHelper_CXSourceLocation_ptr_data {
   }
 }
 
+/// Identifies a half-open character range in the source code.
+class CXSourceRange extends ffi.Struct {
+  ffi.Pointer<ffi.Void> _ptr_data_item_0;
+  ffi.Pointer<ffi.Void> _ptr_data_item_1;
+  ffi.Pointer<ffi.Void> _ptr_data_item_2;
+
+  /// helper for array, supports `[]` operator
+  _ArrayHelper_CXSourceRange_ptr_data get ptr_data =>
+      _ArrayHelper_CXSourceRange_ptr_data(this, 3);
+  @ffi.Uint32()
+  int begin_int_data;
+
+  @ffi.Uint32()
+  int end_int_data;
+}
+
+/// Helper for array ptr_data in struct CXSourceRange
+class _ArrayHelper_CXSourceRange_ptr_data {
+  final CXSourceRange _struct;
+  final int length;
+  _ArrayHelper_CXSourceRange_ptr_data(this._struct, this.length);
+  void operator []=(int index, ffi.Pointer<ffi.Void> value) {
+    switch (index) {
+      case 0:
+        _struct._ptr_data_item_0 = value;
+        break;
+      case 1:
+        _struct._ptr_data_item_1 = value;
+        break;
+      case 2:
+        _struct._ptr_data_item_2 = value;
+        break;
+      default:
+        throw RangeError('Index $index must be in the range [0..2].');
+    }
+  }
+
+  ffi.Pointer<ffi.Void> operator [](int index) {
+    switch (index) {
+      case 0:
+        return _struct._ptr_data_item_0;
+      case 1:
+        return _struct._ptr_data_item_1;
+      case 2:
+        return _struct._ptr_data_item_2;
+      default:
+        throw RangeError('Index $index must be in the range [0..2].');
+    }
+  }
+
+  @override
+  String toString() {
+    if (length == 0) return '[]';
+    final sb = StringBuffer('[');
+    sb.write(this[0]);
+    for (var i = 1; i < length; i++) {
+      sb.write(',');
+      sb.write(this[i]);
+    }
+    sb.write(']');
+    return sb.toString();
+  }
+}
+
 /// A character string.
 class CXString extends ffi.Struct {
   ffi.Pointer<ffi.Void> data;
@@ -430,22 +903,65 @@ class CXTranslationUnitImpl extends ffi.Struct {}
 
 /// Flags that control the creation of translation units.
 class CXTranslationUnit_Flags {
+  /// Used to indicate that no special translation-unit options are needed.
   static const int CXTranslationUnit_None = 0;
+
+  /// Used to indicate that the parser should construct a "detailed"
+  /// preprocessing record, including all macro definitions and instantiations.
   static const int CXTranslationUnit_DetailedPreprocessingRecord = 1;
+
+  /// Used to indicate that the translation unit is incomplete.
   static const int CXTranslationUnit_Incomplete = 2;
+
+  /// Used to indicate that the translation unit should be built with an
+  /// implicit precompiled header for the preamble.
   static const int CXTranslationUnit_PrecompiledPreamble = 4;
+
+  /// Used to indicate that the translation unit should cache some
+  /// code-completion results with each reparse of the source file.
   static const int CXTranslationUnit_CacheCompletionResults = 8;
+
+  /// Used to indicate that the translation unit will be serialized with
+  /// clang_saveTranslationUnit.
   static const int CXTranslationUnit_ForSerialization = 16;
+
+  /// DEPRECATED: Enabled chained precompiled preambles in C++.
   static const int CXTranslationUnit_CXXChainedPCH = 32;
+
+  /// Used to indicate that function/method bodies should be skipped while
+  /// parsing.
   static const int CXTranslationUnit_SkipFunctionBodies = 64;
+
+  /// Used to indicate that brief documentation comments should be included into
+  /// the set of code completions returned from this translation unit.
   static const int CXTranslationUnit_IncludeBriefCommentsInCodeCompletion = 128;
+
+  /// Used to indicate that the precompiled preamble should be created on the
+  /// first parse. Otherwise it will be created on the first reparse. This
+  /// trades runtime on the first parse (serializing the preamble takes time)
+  /// for reduced runtime on the second parse (can now reuse the preamble).
   static const int CXTranslationUnit_CreatePreambleOnFirstParse = 256;
+
+  /// Do not stop processing when fatal errors are encountered.
   static const int CXTranslationUnit_KeepGoing = 512;
+
+  /// Sets the preprocessor in a mode for parsing a single file only.
   static const int CXTranslationUnit_SingleFileParse = 1024;
+
+  /// Used in combination with CXTranslationUnit_SkipFunctionBodies to constrain
+  /// the skipping of function bodies to the preamble.
   static const int CXTranslationUnit_LimitSkipFunctionBodiesToPreamble = 2048;
+
+  /// Used to indicate that attributed types should be included in CXType.
   static const int CXTranslationUnit_IncludeAttributedTypes = 4096;
+
+  /// Used to indicate that implicit attributes should be visited.
   static const int CXTranslationUnit_VisitImplicitAttributes = 8192;
+
+  /// Used to indicate that non-errors from included files should be ignored.
   static const int CXTranslationUnit_IgnoreNonErrorsFromIncludedFiles = 16384;
+
+  /// Tells the preprocessor not to skip excluded conditional blocks.
   static const int CXTranslationUnit_RetainExcludedConditionalBlocks = 32768;
 }
 
@@ -512,7 +1028,10 @@ class _ArrayHelper_CXType_data {
 
 /// Describes the kind of type
 class CXTypeKind {
+  /// Represents an invalid type (e.g., where no type is available).
   static const int CXType_Invalid = 0;
+
+  /// A type whose specific kind is not exposed via this interface.
   static const int CXType_Unexposed = 1;
   static const int CXType_Void = 2;
   static const int CXType_Bool = 3;
@@ -572,6 +1091,8 @@ class CXTypeKind {
   static const int CXType_DependentSizedArray = 116;
   static const int CXType_MemberPointer = 117;
   static const int CXType_Auto = 118;
+
+  /// Represents a type that was referred to using an elaborated type keyword.
   static const int CXType_Elaborated = 119;
   static const int CXType_Pipe = 120;
   static const int CXType_OCLImage1dRO = 121;
@@ -634,10 +1155,13 @@ class CXTypeKind {
 
 /// Provides the contents of a file that has not yet been saved to disk.
 class CXUnsavedFile extends ffi.Struct {
+  /// The file whose contents have not yet been saved.
   ffi.Pointer<ffi.Int8> Filename;
 
+  /// A buffer containing the unsaved contents of this file.
   ffi.Pointer<ffi.Int8> Contents;
 
+  /// The length of the unsaved contents of this buffer.
   @ffi.Uint64()
   int Length;
 }
@@ -697,6 +1221,31 @@ typedef _dart_clang_Cursor_getBriefCommentText_wrap = ffi.Pointer<CXString>
   ffi.Pointer<CXCursor> cursor,
 );
 
+/// Returns the comment range.
+ffi.Pointer<CXSourceRange> clang_Cursor_getCommentRange_wrap(
+  ffi.Pointer<CXCursor> cursor,
+) {
+  return _clang_Cursor_getCommentRange_wrap(
+    cursor,
+  );
+}
+
+final _dart_clang_Cursor_getCommentRange_wrap
+    _clang_Cursor_getCommentRange_wrap = _dylib.lookupFunction<
+            _c_clang_Cursor_getCommentRange_wrap,
+            _dart_clang_Cursor_getCommentRange_wrap>(
+        'clang_Cursor_getCommentRange_wrap');
+
+typedef _c_clang_Cursor_getCommentRange_wrap = ffi.Pointer<CXSourceRange>
+    Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _dart_clang_Cursor_getCommentRange_wrap = ffi.Pointer<CXSourceRange>
+    Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
 int clang_Cursor_getNumArguments_wrap(
   ffi.Pointer<CXCursor> cursor,
 ) {
@@ -716,6 +1265,30 @@ typedef _c_clang_Cursor_getNumArguments_wrap = ffi.Int32 Function(
 );
 
 typedef _dart_clang_Cursor_getNumArguments_wrap = int Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+/// Returns the raw comment.
+ffi.Pointer<CXString> clang_Cursor_getRawCommentText_wrap(
+  ffi.Pointer<CXCursor> cursor,
+) {
+  return _clang_Cursor_getRawCommentText_wrap(
+    cursor,
+  );
+}
+
+final _dart_clang_Cursor_getRawCommentText_wrap
+    _clang_Cursor_getRawCommentText_wrap = _dylib.lookupFunction<
+            _c_clang_Cursor_getRawCommentText_wrap,
+            _dart_clang_Cursor_getRawCommentText_wrap>(
+        'clang_Cursor_getRawCommentText_wrap');
+
+typedef _c_clang_Cursor_getRawCommentText_wrap = ffi.Pointer<CXString> Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _dart_clang_Cursor_getRawCommentText_wrap = ffi.Pointer<CXString>
+    Function(
   ffi.Pointer<CXCursor> cursor,
 );
 
@@ -845,6 +1418,31 @@ typedef _c_clang_disposeTranslationUnit = ffi.Void Function(
 
 typedef _dart_clang_disposeTranslationUnit = void Function(
   ffi.Pointer<CXTranslationUnitImpl> arg0,
+);
+
+/// Returns non-zero if the ranges are the same, zero if they differ.
+int clang_equalRanges_wrap(
+  ffi.Pointer<CXSourceRange> c1,
+  ffi.Pointer<CXSourceRange> c2,
+) {
+  return _clang_equalRanges_wrap(
+    c1,
+    c2,
+  );
+}
+
+final _dart_clang_equalRanges_wrap _clang_equalRanges_wrap = _dylib
+    .lookupFunction<_c_clang_equalRanges_wrap, _dart_clang_equalRanges_wrap>(
+        'clang_equalRanges_wrap');
+
+typedef _c_clang_equalRanges_wrap = ffi.Uint32 Function(
+  ffi.Pointer<CXSourceRange> c1,
+  ffi.Pointer<CXSourceRange> c2,
+);
+
+typedef _dart_clang_equalRanges_wrap = int Function(
+  ffi.Pointer<CXSourceRange> c1,
+  ffi.Pointer<CXSourceRange> c2,
 );
 
 ffi.Pointer<CXString> clang_formatDiagnostic_wrap(
@@ -1370,7 +1968,9 @@ typedef _dart_clang_getTypedefDeclUnderlyingType_wrap = ffi.Pointer<CXType>
   ffi.Pointer<CXCursor> cxcursor,
 );
 
-/// Same as clang_parseTranslationUnit2, but returns the CXTranslationUnit instead of an error code. In case of an error this routine returns a NULL CXTranslationUnit, without further detailed error codes.
+/// Same as clang_parseTranslationUnit2, but returns the CXTranslationUnit
+/// instead of an error code. In case of an error this routine returns a NULL
+/// CXTranslationUnit, without further detailed error codes.
 ffi.Pointer<CXTranslationUnitImpl> clang_parseTranslationUnit(
   ffi.Pointer<ffi.Void> CIdx,
   ffi.Pointer<ffi.Int8> source_filename,
@@ -1417,7 +2017,8 @@ typedef _dart_clang_parseTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
   int options,
 );
 
-/// Visitor is a function pointer with parameters having pointers to cxcursor instead of cxcursor by default.
+/// Visitor is a function pointer with parameters having pointers to cxcursor
+/// instead of cxcursor by default.
 int clang_visitChildren_wrap(
   ffi.Pointer<CXCursor> parent,
   ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor>> _modifiedVisitor,

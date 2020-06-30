@@ -35,6 +35,11 @@ structs:
     names:
       - CXCursor
       - CXType
+      - CXSourceLocation
+      - CXString
+      - CXTranslationUnitImpl
+      - CXUnsavedFile
+      - CXSourceRange
 
 functions:
   include:
@@ -68,6 +73,9 @@ functions:
       - clang_getNumArgTypes_wrap
       - clang_getArgType_wrap
       - clang_getEnumConstantDeclValue_wrap
+      - clang_equalRanges_wrap
+      - clang_Cursor_getCommentRange_wrap
+      - clang_Cursor_getRawCommentText_wrap
       - clang_Cursor_getBriefCommentText_wrap
       - clang_getCursorLocation_wrap
       - clang_getFileLocation_wrap

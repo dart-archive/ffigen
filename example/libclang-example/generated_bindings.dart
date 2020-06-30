@@ -12,22 +12,54 @@ void init(ffi.DynamicLibrary dylib) {
 }
 
 /// Contains the results of code-completion.
+///
+/// This data structure contains the results of code completion, as
+/// produced by \c clang_codeCompleteAt(). Its contents must be freed by
+/// \c clang_disposeCodeCompleteResults.
 class CXCodeCompleteResults extends ffi.Struct {
+  /// The code-completion results.
   ffi.Pointer<CXCompletionResult> Results;
 
+  /// The number of code-completion results stored in the
+  /// \c Results array.
   @ffi.Uint32()
   int NumResults;
 }
 
 /// A single result of code completion.
 class CXCompletionResult extends ffi.Struct {
+  /// The kind of entity that this completion refers to.
+  ///
+  /// The cursor kind will be a macro, keyword, or a declaration (one of the
+  /// *Decl cursor kinds), describing the entity that the completion is
+  /// referring to.
+  ///
+  /// \todo In the future, we would like to provide a full cursor, to allow
+  /// the client to extract additional information from declaration.
   @ffi.Int32()
   int CursorKind;
 
+  /// The code-completion string that describes how to insert this
+  /// code-completion result into the editing buffer.
   ffi.Pointer<ffi.Void> CompletionString;
 }
 
-/// A cursor representing some element in the abstract syntax tree for a translation unit.
+/// A cursor representing some element in the abstract syntax tree for
+/// a translation unit.
+///
+/// The cursor abstraction unifies the different kinds of entities in a
+/// program--declaration, statements, expressions, references to declarations,
+/// etc.--under a single "cursor" abstraction with a common set of operations.
+/// Common operation for a cursor include: getting the physical location in
+/// a source file where the cursor points, getting the name associated with a
+/// cursor, and retrieving cursors for any child nodes of a particular cursor.
+///
+/// Cursors can be produced in two specific ways.
+/// clang_getTranslationUnitCursor() produces a cursor for a translation unit,
+/// from which one can use clang_visitChildren() to explore the rest of the
+/// translation unit. clang_getCursor() maps from a physical source location
+/// to the entity that resides at that location, allowing one to map from the
+/// source code into the AST.
 class CXCursor extends ffi.Struct {
   @ffi.Int32()
   int kind;
@@ -110,7 +142,8 @@ typedef CXFieldVisitor = ffi.Int32 Function(
   ffi.Pointer<ffi.Void>,
 );
 
-/// Uniquely identifies a CXFile, that refers to the same underlying file, across an indexing session.
+/// Uniquely identifies a CXFile, that refers to the same underlying file,
+/// across an indexing session.
 class CXFileUniqueID extends ffi.Struct {
   @ffi.Uint64()
   int _data_item_0;
@@ -173,9 +206,25 @@ class _ArrayHelper_CXFileUniqueID_data {
 }
 
 class CXGlobalOptFlags {
+  /// Used to indicate that no special CXIndex options are needed.
   static const int CXGlobalOpt_None = 0;
+
+  /// Used to indicate that threads that libclang creates for indexing
+  /// purposes should use background priority.
+  ///
+  /// Affects #clang_indexSourceFile, #clang_indexTranslationUnit,
+  /// #clang_parseTranslationUnit, #clang_saveTranslationUnit.
   static const int CXGlobalOpt_ThreadBackgroundPriorityForIndexing = 1;
+
+  /// Used to indicate that threads that libclang creates for editing
+  /// purposes should use background priority.
+  ///
+  /// Affects #clang_reparseTranslationUnit, #clang_codeCompleteAt,
+  /// #clang_annotateTokens
   static const int CXGlobalOpt_ThreadBackgroundPriorityForEditing = 2;
+
+  /// Used to indicate that all threads that libclang creates should use
+  /// background priority.
   static const int CXGlobalOpt_ThreadBackgroundPriorityForAll = 3;
 }
 
@@ -311,10 +360,15 @@ typedef CXInclusionVisitor = ffi.Void Function(
   ffi.Pointer<ffi.Void>,
 );
 
-/// Describes the availability of a given entity on a particular platform, e.g., a particular class might only be available on Mac OS 10.7 or newer.
+/// Describes the availability of a given entity on a particular platform, e.g.,
+/// a particular class might only be available on Mac OS 10.7 or newer.
 class CXPlatformAvailability extends ffi.Struct {}
 
-/// Identifies a specific source location within a translation unit.
+/// Identifies a specific source location within a translation
+/// unit.
+///
+/// Use clang_getExpansionLocation() or clang_getSpellingLocation()
+/// to map a source location to a particular file, line, and column.
 class CXSourceLocation extends ffi.Struct {
   ffi.Pointer<ffi.Void> _ptr_data_item_0;
   ffi.Pointer<ffi.Void> _ptr_data_item_1;
@@ -376,6 +430,9 @@ class _ArrayHelper_CXSourceLocation_ptr_data {
 }
 
 /// Identifies a half-open character range in the source code.
+///
+/// Use clang_getRangeStart() and clang_getRangeEnd() to retrieve the
+/// starting and end locations from a source range, respectively.
 class CXSourceRange extends ffi.Struct {
   ffi.Pointer<ffi.Void> _ptr_data_item_0;
   ffi.Pointer<ffi.Void> _ptr_data_item_1;
@@ -441,13 +498,20 @@ class _ArrayHelper_CXSourceRange_ptr_data {
 
 /// Identifies an array of ranges.
 class CXSourceRangeList extends ffi.Struct {
+  /// The number of ranges in the \c ranges array.
   @ffi.Uint32()
   int count;
 
+  /// An array of \c CXSourceRanges.
   ffi.Pointer<CXSourceRange> ranges;
 }
 
 /// A character string.
+///
+/// The \c CXString type is used to return strings from the interface when
+/// the ownership of that string might differ from one call to the next.
+/// Use \c clang_getCString() to retrieve the string data and, once finished
+/// with the string data, call \c clang_disposeString() to free the string.
 class CXString extends ffi.Struct {
   ffi.Pointer<ffi.Void> data;
 
@@ -610,7 +674,11 @@ class _ArrayHelper_CXType_data {
 
 /// Describes the kind of type
 class CXTypeKind {
+  /// Represents an invalid type (e.g., where no type is available).
   static const int CXType_Invalid = 0;
+
+  /// A type whose specific kind is not exposed via this
+  /// interface.
   static const int CXType_Unexposed = 1;
   static const int CXType_Void = 2;
   static const int CXType_Bool = 3;
@@ -670,6 +738,10 @@ class CXTypeKind {
   static const int CXType_DependentSizedArray = 116;
   static const int CXType_MemberPointer = 117;
   static const int CXType_Auto = 118;
+
+  /// Represents a type that was referred to using an elaborated type keyword.
+  ///
+  /// E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
   static const int CXType_Elaborated = 119;
   static const int CXType_Pipe = 120;
   static const int CXType_OCLImage1dRO = 121;
@@ -731,43 +803,73 @@ class CXTypeKind {
 }
 
 /// Provides the contents of a file that has not yet been saved to disk.
+///
+/// Each CXUnsavedFile instance provides the name of a file on the
+/// system along with the current contents of that file that have not
+/// yet been saved to disk.
 class CXUnsavedFile extends ffi.Struct {
+  /// The file whose contents have not yet been saved.
+  ///
+  /// This file must already exist in the file system.
   ffi.Pointer<ffi.Int8> Filename;
 
+  /// A buffer containing the unsaved contents of this file.
   ffi.Pointer<ffi.Int8> Contents;
 
+  /// The length of the unsaved contents of this buffer.
   @ffi.Uint64()
   int Length;
 }
 
 /// Describes a version number of the form major.minor.subminor.
 class CXVersion extends ffi.Struct {
+  /// The major version number, e.g., the '10' in '10.7.3'. A negative
+  /// value indicates that there is no version number at all.
   @ffi.Int32()
   int Major;
 
+  /// The minor version number, e.g., the '7' in '10.7.3'. This value
+  /// will be negative if no minor version number was provided, e.g., for
+  /// version '10'.
   @ffi.Int32()
   int Minor;
 
+  /// The subminor version number, e.g., the '3' in '10.7.3'. This value
+  /// will be negative if no minor or subminor version number was provided,
+  /// e.g., in version '10' or '10.7'.
   @ffi.Int32()
   int Subminor;
 }
 
-/// A group of callbacks used by #clang_indexSourceFile and #clang_indexTranslationUnit.
+/// A group of callbacks used by #clang_indexSourceFile and
+/// #clang_indexTranslationUnit.
 class IndexerCallbacks extends ffi.Struct {
+  /// Called periodically to check whether indexing should be aborted.
+  /// Should return 0 to continue, and non-zero to abort.
   ffi.Pointer<ffi.NativeFunction<_typedefC_noname_3>> abortQuery;
 
+  /// Called at the end of indexing; passes the complete diagnostic set.
   ffi.Pointer<ffi.NativeFunction<_typedefC_noname_4>> diagnostic;
 
   ffi.Pointer<ffi.NativeFunction<_typedefC_noname_5>> enteredMainFile;
 
+  /// Called when a file gets \#included/\#imported.
   ffi.Pointer<ffi.NativeFunction<_typedefC_noname_6>> ppIncludedFile;
 
+  /// Called when a AST file (PCH or module) gets imported.
+  ///
+  /// AST files will not get indexed (there will not be callbacks to index all
+  /// the entities in an AST file). The recommended action is that, if the AST
+  /// file is not already indexed, to initiate a new indexing job specific to
+  /// the AST file.
   ffi.Pointer<ffi.NativeFunction<_typedefC_noname_7>> importedASTFile;
 
+  /// Called at the beginning of indexing a translation unit.
   ffi.Pointer<ffi.NativeFunction<_typedefC_noname_8>> startedTranslationUnit;
 
   ffi.Pointer<ffi.NativeFunction<_typedefC_noname_9>> indexDeclaration;
 
+  /// Called to index a reference of an entity.
   ffi.Pointer<ffi.NativeFunction<_typedefC_noname_10>> indexEntityReference;
 }
 
@@ -830,6 +932,9 @@ typedef _typedefC_noname_9 = ffi.Void Function(
 );
 
 /// Gets the general options associated with a CXIndex.
+///
+/// \returns A bitmask of options, a bitwise OR of CXGlobalOpt_XXX flags that
+/// are associated with the given CXIndex object.
 int clang_CXIndex_getGlobalOptions(
   ffi.Pointer<ffi.Void> arg0,
 ) {
@@ -851,6 +956,16 @@ typedef _dart_clang_CXIndex_getGlobalOptions = int Function(
 );
 
 /// Sets general options associated with a CXIndex.
+///
+/// For example:
+/// \code
+/// CXIndex idx = ...;
+/// clang_CXIndex_setGlobalOptions(idx,
+/// clang_CXIndex_getGlobalOptions(idx) |
+/// CXGlobalOpt_ThreadBackgroundPriorityForIndexing);
+/// \endcode
+///
+/// \param options A bitmask of options, a bitwise OR of CXGlobalOpt_XXX flags.
 void clang_CXIndex_setGlobalOptions(
   ffi.Pointer<ffi.Void> arg0,
   int options,
@@ -876,6 +991,10 @@ typedef _dart_clang_CXIndex_setGlobalOptions = void Function(
 );
 
 /// Sets the invocation emission path option in a CXIndex.
+///
+/// The invocation emission path specifies a path which will contain log
+/// files for certain libclang invocations. A null value (default) implies that
+/// libclang invocations are not logged..
 void clang_CXIndex_setInvocationEmissionPathOption(
   ffi.Pointer<ffi.Void> arg0,
   ffi.Pointer<ffi.Int8> Path,
@@ -951,6 +1070,31 @@ typedef _dart_clang_Cursor_getBriefCommentText_wrap = ffi.Pointer<CXString>
   ffi.Pointer<CXCursor> cursor,
 );
 
+/// Returns the comment range.
+ffi.Pointer<CXSourceRange> clang_Cursor_getCommentRange_wrap(
+  ffi.Pointer<CXCursor> cursor,
+) {
+  return _clang_Cursor_getCommentRange_wrap(
+    cursor,
+  );
+}
+
+final _dart_clang_Cursor_getCommentRange_wrap
+    _clang_Cursor_getCommentRange_wrap = _dylib.lookupFunction<
+            _c_clang_Cursor_getCommentRange_wrap,
+            _dart_clang_Cursor_getCommentRange_wrap>(
+        'clang_Cursor_getCommentRange_wrap');
+
+typedef _c_clang_Cursor_getCommentRange_wrap = ffi.Pointer<CXSourceRange>
+    Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _dart_clang_Cursor_getCommentRange_wrap = ffi.Pointer<CXSourceRange>
+    Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
 int clang_Cursor_getNumArguments_wrap(
   ffi.Pointer<CXCursor> cursor,
 ) {
@@ -970,6 +1114,30 @@ typedef _c_clang_Cursor_getNumArguments_wrap = ffi.Int32 Function(
 );
 
 typedef _dart_clang_Cursor_getNumArguments_wrap = int Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+/// Returns the raw comment.
+ffi.Pointer<CXString> clang_Cursor_getRawCommentText_wrap(
+  ffi.Pointer<CXCursor> cursor,
+) {
+  return _clang_Cursor_getRawCommentText_wrap(
+    cursor,
+  );
+}
+
+final _dart_clang_Cursor_getRawCommentText_wrap
+    _clang_Cursor_getRawCommentText_wrap = _dylib.lookupFunction<
+            _c_clang_Cursor_getRawCommentText_wrap,
+            _dart_clang_Cursor_getRawCommentText_wrap>(
+        'clang_Cursor_getRawCommentText_wrap');
+
+typedef _c_clang_Cursor_getRawCommentText_wrap = ffi.Pointer<CXString> Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _dart_clang_Cursor_getRawCommentText_wrap = ffi.Pointer<CXString>
+    Function(
   ffi.Pointer<CXCursor> cursor,
 );
 
@@ -994,7 +1162,8 @@ typedef _dart_clang_EvalResult_dispose = void Function(
   ffi.Pointer<ffi.Void> E,
 );
 
-/// Returns the evaluation result as double if the kind is double.
+/// Returns the evaluation result as double if the
+/// kind is double.
 double clang_EvalResult_getAsDouble(
   ffi.Pointer<ffi.Void> E,
 ) {
@@ -1015,7 +1184,8 @@ typedef _dart_clang_EvalResult_getAsDouble = double Function(
   ffi.Pointer<ffi.Void> E,
 );
 
-/// Returns the evaluation result as integer if the kind is Int.
+/// Returns the evaluation result as integer if the
+/// kind is Int.
 int clang_EvalResult_getAsInt(
   ffi.Pointer<ffi.Void> E,
 ) {
@@ -1036,7 +1206,9 @@ typedef _dart_clang_EvalResult_getAsInt = int Function(
   ffi.Pointer<ffi.Void> E,
 );
 
-/// Returns the evaluation result as a long long integer if the kind is Int. This prevents overflows that may happen if the result is returned with clang_EvalResult_getAsInt.
+/// Returns the evaluation result as a long long integer if the
+/// kind is Int. This prevents overflows that may happen if the result is
+/// returned with clang_EvalResult_getAsInt.
 int clang_EvalResult_getAsLongLong(
   ffi.Pointer<ffi.Void> E,
 ) {
@@ -1057,7 +1229,10 @@ typedef _dart_clang_EvalResult_getAsLongLong = int Function(
   ffi.Pointer<ffi.Void> E,
 );
 
-/// Returns the evaluation result as a constant string if the kind is other than Int or float. User must not free this pointer, instead call clang_EvalResult_dispose on the CXEvalResult returned by clang_Cursor_Evaluate.
+/// Returns the evaluation result as a constant string if the
+/// kind is other than Int or float. User must not free this pointer,
+/// instead call clang_EvalResult_dispose on the CXEvalResult returned
+/// by clang_Cursor_Evaluate.
 ffi.Pointer<ffi.Int8> clang_EvalResult_getAsStr(
   ffi.Pointer<ffi.Void> E,
 ) {
@@ -1078,7 +1253,8 @@ typedef _dart_clang_EvalResult_getAsStr = ffi.Pointer<ffi.Int8> Function(
   ffi.Pointer<ffi.Void> E,
 );
 
-/// Returns the evaluation result as an unsigned integer if the kind is Int and clang_EvalResult_isUnsignedInt is non-zero.
+/// Returns the evaluation result as an unsigned integer if
+/// the kind is Int and clang_EvalResult_isUnsignedInt is non-zero.
 int clang_EvalResult_getAsUnsigned(
   ffi.Pointer<ffi.Void> E,
 ) {
@@ -1120,7 +1296,8 @@ typedef _dart_clang_EvalResult_getKind = int Function(
   ffi.Pointer<ffi.Void> E,
 );
 
-/// Returns a non-zero value if the kind is Int and the evaluation result resulted in an unsigned integer.
+/// Returns a non-zero value if the kind is Int and the evaluation
+/// result resulted in an unsigned integer.
 int clang_EvalResult_isUnsignedInt(
   ffi.Pointer<ffi.Void> E,
 ) {
@@ -1141,7 +1318,8 @@ typedef _dart_clang_EvalResult_isUnsignedInt = int Function(
   ffi.Pointer<ffi.Void> E,
 );
 
-/// Returns non-zero if the file1 and file2 point to the same file, or they are both NULL.
+/// Returns non-zero if the \c file1 and \c file2 point to the same file,
+/// or they are both NULL.
 int clang_File_isEqual(
   ffi.Pointer<ffi.Void> file1,
   ffi.Pointer<ffi.Void> file2,
@@ -1166,7 +1344,10 @@ typedef _dart_clang_File_isEqual = int Function(
   ffi.Pointer<ffi.Void> file2,
 );
 
-/// An indexing action/session, to be applied to one or multiple translation units.
+/// An indexing action/session, to be applied to one or multiple
+/// translation units.
+///
+/// \param CIdx The index object with which the index action will be associated.
 ffi.Pointer<ffi.Void> clang_IndexAction_create(
   ffi.Pointer<ffi.Void> CIdx,
 ) {
@@ -1188,6 +1369,9 @@ typedef _dart_clang_IndexAction_create = ffi.Pointer<ffi.Void> Function(
 );
 
 /// Destroy the given index action.
+///
+/// The index action must not be destroyed until all of the translation units
+/// created within that index action have been destroyed.
 void clang_IndexAction_dispose(
   ffi.Pointer<ffi.Void> arg0,
 ) {
@@ -1208,7 +1392,9 @@ typedef _dart_clang_IndexAction_dispose = void Function(
   ffi.Pointer<ffi.Void> arg0,
 );
 
-/// Returns the module file where the provided module object came from.
+/// \param Module a module object.
+///
+/// \returns the module file where the provided module object came from.
 ffi.Pointer<ffi.Void> clang_Module_getASTFile(
   ffi.Pointer<ffi.Void> Module,
 ) {
@@ -1229,7 +1415,9 @@ typedef _dart_clang_Module_getASTFile = ffi.Pointer<ffi.Void> Function(
   ffi.Pointer<ffi.Void> Module,
 );
 
-/// Returns the number of top level headers associated with this module.
+/// \param Module a module object.
+///
+/// \returns the number of top level headers associated with this module.
 int clang_Module_getNumTopLevelHeaders(
   ffi.Pointer<CXTranslationUnitImpl> arg0,
   ffi.Pointer<ffi.Void> Module,
@@ -1256,7 +1444,10 @@ typedef _dart_clang_Module_getNumTopLevelHeaders = int Function(
   ffi.Pointer<ffi.Void> Module,
 );
 
-/// Returns the parent of a sub-module or NULL if the given module is top-level, e.g. for 'std.vector' it will return the 'std' module.
+/// \param Module a module object.
+///
+/// \returns the parent of a sub-module or NULL if the given module is top-level,
+/// e.g. for 'std.vector' it will return the 'std' module.
 ffi.Pointer<ffi.Void> clang_Module_getParent(
   ffi.Pointer<ffi.Void> Module,
 ) {
@@ -1277,7 +1468,11 @@ typedef _dart_clang_Module_getParent = ffi.Pointer<ffi.Void> Function(
   ffi.Pointer<ffi.Void> Module,
 );
 
-/// Returns the specified top level header associated with the module.
+/// \param Module a module object.
+///
+/// \param Index top level header index (zero-based).
+///
+/// \returns the specified top level header associated with the module.
 ffi.Pointer<ffi.Void> clang_Module_getTopLevelHeader(
   ffi.Pointer<CXTranslationUnitImpl> arg0,
   ffi.Pointer<ffi.Void> Module,
@@ -1306,7 +1501,9 @@ typedef _dart_clang_Module_getTopLevelHeader = ffi.Pointer<ffi.Void> Function(
   int Index,
 );
 
-/// Returns non-zero if the module is a system one.
+/// \param Module a module object.
+///
+/// \returns non-zero if the module is a system one.
 int clang_Module_isSystem(
   ffi.Pointer<ffi.Void> Module,
 ) {
@@ -1426,6 +1623,8 @@ typedef _dart_clang_TargetInfo_dispose = void Function(
 );
 
 /// Get the pointer width of the target in bits.
+///
+/// Returns -1 in case of error.
 int clang_TargetInfo_getPointerWidth(
   ffi.Pointer<CXTargetInfoImpl> Info,
 ) {
@@ -1467,7 +1666,34 @@ typedef _dart_clang_Type_getNamedType_wrap = ffi.Pointer<CXType> Function(
   ffi.Pointer<CXType> elaboratedType,
 );
 
-/// Annotate the given set of tokens by providing cursors for each token that can be mapped to a specific entity within the abstract syntax tree.
+/// Annotate the given set of tokens by providing cursors for each token
+/// that can be mapped to a specific entity within the abstract syntax tree.
+///
+/// This token-annotation routine is equivalent to invoking
+/// clang_getCursor() for the source locations of each of the
+/// tokens. The cursors provided are filtered, so that only those
+/// cursors that have a direct correspondence to the token are
+/// accepted. For example, given a function call \c f(x),
+/// clang_getCursor() would provide the following cursors:
+///
+/// * when the cursor is over the 'f', a DeclRefExpr cursor referring to 'f'.
+/// * when the cursor is over the '(' or the ')', a CallExpr referring to 'f'.
+/// * when the cursor is over the 'x', a DeclRefExpr cursor referring to 'x'.
+///
+/// Only the first and last of these cursors will occur within the
+/// annotate, since the tokens "f" and "x' directly refer to a function
+/// and a variable, respectively, but the parentheses are just a small
+/// part of the full syntax of the function call expression, which is
+/// not provided as an annotation.
+///
+/// \param TU the translation unit that owns the given tokens.
+///
+/// \param Tokens the set of tokens to annotate.
+///
+/// \param NumTokens the number of tokens in \p Tokens.
+///
+/// \param Cursors an array of \p NumTokens cursors, whose contents will be
+/// replaced with the cursors corresponding to each token.
 void clang_annotateTokens(
   ffi.Pointer<CXTranslationUnitImpl> TU,
   ffi.Pointer<CXToken> Tokens,
@@ -1501,6 +1727,71 @@ typedef _dart_clang_annotateTokens = void Function(
 );
 
 /// Perform code completion at a given location in a translation unit.
+///
+/// This function performs code completion at a particular file, line, and
+/// column within source code, providing results that suggest potential
+/// code snippets based on the context of the completion. The basic model
+/// for code completion is that Clang will parse a complete source file,
+/// performing syntax checking up to the location where code-completion has
+/// been requested. At that point, a special code-completion token is passed
+/// to the parser, which recognizes this token and determines, based on the
+/// current location in the C/Objective-C/C++ grammar and the state of
+/// semantic analysis, what completions to provide. These completions are
+/// returned via a new \c CXCodeCompleteResults structure.
+///
+/// Code completion itself is meant to be triggered by the client when the
+/// user types punctuation characters or whitespace, at which point the
+/// code-completion location will coincide with the cursor. For example, if \c p
+/// is a pointer, code-completion might be triggered after the "-" and then
+/// after the ">" in \c p->. When the code-completion location is after the ">",
+/// the completion results will provide, e.g., the members of the struct that
+/// "p" points to. The client is responsible for placing the cursor at the
+/// beginning of the token currently being typed, then filtering the results
+/// based on the contents of the token. For example, when code-completing for
+/// the expression \c p->get, the client should provide the location just after
+/// the ">" (e.g., pointing at the "g") to this code-completion hook. Then, the
+/// client can filter the results based on the current token text ("get"), only
+/// showing those results that start with "get". The intent of this interface
+/// is to separate the relatively high-latency acquisition of code-completion
+/// results from the filtering of results on a per-character basis, which must
+/// have a lower latency.
+///
+/// \param TU The translation unit in which code-completion should
+/// occur. The source files for this translation unit need not be
+/// completely up-to-date (and the contents of those source files may
+/// be overridden via \p unsaved_files). Cursors referring into the
+/// translation unit may be invalidated by this invocation.
+///
+/// \param complete_filename The name of the source file where code
+/// completion should be performed. This filename may be any file
+/// included in the translation unit.
+///
+/// \param complete_line The line at which code-completion should occur.
+///
+/// \param complete_column The column at which code-completion should occur.
+/// Note that the column should point just after the syntactic construct that
+/// initiated code completion, and not in the middle of a lexical token.
+///
+/// \param unsaved_files the Files that have not yet been saved to disk
+/// but may be required for parsing or code completion, including the
+/// contents of those files.  The contents and name of these files (as
+/// specified by CXUnsavedFile) are copied when necessary, so the
+/// client only needs to guarantee their validity until the call to
+/// this function returns.
+///
+/// \param num_unsaved_files The number of unsaved file entries in \p
+/// unsaved_files.
+///
+/// \param options Extra options that control the behavior of code
+/// completion, expressed as a bitwise OR of the enumerators of the
+/// CXCodeComplete_Flags enumeration. The
+/// \c clang_defaultCodeCompleteOptions() function returns a default set
+/// of code-completion options.
+///
+/// \returns If successful, a new \c CXCodeCompleteResults structure
+/// containing code-completion results, which should eventually be
+/// freed with \c clang_disposeCodeCompleteResults(). If code
+/// completion fails, returns NULL.
 ffi.Pointer<CXCodeCompleteResults> clang_codeCompleteAt(
   ffi.Pointer<CXTranslationUnitImpl> TU,
   ffi.Pointer<ffi.Int8> complete_filename,
@@ -1546,7 +1837,20 @@ typedef _dart_clang_codeCompleteAt = ffi.Pointer<CXCodeCompleteResults>
   int options,
 );
 
-/// Returns the cursor kind for the container for the current code completion context. The container is only guaranteed to be set for contexts where a container exists (i.e. member accesses or Objective-C message sends); if there is not a container, this function will return CXCursor_InvalidCode.
+/// Returns the cursor kind for the container for the current code
+/// completion context. The container is only guaranteed to be set for
+/// contexts where a container exists (i.e. member accesses or Objective-C
+/// message sends); if there is not a container, this function will return
+/// CXCursor_InvalidCode.
+///
+/// \param Results the code completion results to query
+///
+/// \param IsIncomplete on return, this value will be false if Clang has complete
+/// information about the container. If Clang does not have complete
+/// information, this value will be true.
+///
+/// \returns the container kind, or CXCursor_InvalidCode if there is not a
+/// container
 int clang_codeCompleteGetContainerKind(
   ffi.Pointer<CXCodeCompleteResults> Results,
   ffi.Pointer<ffi.Uint32> IsIncomplete,
@@ -1573,7 +1877,13 @@ typedef _dart_clang_codeCompleteGetContainerKind = int Function(
   ffi.Pointer<ffi.Uint32> IsIncomplete,
 );
 
-/// Determines what completions are appropriate for the context the given code completion.
+/// Determines what completions are appropriate for the context
+/// the given code completion.
+///
+/// \param Results the code completion results to query
+///
+/// \returns the kinds of completions that are appropriate for use
+/// along with the given code completion results.
 int clang_codeCompleteGetContexts(
   ffi.Pointer<CXCodeCompleteResults> Results,
 ) {
@@ -1595,6 +1905,12 @@ typedef _dart_clang_codeCompleteGetContexts = int Function(
 );
 
 /// Retrieve a diagnostic associated with the given code completion.
+///
+/// \param Results the code completion results to query.
+/// \param Index the zero-based diagnostic number to retrieve.
+///
+/// \returns the requested diagnostic. This diagnostic must be freed
+/// via a call to \c clang_disposeDiagnostic().
 ffi.Pointer<ffi.Void> clang_codeCompleteGetDiagnostic(
   ffi.Pointer<CXCodeCompleteResults> Results,
   int Index,
@@ -1620,7 +1936,8 @@ typedef _dart_clang_codeCompleteGetDiagnostic = ffi.Pointer<ffi.Void> Function(
   int Index,
 );
 
-/// Determine the number of diagnostics produced prior to the location where code completion was performed.
+/// Determine the number of diagnostics produced prior to the
+/// location where code completion was performed.
 int clang_codeCompleteGetNumDiagnostics(
   ffi.Pointer<CXCodeCompleteResults> Results,
 ) {
@@ -1657,6 +1974,43 @@ typedef _c_clang_createCXCursorSet = ffi.Pointer<CXCursorSetImpl> Function();
 typedef _dart_clang_createCXCursorSet = ffi.Pointer<CXCursorSetImpl> Function();
 
 /// Provides a shared context for creating translation units.
+///
+/// It provides two options:
+///
+/// - excludeDeclarationsFromPCH: When non-zero, allows enumeration of "local"
+/// declarations (when loading any new translation units). A "local" declaration
+/// is one that belongs in the translation unit itself and not in a precompiled
+/// header that was used by the translation unit. If zero, all declarations
+/// will be enumerated.
+///
+/// Here is an example:
+///
+/// \code
+/// // excludeDeclsFromPCH = 1, displayDiagnostics=1
+/// Idx = clang_createIndex(1, 1);
+///
+/// // IndexTest.pch was produced with the following command:
+/// // "clang -x c IndexTest.h -emit-ast -o IndexTest.pch"
+/// TU = clang_createTranslationUnit(Idx, "IndexTest.pch");
+///
+/// // This will load all the symbols from 'IndexTest.pch'
+/// clang_visitChildren(clang_getTranslationUnitCursor(TU),
+/// TranslationUnitVisitor, 0);
+/// clang_disposeTranslationUnit(TU);
+///
+/// // This will load all the symbols from 'IndexTest.c', excluding symbols
+/// // from 'IndexTest.pch'.
+/// char *args[] = { "-Xclang", "-include-pch=IndexTest.pch" };
+/// TU = clang_createTranslationUnitFromSourceFile(Idx, "IndexTest.c", 2, args,
+/// 0, 0);
+/// clang_visitChildren(clang_getTranslationUnitCursor(TU),
+/// TranslationUnitVisitor, 0);
+/// clang_disposeTranslationUnit(TU);
+/// \endcode
+///
+/// This process of creating the 'pch', loading it separately, and using it (via
+/// -include-pch) allows 'excludeDeclsFromPCH' to remove redundant callbacks
+/// (which gives the indexer the same performance benefit as the compiler).
 ffi.Pointer<ffi.Void> clang_createIndex(
   int excludeDeclarationsFromPCH,
   int displayDiagnostics,
@@ -1681,7 +2035,10 @@ typedef _dart_clang_createIndex = ffi.Pointer<ffi.Void> Function(
   int displayDiagnostics,
 );
 
-/// Same as clang_createTranslationUnit2, but returns the CXTranslationUnit instead of an error code. In case of an error this routine returns a NULL CXTranslationUnit, without further detailed error codes.
+/// Same as \c clang_createTranslationUnit2, but returns
+/// the \c CXTranslationUnit instead of an error code.  In case of an error this
+/// routine returns a \c NULL \c CXTranslationUnit, without further detailed
+/// error codes.
 ffi.Pointer<CXTranslationUnitImpl> clang_createTranslationUnit(
   ffi.Pointer<ffi.Void> CIdx,
   ffi.Pointer<ffi.Int8> ast_filename,
@@ -1708,7 +2065,12 @@ typedef _dart_clang_createTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
   ffi.Pointer<ffi.Int8> ast_filename,
 );
 
-/// Create a translation unit from an AST file ( -emit-ast).
+/// Create a translation unit from an AST file (\c -emit-ast).
+///
+/// \param[out] out_TU A non-NULL pointer to store the created
+/// \c CXTranslationUnit.
+///
+/// \returns Zero on success, otherwise returns an error code.
 int clang_createTranslationUnit2(
   ffi.Pointer<ffi.Void> CIdx,
   ffi.Pointer<ffi.Int8> ast_filename,
@@ -1737,7 +2099,44 @@ typedef _dart_clang_createTranslationUnit2 = int Function(
   ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
 );
 
-/// Return the CXTranslationUnit for a given source file and the provided command line arguments one would pass to the compiler.
+/// Return the CXTranslationUnit for a given source file and the provided
+/// command line arguments one would pass to the compiler.
+///
+/// Note: The 'source_filename' argument is optional.  If the caller provides a
+/// NULL pointer, the name of the source file is expected to reside in the
+/// specified command line arguments.
+///
+/// Note: When encountered in 'clang_command_line_args', the following options
+/// are ignored:
+///
+/// '-c'
+/// '-emit-ast'
+/// '-fsyntax-only'
+/// '-o \<output file>'  (both '-o' and '\<output file>' are ignored)
+///
+/// \param CIdx The index object with which the translation unit will be
+/// associated.
+///
+/// \param source_filename The name of the source file to load, or NULL if the
+/// source file is included in \p clang_command_line_args.
+///
+/// \param num_clang_command_line_args The number of command-line arguments in
+/// \p clang_command_line_args.
+///
+/// \param clang_command_line_args The command-line arguments that would be
+/// passed to the \c clang executable if it were being invoked out-of-process.
+/// These command-line options will be parsed and will affect how the translation
+/// unit is parsed. Note that the following options are ignored: '-c',
+/// '-emit-ast', '-fsyntax-only' (which is the default), and '-o \<output file>'.
+///
+/// \param num_unsaved_files the number of unsaved file entries in \p
+/// unsaved_files.
+///
+/// \param unsaved_files the files that have not yet been saved to disk
+/// but may be required for code completion, including the contents of
+/// those files.  The contents and name of these files (as specified by
+/// CXUnsavedFile) are copied when necessary, so the client only needs to
+/// guarantee their validity until the call to this function returns.
 ffi.Pointer<CXTranslationUnitImpl> clang_createTranslationUnitFromSourceFile(
   ffi.Pointer<ffi.Void> CIdx,
   ffi.Pointer<ffi.Int8> source_filename,
@@ -1782,7 +2181,8 @@ typedef _dart_clang_createTranslationUnitFromSourceFile
   ffi.Pointer<CXUnsavedFile> unsaved_files,
 );
 
-/// Returns a default set of code-completion options that can be passed to clang_codeCompleteAt().
+/// Returns a default set of code-completion options that can be
+/// passed to\c clang_codeCompleteAt().
 int clang_defaultCodeCompleteOptions() {
   return _clang_defaultCodeCompleteOptions();
 }
@@ -1796,7 +2196,11 @@ typedef _c_clang_defaultCodeCompleteOptions = ffi.Uint32 Function();
 
 typedef _dart_clang_defaultCodeCompleteOptions = int Function();
 
-/// Retrieve the set of display options most similar to the default behavior of the clang compiler.
+/// Retrieve the set of display options most similar to the
+/// default behavior of the clang compiler.
+///
+/// \returns A set of display options suitable for use with \c
+/// clang_formatDiagnostic().
 int clang_defaultDiagnosticDisplayOptions() {
   return _clang_defaultDiagnosticDisplayOptions();
 }
@@ -1811,7 +2215,16 @@ typedef _c_clang_defaultDiagnosticDisplayOptions = ffi.Uint32 Function();
 
 typedef _dart_clang_defaultDiagnosticDisplayOptions = int Function();
 
-/// Returns the set of flags that is suitable for parsing a translation unit that is being edited.
+/// Returns the set of flags that is suitable for parsing a translation
+/// unit that is being edited.
+///
+/// The set of flags returned provide options for \c clang_parseTranslationUnit()
+/// to indicate that the translation unit is likely to be reparsed many times,
+/// either explicitly (via \c clang_reparseTranslationUnit()) or implicitly
+/// (e.g., by code completion (\c clang_codeCompletionAt())). The returned flag
+/// set contains an unspecified set of optimizations (e.g., the precompiled
+/// preamble) geared toward improving the performance of these routines. The
+/// set of optimizations enabled may change from one version to the next.
 int clang_defaultEditingTranslationUnitOptions() {
   return _clang_defaultEditingTranslationUnitOptions();
 }
@@ -1826,7 +2239,14 @@ typedef _c_clang_defaultEditingTranslationUnitOptions = ffi.Uint32 Function();
 
 typedef _dart_clang_defaultEditingTranslationUnitOptions = int Function();
 
-/// Returns the set of flags that is suitable for reparsing a translation unit.
+/// Returns the set of flags that is suitable for reparsing a translation
+/// unit.
+///
+/// The set of flags returned provide options for
+/// \c clang_reparseTranslationUnit() by default. The returned flag
+/// set contains an unspecified set of optimizations geared toward common uses
+/// of reparsing. The set of optimizations enabled may change from one version
+/// to the next.
 int clang_defaultReparseOptions(
   ffi.Pointer<CXTranslationUnitImpl> TU,
 ) {
@@ -1847,7 +2267,13 @@ typedef _dart_clang_defaultReparseOptions = int Function(
   ffi.Pointer<CXTranslationUnitImpl> TU,
 );
 
-/// Returns the set of flags that is suitable for saving a translation unit.
+/// Returns the set of flags that is suitable for saving a translation
+/// unit.
+///
+/// The set of flags returned provide options for
+/// \c clang_saveTranslationUnit() by default. The returned flag
+/// set contains an unspecified set of options that save translation units with
+/// the most commonly-requested data.
 int clang_defaultSaveOptions(
   ffi.Pointer<CXTranslationUnitImpl> TU,
 ) {
@@ -1889,7 +2315,7 @@ typedef _dart_clang_disposeCXCursorSet = void Function(
   ffi.Pointer<CXCursorSetImpl> cset,
 );
 
-/// Free the memory associated with a CXPlatformAvailability structure.
+/// Free the memory associated with a \c CXPlatformAvailability structure.
 void clang_disposeCXPlatformAvailability(
   ffi.Pointer<CXPlatformAvailability> availability,
 ) {
@@ -1977,6 +2403,9 @@ typedef _dart_clang_disposeDiagnosticSet = void Function(
 );
 
 /// Destroy the given index.
+///
+/// The index must not be destroyed until all of the translation units created
+/// within that index have been destroyed.
 void clang_disposeIndex(
   ffi.Pointer<ffi.Void> index,
 ) {
@@ -1997,7 +2426,8 @@ typedef _dart_clang_disposeIndex = void Function(
   ffi.Pointer<ffi.Void> index,
 );
 
-/// Free the set of overridden cursors returned by clang_getOverriddenCursors().
+/// Free the set of overridden cursors returned by \c
+/// clang_getOverriddenCursors().
 void clang_disposeOverriddenCursors(
   ffi.Pointer<CXCursor> overridden,
 ) {
@@ -2018,7 +2448,7 @@ typedef _dart_clang_disposeOverriddenCursors = void Function(
   ffi.Pointer<CXCursor> overridden,
 );
 
-/// Destroy the given CXSourceRangeList.
+/// Destroy the given \c CXSourceRangeList.
 void clang_disposeSourceRangeList(
   ffi.Pointer<CXSourceRangeList> ranges,
 ) {
@@ -2142,6 +2572,30 @@ typedef _c_clang_enableStackTraces = ffi.Void Function();
 
 typedef _dart_clang_enableStackTraces = void Function();
 
+int clang_equalRanges_wrap(
+  ffi.Pointer<CXSourceRange> c1,
+  ffi.Pointer<CXSourceRange> c2,
+) {
+  return _clang_equalRanges_wrap(
+    c1,
+    c2,
+  );
+}
+
+final _dart_clang_equalRanges_wrap _clang_equalRanges_wrap = _dylib
+    .lookupFunction<_c_clang_equalRanges_wrap, _dart_clang_equalRanges_wrap>(
+        'clang_equalRanges_wrap');
+
+typedef _c_clang_equalRanges_wrap = ffi.Uint32 Function(
+  ffi.Pointer<CXSourceRange> c1,
+  ffi.Pointer<CXSourceRange> c2,
+);
+
+typedef _dart_clang_equalRanges_wrap = int Function(
+  ffi.Pointer<CXSourceRange> c1,
+  ffi.Pointer<CXSourceRange> c2,
+);
+
 void clang_executeOnThread(
   ffi.Pointer<ffi.NativeFunction<_typedefC_noname_1>> fn,
   ffi.Pointer<ffi.Void> user_data,
@@ -2194,7 +2648,11 @@ typedef _dart_clang_formatDiagnostic_wrap = ffi.Pointer<CXString> Function(
   int opts,
 );
 
-/// Retrieve all ranges from all files that were skipped by the preprocessor.
+/// Retrieve all ranges from all files that were skipped by the
+/// preprocessor.
+///
+/// The preprocessor will skip lines when they are surrounded by an
+/// if/ifdef/ifndef directive whose condition does not evaluate to true.
 ffi.Pointer<CXSourceRangeList> clang_getAllSkippedRanges(
   ffi.Pointer<CXTranslationUnitImpl> tu,
 ) {
@@ -2301,6 +2759,9 @@ typedef _dart_clang_getCanonicalType_wrap = ffi.Pointer<CXType> Function(
 );
 
 /// Retrieve the child diagnostics of a CXDiagnostic.
+///
+/// This CXDiagnosticSet does not need to be released by
+/// clang_disposeDiagnosticSet.
 ffi.Pointer<ffi.Void> clang_getChildDiagnostics(
   ffi.Pointer<ffi.Void> D,
 ) {
@@ -2321,7 +2782,12 @@ typedef _dart_clang_getChildDiagnostics = ffi.Pointer<ffi.Void> Function(
   ffi.Pointer<ffi.Void> D,
 );
 
-/// Determine the availability of the entity that this code-completion string refers to.
+/// Determine the availability of the entity that this code-completion
+/// string refers to.
+///
+/// \param completion_string The completion string to query.
+///
+/// \returns The availability of the completion string.
 int clang_getCompletionAvailability(
   ffi.Pointer<ffi.Void> completion_string,
 ) {
@@ -2343,7 +2809,15 @@ typedef _dart_clang_getCompletionAvailability = int Function(
   ffi.Pointer<ffi.Void> completion_string,
 );
 
-/// Retrieve the completion string associated with a particular chunk within a completion string.
+/// Retrieve the completion string associated with a particular chunk
+/// within a completion string.
+///
+/// \param completion_string the completion string to query.
+///
+/// \param chunk_number the 0-based index of the chunk in the completion string.
+///
+/// \returns the completion string associated with the chunk at index
+/// \c chunk_number.
 ffi.Pointer<ffi.Void> clang_getCompletionChunkCompletionString(
   ffi.Pointer<ffi.Void> completion_string,
   int chunk_number,
@@ -2373,6 +2847,12 @@ typedef _dart_clang_getCompletionChunkCompletionString = ffi.Pointer<ffi.Void>
 );
 
 /// Determine the kind of a particular chunk within a completion string.
+///
+/// \param completion_string the completion string to query.
+///
+/// \param chunk_number the 0-based index of the chunk in the completion string.
+///
+/// \returns the kind of the chunk at the index \c chunk_number.
 int clang_getCompletionChunkKind(
   ffi.Pointer<ffi.Void> completion_string,
   int chunk_number,
@@ -2397,7 +2877,13 @@ typedef _dart_clang_getCompletionChunkKind = int Function(
   int chunk_number,
 );
 
-/// Retrieve the number of annotations associated with the given completion string.
+/// Retrieve the number of annotations associated with the given
+/// completion string.
+///
+/// \param completion_string the completion string to query.
+///
+/// \returns the number of annotations associated with the given completion
+/// string.
 int clang_getCompletionNumAnnotations(
   ffi.Pointer<ffi.Void> completion_string,
 ) {
@@ -2421,6 +2907,16 @@ typedef _dart_clang_getCompletionNumAnnotations = int Function(
 );
 
 /// Retrieve the number of fix-its for the given completion index.
+///
+/// Calling this makes sense only if CXCodeComplete_IncludeCompletionsWithFixIts
+/// option was set.
+///
+/// \param results The structure keeping all completion results
+///
+/// \param completion_index The index of the completion
+///
+/// \return The number of fix-its which must be applied before the completion at
+/// completion_index can be applied
 int clang_getCompletionNumFixIts(
   ffi.Pointer<CXCodeCompleteResults> results,
   int completion_index,
@@ -2446,6 +2942,15 @@ typedef _dart_clang_getCompletionNumFixIts = int Function(
 );
 
 /// Determine the priority of this code completion.
+///
+/// The priority of a code completion indicates how likely it is that this
+/// particular completion is the completion that the user will select. The
+/// priority is selected by various internal heuristics.
+///
+/// \param completion_string The completion string to query.
+///
+/// \returns The priority of this completion string. Smaller values indicate
+/// higher-priority (more likely) completions.
 int clang_getCompletionPriority(
   ffi.Pointer<ffi.Void> completion_string,
 ) {
@@ -2571,6 +3076,12 @@ typedef _dart_clang_getCursorType_wrap = ffi.Pointer<CXType> Function(
 );
 
 /// Retrieve a diagnostic associated with the given translation unit.
+///
+/// \param Unit the translation unit to query.
+/// \param Index the zero-based diagnostic number to retrieve.
+///
+/// \returns the requested diagnostic. This diagnostic must be freed
+/// via a call to \c clang_disposeDiagnostic().
 ffi.Pointer<ffi.Void> clang_getDiagnostic(
   ffi.Pointer<CXTranslationUnitImpl> Unit,
   int Index,
@@ -2596,6 +3107,13 @@ typedef _dart_clang_getDiagnostic = ffi.Pointer<ffi.Void> Function(
 );
 
 /// Retrieve the category number for this diagnostic.
+///
+/// Diagnostics can be categorized into groups along with other, related
+/// diagnostics (e.g., diagnostics under the same warning flag). This routine
+/// retrieves the category number for the given diagnostic.
+///
+/// \returns The number of the category that contains this diagnostic, or zero
+/// if this diagnostic is uncategorized.
 int clang_getDiagnosticCategory(
   ffi.Pointer<ffi.Void> arg0,
 ) {
@@ -2617,6 +3135,12 @@ typedef _dart_clang_getDiagnosticCategory = int Function(
 );
 
 /// Retrieve a diagnostic associated with the given CXDiagnosticSet.
+///
+/// \param Diags the CXDiagnosticSet to query.
+/// \param Index the zero-based diagnostic number to retrieve.
+///
+/// \returns the requested diagnostic. This diagnostic must be freed
+/// via a call to \c clang_disposeDiagnostic().
 ffi.Pointer<ffi.Void> clang_getDiagnosticInSet(
   ffi.Pointer<ffi.Void> Diags,
   int Index,
@@ -2641,7 +3165,8 @@ typedef _dart_clang_getDiagnosticInSet = ffi.Pointer<ffi.Void> Function(
   int Index,
 );
 
-/// Determine the number of fix-it hints associated with the given diagnostic.
+/// Determine the number of fix-it hints associated with the
+/// given diagnostic.
 int clang_getDiagnosticNumFixIts(
   ffi.Pointer<ffi.Void> Diagnostic,
 ) {
@@ -2662,7 +3187,8 @@ typedef _dart_clang_getDiagnosticNumFixIts = int Function(
   ffi.Pointer<ffi.Void> Diagnostic,
 );
 
-/// Determine the number of source ranges associated with the given diagnostic.
+/// Determine the number of source ranges associated with the given
+/// diagnostic.
 int clang_getDiagnosticNumRanges(
   ffi.Pointer<ffi.Void> arg0,
 ) {
@@ -2683,7 +3209,10 @@ typedef _dart_clang_getDiagnosticNumRanges = int Function(
   ffi.Pointer<ffi.Void> arg0,
 );
 
-/// Retrieve the complete set of diagnostics associated with a translation unit.
+/// Retrieve the complete set of diagnostics associated with a
+/// translation unit.
+///
+/// \param Unit the translation unit to query.
 ffi.Pointer<ffi.Void> clang_getDiagnosticSetFromTU(
   ffi.Pointer<CXTranslationUnitImpl> Unit,
 ) {
@@ -2748,6 +3277,13 @@ typedef _dart_clang_getEnumConstantDeclValue_wrap = int Function(
 );
 
 /// Retrieve a file handle within the given translation unit.
+///
+/// \param tu the translation unit
+///
+/// \param file_name the name of the file.
+///
+/// \returns the file handle for the named file in the translation unit \p tu,
+/// or a NULL file handle if the file was not a part of this translation unit.
 ffi.Pointer<ffi.Void> clang_getFile(
   ffi.Pointer<CXTranslationUnitImpl> tu,
   ffi.Pointer<ffi.Int8> file_name,
@@ -2772,6 +3308,15 @@ typedef _dart_clang_getFile = ffi.Pointer<ffi.Void> Function(
 );
 
 /// Retrieve the buffer associated with the given file.
+///
+/// \param tu the translation unit
+///
+/// \param file the file for which to retrieve the buffer.
+///
+/// \param size [out] if non-NULL, will be set to the size of the buffer.
+///
+/// \returns a pointer to the buffer in memory that holds the contents of
+/// \p file, or a NULL pointer when the file is not loaded.
 ffi.Pointer<ffi.Int8> clang_getFileContents(
   ffi.Pointer<CXTranslationUnitImpl> tu,
   ffi.Pointer<ffi.Void> file,
@@ -2877,7 +3422,12 @@ typedef _dart_clang_getFileTime = int Function(
   ffi.Pointer<ffi.Void> SFile,
 );
 
-/// Retrieve the unique ID for the given file.
+/// Retrieve the unique ID for the given \c file.
+///
+/// \param file the file to get the ID for.
+/// \param outID stores the returned CXFileUniqueID.
+/// \returns If there was a failure getting the unique ID, returns non-zero,
+/// otherwise returns 0.
 int clang_getFileUniqueID(
   ffi.Pointer<ffi.Void> file,
   ffi.Pointer<CXFileUniqueID> outID,
@@ -2902,7 +3452,10 @@ typedef _dart_clang_getFileUniqueID = int Function(
   ffi.Pointer<CXFileUniqueID> outID,
 );
 
-/// Visit the set of preprocessor inclusions in a translation unit. The visitor function is called with the provided data for every included file. This does not include headers included by the PCH file (unless one is inspecting the inclusions in the PCH file itself).
+/// Visit the set of preprocessor inclusions in a translation unit.
+/// The visitor function is called with the provided data for every included
+/// file.  This does not include headers included by the PCH file (unless one
+/// is inspecting the inclusions in the PCH file itself).
 void clang_getInclusions(
   ffi.Pointer<CXTranslationUnitImpl> tu,
   ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor>> visitor,
@@ -2931,7 +3484,8 @@ typedef _dart_clang_getInclusions = void Function(
   ffi.Pointer<ffi.Void> client_data,
 );
 
-/// Given a CXFile header file, return the module that contains it, if one exists.
+/// Given a CXFile header file, return the module that contains it, if one
+/// exists.
 ffi.Pointer<ffi.Void> clang_getModuleForFile(
   ffi.Pointer<CXTranslationUnitImpl> arg0,
   ffi.Pointer<ffi.Void> arg1,
@@ -2997,7 +3551,8 @@ typedef _dart_clang_getNumCompletionChunks = int Function(
   ffi.Pointer<ffi.Void> completion_string,
 );
 
-/// Determine the number of diagnostics produced for the given translation unit.
+/// Determine the number of diagnostics produced for the given
+/// translation unit.
 int clang_getNumDiagnostics(
   ffi.Pointer<CXTranslationUnitImpl> Unit,
 ) {
@@ -3080,6 +3635,11 @@ typedef _dart_clang_getPointeeType_wrap = ffi.Pointer<CXType> Function(
 );
 
 /// Retrieve a remapping.
+///
+/// \param path the path that contains metadata about remappings.
+///
+/// \returns the requested remapping. This remapping must be freed
+/// via a call to \c clang_remap_dispose(). Can return NULL if an error occurred.
 ffi.Pointer<ffi.Void> clang_getRemappings(
   ffi.Pointer<ffi.Int8> path,
 ) {
@@ -3101,6 +3661,13 @@ typedef _dart_clang_getRemappings = ffi.Pointer<ffi.Void> Function(
 );
 
 /// Retrieve a remapping.
+///
+/// \param filePaths pointer to an array of file paths containing remapping info.
+///
+/// \param numFiles number of file paths.
+///
+/// \returns the requested remapping. This remapping must be freed
+/// via a call to \c clang_remap_dispose(). Can return NULL if an error occurred.
 ffi.Pointer<ffi.Void> clang_getRemappingsFromFileList(
   ffi.Pointer<ffi.Pointer<ffi.Int8>> filePaths,
   int numFiles,
@@ -3147,6 +3714,9 @@ typedef _dart_clang_getResultType_wrap = ffi.Pointer<CXType> Function(
 );
 
 /// Retrieve all ranges that were skipped by the preprocessor.
+///
+/// The preprocessor will skip lines when they are surrounded by an
+/// if/ifdef/ifndef directive whose condition does not evaluate to true.
 ffi.Pointer<CXSourceRangeList> clang_getSkippedRanges(
   ffi.Pointer<CXTranslationUnitImpl> tu,
   ffi.Pointer<ffi.Void> file,
@@ -3171,7 +3741,8 @@ typedef _dart_clang_getSkippedRanges = ffi.Pointer<CXSourceRangeList> Function(
   ffi.Pointer<ffi.Void> file,
 );
 
-/// Returns the human-readable null-terminated C string that represents the name of the memory category. This string should never be freed.
+/// Returns the human-readable null-terminated C string that represents
+/// the name of the memory category.  This string should never be freed.
 ffi.Pointer<ffi.Int8> clang_getTUResourceUsageName(
   int kind,
 ) {
@@ -3216,6 +3787,8 @@ typedef _dart_clang_getTranslationUnitCursor_wrap = ffi.Pointer<CXCursor>
 );
 
 /// Get target information for this translation unit.
+///
+/// The CXTargetInfo object cannot outlive the CXTranslationUnit object.
 ffi.Pointer<CXTargetInfoImpl> clang_getTranslationUnitTargetInfo(
   ffi.Pointer<CXTranslationUnitImpl> CTUnit,
 ) {
@@ -3324,7 +3897,29 @@ typedef _dart_clang_getTypedefDeclUnderlyingType_wrap = ffi.Pointer<CXType>
   ffi.Pointer<CXCursor> cxcursor,
 );
 
-/// Index the given source file and the translation unit corresponding to that file via callbacks implemented through #IndexerCallbacks.
+/// Index the given source file and the translation unit corresponding
+/// to that file via callbacks implemented through #IndexerCallbacks.
+///
+/// \param client_data pointer data supplied by the client, which will
+/// be passed to the invoked callbacks.
+///
+/// \param index_callbacks Pointer to indexing callbacks that the client
+/// implements.
+///
+/// \param index_callbacks_size Size of #IndexerCallbacks structure that gets
+/// passed in index_callbacks.
+///
+/// \param index_options A bitmask of options that affects how indexing is
+/// performed. This should be a bitwise OR of the CXIndexOpt_XXX flags.
+///
+/// \param[out] out_TU pointer to store a \c CXTranslationUnit that can be
+/// reused after indexing is finished. Set to \c NULL if you do not require it.
+///
+/// \returns 0 on success or if there were errors from which the compiler could
+/// recover.  If there is a failure from which there is no recovery, returns
+/// a non-zero \c CXErrorCode.
+///
+/// The rest of the parameters are the same as #clang_parseTranslationUnit.
 int clang_indexSourceFile(
   ffi.Pointer<ffi.Void> arg0,
   ffi.Pointer<ffi.Void> client_data,
@@ -3389,7 +3984,9 @@ typedef _dart_clang_indexSourceFile = int Function(
   int TU_options,
 );
 
-/// Same as clang_indexSourceFile but requires a full command line for command_line_args including argv[0]. This is useful if the standard library paths are relative to the binary.
+/// Same as clang_indexSourceFile but requires a full command line
+/// for \c command_line_args including argv[0]. This is useful if the standard
+/// library paths are relative to the binary.
 int clang_indexSourceFileFullArgv(
   ffi.Pointer<ffi.Void> arg0,
   ffi.Pointer<ffi.Void> client_data,
@@ -3454,7 +4051,20 @@ typedef _dart_clang_indexSourceFileFullArgv = int Function(
   int TU_options,
 );
 
-/// Index the given translation unit via callbacks implemented through #IndexerCallbacks.
+/// Index the given translation unit via callbacks implemented through
+/// #IndexerCallbacks.
+///
+/// The order of callback invocations is not guaranteed to be the same as
+/// when indexing a source file. The high level order will be:
+///
+/// -Preprocessor callbacks invocations
+/// -Declaration/reference callbacks invocations
+/// -Diagnostic callback invocations
+///
+/// The parameters are the same as #clang_indexSourceFile.
+///
+/// \returns If there is a failure from which there is no recovery, returns
+/// non-zero, otherwise returns 0.
 int clang_indexTranslationUnit(
   ffi.Pointer<ffi.Void> arg0,
   ffi.Pointer<ffi.Void> client_data,
@@ -3518,7 +4128,8 @@ typedef _dart_clang_index_getCXXClassDeclInfo
   ffi.Pointer<CXIdxDeclInfo> arg0,
 );
 
-/// For retrieving a custom CXIdxClientContainer attached to a container.
+/// For retrieving a custom CXIdxClientContainer attached to a
+/// container.
 ffi.Pointer<ffi.Void> clang_index_getClientContainer(
   ffi.Pointer<CXIdxContainerInfo> arg0,
 ) {
@@ -3728,7 +4339,8 @@ typedef _dart_clang_index_isEntityObjCContainerKind = int Function(
   int arg0,
 );
 
-/// For setting a custom CXIdxClientContainer attached to a container.
+/// For setting a custom CXIdxClientContainer attached to a
+/// container.
 void clang_index_setClientContainer(
   ffi.Pointer<CXIdxContainerInfo> arg0,
   ffi.Pointer<ffi.Void> arg1,
@@ -3841,7 +4453,9 @@ typedef _dart_clang_isExpression = int Function(
   int arg0,
 );
 
-/// Determine whether the given header is guarded against multiple inclusions, either with the conventional #ifndef/#define/#endif macro guards or with #pragma once.
+/// Determine whether the given header is guarded against
+/// multiple inclusions, either with the conventional
+/// \#ifndef/\#define/\#endif macro guards or with \#pragma once.
 int clang_isFileMultipleIncludeGuarded(
   ffi.Pointer<CXTranslationUnitImpl> tu,
   ffi.Pointer<ffi.Void> file,
@@ -3868,7 +4482,8 @@ typedef _dart_clang_isFileMultipleIncludeGuarded = int Function(
   ffi.Pointer<ffi.Void> file,
 );
 
-/// Determine whether the given cursor kind represents an invalid cursor.
+/// Determine whether the given cursor kind represents an invalid
+/// cursor.
 int clang_isInvalid(
   int arg0,
 ) {
@@ -3889,7 +4504,8 @@ typedef _dart_clang_isInvalid = int Function(
   int arg0,
 );
 
-/// * Determine whether the given cursor represents a preprocessing element, such as a preprocessor directive or macro instantiation.
+/// Determine whether the given cursor represents a preprocessing
+/// element, such as a preprocessor directive or macro instantiation.
 int clang_isPreprocessing(
   int arg0,
 ) {
@@ -3910,7 +4526,12 @@ typedef _dart_clang_isPreprocessing = int Function(
   int arg0,
 );
 
-/// Determine whether the given cursor kind represents a simple reference.
+/// Determine whether the given cursor kind represents a simple
+/// reference.
+///
+/// Note that other kinds of cursors (such as expressions) can also refer to
+/// other cursors. Use clang_getCursorReferenced() to determine whether a
+/// particular cursor refers to another entity.
 int clang_isReference(
   int arg0,
 ) {
@@ -3952,7 +4573,8 @@ typedef _dart_clang_isStatement = int Function(
   int arg0,
 );
 
-/// Determine whether the given cursor kind represents a translation unit.
+/// Determine whether the given cursor kind represents a translation
+/// unit.
 int clang_isTranslationUnit(
   int arg0,
 ) {
@@ -3973,7 +4595,8 @@ typedef _dart_clang_isTranslationUnit = int Function(
   int arg0,
 );
 
-/// * Determine whether the given cursor represents a currently unexposed piece of the AST (e.g., CXCursor_UnexposedStmt).
+/// Determine whether the given cursor represents a currently
+/// unexposed piece of the AST (e.g., CXCursor_UnexposedStmt).
 int clang_isUnexposed(
   int arg0,
 ) {
@@ -3994,7 +4617,17 @@ typedef _dart_clang_isUnexposed = int Function(
   int arg0,
 );
 
-/// Deserialize a set of diagnostics from a Clang diagnostics bitcode file.
+/// Deserialize a set of diagnostics from a Clang diagnostics bitcode
+/// file.
+///
+/// \param file The name of the file to deserialize.
+/// \param error A pointer to a enum value recording if there was a problem
+/// deserializing the diagnostics.
+/// \param errorString A pointer to a CXString for recording the error string
+/// if the file was not successfully loaded.
+///
+/// \returns A loaded CXDiagnosticSet if successful, and NULL otherwise.  These
+/// diagnostics should be released using clang_disposeDiagnosticSet().
 ffi.Pointer<ffi.Void> clang_loadDiagnostics(
   ffi.Pointer<ffi.Int8> file,
   ffi.Pointer<ffi.Int32> error,
@@ -4023,7 +4656,10 @@ typedef _dart_clang_loadDiagnostics = ffi.Pointer<ffi.Void> Function(
   ffi.Pointer<CXString> errorString,
 );
 
-/// Same as clang_parseTranslationUnit2, but returns the CXTranslationUnit instead of an error code. In case of an error this routine returns a NULL CXTranslationUnit, without further detailed error codes.
+/// Same as \c clang_parseTranslationUnit2, but returns
+/// the \c CXTranslationUnit instead of an error code.  In case of an error this
+/// routine returns a \c NULL \c CXTranslationUnit, without further detailed
+/// error codes.
 ffi.Pointer<CXTranslationUnitImpl> clang_parseTranslationUnit(
   ffi.Pointer<ffi.Void> CIdx,
   ffi.Pointer<ffi.Int8> source_filename,
@@ -4070,7 +4706,48 @@ typedef _dart_clang_parseTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
   int options,
 );
 
-/// Parse the given source file and the translation unit corresponding to that file.
+/// Parse the given source file and the translation unit corresponding
+/// to that file.
+///
+/// This routine is the main entry point for the Clang C API, providing the
+/// ability to parse a source file into a translation unit that can then be
+/// queried by other functions in the API. This routine accepts a set of
+/// command-line arguments so that the compilation can be configured in the same
+/// way that the compiler is configured on the command line.
+///
+/// \param CIdx The index object with which the translation unit will be
+/// associated.
+///
+/// \param source_filename The name of the source file to load, or NULL if the
+/// source file is included in \c command_line_args.
+///
+/// \param command_line_args The command-line arguments that would be
+/// passed to the \c clang executable if it were being invoked out-of-process.
+/// These command-line options will be parsed and will affect how the translation
+/// unit is parsed. Note that the following options are ignored: '-c',
+/// '-emit-ast', '-fsyntax-only' (which is the default), and '-o \<output file>'.
+///
+/// \param num_command_line_args The number of command-line arguments in
+/// \c command_line_args.
+///
+/// \param unsaved_files the files that have not yet been saved to disk
+/// but may be required for parsing, including the contents of
+/// those files.  The contents and name of these files (as specified by
+/// CXUnsavedFile) are copied when necessary, so the client only needs to
+/// guarantee their validity until the call to this function returns.
+///
+/// \param num_unsaved_files the number of unsaved file entries in \p
+/// unsaved_files.
+///
+/// \param options A bitmask of options that affects how the translation unit
+/// is managed but not its compilation. This should be a bitwise OR of the
+/// CXTranslationUnit_XXX flags.
+///
+/// \param[out] out_TU A non-NULL pointer to store the created
+/// \c CXTranslationUnit, describing the parsed code and containing any
+/// diagnostics produced by the compiler.
+///
+/// \returns Zero on success, otherwise returns an error code.
 int clang_parseTranslationUnit2(
   ffi.Pointer<ffi.Void> CIdx,
   ffi.Pointer<ffi.Int8> source_filename,
@@ -4119,7 +4796,9 @@ typedef _dart_clang_parseTranslationUnit2 = int Function(
   ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
 );
 
-/// Same as clang_parseTranslationUnit2 but requires a full command line for command_line_args including argv[0]. This is useful if the standard library paths are relative to the binary.
+/// Same as clang_parseTranslationUnit2 but requires a full command line
+/// for \c command_line_args including argv[0]. This is useful if the standard
+/// library paths are relative to the binary.
 int clang_parseTranslationUnit2FullArgv(
   ffi.Pointer<ffi.Void> CIdx,
   ffi.Pointer<ffi.Int8> source_filename,
@@ -4192,6 +4871,11 @@ typedef _dart_clang_remap_dispose = void Function(
 );
 
 /// Get the original and the associated filename from the remapping.
+///
+/// \param original If non-NULL, will be set to the original filename.
+///
+/// \param transformed If non-NULL, will be set to the filename that the original
+/// is associated with.
 void clang_remap_getFilenames(
   ffi.Pointer<ffi.Void> arg0,
   int index,
@@ -4246,6 +4930,42 @@ typedef _dart_clang_remap_getNumFiles = int Function(
 );
 
 /// Reparse the source files that produced this translation unit.
+///
+/// This routine can be used to re-parse the source files that originally
+/// created the given translation unit, for example because those source files
+/// have changed (either on disk or as passed via \p unsaved_files). The
+/// source code will be reparsed with the same command-line options as it
+/// was originally parsed.
+///
+/// Reparsing a translation unit invalidates all cursors and source locations
+/// that refer into that translation unit. This makes reparsing a translation
+/// unit semantically equivalent to destroying the translation unit and then
+/// creating a new translation unit with the same command-line arguments.
+/// However, it may be more efficient to reparse a translation
+/// unit using this routine.
+///
+/// \param TU The translation unit whose contents will be re-parsed. The
+/// translation unit must originally have been built with
+/// \c clang_createTranslationUnitFromSourceFile().
+///
+/// \param num_unsaved_files The number of unsaved file entries in \p
+/// unsaved_files.
+///
+/// \param unsaved_files The files that have not yet been saved to disk
+/// but may be required for parsing, including the contents of
+/// those files.  The contents and name of these files (as specified by
+/// CXUnsavedFile) are copied when necessary, so the client only needs to
+/// guarantee their validity until the call to this function returns.
+///
+/// \param options A bitset of options composed of the flags in CXReparse_Flags.
+/// The function \c clang_defaultReparseOptions() produces a default set of
+/// options recommended for most uses, based on the translation unit.
+///
+/// \returns 0 if the sources could be reparsed.  A non-zero error code will be
+/// returned if reparsing was impossible, such that the translation unit is
+/// invalid. In such cases, the only valid call for \c TU is
+/// \c clang_disposeTranslationUnit(TU).  The error codes returned by this
+/// routine are described by the \c CXErrorCode enum.
 int clang_reparseTranslationUnit(
   ffi.Pointer<CXTranslationUnitImpl> TU,
   int num_unsaved_files,
@@ -4278,7 +4998,27 @@ typedef _dart_clang_reparseTranslationUnit = int Function(
   int options,
 );
 
-/// Saves a translation unit into a serialized representation of that translation unit on disk.
+/// Saves a translation unit into a serialized representation of
+/// that translation unit on disk.
+///
+/// Any translation unit that was parsed without error can be saved
+/// into a file. The translation unit can then be deserialized into a
+/// new \c CXTranslationUnit with \c clang_createTranslationUnit() or,
+/// if it is an incomplete translation unit that corresponds to a
+/// header, used as a precompiled header when parsing other translation
+/// units.
+///
+/// \param TU The translation unit to save.
+///
+/// \param FileName The file to which the translation unit will be saved.
+///
+/// \param options A bitmask of options that affects how the translation unit
+/// is saved. This should be a bitwise OR of the
+/// CXSaveTranslationUnit_XXX flags.
+///
+/// \returns A value that will match one of the enumerators of the CXSaveError
+/// enumeration. Zero (CXSaveError_None) indicates that the translation unit was
+/// saved successfully, while a non-zero value indicates that a problem occurred.
 int clang_saveTranslationUnit(
   ffi.Pointer<CXTranslationUnitImpl> TU,
   ffi.Pointer<ffi.Int8> FileName,
@@ -4307,7 +5047,11 @@ typedef _dart_clang_saveTranslationUnit = int Function(
   int options,
 );
 
-/// Sort the code-completion results in case-insensitive alphabetical order.
+/// Sort the code-completion results in case-insensitive alphabetical
+/// order.
+///
+/// \param Results The set of results to sort.
+/// \param NumResults The number of results in \p Results.
 void clang_sortCodeCompletionResults(
   ffi.Pointer<CXCompletionResult> Results,
   int NumResults,
@@ -4334,6 +5078,10 @@ typedef _dart_clang_sortCodeCompletionResults = void Function(
 );
 
 /// Suspend a translation unit in order to free memory associated with it.
+///
+/// A suspended translation unit uses significantly less memory but on the other
+/// side does not support any other calls than \c clang_reparseTranslationUnit
+/// to resume it or \c clang_disposeTranslationUnit to dispose it completely.
 int clang_suspendTranslationUnit(
   ffi.Pointer<CXTranslationUnitImpl> arg0,
 ) {
@@ -4355,6 +5103,9 @@ typedef _dart_clang_suspendTranslationUnit = int Function(
 );
 
 /// Enable/disable crash recovery.
+///
+/// \param isEnabled Flag to indicate if crash recovery is enabled.  A non-zero
+/// value enables crash recovery, while 0 disables it.
 void clang_toggleCrashRecovery(
   int isEnabled,
 ) {
@@ -4375,7 +5126,8 @@ typedef _dart_clang_toggleCrashRecovery = void Function(
   int isEnabled,
 );
 
-/// Visitor is a function pointer with parameters having pointers to cxcursor instead of cxcursor by default.
+/// Visitor is a function pointer with parameters having pointers to cxcursor
+/// instead of cxcursor by default.
 int clang_visitChildren_wrap(
   ffi.Pointer<CXCursor> parent,
   ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor>> _modifiedVisitor,
