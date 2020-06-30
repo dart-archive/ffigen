@@ -32,6 +32,12 @@ CXSourceLocation *ptrToCXSourceLocation(CXSourceLocation t)
     *c = t;
     return c;
 }
+CXSourceRange *ptrToCXSourceRange(CXSourceRange t)
+{
+    CXSourceRange *c = aloc(CXSourceRange);
+    *c = t;
+    return c;
+}
 // START ===== Functions for testing libclang behavior in C.
 enum CXChildVisitResult visitor_for_test_in_c(CXCursor cursor, CXCursor parent, CXClientData clientData)
 {
@@ -238,6 +244,24 @@ CXType *clang_getArgType_wrap(CXType *cxtype, unsigned i)
 long long clang_getEnumConstantDeclValue_wrap(CXCursor *cursor)
 {
     return clang_getEnumConstantDeclValue(*cursor);
+}
+
+/** Returns non-zero if the ranges are the same, zero if they differ. */
+unsigned clang_equalRanges_wrap(CXSourceRange *c1, CXSourceRange *c2)
+{
+    return clang_equalRanges(*c1, *c2);
+}
+
+/** Returns the comment range. */
+CXSourceRange *clang_Cursor_getCommentRange_wrap(CXCursor *cursor)
+{
+    return ptrToCXSourceRange(clang_Cursor_getCommentRange(*cursor));
+}
+
+/** Returns the raw comment. */
+CXString *clang_Cursor_getRawCommentText_wrap(CXCursor *cursor)
+{
+    return ptrToCXString(clang_Cursor_getRawCommentText(*cursor));
 }
 
 /** Returns the first paragraph of doxygen doc comment. */

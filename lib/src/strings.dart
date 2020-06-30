@@ -58,8 +58,15 @@ const sizemap_native_mapping = <String, int>{
 const sort = 'sort';
 const useSupportedTypedefs = 'use-supported-typedefs';
 const warnWhenRemoving = 'warn-when-removing';
-const extractComments = 'extract-comments';
 const arrayWorkaround = 'array-workaround';
+
+const comments = 'comments';
+// Comment type.
+const brief = 'brief';
+const full = 'full';
+const none = 'none';
+// Contains all possibe comment types.
+const commentTypeSet = {brief, full, none};
 
 // Dynamic library names.
 const libclang_dylib_linux = 'libwrapped_clang.so';
