@@ -120,7 +120,8 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
   }
 }
 
-const _commentPrefix = '/// ';
+const commentPrefix = '/// ';
+const nesting = '  ';
 
 /// Stores the [clang.CXSourceRange] of the last comment.
 Pointer<clang.CXSourceRange> lastCommentRange = nullptr;
@@ -128,10 +129,10 @@ Pointer<clang.CXSourceRange> lastCommentRange = nullptr;
 /// Returns a cursor's associated comment.
 ///
 /// The given string is wrapped at line width = 80 - [indent]. The [indent] is
-/// [_commentPrefix.length] by default because a comment starts with
+/// [commentPrefix.length] by default because a comment starts with
 /// [commentPrefix].
 String getCursorDocComment(Pointer<clang.CXCursor> cursor,
-    [int indent = _commentPrefix.length]) {
+    [int indent = commentPrefix.length]) {
   String formattedDocComment;
   final currentCommentRange = clang.clang_Cursor_getCommentRange_wrap(cursor);
 

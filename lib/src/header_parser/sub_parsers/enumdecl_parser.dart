@@ -80,7 +80,10 @@ int _enumCursorVisitor(Pointer<clang.CXCursor> cursor,
 void _addEnumConstantToEnumClass(Pointer<clang.CXCursor> cursor) {
   _enumClass.enumConstants.add(
     EnumConstant(
-        dartDoc: getCursorDocComment(cursor, 6),
+        dartDoc: getCursorDocComment(
+          cursor,
+          nesting.length + commentPrefix.length,
+        ),
         name: cursor.spelling(),
         value: clang.clang_getEnumConstantDeclValue_wrap(cursor)),
   );
