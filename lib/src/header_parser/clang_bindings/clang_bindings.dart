@@ -49,14 +49,14 @@ class ArrayHelper_CXCursor_data {
   final List<int> length;
   ArrayHelper_CXCursor_data(this._struct, this.length);
   void setValue(int i1, ffi.Pointer<ffi.Void> value) {
-    switch ('${i1}') {
-      case '0':
+    switch (i1) {
+      case 0:
         _struct._data_item_0 = value;
         break;
-      case '1':
+      case 1:
         _struct._data_item_1 = value;
         break;
-      case '2':
+      case 2:
         _struct._data_item_2 = value;
         break;
       default:
@@ -67,12 +67,12 @@ class ArrayHelper_CXCursor_data {
   ffi.Pointer<ffi.Void> getValue(
     int i1,
   ) {
-    switch ('${i1}') {
-      case '0':
+    switch (i1) {
+      case 0:
         return _struct._data_item_0;
-      case '1':
+      case 1:
         return _struct._data_item_1;
-      case '2':
+      case 2:
         return _struct._data_item_2;
       default:
         throw RangeError('Index(s) not in range');
@@ -773,11 +773,11 @@ class ArrayHelper_CXSourceLocation_ptr_data {
   final List<int> length;
   ArrayHelper_CXSourceLocation_ptr_data(this._struct, this.length);
   void setValue(int i1, ffi.Pointer<ffi.Void> value) {
-    switch ('${i1}') {
-      case '0':
+    switch (i1) {
+      case 0:
         _struct._ptr_data_item_0 = value;
         break;
-      case '1':
+      case 1:
         _struct._ptr_data_item_1 = value;
         break;
       default:
@@ -788,10 +788,10 @@ class ArrayHelper_CXSourceLocation_ptr_data {
   ffi.Pointer<ffi.Void> getValue(
     int i1,
   ) {
-    switch ('${i1}') {
-      case '0':
+    switch (i1) {
+      case 0:
         return _struct._ptr_data_item_0;
-      case '1':
+      case 1:
         return _struct._ptr_data_item_1;
       default:
         throw RangeError('Index(s) not in range');
@@ -820,11 +820,11 @@ class ArrayHelper_CXSourceRange_ptr_data {
   final List<int> length;
   ArrayHelper_CXSourceRange_ptr_data(this._struct, this.length);
   void setValue(int i1, ffi.Pointer<ffi.Void> value) {
-    switch ('${i1}') {
-      case '0':
+    switch (i1) {
+      case 0:
         _struct._ptr_data_item_0 = value;
         break;
-      case '1':
+      case 1:
         _struct._ptr_data_item_1 = value;
         break;
       default:
@@ -835,10 +835,10 @@ class ArrayHelper_CXSourceRange_ptr_data {
   ffi.Pointer<ffi.Void> getValue(
     int i1,
   ) {
-    switch ('${i1}') {
-      case '0':
+    switch (i1) {
+      case 0:
         return _struct._ptr_data_item_0;
-      case '1':
+      case 1:
         return _struct._ptr_data_item_1;
       default:
         throw RangeError('Index(s) not in range');
@@ -938,11 +938,11 @@ class ArrayHelper_CXType_data {
   final List<int> length;
   ArrayHelper_CXType_data(this._struct, this.length);
   void setValue(int i1, ffi.Pointer<ffi.Void> value) {
-    switch ('${i1}') {
-      case '0':
+    switch (i1) {
+      case 0:
         _struct._data_item_0 = value;
         break;
-      case '1':
+      case 1:
         _struct._data_item_1 = value;
         break;
       default:
@@ -953,10 +953,10 @@ class ArrayHelper_CXType_data {
   ffi.Pointer<ffi.Void> getValue(
     int i1,
   ) {
-    switch ('${i1}') {
-      case '0':
+    switch (i1) {
+      case 0:
         return _struct._data_item_0;
-      case '1':
+      case 1:
         return _struct._data_item_1;
       default:
         throw RangeError('Index(s) not in range');

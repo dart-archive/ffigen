@@ -121,10 +121,15 @@ class ArrayHelper {
   final String helperClassName;
   final String elementNamePrefix;
 
-  List<String> _expandedElements;
-  List<String> get expandedElements {
-    _expandedElements ??= length.isEmpty ? [] : _expandElements(length, 0);
-    return _expandedElements;
+  int _expandedArrayLength;
+  int get expandedArrayLength {
+    if (_expandedArrayLength != null) return _expandedArrayLength;
+
+    int arrayLength = 1;
+    for (final i in length) {
+      arrayLength = arrayLength * i;
+    }
+    return arrayLength;
   }
 
   ArrayHelper({
@@ -142,11 +147,11 @@ class ArrayHelper {
     final arrayDartType = elementType.getDartType(w);
     final arrayCType = elementType.getCType(w);
 
-    for (final arrayString in expandedElements) {
+    for (int i = 0; i < expandedArrayLength; i++) {
       if (elementType.isPrimitive) {
         s.write('  @${arrayCType}()\n');
       }
-      s.write('  ${arrayDartType} ${elementNamePrefix}$arrayString;\n');
+      s.write('  ${arrayDartType} ${elementNamePrefix}$i;\n');
     }
 
     s.write('/// Helper for array `$name`.\n');
@@ -170,12 +175,13 @@ class ArrayHelper {
     s.write('final List<int> length;\n');
     s.write('$helperClassName(this._struct, this.length);\n');
 
+    final indexSwitchKey = _getIndexSwitchKey();
     // add setValue method.
     s.write('void setValue(${_getIndexParameters()}$arrayType value) {\n');
-    s.write('switch(\'${_getIndexSwitchKey()}\') {\n');
-    for (final arrayElement in expandedElements) {
-      s.write('case \'$arrayElement\':\n');
-      s.write('  _struct.${elementNamePrefix}$arrayElement = value;\n');
+    s.write('switch(${indexSwitchKey}) {\n');
+    for (int i = 0; i < expandedArrayLength; i++) {
+      s.write('case $i:\n');
+      s.write('  _struct.${elementNamePrefix}$i = value;\n');
       s.write('  break;\n');
     }
     s.write('default:\n');
@@ -185,10 +191,10 @@ class ArrayHelper {
 
     // add getValue method.
     s.write('$arrayType getValue(${_getIndexParameters()}) {\n');
-    s.write('switch(\'${_getIndexSwitchKey()}\') {\n');
-    for (final arrayElement in expandedElements) {
-      s.write('case \'$arrayElement\':\n');
-      s.write('  return _struct.${elementNamePrefix}$arrayElement;\n');
+    s.write('switch(${indexSwitchKey}) {\n');
+    for (int i = 0; i < expandedArrayLength; i++) {
+      s.write('case $i:\n');
+      s.write('  return _struct.${elementNamePrefix}$i;\n');
     }
     s.write('default:\n');
     s.write("  throw RangeError('Index(s) not in range');");
@@ -197,26 +203,6 @@ class ArrayHelper {
 
     s.write('}\n\n');
     return s.toString();
-  }
-
-  /// Expands a List to cover all permutations sequentially.
-  ///
-  /// E.g -> input: [2,2], output: ['0_0','0_1','1_0','1_1']
-  ///
-  /// Ensure that list isn't empty.
-  List<String> _expandElements(List<int> list, int startIndex) {
-    final returnString = <String>[];
-    for (var i = 0; i < list[startIndex]; i++) {
-      if (startIndex == list.length - 1) {
-        // base case for recursion.
-        returnString.add('$i');
-      } else {
-        for (final s in _expandElements(list, startIndex + 1)) {
-          returnString.add('${i}_${s}');
-        }
-      }
-    }
-    return returnString;
   }
 
   /// Returns raw index parameters as string.
@@ -231,16 +217,17 @@ class ArrayHelper {
     return sb.toString();
   }
 
-  /// Returns index switch key.
-  ///
-  /// E.g -> If [length.length] = 3,
-  /// output: "${i1}_${i2}_${i3}"
+  /// Maps n-D array to 1-D array.
   String _getIndexSwitchKey() {
     final sb = StringBuffer();
-    sb.write(r'${i1}');
-    for (var i = 1; i < length.length; i++) {
-      sb.write(r'_${i2}');
+    for (int i = 0; i < length.length - 1; i++) {
+      sb.write('i${i + 1}');
+      for (int j = i + 1; j < length.length; j++) {
+        sb.write('*length[${j}]');
+      }
+      sb.write('+');
     }
+    sb.write('i${length.length}');
     return sb.toString();
   }
 }
