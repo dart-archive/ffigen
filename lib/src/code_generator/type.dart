@@ -138,7 +138,7 @@ class Type {
 
   /// Get base Array type.
   ///
-  /// returns itself if it has not an Array Type.
+  /// Returns itself if it's not an Array Type.
   Type getBaseArrayType() {
     if (broadType == BroadType.ConstantArray ||
         broadType == BroadType.IncompleteArray) {

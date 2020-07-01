@@ -188,7 +188,7 @@ class ArrayHelper {
       s.write(
           '$helperClassName(this.$structIdentifier, this.$dimensionsIdentifier, this.$levelIdentifier, this.$absoluteIndexIdentifier);\n');
 
-      // Write checkBoundsFunction
+      // Write checkBoundsFunction.
       s.write('''
   void $checkBoundsFunctionIdentifier(int index) {
     if (index >= $legthIdentifier || index < 0) {
