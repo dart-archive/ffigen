@@ -243,38 +243,103 @@ class Struct1 extends ffi.Struct {
   int _data_item_5;
 
   /// Helper for array `data`.
-  ArrayHelper_Struct1_data get data =>
-      ArrayHelper_Struct1_data(this, [3, 1, 2]);
+  ArrayHelper_Struct1_data_level0 get data =>
+      ArrayHelper_Struct1_data_level0(this, [3, 1, 2], 0, 0);
 }
 
 /// Helper for array `data` in struct `Struct1`.
-class ArrayHelper_Struct1_data {
+class ArrayHelper_Struct1_data_level0 {
   final Struct1 _struct;
   final List<int> dimensions;
-  ArrayHelper_Struct1_data(this._struct, this.dimensions);
-  void _checkArrayBounds(
-    int i1,
-    int i2,
-    int i3,
-  ) {
-    if (i1 < 0 || i1 >= dimensions[0]) {
-      throw RangeError('i1 not in range 0..3 exclusive.');
-    }
-    if (i2 < 0 || i2 >= dimensions[1]) {
-      throw RangeError('i2 not in range 0..1 exclusive.');
-    }
-    if (i3 < 0 || i3 >= dimensions[2]) {
-      throw RangeError('i3 not in range 0..2 exclusive.');
+  final int level;
+  final int _absoluteIndex;
+  int get length => dimensions[level];
+  ArrayHelper_Struct1_data_level0(
+      this._struct, this.dimensions, this.level, this._absoluteIndex);
+  void _checkBounds(int index) {
+    if (index >= length || index < 0) {
+      throw RangeError(
+          'Dimension $level: index not in range 0..${length} exclusive.');
     }
   }
 
-  void setValue(int i1, int i2, int i3, int value) {
-    _checkArrayBounds(
-      i1,
-      i2,
-      i3,
-    );
-    switch (i1 * dimensions[1] * dimensions[2] + i2 * dimensions[2] + i3) {
+  ArrayHelper_Struct1_data_level1 operator [](int index) {
+    _checkBounds(index);
+    int offset = index;
+    for (int i = level + 1; i < dimensions.length; i++) {
+      offset *= dimensions[i];
+    }
+    return ArrayHelper_Struct1_data_level1(
+        _struct, dimensions, level + 1, _absoluteIndex + offset);
+  }
+}
+
+/// Helper for array `data` in struct `Struct1`.
+class ArrayHelper_Struct1_data_level1 {
+  final Struct1 _struct;
+  final List<int> dimensions;
+  final int level;
+  final int _absoluteIndex;
+  int get length => dimensions[level];
+  ArrayHelper_Struct1_data_level1(
+      this._struct, this.dimensions, this.level, this._absoluteIndex);
+  void _checkBounds(int index) {
+    if (index >= length || index < 0) {
+      throw RangeError(
+          'Dimension $level: index not in range 0..${length} exclusive.');
+    }
+  }
+
+  ArrayHelper_Struct1_data_level2 operator [](int index) {
+    _checkBounds(index);
+    int offset = index;
+    for (int i = level + 1; i < dimensions.length; i++) {
+      offset *= dimensions[i];
+    }
+    return ArrayHelper_Struct1_data_level2(
+        _struct, dimensions, level + 1, _absoluteIndex + offset);
+  }
+}
+
+/// Helper for array `data` in struct `Struct1`.
+class ArrayHelper_Struct1_data_level2 {
+  final Struct1 _struct;
+  final List<int> dimensions;
+  final int level;
+  final int _absoluteIndex;
+  int get length => dimensions[level];
+  ArrayHelper_Struct1_data_level2(
+      this._struct, this.dimensions, this.level, this._absoluteIndex);
+  void _checkBounds(int index) {
+    if (index >= length || index < 0) {
+      throw RangeError(
+          'Dimension $level: index not in range 0..${length} exclusive.');
+    }
+  }
+
+  int operator [](int index) {
+    _checkBounds(index);
+    switch (_absoluteIndex + index) {
+      case 0:
+        return _struct._data_item_0;
+      case 1:
+        return _struct._data_item_1;
+      case 2:
+        return _struct._data_item_2;
+      case 3:
+        return _struct._data_item_3;
+      case 4:
+        return _struct._data_item_4;
+      case 5:
+        return _struct._data_item_5;
+      default:
+        throw Exception('Invalid Array Helper generated.');
+    }
+  }
+
+  void operator []=(int index, int value) {
+    _checkBounds(index);
+    switch (_absoluteIndex + index) {
       case 0:
         _struct._data_item_0 = value;
         break;
@@ -294,35 +359,7 @@ class ArrayHelper_Struct1_data {
         _struct._data_item_5 = value;
         break;
       default:
-        throw RangeError('Index(s) not in range');
-    }
-  }
-
-  int getValue(
-    int i1,
-    int i2,
-    int i3,
-  ) {
-    _checkArrayBounds(
-      i1,
-      i2,
-      i3,
-    );
-    switch (i1 * dimensions[1] * dimensions[2] + i2 * dimensions[2] + i3) {
-      case 0:
-        return _struct._data_item_0;
-      case 1:
-        return _struct._data_item_1;
-      case 2:
-        return _struct._data_item_2;
-      case 3:
-        return _struct._data_item_3;
-      case 4:
-        return _struct._data_item_4;
-      case 5:
-        return _struct._data_item_5;
-      default:
-        throw RangeError('Index(s) not in range');
+        throw Exception('Invalid Array Helper generated.');
     }
   }
 }

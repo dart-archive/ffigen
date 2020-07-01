@@ -71,7 +71,7 @@ class Struc extends Binding {
       if (m.type.broadType == BroadType.ConstantArray) {
         // TODO(5): Remove array helpers when inline array support arives.
         final arrayHelper = ArrayHelper(
-          helperClassName: 'ArrayHelper_${name}_${m.name}',
+          helperClassGroupName: 'ArrayHelper_${name}_${m.name}',
           elementType: m.type.getBaseArrayType(),
           dimensions: _getArrayDimensionLengths(m.type),
           name: m.name,
@@ -118,7 +118,7 @@ class ArrayHelper {
   final String structName;
 
   final String name;
-  final String helperClassName;
+  final String helperClassGroupName;
   final String elementNamePrefix;
 
   int _expandedArrayLength;
@@ -137,7 +137,7 @@ class ArrayHelper {
     @required this.dimensions,
     @required this.structName,
     @required this.name,
-    @required this.helperClassName,
+    @required this.helperClassGroupName,
     @required this.elementNamePrefix,
   });
 
@@ -156,99 +156,91 @@ class ArrayHelper {
 
     s.write('/// Helper for array `$name`.\n');
     s.write(
-        '$helperClassName get $name => ${helperClassName}(this, $dimensions);\n');
+        '${helperClassGroupName}_level0 get $name => ${helperClassGroupName}_level0(this, $dimensions, 0, 0);\n');
 
     return s.toString();
   }
 
-  /// Creates an array helper binding for struct array.
   String helperClassString(Writer w) {
     final s = StringBuffer();
-
     final arrayType = elementType.getDartType(w);
+    for (int dim = 0; dim < dimensions.length; dim++) {
+      final helperClassName = '${helperClassGroupName}_level${dim}';
+      final structIdentifier = '_struct';
+      final dimensionsIdentifier = 'dimensions';
+      final levelIdentifier = 'level';
+      final absoluteIndexIdentifier = '_absoluteIndex';
+      final checkBoundsFunctionIdentifier = '_checkBounds';
+      final legthIdentifier = 'length';
 
-    s.write('/// Helper for array `$name` in struct `$structName`.\n');
+      s.write('/// Helper for array `$name` in struct `$structName`.\n');
 
-    // Write class declaration.
-    s.write('class $helperClassName{\n');
-    s.write('final $structName _struct;\n');
-    s.write('final List<int> dimensions;\n');
-    s.write('$helperClassName(this._struct, this.dimensions);\n');
-
-    final indexSwitchKey = _getIndexSwitchKey();
-    // Add _checkArrayBounds method
-    s.write('void _checkArrayBounds(${_getIndexParameters()}) {\n');
-    for (int i = 0; i < dimensions.length; i++) {
-      s.write('if(i${i + 1}<0 || i${i + 1}>=dimensions[$i]){\n');
+      // Write class declaration.
+      s.write('class ${helperClassName}{\n');
+      s.write('final $structName $structIdentifier;\n');
+      s.write('final List<int> $dimensionsIdentifier;\n');
+      s.write('final int $levelIdentifier;\n');
+      s.write('final int $absoluteIndexIdentifier;\n');
       s.write(
-          "throw RangeError('i${i + 1} not in range 0..${dimensions[i]} exclusive.');");
-      s.write('}');
-    }
-    s.write('}\n');
+          'int get $legthIdentifier => $dimensionsIdentifier[$levelIdentifier];\n');
 
-    // Add setValue method.
-    s.write('void setValue(${_getIndexParameters()}$arrayType value) {\n');
-    s.write('_checkArrayBounds(${_getIndexParameters(false)});\n');
-    s.write('switch(${indexSwitchKey}) {\n');
-    for (int i = 0; i < expandedArrayLength; i++) {
-      s.write('case $i:\n');
-      s.write('  _struct.${elementNamePrefix}$i = value;\n');
-      s.write('  break;\n');
-    }
-    s.write('default:\n');
-    s.write("  throw RangeError('Index(s) not in range');");
-    s.write('}\n');
-    s.write('}\n');
+      // Write class constructor.
+      s.write(
+          '$helperClassName(this.$structIdentifier, this.$dimensionsIdentifier, this.$levelIdentifier, this.$absoluteIndexIdentifier);\n');
 
-    // Add getValue method.
-    s.write('$arrayType getValue(${_getIndexParameters()}) {\n');
-    s.write('_checkArrayBounds(${_getIndexParameters(false)});\n');
-    s.write('switch(${indexSwitchKey}) {\n');
-    for (int i = 0; i < expandedArrayLength; i++) {
-      s.write('case $i:\n');
-      s.write('  return _struct.${elementNamePrefix}$i;\n');
+      // Write checkBoundsFunction
+      s.write('''
+  void $checkBoundsFunctionIdentifier(int index) {
+    if (index >= $legthIdentifier || index < 0) {
+      throw RangeError('Dimension \$$levelIdentifier: index not in range 0..\${$legthIdentifier} exclusive.');
     }
-    s.write('default:\n');
-    s.write("  throw RangeError('Index(s) not in range');");
-    s.write('}\n');
-    s.write('}\n');
-
-    s.write('}\n\n');
-    return s.toString();
   }
-
-  /// Returns raw index parameters as string.
-  ///
-  /// E.g -> If [dimensions.dimensions] = 3,
-  /// output: "int i1, int i2, int i3,"
-  ///
-  /// If [addType] is false types are removed.
-  ///
-  /// E.g -> If [dimensions.dimensions] = 3,
-  /// output: "i1,i2,i3,"
-  String _getIndexParameters([bool addType = true]) {
-    final sb = StringBuffer();
-    for (var i = 0; i < dimensions.length; i++) {
-      if (addType) {
-        sb.write('int i${i + 1}, ');
+  ''');
+      // If this isn't the last level.
+      if (dim + 1 != dimensions.length) {
+        // Override [] operator.
+        s.write('''
+  ${helperClassGroupName}_level${dim + 1} operator [](int index) {
+    $checkBoundsFunctionIdentifier(index);
+    int offset = index;
+    for (int i = level + 1; i < $dimensionsIdentifier.length; i++) {
+      offset *= $dimensionsIdentifier[i];
+    }
+    return ${helperClassGroupName}_level${dim + 1}(
+        $structIdentifier, $dimensionsIdentifier, $levelIdentifier + 1, $absoluteIndexIdentifier + offset);
+  }
+''');
       } else {
-        sb.write('i${i + 1}, ');
-      }
-    }
-    return sb.toString();
-  }
+        // This is the last level, add switching logic here.
+        // Override [] operator.
+        s.write('$arrayType operator[](int index){\n');
+        s.write('$checkBoundsFunctionIdentifier(index);\n');
+        s.write('switch($absoluteIndexIdentifier+index){\n');
+        for (int i = 0; i < expandedArrayLength; i++) {
+          s.write('case $i:\n');
+          s.write('  return $structIdentifier.${elementNamePrefix}$i;\n');
+        }
+        s.write('default:\n');
+        s.write("  throw Exception('Invalid Array Helper generated.');");
+        s.write('}\n');
+        s.write('}\n');
 
-  /// Maps n-D array to 1-D array.
-  String _getIndexSwitchKey() {
-    final sb = StringBuffer();
-    for (int i = 0; i < dimensions.length - 1; i++) {
-      sb.write('i${i + 1}');
-      for (int j = i + 1; j < dimensions.length; j++) {
-        sb.write('*dimensions[${j}]');
+        // Override []= operator.
+        s.write('void operator[]=(int index, $arrayType value){\n');
+        s.write('$checkBoundsFunctionIdentifier(index);\n');
+        s.write('switch($absoluteIndexIdentifier+index){\n');
+        for (int i = 0; i < expandedArrayLength; i++) {
+          s.write('case $i:\n');
+          s.write('  $structIdentifier.${elementNamePrefix}$i = value;\n');
+          s.write('  break;\n');
+        }
+        s.write('default:\n');
+        s.write("  throw Exception('Invalid Array Helper generated.');\n");
+        s.write('}\n');
+        s.write('}\n');
       }
-      sb.write('+');
+      s.write('}\n');
     }
-    sb.write('i${dimensions.length}');
-    return sb.toString();
+    return s.toString();
   }
 }

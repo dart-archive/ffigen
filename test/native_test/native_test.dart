@@ -63,7 +63,7 @@ void main() {
       for (int i = 0; i < struct1.ref.data.dimensions[0]; i++) {
         for (int j = 0; j < struct1.ref.data.dimensions[1]; j++) {
           for (int k = 0; k < struct1.ref.data.dimensions[2]; k++) {
-            expect(struct1.ref.data.getValue(i, j, k), expectedValue);
+            expect(struct1.ref.data[i][j][k], expectedValue);
             expectedValue++;
           }
         }
@@ -72,34 +72,33 @@ void main() {
     test('array-workaround: Range Errors', () {
       final struct1 = bindings.getStruct1();
       // Index (get) above range.
-      expect(() => struct1.ref.data.getValue(4, 0, 0),
-          throwsA(TypeMatcher<RangeError>()));
-      expect(() => struct1.ref.data.getValue(0, 2, 0),
-          throwsA(TypeMatcher<RangeError>()));
-      expect(() => struct1.ref.data.getValue(0, 0, 3),
-          throwsA(TypeMatcher<RangeError>()));
+      expect(
+          () => struct1.ref.data[4][0][0], throwsA(TypeMatcher<RangeError>()));
+      expect(
+          () => struct1.ref.data[0][2][0], throwsA(TypeMatcher<RangeError>()));
+      expect(
+          () => struct1.ref.data[0][0][3], throwsA(TypeMatcher<RangeError>()));
       // Index (get) below range.
-      expect(() => struct1.ref.data.getValue(-1, 0, 0),
-          throwsA(TypeMatcher<RangeError>()));
-      expect(() => struct1.ref.data.getValue(0, -1, 0),
-          throwsA(TypeMatcher<RangeError>()));
-      expect(() => struct1.ref.data.getValue(0, 0, -1),
-          throwsA(TypeMatcher<RangeError>()));
+      expect(
+          () => struct1.ref.data[-1][0][0], throwsA(TypeMatcher<RangeError>()));
+      expect(
+          () => struct1.ref.data[-1][0][0], throwsA(TypeMatcher<RangeError>()));
+      expect(
+          () => struct1.ref.data[0][0][-1], throwsA(TypeMatcher<RangeError>()));
 
       // Index (set) above range.
-      expect(() => struct1.ref.data.setValue(4, 0, 0, 0),
+      expect(() => struct1.ref.data[4][0][0] = 0,
           throwsA(TypeMatcher<RangeError>()));
-      expect(() => struct1.ref.data.setValue(0, 2, 0, 0),
+      expect(() => struct1.ref.data[0][2][0] = 0,
           throwsA(TypeMatcher<RangeError>()));
-      expect(() => struct1.ref.data.setValue(0, 0, 3, 0),
+      expect(() => struct1.ref.data[0][0][3] = 0,
           throwsA(TypeMatcher<RangeError>()));
-
-      // Index (set) below range.
-      expect(() => struct1.ref.data.setValue(4, 0, 0, 0),
+      // Index (get) below range.
+      expect(() => struct1.ref.data[-1][0][0] = 0,
           throwsA(TypeMatcher<RangeError>()));
-      expect(() => struct1.ref.data.setValue(0, 2, 0, 0),
+      expect(() => struct1.ref.data[-1][0][0] = 0,
           throwsA(TypeMatcher<RangeError>()));
-      expect(() => struct1.ref.data.setValue(0, 0, 3, 0),
+      expect(() => struct1.ref.data[0][0][-1] = 0,
           throwsA(TypeMatcher<RangeError>()));
     });
   });
