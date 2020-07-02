@@ -15,6 +15,12 @@ Set<String> _functions = {};
 Set<String> _enumClass = {};
 Set<String> _typedefC = {};
 
+bool isNameConflicting(String name) =>
+    _structs.contains(name) ||
+    _functions.contains(name) ||
+    _enumClass.contains(name) ||
+    _typedefC.contains(name);
+
 bool shouldIncludeStruct(String name) {
   if (_structs.contains(name) || name == '') {
     return false;

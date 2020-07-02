@@ -70,8 +70,6 @@ const commentTypeSet = {brief, full, none};
 
 // Library input.
 const initFunctionName = 'init-function-name';
-const dylibVariableName = 'dylib-variable-name';
-const ffiLibraryPrefix = 'ffi-import-prefix';
 const preamble = 'preamble';
 
 // General Prefix.

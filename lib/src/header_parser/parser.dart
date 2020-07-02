@@ -22,9 +22,9 @@ Library parse(Config conf, {bool sort = false}) {
 
   final library = Library(
     bindings: bindings,
-    initFunctionIdentifier: data.config.initFunctionName,
-    dylibIdentifier: data.config.dylibVariableName,
-    ffiLibraryPrefix: data.config.ffiLibraryPrefix,
+    initFunctionIdentifier: getNonConflictingName(data.config.initFunctionName),
+    dylibIdentifier: getNonConflictingName('_dylib'),
+    ffiLibraryPrefix: getNonConflictingName('ffi'),
     header: data.config.preamble,
     functionPrefix: data.config.functionPrefix,
     structPrefix: data.config.structPrefix,

@@ -70,14 +70,8 @@ class Config {
   /// Name of the init function used to initialise the dynamic library.
   String initFunctionName;
 
-  /// Name of the dylib variable name used in bindings.
-  String dylibVariableName;
-
   /// Header of the generated bindings.
   String preamble;
-
-  /// The import prefix used when importing dart:ffi in bindings.
-  String ffiLibraryPrefix;
 
   /// Prefix for functions.
   String functionPrefix;
@@ -280,24 +274,6 @@ class Config {
         defaultValue: () => 'init',
         extractedResult: (dynamic result) =>
             initFunctionName = result as String,
-      ),
-      strings.dylibVariableName: Specification<String>(
-        description: 'Name of the dylib variable used in bindings',
-        isRequired: false,
-        validator: stringValidator,
-        extractor: stringExtractor,
-        defaultValue: () => '_dylib',
-        extractedResult: (dynamic result) =>
-            dylibVariableName = result as String,
-      ),
-      strings.ffiLibraryPrefix: Specification<String>(
-        description: 'Import prefix for dart:ffi used in bindings',
-        isRequired: false,
-        validator: stringValidator,
-        extractor: stringExtractor,
-        defaultValue: () => 'ffi',
-        extractedResult: (dynamic result) =>
-            ffiLibraryPrefix = result as String,
       ),
       strings.preamble: Specification<String>(
         description: 'Header String for the generated bindings',

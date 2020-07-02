@@ -59,12 +59,6 @@ ffigen:
     unsigned long long: 8
     enum: 4
 
-  # Default is 'ffi'.
-  ffi-import-prefix: ffi
-
-  # Default is '_dylib'.
-  dylib-variable-name: _dylib
-
   # Default is 'init'
   init-function-name: init
 
