@@ -129,7 +129,7 @@ Pointer<clang.CXSourceRange> lastCommentRange = nullptr;
 /// Returns a cursor's associated comment.
 ///
 /// The given string is wrapped at line width = 80 - [indent]. The [indent] is
-/// [commentPrefix.length] by default because a comment starts with
+/// [commentPrefix.dimensions] by default because a comment starts with
 /// [commentPrefix].
 String getCursorDocComment(Pointer<clang.CXCursor> cursor,
     [int indent = commentPrefix.length]) {

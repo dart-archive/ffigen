@@ -6,11 +6,12 @@
 #    dart ../../bin/ffigen.dart --config config.yaml
 # ===============================================================
 
-output: 'native_functions_bindings.dart'
+output: 'native_test_bindings.dart'
 libclang-dylib-folder: '../../tool/wrapped_libclang'
 sort: true
 headers:
-  - 'native_functions.c'
+  - 'native_test.c'
 header-filter:
   include:
-    - 'native_functions.c'
+    - 'native_test.c'
+array-workaround: true

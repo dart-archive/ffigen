@@ -21,6 +21,8 @@ header-filter:
     - Index.h
     - CXString.h
 
+array-workaround: true
+
 enums:
   include:
     names:

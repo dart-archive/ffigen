@@ -38,6 +38,7 @@ enum BroadType {
 
   /// Stores its element type in NativeType as only those are supported.
   ConstantArray,
+  IncompleteArray,
 
   /// Used as a marker, so that functions/structs having these can exclude them.
   Unimplemented,
@@ -73,12 +74,11 @@ class Type {
   /// The BroadType of this Type.
   final BroadType broadType;
 
-  /// Child Type, e.g Pointer(Parent) to Int(Child).
+  /// Child Type, e.g Pointer(Parent) to Int(Child), or Child Type of an Array.
   final Type child;
 
-  /// For ConstantArray type.
-  final int arrayLength;
-  final Type elementType;
+  /// For ConstantArray and IncompleteArray type.
+  final int length;
 
   /// For storing cursor type info for an unimplemented type.
   String unimplementedReason;
@@ -89,8 +89,7 @@ class Type {
     this.structName,
     this.nativeType,
     this.nativeFuncName,
-    this.arrayLength,
-    this.elementType,
+    this.length,
     this.unimplementedReason,
   });
 
@@ -107,8 +106,18 @@ class Type {
   factory Type.nativeType(SupportedNativeType nativeType) {
     return Type._(broadType: BroadType.NativeType, nativeType: nativeType);
   }
-  factory Type.constantArray(int arrayLength, Type elementType) {
-    return Type._(broadType: BroadType.ConstantArray, elementType: elementType);
+  factory Type.constantArray(int length, Type elementType) {
+    return Type._(
+      broadType: BroadType.ConstantArray,
+      child: elementType,
+      length: length,
+    );
+  }
+  factory Type.incompleteArray(Type elementType) {
+    return Type._(
+      broadType: BroadType.ConstantArray,
+      child: elementType,
+    );
   }
   factory Type.unimplemented(String reason) {
     return Type._(
@@ -117,12 +126,25 @@ class Type {
 
   /// Get base broad type for any type.
   ///
-  /// E.g int** has base Broadtype as NativeType.
+  /// E.g int** has base Broadtype as NativeType,
+  /// double[2][3] has base broadtype as double.
   BroadType getBaseBroadType() {
-    if (broadType == BroadType.Pointer) {
+    if (child != null) {
       return child.getBaseBroadType();
     } else {
       return broadType;
+    }
+  }
+
+  /// Get base Array type.
+  ///
+  /// Returns itself if it's not an Array Type.
+  Type getBaseArrayType() {
+    if (broadType == BroadType.ConstantArray ||
+        broadType == BroadType.IncompleteArray) {
+      return child.getBaseArrayType();
+    } else {
+      return this;
     }
   }
 
@@ -138,6 +160,12 @@ class Type {
         return structName;
       case BroadType.NativeFunction:
         return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFuncName}>';
+      case BroadType
+          .IncompleteArray: // Array parameters are treated as Pointers in C.
+        return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
+      case BroadType
+          .ConstantArray: // Array parameters are treated as Pointers in C.
+        return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
       default:
         throw Exception('cType unknown');
     }
@@ -153,6 +181,12 @@ class Type {
         return structName;
       case BroadType.NativeFunction:
         return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFuncName}>';
+      case BroadType
+          .IncompleteArray: // Array parameters are treated as Pointers in C.
+        return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
+      case BroadType
+          .ConstantArray: // Array parameters are treated as Pointers in C.
+        return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
       default:
         throw Exception('dart type unknown for ${broadType.toString()}');
     }

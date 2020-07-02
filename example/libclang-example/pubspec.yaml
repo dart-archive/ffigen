@@ -59,5 +59,8 @@ ffigen:
     unsigned long long: 8
     enum: 4
 
-  # Doc Comments for generated binings: Can be full, brief(default) or none
+  # False by default.
+  array-workaround: true
+
+  # Doc Comments for generated binings: Can be full, brief(default) or none.
   comments: full

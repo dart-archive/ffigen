@@ -58,6 +58,7 @@ const sizemap_native_mapping = <String, int>{
 const sort = 'sort';
 const useSupportedTypedefs = 'use-supported-typedefs';
 const warnWhenRemoving = 'warn-when-removing';
+const arrayWorkaround = 'array-workaround';
 
 const comments = 'comments';
 // Comment type.

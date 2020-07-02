@@ -8,6 +8,7 @@ import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
+import '../data.dart';
 import '../includer.dart';
 import '../utils.dart';
 
@@ -53,6 +54,7 @@ Struc parseStructDeclaration(
 List<Member> _members;
 List<Member> _getMembers(Pointer<clang.CXCursor> cursor, String structName) {
   _members = [];
+  arrayMember = false;
   nestedStructMember = false;
   unimplementedMemberType = false;
 
@@ -65,7 +67,13 @@ List<Member> _getMembers(Pointer<clang.CXCursor> cursor, String structName) {
   visitChildrenResultChecker(resultCode);
 
   // Returning null to exclude the struct members as it has a struct by value field.
-  if (nestedStructMember) {
+  if (arrayMember && !config.arrayWorkaround) {
+    _logger.fine(
+        '---- Removed Struct members, reason: struct has array members ${cursor.completeStringRepr()}');
+    _logger.warning(
+        'Removed All Struct Members from: $structName, Array members not supported');
+    return null;
+  } else if (nestedStructMember) {
     _logger.fine(
         '---- Removed Struct members, reason: struct has struct members ${cursor.completeStringRepr()}');
     _logger.warning(
@@ -84,6 +92,7 @@ List<Member> _getMembers(Pointer<clang.CXCursor> cursor, String structName) {
 
 bool nestedStructMember = false;
 bool unimplementedMemberType = false;
+bool arrayMember = false;
 
 /// Visitor for the struct cursor [CXCursorKind.CXCursor_StructDecl].
 ///
@@ -98,11 +107,14 @@ int _structMembersVisitor(Pointer<clang.CXCursor> cursor,
 
       //TODO(4): Remove these when support for Structs by value arrives.
       if (mt.broadType == BroadType.Struct) {
-        // Setting this flag will exclude adding members for this struct's bindings.
+        // Setting this flag will exclude adding members for this struct's
+        // bindings.
         nestedStructMember = true;
       } else if (mt.broadType == BroadType.ConstantArray) {
-        if (mt.elementType.broadType == BroadType.Struct) {
-          // Setting this flag will exclude adding members for this struct's bindings.
+        arrayMember = true;
+        if (mt.child.broadType == BroadType.Struct) {
+          // Setting this flag will exclude adding members for this struct's
+          // bindings.
           nestedStructMember = true;
         }
       }

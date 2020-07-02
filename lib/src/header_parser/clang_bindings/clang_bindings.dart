@@ -39,17 +39,44 @@ class CXCursor extends ffi.Struct {
   ffi.Pointer<ffi.Void> _data_item_1;
   ffi.Pointer<ffi.Void> _data_item_2;
 
-  /// helper for array, supports `[]` operator
-  _ArrayHelper_CXCursor_data get data => _ArrayHelper_CXCursor_data(this, 3);
+  /// Helper for array `data`.
+  ArrayHelper_CXCursor_data_level0 get data =>
+      ArrayHelper_CXCursor_data_level0(this, [3], 0, 0);
 }
 
-/// Helper for array data in struct CXCursor
-class _ArrayHelper_CXCursor_data {
+/// Helper for array `data` in struct `CXCursor`.
+class ArrayHelper_CXCursor_data_level0 {
   final CXCursor _struct;
-  final int length;
-  _ArrayHelper_CXCursor_data(this._struct, this.length);
+  final List<int> dimensions;
+  final int level;
+  final int _absoluteIndex;
+  int get length => dimensions[level];
+  ArrayHelper_CXCursor_data_level0(
+      this._struct, this.dimensions, this.level, this._absoluteIndex);
+  void _checkBounds(int index) {
+    if (index >= length || index < 0) {
+      throw RangeError(
+          'Dimension $level: index not in range 0..${length} exclusive.');
+    }
+  }
+
+  ffi.Pointer<ffi.Void> operator [](int index) {
+    _checkBounds(index);
+    switch (_absoluteIndex + index) {
+      case 0:
+        return _struct._data_item_0;
+      case 1:
+        return _struct._data_item_1;
+      case 2:
+        return _struct._data_item_2;
+      default:
+        throw Exception('Invalid Array Helper generated.');
+    }
+  }
+
   void operator []=(int index, ffi.Pointer<ffi.Void> value) {
-    switch (index) {
+    _checkBounds(index);
+    switch (_absoluteIndex + index) {
       case 0:
         _struct._data_item_0 = value;
         break;
@@ -60,34 +87,8 @@ class _ArrayHelper_CXCursor_data {
         _struct._data_item_2 = value;
         break;
       default:
-        throw RangeError('Index $index must be in the range [0..2].');
+        throw Exception('Invalid Array Helper generated.');
     }
-  }
-
-  ffi.Pointer<ffi.Void> operator [](int index) {
-    switch (index) {
-      case 0:
-        return _struct._data_item_0;
-      case 1:
-        return _struct._data_item_1;
-      case 2:
-        return _struct._data_item_2;
-      default:
-        throw RangeError('Index $index must be in the range [0..2].');
-    }
-  }
-
-  @override
-  String toString() {
-    if (length == 0) return '[]';
-    final sb = StringBuffer('[');
-    sb.write(this[0]);
-    for (var i = 1; i < length; i++) {
-      sb.write(',');
-      sb.write(this[i]);
-    }
-    sb.write(']');
-    return sb.toString();
   }
 }
 
@@ -770,60 +771,54 @@ class CXDiagnosticDisplayOptions {
 class CXSourceLocation extends ffi.Struct {
   ffi.Pointer<ffi.Void> _ptr_data_item_0;
   ffi.Pointer<ffi.Void> _ptr_data_item_1;
-  ffi.Pointer<ffi.Void> _ptr_data_item_2;
 
-  /// helper for array, supports `[]` operator
-  _ArrayHelper_CXSourceLocation_ptr_data get ptr_data =>
-      _ArrayHelper_CXSourceLocation_ptr_data(this, 3);
+  /// Helper for array `ptr_data`.
+  ArrayHelper_CXSourceLocation_ptr_data_level0 get ptr_data =>
+      ArrayHelper_CXSourceLocation_ptr_data_level0(this, [2], 0, 0);
   @ffi.Uint32()
   int int_data;
 }
 
-/// Helper for array ptr_data in struct CXSourceLocation
-class _ArrayHelper_CXSourceLocation_ptr_data {
+/// Helper for array `ptr_data` in struct `CXSourceLocation`.
+class ArrayHelper_CXSourceLocation_ptr_data_level0 {
   final CXSourceLocation _struct;
-  final int length;
-  _ArrayHelper_CXSourceLocation_ptr_data(this._struct, this.length);
+  final List<int> dimensions;
+  final int level;
+  final int _absoluteIndex;
+  int get length => dimensions[level];
+  ArrayHelper_CXSourceLocation_ptr_data_level0(
+      this._struct, this.dimensions, this.level, this._absoluteIndex);
+  void _checkBounds(int index) {
+    if (index >= length || index < 0) {
+      throw RangeError(
+          'Dimension $level: index not in range 0..${length} exclusive.');
+    }
+  }
+
+  ffi.Pointer<ffi.Void> operator [](int index) {
+    _checkBounds(index);
+    switch (_absoluteIndex + index) {
+      case 0:
+        return _struct._ptr_data_item_0;
+      case 1:
+        return _struct._ptr_data_item_1;
+      default:
+        throw Exception('Invalid Array Helper generated.');
+    }
+  }
+
   void operator []=(int index, ffi.Pointer<ffi.Void> value) {
-    switch (index) {
+    _checkBounds(index);
+    switch (_absoluteIndex + index) {
       case 0:
         _struct._ptr_data_item_0 = value;
         break;
       case 1:
         _struct._ptr_data_item_1 = value;
         break;
-      case 2:
-        _struct._ptr_data_item_2 = value;
-        break;
       default:
-        throw RangeError('Index $index must be in the range [0..2].');
+        throw Exception('Invalid Array Helper generated.');
     }
-  }
-
-  ffi.Pointer<ffi.Void> operator [](int index) {
-    switch (index) {
-      case 0:
-        return _struct._ptr_data_item_0;
-      case 1:
-        return _struct._ptr_data_item_1;
-      case 2:
-        return _struct._ptr_data_item_2;
-      default:
-        throw RangeError('Index $index must be in the range [0..2].');
-    }
-  }
-
-  @override
-  String toString() {
-    if (length == 0) return '[]';
-    final sb = StringBuffer('[');
-    sb.write(this[0]);
-    for (var i = 1; i < length; i++) {
-      sb.write(',');
-      sb.write(this[i]);
-    }
-    sb.write(']');
-    return sb.toString();
   }
 }
 
@@ -831,11 +826,10 @@ class _ArrayHelper_CXSourceLocation_ptr_data {
 class CXSourceRange extends ffi.Struct {
   ffi.Pointer<ffi.Void> _ptr_data_item_0;
   ffi.Pointer<ffi.Void> _ptr_data_item_1;
-  ffi.Pointer<ffi.Void> _ptr_data_item_2;
 
-  /// helper for array, supports `[]` operator
-  _ArrayHelper_CXSourceRange_ptr_data get ptr_data =>
-      _ArrayHelper_CXSourceRange_ptr_data(this, 3);
+  /// Helper for array `ptr_data`.
+  ArrayHelper_CXSourceRange_ptr_data_level0 get ptr_data =>
+      ArrayHelper_CXSourceRange_ptr_data_level0(this, [2], 0, 0);
   @ffi.Uint32()
   int begin_int_data;
 
@@ -843,51 +837,46 @@ class CXSourceRange extends ffi.Struct {
   int end_int_data;
 }
 
-/// Helper for array ptr_data in struct CXSourceRange
-class _ArrayHelper_CXSourceRange_ptr_data {
+/// Helper for array `ptr_data` in struct `CXSourceRange`.
+class ArrayHelper_CXSourceRange_ptr_data_level0 {
   final CXSourceRange _struct;
-  final int length;
-  _ArrayHelper_CXSourceRange_ptr_data(this._struct, this.length);
+  final List<int> dimensions;
+  final int level;
+  final int _absoluteIndex;
+  int get length => dimensions[level];
+  ArrayHelper_CXSourceRange_ptr_data_level0(
+      this._struct, this.dimensions, this.level, this._absoluteIndex);
+  void _checkBounds(int index) {
+    if (index >= length || index < 0) {
+      throw RangeError(
+          'Dimension $level: index not in range 0..${length} exclusive.');
+    }
+  }
+
+  ffi.Pointer<ffi.Void> operator [](int index) {
+    _checkBounds(index);
+    switch (_absoluteIndex + index) {
+      case 0:
+        return _struct._ptr_data_item_0;
+      case 1:
+        return _struct._ptr_data_item_1;
+      default:
+        throw Exception('Invalid Array Helper generated.');
+    }
+  }
+
   void operator []=(int index, ffi.Pointer<ffi.Void> value) {
-    switch (index) {
+    _checkBounds(index);
+    switch (_absoluteIndex + index) {
       case 0:
         _struct._ptr_data_item_0 = value;
         break;
       case 1:
         _struct._ptr_data_item_1 = value;
         break;
-      case 2:
-        _struct._ptr_data_item_2 = value;
-        break;
       default:
-        throw RangeError('Index $index must be in the range [0..2].');
+        throw Exception('Invalid Array Helper generated.');
     }
-  }
-
-  ffi.Pointer<ffi.Void> operator [](int index) {
-    switch (index) {
-      case 0:
-        return _struct._ptr_data_item_0;
-      case 1:
-        return _struct._ptr_data_item_1;
-      case 2:
-        return _struct._ptr_data_item_2;
-      default:
-        throw RangeError('Index $index must be in the range [0..2].');
-    }
-  }
-
-  @override
-  String toString() {
-    if (length == 0) return '[]';
-    final sb = StringBuffer('[');
-    sb.write(this[0]);
-    for (var i = 1; i < length; i++) {
-      sb.write(',');
-      sb.write(this[i]);
-    }
-    sb.write(']');
-    return sb.toString();
   }
 }
 
@@ -972,57 +961,52 @@ class CXType extends ffi.Struct {
 
   ffi.Pointer<ffi.Void> _data_item_0;
   ffi.Pointer<ffi.Void> _data_item_1;
-  ffi.Pointer<ffi.Void> _data_item_2;
 
-  /// helper for array, supports `[]` operator
-  _ArrayHelper_CXType_data get data => _ArrayHelper_CXType_data(this, 3);
+  /// Helper for array `data`.
+  ArrayHelper_CXType_data_level0 get data =>
+      ArrayHelper_CXType_data_level0(this, [2], 0, 0);
 }
 
-/// Helper for array data in struct CXType
-class _ArrayHelper_CXType_data {
+/// Helper for array `data` in struct `CXType`.
+class ArrayHelper_CXType_data_level0 {
   final CXType _struct;
-  final int length;
-  _ArrayHelper_CXType_data(this._struct, this.length);
+  final List<int> dimensions;
+  final int level;
+  final int _absoluteIndex;
+  int get length => dimensions[level];
+  ArrayHelper_CXType_data_level0(
+      this._struct, this.dimensions, this.level, this._absoluteIndex);
+  void _checkBounds(int index) {
+    if (index >= length || index < 0) {
+      throw RangeError(
+          'Dimension $level: index not in range 0..${length} exclusive.');
+    }
+  }
+
+  ffi.Pointer<ffi.Void> operator [](int index) {
+    _checkBounds(index);
+    switch (_absoluteIndex + index) {
+      case 0:
+        return _struct._data_item_0;
+      case 1:
+        return _struct._data_item_1;
+      default:
+        throw Exception('Invalid Array Helper generated.');
+    }
+  }
+
   void operator []=(int index, ffi.Pointer<ffi.Void> value) {
-    switch (index) {
+    _checkBounds(index);
+    switch (_absoluteIndex + index) {
       case 0:
         _struct._data_item_0 = value;
         break;
       case 1:
         _struct._data_item_1 = value;
         break;
-      case 2:
-        _struct._data_item_2 = value;
-        break;
       default:
-        throw RangeError('Index $index must be in the range [0..2].');
+        throw Exception('Invalid Array Helper generated.');
     }
-  }
-
-  ffi.Pointer<ffi.Void> operator [](int index) {
-    switch (index) {
-      case 0:
-        return _struct._data_item_0;
-      case 1:
-        return _struct._data_item_1;
-      case 2:
-        return _struct._data_item_2;
-      default:
-        throw RangeError('Index $index must be in the range [0..2].');
-    }
-  }
-
-  @override
-  String toString() {
-    if (length == 0) return '[]';
-    final sb = StringBuffer('[');
-    sb.write(this[0]);
-    for (var i = 1; i < length; i++) {
-      sb.write(',');
-      sb.write(this[i]);
-    }
-    sb.write(']');
-    return sb.toString();
   }
 }
 
