@@ -21,7 +21,6 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
   _func = null;
   structByValueParameter = false;
   unimplementedParameterType = false;
-  constantArrayParameterType = false;
 
   final name = cursor.spelling();
   if (shouldIncludeFunc(name)) {
@@ -36,14 +35,6 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
           '---- Removed Function, reason: struct pass/return by value: ${cursor.completeStringRepr()}');
       _logger.warning(
           "Skipped Function '$name', struct pass/return by value not supported.");
-      return null; // Returning null so that [addToBindings] function excludes this.
-    }
-
-    if (constantArrayParameterType) {
-      _logger.fine(
-          '---- Removed Function, reason: constant array passed to function parameter: ${cursor.completeStringRepr()}');
-      _logger.warning(
-          "Skipped Function '$name', constant array in function parameter not supported.");
       return null; // Returning null so that [addToBindings] function excludes this.
     }
 
@@ -68,7 +59,6 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
 }
 
 bool structByValueParameter = false;
-bool constantArrayParameterType = false;
 bool unimplementedParameterType = false;
 Type _getFunctionReturnType(Pointer<clang.CXCursor> cursor) {
   return cursor.returnType().toCodeGenTypeAndDispose();
@@ -87,8 +77,6 @@ List<Parameter> _getParameters(Pointer<clang.CXCursor> cursor) {
     //TODO(3): Remove this when support for Structs by value arrives.
     if (pt.broadType == BroadType.Struct) {
       structByValueParameter = true;
-    } else if (pt.broadType == BroadType.ConstantArray) {
-      constantArrayParameterType = true;
     } else if (pt.getBaseBroadType() == BroadType.Unimplemented) {
       unimplementedParameterType = true;
     }

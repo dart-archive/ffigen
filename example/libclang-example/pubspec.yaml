@@ -59,14 +59,17 @@ ffigen:
     unsigned long long: 8
     enum: 4
 
-  # True by default
-  extract-comments: true
-
-  # default is ffi
+  # Default is 'ffi'.
   ffi-import-prefix: ffi
 
-  # default is _dylib
+  # Default is '_dylib'.
   dylib-variable-name: _dylib
 
-  # default is init
+  # Default is 'init'
   init-function-name: init
+
+  # False by default.
+  array-workaround: true
+
+  # Doc Comments for generated binings: Can be full, brief(default) or none.
+  comments: full

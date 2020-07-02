@@ -224,3 +224,153 @@ typedef _c_Function1Uint8 = ffi.Uint8 Function(
 typedef _dart_Function1Uint8 = int Function(
   int x,
 );
+
+class Struct1 extends ffi.Struct {
+  @ffi.Int8()
+  int a;
+
+  @ffi.Int32()
+  int _data_item_0;
+  @ffi.Int32()
+  int _data_item_1;
+  @ffi.Int32()
+  int _data_item_2;
+  @ffi.Int32()
+  int _data_item_3;
+  @ffi.Int32()
+  int _data_item_4;
+  @ffi.Int32()
+  int _data_item_5;
+
+  /// Helper for array `data`.
+  ArrayHelper_Struct1_data_level0 get data =>
+      ArrayHelper_Struct1_data_level0(this, [3, 1, 2], 0, 0);
+}
+
+/// Helper for array `data` in struct `Struct1`.
+class ArrayHelper_Struct1_data_level0 {
+  final Struct1 _struct;
+  final List<int> dimensions;
+  final int level;
+  final int _absoluteIndex;
+  int get length => dimensions[level];
+  ArrayHelper_Struct1_data_level0(
+      this._struct, this.dimensions, this.level, this._absoluteIndex);
+  void _checkBounds(int index) {
+    if (index >= length || index < 0) {
+      throw RangeError(
+          'Dimension $level: index not in range 0..${length} exclusive.');
+    }
+  }
+
+  ArrayHelper_Struct1_data_level1 operator [](int index) {
+    _checkBounds(index);
+    int offset = index;
+    for (int i = level + 1; i < dimensions.length; i++) {
+      offset *= dimensions[i];
+    }
+    return ArrayHelper_Struct1_data_level1(
+        _struct, dimensions, level + 1, _absoluteIndex + offset);
+  }
+}
+
+/// Helper for array `data` in struct `Struct1`.
+class ArrayHelper_Struct1_data_level1 {
+  final Struct1 _struct;
+  final List<int> dimensions;
+  final int level;
+  final int _absoluteIndex;
+  int get length => dimensions[level];
+  ArrayHelper_Struct1_data_level1(
+      this._struct, this.dimensions, this.level, this._absoluteIndex);
+  void _checkBounds(int index) {
+    if (index >= length || index < 0) {
+      throw RangeError(
+          'Dimension $level: index not in range 0..${length} exclusive.');
+    }
+  }
+
+  ArrayHelper_Struct1_data_level2 operator [](int index) {
+    _checkBounds(index);
+    int offset = index;
+    for (int i = level + 1; i < dimensions.length; i++) {
+      offset *= dimensions[i];
+    }
+    return ArrayHelper_Struct1_data_level2(
+        _struct, dimensions, level + 1, _absoluteIndex + offset);
+  }
+}
+
+/// Helper for array `data` in struct `Struct1`.
+class ArrayHelper_Struct1_data_level2 {
+  final Struct1 _struct;
+  final List<int> dimensions;
+  final int level;
+  final int _absoluteIndex;
+  int get length => dimensions[level];
+  ArrayHelper_Struct1_data_level2(
+      this._struct, this.dimensions, this.level, this._absoluteIndex);
+  void _checkBounds(int index) {
+    if (index >= length || index < 0) {
+      throw RangeError(
+          'Dimension $level: index not in range 0..${length} exclusive.');
+    }
+  }
+
+  int operator [](int index) {
+    _checkBounds(index);
+    switch (_absoluteIndex + index) {
+      case 0:
+        return _struct._data_item_0;
+      case 1:
+        return _struct._data_item_1;
+      case 2:
+        return _struct._data_item_2;
+      case 3:
+        return _struct._data_item_3;
+      case 4:
+        return _struct._data_item_4;
+      case 5:
+        return _struct._data_item_5;
+      default:
+        throw Exception('Invalid Array Helper generated.');
+    }
+  }
+
+  void operator []=(int index, int value) {
+    _checkBounds(index);
+    switch (_absoluteIndex + index) {
+      case 0:
+        _struct._data_item_0 = value;
+        break;
+      case 1:
+        _struct._data_item_1 = value;
+        break;
+      case 2:
+        _struct._data_item_2 = value;
+        break;
+      case 3:
+        _struct._data_item_3 = value;
+        break;
+      case 4:
+        _struct._data_item_4 = value;
+        break;
+      case 5:
+        _struct._data_item_5 = value;
+        break;
+      default:
+        throw Exception('Invalid Array Helper generated.');
+    }
+  }
+}
+
+ffi.Pointer<Struct1> getStruct1() {
+  return _getStruct1();
+}
+
+final _dart_getStruct1 _getStruct1 =
+    _dylib.lookupFunction<_c_getStruct1, _dart_getStruct1>('getStruct1');
+
+typedef _c_getStruct1 = ffi.Pointer<Struct1> Function();
+
+typedef _dart_getStruct1 = ffi.Pointer<Struct1> Function();

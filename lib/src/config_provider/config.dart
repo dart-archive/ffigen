@@ -59,8 +59,13 @@ class Config {
   /// If typedef of supported types(int8_t) should be directly used.
   bool useSupportedTypedefs;
 
-  /// If tool should extract doc comment from bindings.
-  bool extractComments;
+  /// Extracted Doc comment type.
+  String comment;
+
+  /// If tool should generate array workarounds.
+  ///
+  /// If false(default), structs with inline array members will have all its members removed.
+  bool arrayWorkaround;
 
   /// Name of the init function used to initialise the dynamic library.
   String initFunctionName;
@@ -247,13 +252,22 @@ class Config {
         extractedResult: (dynamic result) =>
             useSupportedTypedefs = result as bool,
       ),
-      strings.extractComments: Specification<bool>(
-        description: 'whether or not to extract comments from bindings',
+      strings.comments: Specification<String>(
+        description: 'Type of comment to extract',
+        isRequired: false,
+        validator: commentValidator,
+        extractor: commentExtractor,
+        defaultValue: () => strings.brief,
+        extractedResult: (dynamic result) => comment = result as String,
+      ),
+      strings.arrayWorkaround: Specification<bool>(
+        description:
+            'whether or not to generate workarounds for inline arrays in structures',
         isRequired: false,
         validator: booleanValidator,
         extractor: booleanExtractor,
-        defaultValue: () => true,
-        extractedResult: (dynamic result) => extractComments = result as bool,
+        defaultValue: () => false,
+        extractedResult: (dynamic result) => arrayWorkaround = result as bool,
       ),
       strings.initFunctionName: Specification<String>(
         description: 'Name of the init function to use',

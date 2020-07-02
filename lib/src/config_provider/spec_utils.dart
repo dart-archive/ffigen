@@ -251,3 +251,20 @@ bool stringValidator(String name, dynamic value) {
     return false;
   }
 }
+
+String commentExtractor(dynamic value) => value as String;
+
+bool commentValidator(String name, dynamic value) {
+  if (value is! String) {
+    _logger.severe("Expected value of key '$name' to be a String.");
+    return false;
+  } else {
+    if (strings.commentTypeSet.contains(value as String)) {
+      return true;
+    } else {
+      _logger.severe(
+          "Value of key '$name' must be one of the following - ${strings.commentTypeSet}.");
+      return false;
+    }
+  }
+}
