@@ -49,11 +49,10 @@ class Func extends Binding {
   @override
   BindingString toBindingString(Writer w) {
     final s = StringBuffer();
-    final nameWithPrefixAndSuffix =
-        '${w.functionPrefix}$name${w.functionSuffix}';
-    final funcVarName = '_$nameWithPrefixAndSuffix';
-    final typedefC = '_c_$nameWithPrefixAndSuffix';
-    final typedefDart = '_dart_$nameWithPrefixAndSuffix';
+    final nameWithPrefix = '${w.functionPrefix}$name';
+    final funcVarName = '_$nameWithPrefix';
+    final typedefC = '_c_$nameWithPrefix';
+    final typedefDart = '_dart_$nameWithPrefix';
 
     if (dartDoc != null) {
       s.write('/// ');
@@ -62,7 +61,7 @@ class Func extends Binding {
     }
 
     // Write enclosing function.
-    s.write('${returnType.getDartType(w)} $nameWithPrefixAndSuffix(\n');
+    s.write('${returnType.getDartType(w)} $nameWithPrefix(\n');
     for (final p in parameters) {
       s.write('  ${p.type.getDartType(w)} ${p.name},\n');
     }

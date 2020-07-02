@@ -31,6 +31,7 @@ Library parse(Config conf, {bool sort = false}) {
     structMemberPrefix: data.config.structMemberPrefix,
     enumPrefix: data.config.enumPrefix,
     enumMemberPrefix: data.config.enumMemberPrefix,
+    arrayHelperClassPrefix: data.config.arrayHelperClassPrefix,
   );
 
   if (sort) {

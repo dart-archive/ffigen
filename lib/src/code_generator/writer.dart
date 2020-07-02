@@ -6,30 +6,30 @@ import 'binding_string.dart';
 
 /// To store generated String bindings.
 class Writer {
-  String header;
-  String dylibIdentifier;
-  String initFunctionIdentifier;
+  final String header;
+  final String dylibIdentifier;
+  final String initFunctionIdentifier;
 
   /// Prefix for functions.
-  String functionPrefix;
-
-  /// Suffix for functions.
-  String functionSuffix;
+  final String functionPrefix;
 
   /// Prefix for structs.
-  String structPrefix;
+  final String structPrefix;
 
   /// Prefix for struct members.
-  String structMemberPrefix;
+  final String structMemberPrefix;
 
   /// Prefix for enums.
-  String enumPrefix;
+  final String enumPrefix;
 
   /// Prefix for enum members.
-  String enumMemberPrefix;
+  final String enumMemberPrefix;
+
+  /// Prefix for Array helper classes.
+  final String arrayHelperClassPrefix;
 
   /// dart:ffi library prefix.
-  String ffiLibraryPrefix;
+  final String ffiLibraryPrefix;
 
   final List<BindingString> _bindings = [];
 
@@ -38,12 +38,21 @@ class Writer {
     this.initFunctionIdentifier = 'init',
     this.ffiLibraryPrefix = 'ffi',
     this.functionPrefix = '',
-    this.functionSuffix = '',
     this.structPrefix = '',
     this.structMemberPrefix = '',
     this.enumPrefix = '',
     this.enumMemberPrefix = '',
-  });
+    this.arrayHelperClassPrefix = '',
+    this.header,
+  })  : assert(dylibIdentifier != null),
+        assert(initFunctionIdentifier != null),
+        assert(ffiLibraryPrefix != null),
+        assert(functionPrefix != null),
+        assert(structPrefix != null),
+        assert(structMemberPrefix != null),
+        assert(enumPrefix != null),
+        assert(enumMemberPrefix != null),
+        assert(arrayHelperClassPrefix != null);
 
   String generate() {
     final s = StringBuffer();
@@ -70,8 +79,8 @@ class Writer {
     s.write('\n');
     s.write('/// Initialises the Dynamic library.\n');
     s.write(
-        'void $initFunctionIdentifier($ffiLibraryPrefix.DynamicLibrary dylib){\n');
-    s.write('  ${dylibIdentifier} = dylib;\n');
+        'void $initFunctionIdentifier($ffiLibraryPrefix.DynamicLibrary _$dylibIdentifier){\n');
+    s.write('  ${dylibIdentifier} = _$dylibIdentifier;\n');
     s.write('}\n');
 
     // Write bindings.

@@ -86,8 +86,8 @@ import 'dart:ffi' as ffi;
 ffi.DynamicLibrary _dylib;
 
 /// Initialises the Dynamic library.
-void init(ffi.DynamicLibrary dylib){
-  _dylib = dylib;
+void init(ffi.DynamicLibrary __dylib){
+  _dylib = __dylib;
 }
 /// Just a test function
 /// heres another line
@@ -237,8 +237,8 @@ import 'dart:ffi' as ffi;
 ffi.DynamicLibrary _dylib;
 
 /// Initialises the Dynamic library.
-void init(ffi.DynamicLibrary dylib){
-  _dylib = dylib;
+void init(ffi.DynamicLibrary __dylib){
+  _dylib = __dylib;
 }
 /// Just a test struct
 /// heres another line
@@ -343,8 +343,8 @@ import 'dart:ffi' as ffi;
 ffi.DynamicLibrary _dylib;
 
 /// Initialises the Dynamic library.
-void init(ffi.DynamicLibrary dylib){
-  _dylib = dylib;
+void init(ffi.DynamicLibrary __dylib){
+  _dylib = __dylib;
 }
 class SomeStruc extends ffi.Struct{
   @ffi.Int32()
@@ -434,8 +434,8 @@ import 'dart:ffi' as ffi;
 ffi.DynamicLibrary _dylib;
 
 /// Initialises the Dynamic library.
-void init(ffi.DynamicLibrary dylib){
-  _dylib = dylib;
+void init(ffi.DynamicLibrary __dylib){
+  _dylib = __dylib;
 }
 final int test1 = _dylib.lookup<ffi.Int32>('test1').value;
 
@@ -493,8 +493,8 @@ import 'dart:ffi' as ffi;
 ffi.DynamicLibrary _dylib;
 
 /// Initialises the Dynamic library.
-void init(ffi.DynamicLibrary dylib){
-  _dylib = dylib;
+void init(ffi.DynamicLibrary __dylib){
+  _dylib = __dylib;
 }
 const int test1 = 20;
 
@@ -562,8 +562,8 @@ import 'dart:ffi' as ffi;
 ffi.DynamicLibrary _dylib;
 
 /// Initialises the Dynamic library.
-void init(ffi.DynamicLibrary dylib){
-  _dylib = dylib;
+void init(ffi.DynamicLibrary __dylib){
+  _dylib = __dylib;
 }
 /// just a test
 typedef test1 = ffi.Int32 Function(
@@ -621,8 +621,8 @@ import 'dart:ffi' as ffi;
 ffi.DynamicLibrary _dylib;
 
 /// Initialises the Dynamic library.
-void init(ffi.DynamicLibrary dylib){
-  _dylib = dylib;
+void init(ffi.DynamicLibrary __dylib){
+  _dylib = __dylib;
 }
 /// test line 1
 /// test line 2

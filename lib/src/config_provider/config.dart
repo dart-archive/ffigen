@@ -94,6 +94,9 @@ class Config {
   /// Prefix for enum members.
   String enumMemberPrefix;
 
+  /// Prefix for Array helper classes.
+  String arrayHelperClassPrefix;
+
   Config._();
 
   /// Create config from Yaml map.
@@ -350,9 +353,9 @@ class Config {
         isRequired: false,
         validator: stringValidator,
         extractor: stringExtractor,
-        defaultValue: () => 'ArrayHelper',
+        defaultValue: () => '',
         extractedResult: (dynamic result) =>
-            enumMemberPrefix = result as String,
+            arrayHelperClassPrefix = result as String,
       ),
     };
   }

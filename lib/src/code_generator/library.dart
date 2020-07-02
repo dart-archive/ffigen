@@ -4,7 +4,6 @@
 
 import 'dart:io';
 
-import 'package:ffigen/src/strings.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 
@@ -33,13 +32,16 @@ class Library {
   final String structPrefix;
 
   /// Prefix for struct members.
-  String structMemberPrefix;
+  final String structMemberPrefix;
 
   /// Prefix for enums.
-  String enumPrefix;
+  final String enumPrefix;
 
   /// Prefix for enum members.
-  String enumMemberPrefix;
+  final String enumMemberPrefix;
+
+  /// Prefix for Array helper classes.
+  final String arrayHelperClassPrefix;
 
   /// Header of file.
   final String header;
@@ -57,9 +59,9 @@ class Library {
     this.structMemberPrefix = '',
     this.enumPrefix = '',
     this.enumMemberPrefix = '',
+    this.arrayHelperClassPrefix = '',
     this.header,
-  })  : assert(dylibIdentifier != null),
-        assert(initFunctionIdentifier != null);
+  });
 
   /// Sort all bindings in alphabetical order.
   void sort() {
@@ -78,7 +80,6 @@ class Library {
 
   /// Generates bindings and stores it in given [Writer].
   void _generate(Writer w) {
-    w.header = header;
     for (final b in bindings) {
       w.addBindingString(b.toBindingString(w));
     }
@@ -104,6 +105,8 @@ class Library {
       structMemberPrefix: structMemberPrefix,
       enumPrefix: enumPrefix,
       enumMemberPrefix: enumMemberPrefix,
+      header: header,
+      arrayHelperClassPrefix: arrayHelperClassPrefix,
     );
     _generate(w);
     return w.generate();
