@@ -56,7 +56,6 @@ class Struc extends Binding {
   @override
   BindingString toBindingString(Writer w) {
     final s = StringBuffer();
-    final nameWithPrefix = '${w.structPrefix}$name';
 
     if (dartDoc != null) {
       s.write('/// ');
@@ -67,18 +66,18 @@ class Struc extends Binding {
     final helpers = <ArrayHelper>[];
 
     // Write class declaration.
-    s.write('class $nameWithPrefix extends ${w.ffiLibraryPrefix}.Struct{\n');
+    s.write('class $name extends ${w.ffiLibraryPrefix}.Struct{\n');
     for (final m in members) {
       if (m.type.broadType == BroadType.ConstantArray) {
         // TODO(5): Remove array helpers when inline array support arives.
         final arrayHelper = ArrayHelper(
           helperClassGroupName:
-              '${w.arrayHelperClassPrefix}ArrayHelper_${name}_${m.name}',
+              'ArrayHelper_${name}_${m.name}',
           elementType: m.type.getBaseArrayType(),
           dimensions: _getArrayDimensionLengths(m.type),
           name: m.name,
-          structName: nameWithPrefix,
-          elementNamePrefix: '_${w.structMemberPrefix}${m.name}_item_',
+          structName: name,
+          elementNamePrefix: '_${m.name}_item_',
         );
         s.write(arrayHelper.declarationString(w));
         helpers.add(arrayHelper);
@@ -93,7 +92,7 @@ class Struc extends Binding {
           s.write('$depth@${m.type.getCType(w)}()\n');
         }
         s.write(
-            '$depth${m.type.getDartType(w)} ${w.structMemberPrefix}${m.name};\n\n');
+            '$depth${m.type.getDartType(w)} ${m.name};\n\n');
       }
     }
     s.write('}\n\n');
@@ -165,9 +164,9 @@ class ArrayHelper {
       s.write('  ${arrayDartType} ${elementNamePrefix}$i;\n');
     }
 
-    s.write('/// Helper for array `${w.structMemberPrefix}$name`.\n');
+    s.write('/// Helper for array `$name`.\n');
     s.write(
-        '${helperClassGroupName}_level0 get ${w.structMemberPrefix}$name => ${helperClassGroupName}_level0(this, $dimensions, 0, 0);\n');
+        '${helperClassGroupName}_level0 get $name => ${helperClassGroupName}_level0(this, $dimensions, 0, 0);\n');
 
     return s.toString();
   }

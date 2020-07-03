@@ -42,7 +42,20 @@ class Declaration {
     }
   }
 
-  String get prefix => _globalPrefix;
+  String getPrefixedName(String name) {
+    // Apply prefix replacement.
+    for (final pattern in _prefixReplacement.keys) {
+      if (name.startsWith(pattern)) {
+        name = name.replaceFirst(pattern, _prefixReplacement[pattern]);
+        break;
+      }
+    }
+
+    // Apply global prefixes.
+    name = '${_globalPrefix}$name';
+
+    return name;
+  }
 
   /// Checks if a name is allowed by a filter.
   bool shouldInclude(String name) {

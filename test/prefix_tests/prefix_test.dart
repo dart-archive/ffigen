@@ -14,6 +14,10 @@ final functionPrefix = 'fff';
 final structPrefix = 'sss';
 final enumPrefix = 'eee';
 
+final functionPrefixReplacedWith = 'rf';
+final structPrefixReplacedWith = 'rs';
+final enumPrefixReplacedWith = 're';
+
 void main() {
   group('Global Prefix Test', () {
     setUpAll(() {
@@ -34,27 +38,56 @@ ${strings.headerFilter}:
     - 'prefix.h'
 
 functions:
-  prefix: $functionPrefix
+  ${strings.prefix}: $functionPrefix
+  ${strings.prefix_replacement}:
+    'test_': '$functionPrefixReplacedWith'
+
 structs:
-  prefix: $structPrefix
+  ${strings.prefix}: $structPrefix
+  ${strings.prefix_replacement}:
+    'Test_': '$structPrefixReplacedWith'
+
 enums:
-  prefix: $enumPrefix
+  ${strings.prefix}: $enumPrefix
+  ${strings.prefix_replacement}:
+    'Test_': '$enumPrefixReplacedWith'
+
     ''') as yaml.YamlMap));
     });
 
     test('Function prefix', () {
-      expect(binding(actual, 'func1'), binding(expected, 'func1'));
+      expect(binding(actual, '${functionPrefix}func1'),
+          binding(expected, '${functionPrefix}func1'));
     });
     test('Struct prefix', () {
-      expect(binding(actual, 'Struct1'), binding(expected, 'Struct1'));
+      expect(binding(actual, '${structPrefix}Struct1'),
+          binding(expected, '${structPrefix}Struct1'));
     });
     test('Enum prefix', () {
-      expect(binding(actual, 'Enum1'), binding(expected, 'Enum1'));
+      expect(binding(actual, '${enumPrefix}Enum1'),
+          binding(expected, '${enumPrefix}Enum1'));
+    });
+    test('Function prefix-replacement', () {
+      expect(
+          binding(
+              actual, '${functionPrefix}${functionPrefixReplacedWith}func2'),
+          binding(
+              expected, '${functionPrefix}${functionPrefixReplacedWith}func2'));
+    });
+    test('Struct prefix-replacement', () {
+      expect(
+          binding(actual, '${structPrefix}${structPrefixReplacedWith}Struct2'),
+          binding(
+              expected, '${structPrefix}${structPrefixReplacedWith}Struct2'));
+    });
+    test('Enum prefix-replacement', () {
+      expect(binding(actual, '${enumPrefix}${enumPrefixReplacedWith}Enum2'),
+          binding(expected, '${enumPrefix}${enumPrefixReplacedWith}Enum2'));
     });
   });
 }
 
-/// Extracts a binding's string from a library.
+/// Extracts a binding's string with a given name from a library.
 String binding(Library lib, String name) {
   return lib.bindings
       .firstWhere((element) => element.name == name)
@@ -64,23 +97,37 @@ String binding(Library lib, String name) {
 
 Library expectedLibrary() {
   return Library(
-    functionPrefix: functionPrefix,
-    structPrefix: structPrefix,
-    enumPrefix: enumPrefix,
     bindings: [
       Func(
-        name: 'func1',
+        name: '${functionPrefix}func1',
+        lookupSymbolName: 'func1',
         returnType: Type.nativeType(
           SupportedNativeType.Void,
         ),
       ),
-      Struc(name: 'Struct1'),
+      Func(
+        name: '${functionPrefix}${functionPrefixReplacedWith}func2',
+        lookupSymbolName: 'test_func2',
+        returnType: Type.nativeType(
+          SupportedNativeType.Void,
+        ),
+      ),
+      Struc(name: '${structPrefix}Struct1'),
+      Struc(name: '${structPrefix}${structPrefixReplacedWith}Struct2'),
       EnumClass(
-        name: 'Enum1',
+        name: '${enumPrefix}Enum1',
         enumConstants: [
           EnumConstant(name: 'a', value: 0),
           EnumConstant(name: 'b', value: 1),
           EnumConstant(name: 'c', value: 2),
+        ],
+      ),
+      EnumClass(
+        name: '${enumPrefix}${enumPrefixReplacedWith}Enum2',
+        enumConstants: [
+          EnumConstant(name: 'e', value: 0),
+          EnumConstant(name: 'f', value: 1),
+          EnumConstant(name: 'g', value: 2),
         ],
       ),
     ],

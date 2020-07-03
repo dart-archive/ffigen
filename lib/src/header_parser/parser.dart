@@ -23,15 +23,7 @@ Library parse(Config conf, {bool sort = false}) {
   final library = Library(
     bindings: bindings,
     initFunctionIdentifier: getNonConflictingName(data.config.initFunctionName),
-    dylibIdentifier: getNonConflictingName('_dylib'),
-    ffiLibraryPrefix: getNonConflictingName('ffi'),
     header: data.config.preamble,
-    functionPrefix: data.config.functionDecl?.prefix ?? '',
-    structPrefix: data.config.structDecl?.prefix ?? '',
-    structMemberPrefix: data.config.structMemberPrefix,
-    enumPrefix: data.config.enumClassDecl?.prefix ?? '',
-    enumMemberPrefix: data.config.enumMemberPrefix,
-    arrayHelperClassPrefix: data.config.arrayHelperClassPrefix,
   );
 
   if (sort) {

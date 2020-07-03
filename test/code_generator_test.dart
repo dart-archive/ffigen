@@ -14,6 +14,7 @@ void main() {
         bindings: [
           Func(
             name: 'noParam',
+            lookupSymbolName: 'noParam',
             dartDoc: 'Just a test function\nheres another line',
             returnType: Type.nativeType(
               SupportedNativeType.Int32,
@@ -21,6 +22,7 @@ void main() {
           ),
           Func(
             name: 'withPrimitiveParam',
+            lookupSymbolName: 'withPrimitiveParam',
             parameters: [
               Parameter(
                 name: 'a',
@@ -41,6 +43,7 @@ void main() {
           ),
           Func(
             name: 'withPointerParam',
+            lookupSymbolName: 'withPointerParam',
             parameters: [
               Parameter(
                 name: 'a',
@@ -306,6 +309,7 @@ class WithPointerMember extends ffi.Struct{
           ),
           Func(
             name: 'someFunc',
+            lookupSymbolName: 'someFunc',
             parameters: [
               Parameter(
                 name: 'some',

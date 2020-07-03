@@ -68,12 +68,14 @@ Library expectedLibrary() {
     bindings: [
       Func(
         name: 'func1',
+        lookupSymbolName: 'func1',
         returnType: Type.nativeType(
           SupportedNativeType.Void,
         ),
       ),
       Func(
         name: 'func2',
+        lookupSymbolName: 'func2',
         returnType: Type.nativeType(
           SupportedNativeType.Int32,
         ),
@@ -88,6 +90,7 @@ Library expectedLibrary() {
       ),
       Func(
         name: 'func3',
+        lookupSymbolName: 'func3',
         returnType: Type.nativeType(
           SupportedNativeType.Double,
         ),
@@ -119,6 +122,7 @@ Library expectedLibrary() {
       ),
       Func(
           name: 'func4',
+          lookupSymbolName: 'func4',
           returnType: Type.pointer(Type.nativeType(SupportedNativeType.Void)),
           parameters: [
             Parameter(

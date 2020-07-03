@@ -28,11 +28,13 @@ import 'writer.dart';
 /// typedef _dart_sum = int Function(int a, int b);
 /// ```
 class Func extends Binding {
+  final String lookupSymbolName;
   final Type returnType;
   final List<Parameter> parameters;
 
   Func({
     @required String name,
+    @required this.lookupSymbolName,
     String dartDoc,
     @required this.returnType,
     List<Parameter> parameters,
@@ -49,10 +51,9 @@ class Func extends Binding {
   @override
   BindingString toBindingString(Writer w) {
     final s = StringBuffer();
-    final nameWithPrefix = '${w.functionPrefix}$name';
-    final funcVarName = '_$nameWithPrefix';
-    final typedefC = '_c_$nameWithPrefix';
-    final typedefDart = '_dart_$nameWithPrefix';
+    final funcVarName = '_$name';
+    final typedefC = '_c_$name';
+    final typedefDart = '_dart_$name';
 
     if (dartDoc != null) {
       s.write('/// ');
@@ -61,7 +62,7 @@ class Func extends Binding {
     }
 
     // Write enclosing function.
-    s.write('${returnType.getDartType(w)} $nameWithPrefix(\n');
+    s.write('${returnType.getDartType(w)} $name(\n');
     for (final p in parameters) {
       s.write('  ${p.type.getDartType(w)} ${p.name},\n');
     }
@@ -75,7 +76,7 @@ class Func extends Binding {
 
     // Write function with dylib lookup.
     s.write(
-        "final $typedefDart $funcVarName = ${w.dylibIdentifier}.lookupFunction<$typedefC,$typedefDart>('$name');\n\n");
+        "final $typedefDart $funcVarName = ${w.dylibIdentifier}.lookupFunction<$typedefC,$typedefDart>('$lookupSymbolName');\n\n");
 
     // Write typdef for C.
     s.write('typedef $typedefC = ${returnType.getCType(w)} Function(\n');

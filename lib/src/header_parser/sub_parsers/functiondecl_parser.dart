@@ -5,6 +5,7 @@
 import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
+import 'package:ffigen/src/header_parser/data.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
@@ -49,7 +50,8 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
 
     _func = Func(
       dartDoc: getCursorDocComment(cursor),
-      name: name,
+      name: config.functionDecl.getPrefixedName(name),
+      lookupSymbolName: name,
       returnType: rt,
       parameters: parameters,
     );

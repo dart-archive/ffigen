@@ -8,52 +8,17 @@ import 'binding_string.dart';
 class Writer {
   final String header;
   final String dylibIdentifier;
-  final String initFunctionIdentifier;
-
-  /// Prefix for functions.
-  final String functionPrefix;
-
-  /// Prefix for structs.
-  final String structPrefix;
-
-  /// Prefix for struct members.
-  final String structMemberPrefix;
-
-  /// Prefix for enums.
-  final String enumPrefix;
-
-  /// Prefix for enum members.
-  final String enumMemberPrefix;
-
-  /// Prefix for Array helper classes.
-  final String arrayHelperClassPrefix;
-
-  /// dart:ffi library prefix.
   final String ffiLibraryPrefix;
+  final String initFunctionIdentifier;
 
   final List<BindingString> _bindings = [];
 
   Writer({
-    this.dylibIdentifier = '_dylib',
     this.initFunctionIdentifier = 'init',
+    this.dylibIdentifier = '_dylib',
     this.ffiLibraryPrefix = 'ffi',
-    this.functionPrefix = '',
-    this.structPrefix = '',
-    this.structMemberPrefix = '',
-    this.enumPrefix = '',
-    this.enumMemberPrefix = '',
-    this.arrayHelperClassPrefix = '',
     this.header,
-  })  : assert(dylibIdentifier != null),
-        assert(initFunctionIdentifier != null),
-        assert(ffiLibraryPrefix != null),
-        assert(functionPrefix != null),
-        assert(structPrefix != null),
-        assert(structMemberPrefix != null),
-        assert(enumPrefix != null),
-        assert(enumMemberPrefix != null),
-        assert(arrayHelperClassPrefix != null);
-
+  }) : assert(initFunctionIdentifier != null);
   String generate() {
     final s = StringBuffer();
 

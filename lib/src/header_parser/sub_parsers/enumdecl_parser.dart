@@ -5,6 +5,7 @@
 import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
+import 'package:ffigen/src/header_parser/data.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
@@ -32,7 +33,7 @@ EnumClass parseEnumDeclaration(
     _logger.fine('++++ Adding Enum: ${cursor.completeStringRepr()}');
     _enumClass = EnumClass(
       dartDoc: getCursorDocComment(cursor),
-      name: enumName,
+      name: config.enumClassDecl.getPrefixedName(enumName),
     );
     _addEnumConstant(cursor);
   }

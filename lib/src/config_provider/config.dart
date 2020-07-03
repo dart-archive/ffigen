@@ -192,6 +192,7 @@ class Config {
         isRequired: false,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
+        defaultValue: () => Declaration(),
         extractedResult: (dynamic result) =>
             functionDecl = result as Declaration,
       ),
@@ -200,6 +201,7 @@ class Config {
         isRequired: false,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
+        defaultValue: () => Declaration(),
         extractedResult: (dynamic result) => structDecl = result as Declaration,
       ),
       strings.enums: Specification<Declaration>(
@@ -207,6 +209,7 @@ class Config {
         isRequired: false,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
+        defaultValue: () => Declaration(),
         extractedResult: (dynamic result) =>
             enumClassDecl = result as Declaration,
       ),

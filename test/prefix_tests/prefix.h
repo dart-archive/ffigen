@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 void func1();
-int test_func2(int);
+void test_func2();
 
 struct Struct1
 {

@@ -14,34 +14,10 @@ var _logger = Logger('code_generator');
 
 /// Container for all Bindings.
 class Library {
-  /// Variable identifier used for dynamicLibrary. Defaults to `_dylib`,
-  final String dylibIdentifier;
-
   /// Init function for providing dynamic library. Defaults to `init`,
   ///
   /// Can be renamed in case of name conflicts with something else.
   final String initFunctionIdentifier;
-
-  /// Name of the import prefix to use for dart:ffi
-  final String ffiLibraryPrefix;
-
-  /// Prefix for functions
-  final String functionPrefix;
-
-  /// Prefix for structs
-  final String structPrefix;
-
-  /// Prefix for struct members.
-  final String structMemberPrefix;
-
-  /// Prefix for enums.
-  final String enumPrefix;
-
-  /// Prefix for enum members.
-  final String enumMemberPrefix;
-
-  /// Prefix for Array helper classes.
-  final String arrayHelperClassPrefix;
 
   /// Header of file.
   final String header;
@@ -52,30 +28,14 @@ class Library {
   Writer _writer;
   Writer get writer {
     return _writer ??= Writer(
-      dylibIdentifier: dylibIdentifier,
       initFunctionIdentifier: initFunctionIdentifier,
-      ffiLibraryPrefix: ffiLibraryPrefix,
-      functionPrefix: functionPrefix,
-      structPrefix: structPrefix,
-      structMemberPrefix: structMemberPrefix,
-      enumPrefix: enumPrefix,
-      enumMemberPrefix: enumMemberPrefix,
       header: header,
-      arrayHelperClassPrefix: arrayHelperClassPrefix,
     );
   }
 
   Library({
     @required this.bindings,
-    this.dylibIdentifier = '_dylib',
     this.initFunctionIdentifier = 'init',
-    this.ffiLibraryPrefix = 'ffi',
-    this.functionPrefix = '',
-    this.structPrefix = '',
-    this.structMemberPrefix = '',
-    this.enumPrefix = '',
-    this.enumMemberPrefix = '',
-    this.arrayHelperClassPrefix = '',
     this.header,
   });
 

@@ -43,7 +43,7 @@ Struc parseStructDeclaration(
     final members = _getMembers(cursor, structName);
     _struc = Struc(
       dartDoc: getCursorDocComment(cursor),
-      name: structName,
+      name: config.structDecl.getPrefixedName(structName),
       members: members,
     );
   }
