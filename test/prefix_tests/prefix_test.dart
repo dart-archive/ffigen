@@ -104,6 +104,12 @@ Library expectedLibrary() {
         returnType: Type.nativeType(
           SupportedNativeType.Void,
         ),
+        parameters: [
+          Parameter(
+            name: 's',
+            type: Type.pointer(Type.struct('${structPrefix}Struct1')),
+          ),
+        ],
       ),
       Func(
         name: '${functionPrefix}${functionPrefixReplacedWith}func2',
@@ -111,6 +117,13 @@ Library expectedLibrary() {
         returnType: Type.nativeType(
           SupportedNativeType.Void,
         ),
+        parameters: [
+          Parameter(
+            name: 's',
+            type: Type.pointer(Type.struct(
+                '${structPrefix}${structPrefixReplacedWith}Struct2')),
+          ),
+        ],
       ),
       Struc(name: '${structPrefix}Struct1'),
       Struc(name: '${structPrefix}${structPrefixReplacedWith}Struct2'),

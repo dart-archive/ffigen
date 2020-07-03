@@ -100,6 +100,8 @@ Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
         structName = cxtype.spelling();
       }
 
+      structName = config.structDecl.getPrefixedName(structName);
+
       type = Type.struct(structName);
 
       // Also add a struct binding, if its unseen.
