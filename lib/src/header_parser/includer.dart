@@ -78,17 +78,6 @@ bool shouldIncludeRootCursor(String sourceFile) {
   }
 }
 
-bool isUnseenTypedefC(String name, {@required bool addToSeen}) {
-  if (_typedefC.contains(name)) {
-    return false;
-  } else {
-    if (addToSeen) {
-      _typedefC.add(name);
-    }
-    return true;
-  }
-}
-
 bool isUnseenStruct(String name, {@required bool addToSeen}) {
   if (_structs.contains(name)) {
     return false;

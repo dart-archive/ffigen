@@ -91,6 +91,14 @@ class Func extends Binding {
     }
     s.write(');\n\n');
 
+    // Write typedef's for Pointer<NativeFunction> parameters types.
+    for (final p in parameters) {
+      final base = p.type.getBaseType();
+      if (base.broadType == BroadType.NativeFunction) {
+        s.write(base.nativeFunc.toTypedefString(w));
+      }
+    }
+
     return BindingString(type: BindingStringType.func, string: s.toString());
   }
 }

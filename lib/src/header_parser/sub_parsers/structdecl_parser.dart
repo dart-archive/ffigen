@@ -119,7 +119,7 @@ int _structMembersVisitor(Pointer<clang.CXCursor> cursor,
         }
       }
 
-      if (mt.getBaseBroadType() == BroadType.Unimplemented) {
+      if (mt.getBaseType().broadType == BroadType.Unimplemented) {
         unimplementedMemberType = true;
       }
 

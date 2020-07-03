@@ -128,21 +128,16 @@ class ArrayHelper_CXCursor_data_level0 {
 class CXCursorAndRangeVisitor extends ffi.Struct {
   ffi.Pointer<ffi.Void> context;
 
-  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_2>> visit;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_2>> visit;
 }
 
+typedef _typedefC_2 = ffi.Int32 Function(
+  ffi.Pointer<ffi.Void>,
+  CXCursor,
+  CXSourceRange,
+);
+
 class CXCursorSetImpl extends ffi.Struct {}
-
-typedef CXCursorVisitor = ffi.Int32 Function(
-  CXCursor,
-  CXCursor,
-  ffi.Pointer<ffi.Void>,
-);
-
-typedef CXFieldVisitor = ffi.Int32 Function(
-  CXCursor,
-  ffi.Pointer<ffi.Void>,
-);
 
 /// Uniquely identifies a CXFile, that refers to the same underlying file,
 /// across an indexing session.
@@ -348,13 +343,6 @@ class CXIdxObjCProtocolRefListInfo extends ffi.Struct {
   @ffi.Uint32()
   int numProtocols;
 }
-
-typedef CXInclusionVisitor = ffi.Void Function(
-  ffi.Pointer<ffi.Void>,
-  ffi.Pointer<CXSourceLocation>,
-  ffi.Uint32,
-  ffi.Pointer<ffi.Void>,
-);
 
 /// Describes the availability of a given entity on a particular platform, e.g.,
 /// a particular class might only be available on Mac OS 10.7 or newer.
@@ -832,15 +820,15 @@ class CXVersion extends ffi.Struct {
 class IndexerCallbacks extends ffi.Struct {
   /// Called periodically to check whether indexing should be aborted.
   /// Should return 0 to continue, and non-zero to abort.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_3>> abortQuery;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_3>> abortQuery;
 
   /// Called at the end of indexing; passes the complete diagnostic set.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_4>> diagnostic;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_4>> diagnostic;
 
-  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_5>> enteredMainFile;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_5>> enteredMainFile;
 
   /// Called when a file gets \#included/\#imported.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_6>> ppIncludedFile;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_6>> ppIncludedFile;
 
   /// Called when a AST file (PCH or module) gets imported.
   ///
@@ -848,73 +836,57 @@ class IndexerCallbacks extends ffi.Struct {
   /// the entities in an AST file). The recommended action is that, if the AST
   /// file is not already indexed, to initiate a new indexing job specific to
   /// the AST file.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_7>> importedASTFile;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_7>> importedASTFile;
 
   /// Called at the beginning of indexing a translation unit.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_8>> startedTranslationUnit;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_8>> startedTranslationUnit;
 
-  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_9>> indexDeclaration;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_9>> indexDeclaration;
 
   /// Called to index a reference of an entity.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_10>> indexEntityReference;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_10>> indexEntityReference;
 }
 
-typedef ModifiedCXCursorVisitor = ffi.Int32 Function(
-  ffi.Pointer<CXCursor>,
-  ffi.Pointer<CXCursor>,
-  ffi.Pointer<ffi.Void>,
-);
-
-typedef _typedefC_noname_1 = ffi.Void Function(
-  ffi.Pointer<ffi.Void>,
-);
-
-typedef _typedefC_noname_10 = ffi.Void Function(
-  ffi.Pointer<ffi.Void>,
-  ffi.Pointer<CXIdxEntityRefInfo>,
-);
-
-typedef _typedefC_noname_2 = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void>,
-  CXCursor,
-  CXSourceRange,
-);
-
-typedef _typedefC_noname_3 = ffi.Int32 Function(
+typedef _typedefC_3 = ffi.Int32 Function(
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<ffi.Void>,
 );
 
-typedef _typedefC_noname_4 = ffi.Void Function(
+typedef _typedefC_4 = ffi.Void Function(
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<ffi.Void>,
 );
 
-typedef _typedefC_noname_5 = ffi.Pointer<ffi.Void> Function(
+typedef _typedefC_5 = ffi.Pointer<ffi.Void> Function(
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<ffi.Void>,
 );
 
-typedef _typedefC_noname_6 = ffi.Pointer<ffi.Void> Function(
+typedef _typedefC_6 = ffi.Pointer<ffi.Void> Function(
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<CXIdxIncludedFileInfo>,
 );
 
-typedef _typedefC_noname_7 = ffi.Pointer<ffi.Void> Function(
+typedef _typedefC_7 = ffi.Pointer<ffi.Void> Function(
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<CXIdxImportedASTFileInfo>,
 );
 
-typedef _typedefC_noname_8 = ffi.Pointer<ffi.Void> Function(
+typedef _typedefC_8 = ffi.Pointer<ffi.Void> Function(
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<ffi.Void>,
 );
 
-typedef _typedefC_noname_9 = ffi.Void Function(
+typedef _typedefC_9 = ffi.Void Function(
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<CXIdxDeclInfo>,
+);
+
+typedef _typedefC_10 = ffi.Void Function(
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<CXIdxEntityRefInfo>,
 );
 
 /// Gets the general options associated with a CXIndex.
@@ -2584,7 +2556,7 @@ typedef _dart_clang_equalRanges_wrap = int Function(
 );
 
 void clang_executeOnThread(
-  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_1>> fn,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_1>> fn,
   ffi.Pointer<ffi.Void> user_data,
   int stack_size,
 ) {
@@ -2600,15 +2572,19 @@ final _dart_clang_executeOnThread _clang_executeOnThread = _dylib
         'clang_executeOnThread');
 
 typedef _c_clang_executeOnThread = ffi.Void Function(
-  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_1>> fn,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_1>> fn,
   ffi.Pointer<ffi.Void> user_data,
   ffi.Uint32 stack_size,
 );
 
 typedef _dart_clang_executeOnThread = void Function(
-  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_1>> fn,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_1>> fn,
   ffi.Pointer<ffi.Void> user_data,
   int stack_size,
+);
+
+typedef _typedefC_1 = ffi.Void Function(
+  ffi.Pointer<ffi.Void>,
 );
 
 ffi.Pointer<CXString> clang_formatDiagnostic_wrap(
@@ -3445,7 +3421,7 @@ typedef _dart_clang_getFileUniqueID = int Function(
 /// is inspecting the inclusions in the PCH file itself).
 void clang_getInclusions(
   ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor>> visitor,
+  ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor_1>> visitor,
   ffi.Pointer<ffi.Void> client_data,
 ) {
   return _clang_getInclusions(
@@ -3461,14 +3437,21 @@ final _dart_clang_getInclusions _clang_getInclusions =
 
 typedef _c_clang_getInclusions = ffi.Void Function(
   ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor>> visitor,
+  ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor_1>> visitor,
   ffi.Pointer<ffi.Void> client_data,
 );
 
 typedef _dart_clang_getInclusions = void Function(
   ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor>> visitor,
+  ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor_1>> visitor,
   ffi.Pointer<ffi.Void> client_data,
+);
+
+typedef CXInclusionVisitor_1 = ffi.Void Function(
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<CXSourceLocation>,
+  ffi.Uint32,
+  ffi.Pointer<ffi.Void>,
 );
 
 /// Given a CXFile header file, return the module that contains it, if one
@@ -5117,7 +5100,7 @@ typedef _dart_clang_toggleCrashRecovery = void Function(
 /// instead of cxcursor by default.
 int clang_visitChildren_wrap(
   ffi.Pointer<CXCursor> parent,
-  ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor>> _modifiedVisitor,
+  ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor_1>> _modifiedVisitor,
   ffi.Pointer<ffi.Void> clientData,
 ) {
   return _clang_visitChildren_wrap(
@@ -5133,12 +5116,18 @@ final _dart_clang_visitChildren_wrap _clang_visitChildren_wrap =
 
 typedef _c_clang_visitChildren_wrap = ffi.Uint32 Function(
   ffi.Pointer<CXCursor> parent,
-  ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor>> _modifiedVisitor,
+  ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor_1>> _modifiedVisitor,
   ffi.Pointer<ffi.Void> clientData,
 );
 
 typedef _dart_clang_visitChildren_wrap = int Function(
   ffi.Pointer<CXCursor> parent,
-  ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor>> _modifiedVisitor,
+  ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor_1>> _modifiedVisitor,
   ffi.Pointer<ffi.Void> clientData,
+);
+
+typedef ModifiedCXCursorVisitor_1 = ffi.Int32 Function(
+  ffi.Pointer<CXCursor>,
+  ffi.Pointer<CXCursor>,
+  ffi.Pointer<ffi.Void>,
 );

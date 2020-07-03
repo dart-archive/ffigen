@@ -38,7 +38,7 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
       return null; // Returning null so that [addToBindings] function excludes this.
     }
 
-    if (rt.getBaseBroadType() == BroadType.Unimplemented ||
+    if (rt.getBaseType().broadType == BroadType.Unimplemented ||
         unimplementedParameterType) {
       _logger.fine(
           '---- Removed Function, reason: unsupported return type or parameter type: ${cursor.completeStringRepr()}');
@@ -77,7 +77,7 @@ List<Parameter> _getParameters(Pointer<clang.CXCursor> cursor) {
     //TODO(3): Remove this when support for Structs by value arrives.
     if (pt.broadType == BroadType.Struct) {
       structByValueParameter = true;
-    } else if (pt.getBaseBroadType() == BroadType.Unimplemented) {
+    } else if (pt.getBaseType().broadType == BroadType.Unimplemented) {
       unimplementedParameterType = true;
     }
 

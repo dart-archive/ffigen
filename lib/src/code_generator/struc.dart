@@ -98,6 +98,14 @@ class Struc extends Binding {
     }
     s.write('}\n\n');
 
+    // Write typedef's for Pointer<NativeFunction> member types.
+    for (final m in members) {
+      final base = m.type.getBaseType();
+      if (base.broadType == BroadType.NativeFunction) {
+        s.write(base.nativeFunc.toTypedefString(w));
+      }
+    }
+
     for (final helper in helpers) {
       s.write(helper.helperClassString(w));
     }

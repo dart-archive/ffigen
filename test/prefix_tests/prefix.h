@@ -20,7 +20,7 @@ enum Enum1
 };
 enum Test_Enum2
 {
-    a = 0,
-    b = 1,
-    c = 2
+    e = 0,
+    f = 1,
+    g = 2
 };

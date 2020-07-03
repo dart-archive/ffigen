@@ -127,25 +127,24 @@ Type _extractFromFunctionProto(
 
   // Set a name for typedefc incase it was null or empty.
   if (name == null || name == '') {
-    name = _getNextUniqueString('_typedefC_noname');
+    name = _getNextUniqueString('_typedefC');
+  } else {
+    name = _getNextUniqueString(name);
+  }
+  final typedefC = TypedefC(
+    name: name,
+    returnType:
+        clang.clang_getResultType_wrap(cxtype).toCodeGenTypeAndDispose(),
+  );
+  final totalArgs = clang.clang_getNumArgTypes_wrap(cxtype);
+  for (var i = 0; i < totalArgs; i++) {
+    final t = clang.clang_getArgType_wrap(cxtype, i);
+    typedefC.parameters.add(
+      Parameter(name: '', type: t.toCodeGenTypeAndDispose()),
+    );
   }
 
-  if (isUnseenTypedefC(name, addToSeen: true)) {
-    final typedefC = TypedefC(
-      name: name,
-      returnType:
-          clang.clang_getResultType_wrap(cxtype).toCodeGenTypeAndDispose(),
-    );
-    final totalArgs = clang.clang_getNumArgTypes_wrap(cxtype);
-    for (var i = 0; i < totalArgs; i++) {
-      final t = clang.clang_getArgType_wrap(cxtype, i);
-      typedefC.parameters.add(
-        Parameter(name: '', type: t.toCodeGenTypeAndDispose()),
-      );
-    }
-    addToBindings(typedefC);
-  }
-  return Type.nativeFunc(name);
+  return Type.nativeFunc(typedefC);
 }
 
 /// Generate a unique string for naming in [TypedefC].
