@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/code_generator/writer.dart';
 import 'package:ffigen/src/header_parser.dart' as parser;
 import 'package:ffigen/src/config_provider.dart';
 import 'package:logging/logging.dart';
@@ -11,18 +10,18 @@ import 'package:test/test.dart';
 import 'package:yaml/yaml.dart' as yaml;
 import 'package:ffigen/src/strings.dart' as strings;
 
-final writer = Writer();
+Library actual, expected;
 
 void main() {
   group('header_parser', () {
-    Library actual, expected;
-
     setUpAll(() {
       expected = expectedLibrary();
 
       Logger.root.onRecord.listen((log) {
-        print(
-            'test: header_parser: ${log.level.name.padRight(8)}: ${log.message}');
+        if (log.level > Level.INFO) {
+          print(
+              'functions_test.dart: ${log.level.name.padRight(8)}: ${log.message}');
+        }
       });
       actual = parser.parse(
         Config.fromYaml(yaml.loadYaml('''
@@ -60,7 +59,7 @@ ${strings.headerFilter}:
 String binding(Library lib, String name) {
   return lib.bindings
       .firstWhere((element) => element.name == name)
-      .toBindingString(writer)
+      .toBindingString(lib.writer)
       .string;
 }
 

@@ -19,6 +19,8 @@ const enums = 'enums';
 // Sub-fields of Declarations.
 const include = 'include';
 const exclude = 'exclude';
+const prefix = 'prefix';
+const prefix_replacement = 'prefix-replacement';
 
 // Sub-fields of include/exclude.
 const matches = 'matches'; // regex
@@ -73,10 +75,7 @@ const initFunctionName = 'init-function-name';
 const preamble = 'preamble';
 
 // General Prefix.
-const functionPrefix = 'function-prefix';
-const structPrefix = 'struct-prefix';
 const structMemberPrefix = 'struct-member-prefix';
-const enumPrefix = 'enum-prefix';
 const enumMemberPrefix = 'enum-member-prefix';
 const arrayHelperClassPrefix = 'array-helper-prefix';
 

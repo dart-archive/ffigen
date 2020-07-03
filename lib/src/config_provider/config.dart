@@ -15,7 +15,7 @@ import 'package:path/path.dart' as path;
 import 'package:yaml/yaml.dart';
 
 import '../strings.dart' as strings;
-import 'filter.dart';
+import 'declaration.dart';
 import 'spec_utils.dart';
 
 var _logger = Logger('config_provider/config');
@@ -44,14 +44,14 @@ class Config {
   /// CommandLine Arguments to pass to clang_compiler.
   List<String> compilerOpts;
 
-  /// Filter for functions.
-  Filter functionFilters;
+  /// Functions.
+  Declaration functionDecl;
 
-  /// Filter for structs.
-  Filter structFilters;
+  /// Structs.
+  Declaration structDecl;
 
-  /// Filter for enumClass.
-  Filter enumClassFilters;
+  /// Enums.
+  Declaration enumClassDecl;
 
   /// If generated bindings should be sorted alphabetically.
   bool sort;
@@ -73,17 +73,8 @@ class Config {
   /// Header of the generated bindings.
   String preamble;
 
-  /// Prefix for functions.
-  String functionPrefix;
-
-  /// Prefix for structs.
-  String structPrefix;
-
   /// Prefix for struct members.
   String structMemberPrefix;
-
-  /// Prefix for enums.
-  String enumPrefix;
 
   /// Prefix for enum members.
   String enumMemberPrefix;
@@ -196,27 +187,28 @@ class Config {
         extractedResult: (dynamic result) =>
             compilerOpts = result as List<String>,
       ),
-      strings.functions: Specification<Filter>(
+      strings.functions: Specification<Declaration>(
         description: 'Filter for functions',
         isRequired: false,
-        validator: filterValidator,
-        extractor: filterExtractor,
-        extractedResult: (dynamic result) => functionFilters = result as Filter,
+        validator: declarationConfigValidator,
+        extractor: declarationConfigExtractor,
+        extractedResult: (dynamic result) =>
+            functionDecl = result as Declaration,
       ),
-      strings.structs: Specification<Filter>(
+      strings.structs: Specification<Declaration>(
         description: 'Filter for Structs',
         isRequired: false,
-        validator: filterValidator,
-        extractor: filterExtractor,
-        extractedResult: (dynamic result) => structFilters = result as Filter,
+        validator: declarationConfigValidator,
+        extractor: declarationConfigExtractor,
+        extractedResult: (dynamic result) => structDecl = result as Declaration,
       ),
-      strings.enums: Specification<Filter>(
+      strings.enums: Specification<Declaration>(
         description: 'Filter for enums',
         isRequired: false,
-        validator: filterValidator,
-        extractor: filterExtractor,
+        validator: declarationConfigValidator,
+        extractor: declarationConfigExtractor,
         extractedResult: (dynamic result) =>
-            enumClassFilters = result as Filter,
+            enumClassDecl = result as Declaration,
       ),
       strings.sizemap: Specification<Map<int, SupportedNativeType>>(
         description: 'map of types: byte size in int',
@@ -282,22 +274,6 @@ class Config {
         extractor: stringExtractor,
         extractedResult: (dynamic result) => preamble = result as String,
       ),
-      strings.functionPrefix: Specification<String>(
-        description: 'Prefix for generated Functions',
-        isRequired: false,
-        validator: stringValidator,
-        extractor: stringExtractor,
-        defaultValue: () => '',
-        extractedResult: (dynamic result) => functionPrefix = result as String,
-      ),
-      strings.structPrefix: Specification<String>(
-        description: 'Prefix for generated Structs',
-        isRequired: false,
-        validator: stringValidator,
-        extractor: stringExtractor,
-        defaultValue: () => '',
-        extractedResult: (dynamic result) => structPrefix = result as String,
-      ),
       strings.structMemberPrefix: Specification<String>(
         description: 'Prefix for generated Struct Members',
         isRequired: false,
@@ -306,14 +282,6 @@ class Config {
         defaultValue: () => '',
         extractedResult: (dynamic result) =>
             structMemberPrefix = result as String,
-      ),
-      strings.enumPrefix: Specification<String>(
-        description: 'Prefix for generated Enums',
-        isRequired: false,
-        validator: stringValidator,
-        extractor: stringExtractor,
-        defaultValue: () => '',
-        extractedResult: (dynamic result) => enumPrefix = result as String,
       ),
       strings.enumMemberPrefix: Specification<String>(
         description: 'Prefix for generated Enums Members',

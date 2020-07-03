@@ -24,8 +24,8 @@ bool isNameConflicting(String name) =>
 bool shouldIncludeStruct(String name) {
   if (_structs.contains(name) || name == '') {
     return false;
-  } else if (config.structFilters == null ||
-      config.structFilters.shouldInclude(name)) {
+  } else if (config.structDecl == null ||
+      config.structDecl.shouldInclude(name)) {
     _structs.add(name);
     return true;
   } else {
@@ -36,8 +36,8 @@ bool shouldIncludeStruct(String name) {
 bool shouldIncludeFunc(String name) {
   if (_functions.contains(name) || name == '') {
     return false;
-  } else if (config.functionFilters == null ||
-      config.functionFilters.shouldInclude(name)) {
+  } else if (config.functionDecl == null ||
+      config.functionDecl.shouldInclude(name)) {
     _functions.add(name);
     return true;
   } else {
@@ -48,8 +48,8 @@ bool shouldIncludeFunc(String name) {
 bool shouldIncludeEnumClass(String name) {
   if (_enumClass.contains(name) || name == '') {
     return false;
-  } else if (config.enumClassFilters == null ||
-      config.enumClassFilters.shouldInclude(name)) {
+  } else if (config.enumClassDecl == null ||
+      config.enumClassDecl.shouldInclude(name)) {
     _enumClass.add(name);
     return true;
   } else {

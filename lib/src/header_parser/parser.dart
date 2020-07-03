@@ -26,10 +26,10 @@ Library parse(Config conf, {bool sort = false}) {
     dylibIdentifier: getNonConflictingName('_dylib'),
     ffiLibraryPrefix: getNonConflictingName('ffi'),
     header: data.config.preamble,
-    functionPrefix: data.config.functionPrefix,
-    structPrefix: data.config.structPrefix,
+    functionPrefix: data.config.functionDecl?.prefix ?? '',
+    structPrefix: data.config.structDecl?.prefix ?? '',
     structMemberPrefix: data.config.structMemberPrefix,
-    enumPrefix: data.config.enumPrefix,
+    enumPrefix: data.config.enumClassDecl?.prefix ?? '',
     enumMemberPrefix: data.config.enumMemberPrefix,
     arrayHelperClassPrefix: data.config.arrayHelperClassPrefix,
   );

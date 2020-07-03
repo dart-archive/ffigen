@@ -49,6 +49,22 @@ class Library {
   /// List of bindings in this library.
   final List<Binding> bindings;
 
+  Writer _writer;
+  Writer get writer {
+    return _writer ??= Writer(
+      dylibIdentifier: dylibIdentifier,
+      initFunctionIdentifier: initFunctionIdentifier,
+      ffiLibraryPrefix: ffiLibraryPrefix,
+      functionPrefix: functionPrefix,
+      structPrefix: structPrefix,
+      structMemberPrefix: structMemberPrefix,
+      enumPrefix: enumPrefix,
+      enumMemberPrefix: enumMemberPrefix,
+      header: header,
+      arrayHelperClassPrefix: arrayHelperClassPrefix,
+    );
+  }
+
   Library({
     @required this.bindings,
     this.dylibIdentifier = '_dylib',
@@ -96,18 +112,7 @@ class Library {
 
   /// Generates the bindings.
   String generate() {
-    final w = Writer(
-      dylibIdentifier: dylibIdentifier,
-      initFunctionIdentifier: initFunctionIdentifier,
-      ffiLibraryPrefix: ffiLibraryPrefix,
-      functionPrefix: functionPrefix,
-      structPrefix: structPrefix,
-      structMemberPrefix: structMemberPrefix,
-      enumPrefix: enumPrefix,
-      enumMemberPrefix: enumMemberPrefix,
-      header: header,
-      arrayHelperClassPrefix: arrayHelperClassPrefix,
-    );
+    final w = writer;
     _generate(w);
     return w.generate();
   }

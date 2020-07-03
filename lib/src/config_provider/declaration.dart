@@ -2,24 +2,23 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-/// A generic filter for filtering strings based on regexes and prefixes.
-///
-/// Excludes override includes.
-///
-/// User can provide fiters for functions, structs, enums and include/exclude
-/// them using regexp and full name matching.
-class Filter {
+/// A generic declaration config.
+class Declaration {
   // matchers
   List<RegExp> _includeMatchers = [];
   Set<String> _includeFull = {};
   List<RegExp> _excludeMatchers = [];
   Set<String> _excludeFull = {};
+  String _globalPrefix = '';
+  Map<String, String> _prefixReplacement = {};
 
-  Filter({
+  Declaration({
     List<String> includeMatchers,
     List<String> includeFull,
     List<String> excludeMatchers,
     List<String> excludeFull,
+    String globalPrefix,
+    Map<String, String> prefixReplacement,
   }) {
     if (includeMatchers != null) {
       _includeMatchers =
@@ -35,7 +34,15 @@ class Filter {
     if (excludeFull != null) {
       _excludeFull = excludeFull.map((e) => e).toSet();
     }
+    if (globalPrefix != null) {
+      _globalPrefix = globalPrefix;
+    }
+    if (prefixReplacement != null) {
+      _prefixReplacement = prefixReplacement;
+    }
   }
+
+  String get prefix => _globalPrefix;
 
   /// Checks if a name is allowed by a filter.
   bool shouldInclude(String name) {
@@ -66,15 +73,5 @@ class Filter {
     } else {
       return true;
     }
-  }
-
-  @override
-  String toString() {
-    return ''' (includeFull, includeMatchers, excludeFull, excludeMatchers)
-$_includeFull
-$_includeMatchers
-$_excludeFull
-$_excludeMatchers
-    ''';
   }
 }
