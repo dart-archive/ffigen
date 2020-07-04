@@ -10,7 +10,7 @@ import 'package:meta/meta.dart';
 import 'binding.dart';
 import 'writer.dart';
 
-var _logger = Logger('code_generator');
+var _logger = Logger('code_generator:library.dart');
 
 /// Container for all Bindings.
 class Library {

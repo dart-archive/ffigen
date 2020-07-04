@@ -18,7 +18,7 @@ import '../strings.dart' as strings;
 import 'declaration.dart';
 import 'spec_utils.dart';
 
-var _logger = Logger('config_provider/config');
+var _logger = Logger('config_provider:config.dart');
 
 /// Provides configurations to other modules.
 ///
@@ -192,26 +192,33 @@ class Config {
         isRequired: false,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
-        extractedResult: (dynamic result) =>
-            functionDecl = result as Declaration,
+        defaultValue: () => Declaration(declarationTypeName: 'Function'),
+        extractedResult: (dynamic result) {
+          functionDecl = result as Declaration;
+          functionDecl.declarationTypeName = 'Function';
+        },
       ),
       strings.structs: Specification<Declaration>(
         description: 'Filter for Structs',
         isRequired: false,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
-        extractedResult: (dynamic result) => structDecl = result as Declaration,
+        defaultValue: () => Declaration(declarationTypeName: 'Struct'),
+        extractedResult: (dynamic result) {
+          structDecl = result as Declaration;
+          structDecl.declarationTypeName = 'Struct';
+        },
       ),
       strings.enums: Specification<Declaration>(
         description: 'Filter for enums',
         isRequired: false,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
-        extractedResult: (dynamic result) =>
-            enumClassDecl = result as Declaration,
+        defaultValue: () => Declaration(declarationTypeName: 'Enum'),
+        extractedResult: (dynamic result) {
+          enumClassDecl = result as Declaration;
+          enumClassDecl.declarationTypeName = 'Enum';
+        },
       ),
       strings.sizemap: Specification<Map<int, SupportedNativeType>>(
         description: 'map of types: byte size in int',

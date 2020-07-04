@@ -12,7 +12,7 @@ import '../data.dart';
 import '../includer.dart';
 import '../utils.dart';
 
-var _logger = Logger('parser:structdecl_parser');
+var _logger = Logger('header_parser:structdecl_parser.dart');
 
 /// Temporarily holds a struc before its returned by [parseStructDeclaration].
 Struc _struc;

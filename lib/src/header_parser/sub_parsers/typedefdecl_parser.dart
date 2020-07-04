@@ -12,7 +12,7 @@ import '../sub_parsers/enumdecl_parser.dart';
 import '../sub_parsers/structdecl_parser.dart';
 import '../utils.dart';
 
-var _logger = Logger('parser:typedefdecl_parser');
+var _logger = Logger('header_parser:typedefdecl_parser.dart');
 
 /// Temporarily holds a binding before its returned by [parseTypedefDeclaration].
 Binding _binding;

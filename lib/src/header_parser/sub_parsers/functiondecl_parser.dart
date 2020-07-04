@@ -12,7 +12,7 @@ import '../clang_bindings/clang_bindings.dart' as clang;
 import '../includer.dart';
 import '../utils.dart';
 
-var _logger = Logger('parser:functiondecl_parser');
+var _logger = Logger('header_parser:functiondecl_parser.dart');
 
 /// Temporarily holds a function before its returned by [parseFunctionDeclaration].
 Func _func;

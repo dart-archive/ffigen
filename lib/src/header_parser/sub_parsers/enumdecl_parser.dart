@@ -12,7 +12,7 @@ import '../clang_bindings/clang_bindings.dart' as clang;
 import '../includer.dart';
 import '../utils.dart';
 
-var _logger = Logger('parser:enumdecl_parser');
+var _logger = Logger('header_parser:enumdecl_parser.dart');
 
 /// Temporarily holds a enumClass before its returned by [parseEnumDeclaration].
 EnumClass _enumClass;
