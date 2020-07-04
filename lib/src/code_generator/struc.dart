@@ -56,7 +56,7 @@ class Struc extends Binding {
   @override
   BindingString toBindingString(Writer w) {
     final s = StringBuffer();
-
+    final enclosingClassName = name;
     if (dartDoc != null) {
       s.write('/// ');
       s.writeAll(dartDoc.split('\n'), '\n/// ');
@@ -65,14 +65,23 @@ class Struc extends Binding {
 
     final helpers = <ArrayHelper>[];
 
+    // Write typedef's required by members and resolve name conflicts.
+    for (final m in members) {
+      final base = m.type.getBaseType();
+      if (base.broadType == BroadType.NativeFunction) {
+        base.nativeFunc.name = w.getNonConflictingName(base.nativeFunc.name);
+        s.write(base.nativeFunc.toTypedefString(w));
+      }
+    }
+
     // Write class declaration.
-    s.write('class $name extends ${w.ffiLibraryPrefix}.Struct{\n');
+    s.write(
+        'class $enclosingClassName extends ${w.ffiLibraryPrefix}.Struct{\n');
     for (final m in members) {
       if (m.type.broadType == BroadType.ConstantArray) {
         // TODO(5): Remove array helpers when inline array support arives.
         final arrayHelper = ArrayHelper(
-          helperClassGroupName:
-              'ArrayHelper_${name}_${m.name}',
+          helperClassGroupName: 'ArrayHelper_${enclosingClassName}_${m.name}',
           elementType: m.type.getBaseArrayType(),
           dimensions: _getArrayDimensionLengths(m.type),
           name: m.name,
@@ -91,19 +100,10 @@ class Struc extends Binding {
         if (m.type.isPrimitive) {
           s.write('$depth@${m.type.getCType(w)}()\n');
         }
-        s.write(
-            '$depth${m.type.getDartType(w)} ${m.name};\n\n');
+        s.write('$depth${m.type.getDartType(w)} ${m.name};\n\n');
       }
     }
     s.write('}\n\n');
-
-    // Write typedef's for Pointer<NativeFunction> member types.
-    for (final m in members) {
-      final base = m.type.getBaseType();
-      if (base.broadType == BroadType.NativeFunction) {
-        s.write(base.nativeFunc.toTypedefString(w));
-      }
-    }
 
     for (final helper in helpers) {
       s.write(helper.helperClassString(w));

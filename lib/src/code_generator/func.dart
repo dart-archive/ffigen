@@ -51,9 +51,21 @@ class Func extends Binding {
   @override
   BindingString toBindingString(Writer w) {
     final s = StringBuffer();
-    final funcVarName = '_$name';
-    final typedefC = '_c_$name';
-    final typedefDart = '_dart_$name';
+    final enclosingFuncName = name;
+
+    // Ensure name conflicts are resolved for typedefs generated.
+    final funcVarName = w.getNonConflictingName('_$name');
+    final typedefC = w.getNonConflictingName('_c_$name');
+    final typedefDart = w.getNonConflictingName('_dart_$name');
+
+    // Write typedef's required by parameters and resolve name conflicts.
+    for (final p in parameters) {
+      final base = p.type.getBaseType();
+      if (base.broadType == BroadType.NativeFunction) {
+        base.nativeFunc.name = w.getNonConflictingName(base.nativeFunc.name);
+        s.write(base.nativeFunc.toTypedefString(w));
+      }
+    }
 
     if (dartDoc != null) {
       s.write('/// ');
@@ -62,7 +74,7 @@ class Func extends Binding {
     }
 
     // Write enclosing function.
-    s.write('${returnType.getDartType(w)} $name(\n');
+    s.write('${returnType.getDartType(w)} $enclosingFuncName(\n');
     for (final p in parameters) {
       s.write('  ${p.type.getDartType(w)} ${p.name},\n');
     }
@@ -91,14 +103,6 @@ class Func extends Binding {
       s.write('  ${p.type.getDartType(w)} ${p.name},\n');
     }
     s.write(');\n\n');
-
-    // Write typedef's for Pointer<NativeFunction> parameters types.
-    for (final p in parameters) {
-      final base = p.type.getBaseType();
-      if (base.broadType == BroadType.NativeFunction) {
-        s.write(base.nativeFunc.toTypedefString(w));
-      }
-    }
 
     return BindingString(type: BindingStringType.func, string: s.toString());
   }

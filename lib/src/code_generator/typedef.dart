@@ -18,6 +18,8 @@ import 'writer.dart';
 ///   .
 /// );`
 /// ```
+///
+/// Name conflict resolution must be done before using.
 class TypedefC {
   String name;
   String dartDoc;
@@ -29,7 +31,7 @@ class TypedefC {
     this.dartDoc,
     @required this.returnType,
     List<Parameter> parameters,
-  })  : parameters = parameters ?? [];
+  }) : parameters = parameters ?? [];
 
   String toTypedefString(Writer w) {
     final s = StringBuffer();

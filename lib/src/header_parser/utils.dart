@@ -11,7 +11,6 @@ import 'package:logging/logging.dart';
 import '../strings.dart' as strings;
 import 'clang_bindings/clang_bindings.dart' as clang;
 import 'data.dart';
-import 'includer.dart' as includer;
 import 'type_extractor/extractor.dart';
 
 /// Check [resultCode] of [clang.clang_visitChildren_wrap].
@@ -299,20 +298,5 @@ extension DynamicCStringArray on Pointer<Pointer<Utf8>> {
       free(this[i]);
     }
     free(this);
-  }
-}
-
-/// Returns a non conflicting name for a base name.
-///
-/// Do not use twice with the same base.
-String getNonConflictingName(String base) {
-  if (!includer.isNameConflicting(base)) {
-    return base;
-  } else {
-    var i = 0;
-    while (includer.isNameConflicting(base + i.toString())) {
-      i++;
-    }
-    return base + i.toString();
   }
 }

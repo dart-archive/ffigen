@@ -14,30 +14,24 @@ var _logger = Logger('code_generator');
 
 /// Container for all Bindings.
 class Library {
-  /// Init function for providing dynamic library. Defaults to `init`,
-  ///
-  /// Can be renamed in case of name conflicts with something else.
-  final String initFunctionIdentifier;
-
-  /// Header of file.
-  final String header;
-
   /// List of bindings in this library.
   final List<Binding> bindings;
 
   Writer _writer;
-  Writer get writer {
-    return _writer ??= Writer(
+  Writer get writer => _writer;
+
+  Library({
+    @required this.bindings,
+    String header,
+    String initFunctionIdentifier = 'init',
+  }) {
+    final declarationNames = bindings.map((e) => e.name).toSet();
+    _writer = Writer(
+      usedUpNames: declarationNames,
       initFunctionIdentifier: initFunctionIdentifier,
       header: header,
     );
   }
-
-  Library({
-    @required this.bindings,
-    this.initFunctionIdentifier = 'init',
-    this.header,
-  });
 
   /// Sort all bindings in alphabetical order.
   void sort() {

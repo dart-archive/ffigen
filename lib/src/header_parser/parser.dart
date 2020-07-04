@@ -22,7 +22,7 @@ Library parse(Config conf, {bool sort = false}) {
 
   final library = Library(
     bindings: bindings,
-    initFunctionIdentifier: getNonConflictingName(data.config.initFunctionName),
+    initFunctionIdentifier: data.config.initFunctionName,
     header: data.config.preamble,
   );
 

@@ -2,23 +2,33 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:meta/meta.dart';
+
 import 'binding_string.dart';
 
 /// To store generated String bindings.
 class Writer {
   final String header;
-  final String dylibIdentifier;
-  final String ffiLibraryPrefix;
-  final String initFunctionIdentifier;
+  String _initFunctionIdentifier;
+  final Set<String> usedUpNames;
+
+  String _ffiLibraryPrefix;
+  String get ffiLibraryPrefix =>
+      _ffiLibraryPrefix ??= getNonConflictingName('ffi');
+
+  String _dylibIdentifier;
+  String get dylibIdentifier =>
+      _dylibIdentifier ??= getNonConflictingName('_dylib');
 
   final List<BindingString> _bindings = [];
 
   Writer({
-    this.initFunctionIdentifier = 'init',
-    this.dylibIdentifier = '_dylib',
-    this.ffiLibraryPrefix = 'ffi',
+    @required this.usedUpNames,
+    String initFunctionIdentifier = 'init',
     this.header,
-  }) : assert(initFunctionIdentifier != null);
+  }) : assert(initFunctionIdentifier != null) {
+    _initFunctionIdentifier = getNonConflictingName(initFunctionIdentifier);
+  }
   String generate() {
     final s = StringBuffer();
 
@@ -44,7 +54,7 @@ class Writer {
     s.write('\n');
     s.write('/// Initialises the Dynamic library.\n');
     s.write(
-        'void $initFunctionIdentifier($ffiLibraryPrefix.DynamicLibrary _$dylibIdentifier){\n');
+        'void $_initFunctionIdentifier($ffiLibraryPrefix.DynamicLibrary _$dylibIdentifier){\n');
     s.write('  ${dylibIdentifier} = _$dylibIdentifier;\n');
     s.write('}\n');
 
@@ -58,5 +68,20 @@ class Writer {
 
   void addBindingString(BindingString b) {
     _bindings.add(b);
+  }
+
+  /// Returns a non conflicting name by appending ```_cr_<int>``` to it.
+  String getNonConflictingName(String name, [bool addToUsedUpNames = true]) {
+    // 'cr' denotes conflict resolved.
+    String cr_name = name;
+    int i = 1;
+    while (usedUpNames.contains(cr_name)) {
+      cr_name = '${name}_cr_$i';
+      i++;
+    }
+    if (addToUsedUpNames) {
+      usedUpNames.add(cr_name);
+    }
+    return cr_name;
   }
 }
