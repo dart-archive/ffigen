@@ -125,17 +125,17 @@ class ArrayHelper_CXCursor_data_level0 {
   }
 }
 
-class CXCursorAndRangeVisitor extends ffi.Struct {
-  ffi.Pointer<ffi.Void> context;
-
-  ffi.Pointer<ffi.NativeFunction<_typedefC_2>> visit;
-}
-
 typedef _typedefC_2 = ffi.Int32 Function(
   ffi.Pointer<ffi.Void>,
   CXCursor,
   CXSourceRange,
 );
+
+class CXCursorAndRangeVisitor extends ffi.Struct {
+  ffi.Pointer<ffi.Void> context;
+
+  ffi.Pointer<ffi.NativeFunction<_typedefC_2>> visit;
+}
 
 class CXCursorSetImpl extends ffi.Struct {}
 
@@ -817,36 +817,6 @@ class CXVersion extends ffi.Struct {
 
 /// A group of callbacks used by #clang_indexSourceFile and
 /// #clang_indexTranslationUnit.
-class IndexerCallbacks extends ffi.Struct {
-  /// Called periodically to check whether indexing should be aborted.
-  /// Should return 0 to continue, and non-zero to abort.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_3>> abortQuery;
-
-  /// Called at the end of indexing; passes the complete diagnostic set.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_4>> diagnostic;
-
-  ffi.Pointer<ffi.NativeFunction<_typedefC_5>> enteredMainFile;
-
-  /// Called when a file gets \#included/\#imported.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_6>> ppIncludedFile;
-
-  /// Called when a AST file (PCH or module) gets imported.
-  ///
-  /// AST files will not get indexed (there will not be callbacks to index all
-  /// the entities in an AST file). The recommended action is that, if the AST
-  /// file is not already indexed, to initiate a new indexing job specific to
-  /// the AST file.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_7>> importedASTFile;
-
-  /// Called at the beginning of indexing a translation unit.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_8>> startedTranslationUnit;
-
-  ffi.Pointer<ffi.NativeFunction<_typedefC_9>> indexDeclaration;
-
-  /// Called to index a reference of an entity.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_10>> indexEntityReference;
-}
-
 typedef _typedefC_3 = ffi.Int32 Function(
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<ffi.Void>,
@@ -888,6 +858,36 @@ typedef _typedefC_10 = ffi.Void Function(
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<CXIdxEntityRefInfo>,
 );
+
+class IndexerCallbacks extends ffi.Struct {
+  /// Called periodically to check whether indexing should be aborted.
+  /// Should return 0 to continue, and non-zero to abort.
+  ffi.Pointer<ffi.NativeFunction<_typedefC_3>> abortQuery;
+
+  /// Called at the end of indexing; passes the complete diagnostic set.
+  ffi.Pointer<ffi.NativeFunction<_typedefC_4>> diagnostic;
+
+  ffi.Pointer<ffi.NativeFunction<_typedefC_5>> enteredMainFile;
+
+  /// Called when a file gets \#included/\#imported.
+  ffi.Pointer<ffi.NativeFunction<_typedefC_6>> ppIncludedFile;
+
+  /// Called when a AST file (PCH or module) gets imported.
+  ///
+  /// AST files will not get indexed (there will not be callbacks to index all
+  /// the entities in an AST file). The recommended action is that, if the AST
+  /// file is not already indexed, to initiate a new indexing job specific to
+  /// the AST file.
+  ffi.Pointer<ffi.NativeFunction<_typedefC_7>> importedASTFile;
+
+  /// Called at the beginning of indexing a translation unit.
+  ffi.Pointer<ffi.NativeFunction<_typedefC_8>> startedTranslationUnit;
+
+  ffi.Pointer<ffi.NativeFunction<_typedefC_9>> indexDeclaration;
+
+  /// Called to index a reference of an entity.
+  ffi.Pointer<ffi.NativeFunction<_typedefC_10>> indexEntityReference;
+}
 
 /// Gets the general options associated with a CXIndex.
 ///
@@ -2555,6 +2555,10 @@ typedef _dart_clang_equalRanges_wrap = int Function(
   ffi.Pointer<CXSourceRange> c2,
 );
 
+typedef _typedefC_1 = ffi.Void Function(
+  ffi.Pointer<ffi.Void>,
+);
+
 void clang_executeOnThread(
   ffi.Pointer<ffi.NativeFunction<_typedefC_1>> fn,
   ffi.Pointer<ffi.Void> user_data,
@@ -2581,10 +2585,6 @@ typedef _dart_clang_executeOnThread = void Function(
   ffi.Pointer<ffi.NativeFunction<_typedefC_1>> fn,
   ffi.Pointer<ffi.Void> user_data,
   int stack_size,
-);
-
-typedef _typedefC_1 = ffi.Void Function(
-  ffi.Pointer<ffi.Void>,
 );
 
 ffi.Pointer<CXString> clang_formatDiagnostic_wrap(
@@ -3415,6 +3415,13 @@ typedef _dart_clang_getFileUniqueID = int Function(
   ffi.Pointer<CXFileUniqueID> outID,
 );
 
+typedef CXInclusionVisitor_1 = ffi.Void Function(
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<CXSourceLocation>,
+  ffi.Uint32,
+  ffi.Pointer<ffi.Void>,
+);
+
 /// Visit the set of preprocessor inclusions in a translation unit.
 /// The visitor function is called with the provided data for every included
 /// file.  This does not include headers included by the PCH file (unless one
@@ -3445,13 +3452,6 @@ typedef _dart_clang_getInclusions = void Function(
   ffi.Pointer<CXTranslationUnitImpl> tu,
   ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor_1>> visitor,
   ffi.Pointer<ffi.Void> client_data,
-);
-
-typedef CXInclusionVisitor_1 = ffi.Void Function(
-  ffi.Pointer<ffi.Void>,
-  ffi.Pointer<CXSourceLocation>,
-  ffi.Uint32,
-  ffi.Pointer<ffi.Void>,
 );
 
 /// Given a CXFile header file, return the module that contains it, if one
@@ -5096,6 +5096,12 @@ typedef _dart_clang_toggleCrashRecovery = void Function(
   int isEnabled,
 );
 
+typedef ModifiedCXCursorVisitor_1 = ffi.Int32 Function(
+  ffi.Pointer<CXCursor>,
+  ffi.Pointer<CXCursor>,
+  ffi.Pointer<ffi.Void>,
+);
+
 /// Visitor is a function pointer with parameters having pointers to cxcursor
 /// instead of cxcursor by default.
 int clang_visitChildren_wrap(
@@ -5124,10 +5130,4 @@ typedef _dart_clang_visitChildren_wrap = int Function(
   ffi.Pointer<CXCursor> parent,
   ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor_1>> _modifiedVisitor,
   ffi.Pointer<ffi.Void> clientData,
-);
-
-typedef ModifiedCXCursorVisitor_1 = ffi.Int32 Function(
-  ffi.Pointer<CXCursor>,
-  ffi.Pointer<CXCursor>,
-  ffi.Pointer<ffi.Void>,
 );

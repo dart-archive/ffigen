@@ -4,7 +4,7 @@
 
 import 'package:meta/meta.dart';
 
-import 'typedef.dart';
+import 'typedefc.dart';
 import 'writer.dart';
 
 class _SubType {

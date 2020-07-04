@@ -1150,12 +1150,6 @@ class CXUnsavedFile extends ffi.Struct {
   int Length;
 }
 
-typedef ModifiedCXCursorVisitor = ffi.Int32 Function(
-  ffi.Pointer<CXCursor>,
-  ffi.Pointer<CXCursor>,
-  ffi.Pointer<ffi.Void>,
-);
-
 ffi.Pointer<CXCursor> clang_Cursor_getArgument_wrap(
   ffi.Pointer<CXCursor> cursor,
   int i,
@@ -2001,11 +1995,17 @@ typedef _dart_clang_parseTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
   int options,
 );
 
+typedef ModifiedCXCursorVisitor_1 = ffi.Int32 Function(
+  ffi.Pointer<CXCursor>,
+  ffi.Pointer<CXCursor>,
+  ffi.Pointer<ffi.Void>,
+);
+
 /// Visitor is a function pointer with parameters having pointers to cxcursor
 /// instead of cxcursor by default.
 int clang_visitChildren_wrap(
   ffi.Pointer<CXCursor> parent,
-  ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor>> _modifiedVisitor,
+  ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor_1>> _modifiedVisitor,
   ffi.Pointer<ffi.Void> clientData,
 ) {
   return _clang_visitChildren_wrap(
@@ -2021,12 +2021,12 @@ final _dart_clang_visitChildren_wrap _clang_visitChildren_wrap =
 
 typedef _c_clang_visitChildren_wrap = ffi.Uint32 Function(
   ffi.Pointer<CXCursor> parent,
-  ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor>> _modifiedVisitor,
+  ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor_1>> _modifiedVisitor,
   ffi.Pointer<ffi.Void> clientData,
 );
 
 typedef _dart_clang_visitChildren_wrap = int Function(
   ffi.Pointer<CXCursor> parent,
-  ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor>> _modifiedVisitor,
+  ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor_1>> _modifiedVisitor,
   ffi.Pointer<ffi.Void> clientData,
 );

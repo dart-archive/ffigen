@@ -53,7 +53,7 @@ class Declaration {
 
   /// Applies prefix and replacement and returns the result.
   ///
-  /// Also handles logging of '_'.
+  /// Also logs warnings if declaration starts with '_'.
   String getPrefixedName(String name) {
     // Apply prefix replacement.
     for (final pattern in _prefixReplacement.keys) {

@@ -16,8 +16,9 @@ import 'writer.dart';
 ///   $parameter2...,
 ///   .
 ///   .
-/// );`
+/// );
 /// ```
+/// Used for generating typedefs for `Pointer<NativeFunction>`.
 ///
 /// Name conflict resolution must be done before using.
 class TypedefC {

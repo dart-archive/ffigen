@@ -44,13 +44,13 @@ class Config {
   /// CommandLine Arguments to pass to clang_compiler.
   List<String> compilerOpts;
 
-  /// Functions.
+  /// Declaration config for Functions.
   Declaration functionDecl;
 
-  /// Structs.
+  /// Declaration config for Structs.
   Declaration structDecl;
 
-  /// Enums.
+  /// Declaration config for Enums.
   Declaration enumClassDecl;
 
   /// If generated bindings should be sorted alphabetically.
@@ -73,12 +73,15 @@ class Config {
   /// Header of the generated bindings.
   String preamble;
 
+  //TODO: handle name collision.
   /// Prefix for struct members.
   String structMemberPrefix;
 
+  //TODO: handle name collision.
   /// Prefix for enum members.
   String enumMemberPrefix;
 
+  //TODO: handle name collision.
   /// Prefix for Array helper classes.
   String arrayHelperClassPrefix;
 
