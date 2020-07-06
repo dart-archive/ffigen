@@ -35,7 +35,7 @@ Struc parseStructDeclaration(
     _logger.finest('unnamed structure or typedef structure declaration');
     return null;
   } else if ((ignoreFilter || shouldIncludeStruct(structName)) &&
-      !isSeenStruc(structName)) {
+      (!isSeenStruc(structName))) {
     _logger.fine(
         '++++ Adding Structure: structName: ${structName}, ${cursor.completeStringRepr()}');
 
@@ -73,19 +73,19 @@ List<Member> _getMembers(Pointer<clang.CXCursor> cursor, String structName) {
         '---- Removed Struct members, reason: struct has array members ${cursor.completeStringRepr()}');
     _logger.warning(
         'Removed All Struct Members from: $structName, Array members not supported');
-    return null;
+    return [];
   } else if (nestedStructMember) {
     _logger.fine(
         '---- Removed Struct members, reason: struct has struct members ${cursor.completeStringRepr()}');
     _logger.warning(
         "Removed All Struct Members from '$structName', Nested Structures not supported.");
-    return null;
+    return [];
   } else if (unimplementedMemberType) {
     _logger.fine(
         '---- Removed Struct members, reason: member with unimplementedtype ${cursor.completeStringRepr()}');
     _logger.warning(
         "Removed All Struct Members from '$structName', struct member has an unsupported type.");
-    return null;
+    return [];
   }
 
   return _members;

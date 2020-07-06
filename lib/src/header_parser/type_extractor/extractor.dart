@@ -107,8 +107,6 @@ Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
       if (isSeenStruc(structName)) {
         type = Type.struct(getSeenStruc(structName));
       } else {
-        // To stop recursion if a struct has itself as a member, updated later.
-        addStrucToSeen(structName, null);
         final struc = parseStructDeclaration(cursor,
             name: fixedStructName, ignoreFilter: true);
         type = Type.struct(struc);
@@ -131,7 +129,9 @@ Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
 }
 
 // Used for function pointer arguments.
-// TODO: check if its excluded.
+// TODO: exclude functions with function pointer parameter which pass/return
+// struct by value. Currently they are generated and have no effect, but user
+// cannot use them.
 Type _extractFromFunctionProto(
     Pointer<clang.CXType> cxtype, String parentName) {
   var name = parentName;

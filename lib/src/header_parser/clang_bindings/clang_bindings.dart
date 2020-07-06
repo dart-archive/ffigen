@@ -35,9 +35,9 @@ class CXCursor extends ffi.Struct {
   @ffi.Int32()
   int xdata;
 
-  ffi.Pointer<ffi.Void> _data_item_0;
-  ffi.Pointer<ffi.Void> _data_item_1;
-  ffi.Pointer<ffi.Void> _data_item_2;
+  ffi.Pointer<ffi.Void> _exp_workaround_data_item_0;
+  ffi.Pointer<ffi.Void> _exp_workaround_data_item_1;
+  ffi.Pointer<ffi.Void> _exp_workaround_data_item_2;
 
   /// Helper for array `data`.
   ArrayHelper_CXCursor_data_level0 get data =>
@@ -64,11 +64,11 @@ class ArrayHelper_CXCursor_data_level0 {
     _checkBounds(index);
     switch (_absoluteIndex + index) {
       case 0:
-        return _struct._data_item_0;
+        return _struct._exp_workaround_data_item_0;
       case 1:
-        return _struct._data_item_1;
+        return _struct._exp_workaround_data_item_1;
       case 2:
-        return _struct._data_item_2;
+        return _struct._exp_workaround_data_item_2;
       default:
         throw Exception('Invalid Array Helper generated.');
     }
@@ -78,13 +78,13 @@ class ArrayHelper_CXCursor_data_level0 {
     _checkBounds(index);
     switch (_absoluteIndex + index) {
       case 0:
-        _struct._data_item_0 = value;
+        _struct._exp_workaround_data_item_0 = value;
         break;
       case 1:
-        _struct._data_item_1 = value;
+        _struct._exp_workaround_data_item_1 = value;
         break;
       case 2:
-        _struct._data_item_2 = value;
+        _struct._exp_workaround_data_item_2 = value;
         break;
       default:
         throw Exception('Invalid Array Helper generated.');
@@ -769,8 +769,8 @@ class CXDiagnosticDisplayOptions {
 
 /// Identifies a specific source location within a translation unit.
 class CXSourceLocation extends ffi.Struct {
-  ffi.Pointer<ffi.Void> _ptr_data_item_0;
-  ffi.Pointer<ffi.Void> _ptr_data_item_1;
+  ffi.Pointer<ffi.Void> _exp_workaround_ptr_data_item_0;
+  ffi.Pointer<ffi.Void> _exp_workaround_ptr_data_item_1;
 
   /// Helper for array `ptr_data`.
   ArrayHelper_CXSourceLocation_ptr_data_level0 get ptr_data =>
@@ -799,9 +799,9 @@ class ArrayHelper_CXSourceLocation_ptr_data_level0 {
     _checkBounds(index);
     switch (_absoluteIndex + index) {
       case 0:
-        return _struct._ptr_data_item_0;
+        return _struct._exp_workaround_ptr_data_item_0;
       case 1:
-        return _struct._ptr_data_item_1;
+        return _struct._exp_workaround_ptr_data_item_1;
       default:
         throw Exception('Invalid Array Helper generated.');
     }
@@ -811,10 +811,10 @@ class ArrayHelper_CXSourceLocation_ptr_data_level0 {
     _checkBounds(index);
     switch (_absoluteIndex + index) {
       case 0:
-        _struct._ptr_data_item_0 = value;
+        _struct._exp_workaround_ptr_data_item_0 = value;
         break;
       case 1:
-        _struct._ptr_data_item_1 = value;
+        _struct._exp_workaround_ptr_data_item_1 = value;
         break;
       default:
         throw Exception('Invalid Array Helper generated.');
@@ -824,8 +824,8 @@ class ArrayHelper_CXSourceLocation_ptr_data_level0 {
 
 /// Identifies a half-open character range in the source code.
 class CXSourceRange extends ffi.Struct {
-  ffi.Pointer<ffi.Void> _ptr_data_item_0;
-  ffi.Pointer<ffi.Void> _ptr_data_item_1;
+  ffi.Pointer<ffi.Void> _exp_workaround_ptr_data_item_0;
+  ffi.Pointer<ffi.Void> _exp_workaround_ptr_data_item_1;
 
   /// Helper for array `ptr_data`.
   ArrayHelper_CXSourceRange_ptr_data_level0 get ptr_data =>
@@ -857,9 +857,9 @@ class ArrayHelper_CXSourceRange_ptr_data_level0 {
     _checkBounds(index);
     switch (_absoluteIndex + index) {
       case 0:
-        return _struct._ptr_data_item_0;
+        return _struct._exp_workaround_ptr_data_item_0;
       case 1:
-        return _struct._ptr_data_item_1;
+        return _struct._exp_workaround_ptr_data_item_1;
       default:
         throw Exception('Invalid Array Helper generated.');
     }
@@ -869,10 +869,10 @@ class ArrayHelper_CXSourceRange_ptr_data_level0 {
     _checkBounds(index);
     switch (_absoluteIndex + index) {
       case 0:
-        _struct._ptr_data_item_0 = value;
+        _struct._exp_workaround_ptr_data_item_0 = value;
         break;
       case 1:
-        _struct._ptr_data_item_1 = value;
+        _struct._exp_workaround_ptr_data_item_1 = value;
         break;
       default:
         throw Exception('Invalid Array Helper generated.');
@@ -959,8 +959,8 @@ class CXType extends ffi.Struct {
   @ffi.Int32()
   int kind;
 
-  ffi.Pointer<ffi.Void> _data_item_0;
-  ffi.Pointer<ffi.Void> _data_item_1;
+  ffi.Pointer<ffi.Void> _exp_workaround_data_item_0;
+  ffi.Pointer<ffi.Void> _exp_workaround_data_item_1;
 
   /// Helper for array `data`.
   ArrayHelper_CXType_data_level0 get data =>
@@ -987,9 +987,9 @@ class ArrayHelper_CXType_data_level0 {
     _checkBounds(index);
     switch (_absoluteIndex + index) {
       case 0:
-        return _struct._data_item_0;
+        return _struct._exp_workaround_data_item_0;
       case 1:
-        return _struct._data_item_1;
+        return _struct._exp_workaround_data_item_1;
       default:
         throw Exception('Invalid Array Helper generated.');
     }
@@ -999,10 +999,10 @@ class ArrayHelper_CXType_data_level0 {
     _checkBounds(index);
     switch (_absoluteIndex + index) {
       case 0:
-        _struct._data_item_0 = value;
+        _struct._exp_workaround_data_item_0 = value;
         break;
       case 1:
-        _struct._data_item_1 = value;
+        _struct._exp_workaround_data_item_1 = value;
         break;
       default:
         throw Exception('Invalid Array Helper generated.');

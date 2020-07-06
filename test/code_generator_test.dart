@@ -700,9 +700,9 @@ typedef _dart__dart_test = void Function(
 
 class _Test extends ffi.Struct{
   @ffi.Int8()
-  int _array_item_0;
+  int _exp_workaround_array_item_0;
   @ffi.Int8()
-  int _array_item_1;
+  int _exp_workaround_array_item_1;
 /// Helper for array `array`.
 ArrayHelper1__Test_array_level0 get array => ArrayHelper1__Test_array_level0(this, [2], 0, 0);
 }
@@ -724,9 +724,9 @@ ArrayHelper1__Test_array_level0(this._struct, this.dimensions, this.level, this.
 _checkBounds(index);
 switch(_absoluteIndex+index){
 case 0:
-  return _struct._array_item_0;
+  return _struct._exp_workaround_array_item_0;
 case 1:
-  return _struct._array_item_1;
+  return _struct._exp_workaround_array_item_1;
 default:
   throw Exception('Invalid Array Helper generated.');}
 }
@@ -734,10 +734,10 @@ void operator[]=(int index, int value){
 _checkBounds(index);
 switch(_absoluteIndex+index){
 case 0:
-  _struct._array_item_0 = value;
+  _struct._exp_workaround_array_item_0 = value;
   break;
 case 1:
-  _struct._array_item_1 = value;
+  _struct._exp_workaround_array_item_1 = value;
   break;
 default:
   throw Exception('Invalid Array Helper generated.');

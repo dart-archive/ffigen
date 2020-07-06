@@ -55,6 +55,7 @@ class Struc extends Binding {
 
   @override
   BindingString toBindingString(Writer w) {
+    members = members ?? [];
     final s = StringBuffer();
     final enclosingClassName = name;
     if (dartDoc != null) {
