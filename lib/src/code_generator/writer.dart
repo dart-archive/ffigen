@@ -21,10 +21,14 @@ class Writer {
       _dylibIdentifier ??= getNonConflictingName('_dylib');
 
   String _arrayHelperClassPrefix;
+
+  /// Guaranteed to be a unique prefix.
   String get arrayHelperClassPrefix => _arrayHelperClassPrefix;
 
   final List<BindingString> _bindings = [];
 
+  /// [usedUpNames] should contain names of all the declarations which are
+  /// already used. This is used to avoid name collisions.
   Writer({
     @required this.usedUpNames,
     String initFunctionIdentifier = 'init',

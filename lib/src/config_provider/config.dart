@@ -73,14 +73,6 @@ class Config {
   /// Header of the generated bindings.
   String preamble;
 
-  //TODO: handle name collision.
-  /// Prefix for struct members.
-  String structMemberPrefix;
-
-  //TODO: handle name collision.
-  /// Prefix for enum members.
-  String enumMemberPrefix;
-
   Config._();
 
   /// Create config from Yaml map.
@@ -282,24 +274,6 @@ class Config {
         validator: stringValidator,
         extractor: stringExtractor,
         extractedResult: (dynamic result) => preamble = result as String,
-      ),
-      strings.structMemberPrefix: Specification<String>(
-        description: 'Prefix for generated Struct Members',
-        isRequired: false,
-        validator: stringValidator,
-        extractor: stringExtractor,
-        defaultValue: () => '',
-        extractedResult: (dynamic result) =>
-            structMemberPrefix = result as String,
-      ),
-      strings.enumMemberPrefix: Specification<String>(
-        description: 'Prefix for generated Enums Members',
-        isRequired: false,
-        validator: stringValidator,
-        extractor: stringExtractor,
-        defaultValue: () => '',
-        extractedResult: (dynamic result) =>
-            enumMemberPrefix = result as String,
       ),
     };
   }

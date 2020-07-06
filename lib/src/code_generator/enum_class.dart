@@ -43,21 +43,43 @@ class EnumClass extends Binding {
       s.write('\n');
     }
 
+    /// Adding [enclosingClassName] because dart doesn't allow class member
+    /// to have the same name as the class.
+    final localUsedUpNames = <String>{enclosingClassName};
+
     // Print enclosing class.
     s.write('class $enclosingClassName {\n');
     const depth = '  ';
     for (final ec in enumConstants) {
+      final enum_value_name =
+          getLocalNonConflictingName(ec.name, localUsedUpNames);
       if (ec.dartDoc != null) {
         s.write(depth + '/// ');
         s.writeAll(ec.dartDoc.split('\n'), '\n' + depth + '/// ');
         s.write('\n');
       }
-      s.write(depth + 'static const int ${ec.name} = ${ec.value};\n');
+      s.write(depth + 'static const int ${enum_value_name} = ${ec.value};\n');
     }
     s.write('}\n\n');
 
     return BindingString(
         type: BindingStringType.enumClass, string: s.toString());
+  }
+
+  /// Returns a Local non conflicting name by appending `_cr_<int>` to it.
+  String getLocalNonConflictingName(String name, Set<String> usedUpNames,
+      [bool addToUsedUpNames = true]) {
+    // 'cr' denotes conflict resolved.
+    String cr_name = name;
+    int i = 1;
+    while (usedUpNames.contains(cr_name)) {
+      cr_name = '${name}_cr_$i';
+      i++;
+    }
+    if (addToUsedUpNames) {
+      usedUpNames.add(cr_name);
+    }
+    return cr_name;
   }
 }
 

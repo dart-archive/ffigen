@@ -36,22 +36,12 @@ import 'writer.dart';
 class Struc extends Binding {
   List<Member> members;
 
-  /// Used up names local to this struct.
-  /// TODO: fix incomplete
-  final Set<String> usedUpNames;
-
   Struc({
     @required String name,
     String dartDoc,
     List<Member> members,
   })  : members = members ?? [],
-        usedUpNames = {},
-        super(name: name, dartDoc: dartDoc) {
-    usedUpNames.add(name);
-    for (final m in this.members) {
-      usedUpNames.add(m.name);
-    }
-  }
+        super(name: name, dartDoc: dartDoc);
 
   List<int> _getArrayDimensionLengths(Type type) {
     final array = <int>[];
@@ -84,20 +74,38 @@ class Struc extends Binding {
       }
     }
 
+    /// Finding a unique prefix for expanded array items and store into
+    final base = '_exp_workaround_';
+    String expandedArrayItemPrefix = base;
+    int suffixInt = 0;
+    for (int i = 0; i < members.length; i++) {
+      if (members[i].name.startsWith(expandedArrayItemPrefix)) {
+        // Not a unique prefix, start over with a new suffix.
+        i = -1;
+        suffixInt++;
+        expandedArrayItemPrefix = '${base}${suffixInt}';
+      }
+    }
+
+    /// Adding [enclosingClassName] because dart doesn't allow class member
+    /// to have the same name as the class.
+    final localUsedUpNames = <String>{enclosingClassName};
+
     // Write class declaration.
     s.write(
         'class $enclosingClassName extends ${w.ffiLibraryPrefix}.Struct{\n');
     for (final m in members) {
+      final memberName = getLocalNonConflictingName(m.name, localUsedUpNames);
       if (m.type.broadType == BroadType.ConstantArray) {
         // TODO(5): Remove array helpers when inline array support arives.
         final arrayHelper = ArrayHelper(
           helperClassGroupName:
-              '${w.arrayHelperClassPrefix}_${enclosingClassName}_${m.name}',
+              '${w.arrayHelperClassPrefix}_${enclosingClassName}_${memberName}',
           elementType: m.type.getBaseArrayType(),
           dimensions: _getArrayDimensionLengths(m.type),
-          name: m.name,
-          structName: name,
-          elementNamePrefix: '_${m.name}_item_',
+          name: memberName,
+          structName: enclosingClassName,
+          elementNamePrefix: '${expandedArrayItemPrefix}${memberName}_item_',
         );
         s.write(arrayHelper.declarationString(w));
         helpers.add(arrayHelper);
@@ -111,7 +119,7 @@ class Struc extends Binding {
         if (m.type.isPrimitive) {
           s.write('$depth@${m.type.getCType(w)}()\n');
         }
-        s.write('$depth${m.type.getDartType(w)} ${m.name};\n\n');
+        s.write('$depth${m.type.getDartType(w)} ${memberName};\n\n');
       }
     }
     s.write('}\n\n');
@@ -123,8 +131,8 @@ class Struc extends Binding {
     return BindingString(type: BindingStringType.struc, string: s.toString());
   }
 
-  /// Returns a non conflicting name by appending ```_cr_<int>``` to it.
-  String getLocalNonConflictingName(String name,
+  /// Returns a Local non conflicting name by appending `cr_<int>` to it.
+  String getLocalNonConflictingName(String name, Set<String> usedUpNames,
       [bool addToUsedUpNames = true]) {
     // 'cr' denotes conflict resolved.
     String cr_name = name;

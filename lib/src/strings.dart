@@ -74,10 +74,6 @@ const commentTypeSet = {brief, full, none};
 const initFunctionName = 'init-function-name';
 const preamble = 'preamble';
 
-// General Prefix.
-const structMemberPrefix = 'struct-member-prefix';
-const enumMemberPrefix = 'enum-member-prefix';
-
 // Dynamic library names.
 const libclang_dylib_linux = 'libwrapped_clang.so';
 const libclang_dylib_macos = 'libwrapped_clang.dylib';
