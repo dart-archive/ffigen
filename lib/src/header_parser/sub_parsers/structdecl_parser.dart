@@ -24,11 +24,9 @@ Struc parseStructDeclaration(
   /// Optionally provide name (useful in case struct is inside a typedef).
   String name,
 
-  /// Option to override shouldInclude methods. (Useful in case of extracting
-  /// structs when they are passed/returned by an included function.)
-  ///
-  /// Check if binding is not already included before setting this to true.
-  bool doInclude = false,
+  /// Option to ignore struct filter (Useful in case of extracting structs
+  /// when they are passed/returned by an included function.)
+  bool ignoreFilter = false,
 }) {
   _struc = null;
   final structName = name ?? cursor.spelling();
@@ -36,16 +34,19 @@ Struc parseStructDeclaration(
   if (structName == '') {
     _logger.finest('unnamed structure or typedef structure declaration');
     return null;
-  } else if (doInclude || shouldIncludeStruct(structName)) {
+  } else if ((ignoreFilter || shouldIncludeStruct(structName)) &&
+      !isSeenStruc(structName)) {
     _logger.fine(
         '++++ Adding Structure: structName: ${structName}, ${cursor.completeStringRepr()}');
 
-    final members = _getMembers(cursor, structName);
     _struc = Struc(
-      dartDoc: getCursorDocComment(cursor),
       name: config.structDecl.getPrefixedName(structName),
-      members: members,
+      dartDoc: getCursorDocComment(cursor),
     );
+    // Adding to seen here to stop recursion if a struct has itself as a
+    // member, members are updated later.
+    addStrucToSeen(structName, _struc);
+    _struc.members = _getMembers(cursor, structName);
   }
 
   return _struc;

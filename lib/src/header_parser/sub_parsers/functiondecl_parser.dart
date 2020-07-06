@@ -23,8 +23,8 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
   structByValueParameter = false;
   unimplementedParameterType = false;
 
-  final name = cursor.spelling();
-  if (shouldIncludeFunc(name)) {
+  final funcName = cursor.spelling();
+  if (shouldIncludeFunc(funcName) && !isSeenFunc(funcName)) {
     _logger.fine('++++ Adding Function: ${cursor.completeStringRepr()}');
 
     final rt = _getFunctionReturnType(cursor);
@@ -35,7 +35,7 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
       _logger.fine(
           '---- Removed Function, reason: struct pass/return by value: ${cursor.completeStringRepr()}');
       _logger.warning(
-          "Skipped Function '$name', struct pass/return by value not supported.");
+          "Skipped Function '$funcName', struct pass/return by value not supported.");
       return null; // Returning null so that [addToBindings] function excludes this.
     }
 
@@ -44,17 +44,18 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
       _logger.fine(
           '---- Removed Function, reason: unsupported return type or parameter type: ${cursor.completeStringRepr()}');
       _logger.warning(
-          "Skipped Function '$name', function has unsupported return type or parameter type.");
+          "Skipped Function '$funcName', function has unsupported return type or parameter type.");
       return null; // Returning null so that [addToBindings] function excludes this.
     }
 
     _func = Func(
       dartDoc: getCursorDocComment(cursor),
-      name: config.functionDecl.getPrefixedName(name),
-      lookupSymbolName: name,
+      name: config.functionDecl.getPrefixedName(funcName),
+      lookupSymbolName: funcName,
       returnType: rt,
       parameters: parameters,
     );
+    addFuncToSeen(funcName, _func);
   }
 
   return _func;

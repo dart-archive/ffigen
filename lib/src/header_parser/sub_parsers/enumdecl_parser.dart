@@ -29,12 +29,13 @@ EnumClass parseEnumDeclaration(
   final enumName = name ?? cursor.spelling();
   if (enumName == '') {
     _logger.finest('unnamed enum declaration');
-  } else if (shouldIncludeEnumClass(enumName)) {
+  } else if (shouldIncludeEnumClass(enumName) && !isSeenEnumClass(enumName)) {
     _logger.fine('++++ Adding Enum: ${cursor.completeStringRepr()}');
     _enumClass = EnumClass(
       dartDoc: getCursorDocComment(cursor),
       name: config.enumClassDecl.getPrefixedName(enumName),
     );
+    addEnumClassToSeen(enumName, _enumClass);
     _addEnumConstant(cursor);
   }
 

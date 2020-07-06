@@ -282,31 +282,32 @@ class WithPointerMember extends ffi.Struct{
     });
 
     test('Function and Struct Binding (pointer to Struct)', () {
+      final struct_some = Struc(
+        name: 'SomeStruc',
+        members: [
+          Member(
+            name: 'a',
+            type: Type.nativeType(
+              SupportedNativeType.Int32,
+            ),
+          ),
+          Member(
+            name: 'b',
+            type: Type.nativeType(
+              SupportedNativeType.Double,
+            ),
+          ),
+          Member(
+            name: 'c',
+            type: Type.nativeType(
+              SupportedNativeType.Char,
+            ),
+          ),
+        ],
+      );
       final library = Library(
         bindings: [
-          Struc(
-            name: 'SomeStruc',
-            members: [
-              Member(
-                name: 'a',
-                type: Type.nativeType(
-                  SupportedNativeType.Int32,
-                ),
-              ),
-              Member(
-                name: 'b',
-                type: Type.nativeType(
-                  SupportedNativeType.Double,
-                ),
-              ),
-              Member(
-                name: 'c',
-                type: Type.nativeType(
-                  SupportedNativeType.Char,
-                ),
-              ),
-            ],
-          ),
+          struct_some,
           Func(
             name: 'someFunc',
             lookupSymbolName: 'someFunc',
@@ -316,7 +317,7 @@ class WithPointerMember extends ffi.Struct{
                 type: Type.pointer(
                   Type.pointer(
                     Type.struct(
-                      'SomeStruc',
+                      struct_some,
                     ),
                   ),
                 ),
@@ -324,7 +325,7 @@ class WithPointerMember extends ffi.Struct{
             ],
             returnType: Type.pointer(
               Type.struct(
-                'SomeStruc',
+                struct_some,
               ),
             ),
           ),
@@ -392,6 +393,9 @@ typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
     });
 
     test('global (primitives, pointers, pointer to struct)', () {
+      final struc_some = Struc(
+        name: 'Some',
+      );
       final library = Library(
         bindings: [
           Global(
@@ -410,15 +414,13 @@ typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
               ),
             ),
           ),
-          Struc(
-            name: 'Some',
-          ),
+          struc_some,
           Global(
             name: 'test5',
             lookupSymbolName: 'test5',
             type: Type.pointer(
               Type.struct(
-                'Some',
+                struc_some,
               ),
             ),
           ),

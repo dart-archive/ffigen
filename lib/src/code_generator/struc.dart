@@ -34,9 +34,10 @@ import 'writer.dart';
 /// }
 /// ```
 class Struc extends Binding {
-  final List<Member> members;
+  List<Member> members;
 
   /// Used up names local to this struct.
+  /// TODO: fix incomplete
   final Set<String> usedUpNames;
 
   Struc({

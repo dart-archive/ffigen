@@ -100,14 +100,22 @@ Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
         structName = cxtype.spelling();
       }
 
-      structName = config.structDecl.getPrefixedName(structName);
-
-      type = Type.struct(structName);
+      final fixedStructName = config.structDecl.getPrefixedName(structName);
 
       // Also add a struct binding, if its unseen.
-      if (isUnseenStruct(structName, addToSeen: true)) {
-        addToBindings(
-            parseStructDeclaration(cursor, name: structName, doInclude: true));
+      // TODO: check if we should auto add struct.
+      if (isSeenStruc(structName)) {
+        type = Type.struct(getSeenStruc(structName));
+      } else {
+        // To stop recursion if a struct has itself as a member, updated later.
+        addStrucToSeen(structName, null);
+        final struc = parseStructDeclaration(cursor,
+            name: fixedStructName, ignoreFilter: true);
+        type = Type.struct(struc);
+        // Add to bindings.
+        addToBindings(struc);
+        // Add to seen.
+        addStrucToSeen(structName, struc);
       }
 
       cxtype.dispose();
@@ -123,6 +131,7 @@ Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
 }
 
 // Used for function pointer arguments.
+// TODO: check if its excluded.
 Type _extractFromFunctionProto(
     Pointer<clang.CXType> cxtype, String parentName) {
   var name = parentName;
@@ -133,18 +142,20 @@ Type _extractFromFunctionProto(
   } else {
     name = _getNextUniqueString(name);
   }
-  final typedefC = TypedefC(
-    name: name,
-    returnType:
-        clang.clang_getResultType_wrap(cxtype).toCodeGenTypeAndDispose(),
-  );
+  final _parameters = <Parameter>[];
   final totalArgs = clang.clang_getNumArgTypes_wrap(cxtype);
   for (var i = 0; i < totalArgs; i++) {
     final t = clang.clang_getArgType_wrap(cxtype, i);
-    typedefC.parameters.add(
+    _parameters.add(
       Parameter(name: '', type: t.toCodeGenTypeAndDispose()),
     );
   }
+  final typedefC = TypedefC(
+    name: name,
+    parameters: _parameters,
+    returnType:
+        clang.clang_getResultType_wrap(cxtype).toCodeGenTypeAndDispose(),
+  );
 
   return Type.nativeFunc(typedefC);
 }

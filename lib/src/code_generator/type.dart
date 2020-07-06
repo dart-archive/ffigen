@@ -4,6 +4,7 @@
 
 import 'package:meta/meta.dart';
 
+import 'struc.dart';
 import 'typedefc.dart';
 import 'writer.dart';
 
@@ -63,8 +64,8 @@ class Type {
     SupportedNativeType.IntPtr: _SubType(c: 'IntPtr', dart: 'int'),
   };
 
-  /// For providing name of Struct.
-  String structName;
+  /// For providing [Struc].
+  Struc struc;
 
   /// For providing nativeFunc.
   TypedefC nativeFunc;
@@ -87,7 +88,7 @@ class Type {
   Type._({
     @required this.broadType,
     this.child,
-    this.structName,
+    this.struc,
     this.nativeType,
     this.nativeFunc,
     this.length,
@@ -97,8 +98,8 @@ class Type {
   factory Type.pointer(Type child) {
     return Type._(broadType: BroadType.Pointer, child: child);
   }
-  factory Type.struct(String structName) {
-    return Type._(broadType: BroadType.Struct, structName: structName);
+  factory Type.struct(Struc struc) {
+    return Type._(broadType: BroadType.Struct, struc: struc);
   }
   factory Type.nativeFunc(TypedefC nativeFunc) {
     return Type._(broadType: BroadType.NativeFunction, nativeFunc: nativeFunc);
@@ -157,7 +158,7 @@ class Type {
       case BroadType.Pointer:
         return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
       case BroadType.Struct:
-        return '$structName';
+        return '${struc.name}';
       case BroadType.NativeFunction:
         return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc.name}>';
       case BroadType
@@ -178,7 +179,7 @@ class Type {
       case BroadType.Pointer:
         return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
       case BroadType.Struct:
-        return '$structName';
+        return '${struc.name}';
       case BroadType.NativeFunction:
         return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc.name}>';
       case BroadType

@@ -96,6 +96,9 @@ String binding(Library lib, String name) {
 }
 
 Library expectedLibrary() {
+  final struc1 = Struc(name: '${structPrefix}Struct1');
+  final struc2 =
+      Struc(name: '${structPrefix}${structPrefixReplacedWith}Struct2');
   return Library(
     bindings: [
       Func(
@@ -107,7 +110,7 @@ Library expectedLibrary() {
         parameters: [
           Parameter(
             name: 's',
-            type: Type.pointer(Type.struct('${structPrefix}Struct1')),
+            type: Type.pointer(Type.struct(struc1)),
           ),
         ],
       ),
@@ -120,13 +123,12 @@ Library expectedLibrary() {
         parameters: [
           Parameter(
             name: 's',
-            type: Type.pointer(Type.struct(
-                '${structPrefix}${structPrefixReplacedWith}Struct2')),
+            type: Type.pointer(Type.struct(struc2)),
           ),
         ],
       ),
-      Struc(name: '${structPrefix}Struct1'),
-      Struc(name: '${structPrefix}${structPrefixReplacedWith}Struct2'),
+      struc1,
+      struc2,
       EnumClass(
         name: '${enumPrefix}Enum1',
         enumConstants: [
