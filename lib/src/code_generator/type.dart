@@ -64,10 +64,10 @@ class Type {
     SupportedNativeType.IntPtr: _SubType(c: 'IntPtr', dart: 'int'),
   };
 
-  /// For providing [Struc].
+  /// Reference to the [Struc] binding this type refers to.
   Struc struc;
 
-  /// For providing nativeFunc.
+  /// Reference to the [TypedefC] this type refers to.
   TypedefC nativeFunc;
 
   /// For providing [SupportedNativeType] only.

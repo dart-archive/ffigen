@@ -8,8 +8,8 @@ import 'dart:ffi' as ffi;
 ffi.DynamicLibrary _dylib;
 
 /// Initialises the Dynamic library.
-void init(ffi.DynamicLibrary __dylib) {
-  _dylib = __dylib;
+void init(ffi.DynamicLibrary dynamicLibrary) {
+  _dylib = dynamicLibrary;
 }
 
 /// Contains the results of code-completion.
@@ -125,17 +125,7 @@ class ArrayHelper_CXCursor_data_level0 {
   }
 }
 
-typedef _typedefC_2 = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void>,
-  CXCursor,
-  CXSourceRange,
-);
-
-class CXCursorAndRangeVisitor extends ffi.Struct {
-  ffi.Pointer<ffi.Void> context;
-
-  ffi.Pointer<ffi.NativeFunction<_typedefC_2>> visit;
-}
+class CXCursorAndRangeVisitor extends ffi.Struct {}
 
 class CXCursorSetImpl extends ffi.Struct {}
 

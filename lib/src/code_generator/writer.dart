@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:ffigen/src/code_generator/utils.dart';
 import 'package:meta/meta.dart';
 
 import 'binding_string.dart';
@@ -10,15 +11,16 @@ import 'binding_string.dart';
 class Writer {
   final String header;
   String _initFunctionIdentifier;
-  final Set<String> usedUpNames;
+
+  final ConflictHandler conflictHandler;
 
   String _ffiLibraryPrefix;
   String get ffiLibraryPrefix =>
-      _ffiLibraryPrefix ??= getNonConflictingName('ffi');
+      _ffiLibraryPrefix ??= conflictHandler.getNonConflictingName('ffi');
 
   String _dylibIdentifier;
   String get dylibIdentifier =>
-      _dylibIdentifier ??= getNonConflictingName('_dylib');
+      _dylibIdentifier ??= conflictHandler.getNonConflictingName('_dylib');
 
   String _arrayHelperClassPrefix;
 
@@ -30,11 +32,13 @@ class Writer {
   /// [usedUpNames] should contain names of all the declarations which are
   /// already used. This is used to avoid name collisions.
   Writer({
-    @required this.usedUpNames,
+    @required Set<String> usedUpNames,
     String initFunctionIdentifier = 'init',
     this.header,
-  }) : assert(initFunctionIdentifier != null) {
-    _initFunctionIdentifier = getNonConflictingName(initFunctionIdentifier);
+  })  : conflictHandler = ConflictHandler(usedUpNames),
+        assert(initFunctionIdentifier != null) {
+    _initFunctionIdentifier =
+        conflictHandler.getNonConflictingName(initFunctionIdentifier);
 
     /// Finding a unique prefix for Array Helper Classes and store into
     /// [_arrayHelperClassPrefix].
@@ -75,8 +79,8 @@ class Writer {
     s.write('\n');
     s.write('/// Initialises the Dynamic library.\n');
     s.write(
-        'void $_initFunctionIdentifier($ffiLibraryPrefix.DynamicLibrary _$dylibIdentifier){\n');
-    s.write('  ${dylibIdentifier} = _$dylibIdentifier;\n');
+        'void $_initFunctionIdentifier($ffiLibraryPrefix.DynamicLibrary dynamicLibrary){\n');
+    s.write('  ${dylibIdentifier} = dynamicLibrary;\n');
     s.write('}\n');
 
     // Write bindings.
@@ -89,20 +93,5 @@ class Writer {
 
   void addBindingString(BindingString b) {
     _bindings.add(b);
-  }
-
-  /// Returns a non conflicting name by appending ```_cr_<int>``` to it.
-  String getNonConflictingName(String name, [bool addToUsedUpNames = true]) {
-    // 'cr' denotes conflict resolved.
-    String cr_name = name;
-    int i = 1;
-    while (usedUpNames.contains(cr_name)) {
-      cr_name = '${name}_cr_$i';
-      i++;
-    }
-    if (addToUsedUpNames) {
-      usedUpNames.add(cr_name);
-    }
-    return cr_name;
   }
 }

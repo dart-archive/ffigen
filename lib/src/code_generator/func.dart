@@ -32,13 +32,15 @@ class Func extends Binding {
   final Type returnType;
   final List<Parameter> parameters;
 
+  /// [lookupSymbolName], if not provided, takes the value of [name].
   Func({
     @required String name,
-    @required this.lookupSymbolName,
+    String lookupSymbolName,
     String dartDoc,
     @required this.returnType,
     List<Parameter> parameters,
   })  : parameters = parameters ?? [],
+        lookupSymbolName = lookupSymbolName ?? name,
         super(name: name, dartDoc: dartDoc) {
     for (var i = 0; i < this.parameters.length; i++) {
       if (this.parameters[i].name == null ||
@@ -54,15 +56,16 @@ class Func extends Binding {
     final enclosingFuncName = name;
 
     // Ensure name conflicts are resolved for typedefs generated.
-    final funcVarName = w.getNonConflictingName('_$name');
-    final typedefC = w.getNonConflictingName('_c_$name');
-    final typedefDart = w.getNonConflictingName('_dart_$name');
+    final funcVarName = w.conflictHandler.getNonConflictingName('_$name');
+    final typedefC = w.conflictHandler.getNonConflictingName('_c_$name');
+    final typedefDart = w.conflictHandler.getNonConflictingName('_dart_$name');
 
     // Write typedef's required by parameters and resolve name conflicts.
     for (final p in parameters) {
       final base = p.type.getBaseType();
       if (base.broadType == BroadType.NativeFunction) {
-        base.nativeFunc.name = w.getNonConflictingName(base.nativeFunc.name);
+        base.nativeFunc.name =
+            w.conflictHandler.getNonConflictingName(base.nativeFunc.name);
         s.write(base.nativeFunc.toTypedefString(w));
       }
     }

@@ -262,7 +262,7 @@ class Config {
       strings.initFunctionName: Specification<String>(
         description: 'Name of the init function to use',
         isRequired: false,
-        validator: stringValidator,
+        validator: nonEmptyStringValidator,
         extractor: stringExtractor,
         defaultValue: () => 'init',
         extractedResult: (dynamic result) =>
@@ -271,7 +271,7 @@ class Config {
       strings.preamble: Specification<String>(
         description: 'Header String for the generated bindings',
         isRequired: false,
-        validator: stringValidator,
+        validator: nonEmptyStringValidator,
         extractor: stringExtractor,
         extractedResult: (dynamic result) => preamble = result as String,
       ),

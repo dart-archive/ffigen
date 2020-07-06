@@ -271,7 +271,7 @@ SupportedNativeType nativeSupportedType(int value, {bool signed = true}) {
 
 String stringExtractor(dynamic value) => value as String;
 
-bool stringValidator(String name, dynamic value) {
+bool nonEmptyStringValidator(String name, dynamic value) {
   if (value is String && value.isNotEmpty) {
     return true;
   } else {

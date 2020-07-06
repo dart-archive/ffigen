@@ -7,6 +7,7 @@ import 'package:meta/meta.dart';
 import 'binding.dart';
 import 'binding_string.dart';
 import 'type.dart';
+import 'utils.dart';
 import 'writer.dart';
 
 /// A binding for C Struct.
@@ -70,7 +71,8 @@ class Struc extends Binding {
     for (final m in members) {
       final base = m.type.getBaseType();
       if (base.broadType == BroadType.NativeFunction) {
-        base.nativeFunc.name = w.getNonConflictingName(base.nativeFunc.name);
+        base.nativeFunc.name =
+            w.conflictHandler.getNonConflictingName(base.nativeFunc.name);
         s.write(base.nativeFunc.toTypedefString(w));
       }
     }
@@ -90,13 +92,13 @@ class Struc extends Binding {
 
     /// Adding [enclosingClassName] because dart doesn't allow class member
     /// to have the same name as the class.
-    final localUsedUpNames = <String>{enclosingClassName};
+    final localConflictHandler = ConflictHandler({enclosingClassName});
 
     // Write class declaration.
     s.write(
         'class $enclosingClassName extends ${w.ffiLibraryPrefix}.Struct{\n');
     for (final m in members) {
-      final memberName = getLocalNonConflictingName(m.name, localUsedUpNames);
+      final memberName = localConflictHandler.getNonConflictingName(m.name);
       if (m.type.broadType == BroadType.ConstantArray) {
         // TODO(5): Remove array helpers when inline array support arives.
         final arrayHelper = ArrayHelper(
@@ -130,22 +132,6 @@ class Struc extends Binding {
     }
 
     return BindingString(type: BindingStringType.struc, string: s.toString());
-  }
-
-  /// Returns a Local non conflicting name by appending `cr_<int>` to it.
-  String getLocalNonConflictingName(String name, Set<String> usedUpNames,
-      [bool addToUsedUpNames = true]) {
-    // 'cr' denotes conflict resolved.
-    String cr_name = name;
-    int i = 1;
-    while (usedUpNames.contains(cr_name)) {
-      cr_name = '${name}_cr_$i';
-      i++;
-    }
-    if (addToUsedUpNames) {
-      usedUpNames.add(cr_name);
-    }
-    return cr_name;
   }
 }
 

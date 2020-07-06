@@ -103,7 +103,7 @@ Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
       final fixedStructName = config.structDecl.getPrefixedName(structName);
 
       // Also add a struct binding, if its unseen.
-      // TODO: check if we should auto add struct.
+      // TODO(23): Check if we should auto add struct.
       if (isSeenStruc(structName)) {
         type = Type.struct(getSeenStruc(structName));
       } else {
@@ -129,9 +129,6 @@ Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
 }
 
 // Used for function pointer arguments.
-// TODO: exclude functions with function pointer parameter which pass/return
-// struct by value. Currently they are generated and have no effect, but user
-// cannot use them.
 Type _extractFromFunctionProto(
     Pointer<clang.CXType> cxtype, String parentName) {
   var name = parentName;
@@ -146,8 +143,16 @@ Type _extractFromFunctionProto(
   final totalArgs = clang.clang_getNumArgTypes_wrap(cxtype);
   for (var i = 0; i < totalArgs; i++) {
     final t = clang.clang_getArgType_wrap(cxtype, i);
+    final pt = t.toCodeGenTypeAndDispose();
+
+    if (pt.broadType == BroadType.Struct) {
+      return Type.unimplemented('Struct by value in function parameter.');
+    } else if (pt.broadType == BroadType.Unimplemented) {
+      return Type.unimplemented('Function parameter has an unsupported type.');
+    }
+
     _parameters.add(
-      Parameter(name: '', type: t.toCodeGenTypeAndDispose()),
+      Parameter(name: '', type: pt),
     );
   }
   final typedefC = TypedefC(

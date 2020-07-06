@@ -89,8 +89,8 @@ import 'dart:ffi' as ffi;
 ffi.DynamicLibrary _dylib;
 
 /// Initialises the Dynamic library.
-void init(ffi.DynamicLibrary __dylib){
-  _dylib = __dylib;
+void init(ffi.DynamicLibrary dynamicLibrary){
+  _dylib = dynamicLibrary;
 }
 /// Just a test function
 /// heres another line
@@ -240,8 +240,8 @@ import 'dart:ffi' as ffi;
 ffi.DynamicLibrary _dylib;
 
 /// Initialises the Dynamic library.
-void init(ffi.DynamicLibrary __dylib){
-  _dylib = __dylib;
+void init(ffi.DynamicLibrary dynamicLibrary){
+  _dylib = dynamicLibrary;
 }
 /// Just a test struct
 /// heres another line
@@ -348,8 +348,8 @@ import 'dart:ffi' as ffi;
 ffi.DynamicLibrary _dylib;
 
 /// Initialises the Dynamic library.
-void init(ffi.DynamicLibrary __dylib){
-  _dylib = __dylib;
+void init(ffi.DynamicLibrary dynamicLibrary){
+  _dylib = dynamicLibrary;
 }
 class SomeStruc extends ffi.Struct{
   @ffi.Int32()
@@ -443,8 +443,8 @@ import 'dart:ffi' as ffi;
 ffi.DynamicLibrary _dylib;
 
 /// Initialises the Dynamic library.
-void init(ffi.DynamicLibrary __dylib){
-  _dylib = __dylib;
+void init(ffi.DynamicLibrary dynamicLibrary){
+  _dylib = dynamicLibrary;
 }
 final int test1 = _dylib.lookup<ffi.Int32>('test1').value;
 
@@ -502,8 +502,8 @@ import 'dart:ffi' as ffi;
 ffi.DynamicLibrary _dylib;
 
 /// Initialises the Dynamic library.
-void init(ffi.DynamicLibrary __dylib){
-  _dylib = __dylib;
+void init(ffi.DynamicLibrary dynamicLibrary){
+  _dylib = dynamicLibrary;
 }
 const int test1 = 20;
 
@@ -553,8 +553,8 @@ import 'dart:ffi' as ffi;
 ffi.DynamicLibrary _dylib;
 
 /// Initialises the Dynamic library.
-void init(ffi.DynamicLibrary __dylib){
-  _dylib = __dylib;
+void init(ffi.DynamicLibrary dynamicLibrary){
+  _dylib = dynamicLibrary;
 }
 /// test line 1
 /// test line 2
@@ -639,21 +639,21 @@ import 'dart:ffi' as ffi;
 ffi.DynamicLibrary _dylib;
 
 /// Initialises the Dynamic library.
-void init_dylib_cr_1(ffi.DynamicLibrary __dylib){
-  _dylib = __dylib;
+void init_dylib_1(ffi.DynamicLibrary dynamicLibrary){
+  _dylib = dynamicLibrary;
 }
 void test(
 ) {
-  return _test_cr_1(
+  return _test_1(
   );
 }
 
-final _dart_test_cr_1 _test_cr_1 = _dylib.lookupFunction<_c_test_cr_1,_dart_test_cr_1>('test');
+final _dart_test_1 _test_1 = _dylib.lookupFunction<_c_test_1,_dart_test_1>('test');
 
-typedef _c_test_cr_1 = ffi.Void Function(
+typedef _c_test_1 = ffi.Void Function(
 );
 
-typedef _dart_test_cr_1 = void Function(
+typedef _dart_test_1 = void Function(
 );
 
 void _test(
@@ -749,13 +749,13 @@ class ArrayHelperPrefixCollisionTest extends ffi.Struct{
 
 void Test(
 ) {
-  return _Test_cr_1(
+  return _Test_1(
   );
 }
 
-final _dart_Test _Test_cr_1 = _dylib.lookupFunction<_c_Test_cr_1,_dart_Test>('Test');
+final _dart_Test _Test_1 = _dylib.lookupFunction<_c_Test_1,_dart_Test>('Test');
 
-typedef _c_Test_cr_1 = ffi.Void Function(
+typedef _c_Test_1 = ffi.Void Function(
 );
 
 typedef _dart_Test = void Function(
