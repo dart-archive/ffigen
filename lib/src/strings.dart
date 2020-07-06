@@ -77,7 +77,6 @@ const preamble = 'preamble';
 // General Prefix.
 const structMemberPrefix = 'struct-member-prefix';
 const enumMemberPrefix = 'enum-member-prefix';
-const arrayHelperClassPrefix = 'array-helper-prefix';
 
 // Dynamic library names.
 const libclang_dylib_linux = 'libwrapped_clang.so';

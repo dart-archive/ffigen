@@ -36,12 +36,21 @@ import 'writer.dart';
 class Struc extends Binding {
   final List<Member> members;
 
+  /// Used up names local to this struct.
+  final Set<String> usedUpNames;
+
   Struc({
     @required String name,
     String dartDoc,
     List<Member> members,
   })  : members = members ?? [],
-        super(name: name, dartDoc: dartDoc);
+        usedUpNames = {},
+        super(name: name, dartDoc: dartDoc) {
+    usedUpNames.add(name);
+    for (final m in this.members) {
+      usedUpNames.add(m.name);
+    }
+  }
 
   List<int> _getArrayDimensionLengths(Type type) {
     final array = <int>[];
@@ -81,7 +90,8 @@ class Struc extends Binding {
       if (m.type.broadType == BroadType.ConstantArray) {
         // TODO(5): Remove array helpers when inline array support arives.
         final arrayHelper = ArrayHelper(
-          helperClassGroupName: 'ArrayHelper_${enclosingClassName}_${m.name}',
+          helperClassGroupName:
+              '${w.arrayHelperClassPrefix}_${enclosingClassName}_${m.name}',
           elementType: m.type.getBaseArrayType(),
           dimensions: _getArrayDimensionLengths(m.type),
           name: m.name,
@@ -110,6 +120,22 @@ class Struc extends Binding {
     }
 
     return BindingString(type: BindingStringType.struc, string: s.toString());
+  }
+
+  /// Returns a non conflicting name by appending ```_cr_<int>``` to it.
+  String getLocalNonConflictingName(String name,
+      [bool addToUsedUpNames = true]) {
+    // 'cr' denotes conflict resolved.
+    String cr_name = name;
+    int i = 1;
+    while (usedUpNames.contains(cr_name)) {
+      cr_name = '${name}_cr_$i';
+      i++;
+    }
+    if (addToUsedUpNames) {
+      usedUpNames.add(cr_name);
+    }
+    return cr_name;
   }
 }
 

@@ -20,6 +20,9 @@ class Writer {
   String get dylibIdentifier =>
       _dylibIdentifier ??= getNonConflictingName('_dylib');
 
+  String _arrayHelperClassPrefix;
+  String get arrayHelperClassPrefix => _arrayHelperClassPrefix;
+
   final List<BindingString> _bindings = [];
 
   Writer({
@@ -28,6 +31,20 @@ class Writer {
     this.header,
   }) : assert(initFunctionIdentifier != null) {
     _initFunctionIdentifier = getNonConflictingName(initFunctionIdentifier);
+
+    /// Finding a unique prefix for Array Helper Classes and store into
+    /// [_arrayHelperClassPrefix].
+    final base = 'ArrayHelper';
+    _arrayHelperClassPrefix = base;
+    int suffixInt = 0;
+    for (int i = 0; i < usedUpNames.length; i++) {
+      if (usedUpNames.elementAt(i).startsWith(_arrayHelperClassPrefix)) {
+        // Not a unique prefix, start over with a new suffix.
+        i = -1;
+        suffixInt++;
+        _arrayHelperClassPrefix = '${base}${suffixInt}';
+      }
+    }
   }
   String generate() {
     final s = StringBuffer();

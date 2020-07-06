@@ -81,10 +81,6 @@ class Config {
   /// Prefix for enum members.
   String enumMemberPrefix;
 
-  //TODO: handle name collision.
-  /// Prefix for Array helper classes.
-  String arrayHelperClassPrefix;
-
   Config._();
 
   /// Create config from Yaml map.
@@ -304,15 +300,6 @@ class Config {
         defaultValue: () => '',
         extractedResult: (dynamic result) =>
             enumMemberPrefix = result as String,
-      ),
-      strings.arrayHelperClassPrefix: Specification<String>(
-        description: 'Prefix for generated ArrayHelper class',
-        isRequired: false,
-        validator: stringValidator,
-        extractor: stringExtractor,
-        defaultValue: () => '',
-        extractedResult: (dynamic result) =>
-            arrayHelperClassPrefix = result as String,
       ),
     };
   }
