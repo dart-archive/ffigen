@@ -30,14 +30,14 @@ class Library {
     final declConflictHandler = ConflictHandler({});
     for (final b in bindings) {
       // Print warning if name was conflicting and has been changed.
-      if (declConflictHandler.isNameConflicting(b.name)) {
+      if (declConflictHandler.isConflicting(b.name)) {
         final oldName = b.name;
         b.name = declConflictHandler.getNonConflictingName(b.name);
 
         _logger.warning(
             "Resolved name conflict: Declaration '$oldName' and has been renamed to '${b.name}'.");
       } else {
-        declConflictHandler.addToUsedUpNames(b.name);
+        declConflictHandler.markUsed(b.name);
       }
     }
 

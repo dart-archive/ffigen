@@ -2,9 +2,7 @@ class ConflictHandler {
   final Set<String> usedUpNames;
   ConflictHandler(this.usedUpNames);
 
-  /// Returns a non conflicting name by appending `_<int>` to it.
-  ///
-  /// If [name] isn't conflicting, it is returned as is.
+  /// Returns a non conflicting name by appending `_<int>` to it if necessary.
   String getNonConflictingName(String name, [bool addToUsedUpNames = true]) {
     String cr_name = name;
     int i = 1;
@@ -21,12 +19,12 @@ class ConflictHandler {
   /// Adds a name to usedUpNames.
   ///
   /// Note: [getNonConflictingName] also adds the name by default.
-  void addToUsedUpNames(String name) {
+  void markUsed(String name) {
     usedUpNames.add(name);
   }
 
   /// Returns true if a name has been used before.
-  bool isNameConflicting(String name) {
+  bool isConflicting(String name) {
     return usedUpNames.contains(name);
   }
 }
