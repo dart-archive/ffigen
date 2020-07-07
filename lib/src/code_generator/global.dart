@@ -23,7 +23,7 @@ class Global extends Binding {
   final String lookupSymbolName;
   final Type type;
 
-  const Global({
+  Global({
     @required String name,
     @required this.lookupSymbolName,
     @required this.type,

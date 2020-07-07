@@ -28,7 +28,7 @@ class Constant extends Binding {
   /// Put quotes if type is a string.
   final String rawValue;
 
-  const Constant({
+  Constant({
     @required String name,
     String dartDoc,
     @required this.type,

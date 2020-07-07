@@ -8,6 +8,7 @@ import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 
 import 'binding.dart';
+import 'utils.dart';
 import 'writer.dart';
 
 var _logger = Logger('code_generator:library.dart');
@@ -25,6 +26,21 @@ class Library {
     String header,
     String initFunctionIdentifier = 'init',
   }) {
+    // Handle any declaration-declaration name conflict.
+    final declConflictHandler = ConflictHandler({});
+    for (final b in bindings) {
+      // Print warning if name was conflicting and has been changed.
+      if (declConflictHandler.isNameConflicting(b.name)) {
+        final oldName = b.name;
+        b.name = declConflictHandler.getNonConflictingName(b.name);
+
+        _logger.warning(
+            "Resolved name conflict: Declaration '$oldName' and has been renamed to '${b.name}'.");
+      } else {
+        declConflictHandler.addToUsedUpNames(b.name);
+      }
+    }
+
     final declarationNames = bindings.map((e) => e.name).toSet();
     _writer = Writer(
       usedUpNames: declarationNames,
