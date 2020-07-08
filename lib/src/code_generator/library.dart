@@ -8,33 +8,46 @@ import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 
 import 'binding.dart';
+import 'utils.dart';
 import 'writer.dart';
 
-var _logger = Logger('code_generator');
+var _logger = Logger('code_generator:library.dart');
 
 /// Container for all Bindings.
 class Library {
-  /// Variable identifier used for dynamicLibrary. Defaults to `_dylib`,
-  final String dylibIdentifier;
-
-  /// Init function for providing dynamic library. Defaults to `init`,
-  ///
-  /// Can be renamed in case of name conflicts with something else.
-  final String initFunctionIdentifier;
-
-  /// Header of file.
-  final String header;
-
   /// List of bindings in this library.
   final List<Binding> bindings;
 
+  Writer _writer;
+  Writer get writer => _writer;
+
   Library({
     @required this.bindings,
-    this.dylibIdentifier = '_dylib',
-    this.initFunctionIdentifier = 'init',
-    this.header,
-  })  : assert(dylibIdentifier != null),
-        assert(initFunctionIdentifier != null);
+    String header,
+    String initFunctionIdentifier = 'init',
+  }) {
+    // Handle any declaration-declaration name conflict.
+    final declConflictHandler = UniqueNamer({});
+    for (final b in bindings) {
+      // Print warning if name was conflicting and has been changed.
+      if (declConflictHandler.isUsed(b.name)) {
+        final oldName = b.name;
+        b.name = declConflictHandler.makeUnique(b.name);
+
+        _logger.warning(
+            "Resolved name conflict: Declaration '$oldName' and has been renamed to '${b.name}'.");
+      } else {
+        declConflictHandler.markUsed(b.name);
+      }
+    }
+
+    final declarationNames = bindings.map((e) => e.name).toSet();
+    _writer = Writer(
+      usedUpNames: declarationNames,
+      initFunctionIdentifier: initFunctionIdentifier,
+      header: header,
+    );
+  }
 
   /// Sort all bindings in alphabetical order.
   void sort() {
@@ -53,7 +66,6 @@ class Library {
 
   /// Generates bindings and stores it in given [Writer].
   void _generate(Writer w) {
-    w.header = header;
     for (final b in bindings) {
       w.addBindingString(b.toBindingString(w));
     }
@@ -70,10 +82,7 @@ class Library {
 
   /// Generates the bindings.
   String generate() {
-    final w = Writer(
-      dylibIdentifier: dylibIdentifier,
-      initFunctionIdentifier: initFunctionIdentifier,
-    );
+    final w = writer;
     _generate(w);
     return w.generate();
   }

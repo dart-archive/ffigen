@@ -4,8 +4,6 @@
 
 import 'package:meta/meta.dart';
 
-import 'binding.dart';
-import 'binding_string.dart';
 import 'func.dart' show Parameter;
 import 'type.dart';
 import 'writer.dart';
@@ -18,23 +16,25 @@ import 'writer.dart';
 ///   $parameter2...,
 ///   .
 ///   .
-/// );`
+/// );
 /// ```
-/// Note: This doesn't bind with anything.
-class TypedefC extends Binding {
+/// Used for generating typedefs for `Pointer<NativeFunction>`.
+///
+/// Name conflict resolution must be done before using.
+class TypedefC {
+  String name;
+  String dartDoc;
   final Type returnType;
   final List<Parameter> parameters;
 
   TypedefC({
-    @required String name,
-    String dartDoc,
+    @required this.name,
+    this.dartDoc,
     @required this.returnType,
     List<Parameter> parameters,
-  })  : parameters = parameters ?? [],
-        super(name: name, dartDoc: dartDoc);
+  }) : parameters = parameters ?? [];
 
-  @override
-  BindingString toBindingString(Writer w) {
+  String toTypedefString(Writer w) {
     final s = StringBuffer();
 
     if (dartDoc != null) {
@@ -49,6 +49,6 @@ class TypedefC extends Binding {
     }
     s.write(');\n\n');
 
-    return BindingString(type: BindingStringType.typeDef, string: s.toString());
+    return s.toString();
   }
 }

@@ -5,13 +5,14 @@
 import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
+import 'package:ffigen/src/header_parser/data.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
 import '../includer.dart';
 import '../utils.dart';
 
-var _logger = Logger('parser:enumdecl_parser');
+var _logger = Logger('header_parser:enumdecl_parser.dart');
 
 /// Temporarily holds a enumClass before its returned by [parseEnumDeclaration].
 EnumClass _enumClass;
@@ -28,12 +29,13 @@ EnumClass parseEnumDeclaration(
   final enumName = name ?? cursor.spelling();
   if (enumName == '') {
     _logger.finest('unnamed enum declaration');
-  } else if (shouldIncludeEnumClass(enumName)) {
+  } else if (shouldIncludeEnumClass(enumName) && !isSeenEnumClass(enumName)) {
     _logger.fine('++++ Adding Enum: ${cursor.completeStringRepr()}');
     _enumClass = EnumClass(
       dartDoc: getCursorDocComment(cursor),
-      name: enumName,
+      name: config.enumClassDecl.getPrefixedName(enumName),
     );
+    addEnumClassToSeen(enumName, _enumClass);
     _addEnumConstant(cursor);
   }
 

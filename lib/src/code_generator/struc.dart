@@ -7,6 +7,7 @@ import 'package:meta/meta.dart';
 import 'binding.dart';
 import 'binding_string.dart';
 import 'type.dart';
+import 'utils.dart';
 import 'writer.dart';
 
 /// A binding for C Struct.
@@ -34,7 +35,7 @@ import 'writer.dart';
 /// }
 /// ```
 class Struc extends Binding {
-  final List<Member> members;
+  List<Member> members;
 
   Struc({
     @required String name,
@@ -55,8 +56,9 @@ class Struc extends Binding {
 
   @override
   BindingString toBindingString(Writer w) {
+    members = members ?? [];
     final s = StringBuffer();
-
+    final enclosingClassName = name;
     if (dartDoc != null) {
       s.write('/// ');
       s.writeAll(dartDoc.split('\n'), '\n/// ');
@@ -65,18 +67,37 @@ class Struc extends Binding {
 
     final helpers = <ArrayHelper>[];
 
-    // Write class declaration.
-    s.write('class $name extends ${w.ffiLibraryPrefix}.Struct{\n');
+    // Write typedef's required by members and resolve name conflicts.
     for (final m in members) {
+      final base = m.type.getBaseType();
+      if (base.broadType == BroadType.NativeFunction) {
+        base.nativeFunc.name =
+            w.uniqueNamer.makeUnique(base.nativeFunc.name);
+        s.write(base.nativeFunc.toTypedefString(w));
+      }
+    }
+
+    final expandedArrayItemPrefix = getUniqueExpandedArrayItemPrefix();
+
+    /// Adding [enclosingClassName] because dart doesn't allow class member
+    /// to have the same name as the class.
+    final localUniqueNamer = UniqueNamer({enclosingClassName});
+
+    // Write class declaration.
+    s.write(
+        'class $enclosingClassName extends ${w.ffiLibraryPrefix}.Struct{\n');
+    for (final m in members) {
+      final memberName = localUniqueNamer.makeUnique(m.name);
       if (m.type.broadType == BroadType.ConstantArray) {
         // TODO(5): Remove array helpers when inline array support arives.
         final arrayHelper = ArrayHelper(
-          helperClassGroupName: 'ArrayHelper_${name}_${m.name}',
+          helperClassGroupName:
+              '${w.arrayHelperClassPrefix}_${enclosingClassName}_${memberName}',
           elementType: m.type.getBaseArrayType(),
           dimensions: _getArrayDimensionLengths(m.type),
-          name: m.name,
-          structName: name,
-          elementNamePrefix: '_${m.name}_item_',
+          name: memberName,
+          structName: enclosingClassName,
+          elementNamePrefix: '${expandedArrayItemPrefix}${memberName}_item_',
         );
         s.write(arrayHelper.declarationString(w));
         helpers.add(arrayHelper);
@@ -90,7 +111,7 @@ class Struc extends Binding {
         if (m.type.isPrimitive) {
           s.write('$depth@${m.type.getCType(w)}()\n');
         }
-        s.write('$depth${m.type.getDartType(w)} ${m.name};\n\n');
+        s.write('$depth${m.type.getDartType(w)} ${memberName};\n\n');
       }
     }
     s.write('}\n\n');
@@ -100,6 +121,22 @@ class Struc extends Binding {
     }
 
     return BindingString(type: BindingStringType.struc, string: s.toString());
+  }
+
+  /// Gets a unique prefix in local namespace for expanded array items.
+  String getUniqueExpandedArrayItemPrefix() {
+    final base = '_unique';
+    String expandedArrayItemPrefix = base;
+    int suffixInt = 0;
+    for (int i = 0; i < members.length; i++) {
+      if (members[i].name.startsWith(expandedArrayItemPrefix)) {
+        // Not a unique prefix, start over with a new suffix.
+        i = -1;
+        suffixInt++;
+        expandedArrayItemPrefix = '${base}${suffixInt}';
+      }
+    }
+    return expandedArrayItemPrefix + '_';
   }
 }
 

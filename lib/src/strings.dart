@@ -19,6 +19,8 @@ const enums = 'enums';
 // Sub-fields of Declarations.
 const include = 'include';
 const exclude = 'exclude';
+const prefix = 'prefix';
+const prefix_replacement = 'prefix-replacement';
 
 // Sub-fields of include/exclude.
 const matches = 'matches'; // regex
@@ -67,6 +69,10 @@ const full = 'full';
 const none = 'none';
 // Contains all possibe comment types.
 const commentTypeSet = {brief, full, none};
+
+// Library input.
+const initFunctionName = 'init-function-name';
+const preamble = 'preamble';
 
 // Dynamic library names.
 const libclang_dylib_linux = 'libwrapped_clang.so';

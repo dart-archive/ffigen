@@ -12,7 +12,7 @@ import '../data.dart';
 import '../includer.dart';
 import '../utils.dart';
 
-var _logger = Logger('parser:structdecl_parser');
+var _logger = Logger('header_parser:structdecl_parser.dart');
 
 /// Temporarily holds a struc before its returned by [parseStructDeclaration].
 Struc _struc;
@@ -24,11 +24,9 @@ Struc parseStructDeclaration(
   /// Optionally provide name (useful in case struct is inside a typedef).
   String name,
 
-  /// Option to override shouldInclude methods. (Useful in case of extracting
-  /// structs when they are passed/returned by an included function.)
-  ///
-  /// Check if binding is not already included before setting this to true.
-  bool doInclude = false,
+  /// Option to ignore struct filter (Useful in case of extracting structs
+  /// when they are passed/returned by an included function.)
+  bool ignoreFilter = false,
 }) {
   _struc = null;
   final structName = name ?? cursor.spelling();
@@ -36,16 +34,19 @@ Struc parseStructDeclaration(
   if (structName == '') {
     _logger.finest('unnamed structure or typedef structure declaration');
     return null;
-  } else if (doInclude || shouldIncludeStruct(structName)) {
+  } else if ((ignoreFilter || shouldIncludeStruct(structName)) &&
+      (!isSeenStruc(structName))) {
     _logger.fine(
         '++++ Adding Structure: structName: ${structName}, ${cursor.completeStringRepr()}');
 
-    final members = _getMembers(cursor, structName);
     _struc = Struc(
+      name: config.structDecl.getPrefixedName(structName),
       dartDoc: getCursorDocComment(cursor),
-      name: structName,
-      members: members,
     );
+    // Adding to seen here to stop recursion if a struct has itself as a
+    // member, members are updated later.
+    addStrucToSeen(structName, _struc);
+    _struc.members = _getMembers(cursor, structName);
   }
 
   return _struc;
@@ -72,19 +73,19 @@ List<Member> _getMembers(Pointer<clang.CXCursor> cursor, String structName) {
         '---- Removed Struct members, reason: struct has array members ${cursor.completeStringRepr()}');
     _logger.warning(
         'Removed All Struct Members from: $structName, Array members not supported');
-    return null;
+    return [];
   } else if (nestedStructMember) {
     _logger.fine(
         '---- Removed Struct members, reason: struct has struct members ${cursor.completeStringRepr()}');
     _logger.warning(
         "Removed All Struct Members from '$structName', Nested Structures not supported.");
-    return null;
+    return [];
   } else if (unimplementedMemberType) {
     _logger.fine(
         '---- Removed Struct members, reason: member with unimplementedtype ${cursor.completeStringRepr()}');
     _logger.warning(
         "Removed All Struct Members from '$structName', struct member has an unsupported type.");
-    return null;
+    return [];
   }
 
   return _members;
@@ -119,7 +120,7 @@ int _structMembersVisitor(Pointer<clang.CXCursor> cursor,
         }
       }
 
-      if (mt.getBaseBroadType() == BroadType.Unimplemented) {
+      if (mt.getBaseType().broadType == BroadType.Unimplemented) {
         unimplementedMemberType = true;
       }
 

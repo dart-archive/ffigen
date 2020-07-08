@@ -9,11 +9,11 @@ import 'writer.dart';
 
 /// Base class for all Bindings.
 abstract class Binding {
-  final String name;
+  String name;
 
   final String dartDoc;
 
-  const Binding({@required this.name, this.dartDoc});
+  Binding({@required this.name, this.dartDoc});
 
   /// Converts a Binding to its actual string representation.
   BindingString toBindingString(Writer w);

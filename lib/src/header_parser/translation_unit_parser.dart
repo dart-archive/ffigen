@@ -15,7 +15,7 @@ import 'sub_parsers/structdecl_parser.dart';
 import 'sub_parsers/typedefdecl_parser.dart';
 import 'utils.dart';
 
-var _logger = Logger('parser:root_parser');
+var _logger = Logger('header_parser:translation_unit_parser.dart');
 
 List<Binding> _bindings;
 

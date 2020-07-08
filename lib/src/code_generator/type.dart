@@ -4,6 +4,8 @@
 
 import 'package:meta/meta.dart';
 
+import 'struc.dart';
+import 'typedefc.dart';
 import 'writer.dart';
 
 class _SubType {
@@ -62,11 +64,11 @@ class Type {
     SupportedNativeType.IntPtr: _SubType(c: 'IntPtr', dart: 'int'),
   };
 
-  /// For providing name of Struct.
-  String structName;
+  /// Reference to the [Struc] binding this type refers to.
+  Struc struc;
 
-  /// For providing name of nativeFunc.
-  String nativeFuncName;
+  /// Reference to the [TypedefC] this type refers to.
+  TypedefC nativeFunc;
 
   /// For providing [SupportedNativeType] only.
   final SupportedNativeType nativeType;
@@ -86,9 +88,9 @@ class Type {
   Type._({
     @required this.broadType,
     this.child,
-    this.structName,
+    this.struc,
     this.nativeType,
-    this.nativeFuncName,
+    this.nativeFunc,
     this.length,
     this.unimplementedReason,
   });
@@ -96,12 +98,11 @@ class Type {
   factory Type.pointer(Type child) {
     return Type._(broadType: BroadType.Pointer, child: child);
   }
-  factory Type.struct(String structName) {
-    return Type._(broadType: BroadType.Struct, structName: structName);
+  factory Type.struct(Struc struc) {
+    return Type._(broadType: BroadType.Struct, struc: struc);
   }
-  factory Type.nativeFunc(String nativeFuncName) {
-    return Type._(
-        broadType: BroadType.NativeFunction, nativeFuncName: nativeFuncName);
+  factory Type.nativeFunc(TypedefC nativeFunc) {
+    return Type._(broadType: BroadType.NativeFunction, nativeFunc: nativeFunc);
   }
   factory Type.nativeType(SupportedNativeType nativeType) {
     return Type._(broadType: BroadType.NativeType, nativeType: nativeType);
@@ -124,15 +125,15 @@ class Type {
         broadType: BroadType.Unimplemented, unimplementedReason: reason);
   }
 
-  /// Get base broad type for any type.
+  /// Get base type for any type.
   ///
-  /// E.g int** has base Broadtype as NativeType,
-  /// double[2][3] has base broadtype as double.
-  BroadType getBaseBroadType() {
+  /// E.g int** has base [Type] with [Broadtype] as NativeType,
+  /// double[2][3] has base [Type] with [Broadtype] as double.
+  Type getBaseType() {
     if (child != null) {
-      return child.getBaseBroadType();
+      return child.getBaseType();
     } else {
-      return broadType;
+      return this;
     }
   }
 
@@ -157,9 +158,9 @@ class Type {
       case BroadType.Pointer:
         return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
       case BroadType.Struct:
-        return structName;
+        return '${struc.name}';
       case BroadType.NativeFunction:
-        return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFuncName}>';
+        return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc.name}>';
       case BroadType
           .IncompleteArray: // Array parameters are treated as Pointers in C.
         return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
@@ -178,9 +179,9 @@ class Type {
       case BroadType.Pointer:
         return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
       case BroadType.Struct:
-        return structName;
+        return '${struc.name}';
       case BroadType.NativeFunction:
-        return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFuncName}>';
+        return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc.name}>';
       case BroadType
           .IncompleteArray: // Array parameters are treated as Pointers in C.
         return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';

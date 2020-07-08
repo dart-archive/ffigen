@@ -2,29 +2,62 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:ffigen/src/code_generator/utils.dart';
+import 'package:meta/meta.dart';
+
 import 'binding_string.dart';
 
 /// To store generated String bindings.
 class Writer {
-  String header;
-  String dylibIdentifier;
-  String initFunctionIdentifier;
+  final String header;
+  String _initFunctionIdentifier;
 
-  /// dart:ffi library import prefix.
-  String ffiLibraryPrefix;
+  final UniqueNamer uniqueNamer;
+
+  String _ffiLibraryPrefix;
+  String get ffiLibraryPrefix =>
+      _ffiLibraryPrefix ??= uniqueNamer.makeUnique('ffi');
+
+  String _dylibIdentifier;
+  String get dylibIdentifier =>
+      _dylibIdentifier ??= uniqueNamer.makeUnique('_dylib');
+
+  String _arrayHelperClassPrefix;
+
+  /// Guaranteed to be a unique prefix.
+  String get arrayHelperClassPrefix => _arrayHelperClassPrefix;
 
   final List<BindingString> _bindings = [];
 
+  /// [usedUpNames] should contain names of all the declarations which are
+  /// already used. This is used to avoid name collisions.
   Writer({
-    this.dylibIdentifier = '_dylib',
-    this.initFunctionIdentifier = 'init',
-    this.ffiLibraryPrefix = 'ffi',
-  });
+    @required Set<String> usedUpNames,
+    String initFunctionIdentifier = 'init',
+    this.header,
+  })  : uniqueNamer = UniqueNamer(usedUpNames),
+        assert(initFunctionIdentifier != null) {
+    _initFunctionIdentifier =
+        uniqueNamer.makeUnique(initFunctionIdentifier);
 
+    /// Finding a unique prefix for Array Helper Classes and store into
+    /// [_arrayHelperClassPrefix].
+    final base = 'ArrayHelper';
+    _arrayHelperClassPrefix = base;
+    int suffixInt = 0;
+    for (int i = 0; i < usedUpNames.length; i++) {
+      if (usedUpNames.elementAt(i).startsWith(_arrayHelperClassPrefix)) {
+        // Not a unique prefix, start over with a new suffix.
+        i = -1;
+        suffixInt++;
+        _arrayHelperClassPrefix = '${base}${suffixInt}';
+      }
+    }
+  }
   String generate() {
     final s = StringBuffer();
 
-    // Write header (if any)
+    // Write file header (if any).
     if (header != null) {
       s.write(header);
       s.write('\n');
@@ -46,8 +79,8 @@ class Writer {
     s.write('\n');
     s.write('/// Initialises the Dynamic library.\n');
     s.write(
-        'void $initFunctionIdentifier($ffiLibraryPrefix.DynamicLibrary dylib){\n');
-    s.write('  ${dylibIdentifier} = dylib;\n');
+        'void $_initFunctionIdentifier($ffiLibraryPrefix.DynamicLibrary dynamicLibrary){\n');
+    s.write('  ${dylibIdentifier} = dynamicLibrary;\n');
     s.write('}\n');
 
     // Write bindings.

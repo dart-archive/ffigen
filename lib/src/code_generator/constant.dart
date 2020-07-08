@@ -28,7 +28,7 @@ class Constant extends Binding {
   /// Put quotes if type is a string.
   final String rawValue;
 
-  const Constant({
+  Constant({
     @required String name,
     String dartDoc,
     @required this.type,
@@ -38,6 +38,7 @@ class Constant extends Binding {
   @override
   BindingString toBindingString(Writer w) {
     final s = StringBuffer();
+    final constantName = name;
 
     if (dartDoc != null) {
       s.write('/// ');
@@ -45,7 +46,7 @@ class Constant extends Binding {
       s.write('\n');
     }
 
-    s.write('const ${type.getDartType(w)} $name = $rawValue;\n\n');
+    s.write('const ${type.getDartType(w)} $constantName = $rawValue;\n\n');
 
     return BindingString(
         type: BindingStringType.constant, string: s.toString());

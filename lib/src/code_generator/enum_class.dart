@@ -6,6 +6,7 @@ import 'package:meta/meta.dart';
 
 import 'binding.dart';
 import 'binding_string.dart';
+import 'utils.dart';
 import 'writer.dart';
 
 /// A binding for enums in C.
@@ -35,6 +36,7 @@ class EnumClass extends Binding {
   @override
   BindingString toBindingString(Writer w) {
     final s = StringBuffer();
+    final enclosingClassName = name;
 
     if (dartDoc != null) {
       s.write('/// ');
@@ -42,16 +44,22 @@ class EnumClass extends Binding {
       s.write('\n');
     }
 
+    /// Adding [enclosingClassName] because dart doesn't allow class member
+    /// to have the same name as the class.
+    final localUniqueNamer = UniqueNamer({enclosingClassName});
+
     // Print enclosing class.
-    s.write('class $name {\n');
+    s.write('class $enclosingClassName {\n');
     const depth = '  ';
     for (final ec in enumConstants) {
+      final enum_value_name =
+          localUniqueNamer.makeUnique(ec.name);
       if (ec.dartDoc != null) {
         s.write(depth + '/// ');
         s.writeAll(ec.dartDoc.split('\n'), '\n' + depth + '/// ');
         s.write('\n');
       }
-      s.write(depth + 'static const int ${ec.name} = ${ec.value};\n');
+      s.write(depth + 'static const int ${enum_value_name} = ${ec.value};\n');
     }
     s.write('}\n\n');
 

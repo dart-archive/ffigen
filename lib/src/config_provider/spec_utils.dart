@@ -12,9 +12,9 @@ import 'package:yaml/yaml.dart';
 
 import '../strings.dart' as strings;
 import './config.dart';
-import 'filter.dart';
+import 'declaration.dart';
 
-var _logger = Logger('config_provider/utils');
+var _logger = Logger('config_provider:spec_utils.dart');
 
 bool booleanExtractor(dynamic value) => value as bool;
 
@@ -166,13 +166,15 @@ bool outputValidator(String name, dynamic value) {
   if (value is String) {
     return true;
   } else {
-    _logger.severe("Expected value of key '${strings.output}' to be a String.");
+    _logger.severe("Expected value of key '$name' to be a String.");
     return false;
   }
 }
 
-Filter filterExtractor(dynamic yamlMap) {
+Declaration declarationConfigExtractor(dynamic yamlMap) {
   List<String> includeMatchers, includeFull, excludeMatchers, excludeFull;
+  String prefix;
+  Map<String, String> prefixReplacement;
 
   final include = yamlMap[strings.include] as YamlMap;
   if (include != null) {
@@ -186,21 +188,29 @@ Filter filterExtractor(dynamic yamlMap) {
     excludeFull = (exclude[strings.names] as YamlList)?.cast<String>();
   }
 
-  return Filter(
+  prefix = yamlMap[strings.prefix] as String;
+
+  prefixReplacement =
+      (yamlMap[strings.prefix_replacement] as YamlMap)?.cast<String, String>();
+
+  return Declaration(
     includeMatchers: includeMatchers,
     includeFull: includeFull,
     excludeMatchers: excludeMatchers,
     excludeFull: excludeFull,
+    globalPrefix: prefix,
+    prefixReplacement: prefixReplacement,
   );
 }
 
-bool filterValidator(String name, dynamic value) {
+bool declarationConfigValidator(String name, dynamic value) {
   var _result = true;
   if (value is YamlMap) {
     for (final key in value.keys) {
       if (key == strings.include || key == strings.exclude) {
         if (value[key] is! YamlMap) {
           _logger.severe("Expected '$name -> $key' to be a Map.");
+          _result = false;
         }
         for (final subkey in value[key].keys) {
           if (subkey == strings.matches || subkey == strings.names) {
@@ -211,6 +221,24 @@ bool filterValidator(String name, dynamic value) {
             }
           } else {
             _logger.severe("Unknown key '$subkey' in '$name -> $key'.");
+          }
+        }
+      } else if (key == strings.prefix) {
+        if (value[key] is! String) {
+          _logger.severe("Expected '$name -> $key' to be a String.");
+          _result = false;
+        }
+      } else if (key == strings.prefix_replacement) {
+        if (value[key] is! YamlMap) {
+          _logger.severe("Expected '$name -> $key' to be a Map.");
+          _result = false;
+        } else {
+          for (final subkey in value[key].keys) {
+            if (value[key][subkey] is! String) {
+              _logger.severe(
+                  "Expected '$name -> $key -> $subkey' to be a String.");
+              _result = false;
+            }
           }
         }
       } else {
@@ -238,6 +266,17 @@ SupportedNativeType nativeSupportedType(int value, {bool signed = true}) {
     default:
       throw Exception(
           'Unsupported value given to sizemap, Allowed values for sizes are: 1, 2, 4, 8');
+  }
+}
+
+String stringExtractor(dynamic value) => value as String;
+
+bool nonEmptyStringValidator(String name, dynamic value) {
+  if (value is String && value.isNotEmpty) {
+    return true;
+  } else {
+    _logger.severe("Expected value of key '$name' to be a non-empty String.");
+    return false;
   }
 }
 

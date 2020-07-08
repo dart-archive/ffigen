@@ -20,7 +20,11 @@ Library parse(Config conf, {bool sort = false}) {
 
   final bindings = parseToBindings();
 
-  final library = Library(bindings: bindings);
+  final library = Library(
+    bindings: bindings,
+    initFunctionIdentifier: data.config.initFunctionName,
+    header: data.config.preamble,
+  );
 
   if (sort) {
     library.sort();
@@ -32,7 +36,7 @@ Library parse(Config conf, {bool sort = false}) {
 //           BELOW FUNCTIONS ARE MEANT FOR INTERNAL USE AND TESTING
 // ===================================================================================
 
-var _logger = Logger('parser:parser');
+var _logger = Logger('header_parser:parser.dart');
 
 /// initialises parser, clears any previous values.
 void initParser(Config c) {

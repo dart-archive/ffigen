@@ -7,8 +7,8 @@ import 'dart:ffi' as ffi;
 ffi.DynamicLibrary _dylib;
 
 /// Initialises the Dynamic library.
-void init(ffi.DynamicLibrary dylib) {
-  _dylib = dylib;
+void init(ffi.DynamicLibrary dynamicLibrary) {
+  _dylib = dynamicLibrary;
 }
 
 class cJSON extends ffi.Struct {
@@ -32,18 +32,18 @@ class cJSON extends ffi.Struct {
   ffi.Pointer<ffi.Int8> string;
 }
 
-typedef _typedefC_noname_1 = ffi.Pointer<ffi.Void> Function(
+typedef _typedefC_1 = ffi.Pointer<ffi.Void> Function(
   ffi.Uint64,
 );
 
-typedef _typedefC_noname_2 = ffi.Void Function(
+typedef _typedefC_2 = ffi.Void Function(
   ffi.Pointer<ffi.Void>,
 );
 
 class cJSON_Hooks extends ffi.Struct {
-  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_1>> malloc_fn;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_1>> malloc_fn;
 
-  ffi.Pointer<ffi.NativeFunction<_typedefC_noname_2>> free_fn;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_2>> free_fn;
 }
 
 ffi.Pointer<ffi.Int8> cJSON_Version() {

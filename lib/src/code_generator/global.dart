@@ -20,10 +20,12 @@ import 'writer.dart';
 /// final int a = _dylib.lookup<ffi.Int32>('a').value;
 /// ```
 class Global extends Binding {
+  final String lookupSymbolName;
   final Type type;
 
-  const Global({
+  Global({
     @required String name,
+    @required this.lookupSymbolName,
     @required this.type,
     String dartDoc,
   }) : super(name: name, dartDoc: dartDoc);
@@ -31,7 +33,7 @@ class Global extends Binding {
   @override
   BindingString toBindingString(Writer w) {
     final s = StringBuffer();
-
+    final globalVarName = name;
     if (dartDoc != null) {
       s.write('/// ');
       s.writeAll(dartDoc.split('\n'), '\n/// ');
@@ -39,7 +41,7 @@ class Global extends Binding {
     }
 
     s.write(
-        "final ${type.getDartType(w)} $name = ${w.dylibIdentifier}.lookup<${type.getCType(w)}>('$name').value;\n\n");
+        "final ${type.getDartType(w)} $globalVarName = ${w.dylibIdentifier}.lookup<${type.getCType(w)}>('$lookupSymbolName').value;\n\n");
 
     return BindingString(type: BindingStringType.global, string: s.toString());
   }

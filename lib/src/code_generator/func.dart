@@ -28,15 +28,19 @@ import 'writer.dart';
 /// typedef _dart_sum = int Function(int a, int b);
 /// ```
 class Func extends Binding {
+  final String lookupSymbolName;
   final Type returnType;
   final List<Parameter> parameters;
 
+  /// [lookupSymbolName], if not provided, takes the value of [name].
   Func({
     @required String name,
+    String lookupSymbolName,
     String dartDoc,
     @required this.returnType,
     List<Parameter> parameters,
   })  : parameters = parameters ?? [],
+        lookupSymbolName = lookupSymbolName ?? name,
         super(name: name, dartDoc: dartDoc) {
     for (var i = 0; i < this.parameters.length; i++) {
       if (this.parameters[i].name == null ||
@@ -49,10 +53,22 @@ class Func extends Binding {
   @override
   BindingString toBindingString(Writer w) {
     final s = StringBuffer();
+    final enclosingFuncName = name;
 
-    final funcVarName = '_$name';
-    final typedefC = '_c_$name';
-    final typedefDart = '_dart_$name';
+    // Ensure name conflicts are resolved for typedefs generated.
+    final funcVarName = w.uniqueNamer.makeUnique('_$name');
+    final typedefC = w.uniqueNamer.makeUnique('_c_$name');
+    final typedefDart = w.uniqueNamer.makeUnique('_dart_$name');
+
+    // Write typedef's required by parameters and resolve name conflicts.
+    for (final p in parameters) {
+      final base = p.type.getBaseType();
+      if (base.broadType == BroadType.NativeFunction) {
+        base.nativeFunc.name =
+            w.uniqueNamer.makeUnique(base.nativeFunc.name);
+        s.write(base.nativeFunc.toTypedefString(w));
+      }
+    }
 
     if (dartDoc != null) {
       s.write('/// ');
@@ -61,7 +77,7 @@ class Func extends Binding {
     }
 
     // Write enclosing function.
-    s.write('${returnType.getDartType(w)} $name(\n');
+    s.write('${returnType.getDartType(w)} $enclosingFuncName(\n');
     for (final p in parameters) {
       s.write('  ${p.type.getDartType(w)} ${p.name},\n');
     }
@@ -75,7 +91,7 @@ class Func extends Binding {
 
     // Write function with dylib lookup.
     s.write(
-        "final $typedefDart $funcVarName = ${w.dylibIdentifier}.lookupFunction<$typedefC,$typedefDart>('$name');\n\n");
+        "final $typedefDart $funcVarName = ${w.dylibIdentifier}.lookupFunction<$typedefC,$typedefDart>('$lookupSymbolName');\n\n");
 
     // Write typdef for C.
     s.write('typedef $typedefC = ${returnType.getCType(w)} Function(\n');

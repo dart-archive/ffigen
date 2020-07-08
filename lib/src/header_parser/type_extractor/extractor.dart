@@ -16,7 +16,7 @@ import '../translation_unit_parser.dart';
 import '../type_extractor/cxtypekindmap.dart';
 import '../utils.dart';
 
-var _logger = Logger('parser:extractor');
+var _logger = Logger('header_parser:extractor.dart');
 const _padding = '  ';
 
 /// Converts cxtype to a typestring code_generator can accept.
@@ -100,12 +100,20 @@ Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
         structName = cxtype.spelling();
       }
 
-      type = Type.struct(structName);
+      final fixedStructName = config.structDecl.getPrefixedName(structName);
 
       // Also add a struct binding, if its unseen.
-      if (isUnseenStruct(structName, addToSeen: true)) {
-        addToBindings(
-            parseStructDeclaration(cursor, name: structName, doInclude: true));
+      // TODO(23): Check if we should auto add struct.
+      if (isSeenStruc(structName)) {
+        type = Type.struct(getSeenStruc(structName));
+      } else {
+        final struc = parseStructDeclaration(cursor,
+            name: fixedStructName, ignoreFilter: true);
+        type = Type.struct(struc);
+        // Add to bindings.
+        addToBindings(struc);
+        // Add to seen.
+        addStrucToSeen(structName, struc);
       }
 
       cxtype.dispose();
@@ -127,25 +135,34 @@ Type _extractFromFunctionProto(
 
   // Set a name for typedefc incase it was null or empty.
   if (name == null || name == '') {
-    name = _getNextUniqueString('_typedefC_noname');
+    name = _getNextUniqueString('_typedefC');
+  } else {
+    name = _getNextUniqueString(name);
   }
+  final _parameters = <Parameter>[];
+  final totalArgs = clang.clang_getNumArgTypes_wrap(cxtype);
+  for (var i = 0; i < totalArgs; i++) {
+    final t = clang.clang_getArgType_wrap(cxtype, i);
+    final pt = t.toCodeGenTypeAndDispose();
 
-  if (isUnseenTypedefC(name, addToSeen: true)) {
-    final typedefC = TypedefC(
-      name: name,
-      returnType:
-          clang.clang_getResultType_wrap(cxtype).toCodeGenTypeAndDispose(),
-    );
-    final totalArgs = clang.clang_getNumArgTypes_wrap(cxtype);
-    for (var i = 0; i < totalArgs; i++) {
-      final t = clang.clang_getArgType_wrap(cxtype, i);
-      typedefC.parameters.add(
-        Parameter(name: '', type: t.toCodeGenTypeAndDispose()),
-      );
+    if (pt.broadType == BroadType.Struct) {
+      return Type.unimplemented('Struct by value in function parameter.');
+    } else if (pt.broadType == BroadType.Unimplemented) {
+      return Type.unimplemented('Function parameter has an unsupported type.');
     }
-    addToBindings(typedefC);
+
+    _parameters.add(
+      Parameter(name: '', type: pt),
+    );
   }
-  return Type.nativeFunc(name);
+  final typedefC = TypedefC(
+    name: name,
+    parameters: _parameters,
+    returnType:
+        clang.clang_getResultType_wrap(cxtype).toCodeGenTypeAndDispose(),
+  );
+
+  return Type.nativeFunc(typedefC);
 }
 
 /// Generate a unique string for naming in [TypedefC].

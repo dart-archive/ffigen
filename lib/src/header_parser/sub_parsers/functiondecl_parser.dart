@@ -5,13 +5,14 @@
 import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
+import 'package:ffigen/src/header_parser/data.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
 import '../includer.dart';
 import '../utils.dart';
 
-var _logger = Logger('parser:functiondecl_parser');
+var _logger = Logger('header_parser:functiondecl_parser.dart');
 
 /// Temporarily holds a function before its returned by [parseFunctionDeclaration].
 Func _func;
@@ -22,8 +23,8 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
   structByValueParameter = false;
   unimplementedParameterType = false;
 
-  final name = cursor.spelling();
-  if (shouldIncludeFunc(name)) {
+  final funcName = cursor.spelling();
+  if (shouldIncludeFunc(funcName) && !isSeenFunc(funcName)) {
     _logger.fine('++++ Adding Function: ${cursor.completeStringRepr()}');
 
     final rt = _getFunctionReturnType(cursor);
@@ -34,25 +35,27 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
       _logger.fine(
           '---- Removed Function, reason: struct pass/return by value: ${cursor.completeStringRepr()}');
       _logger.warning(
-          "Skipped Function '$name', struct pass/return by value not supported.");
+          "Skipped Function '$funcName', struct pass/return by value not supported.");
       return null; // Returning null so that [addToBindings] function excludes this.
     }
 
-    if (rt.getBaseBroadType() == BroadType.Unimplemented ||
+    if (rt.getBaseType().broadType == BroadType.Unimplemented ||
         unimplementedParameterType) {
       _logger.fine(
           '---- Removed Function, reason: unsupported return type or parameter type: ${cursor.completeStringRepr()}');
       _logger.warning(
-          "Skipped Function '$name', function has unsupported return type or parameter type.");
+          "Skipped Function '$funcName', function has unsupported return type or parameter type.");
       return null; // Returning null so that [addToBindings] function excludes this.
     }
 
     _func = Func(
       dartDoc: getCursorDocComment(cursor),
-      name: name,
+      name: config.functionDecl.getPrefixedName(funcName),
+      lookupSymbolName: funcName,
       returnType: rt,
       parameters: parameters,
     );
+    addFuncToSeen(funcName, _func);
   }
 
   return _func;
@@ -77,7 +80,7 @@ List<Parameter> _getParameters(Pointer<clang.CXCursor> cursor) {
     //TODO(3): Remove this when support for Structs by value arrives.
     if (pt.broadType == BroadType.Struct) {
       structByValueParameter = true;
-    } else if (pt.getBaseBroadType() == BroadType.Unimplemented) {
+    } else if (pt.getBaseType().broadType == BroadType.Unimplemented) {
       unimplementedParameterType = true;
     }
 

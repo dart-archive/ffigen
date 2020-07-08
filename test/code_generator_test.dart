@@ -14,6 +14,7 @@ void main() {
         bindings: [
           Func(
             name: 'noParam',
+            lookupSymbolName: 'noParam',
             dartDoc: 'Just a test function\nheres another line',
             returnType: Type.nativeType(
               SupportedNativeType.Int32,
@@ -21,6 +22,7 @@ void main() {
           ),
           Func(
             name: 'withPrimitiveParam',
+            lookupSymbolName: 'withPrimitiveParam',
             parameters: [
               Parameter(
                 name: 'a',
@@ -41,6 +43,7 @@ void main() {
           ),
           Func(
             name: 'withPointerParam',
+            lookupSymbolName: 'withPointerParam',
             parameters: [
               Parameter(
                 name: 'a',
@@ -86,8 +89,8 @@ import 'dart:ffi' as ffi;
 ffi.DynamicLibrary _dylib;
 
 /// Initialises the Dynamic library.
-void init(ffi.DynamicLibrary dylib){
-  _dylib = dylib;
+void init(ffi.DynamicLibrary dynamicLibrary){
+  _dylib = dynamicLibrary;
 }
 /// Just a test function
 /// heres another line
@@ -237,8 +240,8 @@ import 'dart:ffi' as ffi;
 ffi.DynamicLibrary _dylib;
 
 /// Initialises the Dynamic library.
-void init(ffi.DynamicLibrary dylib){
-  _dylib = dylib;
+void init(ffi.DynamicLibrary dynamicLibrary){
+  _dylib = dynamicLibrary;
 }
 /// Just a test struct
 /// heres another line
@@ -279,40 +282,42 @@ class WithPointerMember extends ffi.Struct{
     });
 
     test('Function and Struct Binding (pointer to Struct)', () {
+      final struct_some = Struc(
+        name: 'SomeStruc',
+        members: [
+          Member(
+            name: 'a',
+            type: Type.nativeType(
+              SupportedNativeType.Int32,
+            ),
+          ),
+          Member(
+            name: 'b',
+            type: Type.nativeType(
+              SupportedNativeType.Double,
+            ),
+          ),
+          Member(
+            name: 'c',
+            type: Type.nativeType(
+              SupportedNativeType.Char,
+            ),
+          ),
+        ],
+      );
       final library = Library(
         bindings: [
-          Struc(
-            name: 'SomeStruc',
-            members: [
-              Member(
-                name: 'a',
-                type: Type.nativeType(
-                  SupportedNativeType.Int32,
-                ),
-              ),
-              Member(
-                name: 'b',
-                type: Type.nativeType(
-                  SupportedNativeType.Double,
-                ),
-              ),
-              Member(
-                name: 'c',
-                type: Type.nativeType(
-                  SupportedNativeType.Char,
-                ),
-              ),
-            ],
-          ),
+          struct_some,
           Func(
             name: 'someFunc',
+            lookupSymbolName: 'someFunc',
             parameters: [
               Parameter(
                 name: 'some',
                 type: Type.pointer(
                   Type.pointer(
                     Type.struct(
-                      'SomeStruc',
+                      struct_some,
                     ),
                   ),
                 ),
@@ -320,7 +325,7 @@ class WithPointerMember extends ffi.Struct{
             ],
             returnType: Type.pointer(
               Type.struct(
-                'SomeStruc',
+                struct_some,
               ),
             ),
           ),
@@ -343,8 +348,8 @@ import 'dart:ffi' as ffi;
 ffi.DynamicLibrary _dylib;
 
 /// Initialises the Dynamic library.
-void init(ffi.DynamicLibrary dylib){
-  _dylib = dylib;
+void init(ffi.DynamicLibrary dynamicLibrary){
+  _dylib = dynamicLibrary;
 }
 class SomeStruc extends ffi.Struct{
   @ffi.Int32()
@@ -388,30 +393,34 @@ typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
     });
 
     test('global (primitives, pointers, pointer to struct)', () {
+      final struc_some = Struc(
+        name: 'Some',
+      );
       final library = Library(
         bindings: [
           Global(
             name: 'test1',
+            lookupSymbolName: 'test1',
             type: Type.nativeType(
               SupportedNativeType.Int32,
             ),
           ),
           Global(
             name: 'test2',
+            lookupSymbolName: 'test2',
             type: Type.pointer(
               Type.nativeType(
                 SupportedNativeType.Float,
               ),
             ),
           ),
-          Struc(
-            name: 'Some',
-          ),
+          struc_some,
           Global(
             name: 'test5',
+            lookupSymbolName: 'test5',
             type: Type.pointer(
               Type.struct(
-                'Some',
+                struc_some,
               ),
             ),
           ),
@@ -434,8 +443,8 @@ import 'dart:ffi' as ffi;
 ffi.DynamicLibrary _dylib;
 
 /// Initialises the Dynamic library.
-void init(ffi.DynamicLibrary dylib){
-  _dylib = dylib;
+void init(ffi.DynamicLibrary dynamicLibrary){
+  _dylib = dynamicLibrary;
 }
 final int test1 = _dylib.lookup<ffi.Int32>('test1').value;
 
@@ -493,89 +502,12 @@ import 'dart:ffi' as ffi;
 ffi.DynamicLibrary _dylib;
 
 /// Initialises the Dynamic library.
-void init(ffi.DynamicLibrary dylib){
-  _dylib = dylib;
+void init(ffi.DynamicLibrary dynamicLibrary){
+  _dylib = dynamicLibrary;
 }
 const int test1 = 20;
 
 const double test2 = 20.0;
-
-''');
-        if (file.existsSync()) {
-          file.delete();
-        }
-      } catch (e) {
-        file.writeAsStringSync(gen);
-        print('Failed test, Debug output: ${file.absolute?.path}');
-        rethrow;
-      }
-    });
-
-    test('TypedefC (primitive, pointers, pointer to struct)', () {
-      final library = Library(
-        bindings: [
-          TypedefC(
-            dartDoc: 'just a test',
-            name: 'test1',
-            returnType: Type.nativeType(
-              SupportedNativeType.Int32,
-            ),
-          ),
-          Struc(name: 'SomeStruct'),
-          TypedefC(
-            name: 'test2',
-            returnType: Type.pointer(
-              Type.nativeType(
-                SupportedNativeType.Int32,
-              ),
-            ),
-            parameters: [
-              Parameter(
-                name: 'param1',
-                type: Type.pointer(
-                  Type.struct('SomeStruct'),
-                ),
-              ),
-              Parameter(
-                name: 'param2',
-                type: Type.nativeType(
-                  SupportedNativeType.Char,
-                ),
-              ),
-            ],
-          ),
-        ],
-      );
-
-      final gen = library.generate();
-
-      // Writing to file for debug purpose.
-      final file =
-          File('test/debug_generated/typedef-Binding-test-output.dart');
-      try {
-        expect(gen, '''/// AUTO GENERATED FILE, DO NOT EDIT.
-///
-/// Generated by `package:ffigen`.
-import 'dart:ffi' as ffi;
-
-/// Holds the Dynamic library.
-ffi.DynamicLibrary _dylib;
-
-/// Initialises the Dynamic library.
-void init(ffi.DynamicLibrary dylib){
-  _dylib = dylib;
-}
-/// just a test
-typedef test1 = ffi.Int32 Function(
-);
-
-class SomeStruct extends ffi.Struct{
-}
-
-typedef test2 = ffi.Pointer<ffi.Int32> Function(
-  ffi.Pointer<SomeStruct> param1,
-  ffi.Uint8 param2,
-);
 
 ''');
         if (file.existsSync()) {
@@ -621,8 +553,8 @@ import 'dart:ffi' as ffi;
 ffi.DynamicLibrary _dylib;
 
 /// Initialises the Dynamic library.
-void init(ffi.DynamicLibrary dylib){
-  _dylib = dylib;
+void init(ffi.DynamicLibrary dynamicLibrary){
+  _dylib = dynamicLibrary;
 }
 /// test line 1
 /// test line 2
@@ -630,6 +562,209 @@ class Constants {
   static const int a = 10;
   /// negative
   static const int b = -1;
+}
+
+''');
+        if (file.existsSync()) {
+          file.delete();
+        }
+      } catch (e) {
+        file.writeAsStringSync(gen);
+        print('Failed test, Debug output: ${file.absolute?.path}');
+        rethrow;
+      }
+    });
+    test('Internal conflict resolution', () {
+      final library = Library(
+        initFunctionIdentifier: 'init_dylib',
+        bindings: [
+          Func(
+            name: 'test',
+            lookupSymbolName: 'test',
+            returnType: Type.nativeType(SupportedNativeType.Void),
+          ),
+          Func(
+            name: '_test',
+            lookupSymbolName: '_test',
+            returnType: Type.nativeType(SupportedNativeType.Void),
+          ),
+          Func(
+            name: '_c_test',
+            lookupSymbolName: '_c_test',
+            returnType: Type.nativeType(SupportedNativeType.Void),
+          ),
+          Func(
+            name: '_dart_test',
+            lookupSymbolName: '_dart_test',
+            returnType: Type.nativeType(SupportedNativeType.Void),
+          ),
+          Struc(
+            name: '_Test',
+            members: [
+              Member(
+                name: 'array',
+                type: Type.constantArray(
+                  2,
+                  Type.nativeType(
+                    SupportedNativeType.Int8,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Struc(name: 'ArrayHelperPrefixCollisionTest'),
+          Func(
+            name: 'Test',
+            lookupSymbolName: 'Test',
+            returnType: Type.nativeType(SupportedNativeType.Void),
+          ),
+          EnumClass(name: '_c_Test'),
+          EnumClass(name: 'init_dylib'),
+        ],
+      );
+
+      final gen = library.generate();
+
+      // Writing to file for debug purpose.
+      final file = File(
+        'test/debug_generated/internal-conflict-resolution.dart',
+      );
+      try {
+        expect(gen, r'''/// AUTO GENERATED FILE, DO NOT EDIT.
+///
+/// Generated by `package:ffigen`.
+import 'dart:ffi' as ffi;
+
+/// Holds the Dynamic library.
+ffi.DynamicLibrary _dylib;
+
+/// Initialises the Dynamic library.
+void init_dylib_1(ffi.DynamicLibrary dynamicLibrary){
+  _dylib = dynamicLibrary;
+}
+void test(
+) {
+  return _test_1(
+  );
+}
+
+final _dart_test_1 _test_1 = _dylib.lookupFunction<_c_test_1,_dart_test_1>('test');
+
+typedef _c_test_1 = ffi.Void Function(
+);
+
+typedef _dart_test_1 = void Function(
+);
+
+void _test(
+) {
+  return __test(
+  );
+}
+
+final _dart__test __test = _dylib.lookupFunction<_c__test,_dart__test>('_test');
+
+typedef _c__test = ffi.Void Function(
+);
+
+typedef _dart__test = void Function(
+);
+
+void _c_test(
+) {
+  return __c_test(
+  );
+}
+
+final _dart__c_test __c_test = _dylib.lookupFunction<_c__c_test,_dart__c_test>('_c_test');
+
+typedef _c__c_test = ffi.Void Function(
+);
+
+typedef _dart__c_test = void Function(
+);
+
+void _dart_test(
+) {
+  return __dart_test(
+  );
+}
+
+final _dart__dart_test __dart_test = _dylib.lookupFunction<_c__dart_test,_dart__dart_test>('_dart_test');
+
+typedef _c__dart_test = ffi.Void Function(
+);
+
+typedef _dart__dart_test = void Function(
+);
+
+class _Test extends ffi.Struct{
+  @ffi.Int8()
+  int _exp_workaround_array_item_0;
+  @ffi.Int8()
+  int _exp_workaround_array_item_1;
+/// Helper for array `array`.
+ArrayHelper1__Test_array_level0 get array => ArrayHelper1__Test_array_level0(this, [2], 0, 0);
+}
+
+/// Helper for array `array` in struct `_Test`.
+class ArrayHelper1__Test_array_level0{
+final _Test _struct;
+final List<int> dimensions;
+final int level;
+final int _absoluteIndex;
+int get length => dimensions[level];
+ArrayHelper1__Test_array_level0(this._struct, this.dimensions, this.level, this._absoluteIndex);
+  void _checkBounds(int index) {
+    if (index >= length || index < 0) {
+      throw RangeError('Dimension $level: index not in range 0..${length} exclusive.');
+    }
+  }
+  int operator[](int index){
+_checkBounds(index);
+switch(_absoluteIndex+index){
+case 0:
+  return _struct._exp_workaround_array_item_0;
+case 1:
+  return _struct._exp_workaround_array_item_1;
+default:
+  throw Exception('Invalid Array Helper generated.');}
+}
+void operator[]=(int index, int value){
+_checkBounds(index);
+switch(_absoluteIndex+index){
+case 0:
+  _struct._exp_workaround_array_item_0 = value;
+  break;
+case 1:
+  _struct._exp_workaround_array_item_1 = value;
+  break;
+default:
+  throw Exception('Invalid Array Helper generated.');
+}
+}
+}
+class ArrayHelperPrefixCollisionTest extends ffi.Struct{
+}
+
+void Test(
+) {
+  return _Test_1(
+  );
+}
+
+final _dart_Test _Test_1 = _dylib.lookupFunction<_c_Test_1,_dart_Test>('Test');
+
+typedef _c_Test_1 = ffi.Void Function(
+);
+
+typedef _dart_Test = void Function(
+);
+
+class _c_Test {
+}
+
+class init_dylib {
 }
 
 ''');

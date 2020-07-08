@@ -15,10 +15,10 @@ import 'package:path/path.dart' as path;
 import 'package:yaml/yaml.dart';
 
 import '../strings.dart' as strings;
-import 'filter.dart';
+import 'declaration.dart';
 import 'spec_utils.dart';
 
-var _logger = Logger('config_provider/config');
+var _logger = Logger('config_provider:config.dart');
 
 /// Provides configurations to other modules.
 ///
@@ -44,14 +44,14 @@ class Config {
   /// CommandLine Arguments to pass to clang_compiler.
   List<String> compilerOpts;
 
-  /// Filter for functions.
-  Filter functionFilters;
+  /// Declaration config for Functions.
+  Declaration functionDecl;
 
-  /// Filter for structs.
-  Filter structFilters;
+  /// Declaration config for Structs.
+  Declaration structDecl;
 
-  /// Filter for enumClass.
-  Filter enumClassFilters;
+  /// Declaration config for Enums.
+  Declaration enumClassDecl;
 
   /// If generated bindings should be sorted alphabetically.
   bool sort;
@@ -67,23 +67,11 @@ class Config {
   /// If false(default), structs with inline array members will have all its members removed.
   bool arrayWorkaround;
 
-  /// Manually creating configurations.
-  ///
-  /// Use [Config.fromYaml] if extracting info from a yaml file.
-  /// Ensure that log printing is setup before using this.
-  Config.raw({
-    this.output,
-    @required this.libclang_dylib_path,
-    @required this.headers,
-    this.headerFilter,
-    this.compilerOpts,
-    this.functionFilters,
-    this.structFilters,
-    this.enumClassFilters,
-    this.sort = false,
-    this.useSupportedTypedefs = true,
-    this.comment,
-  });
+  /// Name of the init function used to initialise the dynamic library.
+  String initFunctionName;
+
+  /// Header of the generated bindings.
+  String preamble;
 
   Config._();
 
@@ -137,7 +125,7 @@ class Config {
       if (map.containsKey(key)) {
         spec.extractedResult(spec.extractor(map[key]));
       } else {
-        spec.extractedResult(spec.defaultValue);
+        spec.extractedResult(spec.defaultValue?.call());
       }
     }
   }
@@ -152,14 +140,13 @@ class Config {
         isRequired: true,
         validator: outputValidator,
         extractor: outputExtractor,
-        defaultValue: null,
         extractedResult: (dynamic result) => output = result as String,
       ),
       strings.libclang_dylib_folder: Specification<String>(
         description:
             'Path to folder containing libclang dynamic library, used to parse C headers',
         isRequired: false,
-        defaultValue: getDylibPath(Platform.script
+        defaultValue: () => getDylibPath(Platform.script
             .resolve(path.join('..', 'tool', 'wrapped_libclang'))
             .toFilePath()),
         validator: libclangDylibValidator,
@@ -178,7 +165,7 @@ class Config {
         description: 'Include/Exclude inclusion headers',
         validator: headerFilterValidator,
         extractor: headerFilterExtractor,
-        defaultValue: HeaderFilter(),
+        defaultValue: () => HeaderFilter(),
         extractedResult: (dynamic result) {
           return headerFilter = result as HeaderFilter;
         },
@@ -188,40 +175,47 @@ class Config {
         isRequired: false,
         validator: compilerOptsValidator,
         extractor: compilerOptsExtractor,
-        defaultValue: null,
         extractedResult: (dynamic result) =>
             compilerOpts = result as List<String>,
       ),
-      strings.functions: Specification<Filter>(
+      strings.functions: Specification<Declaration>(
         description: 'Filter for functions',
         isRequired: false,
-        validator: filterValidator,
-        extractor: filterExtractor,
-        defaultValue: null,
-        extractedResult: (dynamic result) => functionFilters = result as Filter,
+        validator: declarationConfigValidator,
+        extractor: declarationConfigExtractor,
+        defaultValue: () => Declaration(declarationTypeName: 'Function'),
+        extractedResult: (dynamic result) {
+          functionDecl = result as Declaration;
+          functionDecl.declarationTypeName = 'Function';
+        },
       ),
-      strings.structs: Specification<Filter>(
+      strings.structs: Specification<Declaration>(
         description: 'Filter for Structs',
         isRequired: false,
-        validator: filterValidator,
-        extractor: filterExtractor,
-        defaultValue: null,
-        extractedResult: (dynamic result) => structFilters = result as Filter,
+        validator: declarationConfigValidator,
+        extractor: declarationConfigExtractor,
+        defaultValue: () => Declaration(declarationTypeName: 'Struct'),
+        extractedResult: (dynamic result) {
+          structDecl = result as Declaration;
+          structDecl.declarationTypeName = 'Struct';
+        },
       ),
-      strings.enums: Specification<Filter>(
+      strings.enums: Specification<Declaration>(
         description: 'Filter for enums',
         isRequired: false,
-        validator: filterValidator,
-        extractor: filterExtractor,
-        defaultValue: null,
-        extractedResult: (dynamic result) =>
-            enumClassFilters = result as Filter,
+        validator: declarationConfigValidator,
+        extractor: declarationConfigExtractor,
+        defaultValue: () => Declaration(declarationTypeName: 'Enum'),
+        extractedResult: (dynamic result) {
+          enumClassDecl = result as Declaration;
+          enumClassDecl.declarationTypeName = 'Enum';
+        },
       ),
       strings.sizemap: Specification<Map<int, SupportedNativeType>>(
         description: 'map of types: byte size in int',
         validator: sizemapValidator,
         extractor: sizemapExtractor,
-        defaultValue: <int, SupportedNativeType>{},
+        defaultValue: () => <int, SupportedNativeType>{},
         extractedResult: (dynamic result) {
           final map = result as Map<int, SupportedNativeType>;
           for (final key in map.keys) {
@@ -236,7 +230,7 @@ class Config {
         isRequired: false,
         validator: booleanValidator,
         extractor: booleanExtractor,
-        defaultValue: false,
+        defaultValue: () => false,
         extractedResult: (dynamic result) => sort = result as bool,
       ),
       strings.useSupportedTypedefs: Specification<bool>(
@@ -244,7 +238,7 @@ class Config {
         isRequired: false,
         validator: booleanValidator,
         extractor: booleanExtractor,
-        defaultValue: true,
+        defaultValue: () => true,
         extractedResult: (dynamic result) =>
             useSupportedTypedefs = result as bool,
       ),
@@ -253,7 +247,7 @@ class Config {
         isRequired: false,
         validator: commentValidator,
         extractor: commentExtractor,
-        defaultValue: strings.brief,
+        defaultValue: () => strings.brief,
         extractedResult: (dynamic result) => comment = result as String,
       ),
       strings.arrayWorkaround: Specification<bool>(
@@ -262,8 +256,24 @@ class Config {
         isRequired: false,
         validator: booleanValidator,
         extractor: booleanExtractor,
-        defaultValue: false,
+        defaultValue: () => false,
         extractedResult: (dynamic result) => arrayWorkaround = result as bool,
+      ),
+      strings.initFunctionName: Specification<String>(
+        description: 'Name of the init function to use',
+        isRequired: false,
+        validator: nonEmptyStringValidator,
+        extractor: stringExtractor,
+        defaultValue: () => 'init',
+        extractedResult: (dynamic result) =>
+            initFunctionName = result as String,
+      ),
+      strings.preamble: Specification<String>(
+        description: 'Header String for the generated bindings',
+        isRequired: false,
+        validator: nonEmptyStringValidator,
+        extractor: stringExtractor,
+        extractedResult: (dynamic result) => preamble = result as String,
       ),
     };
   }
@@ -276,7 +286,8 @@ class Specification<E> {
   final String description;
   final bool Function(String name, dynamic value) validator;
   final E Function(dynamic map) extractor;
-  final E defaultValue;
+  final E Function() defaultValue;
+
   final bool isRequired;
   final void Function(dynamic result) extractedResult;
 

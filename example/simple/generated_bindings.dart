@@ -7,8 +7,8 @@ import 'dart:ffi' as ffi;
 ffi.DynamicLibrary _dylib;
 
 /// Initialises the Dynamic library.
-void init(ffi.DynamicLibrary dylib) {
-  _dylib = dylib;
+void init(ffi.DynamicLibrary dynamicLibrary) {
+  _dylib = dynamicLibrary;
 }
 
 /// Adds 2 integers.

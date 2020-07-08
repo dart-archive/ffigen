@@ -2,25 +2,23 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:meta/meta.dart';
+import 'package:ffigen/src/code_generator.dart';
 import 'package:path/path.dart' as p;
 import 'data.dart';
 
 /// Utility functions to check whether a binding should be parsed or not
-/// based on filters and if a binding is seen already.
+/// based on filters.
 
-// Stores binding names already scene.
-Set<String> _structs = {};
-Set<String> _functions = {};
-Set<String> _enumClass = {};
-Set<String> _typedefC = {};
+// Stores binding names already scene. Mp key is same as their original name.
+Map<String, Struc> _structs = {};
+Map<String, Func> _functions = {};
+Map<String, EnumClass> _enumClass = {};
 
 bool shouldIncludeStruct(String name) {
-  if (_structs.contains(name) || name == '') {
+  if (_structs.containsKey(name) || name == '') {
     return false;
-  } else if (config.structFilters == null ||
-      config.structFilters.shouldInclude(name)) {
-    _structs.add(name);
+  } else if (config.structDecl == null ||
+      config.structDecl.shouldInclude(name)) {
     return true;
   } else {
     return false;
@@ -28,11 +26,10 @@ bool shouldIncludeStruct(String name) {
 }
 
 bool shouldIncludeFunc(String name) {
-  if (_functions.contains(name) || name == '') {
+  if (_functions.containsKey(name) || name == '') {
     return false;
-  } else if (config.functionFilters == null ||
-      config.functionFilters.shouldInclude(name)) {
-    _functions.add(name);
+  } else if (config.functionDecl == null ||
+      config.functionDecl.shouldInclude(name)) {
     return true;
   } else {
     return false;
@@ -40,11 +37,10 @@ bool shouldIncludeFunc(String name) {
 }
 
 bool shouldIncludeEnumClass(String name) {
-  if (_enumClass.contains(name) || name == '') {
+  if (_enumClass.containsKey(name) || name == '') {
     return false;
-  } else if (config.enumClassFilters == null ||
-      config.enumClassFilters.shouldInclude(name)) {
-    _enumClass.add(name);
+  } else if (config.enumClassDecl == null ||
+      config.enumClassDecl.shouldInclude(name)) {
     return true;
   } else {
     return false;
@@ -72,24 +68,38 @@ bool shouldIncludeRootCursor(String sourceFile) {
   }
 }
 
-bool isUnseenTypedefC(String name, {@required bool addToSeen}) {
-  if (_typedefC.contains(name)) {
-    return false;
-  } else {
-    if (addToSeen) {
-      _typedefC.add(name);
-    }
-    return true;
-  }
+bool isSeenStruc(String originalName) {
+  return _structs.containsKey(originalName);
 }
 
-bool isUnseenStruct(String name, {@required bool addToSeen}) {
-  if (_structs.contains(name)) {
-    return false;
-  } else {
-    if (addToSeen) {
-      _structs.add(name);
-    }
-    return true;
-  }
+void addStrucToSeen(String originalName, Struc struc) {
+  _structs[originalName] = struc;
+}
+
+Struc getSeenStruc(String originalName) {
+  return _structs[originalName];
+}
+
+bool isSeenFunc(String originalName) {
+  return _functions.containsKey(originalName);
+}
+
+void addFuncToSeen(String originalName, Func func) {
+  _functions[originalName] = func;
+}
+
+Func getSeenFunc(String originalName) {
+  return _functions[originalName];
+}
+
+bool isSeenEnumClass(String originalName) {
+  return _enumClass.containsKey(originalName);
+}
+
+void addEnumClassToSeen(String originalName, EnumClass enumClass) {
+  _enumClass[originalName] = enumClass;
+}
+
+EnumClass getSeenEnumClass(String originalName) {
+  return _enumClass[originalName];
 }
