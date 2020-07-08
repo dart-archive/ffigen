@@ -27,12 +27,12 @@ class Library {
     String initFunctionIdentifier = 'init',
   }) {
     // Handle any declaration-declaration name conflict.
-    final declConflictHandler = ConflictHandler({});
+    final declConflictHandler = UniqueNamer({});
     for (final b in bindings) {
       // Print warning if name was conflicting and has been changed.
-      if (declConflictHandler.isConflicting(b.name)) {
+      if (declConflictHandler.isUsed(b.name)) {
         final oldName = b.name;
-        b.name = declConflictHandler.getNonConflictingName(b.name);
+        b.name = declConflictHandler.makeUnique(b.name);
 
         _logger.warning(
             "Resolved name conflict: Declaration '$oldName' and has been renamed to '${b.name}'.");

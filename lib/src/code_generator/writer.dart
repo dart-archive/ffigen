@@ -12,15 +12,15 @@ class Writer {
   final String header;
   String _initFunctionIdentifier;
 
-  final ConflictHandler conflictHandler;
+  final UniqueNamer uniqueNamer;
 
   String _ffiLibraryPrefix;
   String get ffiLibraryPrefix =>
-      _ffiLibraryPrefix ??= conflictHandler.getNonConflictingName('ffi');
+      _ffiLibraryPrefix ??= uniqueNamer.makeUnique('ffi');
 
   String _dylibIdentifier;
   String get dylibIdentifier =>
-      _dylibIdentifier ??= conflictHandler.getNonConflictingName('_dylib');
+      _dylibIdentifier ??= uniqueNamer.makeUnique('_dylib');
 
   String _arrayHelperClassPrefix;
 
@@ -35,10 +35,10 @@ class Writer {
     @required Set<String> usedUpNames,
     String initFunctionIdentifier = 'init',
     this.header,
-  })  : conflictHandler = ConflictHandler(usedUpNames),
+  })  : uniqueNamer = UniqueNamer(usedUpNames),
         assert(initFunctionIdentifier != null) {
     _initFunctionIdentifier =
-        conflictHandler.getNonConflictingName(initFunctionIdentifier);
+        uniqueNamer.makeUnique(initFunctionIdentifier);
 
     /// Finding a unique prefix for Array Helper Classes and store into
     /// [_arrayHelperClassPrefix].

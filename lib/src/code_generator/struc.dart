@@ -72,33 +72,22 @@ class Struc extends Binding {
       final base = m.type.getBaseType();
       if (base.broadType == BroadType.NativeFunction) {
         base.nativeFunc.name =
-            w.conflictHandler.getNonConflictingName(base.nativeFunc.name);
+            w.uniqueNamer.makeUnique(base.nativeFunc.name);
         s.write(base.nativeFunc.toTypedefString(w));
       }
     }
 
-    /// Finding a unique prefix for expanded array items and store into
-    final base = '_exp_workaround_';
-    String expandedArrayItemPrefix = base;
-    int suffixInt = 0;
-    for (int i = 0; i < members.length; i++) {
-      if (members[i].name.startsWith(expandedArrayItemPrefix)) {
-        // Not a unique prefix, start over with a new suffix.
-        i = -1;
-        suffixInt++;
-        expandedArrayItemPrefix = '${base}${suffixInt}';
-      }
-    }
+    final expandedArrayItemPrefix = getUniqueExpandedArrayItemPrefix();
 
     /// Adding [enclosingClassName] because dart doesn't allow class member
     /// to have the same name as the class.
-    final localConflictHandler = ConflictHandler({enclosingClassName});
+    final localUniqueNamer = UniqueNamer({enclosingClassName});
 
     // Write class declaration.
     s.write(
         'class $enclosingClassName extends ${w.ffiLibraryPrefix}.Struct{\n');
     for (final m in members) {
-      final memberName = localConflictHandler.getNonConflictingName(m.name);
+      final memberName = localUniqueNamer.makeUnique(m.name);
       if (m.type.broadType == BroadType.ConstantArray) {
         // TODO(5): Remove array helpers when inline array support arives.
         final arrayHelper = ArrayHelper(
@@ -132,6 +121,22 @@ class Struc extends Binding {
     }
 
     return BindingString(type: BindingStringType.struc, string: s.toString());
+  }
+
+  /// Gets a unique prefix in local namespace for expanded array items.
+  String getUniqueExpandedArrayItemPrefix() {
+    final base = '_unique';
+    String expandedArrayItemPrefix = base;
+    int suffixInt = 0;
+    for (int i = 0; i < members.length; i++) {
+      if (members[i].name.startsWith(expandedArrayItemPrefix)) {
+        // Not a unique prefix, start over with a new suffix.
+        i = -1;
+        suffixInt++;
+        expandedArrayItemPrefix = '${base}${suffixInt}';
+      }
+    }
+    return expandedArrayItemPrefix + '_';
   }
 }
 

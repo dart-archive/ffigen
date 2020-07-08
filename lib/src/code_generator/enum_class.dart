@@ -46,14 +46,14 @@ class EnumClass extends Binding {
 
     /// Adding [enclosingClassName] because dart doesn't allow class member
     /// to have the same name as the class.
-    final localConflictHandler = ConflictHandler({enclosingClassName});
+    final localUniqueNamer = UniqueNamer({enclosingClassName});
 
     // Print enclosing class.
     s.write('class $enclosingClassName {\n');
     const depth = '  ';
     for (final ec in enumConstants) {
       final enum_value_name =
-          localConflictHandler.getNonConflictingName(ec.name);
+          localUniqueNamer.makeUnique(ec.name);
       if (ec.dartDoc != null) {
         s.write(depth + '/// ');
         s.writeAll(ec.dartDoc.split('\n'), '\n' + depth + '/// ');
