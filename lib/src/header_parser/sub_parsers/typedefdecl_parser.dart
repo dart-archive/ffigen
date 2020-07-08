@@ -8,6 +8,7 @@ import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
+import '../data.dart' as data;
 import '../sub_parsers/enumdecl_parser.dart';
 import '../sub_parsers/structdecl_parser.dart';
 import '../utils.dart';
@@ -26,7 +27,7 @@ Binding parseTypedefDeclaration(Pointer<clang.CXCursor> cursor) {
   // Name of typedef.
   _typedefName = cursor.spelling();
 
-  final resultCode = clang.clang_visitChildren_wrap(
+  final resultCode = data.bindings.clang_visitChildren_wrap(
     cursor,
     Pointer.fromFunction(_typedefdeclarationCursorVisitor,
         clang.CXChildVisitResult.CXChildVisit_Break),
@@ -49,7 +50,7 @@ int _typedefdeclarationCursorVisitor(Pointer<clang.CXCursor> cursor,
     _logger.finest(
         'typedefdeclarationCursorVisitor: ${cursor.completeStringRepr()}');
 
-    switch (clang.clang_getCursorKind_wrap(cursor)) {
+    switch (data.bindings.clang_getCursorKind_wrap(cursor)) {
       case clang.CXCursorKind.CXCursor_StructDecl:
         _binding = parseStructDeclaration(cursor, name: _typedefName);
         break;

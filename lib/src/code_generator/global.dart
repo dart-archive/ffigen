@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:ffigen/src/code_generator/typedef.dart';
 import 'package:meta/meta.dart';
 
 import 'binding.dart';
@@ -19,7 +20,7 @@ import 'writer.dart';
 /// ```dart
 /// final int a = _dylib.lookup<ffi.Int32>('a').value;
 /// ```
-class Global extends Binding {
+class Global extends LookUpBinding {
   final String lookupSymbolName;
   final Type type;
 
@@ -40,9 +41,14 @@ class Global extends Binding {
       s.write('\n');
     }
 
+    final holderVarName = w.wrapperLevelUniqueNamer.makeUnique('_$globalVarName');
+    s.write('${w.ffiLibraryPrefix}.Pointer<${type.getCType(w)}> $holderVarName;\n');
     s.write(
-        "final ${type.getDartType(w)} $globalVarName = ${w.dylibIdentifier}.lookup<${type.getCType(w)}>('$lookupSymbolName').value;\n\n");
+        "${type.getDartType(w)} get $globalVarName => ($holderVarName ??= ${w.dylibIdentifier}.lookup<${type.getCType(w)}>('$lookupSymbolName')).value;\n\n");
 
     return BindingString(type: BindingStringType.global, string: s.toString());
   }
+
+  @override
+  List<Typedef> getTypedefDependencies(Writer w) => const [];
 }

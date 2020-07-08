@@ -10,10 +10,10 @@ import 'package:logging/logging.dart';
 
 import '../strings.dart' as strings;
 import 'clang_bindings/clang_bindings.dart' as clang;
-import 'data.dart';
+import 'data.dart' as data;
 import 'type_extractor/extractor.dart';
 
-/// Check [resultCode] of [clang.clang_visitChildren_wrap].
+/// Check [resultCode] of [data.bindings.clang_visitChildren_wrap].
 ///
 /// Throws exception if resultCode is not 0.
 void visitChildrenResultChecker(int resultCode) {
@@ -29,22 +29,22 @@ void logTuDiagnostics(
   Logger logger,
   String header,
 ) {
-  final total = clang.clang_getNumDiagnostics(tu);
+  final total = data.bindings.clang_getNumDiagnostics(tu);
   if (total == 0) {
     return;
   }
 
   logger.warning('Header $header: Total errors/warnings: $total.');
   for (var i = 0; i < total; i++) {
-    final diag = clang.clang_getDiagnostic(tu, i);
-    final cxstring = clang.clang_formatDiagnostic_wrap(
+    final diag = data.bindings.clang_getDiagnostic(tu, i);
+    final cxstring = data.bindings.clang_formatDiagnostic_wrap(
       diag,
       clang.CXDiagnosticDisplayOptions.CXDiagnostic_DisplaySourceLocation |
           clang.CXDiagnosticDisplayOptions.CXDiagnostic_DisplayColumn |
           clang.CXDiagnosticDisplayOptions.CXDiagnostic_DisplayCategoryName,
     );
     logger.warning('    ' + cxstring.toStringAndDispose());
-    clang.clang_disposeDiagnostic(diag);
+    data.bindings.clang_disposeDiagnostic(diag);
   }
 }
 
@@ -57,18 +57,21 @@ extension CXSourceRangeExt on Pointer<clang.CXSourceRange> {
 extension CXCursorExt on Pointer<clang.CXCursor> {
   /// Returns the kind int from [clang.CXCursorKind].
   int kind() {
-    return clang.clang_getCursorKind_wrap(this);
+    return data.bindings.clang_getCursorKind_wrap(this);
   }
 
   /// Name of the cursor (E.g function name, Struct name, Parameter name).
   String spelling() {
-    return clang.clang_getCursorSpelling_wrap(this).toStringAndDispose();
+    return data.bindings
+        .clang_getCursorSpelling_wrap(this)
+        .toStringAndDispose();
   }
 
   /// Spelling for a [clang.CXCursorKind], useful for debug purposes.
   String kindSpelling() {
-    return clang
-        .clang_getCursorKindSpelling_wrap(clang.clang_getCursorKind_wrap(this))
+    return data.bindings
+        .clang_getCursorKindSpelling_wrap(
+            data.bindings.clang_getCursorKind_wrap(this))
         .toStringAndDispose();
   }
 
@@ -83,7 +86,7 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
 
   /// Dispose type using [type.dispose].
   Pointer<clang.CXType> type() {
-    return clang.clang_getCursorType_wrap(this);
+    return data.bindings.clang_getCursorType_wrap(this);
   }
 
   /// Only valid for [clang.CXCursorKind.CXCursor_FunctionDecl].
@@ -91,22 +94,24 @@ extension CXCursorExt on Pointer<clang.CXCursor> {
   /// Dispose type using [type.dispose].
   Pointer<clang.CXType> returnType() {
     final t = type();
-    final r = clang.clang_getResultType_wrap(t);
+    final r = data.bindings.clang_getResultType_wrap(t);
     t.dispose();
     return r;
   }
 
   String sourceFileName() {
-    final cxsource = clang.clang_getCursorLocation_wrap(this);
+    final cxsource = data.bindings.clang_getCursorLocation_wrap(this);
     final cxfilePtr = allocate<Pointer<Void>>();
     final line = allocate<Uint32>();
     final column = allocate<Uint32>();
     final offset = allocate<Uint32>();
 
     // Puts the values in these pointers.
-    clang.clang_getFileLocation_wrap(cxsource, cxfilePtr, line, column, offset);
-    final s =
-        clang.clang_getFileName_wrap(cxfilePtr.value).toStringAndDispose();
+    data.bindings
+        .clang_getFileLocation_wrap(cxsource, cxfilePtr, line, column, offset);
+    final s = data.bindings
+        .clang_getFileName_wrap(cxfilePtr.value)
+        .toStringAndDispose();
     free(cxsource);
     free(cxfilePtr);
     free(line);
@@ -134,25 +139,27 @@ Pointer<clang.CXSourceRange> lastCommentRange = nullptr;
 String getCursorDocComment(Pointer<clang.CXCursor> cursor,
     [int indent = commentPrefix.length]) {
   String formattedDocComment;
-  final currentCommentRange = clang.clang_Cursor_getCommentRange_wrap(cursor);
+  final currentCommentRange =
+      data.bindings.clang_Cursor_getCommentRange_wrap(cursor);
 
   // See if this comment and the last comment both point to the same source
   // range.
   if (lastCommentRange != nullptr &&
       currentCommentRange != nullptr &&
-      clang.clang_equalRanges_wrap(lastCommentRange, currentCommentRange) !=
+      data.bindings
+              .clang_equalRanges_wrap(lastCommentRange, currentCommentRange) !=
           0) {
     formattedDocComment = null;
   } else {
-    switch (config.comment) {
+    switch (data.config.comment) {
       case strings.full:
-        formattedDocComment = removeRawCommentMarkups(clang
+        formattedDocComment = removeRawCommentMarkups(data.bindings
             .clang_Cursor_getRawCommentText_wrap(cursor)
             .toStringAndDispose());
         break;
       case strings.brief:
         formattedDocComment = _wrapNoNewLineString(
-            clang
+            data.bindings
                 .clang_Cursor_getBriefCommentText_wrap(cursor)
                 .toStringAndDispose(),
             80 - indent);
@@ -229,7 +236,7 @@ extension CXTypeExt on Pointer<clang.CXType> {
 
   /// Spelling for a [clang.CXTypeKind], useful for debug purposes.
   String spelling() {
-    return clang.clang_getTypeSpelling_wrap(this).toStringAndDispose();
+    return data.bindings.clang_getTypeSpelling_wrap(this).toStringAndDispose();
   }
 
   /// Returns the typeKind int from [clang.CXTypeKind].
@@ -238,7 +245,9 @@ extension CXTypeExt on Pointer<clang.CXType> {
   }
 
   String kindSpelling() {
-    return clang.clang_getTypeKindSpelling_wrap(kind()).toStringAndDispose();
+    return data.bindings
+        .clang_getTypeKindSpelling_wrap(kind())
+        .toStringAndDispose();
   }
 
   /// For debugging: returns [spelling] [kind] [kindSpelling].
@@ -260,7 +269,7 @@ extension CXStringExt on Pointer<clang.CXString> {
   /// [toStringAndDispose] method.
   String string() {
     String s;
-    final cstring = clang.clang_getCString_wrap(this);
+    final cstring = data.bindings.clang_getCString_wrap(this);
     if (cstring != nullptr) {
       s = Utf8.fromUtf8(cstring.cast());
     }
@@ -271,12 +280,12 @@ extension CXStringExt on Pointer<clang.CXString> {
   String toStringAndDispose() {
     // Note: clang_getCString_wrap returns a const char *, calling free will result in error.
     final s = string();
-    clang.clang_disposeString_wrap(this);
+    data.bindings.clang_disposeString_wrap(this);
     return s;
   }
 
   void dispose() {
-    clang.clang_disposeString_wrap(this);
+    data.bindings.clang_disposeString_wrap(this);
   }
 }
 

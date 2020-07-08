@@ -71,7 +71,7 @@ const none = 'none';
 const commentTypeSet = {brief, full, none};
 
 // Library input.
-const initFunctionName = 'init-function-name';
+const wrapperName = 'wrapper-name';
 const preamble = 'preamble';
 
 // Dynamic library names.

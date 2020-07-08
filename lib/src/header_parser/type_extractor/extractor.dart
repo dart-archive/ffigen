@@ -9,7 +9,7 @@ import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
-import '../data.dart';
+import '../data.dart' as data;
 import '../includer.dart';
 import '../sub_parsers/structdecl_parser.dart';
 import '../translation_unit_parser.dart';
@@ -26,13 +26,13 @@ Type getCodeGenType(Pointer<clang.CXType> cxtype, {String parentName}) {
 
   switch (kind) {
     case clang.CXTypeKind.CXType_Pointer:
-      final pt = clang.clang_getPointeeType_wrap(cxtype);
+      final pt = data.bindings.clang_getPointeeType_wrap(cxtype);
       final s = getCodeGenType(pt, parentName: parentName);
       pt.dispose();
       return Type.pointer(s);
     case clang.CXTypeKind.CXType_Typedef:
       // Get name from typedef name if config allows.
-      if (config.useSupportedTypedefs) {
+      if (data.config.useSupportedTypedefs) {
         final spelling = cxtype.spelling();
         if (suportedTypedefToSuportedNativeType.containsKey(spelling)) {
           _logger.fine('  Type Mapped from supported typedef');
@@ -41,13 +41,13 @@ Type getCodeGenType(Pointer<clang.CXType> cxtype, {String parentName}) {
       }
 
       // This is important or we get stuck in infinite recursion.
-      final ct = clang.clang_getCanonicalType_wrap(cxtype);
+      final ct = data.bindings.clang_getCanonicalType_wrap(cxtype);
 
       final s = getCodeGenType(ct, parentName: parentName ?? cxtype.spelling());
       ct.dispose();
       return s;
     case clang.CXTypeKind.CXType_Elaborated:
-      final et = clang.clang_Type_getNamedType_wrap(cxtype);
+      final et = data.bindings.clang_Type_getNamedType_wrap(cxtype);
       final s = getCodeGenType(et, parentName: parentName);
       et.dispose();
       return s;
@@ -63,13 +63,17 @@ Type getCodeGenType(Pointer<clang.CXType> cxtype, {String parentName}) {
     case clang.CXTypeKind
         .CXType_ConstantArray: // Primarily used for constant array in struct members.
       return Type.constantArray(
-        clang.clang_getNumElements_wrap(cxtype),
-        clang.clang_getArrayElementType_wrap(cxtype).toCodeGenTypeAndDispose(),
+        data.bindings.clang_getNumElements_wrap(cxtype),
+        data.bindings
+            .clang_getArrayElementType_wrap(cxtype)
+            .toCodeGenTypeAndDispose(),
       );
     case clang.CXTypeKind
         .CXType_IncompleteArray: // Primarily used for incomplete array in function parameters.
       return Type.incompleteArray(
-        clang.clang_getArrayElementType_wrap(cxtype).toCodeGenTypeAndDispose(),
+        data.bindings
+            .clang_getArrayElementType_wrap(cxtype)
+            .toCodeGenTypeAndDispose(),
       );
     default:
       if (cxTypeKindToSupportedNativeTypes.containsKey(kind)) {
@@ -88,10 +92,10 @@ Type getCodeGenType(Pointer<clang.CXType> cxtype, {String parentName}) {
 Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
   Type type;
 
-  final cursor = clang.clang_getTypeDeclaration_wrap(cxtype);
+  final cursor = data.bindings.clang_getTypeDeclaration_wrap(cxtype);
   _logger.fine('${_padding}_extractfromRecord: ${cursor.completeStringRepr()}');
 
-  switch (clang.clang_getCursorKind_wrap(cursor)) {
+  switch (data.bindings.clang_getCursorKind_wrap(cursor)) {
     case clang.CXCursorKind.CXCursor_StructDecl:
       final cxtype = cursor.type();
       var structName = cursor.spelling();
@@ -100,7 +104,8 @@ Type _extractfromRecord(Pointer<clang.CXType> cxtype) {
         structName = cxtype.spelling();
       }
 
-      final fixedStructName = config.structDecl.getPrefixedName(structName);
+      final fixedStructName =
+          data.config.structDecl.getPrefixedName(structName);
 
       // Also add a struct binding, if its unseen.
       // TODO(23): Check if we should auto add struct.
@@ -140,9 +145,9 @@ Type _extractFromFunctionProto(
     name = _getNextUniqueString(name);
   }
   final _parameters = <Parameter>[];
-  final totalArgs = clang.clang_getNumArgTypes_wrap(cxtype);
+  final totalArgs = data.bindings.clang_getNumArgTypes_wrap(cxtype);
   for (var i = 0; i < totalArgs; i++) {
-    final t = clang.clang_getArgType_wrap(cxtype, i);
+    final t = data.bindings.clang_getArgType_wrap(cxtype, i);
     final pt = t.toCodeGenTypeAndDispose();
 
     if (pt.broadType == BroadType.Struct) {
@@ -155,17 +160,19 @@ Type _extractFromFunctionProto(
       Parameter(name: '', type: pt),
     );
   }
-  final typedefC = TypedefC(
+  final typedefC = Typedef(
     name: name,
+    typedefType: TypedefType.C,
     parameters: _parameters,
-    returnType:
-        clang.clang_getResultType_wrap(cxtype).toCodeGenTypeAndDispose(),
+    returnType: data.bindings
+        .clang_getResultType_wrap(cxtype)
+        .toCodeGenTypeAndDispose(),
   );
 
   return Type.nativeFunc(typedefC);
 }
 
-/// Generate a unique string for naming in [TypedefC].
+/// Generate a unique string for naming in [Typedef].
 String _getNextUniqueString(String prefix) {
   int i = _uniqueStringCounters[prefix] ?? 0;
   i++;

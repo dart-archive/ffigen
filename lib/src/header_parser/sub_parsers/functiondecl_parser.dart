@@ -9,6 +9,7 @@ import 'package:ffigen/src/header_parser/data.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
+import '../data.dart' as data;
 import '../includer.dart';
 import '../utils.dart';
 
@@ -70,9 +71,9 @@ Type _getFunctionReturnType(Pointer<clang.CXCursor> cursor) {
 List<Parameter> _getParameters(Pointer<clang.CXCursor> cursor) {
   final parameters = <Parameter>[];
 
-  final totalArgs = clang.clang_Cursor_getNumArguments_wrap(cursor);
+  final totalArgs = data.bindings.clang_Cursor_getNumArguments_wrap(cursor);
   for (var i = 0; i < totalArgs; i++) {
-    final paramCursor = clang.clang_Cursor_getArgument_wrap(cursor, i);
+    final paramCursor = data.bindings.clang_Cursor_getArgument_wrap(cursor, i);
 
     _logger.finer('===== parameter: ${paramCursor.completeStringRepr()}');
 

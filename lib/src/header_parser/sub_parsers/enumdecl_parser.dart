@@ -9,6 +9,7 @@ import 'package:ffigen/src/header_parser/data.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
+import '../data.dart' as data;
 import '../includer.dart';
 import '../utils.dart';
 
@@ -43,7 +44,7 @@ EnumClass parseEnumDeclaration(
 }
 
 void _addEnumConstant(Pointer<clang.CXCursor> cursor) {
-  final resultCode = clang.clang_visitChildren_wrap(
+  final resultCode = data.bindings.clang_visitChildren_wrap(
     cursor,
     Pointer.fromFunction(
         _enumCursorVisitor, clang.CXChildVisitResult.CXChildVisit_Break),
@@ -61,7 +62,7 @@ int _enumCursorVisitor(Pointer<clang.CXCursor> cursor,
     Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
   try {
     _logger.finest('  enumCursorVisitor: ${cursor.completeStringRepr()}');
-    switch (clang.clang_getCursorKind_wrap(cursor)) {
+    switch (data.bindings.clang_getCursorKind_wrap(cursor)) {
       case clang.CXCursorKind.CXCursor_EnumConstantDecl:
         _addEnumConstantToEnumClass(cursor);
         break;
@@ -87,6 +88,6 @@ void _addEnumConstantToEnumClass(Pointer<clang.CXCursor> cursor) {
           nesting.length + commentPrefix.length,
         ),
         name: cursor.spelling(),
-        value: clang.clang_getEnumConstantDeclValue_wrap(cursor)),
+        value: data.bindings.clang_getEnumConstantDeclValue_wrap(cursor)),
   );
 }

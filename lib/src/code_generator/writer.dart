@@ -5,48 +5,72 @@
 import 'package:ffigen/src/code_generator/utils.dart';
 import 'package:meta/meta.dart';
 
-import 'binding_string.dart';
+import 'binding.dart';
+import 'typedef.dart';
 
 /// To store generated String bindings.
 class Writer {
   final String header;
+
+  /// Holds bindings, which lookup symbols.
+  final List<Binding> lookUpBindings;
+
+  /// Holds bindings which don't lookup symbols.
+  final List<Binding> noLookUpBindings;
+
   String _initFunctionIdentifier;
 
-  final UniqueNamer uniqueNamer;
-
   String _ffiLibraryPrefix;
-  String get ffiLibraryPrefix =>
-      _ffiLibraryPrefix ??= uniqueNamer.makeUnique('ffi');
+  String get ffiLibraryPrefix => _ffiLibraryPrefix;
 
   String _dylibIdentifier;
-  String get dylibIdentifier =>
-      _dylibIdentifier ??= uniqueNamer.makeUnique('_dylib');
+  String get dylibIdentifier => _dylibIdentifier;
+
+  UniqueNamer _topLevelUniqueNamer, _wrapperLevelUniqueNamer;
+  UniqueNamer get topLevelUniqueNamer => _topLevelUniqueNamer;
+  UniqueNamer get wrapperLevelUniqueNamer => _wrapperLevelUniqueNamer;
 
   String _arrayHelperClassPrefix;
 
   /// Guaranteed to be a unique prefix.
   String get arrayHelperClassPrefix => _arrayHelperClassPrefix;
 
-  final List<BindingString> _bindings = [];
-
-  /// [usedUpNames] should contain names of all the declarations which are
+  /// [_usedUpNames] should contain names of all the declarations which are
   /// already used. This is used to avoid name collisions.
   Writer({
-    @required Set<String> usedUpNames,
-    String initFunctionIdentifier = 'init',
+    @required this.lookUpBindings,
+    @required this.noLookUpBindings,
+    @required String wrapperName,
     this.header,
-  })  : uniqueNamer = UniqueNamer(usedUpNames),
-        assert(initFunctionIdentifier != null) {
-    _initFunctionIdentifier =
-        uniqueNamer.makeUnique(initFunctionIdentifier);
+  }) : assert(wrapperName != null) {
+    final globalLevelNameSet = noLookUpBindings.map((e) => e.name).toSet();
+    final wrapperLevelNameSet = lookUpBindings.map((e) => e.name).toSet();
+    final allNameSet = <String>{}
+      ..addAll(globalLevelNameSet)
+      ..addAll(wrapperLevelNameSet);
+
+    _topLevelUniqueNamer = UniqueNamer(globalLevelNameSet);
+    _wrapperLevelUniqueNamer = UniqueNamer(wrapperLevelNameSet);
+    final allLevelsUniqueNamer = UniqueNamer(allNameSet);
+
+    /// Wrapper class name must be unique among all names.
+    _initFunctionIdentifier = allLevelsUniqueNamer.makeUnique(wrapperName);
+    wrapperLevelUniqueNamer.markUsed(_initFunctionIdentifier);
+    topLevelUniqueNamer.markUsed(_initFunctionIdentifier);
+
+    /// [_ffiLibraryPrefix] should be unique in top level.
+    _ffiLibraryPrefix = topLevelUniqueNamer.makeUnique('ffi');
+
+    /// [_dylibIdentifier] should be unique in top level.
+    _dylibIdentifier = wrapperLevelUniqueNamer.makeUnique('_dylib');
 
     /// Finding a unique prefix for Array Helper Classes and store into
     /// [_arrayHelperClassPrefix].
     final base = 'ArrayHelper';
     _arrayHelperClassPrefix = base;
     int suffixInt = 0;
-    for (int i = 0; i < usedUpNames.length; i++) {
-      if (usedUpNames.elementAt(i).startsWith(_arrayHelperClassPrefix)) {
+    for (int i = 0; i < allNameSet.length; i++) {
+      if (allNameSet.elementAt(i).startsWith(_arrayHelperClassPrefix)) {
         // Not a unique prefix, start over with a new suffix.
         i = -1;
         suffixInt++;
@@ -73,25 +97,43 @@ class Writer {
     s.write("import 'dart:ffi' as $ffiLibraryPrefix;\n");
     s.write('\n');
 
-    // Write dylib.
-    s.write('/// Holds the Dynamic library.\n');
-    s.write('$ffiLibraryPrefix.DynamicLibrary ${dylibIdentifier};\n');
-    s.write('\n');
-    s.write('/// Initialises the Dynamic library.\n');
-    s.write(
-        'void $_initFunctionIdentifier($ffiLibraryPrefix.DynamicLibrary dynamicLibrary){\n');
-    s.write('  ${dylibIdentifier} = dynamicLibrary;\n');
-    s.write('}\n');
+    final dependencies = <Typedef>[];
 
-    // Write bindings.
-    for (final bs in _bindings) {
-      s.write(bs.string);
+    /// Get typedef dependencies, these will be written at the end.
+    for (final b in lookUpBindings) {
+      dependencies.addAll(b.getTypedefDependencies(this));
+    }
+    for (final b in noLookUpBindings) {
+      dependencies.addAll(b.getTypedefDependencies(this));
+    }
+
+    /// Write [lookUpBindings].
+    if (lookUpBindings.isNotEmpty) {
+      // Write wrapper class.
+      s.write('class $_initFunctionIdentifier{\n');
+      // Write dylib.
+      s.write('/// Holds the Dynamic library.\n');
+      s.write('final $ffiLibraryPrefix.DynamicLibrary ${dylibIdentifier};\n');
+      s.write('\n');
+      // Write wrapper class constructor.
+      s.write(
+          '${_initFunctionIdentifier}($ffiLibraryPrefix.DynamicLibrary dynamicLibrary): $dylibIdentifier = dynamicLibrary;\n\n');
+      for (final b in lookUpBindings) {
+        s.write(b.toBindingString(this).string);
+      }
+      s.write('}\n\n');
+    }
+
+    /// Write [noLookUpBindings].
+    for (final b in noLookUpBindings) {
+      s.write(b.toBindingString(this).string);
+    }
+
+    // Write dependencies
+    for (final d in dependencies) {
+      s.write(d.toTypedefString(this));
     }
 
     return s.toString();
-  }
-
-  void addBindingString(BindingString b) {
-    _bindings.add(b);
   }
 }

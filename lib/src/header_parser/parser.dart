@@ -22,7 +22,7 @@ Library parse(Config conf, {bool sort = false}) {
 
   final library = Library(
     bindings: bindings,
-    initFunctionIdentifier: data.config.initFunctionName,
+    wrapperName: data.config.wrapperName,
     header: data.config.preamble,
   );
 
@@ -42,12 +42,13 @@ var _logger = Logger('header_parser:parser.dart');
 void initParser(Config c) {
   data.config = c;
 
-  clang.init(DynamicLibrary.open(data.config.libclang_dylib_path));
+  data.bindings =
+      clang.Bindings(DynamicLibrary.open(data.config.libclang_dylib_path));
 }
 
 /// Parses source files and adds generated bindings to [bindings].
 List<Binding> parseToBindings() {
-  final index = clang.clang_createIndex(0, 0);
+  final index = data.bindings.clang_createIndex(0, 0);
 
   Pointer<Pointer<Utf8>> clangCmdArgs = nullptr;
   var cmdLen = 0;
@@ -65,7 +66,7 @@ List<Binding> parseToBindings() {
   for (final headerLocation in data.config.headers) {
     _logger.fine('Creating TranslationUnit for header: $headerLocation');
 
-    final tu = clang.clang_parseTranslationUnit(
+    final tu = data.bindings.clang_parseTranslationUnit(
       index,
       Utf8.toUtf8(headerLocation).cast(),
       clangCmdArgs.cast(),
@@ -83,18 +84,18 @@ List<Binding> parseToBindings() {
     }
 
     logTuDiagnostics(tu, _logger, headerLocation);
-    final rootCursor = clang.clang_getTranslationUnitCursor_wrap(tu);
+    final rootCursor = data.bindings.clang_getTranslationUnitCursor_wrap(tu);
 
     bindings.addAll(parseTranslationUnit(rootCursor));
 
     // Cleanup.
     rootCursor.dispose();
-    clang.clang_disposeTranslationUnit(tu);
+    data.bindings.clang_disposeTranslationUnit(tu);
   }
 
   if (data.config.compilerOpts != null) {
     clangCmdArgs.dispose(data.config.compilerOpts.length);
   }
-  clang.clang_disposeIndex(index);
+  data.bindings.clang_disposeIndex(index);
   return bindings;
 }

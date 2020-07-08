@@ -5,9 +5,12 @@
 import 'package:meta/meta.dart';
 
 import 'binding_string.dart';
+import 'typedef.dart';
 import 'writer.dart';
 
 /// Base class for all Bindings.
+///
+/// Do not extend directly, use [LookUpBinding] or [NoLookUpBinding].
 abstract class Binding {
   String name;
 
@@ -15,6 +18,24 @@ abstract class Binding {
 
   Binding({@required this.name, this.dartDoc});
 
+  /// Return typedef dependencies.
+  List<Typedef> getTypedefDependencies(Writer w);
+
   /// Converts a Binding to its actual string representation.
+  ///
+  /// Note: This does not print the typedef dependencies.
+  /// Must call [getTypedefDependencies] first.
   BindingString toBindingString(Writer w);
+}
+
+/// Base class for bindings which look up symbols in dynamic library.
+abstract class LookUpBinding extends Binding {
+  LookUpBinding({String name, String dartDoc})
+      : super(name: name, dartDoc: dartDoc);
+}
+
+/// Base class for bindings which don't look up symbols in dynamic library.
+abstract class NoLookUpBinding extends Binding {
+  NoLookUpBinding({String name, String dartDoc})
+      : super(name: name, dartDoc: dartDoc);
 }

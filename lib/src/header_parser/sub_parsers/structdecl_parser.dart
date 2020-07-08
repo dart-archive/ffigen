@@ -8,7 +8,7 @@ import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang;
-import '../data.dart';
+import '../data.dart' as data;
 import '../includer.dart';
 import '../utils.dart';
 
@@ -40,7 +40,7 @@ Struc parseStructDeclaration(
         '++++ Adding Structure: structName: ${structName}, ${cursor.completeStringRepr()}');
 
     _struc = Struc(
-      name: config.structDecl.getPrefixedName(structName),
+      name: data.config.structDecl.getPrefixedName(structName),
       dartDoc: getCursorDocComment(cursor),
     );
     // Adding to seen here to stop recursion if a struct has itself as a
@@ -59,7 +59,7 @@ List<Member> _getMembers(Pointer<clang.CXCursor> cursor, String structName) {
   nestedStructMember = false;
   unimplementedMemberType = false;
 
-  final resultCode = clang.clang_visitChildren_wrap(
+  final resultCode = data.bindings.clang_visitChildren_wrap(
       cursor,
       Pointer.fromFunction(
           _structMembersVisitor, clang.CXChildVisitResult.CXChildVisit_Break),
@@ -68,7 +68,7 @@ List<Member> _getMembers(Pointer<clang.CXCursor> cursor, String structName) {
   visitChildrenResultChecker(resultCode);
 
   // Returning null to exclude the struct members as it has a struct by value field.
-  if (arrayMember && !config.arrayWorkaround) {
+  if (arrayMember && !data.config.arrayWorkaround) {
     _logger.fine(
         '---- Removed Struct members, reason: struct has array members ${cursor.completeStringRepr()}');
     _logger.warning(

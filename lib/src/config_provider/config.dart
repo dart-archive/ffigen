@@ -64,11 +64,12 @@ class Config {
 
   /// If tool should generate array workarounds.
   ///
-  /// If false(default), structs with inline array members will have all its members removed.
+  /// If false(default), structs with inline array members will have all its
+  /// members removed.
   bool arrayWorkaround;
 
-  /// Name of the init function used to initialise the dynamic library.
-  String initFunctionName;
+  /// Name of the wrapper class.
+  String wrapperName;
 
   /// Header of the generated bindings.
   String preamble;
@@ -259,14 +260,13 @@ class Config {
         defaultValue: () => false,
         extractedResult: (dynamic result) => arrayWorkaround = result as bool,
       ),
-      strings.initFunctionName: Specification<String>(
+      strings.wrapperName: Specification<String>(
         description: 'Name of the init function to use',
         isRequired: false,
         validator: nonEmptyStringValidator,
         extractor: stringExtractor,
-        defaultValue: () => 'init',
-        extractedResult: (dynamic result) =>
-            initFunctionName = result as String,
+        defaultValue: () => 'Bindings',
+        extractedResult: (dynamic result) => wrapperName = result as String,
       ),
       strings.preamble: Specification<String>(
         description: 'Header String for the generated bindings',

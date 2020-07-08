@@ -8,6 +8,7 @@ import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 
 import 'clang_bindings/clang_bindings.dart' as clang;
+import 'data.dart' as data;
 import 'includer.dart';
 import 'sub_parsers/enumdecl_parser.dart';
 import 'sub_parsers/functiondecl_parser.dart';
@@ -20,10 +21,11 @@ var _logger = Logger('header_parser:translation_unit_parser.dart');
 List<Binding> _bindings;
 
 /// Parses the translation unit and returns the generated bindings.
-List<Binding> parseTranslationUnit(Pointer<clang.CXCursor> translationUnitCursor) {
+List<Binding> parseTranslationUnit(
+    Pointer<clang.CXCursor> translationUnitCursor) {
   _bindings = [];
 
-  final resultCode = clang.clang_visitChildren_wrap(
+  final resultCode = data.bindings.clang_visitChildren_wrap(
     translationUnitCursor,
     Pointer.fromFunction(
         _rootCursorVisitor, clang.CXChildVisitResult.CXChildVisit_Break),
@@ -41,7 +43,7 @@ int _rootCursorVisitor(Pointer<clang.CXCursor> cursor,
   try {
     if (shouldIncludeRootCursor(cursor.sourceFileName())) {
       _logger.finest('rootCursorVisitor: ${cursor.completeStringRepr()}');
-      switch (clang.clang_getCursorKind_wrap(cursor)) {
+      switch (data.bindings.clang_getCursorKind_wrap(cursor)) {
         case clang.CXCursorKind.CXCursor_FunctionDecl:
           addToBindings(parseFunctionDeclaration(cursor));
           break;
