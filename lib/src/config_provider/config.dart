@@ -71,6 +71,9 @@ class Config {
   /// Name of the wrapper class.
   String wrapperName;
 
+  /// Doc comment for the wrapper class.
+  String wrapperDocComment;
+
   /// Header of the generated bindings.
   String preamble;
 
@@ -100,11 +103,13 @@ class Config {
     var _result = true;
     for (final key in specs.keys) {
       final spec = specs[key];
-      if (spec.isRequired && !map.containsKey(key)) {
+      if (map.containsKey(key)) {
+        _result = _result && spec.validator(key, map[key]);
+      } else if (spec.requirement == Requirement.yes) {
         _logger.severe("Key '${key}' is required.");
         _result = false;
-      } else if (map.containsKey(key)) {
-        _result = _result && spec.validator(key, map[key]);
+      } else if (spec.requirement == Requirement.prefer) {
+        _logger.warning("Prefer adding Key '$key' to your config.");
       }
     }
     // Warn about unknown keys.
@@ -138,7 +143,7 @@ class Config {
     return <String, Specification>{
       strings.output: Specification<String>(
         description: 'Output file name',
-        isRequired: true,
+        requirement: Requirement.yes,
         validator: outputValidator,
         extractor: outputExtractor,
         extractedResult: (dynamic result) => output = result as String,
@@ -146,7 +151,7 @@ class Config {
       strings.libclang_dylib_folder: Specification<String>(
         description:
             'Path to folder containing libclang dynamic library, used to parse C headers',
-        isRequired: false,
+        requirement: Requirement.no,
         defaultValue: () => getDylibPath(Platform.script
             .resolve(path.join('..', 'tool', 'wrapped_libclang'))
             .toFilePath()),
@@ -157,7 +162,7 @@ class Config {
       ),
       strings.headers: Specification<List<String>>(
         description: 'List of C headers to generate bindings of',
-        isRequired: true,
+        requirement: Requirement.yes,
         validator: headersValidator,
         extractor: headersExtractor,
         extractedResult: (dynamic result) => headers = result as List<String>,
@@ -173,7 +178,7 @@ class Config {
       ),
       strings.compilerOpts: Specification<List<String>>(
         description: 'Raw compiler options to pass to clang compiler',
-        isRequired: false,
+        requirement: Requirement.no,
         validator: compilerOptsValidator,
         extractor: compilerOptsExtractor,
         extractedResult: (dynamic result) =>
@@ -181,7 +186,7 @@ class Config {
       ),
       strings.functions: Specification<Declaration>(
         description: 'Filter for functions',
-        isRequired: false,
+        requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
         defaultValue: () => Declaration(declarationTypeName: 'Function'),
@@ -192,7 +197,7 @@ class Config {
       ),
       strings.structs: Specification<Declaration>(
         description: 'Filter for Structs',
-        isRequired: false,
+        requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
         defaultValue: () => Declaration(declarationTypeName: 'Struct'),
@@ -203,7 +208,7 @@ class Config {
       ),
       strings.enums: Specification<Declaration>(
         description: 'Filter for enums',
-        isRequired: false,
+        requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
         defaultValue: () => Declaration(declarationTypeName: 'Enum'),
@@ -228,7 +233,7 @@ class Config {
       ),
       strings.sort: Specification<bool>(
         description: 'whether or not to sort the bindings alphabetically',
-        isRequired: false,
+        requirement: Requirement.no,
         validator: booleanValidator,
         extractor: booleanExtractor,
         defaultValue: () => false,
@@ -236,7 +241,7 @@ class Config {
       ),
       strings.useSupportedTypedefs: Specification<bool>(
         description: 'whether or not to directly map supported typedef by name',
-        isRequired: false,
+        requirement: Requirement.no,
         validator: booleanValidator,
         extractor: booleanExtractor,
         defaultValue: () => true,
@@ -245,7 +250,7 @@ class Config {
       ),
       strings.comments: Specification<String>(
         description: 'Type of comment to extract',
-        isRequired: false,
+        requirement: Requirement.no,
         validator: commentValidator,
         extractor: commentExtractor,
         defaultValue: () => strings.brief,
@@ -254,23 +259,32 @@ class Config {
       strings.arrayWorkaround: Specification<bool>(
         description:
             'whether or not to generate workarounds for inline arrays in structures',
-        isRequired: false,
+        requirement: Requirement.no,
         validator: booleanValidator,
         extractor: booleanExtractor,
         defaultValue: () => false,
         extractedResult: (dynamic result) => arrayWorkaround = result as bool,
       ),
-      strings.wrapperName: Specification<String>(
-        description: 'Name of the init function to use',
-        isRequired: false,
-        validator: nonEmptyStringValidator,
+      strings.name: Specification<String>(
+        description: 'Name of the wrapper class',
+        requirement: Requirement.prefer,
+        validator: dartClassNameValidator,
         extractor: stringExtractor,
-        defaultValue: () => 'Bindings',
+        defaultValue: () => 'NativeLibrary',
         extractedResult: (dynamic result) => wrapperName = result as String,
       ),
+      strings.description: Specification<String>(
+        description: 'Doc comment for the wrapper class',
+        requirement: Requirement.prefer,
+        validator: nonEmptyStringValidator,
+        extractor: stringExtractor,
+        defaultValue: () => null,
+        extractedResult: (dynamic result) =>
+            wrapperDocComment = result as String,
+      ),
       strings.preamble: Specification<String>(
-        description: 'Header String for the generated bindings',
-        isRequired: false,
+        description: 'Raw header string for the generated file',
+        requirement: Requirement.no,
         validator: nonEmptyStringValidator,
         extractor: stringExtractor,
         extractedResult: (dynamic result) => preamble = result as String,
@@ -288,7 +302,7 @@ class Specification<E> {
   final E Function(dynamic map) extractor;
   final E Function() defaultValue;
 
-  final bool isRequired;
+  final Requirement requirement;
   final void Function(dynamic result) extractedResult;
 
   Specification({
@@ -297,9 +311,11 @@ class Specification<E> {
     @required this.validator,
     @required this.extractor,
     this.defaultValue,
-    this.isRequired = false,
+    this.requirement = Requirement.no,
   });
 }
+
+enum Requirement { yes, prefer, no }
 
 class HeaderFilter {
   Set<String> includedInclusionHeaders;

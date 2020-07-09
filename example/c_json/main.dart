@@ -8,9 +8,9 @@ import 'dart:io';
 
 import 'package:ffi/ffi.dart';
 
-import 'cjson_generated_bindings.dart' as cjson;
+import 'cjson_generated_bindings.dart' as cj;
 
-final cjsonFunctions = cjson.Bindings(DynamicLibrary.open(_getPath()));
+final cjson = cj.CJson(DynamicLibrary.open(_getPath()));
 
 /// Using the generated C_JSON bindings.
 void main() {
@@ -18,8 +18,7 @@ void main() {
   final jsonString = File('./example.json').readAsStringSync();
 
   // Parse this json string using our cJSON library.
-  final cjsonParsedJson =
-      cjsonFunctions.cJSON_Parse(Utf8.toUtf8(jsonString).cast());
+  final cjsonParsedJson = cjson.cJSON_Parse(Utf8.toUtf8(jsonString).cast());
   if (cjsonParsedJson == nullptr) {
     print('Error parsing cjson.');
     exit(1);
@@ -31,7 +30,7 @@ void main() {
   final dynamic dartJson = convertCJsonToDartObj(cjsonParsedJson.cast());
 
   // Delete the cjsonParsedJson object.
-  cjsonFunctions.cJSON_Delete(cjsonParsedJson);
+  cjson.cJSON_Delete(cjsonParsedJson);
 
   // Check if the converted json is correct
   // by comparing the result with json converted by `dart:convert`.
@@ -56,31 +55,31 @@ String _getPath() {
   return path;
 }
 
-dynamic convertCJsonToDartObj(Pointer<cjson.cJSON> parsedcjson) {
+dynamic convertCJsonToDartObj(Pointer<cj.cJSON> parsedcjson) {
   dynamic obj;
-  if (cjsonFunctions.cJSON_IsObject(parsedcjson.cast()) == 1) {
+  if (cjson.cJSON_IsObject(parsedcjson.cast()) == 1) {
     obj = <String, dynamic>{};
 
-    Pointer<cjson.cJSON> ptr;
+    Pointer<cj.cJSON> ptr;
     ptr = parsedcjson.ref.child;
     while (ptr != nullptr) {
       final dynamic o = convertCJsonToDartObj(ptr);
       _addToObj(obj, o, ptr.ref.string.cast());
       ptr = ptr.ref.next;
     }
-  } else if (cjsonFunctions.cJSON_IsArray(parsedcjson.cast()) == 1) {
+  } else if (cjson.cJSON_IsArray(parsedcjson.cast()) == 1) {
     obj = <dynamic>[];
 
-    Pointer<cjson.cJSON> ptr;
+    Pointer<cj.cJSON> ptr;
     ptr = parsedcjson.ref.child;
     while (ptr != nullptr) {
       final dynamic o = convertCJsonToDartObj(ptr);
       _addToObj(obj, o);
       ptr = ptr.ref.next;
     }
-  } else if (cjsonFunctions.cJSON_IsString(parsedcjson.cast()) == 1) {
+  } else if (cjson.cJSON_IsString(parsedcjson.cast()) == 1) {
     obj = Utf8.fromUtf8(parsedcjson.ref.valuestring.cast());
-  } else if (cjsonFunctions.cJSON_IsNumber(parsedcjson.cast()) == 1) {
+  } else if (cjson.cJSON_IsNumber(parsedcjson.cast()) == 1) {
     obj = parsedcjson.ref.valueint == parsedcjson.ref.valuedouble
         ? parsedcjson.ref.valueint
         : parsedcjson.ref.valuedouble;

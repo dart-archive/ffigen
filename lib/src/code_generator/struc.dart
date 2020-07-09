@@ -80,9 +80,7 @@ class Struc extends NoLookUpBinding {
     final s = StringBuffer();
     final enclosingClassName = name;
     if (dartDoc != null) {
-      s.write('/// ');
-      s.writeAll(dartDoc.split('\n'), '\n/// ');
-      s.write('\n');
+      s.write(makeDartDoc(dartDoc));
     }
 
     final helpers = <ArrayHelper>[];

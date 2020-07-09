@@ -100,6 +100,7 @@ Library expectedLibrary() {
   final struc2 =
       Struc(name: '${structPrefix}${structPrefixReplacedWith}Struct2');
   return Library(
+    name: 'Bindings',
     bindings: [
       Func(
         name: '${functionPrefix}func1',

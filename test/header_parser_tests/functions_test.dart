@@ -65,6 +65,7 @@ String binding(Library lib, String name) {
 
 Library expectedLibrary() {
   return Library(
+    name: 'Bindings',
     bindings: [
       Func(
         name: 'func1',

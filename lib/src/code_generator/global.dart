@@ -8,6 +8,7 @@ import 'package:meta/meta.dart';
 import 'binding.dart';
 import 'binding_string.dart';
 import 'type.dart';
+import 'utils.dart';
 import 'writer.dart';
 
 /// A binding to a global variable
@@ -36,13 +37,13 @@ class Global extends LookUpBinding {
     final s = StringBuffer();
     final globalVarName = name;
     if (dartDoc != null) {
-      s.write('/// ');
-      s.writeAll(dartDoc.split('\n'), '\n/// ');
-      s.write('\n');
+      s.write(makeDartDoc(dartDoc));
     }
 
-    final holderVarName = w.wrapperLevelUniqueNamer.makeUnique('_$globalVarName');
-    s.write('${w.ffiLibraryPrefix}.Pointer<${type.getCType(w)}> $holderVarName;\n');
+    final holderVarName =
+        w.wrapperLevelUniqueNamer.makeUnique('_$globalVarName');
+    s.write(
+        '${w.ffiLibraryPrefix}.Pointer<${type.getCType(w)}> $holderVarName;\n');
     s.write(
         "${type.getDartType(w)} get $globalVarName => ($holderVarName ??= ${w.dylibIdentifier}.lookup<${type.getCType(w)}>('$lookupSymbolName')).value;\n\n");
 

@@ -22,9 +22,9 @@ class Library {
   Writer get writer => _writer;
 
   Library({
+    @required String name,
     @required this.bindings,
     String header,
-    String wrapperName = 'Bindings',
   }) {
     // Seperate bindings which require lookup.
     final lookUpBindings = bindings.whereType<LookUpBinding>().toList();
@@ -63,7 +63,7 @@ class Library {
     _writer = Writer(
       lookUpBindings: lookUpBindings,
       noLookUpBindings: noLookUpBindings,
-      wrapperName: wrapperName,
+      wrapperName: name,
       header: header,
     );
   }

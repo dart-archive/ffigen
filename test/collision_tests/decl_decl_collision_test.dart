@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 void main() {
   group('Declaration-Declaration Collision', () {
     test('declaration conflict', () {
-      final l1 = Library(bindings: [
+      final l1 = Library(name: 'Bindings', bindings: [
         Struc(name: 'TestStruc'),
         Struc(name: 'TestStruc'),
         EnumClass(name: 'TestEnum'),
@@ -20,7 +20,7 @@ void main() {
             name: 'testFunc',
             returnType: Type.nativeType(SupportedNativeType.Void)),
       ]);
-      final l2 = Library(bindings: [
+      final l2 = Library(name: 'Bindings', bindings: [
         Struc(name: 'TestStruc'),
         Struc(name: 'TestStruc_1'),
         EnumClass(name: 'TestEnum'),

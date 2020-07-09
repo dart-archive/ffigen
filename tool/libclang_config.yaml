@@ -9,6 +9,7 @@
 #    dart ../bin/ffigen.dart --config libclang_config.yaml
 # ===============================================================
 
+name: Clang
 output: '../lib/src/header_parser/clang_bindings/clang_bindings.dart'
 libclang-dylib-folder: 'wrapped_libclang'
 sort: true

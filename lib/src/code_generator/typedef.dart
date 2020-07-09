@@ -7,6 +7,7 @@ import 'package:meta/meta.dart';
 
 import 'func.dart' show Parameter;
 import 'type.dart';
+import 'utils.dart';
 import 'writer.dart';
 
 /// A simple typedef, Expands to -
@@ -40,9 +41,7 @@ class Typedef {
   String toTypedefString(Writer w) {
     final s = StringBuffer();
     if (dartDoc != null) {
-      s.write('/// ');
-      s.writeAll(dartDoc.split('\n'), '\n/// ');
-      s.write('\n');
+      s.write(makeDartDoc(dartDoc));
     }
     final typedefName = name;
 

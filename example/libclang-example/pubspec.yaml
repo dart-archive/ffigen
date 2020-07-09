@@ -59,8 +59,8 @@ ffigen:
     unsigned long long: 8
     enum: 4
 
-  # Default is 'Bindings'
-  wrapper-name: 'Bindings'
+  # Default is 'NativeLibrary'
+  name: 'LibClang'
 
   # False by default.
   array-workaround: true

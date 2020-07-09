@@ -4,11 +4,11 @@
 
 import 'dart:ffi' as ffi;
 
-class Bindings {
+class LibClang {
   /// Holds the Dynamic library.
   final ffi.DynamicLibrary _dylib;
 
-  Bindings(ffi.DynamicLibrary dynamicLibrary) : _dylib = dynamicLibrary;
+  LibClang(ffi.DynamicLibrary dynamicLibrary) : _dylib = dynamicLibrary;
 
   /// Free the given string set.
   void clang_disposeStringSet(

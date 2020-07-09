@@ -8,6 +8,7 @@ import 'package:meta/meta.dart';
 import 'binding.dart';
 import 'binding_string.dart';
 import 'type.dart';
+import 'utils.dart';
 import 'writer.dart';
 
 /// A binding for C function.
@@ -114,9 +115,7 @@ class Func extends LookUpBinding {
     final funcVarName = w.wrapperLevelUniqueNamer.makeUnique('_$name');
 
     if (dartDoc != null) {
-      s.write('/// ');
-      s.writeAll(dartDoc.split('\n'), '\n/// ');
-      s.write('\n');
+      s.write(makeDartDoc(dartDoc));
     }
 
     // Write enclosing function.

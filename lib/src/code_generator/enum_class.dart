@@ -40,9 +40,7 @@ class EnumClass extends NoLookUpBinding {
     final enclosingClassName = name;
 
     if (dartDoc != null) {
-      s.write('/// ');
-      s.writeAll(dartDoc.split('\n'), '\n/// ');
-      s.write('\n');
+      s.write(makeDartDoc(dartDoc));
     }
 
     /// Adding [enclosingClassName] because dart doesn't allow class member
