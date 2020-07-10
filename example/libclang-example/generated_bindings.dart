@@ -4,10 +4,12 @@
 
 import 'dart:ffi' as ffi;
 
+/// Holds bindings to LibClang.
 class LibClang {
   /// Holds the Dynamic library.
   final ffi.DynamicLibrary _dylib;
 
+  /// The symbols are looked up in [dynamicLIbrary].
   LibClang(ffi.DynamicLibrary dynamicLibrary) : _dylib = dynamicLibrary;
 
   /// Free the given string set.

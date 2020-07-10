@@ -90,6 +90,7 @@ class Bindings{
 /// Holds the Dynamic library.
 final ffi.DynamicLibrary _dylib;
 
+/// The symbols are looked up in [dynamicLIbrary].
 Bindings(ffi.DynamicLibrary dynamicLibrary): _dylib = dynamicLibrary;
 
 /// Just a test function
@@ -345,6 +346,7 @@ class Bindings{
 /// Holds the Dynamic library.
 final ffi.DynamicLibrary _dylib;
 
+/// The symbols are looked up in [dynamicLIbrary].
 Bindings(ffi.DynamicLibrary dynamicLibrary): _dylib = dynamicLibrary;
 
 ffi.Pointer<SomeStruc> someFunc(
@@ -442,6 +444,7 @@ class Bindings{
 /// Holds the Dynamic library.
 final ffi.DynamicLibrary _dylib;
 
+/// The symbols are looked up in [dynamicLIbrary].
 Bindings(ffi.DynamicLibrary dynamicLibrary): _dylib = dynamicLibrary;
 
 ffi.Pointer<ffi.Int32> _test1;
@@ -630,6 +633,7 @@ class init_dylib_1{
 /// Holds the Dynamic library.
 final ffi.DynamicLibrary _dylib;
 
+/// The symbols are looked up in [dynamicLIbrary].
 init_dylib_1(ffi.DynamicLibrary dynamicLibrary): _dylib = dynamicLibrary;
 
 void test(

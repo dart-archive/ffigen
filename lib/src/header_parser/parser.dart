@@ -23,6 +23,7 @@ Library parse(Config conf, {bool sort = false}) {
   final library = Library(
     bindings: bindings,
     name: config.wrapperName,
+    description: config.wrapperDocComment,
     header: config.preamble,
   );
 

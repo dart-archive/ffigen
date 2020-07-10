@@ -23,6 +23,7 @@ class Library {
 
   Library({
     @required String name,
+    String description,
     @required this.bindings,
     String header,
   }) {
@@ -64,6 +65,7 @@ class Library {
       lookUpBindings: lookUpBindings,
       noLookUpBindings: noLookUpBindings,
       wrapperName: name,
+      wrapperDocComment: description,
       header: header,
     );
   }

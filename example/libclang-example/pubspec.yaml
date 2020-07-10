@@ -62,6 +62,8 @@ ffigen:
   # Default is 'NativeLibrary'
   name: 'LibClang'
 
+  description: 'Holds bindings to LibClang.'
+
   # False by default.
   array-workaround: true
 
