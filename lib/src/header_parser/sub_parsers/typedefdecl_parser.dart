@@ -7,7 +7,8 @@ import 'dart:ffi';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 
-import '../clang_bindings/clang_bindings.dart' as clang;
+import '../clang_bindings/clang_bindings.dart' as clang_types;
+import '../data.dart' show clang;
 import '../sub_parsers/enumdecl_parser.dart';
 import '../sub_parsers/structdecl_parser.dart';
 import '../utils.dart';
@@ -21,7 +22,7 @@ Binding _binding;
 String _typedefName;
 
 /// Parses a typedef declaration.
-Binding parseTypedefDeclaration(Pointer<clang.CXCursor> cursor) {
+Binding parseTypedefDeclaration(Pointer<clang_types.CXCursor> cursor) {
   _binding = null;
   // Name of typedef.
   _typedefName = cursor.spelling();
@@ -29,7 +30,7 @@ Binding parseTypedefDeclaration(Pointer<clang.CXCursor> cursor) {
   final resultCode = clang.clang_visitChildren_wrap(
     cursor,
     Pointer.fromFunction(_typedefdeclarationCursorVisitor,
-        clang.CXChildVisitResult.CXChildVisit_Break),
+        clang_types.CXChildVisitResult.CXChildVisit_Break),
     nullptr,
   );
 
@@ -43,17 +44,17 @@ Binding parseTypedefDeclaration(Pointer<clang.CXCursor> cursor) {
 ///
 /// Visitor invoked on cursor of type declaration returned by
 /// [clang.clang_getTypeDeclaration_wrap].
-int _typedefdeclarationCursorVisitor(Pointer<clang.CXCursor> cursor,
-    Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
+int _typedefdeclarationCursorVisitor(Pointer<clang_types.CXCursor> cursor,
+    Pointer<clang_types.CXCursor> parent, Pointer<Void> clientData) {
   try {
     _logger.finest(
         'typedefdeclarationCursorVisitor: ${cursor.completeStringRepr()}');
 
     switch (clang.clang_getCursorKind_wrap(cursor)) {
-      case clang.CXCursorKind.CXCursor_StructDecl:
+      case clang_types.CXCursorKind.CXCursor_StructDecl:
         _binding = parseStructDeclaration(cursor, name: _typedefName);
         break;
-      case clang.CXCursorKind.CXCursor_EnumDecl:
+      case clang_types.CXCursorKind.CXCursor_EnumDecl:
         _binding = parseEnumDeclaration(cursor, name: _typedefName);
         break;
       default:
@@ -67,5 +68,5 @@ int _typedefdeclarationCursorVisitor(Pointer<clang.CXCursor> cursor,
     _logger.severe(s);
     rethrow;
   }
-  return clang.CXChildVisitResult.CXChildVisit_Continue;
+  return clang_types.CXChildVisitResult.CXChildVisit_Continue;
 }

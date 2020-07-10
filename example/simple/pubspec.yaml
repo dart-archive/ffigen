@@ -12,6 +12,8 @@ dev_dependencies:
     path: '../../'
 
 ffigen:
+  name: NativeLibrary
+  description: Bindings to `headers/example.h`.
   output: 'generated_bindings.dart'
   headers:
     - 'headers/example.h'

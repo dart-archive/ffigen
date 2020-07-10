@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:ffigen/src/code_generator/typedef.dart';
 import 'package:meta/meta.dart';
 
 import 'binding.dart';
@@ -23,7 +24,7 @@ import 'writer.dart';
 ///   static const banana = 10;
 /// }
 /// ```
-class EnumClass extends Binding {
+class EnumClass extends NoLookUpBinding {
   final List<EnumConstant> enumConstants;
 
   EnumClass({
@@ -39,9 +40,7 @@ class EnumClass extends Binding {
     final enclosingClassName = name;
 
     if (dartDoc != null) {
-      s.write('/// ');
-      s.writeAll(dartDoc.split('\n'), '\n/// ');
-      s.write('\n');
+      s.write(makeDartDoc(dartDoc));
     }
 
     /// Adding [enclosingClassName] because dart doesn't allow class member
@@ -52,8 +51,7 @@ class EnumClass extends Binding {
     s.write('class $enclosingClassName {\n');
     const depth = '  ';
     for (final ec in enumConstants) {
-      final enum_value_name =
-          localUniqueNamer.makeUnique(ec.name);
+      final enum_value_name = localUniqueNamer.makeUnique(ec.name);
       if (ec.dartDoc != null) {
         s.write(depth + '/// ');
         s.writeAll(ec.dartDoc.split('\n'), '\n' + depth + '/// ');
@@ -66,6 +64,9 @@ class EnumClass extends Binding {
     return BindingString(
         type: BindingStringType.enumClass, string: s.toString());
   }
+
+  @override
+  List<Typedef> getTypedefDependencies(Writer w) => const [];
 }
 
 /// Represents a single value in an enum.

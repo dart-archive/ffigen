@@ -280,6 +280,17 @@ bool nonEmptyStringValidator(String name, dynamic value) {
   }
 }
 
+bool dartClassNameValidator(String name, dynamic value) {
+  if (value is String &&
+      RegExp('[a-zA-Z]+[_a-zA-Z0-9]*').stringMatch(value) == value) {
+    return true;
+  } else {
+    _logger.severe(
+        "Expected value of key '$name' to be a valid public class name.");
+    return false;
+  }
+}
+
 String commentExtractor(dynamic value) => value as String;
 
 bool commentValidator(String name, dynamic value) {

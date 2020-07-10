@@ -3,7 +3,12 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/config_provider.dart';
+import 'clang_bindings/clang_bindings.dart' show Clang;
+
 /// Holds all Global shared variables.
 
 /// Holds configurations.
 Config config;
+
+/// Holds clang functions.
+Clang clang;

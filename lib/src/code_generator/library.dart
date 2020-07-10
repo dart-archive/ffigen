@@ -22,29 +22,50 @@ class Library {
   Writer get writer => _writer;
 
   Library({
+    @required String name,
+    String description,
     @required this.bindings,
     String header,
-    String initFunctionIdentifier = 'init',
   }) {
-    // Handle any declaration-declaration name conflict.
-    final declConflictHandler = UniqueNamer({});
-    for (final b in bindings) {
+    // Seperate bindings which require lookup.
+    final lookUpBindings = bindings.whereType<LookUpBinding>().toList();
+    final noLookUpBindings = bindings.whereType<NoLookUpBinding>().toList();
+
+    /// Handle any declaration-declaration name conflict in [lookUpBindings].
+    final lookUpDeclConflictHandler = UniqueNamer({});
+    for (final b in lookUpBindings) {
       // Print warning if name was conflicting and has been changed.
-      if (declConflictHandler.isUsed(b.name)) {
+      if (lookUpDeclConflictHandler.isUsed(b.name)) {
         final oldName = b.name;
-        b.name = declConflictHandler.makeUnique(b.name);
+        b.name = lookUpDeclConflictHandler.makeUnique(b.name);
 
         _logger.warning(
             "Resolved name conflict: Declaration '$oldName' and has been renamed to '${b.name}'.");
       } else {
-        declConflictHandler.markUsed(b.name);
+        lookUpDeclConflictHandler.markUsed(b.name);
       }
     }
 
-    final declarationNames = bindings.map((e) => e.name).toSet();
+    /// Handle any declaration-declaration name conflict in [noLookUpBindings].
+    final noLookUpDeclConflictHandler = UniqueNamer({});
+    for (final b in noLookUpBindings) {
+      // Print warning if name was conflicting and has been changed.
+      if (noLookUpDeclConflictHandler.isUsed(b.name)) {
+        final oldName = b.name;
+        b.name = noLookUpDeclConflictHandler.makeUnique(b.name);
+
+        _logger.warning(
+            "Resolved name conflict: Declaration '$oldName' and has been renamed to '${b.name}'.");
+      } else {
+        noLookUpDeclConflictHandler.markUsed(b.name);
+      }
+    }
+
     _writer = Writer(
-      usedUpNames: declarationNames,
-      initFunctionIdentifier: initFunctionIdentifier,
+      lookUpBindings: lookUpBindings,
+      noLookUpBindings: noLookUpBindings,
+      className: name,
+      classDocComment: description,
       header: header,
     );
   }
@@ -64,13 +85,6 @@ class Library {
     }
   }
 
-  /// Generates bindings and stores it in given [Writer].
-  void _generate(Writer w) {
-    for (final b in bindings) {
-      w.addBindingString(b.toBindingString(w));
-    }
-  }
-
   /// Formats a file using `dartfmt`.
   void _dartFmt(String path) {
     final result = Process.runSync('dartfmt', ['-w', path],
@@ -83,7 +97,6 @@ class Library {
   /// Generates the bindings.
   String generate() {
     final w = writer;
-    _generate(w);
     return w.generate();
   }
 

@@ -29,6 +29,8 @@ void main() {
       });
       expected = expectedLibrary();
       actual = parser.parse(Config.fromYaml(yaml.loadYaml('''
+${strings.name}: 'NativeLibrary'
+${strings.description}: 'Prefix Test'
 ${strings.output}: 'unused'
 ${strings.libclang_dylib_folder}: 'tool/wrapped_libclang'
 ${strings.headers}:
@@ -100,6 +102,7 @@ Library expectedLibrary() {
   final struc2 =
       Struc(name: '${structPrefix}${structPrefixReplacedWith}Struct2');
   return Library(
+    name: 'Bindings',
     bindings: [
       Func(
         name: '${functionPrefix}func1',

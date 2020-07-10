@@ -7,7 +7,7 @@ import 'dart:ffi';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 
-import '../clang_bindings/clang_bindings.dart' as clang;
+import '../clang_bindings/clang_bindings.dart' as clang_types;
 import '../data.dart';
 import '../includer.dart';
 import '../utils.dart';
@@ -19,7 +19,7 @@ Struc _struc;
 
 /// Parses a struct declaration.
 Struc parseStructDeclaration(
-  Pointer<clang.CXCursor> cursor, {
+  Pointer<clang_types.CXCursor> cursor, {
 
   /// Optionally provide name (useful in case struct is inside a typedef).
   String name,
@@ -53,7 +53,7 @@ Struc parseStructDeclaration(
 }
 
 List<Member> _members;
-List<Member> _getMembers(Pointer<clang.CXCursor> cursor, String structName) {
+List<Member> _getMembers(Pointer<clang_types.CXCursor> cursor, String structName) {
   _members = [];
   arrayMember = false;
   nestedStructMember = false;
@@ -62,7 +62,7 @@ List<Member> _getMembers(Pointer<clang.CXCursor> cursor, String structName) {
   final resultCode = clang.clang_visitChildren_wrap(
       cursor,
       Pointer.fromFunction(
-          _structMembersVisitor, clang.CXChildVisitResult.CXChildVisit_Break),
+          _structMembersVisitor, clang_types.CXChildVisitResult.CXChildVisit_Break),
       nullptr);
 
   visitChildrenResultChecker(resultCode);
@@ -98,10 +98,10 @@ bool arrayMember = false;
 /// Visitor for the struct cursor [CXCursorKind.CXCursor_StructDecl].
 ///
 /// Child visitor invoked on struct cursor.
-int _structMembersVisitor(Pointer<clang.CXCursor> cursor,
-    Pointer<clang.CXCursor> parent, Pointer<Void> clientData) {
+int _structMembersVisitor(Pointer<clang_types.CXCursor> cursor,
+    Pointer<clang_types.CXCursor> parent, Pointer<Void> clientData) {
   try {
-    if (cursor.kind() == clang.CXCursorKind.CXCursor_FieldDecl) {
+    if (cursor.kind() == clang_types.CXCursorKind.CXCursor_FieldDecl) {
       _logger.finer('===== member: ${cursor.completeStringRepr()}');
 
       final mt = cursor.type().toCodeGenTypeAndDispose();
@@ -142,5 +142,5 @@ int _structMembersVisitor(Pointer<clang.CXCursor> cursor,
     _logger.severe(s);
     rethrow;
   }
-  return clang.CXChildVisitResult.CXChildVisit_Continue;
+  return clang_types.CXChildVisitResult.CXChildVisit_Continue;
 }

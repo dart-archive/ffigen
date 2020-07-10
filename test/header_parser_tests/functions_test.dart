@@ -25,6 +25,8 @@ void main() {
       });
       actual = parser.parse(
         Config.fromYaml(yaml.loadYaml('''
+${strings.name}: 'NativeLibrary'
+${strings.description}: 'Prefix Test'
 ${strings.output}: 'unused'
 ${strings.libclang_dylib_folder}: 'tool/wrapped_libclang'
 ${strings.headers}:
@@ -65,6 +67,7 @@ String binding(Library lib, String name) {
 
 Library expectedLibrary() {
   return Library(
+    name: 'Bindings',
     bindings: [
       Func(
         name: 'func1',

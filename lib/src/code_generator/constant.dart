@@ -2,11 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:ffigen/src/code_generator/typedef.dart';
 import 'package:meta/meta.dart';
 
 import 'binding.dart';
 import 'binding_string.dart';
 import 'type.dart';
+import 'utils.dart';
 import 'writer.dart';
 
 /// A simple Constant.
@@ -20,7 +22,7 @@ import 'writer.dart';
 /// ```dart
 /// const int name = 10;
 /// ```
-class Constant extends Binding {
+class Constant extends NoLookUpBinding {
   final Type type;
 
   /// The rawValue is pasted as it is.
@@ -41,9 +43,7 @@ class Constant extends Binding {
     final constantName = name;
 
     if (dartDoc != null) {
-      s.write('/// ');
-      s.writeAll(dartDoc.split('\n'), '\n/// ');
-      s.write('\n');
+      s.write(makeDartDoc(dartDoc));
     }
 
     s.write('const ${type.getDartType(w)} $constantName = $rawValue;\n\n');
@@ -51,4 +51,7 @@ class Constant extends Binding {
     return BindingString(
         type: BindingStringType.constant, string: s.toString());
   }
+
+  @override
+  List<Typedef> getTypedefDependencies(Writer w) => const [];
 }

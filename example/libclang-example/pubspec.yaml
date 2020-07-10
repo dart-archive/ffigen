@@ -59,8 +59,10 @@ ffigen:
     unsigned long long: 8
     enum: 4
 
-  # Default is 'init'
-  init-function-name: init
+  # Default is 'NativeLibrary'
+  name: 'LibClang'
+
+  description: 'Holds bindings to LibClang.'
 
   # False by default.
   array-workaround: true

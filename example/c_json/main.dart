@@ -8,13 +8,12 @@ import 'dart:io';
 
 import 'package:ffi/ffi.dart';
 
-import 'cjson_generated_bindings.dart' as cjson;
+import 'cjson_generated_bindings.dart' as cj;
+
+final cjson = cj.CJson(DynamicLibrary.open(_getPath()));
 
 /// Using the generated C_JSON bindings.
 void main() {
-  // Initialise cjson bindings.
-  cjson.init(DynamicLibrary.open(_getPath()));
-
   // Load json from [example.json] file.
   final jsonString = File('./example.json').readAsStringSync();
 
@@ -56,12 +55,12 @@ String _getPath() {
   return path;
 }
 
-dynamic convertCJsonToDartObj(Pointer<cjson.cJSON> parsedcjson) {
+dynamic convertCJsonToDartObj(Pointer<cj.cJSON> parsedcjson) {
   dynamic obj;
   if (cjson.cJSON_IsObject(parsedcjson.cast()) == 1) {
     obj = <String, dynamic>{};
 
-    Pointer<cjson.cJSON> ptr;
+    Pointer<cj.cJSON> ptr;
     ptr = parsedcjson.ref.child;
     while (ptr != nullptr) {
       final dynamic o = convertCJsonToDartObj(ptr);
@@ -71,7 +70,7 @@ dynamic convertCJsonToDartObj(Pointer<cjson.cJSON> parsedcjson) {
   } else if (cjson.cJSON_IsArray(parsedcjson.cast()) == 1) {
     obj = <dynamic>[];
 
-    Pointer<cjson.cJSON> ptr;
+    Pointer<cj.cJSON> ptr;
     ptr = parsedcjson.ref.child;
     while (ptr != nullptr) {
       final dynamic o = convertCJsonToDartObj(ptr);

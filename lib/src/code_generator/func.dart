@@ -2,11 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:ffigen/src/code_generator.dart';
 import 'package:meta/meta.dart';
 
 import 'binding.dart';
 import 'binding_string.dart';
 import 'type.dart';
+import 'utils.dart';
 import 'writer.dart';
 
 /// A binding for C function.
@@ -27,7 +29,7 @@ import 'writer.dart';
 ///
 /// typedef _dart_sum = int Function(int a, int b);
 /// ```
-class Func extends Binding {
+class Func extends LookUpBinding {
   final String lookupSymbolName;
   final Type returnType;
   final List<Parameter> parameters;
@@ -50,30 +52,70 @@ class Func extends Binding {
     }
   }
 
+  List<Typedef> _typedefDependencies;
+  @override
+  List<Typedef> getTypedefDependencies(Writer w) {
+    if (_typedefDependencies == null) {
+      _typedefDependencies = <Typedef>[];
+
+      /// Ensure name conflicts are resolved for [cType] and [dartType] typedefs.
+      cType.name = _uniqueTypedefName(cType.name, w);
+      dartType.name = _uniqueTypedefName(dartType.name, w);
+
+      // Add typedef's required by parameters.
+      for (final p in parameters) {
+        final base = p.type.getBaseType();
+        if (base.broadType == BroadType.NativeFunction) {
+          // Resolve name conflicts in typedef's required by parameters before using.
+          base.nativeFunc.name = _uniqueTypedefName(base.nativeFunc.name, w);
+          _typedefDependencies.add(base.nativeFunc);
+        }
+      }
+      // Add C function typedef.
+      _typedefDependencies.add(cType);
+      // Add Dart function typedef.
+      _typedefDependencies.add(dartType);
+    }
+    return _typedefDependencies;
+  }
+
+  /// Checks if typedef name is unique in both top level and wrapper level.
+  /// And only marks it as used at top-level.
+  String _uniqueTypedefName(String name, Writer w) {
+    final base = name;
+    String uniqueName = name;
+    int suffix = 0;
+    while (w.topLevelUniqueNamer.isUsed(uniqueName) ||
+        w.wrapperLevelUniqueNamer.isUsed(uniqueName)) {
+      suffix++;
+      uniqueName = base + suffix.toString();
+    }
+    w.topLevelUniqueNamer.markUsed(uniqueName);
+    return uniqueName;
+  }
+
+  Typedef _cType, _dartType;
+  Typedef get cType => _cType ??= Typedef(
+        name: '_c_$name',
+        returnType: returnType,
+        parameters: parameters,
+        typedefType: TypedefType.C,
+      );
+  Typedef get dartType => _dartType ??= Typedef(
+        name: '_dart_$name',
+        returnType: returnType,
+        parameters: parameters,
+        typedefType: TypedefType.Dart,
+      );
+
   @override
   BindingString toBindingString(Writer w) {
     final s = StringBuffer();
     final enclosingFuncName = name;
-
-    // Ensure name conflicts are resolved for typedefs generated.
-    final funcVarName = w.uniqueNamer.makeUnique('_$name');
-    final typedefC = w.uniqueNamer.makeUnique('_c_$name');
-    final typedefDart = w.uniqueNamer.makeUnique('_dart_$name');
-
-    // Write typedef's required by parameters and resolve name conflicts.
-    for (final p in parameters) {
-      final base = p.type.getBaseType();
-      if (base.broadType == BroadType.NativeFunction) {
-        base.nativeFunc.name =
-            w.uniqueNamer.makeUnique(base.nativeFunc.name);
-        s.write(base.nativeFunc.toTypedefString(w));
-      }
-    }
+    final funcVarName = w.wrapperLevelUniqueNamer.makeUnique('_$name');
 
     if (dartDoc != null) {
-      s.write('/// ');
-      s.writeAll(dartDoc.split('\n'), '\n/// ');
-      s.write('\n');
+      s.write(makeDartDoc(dartDoc));
     }
 
     // Write enclosing function.
@@ -82,30 +124,18 @@ class Func extends Binding {
       s.write('  ${p.type.getDartType(w)} ${p.name},\n');
     }
     s.write(') {\n');
+    s.write(
+        "$funcVarName ??= ${w.dylibIdentifier}.lookupFunction<${cType.name},${dartType.name}>('$lookupSymbolName');\n");
+
     s.write('  return $funcVarName(\n');
     for (final p in parameters) {
       s.write('    ${p.name},\n');
     }
     s.write('  );\n');
-    s.write('}\n\n');
+    s.write('}\n');
 
-    // Write function with dylib lookup.
-    s.write(
-        "final $typedefDart $funcVarName = ${w.dylibIdentifier}.lookupFunction<$typedefC,$typedefDart>('$lookupSymbolName');\n\n");
-
-    // Write typdef for C.
-    s.write('typedef $typedefC = ${returnType.getCType(w)} Function(\n');
-    for (final p in parameters) {
-      s.write('  ${p.type.getCType(w)} ${p.name},\n');
-    }
-    s.write(');\n\n');
-
-    // Write typdef for dart.
-    s.write('typedef $typedefDart = ${returnType.getDartType(w)} Function(\n');
-    for (final p in parameters) {
-      s.write('  ${p.type.getDartType(w)} ${p.name},\n');
-    }
-    s.write(');\n\n');
+    // Write function variable.
+    s.write('${dartType.name} $funcVarName;\n\n');
 
     return BindingString(type: BindingStringType.func, string: s.toString());
   }

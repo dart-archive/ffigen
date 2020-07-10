@@ -7,20 +7,32 @@ import 'package:test/test.dart';
 
 void main() {
   group('Declaration-Declaration Collision', () {
-    test('struct-func', () {
-      final l1 = Library(bindings: [
+    test('declaration conflict', () {
+      final l1 = Library(name: 'Bindings', bindings: [
+        Struc(name: 'TestStruc'),
+        Struc(name: 'TestStruc'),
+        EnumClass(name: 'TestEnum'),
+        EnumClass(name: 'TestEnum'),
         Func(
-          name: 'test',
-          returnType: Type.nativeType(SupportedNativeType.Void),
-        ),
-        Struc(name: 'test'),
+            name: 'testFunc',
+            returnType: Type.nativeType(SupportedNativeType.Void)),
+        Func(
+            name: 'testFunc',
+            returnType: Type.nativeType(SupportedNativeType.Void)),
       ]);
-      final l2 = Library(bindings: [
+      final l2 = Library(name: 'Bindings', bindings: [
+        Struc(name: 'TestStruc'),
+        Struc(name: 'TestStruc_1'),
+        EnumClass(name: 'TestEnum'),
+        EnumClass(name: 'TestEnum_1'),
         Func(
-          name: 'test',
-          returnType: Type.nativeType(SupportedNativeType.Void),
-        ),
-        Struc(name: 'test_1'),
+            name: 'testFunc',
+            lookupSymbolName: 'testFunc',
+            returnType: Type.nativeType(SupportedNativeType.Void)),
+        Func(
+            name: 'testFunc_1',
+            lookupSymbolName: 'testFunc',
+            returnType: Type.nativeType(SupportedNativeType.Void)),
       ]);
 
       expect(l1.generate(), l2.generate());

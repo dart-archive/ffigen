@@ -8,7 +8,8 @@ import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser/data.dart';
 import 'package:logging/logging.dart';
 
-import '../clang_bindings/clang_bindings.dart' as clang;
+import '../clang_bindings/clang_bindings.dart' as clang_types;
+import '../data.dart' show clang;
 import '../includer.dart';
 import '../utils.dart';
 
@@ -18,7 +19,7 @@ var _logger = Logger('header_parser:functiondecl_parser.dart');
 Func _func;
 
 /// Parses a function declaration.
-Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
+Func parseFunctionDeclaration(Pointer<clang_types.CXCursor> cursor) {
   _func = null;
   structByValueParameter = false;
   unimplementedParameterType = false;
@@ -49,7 +50,10 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
     }
 
     _func = Func(
-      dartDoc: getCursorDocComment(cursor),
+      dartDoc: getCursorDocComment(
+        cursor,
+        nesting.length + commentPrefix.length,
+      ),
       name: config.functionDecl.getPrefixedName(funcName),
       lookupSymbolName: funcName,
       returnType: rt,
@@ -63,11 +67,11 @@ Func parseFunctionDeclaration(Pointer<clang.CXCursor> cursor) {
 
 bool structByValueParameter = false;
 bool unimplementedParameterType = false;
-Type _getFunctionReturnType(Pointer<clang.CXCursor> cursor) {
+Type _getFunctionReturnType(Pointer<clang_types.CXCursor> cursor) {
   return cursor.returnType().toCodeGenTypeAndDispose();
 }
 
-List<Parameter> _getParameters(Pointer<clang.CXCursor> cursor) {
+List<Parameter> _getParameters(Pointer<clang_types.CXCursor> cursor) {
   final parameters = <Parameter>[];
 
   final totalArgs = clang.clang_Cursor_getNumArguments_wrap(cursor);
@@ -99,6 +103,6 @@ List<Parameter> _getParameters(Pointer<clang.CXCursor> cursor) {
   return parameters;
 }
 
-Type _getParameterType(Pointer<clang.CXCursor> cursor) {
+Type _getParameterType(Pointer<clang_types.CXCursor> cursor) {
   return cursor.type().toCodeGenTypeAndDispose();
 }

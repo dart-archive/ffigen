@@ -5,7 +5,7 @@
 import 'package:meta/meta.dart';
 
 import 'struc.dart';
-import 'typedefc.dart';
+import 'typedef.dart';
 import 'writer.dart';
 
 class _SubType {
@@ -67,8 +67,8 @@ class Type {
   /// Reference to the [Struc] binding this type refers to.
   Struc struc;
 
-  /// Reference to the [TypedefC] this type refers to.
-  TypedefC nativeFunc;
+  /// Reference to the [Typedef] this type refers to.
+  Typedef nativeFunc;
 
   /// For providing [SupportedNativeType] only.
   final SupportedNativeType nativeType;
@@ -101,7 +101,7 @@ class Type {
   factory Type.struct(Struc struc) {
     return Type._(broadType: BroadType.Struct, struc: struc);
   }
-  factory Type.nativeFunc(TypedefC nativeFunc) {
+  factory Type.nativeFunc(Typedef nativeFunc) {
     return Type._(broadType: BroadType.NativeFunction, nativeFunc: nativeFunc);
   }
   factory Type.nativeType(SupportedNativeType nativeType) {

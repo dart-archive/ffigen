@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:ffigen/src/code_generator/typedef.dart';
 import 'package:meta/meta.dart';
 
 import 'binding.dart';
@@ -34,7 +35,7 @@ import 'writer.dart';
 ///
 /// }
 /// ```
-class Struc extends Binding {
+class Struc extends NoLookUpBinding {
   List<Member> members;
 
   Struc({
@@ -54,28 +55,35 @@ class Struc extends Binding {
     return array;
   }
 
+  List<Typedef> _typedefDependencies;
+  @override
+  List<Typedef> getTypedefDependencies(Writer w) {
+    if (_typedefDependencies == null) {
+      _typedefDependencies = <Typedef>[];
+
+      // Write typedef's required by members and resolve name conflicts.
+      for (final m in members) {
+        final base = m.type.getBaseType();
+        if (base.broadType == BroadType.NativeFunction) {
+          base.nativeFunc.name =
+              w.topLevelUniqueNamer.makeUnique(base.nativeFunc.name);
+          _typedefDependencies.add(base.nativeFunc);
+        }
+      }
+    }
+    return _typedefDependencies;
+  }
+
   @override
   BindingString toBindingString(Writer w) {
     members = members ?? [];
     final s = StringBuffer();
     final enclosingClassName = name;
     if (dartDoc != null) {
-      s.write('/// ');
-      s.writeAll(dartDoc.split('\n'), '\n/// ');
-      s.write('\n');
+      s.write(makeDartDoc(dartDoc));
     }
 
     final helpers = <ArrayHelper>[];
-
-    // Write typedef's required by members and resolve name conflicts.
-    for (final m in members) {
-      final base = m.type.getBaseType();
-      if (base.broadType == BroadType.NativeFunction) {
-        base.nativeFunc.name =
-            w.uniqueNamer.makeUnique(base.nativeFunc.name);
-        s.write(base.nativeFunc.toTypedefString(w));
-      }
-    }
 
     final expandedArrayItemPrefix = getUniqueExpandedArrayItemPrefix();
 

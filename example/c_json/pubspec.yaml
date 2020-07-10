@@ -16,6 +16,8 @@ dev_dependencies:
 
 ffigen:
   output: 'cjson_generated_bindings.dart'
+  name: 'CJson'
+  description: 'Holds bindings to cJSON.'
   headers:
     - '../../third_party/cjson_library/cJSON.h'
   header-filter:
