@@ -22,15 +22,14 @@ import 'writer.dart';
 /// final int a = _dylib.lookup<ffi.Int32>('a').value;
 /// ```
 class Global extends LookUpBinding {
-  final String lookupSymbolName;
   final Type type;
 
   Global({
+    String originalName,
     @required String name,
-    @required this.lookupSymbolName,
     @required this.type,
     String dartDoc,
-  }) : super(name: name, dartDoc: dartDoc);
+  }) : super(originalName: originalName ?? name, name: name, dartDoc: dartDoc);
 
   @override
   BindingString toBindingString(Writer w) {
@@ -45,7 +44,7 @@ class Global extends LookUpBinding {
     s.write(
         '${w.ffiLibraryPrefix}.Pointer<${type.getCType(w)}> $holderVarName;\n');
     s.write(
-        "${type.getDartType(w)} get $globalVarName => ($holderVarName ??= ${w.dylibIdentifier}.lookup<${type.getCType(w)}>('$lookupSymbolName')).value;\n\n");
+        "${type.getDartType(w)} get $globalVarName => ($holderVarName ??= ${w.dylibIdentifier}.lookup<${type.getCType(w)}>('$originalName')).value;\n\n");
 
     return BindingString(type: BindingStringType.global, string: s.toString());
   }

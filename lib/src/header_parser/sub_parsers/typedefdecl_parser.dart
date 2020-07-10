@@ -15,17 +15,26 @@ import '../utils.dart';
 
 var _logger = Logger('header_parser:typedefdecl_parser.dart');
 
-/// Temporarily holds a binding before its returned by [parseTypedefDeclaration].
-Binding _binding;
+/// Holds all data required while parsing a typedef decl.
+class _Holder {
+  Binding binding;
+  String typedefName;
+  _Holder();
+}
 
-/// Temporarily holds parent cursor name.
-String _typedefName;
+/// Temporarily holds the binding before its returned by [parseTypedefDeclaration].
+///
+/// Maintained like a Stack.
+List<_Holder> _holders = [];
+_Holder get _current => _holders.last;
+_Holder _getCurrentAndDispose() => _holders.removeLast();
+void _addNewHolder() => _holders.add(_Holder());
 
 /// Parses a typedef declaration.
 Binding parseTypedefDeclaration(Pointer<clang_types.CXCursor> cursor) {
-  _binding = null;
+  _addNewHolder();
   // Name of typedef.
-  _typedefName = cursor.spelling();
+  _current.typedefName = cursor.spelling();
 
   final resultCode = clang.clang_visitChildren_wrap(
     cursor,
@@ -35,8 +44,7 @@ Binding parseTypedefDeclaration(Pointer<clang_types.CXCursor> cursor) {
   );
 
   visitChildrenResultChecker(resultCode);
-
-  return _binding;
+  return _getCurrentAndDispose().binding;
 }
 
 /// Visitor for extracting binding for a TypedefDeclarations of a
@@ -52,10 +60,12 @@ int _typedefdeclarationCursorVisitor(Pointer<clang_types.CXCursor> cursor,
 
     switch (clang.clang_getCursorKind_wrap(cursor)) {
       case clang_types.CXCursorKind.CXCursor_StructDecl:
-        _binding = parseStructDeclaration(cursor, name: _typedefName);
+        _current.binding =
+            parseStructDeclaration(cursor, name: _current.typedefName);
         break;
       case clang_types.CXCursorKind.CXCursor_EnumDecl:
-        _binding = parseEnumDeclaration(cursor, name: _typedefName);
+        _current.binding =
+            parseEnumDeclaration(cursor, name: _current.typedefName);
         break;
       default:
         _logger.finest('typedefdeclarationCursorVisitor: Ignored');

@@ -15,8 +15,19 @@ import '../utils.dart';
 
 var _logger = Logger('header_parser:enumdecl_parser.dart');
 
+/// Holds all data required while parsing an enum decl.
+class _Holder {
+  EnumClass enumClass;
+  _Holder();
+}
+
 /// Temporarily holds a enumClass before its returned by [parseEnumDeclaration].
-EnumClass _enumClass;
+///
+/// Maintained like a Stack.
+List<_Holder> _holders = [];
+_Holder get _current => _holders.last;
+_Holder _getCurrentAndDispose() => _holders.removeLast();
+void _addNewHolder() => _holders.add(_Holder());
 
 /// Parses a function declaration.
 EnumClass parseEnumDeclaration(
@@ -25,22 +36,23 @@ EnumClass parseEnumDeclaration(
   /// Optionally provide name to use (useful in case struct is inside a typedef).
   String name,
 }) {
-  _enumClass = null;
+  _addNewHolder();
 
   final enumName = name ?? cursor.spelling();
   if (enumName == '') {
     _logger.finest('unnamed enum declaration');
   } else if (shouldIncludeEnumClass(enumName) && !isSeenEnumClass(enumName)) {
     _logger.fine('++++ Adding Enum: ${cursor.completeStringRepr()}');
-    _enumClass = EnumClass(
+    _current.enumClass = EnumClass(
       dartDoc: getCursorDocComment(cursor),
+      originalName: enumName,
       name: config.enumClassDecl.getPrefixedName(enumName),
     );
-    addEnumClassToSeen(enumName, _enumClass);
+    addEnumClassToSeen(enumName, _current.enumClass);
     _addEnumConstant(cursor);
   }
 
-  return _enumClass;
+  return _getCurrentAndDispose().enumClass;
 }
 
 void _addEnumConstant(Pointer<clang_types.CXCursor> cursor) {
@@ -81,7 +93,7 @@ int _enumCursorVisitor(Pointer<clang_types.CXCursor> cursor,
 
 /// Adds the parameter to func in [functiondecl_parser.dart].
 void _addEnumConstantToEnumClass(Pointer<clang_types.CXCursor> cursor) {
-  _enumClass.enumConstants.add(
+  _current.enumClass.enumConstants.add(
     EnumConstant(
         dartDoc: getCursorDocComment(
           cursor,

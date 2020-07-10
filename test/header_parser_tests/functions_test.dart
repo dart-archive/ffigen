@@ -13,7 +13,7 @@ import 'package:ffigen/src/strings.dart' as strings;
 Library actual, expected;
 
 void main() {
-  group('header_parser', () {
+  group('functions_test', () {
     setUpAll(() {
       expected = expectedLibrary();
 
@@ -26,7 +26,7 @@ void main() {
       actual = parser.parse(
         Config.fromYaml(yaml.loadYaml('''
 ${strings.name}: 'NativeLibrary'
-${strings.description}: 'Prefix Test'
+${strings.description}: 'Functions Test'
 ${strings.output}: 'unused'
 ${strings.libclang_dylib_folder}: 'tool/wrapped_libclang'
 ${strings.headers}:
@@ -71,14 +71,12 @@ Library expectedLibrary() {
     bindings: [
       Func(
         name: 'func1',
-        lookupSymbolName: 'func1',
         returnType: Type.nativeType(
           SupportedNativeType.Void,
         ),
       ),
       Func(
         name: 'func2',
-        lookupSymbolName: 'func2',
         returnType: Type.nativeType(
           SupportedNativeType.Int32,
         ),
@@ -93,7 +91,6 @@ Library expectedLibrary() {
       ),
       Func(
         name: 'func3',
-        lookupSymbolName: 'func3',
         returnType: Type.nativeType(
           SupportedNativeType.Double,
         ),
@@ -125,7 +122,6 @@ Library expectedLibrary() {
       ),
       Func(
           name: 'func4',
-          lookupSymbolName: 'func4',
           returnType: Type.pointer(Type.nativeType(SupportedNativeType.Void)),
           parameters: [
             Parameter(

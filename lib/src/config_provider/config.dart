@@ -80,9 +80,15 @@ class Config {
   Config._();
 
   /// Create config from Yaml map.
-  ///
-  /// Ensure that log printing is setup before using this.
-  factory Config.fromYaml(YamlMap map) {
+  factory Config.fromYaml(YamlMap map, {bool setupLogger = true}) {
+    if (setupLogger) {
+      // Prints warnings and errors.
+      Logger.root.onRecord.listen((record) {
+        if (record.level > Level.INFO) {
+          print('${record.level.name.padRight(8)}: ${record.message}');
+        }
+      });
+    }
     final configspecs = Config._();
     _logger.finest('Config Map: ' + map.toString());
 

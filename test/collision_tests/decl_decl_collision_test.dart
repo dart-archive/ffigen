@@ -6,7 +6,7 @@ import 'package:ffigen/src/code_generator.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Declaration-Declaration Collision', () {
+  group('decl_decl_collision_test', () {
     test('declaration conflict', () {
       final l1 = Library(name: 'Bindings', bindings: [
         Struc(name: 'TestStruc'),
@@ -27,11 +27,11 @@ void main() {
         EnumClass(name: 'TestEnum_1'),
         Func(
             name: 'testFunc',
-            lookupSymbolName: 'testFunc',
+            originalName: 'testFunc',
             returnType: Type.nativeType(SupportedNativeType.Void)),
         Func(
             name: 'testFunc_1',
-            lookupSymbolName: 'testFunc',
+            originalName: 'testFunc',
             returnType: Type.nativeType(SupportedNativeType.Void)),
       ]);
 

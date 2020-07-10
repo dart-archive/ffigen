@@ -19,7 +19,7 @@ final structPrefixReplacedWith = 'rs';
 final enumPrefixReplacedWith = 're';
 
 void main() {
-  group('Global Prefix Test', () {
+  group('prefix_test', () {
     setUpAll(() {
       Logger.root.onRecord.listen((log) {
         if (log.level > Level.INFO) {
@@ -106,7 +106,7 @@ Library expectedLibrary() {
     bindings: [
       Func(
         name: '${functionPrefix}func1',
-        lookupSymbolName: 'func1',
+        originalName: 'func1',
         returnType: Type.nativeType(
           SupportedNativeType.Void,
         ),
@@ -119,7 +119,7 @@ Library expectedLibrary() {
       ),
       Func(
         name: '${functionPrefix}${functionPrefixReplacedWith}func2',
-        lookupSymbolName: 'test_func2',
+        originalName: 'test_func2',
         returnType: Type.nativeType(
           SupportedNativeType.Void,
         ),

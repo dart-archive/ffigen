@@ -15,7 +15,6 @@ void main() {
         bindings: [
           Func(
             name: 'noParam',
-            lookupSymbolName: 'noParam',
             dartDoc: 'Just a test function\nheres another line',
             returnType: Type.nativeType(
               SupportedNativeType.Int32,
@@ -23,7 +22,6 @@ void main() {
           ),
           Func(
             name: 'withPrimitiveParam',
-            lookupSymbolName: 'withPrimitiveParam',
             parameters: [
               Parameter(
                 name: 'a',
@@ -44,7 +42,6 @@ void main() {
           ),
           Func(
             name: 'withPointerParam',
-            lookupSymbolName: 'withPointerParam',
             parameters: [
               Parameter(
                 name: 'a',
@@ -308,7 +305,6 @@ class WithPointerMember extends ffi.Struct{
           struct_some,
           Func(
             name: 'someFunc',
-            lookupSymbolName: 'someFunc',
             parameters: [
               Parameter(
                 name: 'some',
@@ -401,14 +397,12 @@ typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
         bindings: [
           Global(
             name: 'test1',
-            lookupSymbolName: 'test1',
             type: Type.nativeType(
               SupportedNativeType.Int32,
             ),
           ),
           Global(
             name: 'test2',
-            lookupSymbolName: 'test2',
             type: Type.pointer(
               Type.nativeType(
                 SupportedNativeType.Float,
@@ -418,7 +412,6 @@ typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
           struc_some,
           Global(
             name: 'test5',
-            lookupSymbolName: 'test5',
             type: Type.pointer(
               Type.struct(
                 struc_some,
@@ -574,22 +567,18 @@ class Constants {
         bindings: [
           Func(
             name: 'test',
-            lookupSymbolName: 'test',
             returnType: Type.nativeType(SupportedNativeType.Void),
           ),
           Func(
             name: '_test',
-            lookupSymbolName: '_test',
             returnType: Type.nativeType(SupportedNativeType.Void),
           ),
           Func(
             name: '_c_test',
-            lookupSymbolName: '_c_test',
             returnType: Type.nativeType(SupportedNativeType.Void),
           ),
           Func(
             name: '_dart_test',
-            lookupSymbolName: '_dart_test',
             returnType: Type.nativeType(SupportedNativeType.Void),
           ),
           Struc(
@@ -609,7 +598,6 @@ class Constants {
           Struc(name: 'ArrayHelperPrefixCollisionTest'),
           Func(
             name: 'Test',
-            lookupSymbolName: 'Test',
             returnType: Type.nativeType(SupportedNativeType.Void),
           ),
           EnumClass(name: '_c_Test'),

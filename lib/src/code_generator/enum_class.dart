@@ -28,11 +28,12 @@ class EnumClass extends NoLookUpBinding {
   final List<EnumConstant> enumConstants;
 
   EnumClass({
+    String originalName,
     @required String name,
     String dartDoc,
     List<EnumConstant> enumConstants,
   })  : enumConstants = enumConstants ?? [],
-        super(name: name, dartDoc: dartDoc);
+        super(originalName: originalName ?? name, name: name, dartDoc: dartDoc);
 
   @override
   BindingString toBindingString(Writer w) {

@@ -15,14 +15,27 @@ import '../utils.dart';
 
 var _logger = Logger('header_parser:functiondecl_parser.dart');
 
+/// Holds all data required while parsing a function decl.
+class _Holder {
+  Func func;
+  bool structByValueParameter = false;
+  bool unimplementedParameterType = false;
+  _Holder();
+}
+
 /// Temporarily holds a function before its returned by [parseFunctionDeclaration].
-Func _func;
+///
+/// Maintained like a Stack.
+List<_Holder> _holders = [];
+_Holder get _current => _holders.last;
+_Holder _getCurrentAndDispose() => _holders.removeLast();
+void _addNewHolder() => _holders.add(_Holder());
 
 /// Parses a function declaration.
 Func parseFunctionDeclaration(Pointer<clang_types.CXCursor> cursor) {
-  _func = null;
-  structByValueParameter = false;
-  unimplementedParameterType = false;
+  _addNewHolder();
+  _current.structByValueParameter = false;
+  _current.unimplementedParameterType = false;
 
   final funcName = cursor.spelling();
   if (shouldIncludeFunc(funcName) && !isSeenFunc(funcName)) {
@@ -32,41 +45,41 @@ Func parseFunctionDeclaration(Pointer<clang_types.CXCursor> cursor) {
     final parameters = _getParameters(cursor);
 
     //TODO(3): Remove this when support for Structs by value arrives.
-    if (rt.broadType == BroadType.Struct || structByValueParameter) {
+    if (rt.broadType == BroadType.Struct || _current.structByValueParameter) {
       _logger.fine(
           '---- Removed Function, reason: struct pass/return by value: ${cursor.completeStringRepr()}');
       _logger.warning(
           "Skipped Function '$funcName', struct pass/return by value not supported.");
-      return null; // Returning null so that [addToBindings] function excludes this.
+      return _getCurrentAndDispose()
+          .func; // Returning null so that [addToBindings] function excludes this.
     }
 
     if (rt.getBaseType().broadType == BroadType.Unimplemented ||
-        unimplementedParameterType) {
+        _current.unimplementedParameterType) {
       _logger.fine(
           '---- Removed Function, reason: unsupported return type or parameter type: ${cursor.completeStringRepr()}');
       _logger.warning(
           "Skipped Function '$funcName', function has unsupported return type or parameter type.");
-      return null; // Returning null so that [addToBindings] function excludes this.
+      return _getCurrentAndDispose()
+          .func; // Returning null so that [addToBindings] function excludes this.
     }
 
-    _func = Func(
+    _current.func = Func(
       dartDoc: getCursorDocComment(
         cursor,
         nesting.length + commentPrefix.length,
       ),
       name: config.functionDecl.getPrefixedName(funcName),
-      lookupSymbolName: funcName,
+      originalName: funcName,
       returnType: rt,
       parameters: parameters,
     );
-    addFuncToSeen(funcName, _func);
+    addFuncToSeen(funcName, _current.func);
   }
 
-  return _func;
+  return _getCurrentAndDispose().func;
 }
 
-bool structByValueParameter = false;
-bool unimplementedParameterType = false;
 Type _getFunctionReturnType(Pointer<clang_types.CXCursor> cursor) {
   return cursor.returnType().toCodeGenTypeAndDispose();
 }
@@ -83,9 +96,9 @@ List<Parameter> _getParameters(Pointer<clang_types.CXCursor> cursor) {
     final pt = _getParameterType(paramCursor);
     //TODO(3): Remove this when support for Structs by value arrives.
     if (pt.broadType == BroadType.Struct) {
-      structByValueParameter = true;
+      _current.structByValueParameter = true;
     } else if (pt.getBaseType().broadType == BroadType.Unimplemented) {
-      unimplementedParameterType = true;
+      _current.unimplementedParameterType = true;
     }
 
     final pn = paramCursor.spelling();

@@ -30,20 +30,19 @@ import 'writer.dart';
 /// typedef _dart_sum = int Function(int a, int b);
 /// ```
 class Func extends LookUpBinding {
-  final String lookupSymbolName;
   final Type returnType;
   final List<Parameter> parameters;
 
   /// [lookupSymbolName], if not provided, takes the value of [name].
   Func({
     @required String name,
-    String lookupSymbolName,
+    String originalName,
     String dartDoc,
     @required this.returnType,
     List<Parameter> parameters,
   })  : parameters = parameters ?? [],
-        lookupSymbolName = lookupSymbolName ?? name,
-        super(name: name, dartDoc: dartDoc) {
+        super(
+            originalName: originalName ?? name, name: name, dartDoc: dartDoc) {
     for (var i = 0; i < this.parameters.length; i++) {
       if (this.parameters[i].name == null ||
           this.parameters[i].name.trim() == '') {
@@ -125,7 +124,7 @@ class Func extends LookUpBinding {
     }
     s.write(') {\n');
     s.write(
-        "$funcVarName ??= ${w.dylibIdentifier}.lookupFunction<${cType.name},${dartType.name}>('$lookupSymbolName');\n");
+        "$funcVarName ??= ${w.dylibIdentifier}.lookupFunction<${cType.name},${dartType.name}>('$originalName');\n");
 
     s.write('  return $funcVarName(\n');
     for (final p in parameters) {

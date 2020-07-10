@@ -10,7 +10,7 @@ import 'package:test/test.dart';
 import 'native_test_bindings.dart' as bindings;
 
 void main() {
-  group('Tests for native functions', () {
+  group('native_test', () {
     setUpAll(() {
       var dylibName = 'test/native_test/native_test.so';
       if (Platform.isMacOS) {
