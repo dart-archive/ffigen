@@ -18,8 +18,8 @@ class Writer {
   /// Holds bindings which don't lookup symbols.
   final List<Binding> noLookUpBindings;
 
-  String _wrapperClassName;
-  final String wrapperDocComment;
+  String _className;
+  final String classDocComment;
 
   String _ffiLibraryPrefix;
   String get ffiLibraryPrefix => _ffiLibraryPrefix;
@@ -41,10 +41,10 @@ class Writer {
   Writer({
     @required this.lookUpBindings,
     @required this.noLookUpBindings,
-    @required String wrapperName,
-    this.wrapperDocComment,
+    @required String className,
+    this.classDocComment,
     this.header,
-  }) : assert(wrapperName != null) {
+  }) : assert(className != null) {
     final globalLevelNameSet = noLookUpBindings.map((e) => e.name).toSet();
     final wrapperLevelNameSet = lookUpBindings.map((e) => e.name).toSet();
     final allNameSet = <String>{}
@@ -56,9 +56,9 @@ class Writer {
     final allLevelsUniqueNamer = UniqueNamer(allNameSet);
 
     /// Wrapper class name must be unique among all names.
-    _wrapperClassName = allLevelsUniqueNamer.makeUnique(wrapperName);
-    wrapperLevelUniqueNamer.markUsed(_wrapperClassName);
-    topLevelUniqueNamer.markUsed(_wrapperClassName);
+    _className = allLevelsUniqueNamer.makeUnique(className);
+    wrapperLevelUniqueNamer.markUsed(_className);
+    topLevelUniqueNamer.markUsed(_className);
 
     /// [_ffiLibraryPrefix] should be unique in top level.
     _ffiLibraryPrefix = topLevelUniqueNamer.makeUnique('ffi');
@@ -112,11 +112,11 @@ class Writer {
     /// Write [lookUpBindings].
     if (lookUpBindings.isNotEmpty) {
       // Write doc comment for wrapper class.
-      if (wrapperDocComment != null) {
-        s.write(makeDartDoc(wrapperDocComment));
+      if (classDocComment != null) {
+        s.write(makeDartDoc(classDocComment));
       }
       // Write wrapper classs.
-      s.write('class $_wrapperClassName{\n');
+      s.write('class $_className{\n');
       // Write dylib.
       s.write('/// Holds the Dynamic library.\n');
       s.write('final $ffiLibraryPrefix.DynamicLibrary ${dylibIdentifier};\n');
@@ -125,7 +125,7 @@ class Writer {
       s.write(makeDartDoc('The symbols are looked up in [dynamicLIbrary].'));
       // Write wrapper class constructor.
       s.write(
-          '${_wrapperClassName}($ffiLibraryPrefix.DynamicLibrary dynamicLibrary): $dylibIdentifier = dynamicLibrary;\n\n');
+          '${_className}($ffiLibraryPrefix.DynamicLibrary dynamicLibrary): $dylibIdentifier = dynamicLibrary;\n\n');
       for (final b in lookUpBindings) {
         s.write(b.toBindingString(this).string);
       }

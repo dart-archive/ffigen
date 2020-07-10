@@ -64,8 +64,8 @@ class Library {
     _writer = Writer(
       lookUpBindings: lookUpBindings,
       noLookUpBindings: noLookUpBindings,
-      wrapperName: name,
-      wrapperDocComment: description,
+      className: name,
+      classDocComment: description,
       header: header,
     );
   }
