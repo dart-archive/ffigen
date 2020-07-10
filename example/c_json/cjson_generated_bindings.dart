@@ -8,7 +8,7 @@ class CJson {
   /// Holds the Dynamic library.
   final ffi.DynamicLibrary _dylib;
 
-  /// The symbols are looked up in [dynamicLIbrary].
+  /// The symbols are looked up in [dynamicLibrary].
   CJson(ffi.DynamicLibrary dynamicLibrary) : _dylib = dynamicLibrary;
 
   ffi.Pointer<ffi.Int8> cJSON_Version() {

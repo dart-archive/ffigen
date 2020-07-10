@@ -122,7 +122,7 @@ class Writer {
       s.write('final $ffiLibraryPrefix.DynamicLibrary ${dylibIdentifier};\n');
       s.write('\n');
       //Write doc comment for wrapper class constructor.
-      s.write(makeDartDoc('The symbols are looked up in [dynamicLIbrary].'));
+      s.write(makeDartDoc('The symbols are looked up in [dynamicLibrary].'));
       // Write wrapper class constructor.
       s.write(
           '${_className}($ffiLibraryPrefix.DynamicLibrary dynamicLibrary): $dylibIdentifier = dynamicLibrary;\n\n');

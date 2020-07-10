@@ -9,7 +9,7 @@ class LibClang {
   /// Holds the Dynamic library.
   final ffi.DynamicLibrary _dylib;
 
-  /// The symbols are looked up in [dynamicLIbrary].
+  /// The symbols are looked up in [dynamicLibrary].
   LibClang(ffi.DynamicLibrary dynamicLibrary) : _dylib = dynamicLibrary;
 
   /// Free the given string set.
