@@ -6,7 +6,7 @@ import 'dart:io';
 
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
-
+import 'package:dart_style/dart_style.dart' as style;
 import 'binding.dart';
 import 'utils.dart';
 import 'writer.dart';
@@ -79,7 +79,7 @@ class Library {
   ///
   /// If format is true(default), 'dartfmt -w $PATH' will be called to format the generated file.
   void generateFile(File file, {bool format = true}) {
-    file.writeAsStringSync(generate());
+    file.writeAsStringSync(generate(format: format));
     if (format) {
       _dartFmt(file.path);
     }
@@ -95,9 +95,18 @@ class Library {
   }
 
   /// Generates the bindings.
-  String generate() {
+  String generate({bool format = true}) {
     final w = writer;
-    return w.generate();
+    String generated = w.generate();
+    if (format) {
+      try {
+        generated = style.DartFormatter().format(generated);
+      } catch (e) {
+        _logger.severe('Failed to format source.');
+        print(e);
+      }
+    }
+    return generated;
   }
 
   @override

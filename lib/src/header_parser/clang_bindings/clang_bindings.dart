@@ -8,7 +8,7 @@ class Clang {
   /// Holds the Dynamic library.
   final ffi.DynamicLibrary _dylib;
 
-  /// The symbols are looked up in [dynamicLIbrary].
+  /// The symbols are looked up in [dynamicLibrary].
   Clang(ffi.DynamicLibrary dynamicLibrary) : _dylib = dynamicLibrary;
 
   /// Provides a shared context for creating translation units.
