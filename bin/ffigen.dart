@@ -14,26 +14,30 @@ import 'package:yaml/yaml.dart' as yaml;
 var _logger = Logger('ffigen.dart');
 
 void main(List<String> args) {
-  // Parses the cmd args.
-  final result = getArgResults(args);
+  try {
+    // Parses the cmd args.
+    final result = getArgResults(args);
 
-  // Setup logging level and printing.
-  setupLogger(result);
+    // Setup logging level and printing.
+    setupLogger(result);
 
-  // Create a config object.
-  final config = getConfig(result);
+    // Create a config object.
+    final config = getConfig(result);
 
-  // Parse the bindings according to config object provided.
-  final library = parser.parse(config);
+    // Parse the bindings according to config object provided.
+    final library = parser.parse(config);
 
-  if (config.sort) {
-    library.sort();
+    if (config.sort) {
+      library.sort();
+    }
+
+    // Generate file for the parsed bindings.
+    final gen = File(config.output);
+    library.generateFile(gen);
+    _logger.info('Finished, Bindings generated in ${gen?.absolute?.path}');
+  } catch (e) {
+    print(e);
   }
-
-  // Generate file for the parsed bindings.
-  final gen = File(config.output);
-  library.generateFile(gen);
-  _logger.info('Finished, Bindings generated in ${gen?.absolute?.path}');
 }
 
 Config getConfig(ArgResults result) {

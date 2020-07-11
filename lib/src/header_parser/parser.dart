@@ -39,7 +39,7 @@ Library parse(Config conf, {bool sort = false}) {
 
 var _logger = Logger('header_parser:parser.dart');
 
-/// initialises parser, clears any previous values.
+/// Initialises parser, clears any previous values.
 void initParser(Config c) {
   config = c;
 

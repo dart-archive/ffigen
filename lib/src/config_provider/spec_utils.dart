@@ -16,6 +16,15 @@ import 'declaration.dart';
 
 var _logger = Logger('config_provider:spec_utils.dart');
 
+/// Fixes a path according to current platform.
+String _fixPath(String path) {
+  if (Platform.isWindows) {
+    return path.replaceAll(p.posix.separator, p.windows.separator);
+  } else {
+    return path.replaceAll(p.windows.separator, p.posix.separator);
+  }
+}
+
 bool booleanExtractor(dynamic value) => value as bool;
 
 bool booleanValidator(String name, dynamic value) {
@@ -104,13 +113,15 @@ List<String> headersExtractor(dynamic yamlConfig) {
     final headerGlob = h as String;
     // Add file directly to header if it's not a Glob but a File.
     if (File(headerGlob).existsSync()) {
-      headers.add(headerGlob);
+      final fixedPath = _fixPath(headerGlob);
+      headers.add(fixedPath);
       _logger.fine('Adding header/file: $headerGlob');
     } else {
       final glob = Glob(headerGlob);
       for (final file in glob.listSync(followLinks: true)) {
-        headers.add(file.path);
-        _logger.fine('Adding header/file: ${file.path}');
+        final fixedPath = _fixPath(file.path);
+        headers.add(fixedPath);
+        _logger.fine('Adding header/file: ${fixedPath}');
       }
     }
   }
@@ -146,21 +157,19 @@ bool libclangDylibValidator(String name, dynamic value) {
 }
 
 String getDylibPath(String dylibParentFoler) {
+  dylibParentFoler = _fixPath(dylibParentFoler);
   String dylibPath;
   if (Platform.isMacOS) {
     dylibPath = p.join(dylibParentFoler, strings.libclang_dylib_macos);
   } else if (Platform.isWindows) {
-    // Fix path for windows if '/' is used as seperator instead of '\'
-    // because our examples input path like this.
-    final newValue = dylibParentFoler.replaceAll('/', r'\');
-    dylibPath = p.join(newValue, strings.libclang_dylib_windows);
+    dylibPath = p.join(dylibParentFoler, strings.libclang_dylib_windows);
   } else {
     dylibPath = p.join(dylibParentFoler, strings.libclang_dylib_linux);
   }
   return dylibPath;
 }
 
-String outputExtractor(dynamic value) => value as String;
+String outputExtractor(dynamic value) => _fixPath(value as String);
 
 bool outputValidator(String name, dynamic value) {
   if (value is String) {

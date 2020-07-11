@@ -80,6 +80,10 @@ class Config {
   Config._();
 
   /// Create config from Yaml map.
+  ///
+  /// If [setupLogger] is true(default), warnings/errors are logged to stdout.
+  /// If it's false, logger setup is skipped entirely and nothing is logged
+  /// unless [Logger] has been setup manually.
   factory Config.fromYaml(YamlMap map, {bool setupLogger = true}) {
     if (setupLogger) {
       // Prints warnings and errors.
@@ -96,8 +100,9 @@ class Config {
 
     final result = configspecs._checkConfigs(map, specs);
     if (!result) {
-      _logger.info('Please fix errors in Configurations and re-run the tool');
-      exit(1);
+      _logger
+          .warning('Please fix errors in Configurations and re-run the tool');
+      throw ConfigError();
     }
 
     configspecs._extract(map, specs);
@@ -159,7 +164,8 @@ class Config {
             'Path to folder containing libclang dynamic library, used to parse C headers',
         requirement: Requirement.no,
         defaultValue: () => getDylibPath(Platform.script
-            .resolve(path.join('..', 'tool', 'wrapped_libclang'))
+            .resolve(path.posix.join('..', 'tool',
+                'wrapped_libclang')) // Path needs to be in posix style here.
             .toFilePath()),
         validator: libclangDylibValidator,
         extractor: libclangDylibExtractor,
@@ -331,4 +337,18 @@ class HeaderFilter {
     this.includedInclusionHeaders = const {},
     this.excludedInclusionHeaders = const {},
   });
+}
+
+class ConfigError implements Exception {
+  final String message;
+  ConfigError([this.message]);
+
+  @override
+  String toString() {
+    if (message == null) {
+      return 'ConfigError: Invalid configurations provided.';
+    } else {
+      return 'ConfigError: $message';
+    }
+  }
 }
