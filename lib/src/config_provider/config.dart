@@ -100,8 +100,6 @@ class Config {
 
     final result = configspecs._checkConfigs(map, specs);
     if (!result) {
-      _logger
-          .warning('Please fix errors in Configurations and re-run the tool');
       throw ConfigError();
     }
 

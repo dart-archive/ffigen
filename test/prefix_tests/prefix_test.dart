@@ -9,6 +9,8 @@ import 'package:test/test.dart';
 import 'package:yaml/yaml.dart' as yaml;
 import 'package:ffigen/src/strings.dart' as strings;
 
+import '../test_utils.dart';
+
 Library actual, expected;
 final functionPrefix = 'fff';
 final structPrefix = 'sss';
@@ -58,43 +60,36 @@ enums:
     });
 
     test('Function prefix', () {
-      expect(binding(actual, '${functionPrefix}func1'),
-          binding(expected, '${functionPrefix}func1'));
+      expect(actual.getBinding('${functionPrefix}func1'),
+          expected.getBinding('${functionPrefix}func1'));
     });
     test('Struct prefix', () {
-      expect(binding(actual, '${structPrefix}Struct1'),
-          binding(expected, '${structPrefix}Struct1'));
+      expect(actual.getBinding('${structPrefix}Struct1'),
+          expected.getBinding('${structPrefix}Struct1'));
     });
     test('Enum prefix', () {
-      expect(binding(actual, '${enumPrefix}Enum1'),
-          binding(expected, '${enumPrefix}Enum1'));
+      expect(actual.getBinding('${enumPrefix}Enum1'),
+          expected.getBinding('${enumPrefix}Enum1'));
     });
     test('Function prefix-replacement', () {
       expect(
-          binding(
-              actual, '${functionPrefix}${functionPrefixReplacedWith}func2'),
-          binding(
-              expected, '${functionPrefix}${functionPrefixReplacedWith}func2'));
+          actual.getBinding(
+              '${functionPrefix}${functionPrefixReplacedWith}func2'),
+          expected.getBinding(
+              '${functionPrefix}${functionPrefixReplacedWith}func2'));
     });
     test('Struct prefix-replacement', () {
       expect(
-          binding(actual, '${structPrefix}${structPrefixReplacedWith}Struct2'),
-          binding(
-              expected, '${structPrefix}${structPrefixReplacedWith}Struct2'));
+          actual
+              .getBinding('${structPrefix}${structPrefixReplacedWith}Struct2'),
+          expected
+              .getBinding('${structPrefix}${structPrefixReplacedWith}Struct2'));
     });
     test('Enum prefix-replacement', () {
-      expect(binding(actual, '${enumPrefix}${enumPrefixReplacedWith}Enum2'),
-          binding(expected, '${enumPrefix}${enumPrefixReplacedWith}Enum2'));
+      expect(actual.getBinding('${enumPrefix}${enumPrefixReplacedWith}Enum2'),
+          expected.getBinding('${enumPrefix}${enumPrefixReplacedWith}Enum2'));
     });
   });
-}
-
-/// Extracts a binding's string with a given name from a library.
-String binding(Library lib, String name) {
-  return lib.bindings
-      .firstWhere((element) => element.name == name)
-      .toBindingString(lib.writer)
-      .string;
 }
 
 Library expectedLibrary() {

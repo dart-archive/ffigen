@@ -10,6 +10,8 @@ import 'package:test/test.dart';
 import 'package:yaml/yaml.dart' as yaml;
 import 'package:ffigen/src/strings.dart' as strings;
 
+import '../test_utils.dart';
+
 Library actual, expected;
 
 void main() {
@@ -47,20 +49,12 @@ ${strings.headerFilter}:
     });
 
     test('Struct1', () {
-      expect(binding(actual, 'Struct1'), binding(expected, 'Struct1'));
+      expect(actual.getBinding('Struct1'), expected.getBinding('Struct1'));
     });
     test('Struct2', () {
-      expect(binding(actual, 'Struct2'), binding(expected, 'Struct2'));
+      expect(actual.getBinding('Struct2'), expected.getBinding('Struct2'));
     });
   });
-}
-
-/// Extracts a binding's string from a library.
-String binding(Library lib, String name) {
-  return lib.bindings
-      .firstWhere((element) => element.name == name, orElse: () => null)
-      ?.toBindingString(lib.writer)
-      ?.string;
 }
 
 Library expectedLibrary() {

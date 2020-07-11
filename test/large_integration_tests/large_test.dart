@@ -32,7 +32,7 @@ ${strings.headerFilter}:
     - 'Documentation.h'
     - 'FataErrorHandler.h'
     - 'Index.h'
-      ''') as YamlMap);
+      ''') as YamlMap, setupLogger: false);
       final library = parse(config);
       final file = File(
         path.join('test', 'debug_generated', 'large_test_libclang.dart'),
