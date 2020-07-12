@@ -4,7 +4,6 @@
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser.dart' as parser;
 import 'package:ffigen/src/config_provider.dart';
-import 'package:logging/logging.dart';
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart' as yaml;
 import 'package:ffigen/src/strings.dart' as strings;
@@ -23,12 +22,6 @@ final enumPrefixReplacedWith = 're';
 void main() {
   group('prefix_test', () {
     setUpAll(() {
-      Logger.root.onRecord.listen((log) {
-        if (log.level > Level.INFO) {
-          print(
-              'prefix_test.dart: ${log.level.name.padRight(8)}: ${log.message}');
-        }
-      });
       expected = expectedLibrary();
       actual = parser.parse(Config.fromYaml(yaml.loadYaml('''
 ${strings.name}: 'NativeLibrary'
@@ -60,34 +53,34 @@ enums:
     });
 
     test('Function prefix', () {
-      expect(actual.getBinding('${functionPrefix}func1'),
-          expected.getBinding('${functionPrefix}func1'));
+      expect(actual.getBindingAsString('${functionPrefix}func1'),
+          expected.getBindingAsString('${functionPrefix}func1'));
     });
     test('Struct prefix', () {
-      expect(actual.getBinding('${structPrefix}Struct1'),
-          expected.getBinding('${structPrefix}Struct1'));
+      expect(actual.getBindingAsString('${structPrefix}Struct1'),
+          expected.getBindingAsString('${structPrefix}Struct1'));
     });
     test('Enum prefix', () {
-      expect(actual.getBinding('${enumPrefix}Enum1'),
-          expected.getBinding('${enumPrefix}Enum1'));
+      expect(actual.getBindingAsString('${enumPrefix}Enum1'),
+          expected.getBindingAsString('${enumPrefix}Enum1'));
     });
     test('Function prefix-replacement', () {
       expect(
-          actual.getBinding(
+          actual.getBindingAsString(
               '${functionPrefix}${functionPrefixReplacedWith}func2'),
-          expected.getBinding(
+          expected.getBindingAsString(
               '${functionPrefix}${functionPrefixReplacedWith}func2'));
     });
     test('Struct prefix-replacement', () {
       expect(
           actual
-              .getBinding('${structPrefix}${structPrefixReplacedWith}Struct2'),
+              .getBindingAsString('${structPrefix}${structPrefixReplacedWith}Struct2'),
           expected
-              .getBinding('${structPrefix}${structPrefixReplacedWith}Struct2'));
+              .getBindingAsString('${structPrefix}${structPrefixReplacedWith}Struct2'));
     });
     test('Enum prefix-replacement', () {
-      expect(actual.getBinding('${enumPrefix}${enumPrefixReplacedWith}Enum2'),
-          expected.getBinding('${enumPrefix}${enumPrefixReplacedWith}Enum2'));
+      expect(actual.getBindingAsString('${enumPrefix}${enumPrefixReplacedWith}Enum2'),
+          expected.getBindingAsString('${enumPrefix}${enumPrefixReplacedWith}Enum2'));
     });
   });
 }

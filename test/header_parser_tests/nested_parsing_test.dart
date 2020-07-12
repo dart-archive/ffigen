@@ -5,7 +5,6 @@
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser.dart' as parser;
 import 'package:ffigen/src/config_provider.dart';
-import 'package:logging/logging.dart';
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart' as yaml;
 import 'package:ffigen/src/strings.dart' as strings;
@@ -15,31 +14,24 @@ import '../test_utils.dart';
 Library actual, expected;
 
 void main() {
-  group('structs_test', () {
+  group('nested_parsing_test', () {
     setUpAll(() {
       expected = expectedLibrary();
-
-      Logger.root.onRecord.listen((log) {
-        if (log.level > Level.INFO) {
-          print(
-              'functions_test.dart: ${log.level.name.padRight(8)}: ${log.message}');
-        }
-      });
       actual = parser.parse(
         Config.fromYaml(yaml.loadYaml('''
 ${strings.name}: 'NativeLibrary'
-${strings.description}: 'Structs Test'
+${strings.description}: 'Nested Parsing Test'
 ${strings.output}: 'unused'
 ${strings.libclang_dylib_folder}: 'tool/wrapped_libclang'
 ${strings.headers}:
-  - 'test/header_parser_tests/structs.h'
+  - 'test/header_parser_tests/nested_parsing.h'
 structs:
   include:
     names:
       - Struct1
 ${strings.headerFilter}:
   ${strings.include}:
-    - 'structs.h'
+    - 'nested_parsing.h'
         ''') as yaml.YamlMap),
       );
     });
@@ -49,10 +41,10 @@ ${strings.headerFilter}:
     });
 
     test('Struct1', () {
-      expect(actual.getBinding('Struct1'), expected.getBinding('Struct1'));
+      expect(actual.getBindingAsString('Struct1'), expected.getBindingAsString('Struct1'));
     });
     test('Struct2', () {
-      expect(actual.getBinding('Struct2'), expected.getBinding('Struct2'));
+      expect(actual.getBindingAsString('Struct2'), expected.getBindingAsString('Struct2'));
     });
   });
 }

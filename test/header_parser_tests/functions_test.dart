@@ -5,7 +5,6 @@
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser.dart' as parser;
 import 'package:ffigen/src/config_provider.dart';
-import 'package:logging/logging.dart';
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart' as yaml;
 import 'package:ffigen/src/strings.dart' as strings;
@@ -18,13 +17,6 @@ void main() {
   group('functions_test', () {
     setUpAll(() {
       expected = expectedLibrary();
-
-      Logger.root.onRecord.listen((log) {
-        if (log.level > Level.INFO) {
-          print(
-              'functions_test.dart: ${log.level.name.padRight(8)}: ${log.message}');
-        }
-      });
       actual = parser.parse(
         Config.fromYaml(yaml.loadYaml('''
 ${strings.name}: 'NativeLibrary'
@@ -44,17 +36,17 @@ ${strings.headerFilter}:
     });
 
     test('func1', () {
-      expect(actual.getBinding('func1'), expected.getBinding('func1'));
+      expect(actual.getBindingAsString('func1'), expected.getBindingAsString('func1'));
     });
     test('func2', () {
-      expect(actual.getBinding('func2'), expected.getBinding('func2'));
+      expect(actual.getBindingAsString('func2'), expected.getBindingAsString('func2'));
     });
     test('func3', () {
-      expect(actual.getBinding('func3'), expected.getBinding('func3'));
+      expect(actual.getBindingAsString('func3'), expected.getBindingAsString('func3'));
     });
 
     test('func4', () {
-      expect(actual.getBinding('func4'), expected.getBinding('func4'));
+      expect(actual.getBindingAsString('func4'), expected.getBindingAsString('func4'));
     });
   });
 }
