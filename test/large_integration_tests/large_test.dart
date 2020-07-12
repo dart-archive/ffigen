@@ -41,8 +41,78 @@ ${strings.headerFilter}:
 
       try {
         final actual = file.readAsStringSync();
-        final expected = File(path.join(
-                'third_party', 'libclang', 'expected_libclang_bindings.dart'))
+        final expected = File(path.join('test', 'large_integration_tests',
+                '_expected_libclang_bindings.dart'))
+            .readAsStringSync();
+        expect(actual, expected);
+        if (file.existsSync()) {
+          file.delete();
+        }
+      } catch (e) {
+        print('Failed test: Debug generated file: ${file.absolute?.path}');
+        rethrow;
+      }
+    });
+
+    test('CJSON test', () {
+      final config = Config.fromYaml(loadYaml('''
+${strings.name}: CJson
+${strings.description}: Bindings to Cjson.
+${strings.output}: unused
+${strings.comments}: full
+${strings.libclang_dylib_folder}: tool/wrapped_libclang
+${strings.arrayWorkaround}: true
+${strings.headers}:
+  - third_party/cjson_library/cJSON.h
+${strings.headerFilter}:
+  include:
+    - 'cJSON.h'
+      ''') as YamlMap, setupLogger: false);
+      final library = parse(config);
+      final file = File(
+        path.join('test', 'debug_generated', 'large_test_cjson.dart'),
+      );
+      library.generateFile(file);
+
+      try {
+        final actual = file.readAsStringSync();
+        final expected = File(path.join('test', 'large_integration_tests',
+                '_expected_cjson_bindings.dart'))
+            .readAsStringSync();
+        expect(actual, expected);
+        if (file.existsSync()) {
+          file.delete();
+        }
+      } catch (e) {
+        print('Failed test: Debug generated file: ${file.absolute?.path}');
+        rethrow;
+      }
+    });
+
+    test('SQLite test', () {
+      final config = Config.fromYaml(loadYaml('''
+${strings.name}: SQLite
+${strings.description}: Bindings to SQLite.
+${strings.output}: unused
+${strings.libclang_dylib_folder}: tool/wrapped_libclang
+${strings.arrayWorkaround}: true
+${strings.comments}: full
+${strings.headers}:
+  - third_party/sqlite/sqlite3.h
+${strings.headerFilter}:
+  include:
+    - 'sqlite3.h'
+      ''') as YamlMap, setupLogger: false);
+      final library = parse(config);
+      final file = File(
+        path.join('test', 'debug_generated', 'large_test_sqlite.dart'),
+      );
+      library.generateFile(file);
+
+      try {
+        final actual = file.readAsStringSync();
+        final expected = File(path.join('test', 'large_integration_tests',
+                '_expected_sqlite_bindings.dart'))
             .readAsStringSync();
         expect(actual, expected);
         if (file.existsSync()) {

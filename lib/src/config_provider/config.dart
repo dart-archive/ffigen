@@ -199,10 +199,9 @@ class Config {
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(declarationTypeName: 'Function'),
+        defaultValue: () => Declaration(),
         extractedResult: (dynamic result) {
           functionDecl = result as Declaration;
-          functionDecl.declarationTypeName = 'Function';
         },
       ),
       strings.structs: Specification<Declaration>(
@@ -210,10 +209,9 @@ class Config {
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(declarationTypeName: 'Struct'),
+        defaultValue: () => Declaration(),
         extractedResult: (dynamic result) {
           structDecl = result as Declaration;
-          structDecl.declarationTypeName = 'Struct';
         },
       ),
       strings.enums: Specification<Declaration>(
@@ -221,10 +219,9 @@ class Config {
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(declarationTypeName: 'Enum'),
+        defaultValue: () => Declaration(),
         extractedResult: (dynamic result) {
           enumClassDecl = result as Declaration;
-          enumClassDecl.declarationTypeName = 'Enum';
         },
       ),
       strings.sizemap: Specification<Map<int, SupportedNativeType>>(
