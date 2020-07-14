@@ -36,7 +36,7 @@ typedef _dart_sum = int Function(int a,int b);
 - clone/download this repository.
 - Build it (see [building](#building)).
 - Add this package as dev_dependency in your `pubspec.yaml`.
-- Configurations must be provided in `pubspec.yaml` or in a custom `yaml` file (see [configurations](#configurations)).
+- Configurations must be provided in `pubspec.yaml` or in a custom `YAML` file (see [configurations](#configurations)).
 - Run the tool- `pub run ffigen`.
 
 ## Building
@@ -165,7 +165,7 @@ functions:
     <td>sort</td>
     <td>no</td>
     <td>Sort the bindings according to name.<br>
-      <b>Default: false</b>
+      <b>Default: false</b>, i.e keep the order as in the source files.
     </td>
     <td><pre lang='yaml'>sort: true</pre></td>
   </tr>
@@ -287,8 +287,9 @@ class ArrayHelper_CXFileUniqueID_data_level0 {
 ```
 
 ## Limitations
-1. Function's passing/returning structs by value are skipped. [Issue #3](https://github.com/dart-lang/ffigen/issues/3)
-2. Structs containing structs will have all their members removed. [Issue #4](https://github.com/dart-lang/ffigen/issues/4)
+1. Multi OS support for types such as long. [Issue #7](https://github.com/dart-lang/ffigen/issues/7)
+2. Function's passing/returning structs by value are skipped. [Issue #3](https://github.com/dart-lang/ffigen/issues/3)
+3. Structs containing structs will have all their members removed. [Issue #4](https://github.com/dart-lang/ffigen/issues/4)
 
 ## Trying out examples
 1. `cd examples/<example_u_want_to_run>`, Run `pub get`.
