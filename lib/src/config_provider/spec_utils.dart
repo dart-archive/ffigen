@@ -16,8 +16,8 @@ import 'declaration.dart';
 
 var _logger = Logger('config_provider:spec_utils.dart');
 
-/// Fixes a path according to current platform.
-String _fixPath(String path) {
+/// FReplaces the path separators according to current platform.
+String _replaceSeparators(String path) {
   if (Platform.isWindows) {
     return path.replaceAll(p.posix.separator, p.windows.separator);
   } else {
@@ -113,13 +113,13 @@ List<String> headersExtractor(dynamic yamlConfig) {
     final headerGlob = h as String;
     // Add file directly to header if it's not a Glob but a File.
     if (File(headerGlob).existsSync()) {
-      final fixedPath = _fixPath(headerGlob);
-      headers.add(fixedPath);
+      final osSpecificPath = _replaceSeparators(headerGlob);
+      headers.add(osSpecificPath);
       _logger.fine('Adding header/file: $headerGlob');
     } else {
       final glob = Glob(headerGlob);
       for (final file in glob.listSync(followLinks: true)) {
-        final fixedPath = _fixPath(file.path);
+        final fixedPath = _replaceSeparators(file.path);
         headers.add(fixedPath);
         _logger.fine('Adding header/file: ${fixedPath}');
       }
@@ -157,7 +157,7 @@ bool libclangDylibValidator(String name, dynamic value) {
 }
 
 String getDylibPath(String dylibParentFoler) {
-  dylibParentFoler = _fixPath(dylibParentFoler);
+  dylibParentFoler = _replaceSeparators(dylibParentFoler);
   String dylibPath;
   if (Platform.isMacOS) {
     dylibPath = p.join(dylibParentFoler, strings.libclang_dylib_macos);
@@ -169,7 +169,7 @@ String getDylibPath(String dylibParentFoler) {
   return dylibPath;
 }
 
-String outputExtractor(dynamic value) => _fixPath(value as String);
+String outputExtractor(dynamic value) => _replaceSeparators(value as String);
 
 bool outputValidator(String name, dynamic value) {
   if (value is String) {

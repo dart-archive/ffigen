@@ -14,22 +14,16 @@ import '../utils.dart';
 
 var _logger = Logger('header_parser:structdecl_parser.dart');
 
-/// Holds all data required while parsing a struct decl.
-class _Holder {
+/// Holds temporary information regarding [struc] while parsing.
+class _ParsedStruc {
   Struc struc;
   bool nestedStructMember = false;
   bool unimplementedMemberType = false;
   bool arrayMember = false;
-  _Holder();
+  _ParsedStruc();
 }
 
-/// Temporarily holds struc before its returned by [parseStructDeclaration].
-///
-/// Maintained like a Stack.
-List<_Holder> _holders = [];
-_Holder get _current => _holders.last;
-_Holder _getCurrentAndDispose() => _holders.removeLast();
-void _addNewHolder() => _holders.add(_Holder());
+final _stack = Stack<_ParsedStruc>();
 
 /// Parses a struct declaration.
 Struc parseStructDeclaration(
@@ -42,7 +36,7 @@ Struc parseStructDeclaration(
   /// when they are passed/returned by an included function.)
   bool ignoreFilter = false,
 }) {
-  _addNewHolder();
+  _stack.push(_ParsedStruc());
   final structName = name ?? cursor.spelling();
 
   if (structName.isEmpty) {
@@ -51,24 +45,24 @@ Struc parseStructDeclaration(
       (!isSeenStruc(structName))) {
     _logger.fine(
         '++++ Adding Structure: structName: ${structName}, ${cursor.completeStringRepr()}');
-    _current.struc = Struc(
+    _stack.top.struc = Struc(
       originalName: structName,
       name: config.structDecl.getPrefixedName(structName),
       dartDoc: getCursorDocComment(cursor),
     );
     // Adding to seen here to stop recursion if a struct has itself as a
     // member, members are updated later.
-    addStrucToSeen(structName, _current.struc);
+    addStrucToSeen(structName, _stack.top.struc);
     _setStructMembers(cursor);
   }
 
-  return _getCurrentAndDispose().struc;
+  return _stack.pop().struc;
 }
 
 void _setStructMembers(Pointer<clang_types.CXCursor> cursor) {
-  _current.arrayMember = false;
-  _current.nestedStructMember = false;
-  _current.unimplementedMemberType = false;
+  _stack.top.arrayMember = false;
+  _stack.top.nestedStructMember = false;
+  _stack.top.unimplementedMemberType = false;
 
   final resultCode = clang.clang_visitChildren_wrap(
       cursor,
@@ -79,24 +73,24 @@ void _setStructMembers(Pointer<clang_types.CXCursor> cursor) {
   visitChildrenResultChecker(resultCode);
 
   // Returning null to exclude the struct members as it has a struct by value field.
-  if (_current.arrayMember && !config.arrayWorkaround) {
+  if (_stack.top.arrayMember && !config.arrayWorkaround) {
     _logger.fine(
         '---- Removed Struct members, reason: struct has array members ${cursor.completeStringRepr()}');
     _logger.warning(
-        'Removed All Struct Members from: ${_current.struc.name}(${_current.struc.originalName}), Array members not supported');
-    return _current.struc.members.clear();
-  } else if (_current.nestedStructMember) {
+        'Removed All Struct Members from: ${_stack.top.struc.name}(${_stack.top.struc.originalName}), Array members not supported');
+    return _stack.top.struc.members.clear();
+  } else if (_stack.top.nestedStructMember) {
     _logger.fine(
         '---- Removed Struct members, reason: struct has struct members ${cursor.completeStringRepr()}');
     _logger.warning(
-        'Removed All Struct Members from ${_current.struc.name}(${_current.struc.originalName}), Nested Structures not supported.');
-    return _current.struc.members.clear();
-  } else if (_current.unimplementedMemberType) {
+        'Removed All Struct Members from ${_stack.top.struc.name}(${_stack.top.struc.originalName}), Nested Structures not supported.');
+    return _stack.top.struc.members.clear();
+  } else if (_stack.top.unimplementedMemberType) {
     _logger.fine(
         '---- Removed Struct members, reason: member with unimplementedtype ${cursor.completeStringRepr()}');
     _logger.warning(
-        'Removed All Struct Members from ${_current.struc.name}(${_current.struc.originalName}), struct member has an unsupported type.');
-    return _current.struc.members.clear();
+        'Removed All Struct Members from ${_stack.top.struc.name}(${_stack.top.struc.originalName}), struct member has an unsupported type.');
+    return _stack.top.struc.members.clear();
   }
 }
 
@@ -115,21 +109,21 @@ int _structMembersVisitor(Pointer<clang_types.CXCursor> cursor,
       if (mt.broadType == BroadType.Struct) {
         // Setting this flag will exclude adding members for this struct's
         // bindings.
-        _current.nestedStructMember = true;
+        _stack.top.nestedStructMember = true;
       } else if (mt.broadType == BroadType.ConstantArray) {
-        _current.arrayMember = true;
+        _stack.top.arrayMember = true;
         if (mt.child.broadType == BroadType.Struct) {
           // Setting this flag will exclude adding members for this struct's
           // bindings.
-          _current.nestedStructMember = true;
+          _stack.top.nestedStructMember = true;
         }
       }
 
       if (mt.getBaseType().broadType == BroadType.Unimplemented) {
-        _current.unimplementedMemberType = true;
+        _stack.top.unimplementedMemberType = true;
       }
 
-      _current.struc.members.add(
+      _stack.top.struc.members.add(
         Member(
           dartDoc: getCursorDocComment(
             cursor,

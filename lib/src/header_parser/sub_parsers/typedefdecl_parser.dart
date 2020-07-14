@@ -15,26 +15,21 @@ import '../utils.dart';
 
 var _logger = Logger('header_parser:typedefdecl_parser.dart');
 
-/// Holds all data required while parsing a typedef decl.
-class _Holder {
+/// Holds temporary information regarding a typedef referenced [Binding]
+/// while parsing.
+class _ParsedTypedef {
   Binding binding;
   String typedefName;
-  _Holder();
+  _ParsedTypedef();
 }
 
-/// Temporarily holds the binding before its returned by [parseTypedefDeclaration].
-///
-/// Maintained like a Stack.
-List<_Holder> _holders = [];
-_Holder get _current => _holders.last;
-_Holder _getCurrentAndDispose() => _holders.removeLast();
-void _addNewHolder() => _holders.add(_Holder());
+final _stack = Stack<_ParsedTypedef>();
 
 /// Parses a typedef declaration.
 Binding parseTypedefDeclaration(Pointer<clang_types.CXCursor> cursor) {
-  _addNewHolder();
+  _stack.push(_ParsedTypedef());
   // Name of typedef.
-  _current.typedefName = cursor.spelling();
+  _stack.top.typedefName = cursor.spelling();
 
   final resultCode = clang.clang_visitChildren_wrap(
     cursor,
@@ -44,7 +39,7 @@ Binding parseTypedefDeclaration(Pointer<clang_types.CXCursor> cursor) {
   );
 
   visitChildrenResultChecker(resultCode);
-  return _getCurrentAndDispose().binding;
+  return _stack.pop().binding;
 }
 
 /// Visitor for extracting binding for a TypedefDeclarations of a
@@ -60,12 +55,12 @@ int _typedefdeclarationCursorVisitor(Pointer<clang_types.CXCursor> cursor,
 
     switch (clang.clang_getCursorKind_wrap(cursor)) {
       case clang_types.CXCursorKind.CXCursor_StructDecl:
-        _current.binding =
-            parseStructDeclaration(cursor, name: _current.typedefName);
+        _stack.top.binding =
+            parseStructDeclaration(cursor, name: _stack.top.typedefName);
         break;
       case clang_types.CXCursorKind.CXCursor_EnumDecl:
-        _current.binding =
-            parseEnumDeclaration(cursor, name: _current.typedefName);
+        _stack.top.binding =
+            parseEnumDeclaration(cursor, name: _stack.top.typedefName);
         break;
       default:
         _logger.finest('typedefdeclarationCursorVisitor: Ignored');
