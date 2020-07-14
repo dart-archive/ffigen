@@ -36,7 +36,7 @@ typedef _dart_sum = int Function(int a,int b);
 - clone/download this repository.
 - Build it (see [building](#building)).
 - Add this package as dev_dependency in your `pubspec.yaml`.
-- Configurations must be provided in `pubspec.yaml` or in a custom `YAML` file (see [configurations](#configurations)).
+- Configurations must be provided in `pubspec.yaml` or in a custom YAML file (see [configurations](#configurations)).
 - Run the tool- `pub run ffigen`.
 
 ## Building
@@ -57,8 +57,8 @@ A dynamic library for a wrapper to libclang needs to be generated as it is used 
 
 ## Configurations
 Configurations can be provided in 2 ways-
-1. In your project's `pubspec.yaml` file under the key `ffigen`.
-2. Via a custom yaml file. You can then specify this file while running -
+1. In the project's `pubspec.yaml` file under the key `ffigen`.
+2. Via a custom YAML file, then specify this file while running -
 `pub run ffigen --config config.yaml`
 
 The following configuration options are available-
@@ -136,7 +136,7 @@ functions:
   <tr>
     <td>array-workaround</td>
     <td>no</td>
-    <td>Should generate workaround for fixed arrays in Structs. See [Array Workaround](#array-workaround)
+    <td>Should generate workaround for fixed arrays in Structs. See <a href="#array-workaround">Array Workaround</a><br>
       <b>Default: false</b>
     </td>
     <td><pre lang='yaml'>array-workaround: true</pre></td>
@@ -147,9 +147,9 @@ functions:
     <td>Extract documentation comments for declarations.<br>
       <i>Options: brief/full/none</i><br>
       <b>Default: brief</b><br>
-      By default clang only parses documentation comments. If you need
-      ordinary comments (starting with // or /*) then add<br>
-      <i>-fparse-all-comments</i> to <i>compiler-opts</i>.
+      By default clang only parses documentation comments. To enable
+      ordinary comments (starting with // or /*) add<br>
+      <code>-fparse-all-comments</code> to <code>compiler-opts</code>.
     </td>
     <td><pre lang='yaml'>comments: 'full'</pre></td>
   </tr>
@@ -158,7 +158,7 @@ functions:
     <td>no</td>
     <td>Path to the folder containing dynamic library for libclang wrapper.<br>
     Note: This is meant for programatic use of this package, and isn't required
-    if you are using it via the <i>pub run ffigen</i> command.<br>
+    when using it via the <code>pub run ffigen</code> command.<br>
       <b>Default: tool/wrapped_libclang</b>
     </td>
     <td><pre lang='yaml'>libclang-dylib-folder: 'tool/wrapped_libclang'</pre></td>
@@ -192,9 +192,9 @@ preamble: |
   <tr>
     <td>size-map</td>
     <td>no</td>
-    <td>Size of integers to use.<br>
+    <td>Size of integers to use (in bytes).<br>
     <b>The defaults (see example) <i>may</i> not be portable on all OS.
-    Do not change these unless you are sure.</b>
+    Do not change these unless absolutely sure.</b>
     </td>
     <td><pre lang='yaml'>
 # These are optional and also default,
