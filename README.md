@@ -157,6 +157,8 @@ functions:
     <td>libclang-dylib-folder</td>
     <td>no</td>
     <td>Path to the folder containing dynamic library for libclang wrapper.<br>
+    Note: This is meant for programatic use of this package, and isn't required
+    if you are using it via the <i>pub run ffigen</i> command.<br>
       <b>Default: tool/wrapped_libclang</b>
     </td>
     <td><pre lang='yaml'>libclang-dylib-folder: 'tool/wrapped_libclang'</pre></td>
@@ -191,7 +193,8 @@ preamble: |
     <td>size-map</td>
     <td>no</td>
     <td>Size of integers to use.<br>
-    <b>Do not change these unless you are sure.</b>
+    <b>The defaults (see example) <i>may</i> not be portable on all OS.
+    Do not change these unless you are sure.</b>
     </td>
     <td><pre lang='yaml'>
 # These are optional and also default,
