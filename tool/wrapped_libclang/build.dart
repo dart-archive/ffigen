@@ -102,6 +102,7 @@ ProcessResult runClangProcess(Options options) {
       '-o',
       options.outputfilename,
       options.moduleDefPath,
+      '-Wno-nullability-completeness'
     ],
   );
   return result;
