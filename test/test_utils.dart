@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator.dart';
+import 'package:logging/logging.dart';
 
 /// Extracts a binding's string from a library.
 
@@ -38,4 +39,11 @@ class NotFoundException implements Exception {
   String toString() {
     return message;
   }
+}
+
+void logWarnings() {
+  Logger.root.level = Level.WARNING;
+  Logger.root.onRecord.listen((record) {
+    print('${record.level.name.padRight(8)}: ${record.message}');
+  });
 }

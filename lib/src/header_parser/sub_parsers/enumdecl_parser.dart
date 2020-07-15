@@ -13,7 +13,7 @@ import '../data.dart' show clang;
 import '../includer.dart';
 import '../utils.dart';
 
-var _logger = Logger('header_parser:enumdecl_parser.dart');
+var _logger = Logger('header_parser.enumdecl_parser');
 
 /// Holds temporary information regarding [EnumClass] while parsing.
 class _ParsedEnum {

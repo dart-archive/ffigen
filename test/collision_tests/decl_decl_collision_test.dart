@@ -5,8 +5,13 @@
 import 'package:ffigen/src/code_generator.dart';
 import 'package:test/test.dart';
 
+import '../test_utils.dart';
+
 void main() {
   group('decl_decl_collision_test', () {
+    setUpAll(() {
+      logWarnings();
+    });
     test('declaration conflict', () {
       final l1 = Library(name: 'Bindings', bindings: [
         Struc(name: 'TestStruc'),

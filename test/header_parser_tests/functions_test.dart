@@ -16,6 +16,7 @@ Library actual, expected;
 void main() {
   group('functions_test', () {
     setUpAll(() {
+      logWarnings();
       expected = expectedLibrary();
       actual = parser.parse(
         Config.fromYaml(yaml.loadYaml('''
@@ -36,17 +37,21 @@ ${strings.headerFilter}:
     });
 
     test('func1', () {
-      expect(actual.getBindingAsString('func1'), expected.getBindingAsString('func1'));
+      expect(actual.getBindingAsString('func1'),
+          expected.getBindingAsString('func1'));
     });
     test('func2', () {
-      expect(actual.getBindingAsString('func2'), expected.getBindingAsString('func2'));
+      expect(actual.getBindingAsString('func2'),
+          expected.getBindingAsString('func2'));
     });
     test('func3', () {
-      expect(actual.getBindingAsString('func3'), expected.getBindingAsString('func3'));
+      expect(actual.getBindingAsString('func3'),
+          expected.getBindingAsString('func3'));
     });
 
     test('func4', () {
-      expect(actual.getBindingAsString('func4'), expected.getBindingAsString('func4'));
+      expect(actual.getBindingAsString('func4'),
+          expected.getBindingAsString('func4'));
     });
   });
 }

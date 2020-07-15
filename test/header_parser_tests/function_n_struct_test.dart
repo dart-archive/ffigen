@@ -16,6 +16,7 @@ Library actual, expected;
 void main() {
   group('function_n_struct_test', () {
     setUpAll(() {
+      logWarnings();
       expected = expectedLibrary();
       actual = parser.parse(
         Config.fromYaml(yaml.loadYaml('''
@@ -25,7 +26,7 @@ ${strings.output}: 'unused'
 ${strings.libclang_dylib_folder}: 'tool/wrapped_libclang'
 ${strings.headers}:
   - 'test/header_parser_tests/function_n_struct.h'
-        ''') as yaml.YamlMap, setupLogger: false),
+        ''') as yaml.YamlMap),
       );
     });
 

@@ -32,7 +32,7 @@ ${strings.headerFilter}:
     - 'Documentation.h'
     - 'FataErrorHandler.h'
     - 'Index.h'
-      ''') as YamlMap, setupLogger: false);
+      ''') as YamlMap);
       final library = parse(config);
       final file = File(
         path.join('test', 'debug_generated', 'large_test_libclang.dart'),
@@ -67,7 +67,7 @@ ${strings.headers}:
 ${strings.headerFilter}:
   include:
     - 'cJSON.h'
-      ''') as YamlMap, setupLogger: false);
+      ''') as YamlMap);
       final library = parse(config);
       final file = File(
         path.join('test', 'debug_generated', 'large_test_cjson.dart'),
@@ -102,7 +102,7 @@ ${strings.headers}:
 ${strings.headerFilter}:
   include:
     - 'sqlite3.h'
-      ''') as YamlMap, setupLogger: false);
+      ''') as YamlMap);
       final library = parse(config);
       final file = File(
         path.join('test', 'debug_generated', 'large_test_sqlite.dart'),

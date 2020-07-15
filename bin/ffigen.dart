@@ -11,7 +11,7 @@ import 'package:ffigen/src/header_parser.dart' as parser;
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart' as yaml;
 
-var _logger = Logger('ffigen.dart');
+var _logger = Logger('ffigen');
 
 void main(List<String> args) {
   // Parses the cmd args.
@@ -75,7 +75,7 @@ Config getConfigFromPubspec() {
     _logger.severe("Couldn't find an entry for '$configKey' in $pubspecName.");
     exit(1);
   }
-  return Config.fromYaml(bindingsConfigMap, setupLogger: false);
+  return Config.fromYaml(bindingsConfigMap);
 }
 
 /// Extracts configuration from a custom yaml file.
@@ -91,7 +91,7 @@ Config getConfigFromCustomYaml(String yamlPath) {
   final bindingsConfigMap =
       yaml.loadYaml(yamlFile.readAsStringSync()) as yaml.YamlMap;
 
-  return Config.fromYaml(bindingsConfigMap, setupLogger: false);
+  return Config.fromYaml(bindingsConfigMap);
 }
 
 /// Parses the cmd line arguments.

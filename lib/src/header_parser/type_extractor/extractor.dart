@@ -16,7 +16,7 @@ import '../translation_unit_parser.dart';
 import '../type_extractor/cxtypekindmap.dart';
 import '../utils.dart';
 
-var _logger = Logger('header_parser:extractor.dart');
+var _logger = Logger('header_parser.extractor');
 const _padding = '  ';
 
 /// Converts cxtype to a typestring code_generator can accept.

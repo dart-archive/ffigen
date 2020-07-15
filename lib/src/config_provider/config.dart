@@ -18,7 +18,7 @@ import '../strings.dart' as strings;
 import 'declaration.dart';
 import 'spec_utils.dart';
 
-var _logger = Logger('config_provider:config.dart');
+var _logger = Logger('config_provider.config');
 
 /// Provides configurations to other modules.
 ///
@@ -80,19 +80,7 @@ class Config {
   Config._();
 
   /// Create config from Yaml map.
-  ///
-  /// If [setupLogger] is true(default), warnings/errors are logged to stdout.
-  /// If it's false, logger setup is skipped entirely and nothing is logged
-  /// unless [Logger] has been setup manually.
-  factory Config.fromYaml(YamlMap map, {bool setupLogger = true}) {
-    if (setupLogger) {
-      // Prints warnings and errors.
-      Logger.root.onRecord.listen((record) {
-        if (record.level > Level.INFO) {
-          print('${record.level.name.padRight(8)}: ${record.message}');
-        }
-      });
-    }
+  factory Config.fromYaml(YamlMap map) {
     final configspecs = Config._();
     _logger.finest('Config Map: ' + map.toString());
 

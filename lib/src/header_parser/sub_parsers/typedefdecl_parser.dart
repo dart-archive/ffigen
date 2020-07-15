@@ -13,7 +13,7 @@ import '../sub_parsers/enumdecl_parser.dart';
 import '../sub_parsers/structdecl_parser.dart';
 import '../utils.dart';
 
-var _logger = Logger('header_parser:typedefdecl_parser.dart');
+var _logger = Logger('header_parser.typedefdecl_parser');
 
 /// Holds temporary information regarding a typedef referenced [Binding]
 /// while parsing.

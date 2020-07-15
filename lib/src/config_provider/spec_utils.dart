@@ -14,9 +14,9 @@ import '../strings.dart' as strings;
 import './config.dart';
 import 'declaration.dart';
 
-var _logger = Logger('config_provider:spec_utils.dart');
+var _logger = Logger('config_provider.spec_utils');
 
-/// FReplaces the path separators according to current platform.
+/// Replaces the path separators according to current platform.
 String _replaceSeparators(String path) {
   if (Platform.isWindows) {
     return path.replaceAll(p.posix.separator, p.windows.separator);

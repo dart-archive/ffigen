@@ -16,6 +16,7 @@ Library actual, expected;
 void main() {
   group('nested_parsing_test', () {
     setUpAll(() {
+      logWarnings();
       expected = expectedLibrary();
       actual = parser.parse(
         Config.fromYaml(yaml.loadYaml('''
@@ -41,10 +42,12 @@ ${strings.headerFilter}:
     });
 
     test('Struct1', () {
-      expect(actual.getBindingAsString('Struct1'), expected.getBindingAsString('Struct1'));
+      expect(actual.getBindingAsString('Struct1'),
+          expected.getBindingAsString('Struct1'));
     });
     test('Struct2', () {
-      expect(actual.getBindingAsString('Struct2'), expected.getBindingAsString('Struct2'));
+      expect(actual.getBindingAsString('Struct2'),
+          expected.getBindingAsString('Struct2'));
     });
   });
 }
