@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
@@ -43,7 +44,9 @@ var _logger = Logger('header_parser:parser.dart');
 void initParser(Config c) {
   config = c;
 
-  clang = clang_types.Clang(DynamicLibrary.open(config.libclang_dylib_path));
+  clang = clang_types.Clang(DynamicLibrary.open(
+      File(config.libclang_dylib_path).absolute?.path ??
+          config.libclang_dylib_path));
 }
 
 /// Parses source files and adds generated bindings to [bindings].
