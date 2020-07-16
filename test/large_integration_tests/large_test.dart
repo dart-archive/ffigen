@@ -90,6 +90,8 @@ ${strings.headerFilter}:
     });
 
     test('SQLite test', () {
+      // Excluding functions that use 'va_list' because it can either be a
+      // Pointer<__va_list_tag> or int depending on the OS.
       final config = Config.fromYaml(loadYaml('''
 ${strings.name}: SQLite
 ${strings.description}: Bindings to SQLite.
@@ -100,8 +102,14 @@ ${strings.comments}: full
 ${strings.headers}:
   - third_party/sqlite/sqlite3.h
 ${strings.headerFilter}:
-  include:
+  ${strings.include}:
     - 'sqlite3.h'
+${strings.functions}:
+  ${strings.exclude}:
+    ${strings.names}:
+      - sqlite3_vmprintf
+      - sqlite3_vsnprintf
+      - sqlite3_str_vappendf
       ''') as YamlMap);
       final library = parse(config);
       final file = File(

@@ -368,21 +368,6 @@ class SQLite {
 
   _dart_sqlite3_mprintf _sqlite3_mprintf;
 
-  ffi.Pointer<ffi.Int8> sqlite3_vmprintf(
-    ffi.Pointer<ffi.Int8> arg0,
-    ffi.Pointer<__va_list_tag> arg1,
-  ) {
-    _sqlite3_vmprintf ??=
-        _dylib.lookupFunction<_c_sqlite3_vmprintf, _dart_sqlite3_vmprintf>(
-            'sqlite3_vmprintf');
-    return _sqlite3_vmprintf(
-      arg0,
-      arg1,
-    );
-  }
-
-  _dart_sqlite3_vmprintf _sqlite3_vmprintf;
-
   ffi.Pointer<ffi.Int8> sqlite3_snprintf(
     int arg0,
     ffi.Pointer<ffi.Int8> arg1,
@@ -399,25 +384,6 @@ class SQLite {
   }
 
   _dart_sqlite3_snprintf _sqlite3_snprintf;
-
-  ffi.Pointer<ffi.Int8> sqlite3_vsnprintf(
-    int arg0,
-    ffi.Pointer<ffi.Int8> arg1,
-    ffi.Pointer<ffi.Int8> arg2,
-    ffi.Pointer<__va_list_tag> arg3,
-  ) {
-    _sqlite3_vsnprintf ??=
-        _dylib.lookupFunction<_c_sqlite3_vsnprintf, _dart_sqlite3_vsnprintf>(
-            'sqlite3_vsnprintf');
-    return _sqlite3_vsnprintf(
-      arg0,
-      arg1,
-      arg2,
-      arg3,
-    );
-  }
-
-  _dart_sqlite3_vsnprintf _sqlite3_vsnprintf;
 
   ffi.Pointer<ffi.Void> sqlite3_malloc(
     int arg0,
@@ -3441,22 +3407,6 @@ class SQLite {
 
   _dart_sqlite3_str_appendf _sqlite3_str_appendf;
 
-  void sqlite3_str_vappendf(
-    ffi.Pointer<sqlite3_str> arg0,
-    ffi.Pointer<ffi.Int8> zFormat,
-    ffi.Pointer<__va_list_tag> arg2,
-  ) {
-    _sqlite3_str_vappendf ??= _dylib.lookupFunction<_c_sqlite3_str_vappendf,
-        _dart_sqlite3_str_vappendf>('sqlite3_str_vappendf');
-    return _sqlite3_str_vappendf(
-      arg0,
-      zFormat,
-      arg2,
-    );
-  }
-
-  _dart_sqlite3_str_vappendf _sqlite3_str_vappendf;
-
   void sqlite3_str_append(
     ffi.Pointer<sqlite3_str> arg0,
     ffi.Pointer<ffi.Int8> zIn,
@@ -4179,18 +4129,6 @@ class sqlite3_vfs extends ffi.Struct {}
 
 class sqlite3_mem_methods extends ffi.Struct {}
 
-class __va_list_tag extends ffi.Struct {
-  @ffi.Uint32()
-  int gp_offset;
-
-  @ffi.Uint32()
-  int fp_offset;
-
-  ffi.Pointer<ffi.Void> overflow_arg_area;
-
-  ffi.Pointer<ffi.Void> reg_save_area;
-}
-
 class sqlite3_stmt extends ffi.Struct {}
 
 class sqlite3_value extends ffi.Struct {}
@@ -4847,16 +4785,6 @@ typedef _dart_sqlite3_mprintf = ffi.Pointer<ffi.Int8> Function(
   ffi.Pointer<ffi.Int8> arg0,
 );
 
-typedef _c_sqlite3_vmprintf = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<ffi.Int8> arg0,
-  ffi.Pointer<__va_list_tag> arg1,
-);
-
-typedef _dart_sqlite3_vmprintf = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<ffi.Int8> arg0,
-  ffi.Pointer<__va_list_tag> arg1,
-);
-
 typedef _c_sqlite3_snprintf = ffi.Pointer<ffi.Int8> Function(
   ffi.Int32 arg0,
   ffi.Pointer<ffi.Int8> arg1,
@@ -4867,20 +4795,6 @@ typedef _dart_sqlite3_snprintf = ffi.Pointer<ffi.Int8> Function(
   int arg0,
   ffi.Pointer<ffi.Int8> arg1,
   ffi.Pointer<ffi.Int8> arg2,
-);
-
-typedef _c_sqlite3_vsnprintf = ffi.Pointer<ffi.Int8> Function(
-  ffi.Int32 arg0,
-  ffi.Pointer<ffi.Int8> arg1,
-  ffi.Pointer<ffi.Int8> arg2,
-  ffi.Pointer<__va_list_tag> arg3,
-);
-
-typedef _dart_sqlite3_vsnprintf = ffi.Pointer<ffi.Int8> Function(
-  int arg0,
-  ffi.Pointer<ffi.Int8> arg1,
-  ffi.Pointer<ffi.Int8> arg2,
-  ffi.Pointer<__va_list_tag> arg3,
 );
 
 typedef _c_sqlite3_malloc = ffi.Pointer<ffi.Void> Function(
@@ -7236,18 +7150,6 @@ typedef _c_sqlite3_str_appendf = ffi.Void Function(
 typedef _dart_sqlite3_str_appendf = void Function(
   ffi.Pointer<sqlite3_str> arg0,
   ffi.Pointer<ffi.Int8> zFormat,
-);
-
-typedef _c_sqlite3_str_vappendf = ffi.Void Function(
-  ffi.Pointer<sqlite3_str> arg0,
-  ffi.Pointer<ffi.Int8> zFormat,
-  ffi.Pointer<__va_list_tag> arg2,
-);
-
-typedef _dart_sqlite3_str_vappendf = void Function(
-  ffi.Pointer<sqlite3_str> arg0,
-  ffi.Pointer<ffi.Int8> zFormat,
-  ffi.Pointer<__va_list_tag> arg2,
 );
 
 typedef _c_sqlite3_str_append = ffi.Void Function(

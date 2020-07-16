@@ -3,7 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:ffi';
+import 'dart:isolate';
 
+import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 
@@ -30,12 +32,12 @@ Binding parseTypedefDeclaration(Pointer<clang_types.CXCursor> cursor) {
   _stack.push(_ParsedTypedef());
   // Name of typedef.
   _stack.top.typedefName = cursor.spelling();
-
+  final uid = allocate<Int64>()..value = Isolate.current.controlPort.nativePort;
   final resultCode = clang.clang_visitChildren_wrap(
     cursor,
     Pointer.fromFunction(_typedefdeclarationCursorVisitor,
         clang_types.CXChildVisitResult.CXChildVisit_Break),
-    nullptr,
+    uid.cast(),
   );
 
   visitChildrenResultChecker(resultCode);

@@ -3,7 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:ffi';
+import 'dart:isolate';
 
+import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 
@@ -24,12 +26,12 @@ List<Binding> _bindings;
 List<Binding> parseTranslationUnit(
     Pointer<clang_types.CXCursor> translationUnitCursor) {
   _bindings = [];
-
+  final uid = allocate<Int64>()..value = Isolate.current.controlPort.nativePort;
   final resultCode = clang.clang_visitChildren_wrap(
     translationUnitCursor,
     Pointer.fromFunction(
         _rootCursorVisitor, clang_types.CXChildVisitResult.CXChildVisit_Break),
-    nullptr,
+    uid.cast(),
   );
 
   visitChildrenResultChecker(resultCode);
