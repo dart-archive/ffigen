@@ -14,7 +14,7 @@ description: Holds bindings to LibClang.
 output: '../lib/src/header_parser/clang_bindings/clang_bindings.dart'
 libclang-dylib-folder: 'wrapped_libclang'
 sort: true
-compiler-opts: '-I/usr/lib/llvm-9/include/ -I/usr/lib/llvm-10/include/ -I/usr/local/opt/llvm/include/ -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/'
+compiler-opts: '-I/usr/lib/llvm-9/include/ -I/usr/lib/llvm-10/include/ -I/usr/local/opt/llvm/include/ -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/ -Wno-nullability-completeness'
 headers:
   - 'wrapped_libclang/wrapper.c'
 header-filter:

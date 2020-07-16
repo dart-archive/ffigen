@@ -30,24 +30,24 @@ import 'dart:io';
 
 import 'package:meta/meta.dart';
 
-const MACOS = 'macos';
-const WINDOWS = 'windows';
-const LINUX = 'linux';
+const macOS = 'macos';
+const windows = 'windows';
+const linux = 'linux';
 
 Map<String, Options> platformOptions = {
-  LINUX: Options(
+  linux: Options(
     outputfilename: 'native_test.so',
     sharedFlag: '-shared',
     inputHeader: 'native_test.c',
     fPIC: '-fpic',
   ),
-  WINDOWS: Options(
+  windows: Options(
     outputfilename: 'native_test.dll',
     sharedFlag: '-shared',
     inputHeader: 'native_test.c',
     moduleDefPath: '-Wl,/DEF:native_test.def',
   ),
-  MACOS: Options(
+  macOS: Options(
     outputfilename: 'native_test.dylib',
     sharedFlag: '-shared',
     inputHeader: 'native_test.c',
@@ -75,6 +75,7 @@ ProcessResult runClangProcess(Options options) {
       '-o',
       options.outputfilename,
       options.moduleDefPath,
+      '-Wno-nullability-completeness',
     ],
   );
   return result;
@@ -93,11 +94,11 @@ void printSuccess(ProcessResult result, Options options) {
 /// Get options based on current platform.
 Options getPlatformOptions() {
   if (Platform.isMacOS) {
-    return platformOptions[MACOS];
+    return platformOptions[macOS];
   } else if (Platform.isWindows) {
-    return platformOptions[WINDOWS];
+    return platformOptions[windows];
   } else if (Platform.isLinux) {
-    return platformOptions[LINUX];
+    return platformOptions[linux];
   } else {
     throw Exception('Unknown Platform.');
   }

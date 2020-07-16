@@ -18,7 +18,8 @@ void main() {
       } else if (Platform.isWindows) {
         dylibName = r'test\native_test\native_test.dll';
       }
-      bindings.init(DynamicLibrary.open(dylibName));
+      bindings.init(
+          DynamicLibrary.open(File(dylibName).absolute?.path ?? dylibName));
     });
     test('uint8_t', () {
       expect(bindings.Function1Uint8(pow(2, 8).toInt()), 42);
