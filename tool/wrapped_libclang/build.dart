@@ -30,13 +30,13 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:meta/meta.dart';
 
-const MACOS = 'macos';
-const WINDOWS = 'windows';
-const LINUX = 'linux';
+const macOS = 'macos';
+const windows = 'windows';
+const linux = 'linux';
 
 /// Default platform options.
 Map<String, Options> platformOptions = {
-  LINUX: Options(
+  linux: Options(
     outputfilename: 'libwrapped_clang.so',
     sharedFlag: '-shared',
     inputHeader: 'wrapper.c',
@@ -47,7 +47,7 @@ Map<String, Options> platformOptions = {
       '-I/usr/lib/llvm-10/include/',
     ],
   ),
-  WINDOWS: Options(
+  windows: Options(
     outputfilename: 'wrapped_clang.dll',
     sharedFlag: '-shared',
     inputHeader: 'wrapper.c',
@@ -60,7 +60,7 @@ Map<String, Options> platformOptions = {
       r'-LC:\Progra~1\LLVM\lib',
     ],
   ),
-  MACOS: Options(
+  macOS: Options(
     outputfilename: 'libwrapped_clang.dylib',
     sharedFlag: '-shared',
     inputHeader: 'wrapper.c',
@@ -102,6 +102,7 @@ ProcessResult runClangProcess(Options options) {
       '-o',
       options.outputfilename,
       options.moduleDefPath,
+      '-Wno-nullability-completeness',
     ],
   );
   return result;
@@ -167,11 +168,11 @@ void changeIncludesUsingCmdArgs(List<String> arguments, Options options) {
 /// Get options based on current platform.
 Options getPlatformOptions() {
   if (Platform.isMacOS) {
-    return platformOptions[MACOS];
+    return platformOptions[macOS];
   } else if (Platform.isWindows) {
-    return platformOptions[WINDOWS];
+    return platformOptions[windows];
   } else if (Platform.isLinux) {
-    return platformOptions[LINUX];
+    return platformOptions[linux];
   } else {
     throw Exception('Unknown Platform.');
   }
