@@ -3,18 +3,17 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:ffi';
-import 'dart:isolate';
 
 import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
-import '../data.dart' show clang;
+import '../data.dart';
 import '../sub_parsers/enumdecl_parser.dart';
 import '../sub_parsers/structdecl_parser.dart';
 import '../utils.dart';
 
-var _logger = Logger('header_parser.typedefdecl_parser');
+var _logger = Logger('ffigen.header_parser.typedefdecl_parser');
 
 /// Holds temporary information regarding a typedef referenced [Binding]
 /// while parsing.
@@ -31,7 +30,6 @@ Binding parseTypedefDeclaration(Pointer<clang_types.CXCursor> cursor) {
   _stack.push(_ParsedTypedef());
   // Name of typedef.
   _stack.top.typedefName = cursor.spelling();
-  final uid = Isolate.current.controlPort.nativePort;
   final resultCode = clang.clang_visitChildren_wrap(
     cursor,
     Pointer.fromFunction(_typedefdeclarationCursorVisitor,

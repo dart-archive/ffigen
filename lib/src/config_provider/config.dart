@@ -18,7 +18,7 @@ import '../strings.dart' as strings;
 import 'declaration.dart';
 import 'spec_utils.dart';
 
-var _logger = Logger('config_provider.config');
+var _logger = Logger('ffigen.config_provider.config');
 
 /// Provides configurations to other modules.
 ///

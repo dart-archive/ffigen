@@ -3,18 +3,17 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:ffi';
-import 'dart:isolate';
 
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser/data.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
-import '../data.dart' show clang;
+import '../data.dart';
 import '../includer.dart';
 import '../utils.dart';
 
-var _logger = Logger('header_parser.enumdecl_parser');
+var _logger = Logger('ffigen.header_parser.enumdecl_parser');
 
 /// Holds temporary information regarding [EnumClass] while parsing.
 class _ParsedEnum {
@@ -51,7 +50,6 @@ EnumClass parseEnumDeclaration(
 }
 
 void _addEnumConstant(Pointer<clang_types.CXCursor> cursor) {
-  final uid = Isolate.current.controlPort.nativePort;
   final resultCode = clang.clang_visitChildren_wrap(
     cursor,
     Pointer.fromFunction(

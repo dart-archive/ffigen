@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:ffi';
-import 'dart:isolate';
 
 import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
@@ -13,7 +12,7 @@ import '../data.dart';
 import '../includer.dart';
 import '../utils.dart';
 
-var _logger = Logger('header_parser.structdecl_parser');
+var _logger = Logger('ffigen.header_parser.structdecl_parser');
 
 /// Holds temporary information regarding [struc] while parsing.
 class _ParsedStruc {
@@ -64,7 +63,6 @@ void _setStructMembers(Pointer<clang_types.CXCursor> cursor) {
   _stack.top.arrayMember = false;
   _stack.top.nestedStructMember = false;
   _stack.top.unimplementedMemberType = false;
-  final uid = Isolate.current.controlPort.nativePort;
 
   final resultCode = clang.clang_visitChildren_wrap(
     cursor,

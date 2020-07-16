@@ -14,7 +14,7 @@ import '../strings.dart' as strings;
 import './config.dart';
 import 'declaration.dart';
 
-var _logger = Logger('config_provider.spec_utils');
+var _logger = Logger('ffigen.config_provider.spec_utils');
 
 /// Replaces the path separators according to current platform.
 String _replaceSeparators(String path) {

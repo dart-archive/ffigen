@@ -38,7 +38,7 @@ Library parse(Config conf, {bool sort = false}) {
 //           BELOW FUNCTIONS ARE MEANT FOR INTERNAL USE AND TESTING
 // ===================================================================================
 
-var _logger = Logger('header_parser.parser');
+var _logger = Logger('ffigen.header_parser.parser');
 
 /// Initialises parser, clears any previous values.
 void initParser(Config c) {
