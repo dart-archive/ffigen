@@ -5,7 +5,6 @@
 import 'dart:ffi';
 import 'dart:isolate';
 
-import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser/data.dart';
 import 'package:logging/logging.dart';
@@ -52,12 +51,12 @@ EnumClass parseEnumDeclaration(
 }
 
 void _addEnumConstant(Pointer<clang_types.CXCursor> cursor) {
-  final uid = allocate<Int64>()..value = Isolate.current.controlPort.nativePort;
+  final uid = Isolate.current.controlPort.nativePort;
   final resultCode = clang.clang_visitChildren_wrap(
     cursor,
     Pointer.fromFunction(
         _enumCursorVisitor, clang_types.CXChildVisitResult.CXChildVisit_Break),
-    uid.cast(),
+    uid,
   );
 
   visitChildrenResultChecker(resultCode);

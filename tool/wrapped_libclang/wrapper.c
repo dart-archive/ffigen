@@ -249,9 +249,10 @@ _visitorwrap(CXCursor cursor, CXCursor parent, CXClientData clientData)
 
 /** Visitor is a function pointer with parameters having pointers to cxcursor
 * instead of cxcursor by default. */
-unsigned clang_visitChildren_wrap(CXCursor *parent, ModifiedCXCursorVisitor _modifiedVisitor, CXClientData clientData)
+unsigned clang_visitChildren_wrap(CXCursor *parent, ModifiedCXCursorVisitor _modifiedVisitor, long long uid)
 {
-    long long uid = *((long long *)clientData);
+    long long *clientData = aloc(long long);
+    *clientData = uid;
     _push(_modifiedVisitor, uid);
     unsigned a = clang_visitChildren(*parent, _visitorwrap, clientData);
     _pop(uid);

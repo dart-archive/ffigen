@@ -5,7 +5,6 @@
 import 'dart:ffi';
 import 'dart:isolate';
 
-import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 
@@ -65,13 +64,13 @@ void _setStructMembers(Pointer<clang_types.CXCursor> cursor) {
   _stack.top.arrayMember = false;
   _stack.top.nestedStructMember = false;
   _stack.top.unimplementedMemberType = false;
-  final uid = allocate<Int64>()..value = Isolate.current.controlPort.nativePort;
+  final uid = Isolate.current.controlPort.nativePort;
 
   final resultCode = clang.clang_visitChildren_wrap(
     cursor,
     Pointer.fromFunction(_structMembersVisitor,
         clang_types.CXChildVisitResult.CXChildVisit_Break),
-    uid.cast(),
+    uid,
   );
 
   visitChildrenResultChecker(resultCode);
