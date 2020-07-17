@@ -9,35 +9,35 @@ import 'package:test/test.dart';
 import '../test_utils.dart';
 
 void main() {
-  group('decl_decl_collision_test', () {
+  group('reserved_keyword_collision_test', () {
     setUpAll(() {
       logWarnings(Level.SEVERE);
     });
-    test('declaration conflict', () {
+    test('reserved keyword collision', () {
       final l1 = Library(name: 'Bindings', bindings: [
-        Struc(name: 'TestStruc'),
-        Struc(name: 'TestStruc'),
-        EnumClass(name: 'TestEnum'),
-        EnumClass(name: 'TestEnum'),
+        Struc(name: 'abstract'),
+        Struc(name: 'if'),
+        EnumClass(name: 'return'),
+        EnumClass(name: 'export'),
         Func(
-            name: 'testFunc',
+            name: 'show',
             returnType: Type.nativeType(SupportedNativeType.Void)),
         Func(
-            name: 'testFunc',
+            name: 'implements',
             returnType: Type.nativeType(SupportedNativeType.Void)),
       ]);
       final l2 = Library(name: 'Bindings', bindings: [
-        Struc(name: 'TestStruc'),
-        Struc(name: 'TestStruc_1'),
-        EnumClass(name: 'TestEnum'),
-        EnumClass(name: 'TestEnum_1'),
+        Struc(name: 'abstract_1'),
+        Struc(name: 'if_1'),
+        EnumClass(name: 'return_1'),
+        EnumClass(name: 'export_1'),
         Func(
-            name: 'testFunc',
-            originalName: 'testFunc',
+            name: 'show_1',
+            originalName: 'show',
             returnType: Type.nativeType(SupportedNativeType.Void)),
         Func(
-            name: 'testFunc_1',
-            originalName: 'testFunc',
+            name: 'implements_1',
+            originalName: 'implements',
             returnType: Type.nativeType(SupportedNativeType.Void)),
       ]);
 

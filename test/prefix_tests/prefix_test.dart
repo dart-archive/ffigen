@@ -23,6 +23,7 @@ final enumPrefixReplacedWith = 're';
 void main() {
   group('prefix_test', () {
     setUpAll(() {
+      logWarnings();
       expected = expectedLibrary();
       actual = parser.parse(Config.fromYaml(yaml.loadYaml('''
 ${strings.name}: 'NativeLibrary'

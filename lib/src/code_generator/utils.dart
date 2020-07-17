@@ -1,6 +1,10 @@
+import 'dart_keywords.dart';
+
 class UniqueNamer {
   final Set<String> _usedUpNames;
-  UniqueNamer(this._usedUpNames);
+  UniqueNamer(Set<String> usedUpNames)
+      : assert(keywords.intersection(usedUpNames).isEmpty),
+        _usedUpNames = {...keywords, ...usedUpNames};
 
   /// Returns a unique name by appending `_<int>` to it if necessary.
   ///

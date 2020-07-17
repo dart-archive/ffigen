@@ -5,14 +5,20 @@
 import 'dart:io';
 
 import 'package:ffigen/src/header_parser.dart';
+import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart';
 import 'package:ffigen/src/config_provider/config.dart';
 import 'package:test/test.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:path/path.dart' as path;
 
+import '../test_utils.dart';
+
 void main() {
   group('large_test', () {
+    setUpAll(() {
+      logWarnings(Level.SEVERE);
+    });
     test('Libclang test', () {
       final config = Config.fromYaml(loadYaml('''
 ${strings.name}: LibClang
