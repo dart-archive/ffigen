@@ -3,6 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 /// Dart reserved keywords, used for resolving conflict with a name.
+///
+/// Source: https://dart.dev/guides/language/language-tour#keywords.
 const keywords = {
   'abstract',
   'else',
