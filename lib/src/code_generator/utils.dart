@@ -2,9 +2,14 @@ import 'dart_keywords.dart';
 
 class UniqueNamer {
   final Set<String> _usedUpNames;
+
+  /// Creates a UniqueNamer with given [usedUpNames] and Dart reserved keywords.
   UniqueNamer(Set<String> usedUpNames)
       : assert(keywords.intersection(usedUpNames).isEmpty),
         _usedUpNames = {...keywords, ...usedUpNames};
+
+  /// Creates a UniqueNamer with given [usedUpNames] only.
+  UniqueNamer.raw(this._usedUpNames);
 
   /// Returns a unique name by appending `_<int>` to it if necessary.
   ///
@@ -38,6 +43,8 @@ class UniqueNamer {
   bool isUnique(String name) {
     return !_usedUpNames.contains(name);
   }
+
+  UniqueNamer clone() => UniqueNamer.raw({..._usedUpNames});
 }
 
 /// Converts [text] to a dart doc comment.

@@ -27,6 +27,11 @@ class Writer {
   String _dylibIdentifier;
   String get dylibIdentifier => _dylibIdentifier;
 
+  /// Initial namers set after running constructor. Namers are reset to this
+  /// initial state everytime [generate] is called.
+  UniqueNamer _initialTopLevelUniqueNamer, _initialWrapperLevelUniqueNamer;
+
+  /// Used by [Binding]s for generating required code.
   UniqueNamer _topLevelUniqueNamer, _wrapperLevelUniqueNamer;
   UniqueNamer get topLevelUniqueNamer => _topLevelUniqueNamer;
   UniqueNamer get wrapperLevelUniqueNamer => _wrapperLevelUniqueNamer;
@@ -51,20 +56,20 @@ class Writer {
       ..addAll(globalLevelNameSet)
       ..addAll(wrapperLevelNameSet);
 
-    _topLevelUniqueNamer = UniqueNamer(globalLevelNameSet);
-    _wrapperLevelUniqueNamer = UniqueNamer(wrapperLevelNameSet);
+    _initialTopLevelUniqueNamer = UniqueNamer(globalLevelNameSet);
+    _initialWrapperLevelUniqueNamer = UniqueNamer(wrapperLevelNameSet);
     final allLevelsUniqueNamer = UniqueNamer(allNameSet);
 
     /// Wrapper class name must be unique among all names.
     _className = allLevelsUniqueNamer.makeUnique(className);
-    wrapperLevelUniqueNamer.markUsed(_className);
-    topLevelUniqueNamer.markUsed(_className);
+    _initialWrapperLevelUniqueNamer.markUsed(_className);
+    _initialTopLevelUniqueNamer.markUsed(_className);
 
     /// [_ffiLibraryPrefix] should be unique in top level.
-    _ffiLibraryPrefix = topLevelUniqueNamer.makeUnique('ffi');
+    _ffiLibraryPrefix = _initialTopLevelUniqueNamer.makeUnique('ffi');
 
     /// [_dylibIdentifier] should be unique in top level.
-    _dylibIdentifier = wrapperLevelUniqueNamer.makeUnique('_dylib');
+    _dylibIdentifier = _initialTopLevelUniqueNamer.makeUnique('_dylib');
 
     /// Finding a unique prefix for Array Helper Classes and store into
     /// [_arrayHelperClassPrefix].
@@ -79,11 +84,22 @@ class Writer {
         _arrayHelperClassPrefix = '${base}${suffixInt}';
       }
     }
+
+    _resetUniqueNamersNamers();
+  }
+
+  /// Resets the namers to initial state. Namers are reset before generating.
+  void _resetUniqueNamersNamers() {
+    _topLevelUniqueNamer = _initialTopLevelUniqueNamer.clone();
+    _wrapperLevelUniqueNamer = _initialWrapperLevelUniqueNamer.clone();
   }
 
   /// Writes all bindings to a String.
   String generate() {
     final s = StringBuffer();
+
+    // Reset unique namers to initial state.
+    _resetUniqueNamersNamers();
 
     // Write file header (if any).
     if (header != null) {
