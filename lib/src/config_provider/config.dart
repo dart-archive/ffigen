@@ -150,8 +150,9 @@ class Config {
             'Path to folder containing libclang dynamic library, used to parse C headers',
         requirement: Requirement.no,
         defaultValue: () => getDylibPath(Platform.script
-            .resolve(path.posix.join('..', 'tool',
-                'wrapped_libclang')) // Path needs to be in posix style here.
+            .resolve(path.posix.join('..', 'tool', 'wrapped_libclang'))
+            // Path needs to be in posix style here or an illegal character
+            // error is thrown on windows.
             .toFilePath()),
         validator: libclangDylibValidator,
         extractor: libclangDylibExtractor,
