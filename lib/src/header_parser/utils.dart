@@ -302,3 +302,11 @@ extension DynamicCStringArray on Pointer<Pointer<Utf8>> {
     free(this);
   }
 }
+
+class Stack<T> {
+  final _stack = <T>[];
+
+  T get top => _stack.last;
+  T pop() => _stack.removeLast();
+  void push(T item) => _stack.add(item);
+}

@@ -16,7 +16,7 @@ import '../translation_unit_parser.dart';
 import '../type_extractor/cxtypekindmap.dart';
 import '../utils.dart';
 
-var _logger = Logger('header_parser:extractor.dart');
+var _logger = Logger('ffigen.header_parser.extractor');
 const _padding = '  ';
 
 /// Converts cxtype to a typestring code_generator can accept.
@@ -64,16 +64,12 @@ Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String parentName}) {
         .CXType_ConstantArray: // Primarily used for constant array in struct members.
       return Type.constantArray(
         clang.clang_getNumElements_wrap(cxtype),
-        clang
-            .clang_getArrayElementType_wrap(cxtype)
-            .toCodeGenTypeAndDispose(),
+        clang.clang_getArrayElementType_wrap(cxtype).toCodeGenTypeAndDispose(),
       );
     case clang_types.CXTypeKind
         .CXType_IncompleteArray: // Primarily used for incomplete array in function parameters.
       return Type.incompleteArray(
-        clang
-            .clang_getArrayElementType_wrap(cxtype)
-            .toCodeGenTypeAndDispose(),
+        clang.clang_getArrayElementType_wrap(cxtype).toCodeGenTypeAndDispose(),
       );
     default:
       if (cxTypeKindToSupportedNativeTypes.containsKey(kind)) {
@@ -104,8 +100,7 @@ Type _extractfromRecord(Pointer<clang_types.CXType> cxtype) {
         structName = cxtype.spelling();
       }
 
-      final fixedStructName =
-          config.structDecl.getPrefixedName(structName);
+      final fixedStructName = config.structDecl.getPrefixedName(structName);
 
       // Also add a struct binding, if its unseen.
       // TODO(23): Check if we should auto add struct.
@@ -140,9 +135,9 @@ Type _extractFromFunctionProto(
 
   // Set a name for typedefc incase it was null or empty.
   if (name == null || name == '') {
-    name = _getNextUniqueString('_typedefC');
+    name = _getNextIncrementedString('_typedefC');
   } else {
-    name = _getNextUniqueString(name);
+    name = _getNextIncrementedString(name);
   }
   final _parameters = <Parameter>[];
   final totalArgs = clang.clang_getNumArgTypes_wrap(cxtype);
@@ -164,20 +159,19 @@ Type _extractFromFunctionProto(
     name: name,
     typedefType: TypedefType.C,
     parameters: _parameters,
-    returnType: clang
-        .clang_getResultType_wrap(cxtype)
-        .toCodeGenTypeAndDispose(),
+    returnType:
+        clang.clang_getResultType_wrap(cxtype).toCodeGenTypeAndDispose(),
   );
 
   return Type.nativeFunc(typedefC);
 }
 
 /// Generate a unique string for naming in [Typedef].
-String _getNextUniqueString(String prefix) {
-  int i = _uniqueStringCounters[prefix] ?? 0;
+String _getNextIncrementedString(String prefix) {
+  int i = _incrementedStringCounters[prefix] ?? 0;
   i++;
-  _uniqueStringCounters[prefix] = i;
+  _incrementedStringCounters[prefix] = i;
   return '${prefix}_$i';
 }
 
-Map<String, int> _uniqueStringCounters = {};
+Map<String, int> _incrementedStringCounters = {};

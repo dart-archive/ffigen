@@ -18,7 +18,7 @@ import '../strings.dart' as strings;
 import 'declaration.dart';
 import 'spec_utils.dart';
 
-var _logger = Logger('config_provider:config.dart');
+var _logger = Logger('ffigen.config_provider.config');
 
 /// Provides configurations to other modules.
 ///
@@ -80,8 +80,6 @@ class Config {
   Config._();
 
   /// Create config from Yaml map.
-  ///
-  /// Ensure that log printing is setup before using this.
   factory Config.fromYaml(YamlMap map) {
     final configspecs = Config._();
     _logger.finest('Config Map: ' + map.toString());
@@ -90,8 +88,7 @@ class Config {
 
     final result = configspecs._checkConfigs(map, specs);
     if (!result) {
-      _logger.info('Please fix errors in Configurations and re-run the tool');
-      exit(1);
+      throw ConfigError();
     }
 
     configspecs._extract(map, specs);
@@ -153,7 +150,9 @@ class Config {
             'Path to folder containing libclang dynamic library, used to parse C headers',
         requirement: Requirement.no,
         defaultValue: () => getDylibPath(Platform.script
-            .resolve(path.join('..', 'tool', 'wrapped_libclang'))
+            .resolve(path.posix.join('..', 'tool', 'wrapped_libclang'))
+            // Path needs to be in posix style here or an illegal character
+            // error is thrown on windows.
             .toFilePath()),
         validator: libclangDylibValidator,
         extractor: libclangDylibExtractor,
@@ -189,10 +188,9 @@ class Config {
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(declarationTypeName: 'Function'),
+        defaultValue: () => Declaration(),
         extractedResult: (dynamic result) {
           functionDecl = result as Declaration;
-          functionDecl.declarationTypeName = 'Function';
         },
       ),
       strings.structs: Specification<Declaration>(
@@ -200,10 +198,9 @@ class Config {
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(declarationTypeName: 'Struct'),
+        defaultValue: () => Declaration(),
         extractedResult: (dynamic result) {
           structDecl = result as Declaration;
-          structDecl.declarationTypeName = 'Struct';
         },
       ),
       strings.enums: Specification<Declaration>(
@@ -211,10 +208,9 @@ class Config {
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(declarationTypeName: 'Enum'),
+        defaultValue: () => Declaration(),
         extractedResult: (dynamic result) {
           enumClassDecl = result as Declaration;
-          enumClassDecl.declarationTypeName = 'Enum';
         },
       ),
       strings.sizemap: Specification<Map<int, SupportedNativeType>>(
@@ -325,4 +321,18 @@ class HeaderFilter {
     this.includedInclusionHeaders = const {},
     this.excludedInclusionHeaders = const {},
   });
+}
+
+class ConfigError implements Exception {
+  final String message;
+  ConfigError([this.message]);
+
+  @override
+  String toString() {
+    if (message == null) {
+      return 'ConfigError: Invalid configurations provided.';
+    } else {
+      return 'ConfigError: $message';
+    }
+  }
 }

@@ -14,7 +14,16 @@ import '../strings.dart' as strings;
 import './config.dart';
 import 'declaration.dart';
 
-var _logger = Logger('config_provider:spec_utils.dart');
+var _logger = Logger('ffigen.config_provider.spec_utils');
+
+/// Replaces the path separators according to current platform.
+String _replaceSeparators(String path) {
+  if (Platform.isWindows) {
+    return path.replaceAll(p.posix.separator, p.windows.separator);
+  } else {
+    return path.replaceAll(p.windows.separator, p.posix.separator);
+  }
+}
 
 bool booleanExtractor(dynamic value) => value as bool;
 
@@ -104,13 +113,15 @@ List<String> headersExtractor(dynamic yamlConfig) {
     final headerGlob = h as String;
     // Add file directly to header if it's not a Glob but a File.
     if (File(headerGlob).existsSync()) {
-      headers.add(headerGlob);
+      final osSpecificPath = _replaceSeparators(headerGlob);
+      headers.add(osSpecificPath);
       _logger.fine('Adding header/file: $headerGlob');
     } else {
       final glob = Glob(headerGlob);
       for (final file in glob.listSync(followLinks: true)) {
-        headers.add(file.path);
-        _logger.fine('Adding header/file: ${file.path}');
+        final fixedPath = _replaceSeparators(file.path);
+        headers.add(fixedPath);
+        _logger.fine('Adding header/file: ${fixedPath}');
       }
     }
   }
@@ -146,21 +157,19 @@ bool libclangDylibValidator(String name, dynamic value) {
 }
 
 String getDylibPath(String dylibParentFoler) {
+  dylibParentFoler = _replaceSeparators(dylibParentFoler);
   String dylibPath;
   if (Platform.isMacOS) {
     dylibPath = p.join(dylibParentFoler, strings.libclang_dylib_macos);
   } else if (Platform.isWindows) {
-    // Fix path for windows if '/' is used as seperator instead of '\'
-    // because our examples input path like this.
-    final newValue = dylibParentFoler.replaceAll('/', r'\');
-    dylibPath = p.join(newValue, strings.libclang_dylib_windows);
+    dylibPath = p.join(dylibParentFoler, strings.libclang_dylib_windows);
   } else {
     dylibPath = p.join(dylibParentFoler, strings.libclang_dylib_linux);
   }
   return dylibPath;
 }
 
-String outputExtractor(dynamic value) => value as String;
+String outputExtractor(dynamic value) => _replaceSeparators(value as String);
 
 bool outputValidator(String name, dynamic value) {
   if (value is String) {

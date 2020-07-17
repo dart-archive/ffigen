@@ -12,11 +12,13 @@ import 'writer.dart';
 ///
 /// Do not extend directly, use [LookUpBinding] or [NoLookUpBinding].
 abstract class Binding {
+  final String originalName;
+
   String name;
 
   final String dartDoc;
 
-  Binding({@required this.name, this.dartDoc});
+  Binding({@required this.originalName, @required this.name, this.dartDoc});
 
   /// Return typedef dependencies.
   List<Typedef> getTypedefDependencies(Writer w);
@@ -30,12 +32,18 @@ abstract class Binding {
 
 /// Base class for bindings which look up symbols in dynamic library.
 abstract class LookUpBinding extends Binding {
-  LookUpBinding({String name, String dartDoc})
-      : super(name: name, dartDoc: dartDoc);
+  LookUpBinding({
+    @required String originalName,
+    @required String name,
+    String dartDoc,
+  }) : super(originalName: originalName, name: name, dartDoc: dartDoc);
 }
 
 /// Base class for bindings which don't look up symbols in dynamic library.
 abstract class NoLookUpBinding extends Binding {
-  NoLookUpBinding({String name, String dartDoc})
-      : super(name: name, dartDoc: dartDoc);
+  NoLookUpBinding({
+    @required String originalName,
+    @required String name,
+    String dartDoc,
+  }) : super(originalName: originalName, name: name, dartDoc: dartDoc);
 }

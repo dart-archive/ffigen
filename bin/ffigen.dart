@@ -11,7 +11,7 @@ import 'package:ffigen/src/header_parser.dart' as parser;
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart' as yaml;
 
-var _logger = Logger('ffigen.dart');
+var _logger = Logger('ffigen.ffigen');
 
 void main(List<String> args) {
   // Parses the cmd args.
@@ -21,7 +21,13 @@ void main(List<String> args) {
   setupLogger(result);
 
   // Create a config object.
-  final config = getConfig(result);
+  Config config;
+  try {
+    config = getConfig(result);
+  } on ConfigError {
+    print('Please fix configuration errors and re-run the tool.');
+    exit(1);
+  }
 
   // Parse the bindings according to config object provided.
   final library = parser.parse(config);

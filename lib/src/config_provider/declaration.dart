@@ -1,17 +1,9 @@
 // Copyright (c) 2020, the Dart project authors. Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-import 'package:logging/logging.dart';
-
-var _logger = Logger('config_provider:declaration.dart');
 
 /// A generic declaration config.
 class Declaration {
-  /// Display name of a declaration type.
-  ///
-  /// Used for logging and warning purposes.
-  String declarationTypeName;
-
   // matchers
   List<RegExp> _includeMatchers = [];
   Set<String> _includeFull = {};
@@ -21,7 +13,6 @@ class Declaration {
   Map<String, String> _prefixReplacement = {};
 
   Declaration({
-    this.declarationTypeName = 'declaration',
     List<String> includeMatchers,
     List<String> includeFull,
     List<String> excludeMatchers,
@@ -66,11 +57,6 @@ class Declaration {
     // Apply global prefixes.
     name = '${_globalPrefix}$name';
 
-    // Warn user if a declaration starts with '_'.
-    if (name.startsWith('_')) {
-      _logger.warning(
-          "Generated $declarationTypeName '$name' start's with '_' and therefore will be private.");
-    }
     return name;
   }
 

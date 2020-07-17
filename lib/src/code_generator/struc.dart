@@ -39,11 +39,12 @@ class Struc extends NoLookUpBinding {
   List<Member> members;
 
   Struc({
+    String originalName,
     @required String name,
     String dartDoc,
     List<Member> members,
   })  : members = members ?? [],
-        super(name: name, dartDoc: dartDoc);
+        super(originalName: originalName ?? name, name: name, dartDoc: dartDoc);
 
   List<int> _getArrayDimensionLengths(Type type) {
     final array = <int>[];
@@ -153,7 +154,7 @@ class Member {
   final String name;
   final Type type;
 
-  const Member({this.name, this.type, this.dartDoc});
+  const Member({@required this.name, @required this.type, this.dartDoc});
 }
 
 // Helper bindings for struct array.

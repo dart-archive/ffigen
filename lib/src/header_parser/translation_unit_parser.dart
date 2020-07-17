@@ -8,7 +8,7 @@ import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 
 import 'clang_bindings/clang_bindings.dart' as clang_types;
-import 'data.dart' show clang;
+import 'data.dart';
 import 'includer.dart';
 import 'sub_parsers/enumdecl_parser.dart';
 import 'sub_parsers/functiondecl_parser.dart';
@@ -16,7 +16,7 @@ import 'sub_parsers/structdecl_parser.dart';
 import 'sub_parsers/typedefdecl_parser.dart';
 import 'utils.dart';
 
-var _logger = Logger('header_parser:translation_unit_parser.dart');
+var _logger = Logger('ffigen.header_parser.translation_unit_parser');
 
 List<Binding> _bindings;
 
@@ -24,12 +24,11 @@ List<Binding> _bindings;
 List<Binding> parseTranslationUnit(
     Pointer<clang_types.CXCursor> translationUnitCursor) {
   _bindings = [];
-
   final resultCode = clang.clang_visitChildren_wrap(
     translationUnitCursor,
     Pointer.fromFunction(
         _rootCursorVisitor, clang_types.CXChildVisitResult.CXChildVisit_Break),
-    nullptr,
+    uid,
   );
 
   visitChildrenResultChecker(resultCode);

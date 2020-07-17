@@ -347,7 +347,7 @@ class Clang {
   int clang_visitChildren_wrap(
     ffi.Pointer<CXCursor> parent,
     ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor_1>> _modifiedVisitor,
-    ffi.Pointer<ffi.Void> clientData,
+    int uid,
   ) {
     _clang_visitChildren_wrap ??= _dylib.lookupFunction<
         _c_clang_visitChildren_wrap,
@@ -355,7 +355,7 @@ class Clang {
     return _clang_visitChildren_wrap(
       parent,
       _modifiedVisitor,
-      clientData,
+      uid,
     );
   }
 
@@ -1922,13 +1922,13 @@ typedef ModifiedCXCursorVisitor_1 = ffi.Int32 Function(
 typedef _c_clang_visitChildren_wrap = ffi.Uint32 Function(
   ffi.Pointer<CXCursor> parent,
   ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor_1>> _modifiedVisitor,
-  ffi.Pointer<ffi.Void> clientData,
+  ffi.Int64 uid,
 );
 
 typedef _dart_clang_visitChildren_wrap = int Function(
   ffi.Pointer<CXCursor> parent,
   ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor_1>> _modifiedVisitor,
-  ffi.Pointer<ffi.Void> clientData,
+  int uid,
 );
 
 typedef _c_clang_Cursor_getNumArguments_wrap = ffi.Int32 Function(

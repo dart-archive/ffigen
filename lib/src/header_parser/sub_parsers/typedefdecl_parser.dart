@@ -8,35 +8,37 @@ import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
-import '../data.dart' show clang;
+import '../data.dart';
 import '../sub_parsers/enumdecl_parser.dart';
 import '../sub_parsers/structdecl_parser.dart';
 import '../utils.dart';
 
-var _logger = Logger('header_parser:typedefdecl_parser.dart');
+var _logger = Logger('ffigen.header_parser.typedefdecl_parser');
 
-/// Temporarily holds a binding before its returned by [parseTypedefDeclaration].
-Binding _binding;
+/// Holds temporary information regarding a typedef referenced [Binding]
+/// while parsing.
+class _ParsedTypedef {
+  Binding binding;
+  String typedefName;
+  _ParsedTypedef();
+}
 
-/// Temporarily holds parent cursor name.
-String _typedefName;
+final _stack = Stack<_ParsedTypedef>();
 
 /// Parses a typedef declaration.
 Binding parseTypedefDeclaration(Pointer<clang_types.CXCursor> cursor) {
-  _binding = null;
+  _stack.push(_ParsedTypedef());
   // Name of typedef.
-  _typedefName = cursor.spelling();
-
+  _stack.top.typedefName = cursor.spelling();
   final resultCode = clang.clang_visitChildren_wrap(
     cursor,
     Pointer.fromFunction(_typedefdeclarationCursorVisitor,
         clang_types.CXChildVisitResult.CXChildVisit_Break),
-    nullptr,
+    uid,
   );
 
   visitChildrenResultChecker(resultCode);
-
-  return _binding;
+  return _stack.pop().binding;
 }
 
 /// Visitor for extracting binding for a TypedefDeclarations of a
@@ -52,10 +54,12 @@ int _typedefdeclarationCursorVisitor(Pointer<clang_types.CXCursor> cursor,
 
     switch (clang.clang_getCursorKind_wrap(cursor)) {
       case clang_types.CXCursorKind.CXCursor_StructDecl:
-        _binding = parseStructDeclaration(cursor, name: _typedefName);
+        _stack.top.binding =
+            parseStructDeclaration(cursor, name: _stack.top.typedefName);
         break;
       case clang_types.CXCursorKind.CXCursor_EnumDecl:
-        _binding = parseEnumDeclaration(cursor, name: _typedefName);
+        _stack.top.binding =
+            parseEnumDeclaration(cursor, name: _stack.top.typedefName);
         break;
       default:
         _logger.finest('typedefdeclarationCursorVisitor: Ignored');

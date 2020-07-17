@@ -5,28 +5,23 @@
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser.dart' as parser;
 import 'package:ffigen/src/config_provider.dart';
-import 'package:logging/logging.dart';
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart' as yaml;
 import 'package:ffigen/src/strings.dart' as strings;
 
+import '../test_utils.dart';
+
 Library actual, expected;
 
 void main() {
-  group('header_parser', () {
+  group('functions_test', () {
     setUpAll(() {
+      logWarnings();
       expected = expectedLibrary();
-
-      Logger.root.onRecord.listen((log) {
-        if (log.level > Level.INFO) {
-          print(
-              'functions_test.dart: ${log.level.name.padRight(8)}: ${log.message}');
-        }
-      });
       actual = parser.parse(
         Config.fromYaml(yaml.loadYaml('''
 ${strings.name}: 'NativeLibrary'
-${strings.description}: 'Prefix Test'
+${strings.description}: 'Functions Test'
 ${strings.output}: 'unused'
 ${strings.libclang_dylib_folder}: 'tool/wrapped_libclang'
 ${strings.headers}:
@@ -42,27 +37,23 @@ ${strings.headerFilter}:
     });
 
     test('func1', () {
-      expect(binding(actual, 'func1'), binding(expected, 'func1'));
+      expect(actual.getBindingAsString('func1'),
+          expected.getBindingAsString('func1'));
     });
     test('func2', () {
-      expect(binding(actual, 'func2'), binding(expected, 'func2'));
+      expect(actual.getBindingAsString('func2'),
+          expected.getBindingAsString('func2'));
     });
     test('func3', () {
-      expect(binding(actual, 'func3'), binding(expected, 'func3'));
+      expect(actual.getBindingAsString('func3'),
+          expected.getBindingAsString('func3'));
     });
 
     test('func4', () {
-      expect(binding(actual, 'func4'), binding(expected, 'func4'));
+      expect(actual.getBindingAsString('func4'),
+          expected.getBindingAsString('func4'));
     });
   });
-}
-
-/// Extracts a binding's string from a library.
-String binding(Library lib, String name) {
-  return lib.bindings
-      .firstWhere((element) => element.name == name)
-      .toBindingString(lib.writer)
-      .string;
 }
 
 Library expectedLibrary() {
@@ -71,14 +62,12 @@ Library expectedLibrary() {
     bindings: [
       Func(
         name: 'func1',
-        lookupSymbolName: 'func1',
         returnType: Type.nativeType(
           SupportedNativeType.Void,
         ),
       ),
       Func(
         name: 'func2',
-        lookupSymbolName: 'func2',
         returnType: Type.nativeType(
           SupportedNativeType.Int32,
         ),
@@ -93,7 +82,6 @@ Library expectedLibrary() {
       ),
       Func(
         name: 'func3',
-        lookupSymbolName: 'func3',
         returnType: Type.nativeType(
           SupportedNativeType.Double,
         ),
@@ -125,7 +113,6 @@ Library expectedLibrary() {
       ),
       Func(
           name: 'func4',
-          lookupSymbolName: 'func4',
           returnType: Type.pointer(Type.nativeType(SupportedNativeType.Void)),
           parameters: [
             Parameter(

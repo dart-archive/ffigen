@@ -11,7 +11,7 @@ import 'binding.dart';
 import 'utils.dart';
 import 'writer.dart';
 
-var _logger = Logger('code_generator:library.dart');
+var _logger = Logger('ffigen.code_generator.library');
 
 /// Container for all Bindings.
 class Library {
@@ -31,34 +31,19 @@ class Library {
     final lookUpBindings = bindings.whereType<LookUpBinding>().toList();
     final noLookUpBindings = bindings.whereType<NoLookUpBinding>().toList();
 
+    //TODO(21): Resolve dart keyword as identifiers.
     /// Handle any declaration-declaration name conflict in [lookUpBindings].
     final lookUpDeclConflictHandler = UniqueNamer({});
     for (final b in lookUpBindings) {
-      // Print warning if name was conflicting and has been changed.
-      if (lookUpDeclConflictHandler.isUsed(b.name)) {
-        final oldName = b.name;
-        b.name = lookUpDeclConflictHandler.makeUnique(b.name);
-
-        _logger.warning(
-            "Resolved name conflict: Declaration '$oldName' and has been renamed to '${b.name}'.");
-      } else {
-        lookUpDeclConflictHandler.markUsed(b.name);
-      }
+      _warnPrivateDeclaration(b);
+      _resolveNameConflict(lookUpDeclConflictHandler, b);
     }
 
     /// Handle any declaration-declaration name conflict in [noLookUpBindings].
     final noLookUpDeclConflictHandler = UniqueNamer({});
     for (final b in noLookUpBindings) {
-      // Print warning if name was conflicting and has been changed.
-      if (noLookUpDeclConflictHandler.isUsed(b.name)) {
-        final oldName = b.name;
-        b.name = noLookUpDeclConflictHandler.makeUnique(b.name);
-
-        _logger.warning(
-            "Resolved name conflict: Declaration '$oldName' and has been renamed to '${b.name}'.");
-      } else {
-        noLookUpDeclConflictHandler.markUsed(b.name);
-      }
+      _warnPrivateDeclaration(b);
+      _resolveNameConflict(noLookUpDeclConflictHandler, b);
     }
 
     _writer = Writer(
@@ -68,6 +53,28 @@ class Library {
       classDocComment: description,
       header: header,
     );
+  }
+
+  /// Logs a warning if generated declaration will be private.
+  void _warnPrivateDeclaration(Binding b) {
+    if (b.name.startsWith('_')) {
+      _logger.warning(
+          "Generated declaration '${b.name}' start's with '_' and therefore will be private.");
+    }
+  }
+
+  /// LResolves name conflict(if any) and logs a warning.
+  void _resolveNameConflict(UniqueNamer namer, Binding b) {
+    // Print warning if name was conflicting and has been changed.
+    if (namer.isUsed(b.name)) {
+      final oldName = b.name;
+      b.name = namer.makeUnique(b.name);
+
+      _logger.warning(
+          "Resolved name conflict: Declaration '$oldName' and has been renamed to '${b.name}'.");
+    } else {
+      namer.markUsed(b.name);
+    }
   }
 
   /// Sort all bindings in alphabetical order.

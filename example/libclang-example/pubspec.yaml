@@ -18,12 +18,11 @@ ffigen:
   # Bash style Glob matching is also supported.
   # TODO(11): Globs dont work on windows if they begin with '.' or '..'.
   headers:
-    - '../../tool/wrapped_libclang/wrapper.c'
+    - ../../third_party/libclang/include/clang-c/Index.h
 
   # Excludes included headers based on their names (not fullpath name).
   header-filter:
     include:
-      - 'wrapper.c'
       - 'CXString.h'
       - 'Index.h'
 

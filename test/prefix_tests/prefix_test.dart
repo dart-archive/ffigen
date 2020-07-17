@@ -1,13 +1,15 @@
 // Copyright (c) 2020, the Dart project authors. Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser.dart' as parser;
 import 'package:ffigen/src/config_provider.dart';
-import 'package:logging/logging.dart';
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart' as yaml;
 import 'package:ffigen/src/strings.dart' as strings;
+
+import '../test_utils.dart';
 
 Library actual, expected;
 final functionPrefix = 'fff';
@@ -19,14 +21,8 @@ final structPrefixReplacedWith = 'rs';
 final enumPrefixReplacedWith = 're';
 
 void main() {
-  group('Global Prefix Test', () {
+  group('prefix_test', () {
     setUpAll(() {
-      Logger.root.onRecord.listen((log) {
-        if (log.level > Level.INFO) {
-          print(
-              'prefix_test.dart: ${log.level.name.padRight(8)}: ${log.message}');
-        }
-      });
       expected = expectedLibrary();
       actual = parser.parse(Config.fromYaml(yaml.loadYaml('''
 ${strings.name}: 'NativeLibrary'
@@ -58,43 +54,39 @@ enums:
     });
 
     test('Function prefix', () {
-      expect(binding(actual, '${functionPrefix}func1'),
-          binding(expected, '${functionPrefix}func1'));
+      expect(actual.getBindingAsString('${functionPrefix}func1'),
+          expected.getBindingAsString('${functionPrefix}func1'));
     });
     test('Struct prefix', () {
-      expect(binding(actual, '${structPrefix}Struct1'),
-          binding(expected, '${structPrefix}Struct1'));
+      expect(actual.getBindingAsString('${structPrefix}Struct1'),
+          expected.getBindingAsString('${structPrefix}Struct1'));
     });
     test('Enum prefix', () {
-      expect(binding(actual, '${enumPrefix}Enum1'),
-          binding(expected, '${enumPrefix}Enum1'));
+      expect(actual.getBindingAsString('${enumPrefix}Enum1'),
+          expected.getBindingAsString('${enumPrefix}Enum1'));
     });
     test('Function prefix-replacement', () {
       expect(
-          binding(
-              actual, '${functionPrefix}${functionPrefixReplacedWith}func2'),
-          binding(
-              expected, '${functionPrefix}${functionPrefixReplacedWith}func2'));
+          actual.getBindingAsString(
+              '${functionPrefix}${functionPrefixReplacedWith}func2'),
+          expected.getBindingAsString(
+              '${functionPrefix}${functionPrefixReplacedWith}func2'));
     });
     test('Struct prefix-replacement', () {
       expect(
-          binding(actual, '${structPrefix}${structPrefixReplacedWith}Struct2'),
-          binding(
-              expected, '${structPrefix}${structPrefixReplacedWith}Struct2'));
+          actual.getBindingAsString(
+              '${structPrefix}${structPrefixReplacedWith}Struct2'),
+          expected.getBindingAsString(
+              '${structPrefix}${structPrefixReplacedWith}Struct2'));
     });
     test('Enum prefix-replacement', () {
-      expect(binding(actual, '${enumPrefix}${enumPrefixReplacedWith}Enum2'),
-          binding(expected, '${enumPrefix}${enumPrefixReplacedWith}Enum2'));
+      expect(
+          actual.getBindingAsString(
+              '${enumPrefix}${enumPrefixReplacedWith}Enum2'),
+          expected.getBindingAsString(
+              '${enumPrefix}${enumPrefixReplacedWith}Enum2'));
     });
   });
-}
-
-/// Extracts a binding's string with a given name from a library.
-String binding(Library lib, String name) {
-  return lib.bindings
-      .firstWhere((element) => element.name == name)
-      .toBindingString(lib.writer)
-      .string;
 }
 
 Library expectedLibrary() {
@@ -106,7 +98,7 @@ Library expectedLibrary() {
     bindings: [
       Func(
         name: '${functionPrefix}func1',
-        lookupSymbolName: 'func1',
+        originalName: 'func1',
         returnType: Type.nativeType(
           SupportedNativeType.Void,
         ),
@@ -119,7 +111,7 @@ Library expectedLibrary() {
       ),
       Func(
         name: '${functionPrefix}${functionPrefixReplacedWith}func2',
-        lookupSymbolName: 'test_func2',
+        originalName: 'test_func2',
         returnType: Type.nativeType(
           SupportedNativeType.Void,
         ),
