@@ -9,7 +9,7 @@ class UniqueNamer {
         _usedUpNames = {...keywords, ...usedUpNames};
 
   /// Creates a UniqueNamer with given [usedUpNames] only.
-  UniqueNamer.raw(this._usedUpNames);
+  UniqueNamer._raw(this._usedUpNames);
 
   /// Returns a unique name by appending `_<int>` to it if necessary.
   ///
@@ -44,7 +44,7 @@ class UniqueNamer {
     return !_usedUpNames.contains(name);
   }
 
-  UniqueNamer clone() => UniqueNamer.raw({..._usedUpNames});
+  UniqueNamer clone() => UniqueNamer._raw({..._usedUpNames});
 }
 
 /// Converts [text] to a dart doc comment.
