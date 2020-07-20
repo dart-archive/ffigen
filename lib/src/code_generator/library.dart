@@ -31,7 +31,6 @@ class Library {
     final lookUpBindings = bindings.whereType<LookUpBinding>().toList();
     final noLookUpBindings = bindings.whereType<NoLookUpBinding>().toList();
 
-    //TODO(21): Resolve dart keyword as identifiers.
     /// Handle any declaration-declaration name conflict in [lookUpBindings].
     final lookUpDeclConflictHandler = UniqueNamer({});
     for (final b in lookUpBindings) {

@@ -41,8 +41,8 @@ class NotFoundException implements Exception {
   }
 }
 
-void logWarnings() {
-  Logger.root.level = Level.WARNING;
+void logWarnings([Level level = Level.WARNING]) {
+  Logger.root.level = level;
   Logger.root.onRecord.listen((record) {
     print('${record.level.name.padRight(8)}: ${record.message}');
   });

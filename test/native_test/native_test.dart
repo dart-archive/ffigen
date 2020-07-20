@@ -7,11 +7,13 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:test/test.dart';
+import '../test_utils.dart';
 import 'native_test_bindings.dart' as bindings;
 
 void main() {
   group('native_test', () {
     setUpAll(() {
+      logWarnings();
       var dylibName = 'test/native_test/native_test.so';
       if (Platform.isMacOS) {
         dylibName = 'test/native_test/native_test.dylib';
