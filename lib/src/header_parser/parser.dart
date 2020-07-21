@@ -8,6 +8,7 @@ import 'dart:io';
 import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/config_provider.dart';
+import 'package:ffigen/src/header_parser/sub_parsers/macro_parser.dart';
 import 'package:ffigen/src/header_parser/translation_unit_parser.dart';
 import 'package:logging/logging.dart';
 
@@ -76,7 +77,9 @@ List<Binding> parseToBindings() {
       cmdLen,
       nullptr,
       0,
-      clang_types.CXTranslationUnit_Flags.CXTranslationUnit_SkipFunctionBodies,
+      clang_types.CXTranslationUnit_Flags.CXTranslationUnit_SkipFunctionBodies |
+          clang_types.CXTranslationUnit_Flags
+              .CXTranslationUnit_DetailedPreprocessingRecord,
     );
 
     if (tu == nullptr) {
@@ -95,6 +98,9 @@ List<Binding> parseToBindings() {
     rootCursor.dispose();
     clang.clang_disposeTranslationUnit(tu);
   }
+
+  // Parse all saved macros.
+  bindings.addAll(parseSavedMacros());
 
   if (config.compilerOpts != null) {
     clangCmdArgs.dispose(config.compilerOpts.length);

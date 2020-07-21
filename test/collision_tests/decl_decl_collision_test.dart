@@ -25,6 +25,18 @@ void main() {
         Func(
             name: 'testFunc',
             returnType: Type.nativeType(SupportedNativeType.Void)),
+        Constant(
+          originalName: 'Test_Macro',
+          name: 'Test_Macro',
+          rawType: 'int',
+          rawValue: '0',
+        ),
+        Constant(
+          originalName: 'Test_Macro',
+          name: 'Test_Macro',
+          rawType: 'int',
+          rawValue: '0',
+        ),
       ]);
       final l2 = Library(name: 'Bindings', bindings: [
         Struc(name: 'TestStruc'),
@@ -39,6 +51,18 @@ void main() {
             name: 'testFunc_1',
             originalName: 'testFunc',
             returnType: Type.nativeType(SupportedNativeType.Void)),
+        Constant(
+          originalName: 'Test_Macro',
+          name: 'Test_Macro',
+          rawType: 'int',
+          rawValue: '0',
+        ),
+        Constant(
+          originalName: 'Test_Macro',
+          name: 'Test_Macro_1',
+          rawType: 'int',
+          rawValue: '0',
+        ),
       ]);
 
       expect(l1.generate(), l2.generate());

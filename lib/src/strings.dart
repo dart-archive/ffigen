@@ -15,6 +15,7 @@ const filters = 'filters';
 const functions = 'functions';
 const structs = 'structs';
 const enums = 'enums';
+const macros = 'macros';
 
 // Sub-fields of Declarations.
 const include = 'include';

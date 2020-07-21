@@ -13,6 +13,7 @@ import 'data.dart';
 Map<String, Struc> _structs = {};
 Map<String, Func> _functions = {};
 Map<String, EnumClass> _enumClass = {};
+Map<String, String> _macros = {};
 
 bool shouldIncludeStruct(String name) {
   if (_structs.containsKey(name) || name == '') {
@@ -47,9 +48,24 @@ bool shouldIncludeEnumClass(String name) {
   }
 }
 
+bool shouldIncludeMacro(String name) {
+  if (_macros.containsKey(name) || name == '') {
+    return false;
+  } else if (config.macroDecl == null || config.macroDecl.shouldInclude(name)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 /// True if a cursor should be included based on header-filter, use for root
 /// declarations.
 bool shouldIncludeRootCursor(String sourceFile) {
+  // Handle null in case of system headers or macros.
+  if (sourceFile == null) {
+    return false;
+  }
+
   final name = p.basename(sourceFile);
 
   if (config.headerFilter.excludedInclusionHeaders.contains(name)) {
@@ -102,4 +118,16 @@ void addEnumClassToSeen(String originalName, EnumClass enumClass) {
 
 EnumClass getSeenEnumClass(String originalName) {
   return _enumClass[originalName];
+}
+
+bool isSeenMacro(String originalName) {
+  return _macros.containsKey(originalName);
+}
+
+void addMacroToSeen(String originalName, String macro) {
+  _macros[originalName] = macro;
+}
+
+String getSeenMacro(String originalName) {
+  return _macros[originalName];
 }

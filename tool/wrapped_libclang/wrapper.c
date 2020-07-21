@@ -333,4 +333,18 @@ CXType *clang_getArrayElementType_wrap(CXType *cxtype)
     return ptrToCXType(clang_getArrayElementType(*cxtype));
 }
 
+unsigned clang_Cursor_isMacroFunctionLike_wrap(CXCursor *cursor)
+{
+    return clang_Cursor_isMacroFunctionLike(*cursor);
+}
+
+unsigned clang_Cursor_isMacroBuiltin_wrap(CXCursor *cursor)
+{
+    return clang_Cursor_isMacroBuiltin(*cursor);
+}
+
+CXEvalResult clang_Cursor_Evaluate_wrap(CXCursor *cursor)
+{
+    return clang_Cursor_Evaluate(*cursor);
+}
 // END ===== WRAPPER FUNCTIONS =====================

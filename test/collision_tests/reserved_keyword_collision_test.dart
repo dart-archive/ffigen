@@ -25,6 +25,11 @@ void main() {
         Func(
             name: 'implements',
             returnType: Type.nativeType(SupportedNativeType.Void)),
+        Constant(
+          name: 'else',
+          rawType: 'int',
+          rawValue: '0',
+        ),
       ]);
       final l2 = Library(name: 'Bindings', bindings: [
         Struc(name: 'abstract_1'),
@@ -39,6 +44,11 @@ void main() {
             name: 'implements_1',
             originalName: 'implements',
             returnType: Type.nativeType(SupportedNativeType.Void)),
+        Constant(
+          name: 'else_1',
+          rawType: 'int',
+          rawValue: '0',
+        ),
       ]);
 
       expect(l1.generate(), l2.generate());

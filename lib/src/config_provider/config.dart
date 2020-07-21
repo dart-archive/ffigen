@@ -53,6 +53,9 @@ class Config {
   /// Declaration config for Enums.
   Declaration enumClassDecl;
 
+  /// Declaration config for Enums.
+  Declaration macroDecl;
+
   /// If generated bindings should be sorted alphabetically.
   bool sort;
 
@@ -211,6 +214,16 @@ class Config {
         defaultValue: () => Declaration(),
         extractedResult: (dynamic result) {
           enumClassDecl = result as Declaration;
+        },
+      ),
+      strings.macros: Specification<Declaration>(
+        description: 'Filter for macros',
+        requirement: Requirement.no,
+        validator: declarationConfigValidator,
+        extractor: declarationConfigExtractor,
+        defaultValue: () => Declaration(),
+        extractedResult: (dynamic result) {
+          macroDecl = result as Declaration;
         },
       ),
       strings.sizemap: Specification<Map<int, SupportedNativeType>>(
