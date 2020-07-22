@@ -39,7 +39,7 @@ typedef _dart_sum = int Function(int a,int b);
 - Run the tool- `pub run ffigen`.
 
 ## Setup
-LLVM must be installed because a dynamic library for a wrapper to libclang is required by this tool.
+`package:ffigen` uses LLVM. Install LLVM in the following way.
 
 #### ubuntu/linux
 1. Install libclangdev - `sudo apt-get install libclang-dev`.
@@ -286,8 +286,9 @@ class ArrayHelper_CXFileUniqueID_data_level0 {
 2. Run `pub run ffigen`.
 
 ## Running Tests
-Dynamic library for some tests need to be built before running the examples.
-1. `cd test/native_test`.
-2. Run `dart build_test_dylib.dart`.
+1. Run setup to build required dynamic library - `pub run ffigen:setup`.
+2. Dynamic library for some tests also need to be built before running the examples.
+  1. `cd test/native_test`.
+  2. Run `dart build_test_dylib.dart`.
 
 Run tests from the root of the package with `pub run test`.

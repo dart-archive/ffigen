@@ -122,7 +122,7 @@ void _deleteOldDylib() {
 }
 
 /// Creates necesarry parent folders and return full path to dylib.
-String _makeDylibPath() {
+String _dylibPath() {
   // Find .dart_tool.
   final dtpath = _getDotDartToolPath();
   // Create .dart_tool/ffigen if it doesn't exists.
@@ -175,7 +175,7 @@ ProcessResult _runClangProcess(_Options options) {
       options.fPIC,
       options.inputHeader,
       '-o',
-      _makeDylibPath(),
+      _dylibPath(),
       options.moduleDefPath,
       '-Wno-nullability-completeness',
     ],
