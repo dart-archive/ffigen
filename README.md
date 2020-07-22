@@ -33,27 +33,23 @@ typedef _c_sum = ffi.Int32 Function(Int32 a, Int32 b);
 typedef _dart_sum = int Function(int a,int b);
 ```
 ## Using this package
-- clone/download this repository.
-- Build it (see [building](#building)).
 - Add this package as dev_dependency in your `pubspec.yaml`.
+- Setup for use (see [Setup](#Setup)).
 - Configurations must be provided in `pubspec.yaml` or in a custom YAML file (see [configurations](#configurations)).
 - Run the tool- `pub run ffigen`.
 
-## Building
-A dynamic library for a wrapper to libclang needs to be generated as it is used by the parser submodule.
+## Setup
+LLVM must be installed because, a dynamic library for a wrapper to libclang needs to be generated as it is used by the parser submodule.
 
 #### ubuntu/linux
 1. Install libclangdev - `sudo apt-get install libclang-dev`.
-2. `cd tool/wrapped_libclang`, then run `dart build.dart`.
 
 #### Windows
 1. Install Visual Studio with C++ development support.
-2. Install LLVM.
-3. `cd tool\wrapped_libclang`, then run `dart build.dart`.
+2. Install [LLVM](https://releases.llvm.org/download.html).
 
 #### MacOS
-1. Install LLVM.
-2. `cd tool/wrapped_libclang`, then run `dart build.dart`.
+1. Install LLVM - `brew install llvm`.
 
 ## Configurations
 Configurations can be provided in 2 ways-
