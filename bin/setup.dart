@@ -19,8 +19,6 @@
 /// Windows:
 /// ```
 /// clang -IC:\Progra~1\LLVM\include -LC:\Progra~1\LLVM\lib -llibclang -shared path/to/wrapper.c -o path/to/wrapped_clang.dll -Wl,/DEF:path/to/wrapper.def
-/// del wrapped_clang.exp
-/// del wrapped_clang.lib
 /// ```
 /// =======================================================================
 /// =======================================================================
@@ -141,7 +139,9 @@ String _makeDylibPath() {
 String _getWrapperPath(String wrapperName) {
   final file = File(path.join(
     Platform.script
-        .resolve(path.join('..', 'lib', 'src', 'clang_library'))
+        .resolve(path.posix.join('..', 'lib', 'src', 'clang_library'))
+        // This needs to be in posix style or illegal character exception is
+        // thrown on windows.
         .toFilePath(),
     wrapperName,
   ));

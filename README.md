@@ -39,7 +39,7 @@ typedef _dart_sum = int Function(int a,int b);
 - Run the tool- `pub run ffigen`.
 
 ## Setup
-LLVM must be installed because, a dynamic library for a wrapper to libclang needs to be generated as it is used by the parser submodule.
+LLVM must be installed because a dynamic library for a wrapper to libclang is required by this tool.
 
 #### ubuntu/linux
 1. Install libclangdev - `sudo apt-get install libclang-dev`.
@@ -49,7 +49,8 @@ LLVM must be installed because, a dynamic library for a wrapper to libclang need
 2. Install [LLVM](https://releases.llvm.org/download.html).
 
 #### MacOS
-1. Install LLVM - `brew install llvm`.
+1. Install Xcode.
+2. Install LLVM - `brew install llvm`.
 
 ## Configurations
 Configurations can be provided in 2 ways-
