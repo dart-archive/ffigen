@@ -24,7 +24,6 @@ void main() {
 ${strings.name}: LibClang
 ${strings.description}: Bindings to LibClang.
 ${strings.output}: unused
-${strings.libclang_dylib_folder}: tool/wrapped_libclang
 ${strings.compilerOpts}: -I${path.join('third_party', 'libclang', 'include')}
 ${strings.arrayWorkaround}: true
 ${strings.headers}:
@@ -66,7 +65,6 @@ ${strings.name}: CJson
 ${strings.description}: Bindings to Cjson.
 ${strings.output}: unused
 ${strings.comments}: full
-${strings.libclang_dylib_folder}: tool/wrapped_libclang
 ${strings.arrayWorkaround}: true
 ${strings.headers}:
   - third_party/cjson_library/cJSON.h
@@ -102,7 +100,6 @@ ${strings.headerFilter}:
 ${strings.name}: SQLite
 ${strings.description}: Bindings to SQLite.
 ${strings.output}: unused
-${strings.libclang_dylib_folder}: tool/wrapped_libclang
 ${strings.arrayWorkaround}: true
 ${strings.comments}: full
 ${strings.headers}:

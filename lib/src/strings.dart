@@ -1,11 +1,32 @@
 // Copyright (c) 2020, the Dart project authors. Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+import 'dart:io';
+
 import 'package:ffigen/src/header_parser/clang_bindings/clang_bindings.dart'
     as clang;
 
+// This version must be updated whenever we update the libclang wrapper.
+const dylibVersion = 'v1';
+
+/// Name of the dynamic library file according to current platform.
+String get dylibFileName {
+  String name;
+  if (Platform.isLinux) {
+    name = libclang_dylib_linux;
+  } else if (Platform.isMacOS) {
+    name = libclang_dylib_macos;
+  } else if (Platform.isWindows) {
+    name = libclang_dylib_windows;
+  } else {
+    throw Exception('Unsupported Platform.');
+  }
+  return '_${dylibVersion}_$name';
+}
+
+const ffigenFolderName = 'ffigen';
+
 const output = 'output';
-const libclang_dylib_folder = 'libclang-dylib-folder';
 const headers = 'headers';
 const headerFilter = 'header-filter';
 const compilerOpts = 'compiler-opts';

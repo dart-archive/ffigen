@@ -7,7 +7,6 @@
 # ===============================================================
 
 output: 'native_test_bindings.dart'
-libclang-dylib-folder: '../../tool/wrapped_libclang'
 sort: true
 headers:
   - 'native_test.c'

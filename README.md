@@ -154,16 +154,6 @@ functions:
     <td><pre lang='yaml'>comments: 'full'</pre></td>
   </tr>
   <tr>
-    <td>libclang-dylib-folder</td>
-    <td>no</td>
-    <td>Path to the folder containing dynamic library for libclang wrapper.<br>
-    Note: This is meant for programatic use of this package, and isn't required
-    when using it via the <code>pub run ffigen</code> command.<br>
-      <b>Default: tool/wrapped_libclang</b>
-    </td>
-    <td><pre lang='yaml'>libclang-dylib-folder: 'tool/wrapped_libclang'</pre></td>
-  </tr>
-  <tr>
     <td>sort</td>
     <td>no</td>
     <td>Sort the bindings according to name.<br>

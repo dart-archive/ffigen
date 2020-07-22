@@ -24,7 +24,7 @@ void main() {
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Function And Struct Test'
 ${strings.output}: 'unused'
-${strings.libclang_dylib_folder}: 'tool/wrapped_libclang'
+
 ${strings.headers}:
   - 'test/header_parser_tests/function_n_struct.h'
         ''') as yaml.YamlMap),

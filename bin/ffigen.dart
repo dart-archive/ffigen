@@ -11,9 +11,20 @@ import 'package:ffigen/src/header_parser.dart' as parser;
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart' as yaml;
 
+import 'setup.dart';
+
 var _logger = Logger('ffigen.ffigen');
 
 void main(List<String> args) {
+  /// Prompt user if dylib doesn't exist and cannot be auto created to run
+  /// `pub run ffigen:setup -Ipath/to/llvm/include -Lpath/to/llvm/lib`.
+  if (!checkDylibExist() && !autoCreateDylib()) {
+    print('Unable to create dynamic library automatically.');
+    print('If LLVM is installed, try running:');
+    print('  pub run ffigen:setup -Ipath/to/llvm/include -Lpath/to/llvm/lib');
+    exit(1);
+  }
+
   // Parses the cmd args.
   final result = getArgResults(args);
 

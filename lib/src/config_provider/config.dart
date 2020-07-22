@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:io';
-
 /// Validates the yaml input by the user, prints useful info for the user
 
 import 'package:ffigen/src/code_generator.dart';
@@ -11,7 +9,6 @@ import 'package:ffigen/src/header_parser/type_extractor/cxtypekindmap.dart';
 
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
-import 'package:path/path.dart' as path;
 import 'package:yaml/yaml.dart';
 
 import '../strings.dart' as strings;
@@ -26,12 +23,6 @@ var _logger = Logger('ffigen.config_provider.config');
 class Config {
   /// output file name.
   String output;
-
-  /// libclang path (in accordance with the platform).
-  ///
-  /// File may have the following extensions - `.so` / `.dll` / `.dylib`
-  /// as extracted by configspec.
-  String libclang_dylib_path;
 
   /// Path to headers.
   ///
@@ -144,20 +135,6 @@ class Config {
         validator: outputValidator,
         extractor: outputExtractor,
         extractedResult: (dynamic result) => output = result as String,
-      ),
-      strings.libclang_dylib_folder: Specification<String>(
-        description:
-            'Path to folder containing libclang dynamic library, used to parse C headers',
-        requirement: Requirement.no,
-        defaultValue: () => getDylibPath(Platform.script
-            .resolve(path.posix.join('..', 'tool', 'wrapped_libclang'))
-            // Path needs to be in posix style here or an illegal character
-            // error is thrown on windows.
-            .toFilePath()),
-        validator: libclangDylibValidator,
-        extractor: libclangDylibExtractor,
-        extractedResult: (dynamic result) =>
-            libclang_dylib_path = result as String,
       ),
       strings.headers: Specification<List<String>>(
         description: 'List of C headers to generate bindings of',
