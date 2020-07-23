@@ -75,8 +75,8 @@ class Writer {
     /// [_arrayHelperClassPrefix].
     final base = 'ArrayHelper';
     _arrayHelperClassPrefix = base;
-    int suffixInt = 0;
-    for (int i = 0; i < allNameSet.length; i++) {
+    var suffixInt = 0;
+    for (var i = 0; i < allNameSet.length; i++) {
       if (allNameSet.elementAt(i).startsWith(_arrayHelperClassPrefix)) {
         // Not a unique prefix, start over with a new suffix.
         i = -1;

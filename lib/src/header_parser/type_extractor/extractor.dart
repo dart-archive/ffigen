@@ -168,7 +168,7 @@ Type _extractFromFunctionProto(
 
 /// Generate a unique string for naming in [Typedef].
 String _getNextIncrementedString(String prefix) {
-  int i = _incrementedStringCounters[prefix] ?? 0;
+  var i = _incrementedStringCounters[prefix] ?? 0;
   i++;
   _incrementedStringCounters[prefix] = i;
   return '${prefix}_$i';
