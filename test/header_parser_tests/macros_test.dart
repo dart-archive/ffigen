@@ -5,6 +5,7 @@
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser.dart' as parser;
 import 'package:ffigen/src/config_provider.dart';
+import 'package:logging/logging.dart';
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart' as yaml;
 import 'package:ffigen/src/strings.dart' as strings;
@@ -16,7 +17,7 @@ Library actual, expected;
 void main() {
   group('macros_test', () {
     setUpAll(() {
-      logWarnings();
+      logWarnings(Level.ALL);
       expected = expectedLibrary();
       actual = parser.parse(
         Config.fromYaml(yaml.loadYaml('''

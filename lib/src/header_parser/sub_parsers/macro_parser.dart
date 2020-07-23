@@ -202,7 +202,14 @@ File createFileForMacros() {
     // Add to _macroVarNames.
     _macroVarNames.add(macroVarName);
   }
-  file.writeAsStringSync(sb.toString());
+  final macroFileContent = sb.toString();
+  // Log this generated file for debugging purpose.
+  // We use the finest log because this file may be very big.
+  _logger.finest('=====FILE FOR MACROS====');
+  _logger.finest(macroFileContent);
+  _logger.finest('========================');
+
+  file.writeAsStringSync(macroFileContent);
   return file;
 }
 

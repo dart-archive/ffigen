@@ -9,3 +9,6 @@
               3
 #define TEST6 (1 == 1);
 #define TEST7(x, y) x *y
+
+// The following are added to test collisions.
+
