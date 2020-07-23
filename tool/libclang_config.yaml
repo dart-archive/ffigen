@@ -5,18 +5,17 @@
 # Config file for generating the libclang bindings used by this package.
 
 # ===================== GENERATING BINDINGS =====================
-#    cd to `tool`, and run -
-#    dart ../bin/ffigen.dart --config libclang_config.yaml
+#    cd to project's root, and run -
+#    pub run ffigen --config libclang_config.yaml
 # ===============================================================
 
 name: Clang
 description: Holds bindings to LibClang.
-output: '../lib/src/header_parser/clang_bindings/clang_bindings.dart'
-libclang-dylib-folder: 'wrapped_libclang'
+output: 'lib/src/header_parser/clang_bindings/clang_bindings.dart'
 sort: true
 compiler-opts: '-I/usr/lib/llvm-9/include/ -I/usr/lib/llvm-10/include/ -I/usr/local/opt/llvm/include/ -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/ -Wno-nullability-completeness'
 headers:
-  - 'wrapped_libclang/wrapper.c'
+  - 'lib/src/clang_library/wrapper.c'
 header-filter:
   include:
     - wrapper.c

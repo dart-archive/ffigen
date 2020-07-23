@@ -49,7 +49,7 @@ class EnumClass extends NoLookUpBinding {
     final localUniqueNamer = UniqueNamer({enclosingClassName});
 
     // Print enclosing class.
-    s.write('class $enclosingClassName {\n');
+    s.write('abstract class $enclosingClassName {\n');
     const depth = '  ';
     for (final ec in enumConstants) {
       final enum_value_name = localUniqueNamer.makeUnique(ec.name);

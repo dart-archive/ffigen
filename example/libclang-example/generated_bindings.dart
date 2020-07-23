@@ -2531,7 +2531,7 @@ class CXVersion extends ffi.Struct {
   int Subminor;
 }
 
-class CXGlobalOptFlags {
+abstract class CXGlobalOptFlags {
   /// Used to indicate that no special CXIndex options are needed.
   static const int CXGlobalOpt_None = 0;
 
@@ -2852,7 +2852,7 @@ class CXPlatformAvailability extends ffi.Struct {}
 class CXCursorSetImpl extends ffi.Struct {}
 
 /// Describes the kind of type
-class CXTypeKind {
+abstract class CXTypeKind {
   /// Represents an invalid type (e.g., where no type is available).
   static const int CXType_Invalid = 0;
 

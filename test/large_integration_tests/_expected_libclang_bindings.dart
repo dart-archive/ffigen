@@ -2149,7 +2149,7 @@ class LibClang {
 }
 
 /// Error codes returned by libclang routines.
-class CXErrorCode {
+abstract class CXErrorCode {
   /// No error.
   static const int CXError_Success = 0;
 
@@ -2205,7 +2205,7 @@ class CXUnsavedFile extends ffi.Struct {
 /// Describes the availability of a particular entity, which indicates whether
 /// the use of this entity will result in a warning or error due to it being
 /// deprecated or unavailable.
-class CXAvailabilityKind {
+abstract class CXAvailabilityKind {
   /// The entity is available.
   static const int CXAvailability_Available = 0;
 
@@ -2241,7 +2241,7 @@ class CXVersion extends ffi.Struct {
 }
 
 /// Describes the exception specification of a cursor.
-class CXCursor_ExceptionSpecificationKind {
+abstract class CXCursor_ExceptionSpecificationKind {
   /// The cursor has no exception specification.
   static const int CXCursor_ExceptionSpecificationKind_None = 0;
 
@@ -2273,7 +2273,7 @@ class CXCursor_ExceptionSpecificationKind {
   static const int CXCursor_ExceptionSpecificationKind_NoThrow = 9;
 }
 
-class CXGlobalOptFlags {
+abstract class CXGlobalOptFlags {
   /// Used to indicate that no special CXIndex options are needed.
   static const int CXGlobalOpt_None = 0;
 
@@ -2477,7 +2477,7 @@ class CXSourceRangeList extends ffi.Struct {
 }
 
 /// Describes the severity of a particular diagnostic.
-class CXDiagnosticSeverity {
+abstract class CXDiagnosticSeverity {
   /// A diagnostic that has been suppressed, e.g., by a command-line option.
   static const int CXDiagnostic_Ignored = 0;
 
@@ -2498,7 +2498,7 @@ class CXDiagnosticSeverity {
 
 /// Describes the kind of error that occurred (if any) in a call to
 /// clang_loadDiagnostics.
-class CXLoadDiag_Error {
+abstract class CXLoadDiag_Error {
   /// Indicates that no error occurred.
   static const int CXLoadDiag_None = 0;
 
@@ -2515,7 +2515,7 @@ class CXLoadDiag_Error {
 }
 
 /// Options to control the display of diagnostics.
-class CXDiagnosticDisplayOptions {
+abstract class CXDiagnosticDisplayOptions {
   /// Display the source-location information where the diagnostic was located.
   static const int CXDiagnostic_DisplaySourceLocation = 1;
 
@@ -2538,7 +2538,7 @@ class CXDiagnosticDisplayOptions {
 }
 
 /// Flags that control the creation of translation units.
-class CXTranslationUnit_Flags {
+abstract class CXTranslationUnit_Flags {
   /// Used to indicate that no special translation-unit options are needed.
   static const int CXTranslationUnit_None = 0;
 
@@ -2602,14 +2602,14 @@ class CXTranslationUnit_Flags {
 }
 
 /// Flags that control how translation units are saved.
-class CXSaveTranslationUnit_Flags {
+abstract class CXSaveTranslationUnit_Flags {
   /// Used to indicate that no special saving options are needed.
   static const int CXSaveTranslationUnit_None = 0;
 }
 
 /// Describes the kind of error that occurred (if any) in a call to
 /// clang_saveTranslationUnit().
-class CXSaveError {
+abstract class CXSaveError {
   /// Indicates that no error occurred while saving a translation unit.
   static const int CXSaveError_None = 0;
 
@@ -2627,13 +2627,13 @@ class CXSaveError {
 }
 
 /// Flags that control the reparsing of translation units.
-class CXReparse_Flags {
+abstract class CXReparse_Flags {
   /// Used to indicate that no special reparsing options are needed.
   static const int CXReparse_None = 0;
 }
 
 /// Categorizes how memory is being used by a translation unit.
-class CXTUResourceUsageKind {
+abstract class CXTUResourceUsageKind {
   static const int CXTUResourceUsage_AST = 1;
   static const int CXTUResourceUsage_Identifiers = 2;
   static const int CXTUResourceUsage_Selectors = 3;
@@ -2673,7 +2673,7 @@ class CXTUResourceUsage extends ffi.Struct {
 }
 
 /// Describes the kind of entity that a cursor refers to.
-class CXCursorKind {
+abstract class CXCursorKind {
   /// A declaration whose specific kind is not exposed via this interface.
   static const int CXCursor_UnexposedDecl = 1;
 
@@ -3391,7 +3391,7 @@ class ArrayHelper_CXCursor_data_level0 {
 }
 
 /// Describe the linkage of the entity referred to by a cursor.
-class CXLinkageKind {
+abstract class CXLinkageKind {
   /// This value indicates that no linkage information is available for a
   /// provided CXCursor.
   static const int CXLinkage_Invalid = 0;
@@ -3411,7 +3411,7 @@ class CXLinkageKind {
   static const int CXLinkage_External = 4;
 }
 
-class CXVisibilityKind {
+abstract class CXVisibilityKind {
   /// This value indicates that no visibility information is available for a
   /// provided CXCursor.
   static const int CXVisibility_Invalid = 0;
@@ -3431,7 +3431,7 @@ class CXVisibilityKind {
 class CXPlatformAvailability extends ffi.Struct {}
 
 /// Describe the "language" of the entity referred to by a cursor.
-class CXLanguageKind {
+abstract class CXLanguageKind {
   static const int CXLanguage_Invalid = 0;
   static const int CXLanguage_C = 1;
   static const int CXLanguage_ObjC = 2;
@@ -3440,7 +3440,7 @@ class CXLanguageKind {
 
 /// Describe the "thread-local storage (TLS) kind" of the declaration referred
 /// to by a cursor.
-class CXTLSKind {
+abstract class CXTLSKind {
   static const int CXTLS_None = 0;
   static const int CXTLS_Dynamic = 1;
   static const int CXTLS_Static = 2;
@@ -3449,7 +3449,7 @@ class CXTLSKind {
 class CXCursorSetImpl extends ffi.Struct {}
 
 /// Describes the kind of type
-class CXTypeKind {
+abstract class CXTypeKind {
   /// Represents an invalid type (e.g., where no type is available).
   static const int CXType_Invalid = 0;
 
@@ -3576,7 +3576,7 @@ class CXTypeKind {
 }
 
 /// Describes the calling convention of a function type
-class CXCallingConv {
+abstract class CXCallingConv {
   static const int CXCallingConv_Default = 0;
   static const int CXCallingConv_C = 1;
   static const int CXCallingConv_X86StdCall = 2;
@@ -3656,7 +3656,7 @@ class ArrayHelper_CXType_data_level0 {
 }
 
 /// Describes the kind of a template argument.
-class CXTemplateArgumentKind {
+abstract class CXTemplateArgumentKind {
   static const int CXTemplateArgumentKind_Null = 0;
   static const int CXTemplateArgumentKind_Type = 1;
   static const int CXTemplateArgumentKind_Declaration = 2;
@@ -3669,7 +3669,7 @@ class CXTemplateArgumentKind {
   static const int CXTemplateArgumentKind_Invalid = 9;
 }
 
-class CXTypeNullabilityKind {
+abstract class CXTypeNullabilityKind {
   /// Values of this type can never be null.
   static const int CXTypeNullability_NonNull = 0;
 
@@ -3687,7 +3687,7 @@ class CXTypeNullabilityKind {
 
 /// List the possible error codes for clang_Type_getSizeOf,
 /// clang_Type_getAlignOf, clang_Type_getOffsetOf and clang_Cursor_getOffsetOf.
-class CXTypeLayoutError {
+abstract class CXTypeLayoutError {
   /// Type is of kind CXType_Invalid.
   static const int CXTypeLayoutError_Invalid = -1;
 
@@ -3707,7 +3707,7 @@ class CXTypeLayoutError {
   static const int CXTypeLayoutError_Undeduced = -6;
 }
 
-class CXRefQualifierKind {
+abstract class CXRefQualifierKind {
   /// No ref-qualifier was provided.
   static const int CXRefQualifier_None = 0;
 
@@ -3720,7 +3720,7 @@ class CXRefQualifierKind {
 
 /// Represents the C++ access control level to a base class for a cursor with
 /// kind CX_CXXBaseSpecifier.
-class CX_CXXAccessSpecifier {
+abstract class CX_CXXAccessSpecifier {
   static const int CX_CXXInvalidAccessSpecifier = 0;
   static const int CX_CXXPublic = 1;
   static const int CX_CXXProtected = 2;
@@ -3729,7 +3729,7 @@ class CX_CXXAccessSpecifier {
 
 /// Represents the storage classes as declared in the source. CX_SC_Invalid was
 /// added for the case that the passed cursor in not a declaration.
-class CX_StorageClass {
+abstract class CX_StorageClass {
   static const int CX_SC_Invalid = 0;
   static const int CX_SC_None = 1;
   static const int CX_SC_Extern = 2;
@@ -3742,7 +3742,7 @@ class CX_StorageClass {
 
 /// Describes how the traversal of the children of a particular cursor should
 /// proceed after visiting a particular child cursor.
-class CXChildVisitResult {
+abstract class CXChildVisitResult {
   /// Terminates the cursor traversal.
   static const int CXChildVisit_Break = 0;
 
@@ -3756,7 +3756,7 @@ class CXChildVisitResult {
 }
 
 /// Properties for the printing policy.
-class CXPrintingPolicyProperty {
+abstract class CXPrintingPolicyProperty {
   static const int CXPrintingPolicy_Indentation = 0;
   static const int CXPrintingPolicy_SuppressSpecifiers = 1;
   static const int CXPrintingPolicy_SuppressTagKeyword = 2;
@@ -3787,7 +3787,7 @@ class CXPrintingPolicyProperty {
 }
 
 /// Property attributes for a CXCursor_ObjCPropertyDecl.
-class CXObjCPropertyAttrKind {
+abstract class CXObjCPropertyAttrKind {
   static const int CXObjCPropertyAttr_noattr = 0;
   static const int CXObjCPropertyAttr_readonly = 1;
   static const int CXObjCPropertyAttr_getter = 2;
@@ -3806,7 +3806,7 @@ class CXObjCPropertyAttrKind {
 
 /// 'Qualifiers' written next to the return and parameter types in Objective-C
 /// method declarations.
-class CXObjCDeclQualifierKind {
+abstract class CXObjCDeclQualifierKind {
   static const int CXObjCDeclQualifier_None = 0;
   static const int CXObjCDeclQualifier_In = 1;
   static const int CXObjCDeclQualifier_Inout = 2;
@@ -3816,7 +3816,7 @@ class CXObjCDeclQualifierKind {
   static const int CXObjCDeclQualifier_Oneway = 32;
 }
 
-class CXNameRefFlags {
+abstract class CXNameRefFlags {
   /// Include the nested-name-specifier, e.g. Foo:: in x.Foo::y, in the range.
   static const int CXNameRange_WantQualifier = 1;
 
@@ -3829,7 +3829,7 @@ class CXNameRefFlags {
 }
 
 /// Describes a kind of token.
-class CXTokenKind {
+abstract class CXTokenKind {
   /// A token that contains some kind of punctuation.
   static const int CXToken_Punctuation = 0;
 
@@ -3928,7 +3928,7 @@ class CXCompletionResult extends ffi.Struct {
 }
 
 /// Describes a single piece of text within a code-completion string.
-class CXCompletionChunkKind {
+abstract class CXCompletionChunkKind {
   /// A code-completion string that describes "optional" text that could be a
   /// part of the template (but is not required).
   static const int CXCompletionChunk_Optional = 0;
@@ -4011,7 +4011,7 @@ class CXCodeCompleteResults extends ffi.Struct {
 }
 
 /// Flags that can be passed to clang_codeCompleteAt() to modify its behavior.
-class CXCodeComplete_Flags {
+abstract class CXCodeComplete_Flags {
   /// Whether to include macros within the set of code completions returned.
   static const int CXCodeComplete_IncludeMacros = 1;
 
@@ -4035,7 +4035,7 @@ class CXCodeComplete_Flags {
 }
 
 /// Bits that represent the context under which completion is occurring.
-class CXCompletionContext {
+abstract class CXCompletionContext {
   /// The context for completions is unexposed, as only Clang results should be
   /// included. (This is equivalent to having no context bits set.)
   static const int CXCompletionContext_Unexposed = 0;
@@ -4127,7 +4127,7 @@ class CXCompletionContext {
   static const int CXCompletionContext_Unknown = 8388607;
 }
 
-class CXEvalResultKind {
+abstract class CXEvalResultKind {
   static const int CXEval_Int = 1;
   static const int CXEval_Float = 2;
   static const int CXEval_ObjCStrLiteral = 3;
@@ -4138,14 +4138,14 @@ class CXEvalResultKind {
 }
 
 /// @{
-class CXVisitorResult {
+abstract class CXVisitorResult {
   static const int CXVisit_Break = 0;
   static const int CXVisit_Continue = 1;
 }
 
 class CXCursorAndRangeVisitor extends ffi.Struct {}
 
-class CXResult {
+abstract class CXResult {
   /// Function returned successfully.
   static const int CXResult_Success = 0;
 
@@ -4217,7 +4217,7 @@ class CXIdxIncludedFileInfo extends ffi.Struct {}
 /// Data for IndexerCallbacks#importedASTFile.
 class CXIdxImportedASTFileInfo extends ffi.Struct {}
 
-class CXIdxEntityKind {
+abstract class CXIdxEntityKind {
   static const int CXIdxEntity_Unexposed = 0;
   static const int CXIdxEntity_Typedef = 1;
   static const int CXIdxEntity_Function = 2;
@@ -4247,7 +4247,7 @@ class CXIdxEntityKind {
   static const int CXIdxEntity_CXXInterface = 26;
 }
 
-class CXIdxEntityLanguage {
+abstract class CXIdxEntityLanguage {
   static const int CXIdxEntityLang_None = 0;
   static const int CXIdxEntityLang_C = 1;
   static const int CXIdxEntityLang_ObjC = 2;
@@ -4259,14 +4259,14 @@ class CXIdxEntityLanguage {
 /// CXIdxEntity_Function CXIdxEntity_CXXClass CXIdxEntity_CXXStaticMethod
 /// CXIdxEntity_CXXInstanceMethod CXIdxEntity_CXXConstructor
 /// CXIdxEntity_CXXConversionFunction CXIdxEntity_CXXTypeAlias
-class CXIdxEntityCXXTemplateKind {
+abstract class CXIdxEntityCXXTemplateKind {
   static const int CXIdxEntity_NonTemplate = 0;
   static const int CXIdxEntity_Template = 1;
   static const int CXIdxEntity_TemplatePartialSpecialization = 2;
   static const int CXIdxEntity_TemplateSpecialization = 3;
 }
 
-class CXIdxAttrKind {
+abstract class CXIdxAttrKind {
   static const int CXIdxAttr_Unexposed = 0;
   static const int CXIdxAttr_IBAction = 1;
   static const int CXIdxAttr_IBOutlet = 2;
@@ -4281,13 +4281,13 @@ class CXIdxContainerInfo extends ffi.Struct {}
 
 class CXIdxIBOutletCollectionAttrInfo extends ffi.Struct {}
 
-class CXIdxDeclInfoFlags {
+abstract class CXIdxDeclInfoFlags {
   static const int CXIdxDeclFlag_Skipped = 1;
 }
 
 class CXIdxDeclInfo extends ffi.Struct {}
 
-class CXIdxObjCContainerKind {
+abstract class CXIdxObjCContainerKind {
   static const int CXIdxObjCContainer_ForwardRef = 0;
   static const int CXIdxObjCContainer_Interface = 1;
   static const int CXIdxObjCContainer_Implementation = 2;
@@ -4339,7 +4339,7 @@ class CXIdxCXXClassDeclInfo extends ffi.Struct {
 }
 
 /// Data for IndexerCallbacks#indexEntityReference.
-class CXIdxEntityRefKind {
+abstract class CXIdxEntityRefKind {
   /// The entity is referenced directly in user's code.
   static const int CXIdxEntityRef_Direct = 1;
 
@@ -4349,7 +4349,7 @@ class CXIdxEntityRefKind {
 }
 
 /// Roles that are attributed to symbol occurrences.
-class CXSymbolRole {
+abstract class CXSymbolRole {
   static const int CXSymbolRole_None = 0;
   static const int CXSymbolRole_Declaration = 1;
   static const int CXSymbolRole_Definition = 2;
@@ -4392,7 +4392,7 @@ class IndexerCallbacks extends ffi.Struct {
   ffi.Pointer<ffi.NativeFunction<_typedefC_10>> indexEntityReference;
 }
 
-class CXIndexOptFlags {
+abstract class CXIndexOptFlags {
   /// Used to indicate that no special indexing options are needed.
   static const int CXIndexOpt_None = 0;
 

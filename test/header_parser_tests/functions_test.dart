@@ -23,7 +23,7 @@ void main() {
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Functions Test'
 ${strings.output}: 'unused'
-${strings.libclang_dylib_folder}: 'tool/wrapped_libclang'
+
 ${strings.headers}:
   - 'test/header_parser_tests/functions.h'
 ${strings.headerFilter}:

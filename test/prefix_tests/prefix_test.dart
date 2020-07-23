@@ -29,7 +29,7 @@ void main() {
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Prefix Test'
 ${strings.output}: 'unused'
-${strings.libclang_dylib_folder}: 'tool/wrapped_libclang'
+
 ${strings.headers}:
   - 'test/prefix_tests/prefix.h'
 ${strings.headerFilter}:

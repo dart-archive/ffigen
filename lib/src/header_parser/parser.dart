@@ -3,13 +3,15 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:ffi';
-import 'dart:io';
 
 import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/config_provider.dart';
+import 'package:ffigen/src/find_dot_dart_tool.dart';
 import 'package:ffigen/src/header_parser/translation_unit_parser.dart';
+import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
+import 'package:path/path.dart' as path;
 
 import 'clang_bindings/clang_bindings.dart' as clang_types;
 import 'data.dart';
@@ -42,11 +44,20 @@ var _logger = Logger('ffigen.header_parser.parser');
 
 /// Initialises parser, clears any previous values.
 void initParser(Config c) {
+  // Set global configurations.
   config = c;
 
-  clang = clang_types.Clang(DynamicLibrary.open(
-      File(config.libclang_dylib_path).absolute?.path ??
-          config.libclang_dylib_path));
+  // Find full path of dynamic library and initialise bindings.
+  if (findDotDartTool() == null) {
+    throw Exception('Unable to find .dart_tool.');
+  } else {
+    final fullDylibPath = path.join(
+      findDotDartTool().toFilePath(),
+      strings.ffigenFolderName,
+      strings.dylibFileName,
+    );
+    clang = clang_types.Clang(DynamicLibrary.open(fullDylibPath));
+  }
 }
 
 /// Parses source files and adds generated bindings to [bindings].
