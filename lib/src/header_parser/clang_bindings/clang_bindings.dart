@@ -704,7 +704,7 @@ class ArrayHelper_CXSourceRange_ptr_data_level0 {
 }
 
 /// Options to control the display of diagnostics.
-class CXDiagnosticDisplayOptions {
+abstract class CXDiagnosticDisplayOptions {
   /// Display the source-location information where the diagnostic was located.
   static const int CXDiagnostic_DisplaySourceLocation = 1;
 
@@ -727,7 +727,7 @@ class CXDiagnosticDisplayOptions {
 }
 
 /// Flags that control the creation of translation units.
-class CXTranslationUnit_Flags {
+abstract class CXTranslationUnit_Flags {
   /// Used to indicate that no special translation-unit options are needed.
   static const int CXTranslationUnit_None = 0;
 
@@ -791,7 +791,7 @@ class CXTranslationUnit_Flags {
 }
 
 /// Describes the kind of entity that a cursor refers to.
-class CXCursorKind {
+abstract class CXCursorKind {
   /// A declaration whose specific kind is not exposed via this interface.
   static const int CXCursor_UnexposedDecl = 1;
 
@@ -1509,7 +1509,7 @@ class ArrayHelper_CXCursor_data_level0 {
 }
 
 /// Describes the kind of type
-class CXTypeKind {
+abstract class CXTypeKind {
   /// Represents an invalid type (e.g., where no type is available).
   static const int CXType_Invalid = 0;
 
@@ -1693,7 +1693,7 @@ class ArrayHelper_CXType_data_level0 {
 
 /// Describes how the traversal of the children of a particular cursor should
 /// proceed after visiting a particular child cursor.
-class CXChildVisitResult {
+abstract class CXChildVisitResult {
   /// Terminates the cursor traversal.
   static const int CXChildVisit_Break = 0;
 
