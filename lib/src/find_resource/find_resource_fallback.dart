@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:convert' show jsonDecode;
 import 'dart:io' show Platform, File;
 
 /// Find the `.dart_tool/` folder, returns `null` if unable to find it.
@@ -20,6 +21,35 @@ Uri findDotDartTool() {
     if (File.fromUri(root.resolve('.dart_tool/package_config.json'))
         .existsSync()) {
       return root.resolve('.dart_tool/');
+    }
+  } while (root != (root = root.resolve('..')));
+  return null;
+}
+
+Uri findWrapper(String wrapperName) {
+  var root = Platform.script.resolve('./');
+  // Traverse up until we see a `.dart_tool/package_config.json` file.
+  do {
+    final file = File.fromUri(root.resolve('.dart_tool/package_config.json'));
+    if (file.existsSync()) {
+      /// Read the package_config.json file to extract path of wrapper.
+      try {
+        final packageMap =
+            jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
+        if (packageMap['configVersion'] == 2) {
+          final ffigenRootUri = Uri.parse(
+            ((packageMap['packages'] as List<dynamic>)
+                    .cast<Map<String, dynamic>>()
+                    .firstWhere(
+                        (element) => element['name'] == 'ffigen')['rootUri']
+                as String),
+          );
+          return ffigenRootUri.resolve('src/clang_library/$wrapperName');
+        }
+      } catch (e, s) {
+        print(s);
+        throw Exception('Cannot resolve package:ffigen rootUri.');
+      }
     }
   } while (root != (root = root.resolve('..')));
   return null;

@@ -7,7 +7,7 @@ import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/config_provider.dart';
-import 'package:ffigen/src/find_dot_dart_tool.dart';
+import 'package:ffigen/src/find_resource.dart';
 import 'package:ffigen/src/header_parser/translation_unit_parser.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
