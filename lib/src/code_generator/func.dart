@@ -33,7 +33,8 @@ class Func extends LookUpBinding {
   final Type returnType;
   final List<Parameter> parameters;
 
-  /// [lookupSymbolName], if not provided, takes the value of [name].
+  /// [originalName] is looked up in dynamic library, if not
+  /// provided, takes the value of [name].
   Func({
     @required String name,
     String originalName,
