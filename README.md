@@ -286,7 +286,7 @@ class ArrayHelper_CXFileUniqueID_data_level0 {
 2. Run `pub run ffigen`.
 
 ## Running Tests
-1. Run setup to build required dynamic library - `pub run ffigen:setup`.
+1. Run setup to build the LLVM wrapper - `pub run ffigen:setup`.
 2. Dynamic library for some tests also need to be built before running the examples.
   1. `cd test/native_test`.
   2. Run `dart build_test_dylib.dart`.
