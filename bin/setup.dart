@@ -10,17 +10,15 @@
 ///
 /// Linux:
 /// ```
-/// clang -I/usr/lib/llvm-9/include/ -I/usr/lib/llvm-10/include/ -lclang -shared -fpic wrapper.c -o libwrapped_clang.so
+/// clang -I/usr/lib/llvm-9/include/ -I/usr/lib/llvm-10/include/ -lclang -shared -fpic path/to/wrapper.c -o path/to/libwrapped_clang.so
 /// ```
 /// MacOS:
 /// ```
-/// clang -I/usr/local/opt/llvm/include/ -L/usr/local/opt/llvm/lib/ -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/ -v -lclang -shared -fpic wrapper.c -o libwrapped_clang.dylib
+/// clang -I/usr/local/opt/llvm/include/ -L/usr/local/opt/llvm/lib/ -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/ -v -lclang -shared -fpic path/to/wrapper.c -o path/to/libwrapped_clang.dylib
 /// ```
 /// Windows:
 /// ```
-/// clang -IC:\Progra~1\LLVM\include -LC:\Progra~1\LLVM\lib -llibclang -shared wrapper.c -o wrapped_clang.dll -Wl,/DEF:wrapper.def
-/// del wrapped_clang.exp
-/// del wrapped_clang.lib
+/// clang -IC:\Progra~1\LLVM\include -LC:\Progra~1\LLVM\lib -llibclang -shared path/to/wrapper.c -o path/to/wrapped_clang.dll -Wl,/DEF:path/to/wrapper.def
 /// ```
 /// =======================================================================
 /// =======================================================================
@@ -29,17 +27,19 @@
 import 'dart:io';
 import 'package:args/args.dart';
 import 'package:meta/meta.dart';
+import 'package:ffigen/src/find_dot_dart_tool.dart';
+import 'package:ffigen/src/strings.dart' as strings;
+import 'package:path/path.dart' as path;
 
-const macOS = 'macos';
-const windows = 'windows';
-const linux = 'linux';
+const _macOS = 'macos';
+const _windows = 'windows';
+const _linux = 'linux';
 
 /// Default platform options.
-Map<String, Options> platformOptions = {
-  linux: Options(
-    outputfilename: 'libwrapped_clang.so',
+Map<String, _Options> _platformOptions = {
+  _linux: _Options(
     sharedFlag: '-shared',
-    inputHeader: 'wrapper.c',
+    inputHeader: _getWrapperPath('wrapper.c'),
     fPIC: '-fpic',
     ldLibFlag: '-lclang',
     headerIncludes: [
@@ -47,11 +47,10 @@ Map<String, Options> platformOptions = {
       '-I/usr/lib/llvm-10/include/',
     ],
   ),
-  windows: Options(
-    outputfilename: 'wrapped_clang.dll',
+  _windows: _Options(
     sharedFlag: '-shared',
-    inputHeader: 'wrapper.c',
-    moduleDefPath: '-Wl,/DEF:wrapper.def',
+    inputHeader: _getWrapperPath('wrapper.c'),
+    moduleDefPath: '-Wl,/DEF:${_getWrapperPath("wrapper.def")}',
     ldLibFlag: '-llibclang',
     headerIncludes: [
       r'-IC:\Progra~1\LLVM\include',
@@ -60,10 +59,9 @@ Map<String, Options> platformOptions = {
       r'-LC:\Progra~1\LLVM\lib',
     ],
   ),
-  macOS: Options(
-    outputfilename: 'libwrapped_clang.dylib',
+  _macOS: _Options(
     sharedFlag: '-shared',
-    inputHeader: 'wrapper.c',
+    inputHeader: _getWrapperPath('wrapper.c'),
     fPIC: '-fpic',
     ldLibFlag: '-lclang',
     headerIncludes: [
@@ -76,20 +74,97 @@ Map<String, Options> platformOptions = {
   ),
 };
 
+/// If main is called directly we always re-create the dynamic library.
 void main(List<String> arguments) {
-  print('Building Dynamic Library for libclang wrapper... ');
-  final options = getPlatformOptions();
+  print('Building Dynamic Library for libclang wrapper...');
+  final options = _getPlatformOptions();
+  _deleteOldDylib();
 
   // Updates header/lib includes in platform options.
-  changeIncludesUsingCmdArgs(arguments, options);
+  _changeIncludesUsingCmdArgs(arguments, options);
 
   // Run clang compiler to generate the dynamic library.
-  final ProcessResult result = runClangProcess(options);
-  printSuccess(result, options);
+  final ProcessResult result = _runClangProcess(options);
+  _printDetails(result, options);
+}
+
+/// Returns true if auto creating dylib was successful.
+///
+/// This will fail if llvm is not in default directories or if .dart_tool
+/// doesn't exist.
+bool autoCreateDylib() {
+  _deleteOldDylib();
+  final options = _getPlatformOptions();
+  final ProcessResult result = _runClangProcess(options);
+  if ((result.stderr as String).isNotEmpty) {
+    print(stderr);
+  }
+  return checkDylibExist();
+}
+
+bool checkDylibExist() {
+  return File(path.join(
+    _getDotDartToolPath(),
+    strings.ffigenFolderName,
+    strings.dylibFileName,
+  )).existsSync();
+}
+
+/// Removes old dynamic libraries(if any) by deleting .dart_tool/ffigen.
+///
+/// Throws error if '.dart_tool' is not found.
+void _deleteOldDylib() {
+  // Find .dart_tool.
+  final dtpath = _getDotDartToolPath();
+  // Find .dart_tool/ffigen and delete recursively if it exists.
+  final ffigenDir = Directory(path.join(dtpath, strings.ffigenFolderName));
+  if (ffigenDir.existsSync()) ffigenDir.deleteSync(recursive: true);
+}
+
+/// Creates necesarry parent folders and return full path to dylib.
+String _dylibPath() {
+  // Find .dart_tool.
+  final dtpath = _getDotDartToolPath();
+  // Create .dart_tool/ffigen if it doesn't exists.
+  final ffigenDir = Directory(path.join(dtpath, strings.ffigenFolderName));
+  if (!ffigenDir.existsSync()) ffigenDir.createSync();
+
+  // Return dylib path
+  return path.join(ffigenDir.absolute.path, strings.dylibFileName);
+}
+
+/// Returns full path of the wrapper files.
+///
+/// Throws error if not found.
+String _getWrapperPath(String wrapperName) {
+  final file = File(path.join(
+    Platform.script
+        .resolve(path.posix.join('..', 'lib', 'src', 'clang_library'))
+        // This needs to be in posix style or illegal character exception is
+        // thrown on windows.
+        .toFilePath(),
+    wrapperName,
+  ));
+  if (file.existsSync()) {
+    return file.absolute.path;
+  } else {
+    throw Exception('Unable to find $wrapperName file.');
+  }
+}
+
+/// Gets full path to .dart_tool.
+///
+/// Throws Exception if not found.
+String _getDotDartToolPath() {
+  final dtpath = findDotDartTool()?.toFilePath();
+  if (dtpath == null) {
+    throw Exception('.dart_tool not found.');
+  }
+  return dtpath;
 }
 
 /// Calls the clang compiler.
-ProcessResult runClangProcess(Options options) {
+ProcessResult _runClangProcess(_Options options) {
   final result = Process.runSync(
     'clang',
     [
@@ -100,7 +175,7 @@ ProcessResult runClangProcess(Options options) {
       options.fPIC,
       options.inputHeader,
       '-o',
-      options.outputfilename,
+      _dylibPath(),
       options.moduleDefPath,
       '-Wno-nullability-completeness',
     ],
@@ -109,16 +184,16 @@ ProcessResult runClangProcess(Options options) {
 }
 
 /// Prints success message (or process error if any).
-void printSuccess(ProcessResult result, Options options) {
+void _printDetails(ProcessResult result, _Options options) {
   print(result.stdout);
-  if ((result.stderr as String).isEmpty) {
-    print('Generated file: ${options.outputfilename}');
-  } else {
+  if ((result.stderr as String).isNotEmpty) {
     print(result.stderr);
+  } else {
+    print('Created dynamic library.');
   }
 }
 
-ArgResults getArgResults(List<String> args) {
+ArgResults _getArgResults(List<String> args) {
   final parser = ArgParser(allowTrailingOptions: true);
   parser.addSeparator(
       'Build Script to generate dynamic library used by this package:');
@@ -151,8 +226,8 @@ ArgResults getArgResults(List<String> args) {
 }
 
 /// Use cmd args(if any) to change header/lib include paths.
-void changeIncludesUsingCmdArgs(List<String> arguments, Options options) {
-  final argResult = getArgResults(arguments);
+void _changeIncludesUsingCmdArgs(List<String> arguments, _Options options) {
+  final argResult = _getArgResults(arguments);
   if (argResult.wasParsed('include-header')) {
     options.headerIncludes = (argResult['include-header'] as List<String>)
         .map((header) => '-I$header')
@@ -166,23 +241,20 @@ void changeIncludesUsingCmdArgs(List<String> arguments, Options options) {
 }
 
 /// Get options based on current platform.
-Options getPlatformOptions() {
+_Options _getPlatformOptions() {
   if (Platform.isMacOS) {
-    return platformOptions[macOS];
+    return _platformOptions[_macOS];
   } else if (Platform.isWindows) {
-    return platformOptions[windows];
+    return _platformOptions[_windows];
   } else if (Platform.isLinux) {
-    return platformOptions[linux];
+    return _platformOptions[_linux];
   } else {
     throw Exception('Unknown Platform.');
   }
 }
 
 /// Hold options which would be passed to clang.
-class Options {
-  /// Name of dynamic library to generate.
-  final String outputfilename;
-
+class _Options {
   /// Tells compiler to generate a shared library.
   final String sharedFlag;
 
@@ -204,8 +276,7 @@ class Options {
   /// Linker flag for linking to libclang.
   final String ldLibFlag;
 
-  Options({
-    @required this.outputfilename,
+  _Options({
     @required this.sharedFlag,
     @required this.inputHeader,
     @required this.ldLibFlag,

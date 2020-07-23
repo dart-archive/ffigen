@@ -1,7 +1,7 @@
 # Libclang example
 
 Demonstrates generating bindings for [Libclang](https://clang.llvm.org/doxygen/group__CINDEX.html).
-This example actually uses a C file used in this package itself, ([wrapper.c](../../tool/wrapped_libclang/wrapper.c)), which adds a few more wrapper functions atop Libclang.
+The C header source files for libclang are in [third_party/libclang](/third_party/libclang).
 
 ## Generating bindings
 At the root of this example (`example/libclang-example`), run -

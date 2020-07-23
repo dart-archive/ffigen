@@ -33,27 +33,24 @@ typedef _c_sum = ffi.Int32 Function(Int32 a, Int32 b);
 typedef _dart_sum = int Function(int a,int b);
 ```
 ## Using this package
-- clone/download this repository.
-- Build it (see [building](#building)).
 - Add this package as dev_dependency in your `pubspec.yaml`.
+- Setup for use (see [Setup](#Setup)).
 - Configurations must be provided in `pubspec.yaml` or in a custom YAML file (see [configurations](#configurations)).
 - Run the tool- `pub run ffigen`.
 
-## Building
-A dynamic library for a wrapper to libclang needs to be generated as it is used by the parser submodule.
+## Setup
+`package:ffigen` uses LLVM. Install LLVM in the following way.
 
 #### ubuntu/linux
 1. Install libclangdev - `sudo apt-get install libclang-dev`.
-2. `cd tool/wrapped_libclang`, then run `dart build.dart`.
 
 #### Windows
 1. Install Visual Studio with C++ development support.
-2. Install LLVM.
-3. `cd tool\wrapped_libclang`, then run `dart build.dart`.
+2. Install [LLVM](https://releases.llvm.org/download.html).
 
 #### MacOS
-1. Install LLVM.
-2. `cd tool/wrapped_libclang`, then run `dart build.dart`.
+1. Install Xcode.
+2. Install LLVM - `brew install llvm`.
 
 ## Configurations
 Configurations can be provided in 2 ways-
@@ -152,16 +149,6 @@ functions:
       <code>-fparse-all-comments</code> to <code>compiler-opts</code>.
     </td>
     <td><pre lang='yaml'>comments: 'full'</pre></td>
-  </tr>
-  <tr>
-    <td>libclang-dylib-folder</td>
-    <td>no</td>
-    <td>Path to the folder containing dynamic library for libclang wrapper.<br>
-    Note: This is meant for programatic use of this package, and isn't required
-    when using it via the <code>pub run ffigen</code> command.<br>
-      <b>Default: tool/wrapped_libclang</b>
-    </td>
-    <td><pre lang='yaml'>libclang-dylib-folder: 'tool/wrapped_libclang'</pre></td>
   </tr>
   <tr>
     <td>sort</td>
@@ -299,8 +286,9 @@ class ArrayHelper_CXFileUniqueID_data_level0 {
 2. Run `pub run ffigen`.
 
 ## Running Tests
-Dynamic library for some tests need to be built before running the examples.
-1. `cd test/native_test`.
-2. Run `dart build_test_dylib.dart`.
+1. Run setup to build the LLVM wrapper - `pub run ffigen:setup`.
+2. Dynamic library for some tests also need to be built before running the examples.
+  1. `cd test/native_test`.
+  2. Run `dart build_test_dylib.dart`.
 
 Run tests from the root of the package with `pub run test`.

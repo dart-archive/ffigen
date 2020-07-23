@@ -541,7 +541,7 @@ import 'dart:ffi' as ffi;
 
 /// test line 1
 /// test line 2
-class Constants {
+abstract class Constants {
   static const int a = 10;
   /// negative
   static const int b = -1;
@@ -711,10 +711,10 @@ default:
 class ArrayHelperPrefixCollisionTest extends ffi.Struct{
 }
 
-class _c_Test {
+abstract class _c_Test {
 }
 
-class init_dylib {
+abstract class init_dylib {
 }
 
 typedef _c_test1 = ffi.Void Function(

@@ -1,5 +1,11 @@
 # 0.1.0
-- Initial release supporing binding generation for Functions, Structs, Enums.
+- Support for Functions, Structs and Enums.
 - Glob support for specifying headers.
-- HeaderFilter - Include/Exclude declarations from specific header files.
+- HeaderFilter - Include/Exclude declarations from specific header files using name matching.
 - Filters - Include/Exclude function, structs and enum declarations using Regexp or Name matching.
+- Prefixing - function, structs and enums can have a global prefix. Individual prefix Replacement support using Regexp.
+- Comment extraction: full/brief/none
+- Support for fixed size arrays in struct. `array-workaround` (if enabled) will generate helpers for accessing fixed size arrays in structs.
+- Size for ints can be specified using `size-map` in config.
+- Options to disable using supported typedefs (e.g `uint8_t => Uint8`), sort bindings.
+- Option to add a raw `preamble` which is included as is in the generated file.

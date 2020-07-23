@@ -23,7 +23,6 @@ void main() {
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Macros Test'
 ${strings.output}: 'unused'
-${strings.libclang_dylib_folder}: 'tool/wrapped_libclang'
 ${strings.headers}:
   - 'test/header_parser_tests/macros.h'
 ${strings.headerFilter}:
