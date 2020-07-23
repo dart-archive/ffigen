@@ -82,8 +82,8 @@ class Func extends LookUpBinding {
   /// And only marks it as used at top-level.
   String _uniqueTypedefName(String name, Writer w) {
     final base = name;
-    String uniqueName = name;
-    int suffix = 0;
+    var uniqueName = name;
+    var suffix = 0;
     while (w.topLevelUniqueNamer.isUsed(uniqueName) ||
         w.wrapperLevelUniqueNamer.isUsed(uniqueName)) {
       suffix++;

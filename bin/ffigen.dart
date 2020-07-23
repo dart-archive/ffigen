@@ -16,6 +16,9 @@ import 'setup.dart';
 var _logger = Logger('ffigen.ffigen');
 
 void main(List<String> args) {
+  // Parses the cmd args. This will print usage and exit if --help was passed.
+  final result = getArgResults(args);
+
   /// Prompt user if dylib doesn't exist and cannot be auto created to run
   /// `pub run ffigen:setup -Ipath/to/llvm/include -Lpath/to/llvm/lib`.
   if (!checkDylibExist() && !autoCreateDylib()) {
@@ -24,9 +27,6 @@ void main(List<String> args) {
     print('  pub run ffigen:setup -Ipath/to/llvm/include -Lpath/to/llvm/lib');
     exit(1);
   }
-
-  // Parses the cmd args.
-  final result = getArgResults(args);
 
   // Setup logging level and printing.
   setupLogger(result);
