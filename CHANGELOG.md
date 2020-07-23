@@ -1,5 +1,5 @@
 # 0.1.1
-- Fix pub score.
+- Address pub score: follow dart File conventions, provide documentation, and pass static analysis.
 
 # 0.1.0
 - Support for Functions, Structs and Enums.
