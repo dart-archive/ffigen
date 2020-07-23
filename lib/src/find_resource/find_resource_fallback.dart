@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:convert' show jsonDecode;
-import 'dart:io' show Platform, File;
+import 'dart:io' show Platform, File, Directory;
 
 /// Find the `.dart_tool/` folder, returns `null` if unable to find it.
 Uri findDotDartTool() {
@@ -15,7 +15,7 @@ Uri findDotDartTool() {
   //       `Platform.script` and traverse level-up until we find a
   //       `.dart_tool/package_config.json` file.
   // Find script directory
-  var root = Platform.script.resolve('./');
+  var root = Directory.current.uri;
   // Traverse up until we see a `.dart_tool/package_config.json` file.
   do {
     if (File.fromUri(root.resolve('.dart_tool/package_config.json'))
@@ -27,7 +27,7 @@ Uri findDotDartTool() {
 }
 
 Uri findWrapper(String wrapperName) {
-  var root = Platform.script.resolve('./');
+  var root = Directory.current.uri;
   // Traverse up until we see a `.dart_tool/package_config.json` file.
   do {
     final file = File.fromUri(root.resolve('.dart_tool/package_config.json'));
@@ -37,18 +37,24 @@ Uri findWrapper(String wrapperName) {
         final packageMap =
             jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
         if (packageMap['configVersion'] == 2) {
-          final ffigenRootUri = Uri.parse(
-            ((packageMap['packages'] as List<dynamic>)
-                    .cast<Map<String, dynamic>>()
-                    .firstWhere(
-                        (element) => element['name'] == 'ffigen')['rootUri']
-                as String),
-          );
-          return ffigenRootUri.resolve('src/clang_library/$wrapperName');
+          var ffigenRootUriString = ((packageMap['packages'] as List<dynamic>)
+                  .cast<Map<String, dynamic>>()
+                  .firstWhere(
+                      (element) => element['name'] == 'ffigen')['rootUri']
+              as String);
+          ffigenRootUriString = ffigenRootUriString.endsWith('/')
+              ? ffigenRootUriString
+              : ffigenRootUriString + '/';
+
+          /// [ffigenRootUri] can be relative to .dart_tool if its from
+          /// filesystem so we need to resolve it from .dart_tool first.
+          return file.parent.uri
+              .resolve(ffigenRootUriString)
+              .resolve('lib/src/clang_library/$wrapperName');
         }
       } catch (e, s) {
         print(s);
-        throw Exception('Cannot resolve package:ffigen rootUri.');
+        throw Exception('Cannot resolve package:ffigen\'s rootUri.');
       }
     }
   } while (root != (root = root.resolve('..')));
