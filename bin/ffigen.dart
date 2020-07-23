@@ -6,8 +6,7 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:ffigen/src/config_provider.dart';
-import 'package:ffigen/src/header_parser.dart' as parser;
+import 'package:ffigen/ffigen.dart';
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart' as yaml;
 
@@ -41,7 +40,7 @@ void main(List<String> args) {
   }
 
   // Parse the bindings according to config object provided.
-  final library = parser.parse(config);
+  final library = parse(config);
 
   if (config.sort) {
     library.sort();
