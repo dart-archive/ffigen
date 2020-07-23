@@ -17,7 +17,7 @@ var _logger = Logger('ffigen.ffigen');
 
 void main(List<String> args) {
   // Parses the cmd args. This will print usage and exit if --help was passed.
-  final result = getArgResults(args);
+  final argResult = getArgResults(args);
 
   /// Prompt user if dylib doesn't exist and cannot be auto created to run
   /// `pub run ffigen:setup -Ipath/to/llvm/include -Lpath/to/llvm/lib`.
@@ -29,12 +29,12 @@ void main(List<String> args) {
   }
 
   // Setup logging level and printing.
-  setupLogger(result);
+  setupLogger(argResult);
 
   // Create a config object.
   Config config;
   try {
-    config = getConfig(result);
+    config = getConfig(argResult);
   } on ConfigError {
     print('Please fix configuration errors and re-run the tool.');
     exit(1);

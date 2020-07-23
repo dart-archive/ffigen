@@ -1,3 +1,6 @@
+# 0.1.1
+- Fix pub score.
+
 # 0.1.0
 - Support for Functions, Structs and Enums.
 - Glob support for specifying headers.
