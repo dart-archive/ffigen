@@ -265,8 +265,8 @@ class ArrayHelper_Struct1_data_level0 {
 
   ArrayHelper_Struct1_data_level1 operator [](int index) {
     _checkBounds(index);
-    int offset = index;
-    for (int i = level + 1; i < dimensions.length; i++) {
+    var offset = index;
+    for (var i = level + 1; i < dimensions.length; i++) {
       offset *= dimensions[i];
     }
     return ArrayHelper_Struct1_data_level1(
@@ -292,8 +292,8 @@ class ArrayHelper_Struct1_data_level1 {
 
   ArrayHelper_Struct1_data_level2 operator [](int index) {
     _checkBounds(index);
-    int offset = index;
-    for (int i = level + 1; i < dimensions.length; i++) {
+    var offset = index;
+    for (var i = level + 1; i < dimensions.length; i++) {
       offset *= dimensions[i];
     }
     return ArrayHelper_Struct1_data_level2(

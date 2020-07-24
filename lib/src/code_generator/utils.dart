@@ -15,8 +15,8 @@ class UniqueNamer {
   ///
   /// Adds the resulting name to the used names by default.
   String makeUnique(String name, [bool addToUsedUpNames = true]) {
-    String cr_name = name;
-    int i = 1;
+    var cr_name = name;
+    var i = 1;
     while (_usedUpNames.contains(cr_name)) {
       cr_name = '${name}_$i';
       i++;

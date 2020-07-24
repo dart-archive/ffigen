@@ -135,9 +135,9 @@ class Struc extends NoLookUpBinding {
   /// Gets a unique prefix in local namespace for expanded array items.
   String getUniqueExpandedArrayItemPrefix() {
     final base = '_unique';
-    String expandedArrayItemPrefix = base;
-    int suffixInt = 0;
-    for (int i = 0; i < members.length; i++) {
+    var expandedArrayItemPrefix = base;
+    var suffixInt = 0;
+    for (var i = 0; i < members.length; i++) {
       if (members[i].name.startsWith(expandedArrayItemPrefix)) {
         // Not a unique prefix, start over with a new suffix.
         i = -1;
@@ -171,7 +171,7 @@ class ArrayHelper {
   int get expandedArrayLength {
     if (_expandedArrayLength != null) return _expandedArrayLength;
 
-    int arrayLength = 1;
+    var arrayLength = 1;
     for (final i in dimensions) {
       arrayLength = arrayLength * i;
     }
@@ -193,7 +193,7 @@ class ArrayHelper {
     final arrayDartType = elementType.getDartType(w);
     final arrayCType = elementType.getCType(w);
 
-    for (int i = 0; i < expandedArrayLength; i++) {
+    for (var i = 0; i < expandedArrayLength; i++) {
       if (elementType.isPrimitive) {
         s.write('  @${arrayCType}()\n');
       }
@@ -210,7 +210,7 @@ class ArrayHelper {
   String helperClassString(Writer w) {
     final s = StringBuffer();
     final arrayType = elementType.getDartType(w);
-    for (int dim = 0; dim < dimensions.length; dim++) {
+    for (var dim = 0; dim < dimensions.length; dim++) {
       final helperClassName = '${helperClassGroupName}_level${dim}';
       final structIdentifier = '_struct';
       final dimensionsIdentifier = 'dimensions';
@@ -262,7 +262,7 @@ class ArrayHelper {
         s.write('$arrayType operator[](int index){\n');
         s.write('$checkBoundsFunctionIdentifier(index);\n');
         s.write('switch($absoluteIndexIdentifier+index){\n');
-        for (int i = 0; i < expandedArrayLength; i++) {
+        for (var i = 0; i < expandedArrayLength; i++) {
           s.write('case $i:\n');
           s.write('  return $structIdentifier.${elementNamePrefix}$i;\n');
         }
@@ -275,7 +275,7 @@ class ArrayHelper {
         s.write('void operator[]=(int index, $arrayType value){\n');
         s.write('$checkBoundsFunctionIdentifier(index);\n');
         s.write('switch($absoluteIndexIdentifier+index){\n');
-        for (int i = 0; i < expandedArrayLength; i++) {
+        for (var i = 0; i < expandedArrayLength; i++) {
           s.write('case $i:\n');
           s.write('  $structIdentifier.${elementNamePrefix}$i = value;\n');
           s.write('  break;\n');

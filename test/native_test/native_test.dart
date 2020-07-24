@@ -62,10 +62,10 @@ void main() {
     });
     test('array-workaround: Order of access', () {
       final struct1 = bindings.getStruct1();
-      int expectedValue = 1;
-      for (int i = 0; i < struct1.ref.data.dimensions[0]; i++) {
-        for (int j = 0; j < struct1.ref.data.dimensions[1]; j++) {
-          for (int k = 0; k < struct1.ref.data.dimensions[2]; k++) {
+      var expectedValue = 1;
+      for (var i = 0; i < struct1.ref.data.dimensions[0]; i++) {
+        for (var j = 0; j < struct1.ref.data.dimensions[1]; j++) {
+          for (var k = 0; k < struct1.ref.data.dimensions[2]; k++) {
             expect(struct1.ref.data[i][j][k], expectedValue);
             expectedValue++;
           }

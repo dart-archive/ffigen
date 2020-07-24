@@ -181,7 +181,7 @@ String _wrapNoNewLineString(String string, int lineWidth) {
   final words = string.split(' ');
 
   sb.write(words[0]);
-  int trackLineWidth = words[0].length;
+  var trackLineWidth = words[0].length;
   for (var i = 1; i < words.length; i++) {
     final word = words[i];
     if (trackLineWidth + word.length < lineWidth) {

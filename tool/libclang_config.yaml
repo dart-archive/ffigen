@@ -6,7 +6,7 @@
 
 # ===================== GENERATING BINDINGS =====================
 #    cd to project's root, and run -
-#    pub run ffigen --config libclang_config.yaml
+#    pub run ffigen --config tool/libclang_config.yaml
 # ===============================================================
 
 name: Clang
