@@ -13,12 +13,12 @@ class LibClang {
 
   /// Free the given string set.
   void clang_disposeStringSet(
-    ffi.Pointer<CXStringSet> set,
+    ffi.Pointer<CXStringSet> set_1,
   ) {
     _clang_disposeStringSet ??= _dylib.lookupFunction<_c_clang_disposeStringSet,
         _dart_clang_disposeStringSet>('clang_disposeStringSet');
     return _clang_disposeStringSet(
-      set,
+      set_1,
     );
   }
 
@@ -4419,11 +4419,11 @@ abstract class CXIndexOptFlags {
 }
 
 typedef _c_clang_disposeStringSet = ffi.Void Function(
-  ffi.Pointer<CXStringSet> set,
+  ffi.Pointer<CXStringSet>,
 );
 
 typedef _dart_clang_disposeStringSet = void Function(
-  ffi.Pointer<CXStringSet> set,
+  ffi.Pointer<CXStringSet>,
 );
 
 typedef _c_clang_getBuildSessionTimestamp = ffi.Uint64 Function();
@@ -4432,330 +4432,330 @@ typedef _dart_clang_getBuildSessionTimestamp = int Function();
 
 typedef _c_clang_VirtualFileOverlay_create
     = ffi.Pointer<CXVirtualFileOverlayImpl> Function(
-  ffi.Uint32 options,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_VirtualFileOverlay_create
     = ffi.Pointer<CXVirtualFileOverlayImpl> Function(
-  int options,
+  int,
 );
 
 typedef _c_clang_VirtualFileOverlay_addFileMapping = ffi.Int32 Function(
-  ffi.Pointer<CXVirtualFileOverlayImpl> arg0,
-  ffi.Pointer<ffi.Int8> virtualPath,
-  ffi.Pointer<ffi.Int8> realPath,
+  ffi.Pointer<CXVirtualFileOverlayImpl>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_clang_VirtualFileOverlay_addFileMapping = int Function(
-  ffi.Pointer<CXVirtualFileOverlayImpl> arg0,
-  ffi.Pointer<ffi.Int8> virtualPath,
-  ffi.Pointer<ffi.Int8> realPath,
+  ffi.Pointer<CXVirtualFileOverlayImpl>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_clang_VirtualFileOverlay_setCaseSensitivity = ffi.Int32 Function(
-  ffi.Pointer<CXVirtualFileOverlayImpl> arg0,
-  ffi.Int32 caseSensitive,
+  ffi.Pointer<CXVirtualFileOverlayImpl>,
+  ffi.Int32,
 );
 
 typedef _dart_clang_VirtualFileOverlay_setCaseSensitivity = int Function(
-  ffi.Pointer<CXVirtualFileOverlayImpl> arg0,
-  int caseSensitive,
+  ffi.Pointer<CXVirtualFileOverlayImpl>,
+  int,
 );
 
 typedef _c_clang_VirtualFileOverlay_writeToBuffer = ffi.Int32 Function(
-  ffi.Pointer<CXVirtualFileOverlayImpl> arg0,
-  ffi.Uint32 options,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> out_buffer_ptr,
-  ffi.Pointer<ffi.Uint32> out_buffer_size,
+  ffi.Pointer<CXVirtualFileOverlayImpl>,
+  ffi.Uint32,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  ffi.Pointer<ffi.Uint32>,
 );
 
 typedef _dart_clang_VirtualFileOverlay_writeToBuffer = int Function(
-  ffi.Pointer<CXVirtualFileOverlayImpl> arg0,
-  int options,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> out_buffer_ptr,
-  ffi.Pointer<ffi.Uint32> out_buffer_size,
+  ffi.Pointer<CXVirtualFileOverlayImpl>,
+  int,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  ffi.Pointer<ffi.Uint32>,
 );
 
 typedef _c_clang_free = ffi.Void Function(
-  ffi.Pointer<ffi.Void> buffer,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_free = void Function(
-  ffi.Pointer<ffi.Void> buffer,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_VirtualFileOverlay_dispose = ffi.Void Function(
-  ffi.Pointer<CXVirtualFileOverlayImpl> arg0,
+  ffi.Pointer<CXVirtualFileOverlayImpl>,
 );
 
 typedef _dart_clang_VirtualFileOverlay_dispose = void Function(
-  ffi.Pointer<CXVirtualFileOverlayImpl> arg0,
+  ffi.Pointer<CXVirtualFileOverlayImpl>,
 );
 
 typedef _c_clang_ModuleMapDescriptor_create
     = ffi.Pointer<CXModuleMapDescriptorImpl> Function(
-  ffi.Uint32 options,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_ModuleMapDescriptor_create
     = ffi.Pointer<CXModuleMapDescriptorImpl> Function(
-  int options,
+  int,
 );
 
 typedef _c_clang_ModuleMapDescriptor_setFrameworkModuleName = ffi.Int32
     Function(
-  ffi.Pointer<CXModuleMapDescriptorImpl> arg0,
-  ffi.Pointer<ffi.Int8> name,
+  ffi.Pointer<CXModuleMapDescriptorImpl>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_clang_ModuleMapDescriptor_setFrameworkModuleName = int Function(
-  ffi.Pointer<CXModuleMapDescriptorImpl> arg0,
-  ffi.Pointer<ffi.Int8> name,
+  ffi.Pointer<CXModuleMapDescriptorImpl>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_clang_ModuleMapDescriptor_setUmbrellaHeader = ffi.Int32 Function(
-  ffi.Pointer<CXModuleMapDescriptorImpl> arg0,
-  ffi.Pointer<ffi.Int8> name,
+  ffi.Pointer<CXModuleMapDescriptorImpl>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_clang_ModuleMapDescriptor_setUmbrellaHeader = int Function(
-  ffi.Pointer<CXModuleMapDescriptorImpl> arg0,
-  ffi.Pointer<ffi.Int8> name,
+  ffi.Pointer<CXModuleMapDescriptorImpl>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_clang_ModuleMapDescriptor_writeToBuffer = ffi.Int32 Function(
-  ffi.Pointer<CXModuleMapDescriptorImpl> arg0,
-  ffi.Uint32 options,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> out_buffer_ptr,
-  ffi.Pointer<ffi.Uint32> out_buffer_size,
+  ffi.Pointer<CXModuleMapDescriptorImpl>,
+  ffi.Uint32,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  ffi.Pointer<ffi.Uint32>,
 );
 
 typedef _dart_clang_ModuleMapDescriptor_writeToBuffer = int Function(
-  ffi.Pointer<CXModuleMapDescriptorImpl> arg0,
-  int options,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> out_buffer_ptr,
-  ffi.Pointer<ffi.Uint32> out_buffer_size,
+  ffi.Pointer<CXModuleMapDescriptorImpl>,
+  int,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  ffi.Pointer<ffi.Uint32>,
 );
 
 typedef _c_clang_ModuleMapDescriptor_dispose = ffi.Void Function(
-  ffi.Pointer<CXModuleMapDescriptorImpl> arg0,
+  ffi.Pointer<CXModuleMapDescriptorImpl>,
 );
 
 typedef _dart_clang_ModuleMapDescriptor_dispose = void Function(
-  ffi.Pointer<CXModuleMapDescriptorImpl> arg0,
+  ffi.Pointer<CXModuleMapDescriptorImpl>,
 );
 
 typedef _c_clang_createIndex = ffi.Pointer<ffi.Void> Function(
-  ffi.Int32 excludeDeclarationsFromPCH,
-  ffi.Int32 displayDiagnostics,
+  ffi.Int32,
+  ffi.Int32,
 );
 
 typedef _dart_clang_createIndex = ffi.Pointer<ffi.Void> Function(
-  int excludeDeclarationsFromPCH,
-  int displayDiagnostics,
+  int,
+  int,
 );
 
 typedef _c_clang_disposeIndex = ffi.Void Function(
-  ffi.Pointer<ffi.Void> index,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_disposeIndex = void Function(
-  ffi.Pointer<ffi.Void> index,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_CXIndex_setGlobalOptions = ffi.Void Function(
-  ffi.Pointer<ffi.Void> arg0,
-  ffi.Uint32 options,
+  ffi.Pointer<ffi.Void>,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_CXIndex_setGlobalOptions = void Function(
-  ffi.Pointer<ffi.Void> arg0,
-  int options,
+  ffi.Pointer<ffi.Void>,
+  int,
 );
 
 typedef _c_clang_CXIndex_getGlobalOptions = ffi.Uint32 Function(
-  ffi.Pointer<ffi.Void> arg0,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_CXIndex_getGlobalOptions = int Function(
-  ffi.Pointer<ffi.Void> arg0,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_CXIndex_setInvocationEmissionPathOption = ffi.Void Function(
-  ffi.Pointer<ffi.Void> arg0,
-  ffi.Pointer<ffi.Int8> Path,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_clang_CXIndex_setInvocationEmissionPathOption = void Function(
-  ffi.Pointer<ffi.Void> arg0,
-  ffi.Pointer<ffi.Int8> Path,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_clang_getFileTime = ffi.Int64 Function(
-  ffi.Pointer<ffi.Void> SFile,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_getFileTime = int Function(
-  ffi.Pointer<ffi.Void> SFile,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_getFileUniqueID = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> file,
-  ffi.Pointer<CXFileUniqueID> outID,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<CXFileUniqueID>,
 );
 
 typedef _dart_clang_getFileUniqueID = int Function(
-  ffi.Pointer<ffi.Void> file,
-  ffi.Pointer<CXFileUniqueID> outID,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<CXFileUniqueID>,
 );
 
 typedef _c_clang_isFileMultipleIncludeGuarded = ffi.Uint32 Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.Void> file,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_isFileMultipleIncludeGuarded = int Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.Void> file,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_getFile = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.Int8> file_name,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_clang_getFile = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.Int8> file_name,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_clang_getFileContents = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.Void> file,
-  ffi.Pointer<ffi.Uint64> size,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Uint64>,
 );
 
 typedef _dart_clang_getFileContents = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.Void> file,
-  ffi.Pointer<ffi.Uint64> size,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Uint64>,
 );
 
 typedef _c_clang_File_isEqual = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> file1,
-  ffi.Pointer<ffi.Void> file2,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_File_isEqual = int Function(
-  ffi.Pointer<ffi.Void> file1,
-  ffi.Pointer<ffi.Void> file2,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_getSkippedRanges = ffi.Pointer<CXSourceRangeList> Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.Void> file,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_getSkippedRanges = ffi.Pointer<CXSourceRangeList> Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.Void> file,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_getAllSkippedRanges = ffi.Pointer<CXSourceRangeList> Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _dart_clang_getAllSkippedRanges = ffi.Pointer<CXSourceRangeList>
     Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _c_clang_disposeSourceRangeList = ffi.Void Function(
-  ffi.Pointer<CXSourceRangeList> ranges,
+  ffi.Pointer<CXSourceRangeList>,
 );
 
 typedef _dart_clang_disposeSourceRangeList = void Function(
-  ffi.Pointer<CXSourceRangeList> ranges,
+  ffi.Pointer<CXSourceRangeList>,
 );
 
 typedef _c_clang_getNumDiagnosticsInSet = ffi.Uint32 Function(
-  ffi.Pointer<ffi.Void> Diags,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_getNumDiagnosticsInSet = int Function(
-  ffi.Pointer<ffi.Void> Diags,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_getDiagnosticInSet = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> Diags,
-  ffi.Uint32 Index,
+  ffi.Pointer<ffi.Void>,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_getDiagnosticInSet = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> Diags,
-  int Index,
+  ffi.Pointer<ffi.Void>,
+  int,
 );
 
 typedef _c_clang_loadDiagnostics = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Int8> file,
-  ffi.Pointer<ffi.Int32> error,
-  ffi.Pointer<CXString> errorString,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int32>,
+  ffi.Pointer<CXString>,
 );
 
 typedef _dart_clang_loadDiagnostics = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Int8> file,
-  ffi.Pointer<ffi.Int32> error,
-  ffi.Pointer<CXString> errorString,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int32>,
+  ffi.Pointer<CXString>,
 );
 
 typedef _c_clang_disposeDiagnosticSet = ffi.Void Function(
-  ffi.Pointer<ffi.Void> Diags,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_disposeDiagnosticSet = void Function(
-  ffi.Pointer<ffi.Void> Diags,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_getChildDiagnostics = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> D,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_getChildDiagnostics = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> D,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_getNumDiagnostics = ffi.Uint32 Function(
-  ffi.Pointer<CXTranslationUnitImpl> Unit,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _dart_clang_getNumDiagnostics = int Function(
-  ffi.Pointer<CXTranslationUnitImpl> Unit,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _c_clang_getDiagnostic = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXTranslationUnitImpl> Unit,
-  ffi.Uint32 Index,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_getDiagnostic = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXTranslationUnitImpl> Unit,
-  int Index,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  int,
 );
 
 typedef _c_clang_getDiagnosticSetFromTU = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXTranslationUnitImpl> Unit,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _dart_clang_getDiagnosticSetFromTU = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXTranslationUnitImpl> Unit,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _c_clang_disposeDiagnostic = ffi.Void Function(
-  ffi.Pointer<ffi.Void> Diagnostic,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_disposeDiagnostic = void Function(
-  ffi.Pointer<ffi.Void> Diagnostic,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_defaultDiagnosticDisplayOptions = ffi.Uint32 Function();
@@ -4763,79 +4763,79 @@ typedef _c_clang_defaultDiagnosticDisplayOptions = ffi.Uint32 Function();
 typedef _dart_clang_defaultDiagnosticDisplayOptions = int Function();
 
 typedef _c_clang_getDiagnosticSeverity = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> arg0,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_getDiagnosticSeverity = int Function(
-  ffi.Pointer<ffi.Void> arg0,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_getDiagnosticCategory = ffi.Uint32 Function(
-  ffi.Pointer<ffi.Void> arg0,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_getDiagnosticCategory = int Function(
-  ffi.Pointer<ffi.Void> arg0,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_getDiagnosticNumRanges = ffi.Uint32 Function(
-  ffi.Pointer<ffi.Void> arg0,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_getDiagnosticNumRanges = int Function(
-  ffi.Pointer<ffi.Void> arg0,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_getDiagnosticNumFixIts = ffi.Uint32 Function(
-  ffi.Pointer<ffi.Void> Diagnostic,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_getDiagnosticNumFixIts = int Function(
-  ffi.Pointer<ffi.Void> Diagnostic,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_createTranslationUnitFromSourceFile
     = ffi.Pointer<CXTranslationUnitImpl> Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Int32 num_clang_command_line_args,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> clang_command_line_args,
-  ffi.Uint32 num_unsaved_files,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Int32,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  ffi.Uint32,
+  ffi.Pointer<CXUnsavedFile>,
 );
 
 typedef _dart_clang_createTranslationUnitFromSourceFile
     = ffi.Pointer<CXTranslationUnitImpl> Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> source_filename,
-  int num_clang_command_line_args,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> clang_command_line_args,
-  int num_unsaved_files,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Int8>,
+  int,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  int,
+  ffi.Pointer<CXUnsavedFile>,
 );
 
 typedef _c_clang_createTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
     Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> ast_filename,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_clang_createTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
     Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> ast_filename,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_clang_createTranslationUnit2 = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> ast_filename,
-  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>>,
 );
 
 typedef _dart_clang_createTranslationUnit2 = int Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> ast_filename,
-  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>>,
 );
 
 typedef _c_clang_defaultEditingTranslationUnitOptions = ffi.Uint32 Function();
@@ -4844,240 +4844,240 @@ typedef _dart_clang_defaultEditingTranslationUnitOptions = int Function();
 
 typedef _c_clang_parseTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
     Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
-  ffi.Int32 num_command_line_args,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  ffi.Uint32 num_unsaved_files,
-  ffi.Uint32 options,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  ffi.Int32,
+  ffi.Pointer<CXUnsavedFile>,
+  ffi.Uint32,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_parseTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
     Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
-  int num_command_line_args,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  int num_unsaved_files,
-  int options,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  int,
+  ffi.Pointer<CXUnsavedFile>,
+  int,
+  int,
 );
 
 typedef _c_clang_parseTranslationUnit2 = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
-  ffi.Int32 num_command_line_args,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  ffi.Uint32 num_unsaved_files,
-  ffi.Uint32 options,
-  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  ffi.Int32,
+  ffi.Pointer<CXUnsavedFile>,
+  ffi.Uint32,
+  ffi.Uint32,
+  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>>,
 );
 
 typedef _dart_clang_parseTranslationUnit2 = int Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
-  int num_command_line_args,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  int num_unsaved_files,
-  int options,
-  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  int,
+  ffi.Pointer<CXUnsavedFile>,
+  int,
+  int,
+  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>>,
 );
 
 typedef _c_clang_parseTranslationUnit2FullArgv = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
-  ffi.Int32 num_command_line_args,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  ffi.Uint32 num_unsaved_files,
-  ffi.Uint32 options,
-  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  ffi.Int32,
+  ffi.Pointer<CXUnsavedFile>,
+  ffi.Uint32,
+  ffi.Uint32,
+  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>>,
 );
 
 typedef _dart_clang_parseTranslationUnit2FullArgv = int Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
-  int num_command_line_args,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  int num_unsaved_files,
-  int options,
-  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  int,
+  ffi.Pointer<CXUnsavedFile>,
+  int,
+  int,
+  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>>,
 );
 
 typedef _c_clang_defaultSaveOptions = ffi.Uint32 Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _dart_clang_defaultSaveOptions = int Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _c_clang_saveTranslationUnit = ffi.Int32 Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<ffi.Int8> FileName,
-  ffi.Uint32 options,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_saveTranslationUnit = int Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<ffi.Int8> FileName,
-  int options,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<ffi.Int8>,
+  int,
 );
 
 typedef _c_clang_suspendTranslationUnit = ffi.Uint32 Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _dart_clang_suspendTranslationUnit = int Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _c_clang_disposeTranslationUnit = ffi.Void Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _dart_clang_disposeTranslationUnit = void Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _c_clang_defaultReparseOptions = ffi.Uint32 Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _dart_clang_defaultReparseOptions = int Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _c_clang_reparseTranslationUnit = ffi.Int32 Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Uint32 num_unsaved_files,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  ffi.Uint32 options,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Uint32,
+  ffi.Pointer<CXUnsavedFile>,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_reparseTranslationUnit = int Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  int num_unsaved_files,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  int options,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  int,
+  ffi.Pointer<CXUnsavedFile>,
+  int,
 );
 
 typedef _c_clang_getTUResourceUsageName = ffi.Pointer<ffi.Int8> Function(
-  ffi.Int32 kind,
+  ffi.Int32,
 );
 
 typedef _dart_clang_getTUResourceUsageName = ffi.Pointer<ffi.Int8> Function(
-  int kind,
+  int,
 );
 
 typedef _c_clang_getTranslationUnitTargetInfo = ffi.Pointer<CXTargetInfoImpl>
     Function(
-  ffi.Pointer<CXTranslationUnitImpl> CTUnit,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _dart_clang_getTranslationUnitTargetInfo = ffi.Pointer<CXTargetInfoImpl>
     Function(
-  ffi.Pointer<CXTranslationUnitImpl> CTUnit,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _c_clang_TargetInfo_dispose = ffi.Void Function(
-  ffi.Pointer<CXTargetInfoImpl> Info,
+  ffi.Pointer<CXTargetInfoImpl>,
 );
 
 typedef _dart_clang_TargetInfo_dispose = void Function(
-  ffi.Pointer<CXTargetInfoImpl> Info,
+  ffi.Pointer<CXTargetInfoImpl>,
 );
 
 typedef _c_clang_TargetInfo_getPointerWidth = ffi.Int32 Function(
-  ffi.Pointer<CXTargetInfoImpl> Info,
+  ffi.Pointer<CXTargetInfoImpl>,
 );
 
 typedef _dart_clang_TargetInfo_getPointerWidth = int Function(
-  ffi.Pointer<CXTargetInfoImpl> Info,
+  ffi.Pointer<CXTargetInfoImpl>,
 );
 
 typedef _c_clang_isDeclaration = ffi.Uint32 Function(
-  ffi.Int32 arg0,
+  ffi.Int32,
 );
 
 typedef _dart_clang_isDeclaration = int Function(
-  int arg0,
+  int,
 );
 
 typedef _c_clang_isReference = ffi.Uint32 Function(
-  ffi.Int32 arg0,
+  ffi.Int32,
 );
 
 typedef _dart_clang_isReference = int Function(
-  int arg0,
+  int,
 );
 
 typedef _c_clang_isExpression = ffi.Uint32 Function(
-  ffi.Int32 arg0,
+  ffi.Int32,
 );
 
 typedef _dart_clang_isExpression = int Function(
-  int arg0,
+  int,
 );
 
 typedef _c_clang_isStatement = ffi.Uint32 Function(
-  ffi.Int32 arg0,
+  ffi.Int32,
 );
 
 typedef _dart_clang_isStatement = int Function(
-  int arg0,
+  int,
 );
 
 typedef _c_clang_isAttribute = ffi.Uint32 Function(
-  ffi.Int32 arg0,
+  ffi.Int32,
 );
 
 typedef _dart_clang_isAttribute = int Function(
-  int arg0,
+  int,
 );
 
 typedef _c_clang_isInvalid = ffi.Uint32 Function(
-  ffi.Int32 arg0,
+  ffi.Int32,
 );
 
 typedef _dart_clang_isInvalid = int Function(
-  int arg0,
+  int,
 );
 
 typedef _c_clang_isTranslationUnit = ffi.Uint32 Function(
-  ffi.Int32 arg0,
+  ffi.Int32,
 );
 
 typedef _dart_clang_isTranslationUnit = int Function(
-  int arg0,
+  int,
 );
 
 typedef _c_clang_isPreprocessing = ffi.Uint32 Function(
-  ffi.Int32 arg0,
+  ffi.Int32,
 );
 
 typedef _dart_clang_isPreprocessing = int Function(
-  int arg0,
+  int,
 );
 
 typedef _c_clang_isUnexposed = ffi.Uint32 Function(
-  ffi.Int32 arg0,
+  ffi.Int32,
 );
 
 typedef _dart_clang_isUnexposed = int Function(
-  int arg0,
+  int,
 );
 
 typedef _c_clang_disposeCXPlatformAvailability = ffi.Void Function(
-  ffi.Pointer<CXPlatformAvailability> availability,
+  ffi.Pointer<CXPlatformAvailability>,
 );
 
 typedef _dart_clang_disposeCXPlatformAvailability = void Function(
-  ffi.Pointer<CXPlatformAvailability> availability,
+  ffi.Pointer<CXPlatformAvailability>,
 );
 
 typedef _c_clang_createCXCursorSet = ffi.Pointer<CXCursorSetImpl> Function();
@@ -5085,131 +5085,131 @@ typedef _c_clang_createCXCursorSet = ffi.Pointer<CXCursorSetImpl> Function();
 typedef _dart_clang_createCXCursorSet = ffi.Pointer<CXCursorSetImpl> Function();
 
 typedef _c_clang_disposeCXCursorSet = ffi.Void Function(
-  ffi.Pointer<CXCursorSetImpl> cset,
+  ffi.Pointer<CXCursorSetImpl>,
 );
 
 typedef _dart_clang_disposeCXCursorSet = void Function(
-  ffi.Pointer<CXCursorSetImpl> cset,
+  ffi.Pointer<CXCursorSetImpl>,
 );
 
 typedef _c_clang_disposeOverriddenCursors = ffi.Void Function(
-  ffi.Pointer<CXCursor> overridden,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _dart_clang_disposeOverriddenCursors = void Function(
-  ffi.Pointer<CXCursor> overridden,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _c_clang_PrintingPolicy_getProperty = ffi.Uint32 Function(
-  ffi.Pointer<ffi.Void> Policy,
-  ffi.Int32 Property,
+  ffi.Pointer<ffi.Void>,
+  ffi.Int32,
 );
 
 typedef _dart_clang_PrintingPolicy_getProperty = int Function(
-  ffi.Pointer<ffi.Void> Policy,
-  int Property,
+  ffi.Pointer<ffi.Void>,
+  int,
 );
 
 typedef _c_clang_PrintingPolicy_setProperty = ffi.Void Function(
-  ffi.Pointer<ffi.Void> Policy,
-  ffi.Int32 Property,
-  ffi.Uint32 Value,
+  ffi.Pointer<ffi.Void>,
+  ffi.Int32,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_PrintingPolicy_setProperty = void Function(
-  ffi.Pointer<ffi.Void> Policy,
-  int Property,
-  int Value,
+  ffi.Pointer<ffi.Void>,
+  int,
+  int,
 );
 
 typedef _c_clang_PrintingPolicy_dispose = ffi.Void Function(
-  ffi.Pointer<ffi.Void> Policy,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_PrintingPolicy_dispose = void Function(
-  ffi.Pointer<ffi.Void> Policy,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_getModuleForFile = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-  ffi.Pointer<ffi.Void> arg1,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_getModuleForFile = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-  ffi.Pointer<ffi.Void> arg1,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_Module_getASTFile = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> Module,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_Module_getASTFile = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> Module,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_Module_getParent = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> Module,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_Module_getParent = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> Module,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_Module_isSystem = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> Module,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_Module_isSystem = int Function(
-  ffi.Pointer<ffi.Void> Module,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_Module_getNumTopLevelHeaders = ffi.Uint32 Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-  ffi.Pointer<ffi.Void> Module,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_Module_getNumTopLevelHeaders = int Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-  ffi.Pointer<ffi.Void> Module,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_Module_getTopLevelHeader = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-  ffi.Pointer<ffi.Void> Module,
-  ffi.Uint32 Index,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_Module_getTopLevelHeader = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
-  ffi.Pointer<ffi.Void> Module,
-  int Index,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<ffi.Void>,
+  int,
 );
 
 typedef _c_clang_annotateTokens = ffi.Void Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<CXToken> Tokens,
-  ffi.Uint32 NumTokens,
-  ffi.Pointer<CXCursor> Cursors,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<CXToken>,
+  ffi.Uint32,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _dart_clang_annotateTokens = void Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<CXToken> Tokens,
-  int NumTokens,
-  ffi.Pointer<CXCursor> Cursors,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<CXToken>,
+  int,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _c_clang_disposeTokens = ffi.Void Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<CXToken> Tokens,
-  ffi.Uint32 NumTokens,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<CXToken>,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_disposeTokens = void Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<CXToken> Tokens,
-  int NumTokens,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<CXToken>,
+  int,
 );
 
 typedef _c_clang_enableStackTraces = ffi.Void Function();
@@ -5221,79 +5221,79 @@ typedef _typedefC_1 = ffi.Void Function(
 );
 
 typedef _c_clang_executeOnThread = ffi.Void Function(
-  ffi.Pointer<ffi.NativeFunction<_typedefC_1>> fn,
-  ffi.Pointer<ffi.Void> user_data,
-  ffi.Uint32 stack_size,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_1>>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_executeOnThread = void Function(
-  ffi.Pointer<ffi.NativeFunction<_typedefC_1>> fn,
-  ffi.Pointer<ffi.Void> user_data,
-  int stack_size,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_1>>,
+  ffi.Pointer<ffi.Void>,
+  int,
 );
 
 typedef _c_clang_getCompletionChunkKind = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> completion_string,
-  ffi.Uint32 chunk_number,
+  ffi.Pointer<ffi.Void>,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_getCompletionChunkKind = int Function(
-  ffi.Pointer<ffi.Void> completion_string,
-  int chunk_number,
+  ffi.Pointer<ffi.Void>,
+  int,
 );
 
 typedef _c_clang_getCompletionChunkCompletionString = ffi.Pointer<ffi.Void>
     Function(
-  ffi.Pointer<ffi.Void> completion_string,
-  ffi.Uint32 chunk_number,
+  ffi.Pointer<ffi.Void>,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_getCompletionChunkCompletionString = ffi.Pointer<ffi.Void>
     Function(
-  ffi.Pointer<ffi.Void> completion_string,
-  int chunk_number,
+  ffi.Pointer<ffi.Void>,
+  int,
 );
 
 typedef _c_clang_getNumCompletionChunks = ffi.Uint32 Function(
-  ffi.Pointer<ffi.Void> completion_string,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_getNumCompletionChunks = int Function(
-  ffi.Pointer<ffi.Void> completion_string,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_getCompletionPriority = ffi.Uint32 Function(
-  ffi.Pointer<ffi.Void> completion_string,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_getCompletionPriority = int Function(
-  ffi.Pointer<ffi.Void> completion_string,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_getCompletionAvailability = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> completion_string,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_getCompletionAvailability = int Function(
-  ffi.Pointer<ffi.Void> completion_string,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_getCompletionNumAnnotations = ffi.Uint32 Function(
-  ffi.Pointer<ffi.Void> completion_string,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_getCompletionNumAnnotations = int Function(
-  ffi.Pointer<ffi.Void> completion_string,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_getCompletionNumFixIts = ffi.Uint32 Function(
-  ffi.Pointer<CXCodeCompleteResults> results,
-  ffi.Uint32 completion_index,
+  ffi.Pointer<CXCodeCompleteResults>,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_getCompletionNumFixIts = int Function(
-  ffi.Pointer<CXCodeCompleteResults> results,
-  int completion_index,
+  ffi.Pointer<CXCodeCompleteResults>,
+  int,
 );
 
 typedef _c_clang_defaultCodeCompleteOptions = ffi.Uint32 Function();
@@ -5301,86 +5301,86 @@ typedef _c_clang_defaultCodeCompleteOptions = ffi.Uint32 Function();
 typedef _dart_clang_defaultCodeCompleteOptions = int Function();
 
 typedef _c_clang_codeCompleteAt = ffi.Pointer<CXCodeCompleteResults> Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<ffi.Int8> complete_filename,
-  ffi.Uint32 complete_line,
-  ffi.Uint32 complete_column,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  ffi.Uint32 num_unsaved_files,
-  ffi.Uint32 options,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Uint32,
+  ffi.Uint32,
+  ffi.Pointer<CXUnsavedFile>,
+  ffi.Uint32,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_codeCompleteAt = ffi.Pointer<CXCodeCompleteResults>
     Function(
-  ffi.Pointer<CXTranslationUnitImpl> TU,
-  ffi.Pointer<ffi.Int8> complete_filename,
-  int complete_line,
-  int complete_column,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  int num_unsaved_files,
-  int options,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<ffi.Int8>,
+  int,
+  int,
+  ffi.Pointer<CXUnsavedFile>,
+  int,
+  int,
 );
 
 typedef _c_clang_sortCodeCompletionResults = ffi.Void Function(
-  ffi.Pointer<CXCompletionResult> Results,
-  ffi.Uint32 NumResults,
+  ffi.Pointer<CXCompletionResult>,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_sortCodeCompletionResults = void Function(
-  ffi.Pointer<CXCompletionResult> Results,
-  int NumResults,
+  ffi.Pointer<CXCompletionResult>,
+  int,
 );
 
 typedef _c_clang_disposeCodeCompleteResults = ffi.Void Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
+  ffi.Pointer<CXCodeCompleteResults>,
 );
 
 typedef _dart_clang_disposeCodeCompleteResults = void Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
+  ffi.Pointer<CXCodeCompleteResults>,
 );
 
 typedef _c_clang_codeCompleteGetNumDiagnostics = ffi.Uint32 Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
+  ffi.Pointer<CXCodeCompleteResults>,
 );
 
 typedef _dart_clang_codeCompleteGetNumDiagnostics = int Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
+  ffi.Pointer<CXCodeCompleteResults>,
 );
 
 typedef _c_clang_codeCompleteGetDiagnostic = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
-  ffi.Uint32 Index,
+  ffi.Pointer<CXCodeCompleteResults>,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_codeCompleteGetDiagnostic = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
-  int Index,
+  ffi.Pointer<CXCodeCompleteResults>,
+  int,
 );
 
 typedef _c_clang_codeCompleteGetContexts = ffi.Uint64 Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
+  ffi.Pointer<CXCodeCompleteResults>,
 );
 
 typedef _dart_clang_codeCompleteGetContexts = int Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
+  ffi.Pointer<CXCodeCompleteResults>,
 );
 
 typedef _c_clang_codeCompleteGetContainerKind = ffi.Int32 Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
-  ffi.Pointer<ffi.Uint32> IsIncomplete,
+  ffi.Pointer<CXCodeCompleteResults>,
+  ffi.Pointer<ffi.Uint32>,
 );
 
 typedef _dart_clang_codeCompleteGetContainerKind = int Function(
-  ffi.Pointer<CXCodeCompleteResults> Results,
-  ffi.Pointer<ffi.Uint32> IsIncomplete,
+  ffi.Pointer<CXCodeCompleteResults>,
+  ffi.Pointer<ffi.Uint32>,
 );
 
 typedef _c_clang_toggleCrashRecovery = ffi.Void Function(
-  ffi.Uint32 isEnabled,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_toggleCrashRecovery = void Function(
-  int isEnabled,
+  int,
 );
 
 typedef CXInclusionVisitor_1 = ffi.Void Function(
@@ -5391,335 +5391,335 @@ typedef CXInclusionVisitor_1 = ffi.Void Function(
 );
 
 typedef _c_clang_getInclusions = ffi.Void Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor_1>> visitor,
-  ffi.Pointer<ffi.Void> client_data,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor_1>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_getInclusions = void Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor_1>> visitor,
-  ffi.Pointer<ffi.Void> client_data,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor_1>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_EvalResult_getKind = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> E,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_EvalResult_getKind = int Function(
-  ffi.Pointer<ffi.Void> E,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_EvalResult_getAsInt = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> E,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_EvalResult_getAsInt = int Function(
-  ffi.Pointer<ffi.Void> E,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_EvalResult_getAsLongLong = ffi.Int64 Function(
-  ffi.Pointer<ffi.Void> E,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_EvalResult_getAsLongLong = int Function(
-  ffi.Pointer<ffi.Void> E,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_EvalResult_isUnsignedInt = ffi.Uint32 Function(
-  ffi.Pointer<ffi.Void> E,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_EvalResult_isUnsignedInt = int Function(
-  ffi.Pointer<ffi.Void> E,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_EvalResult_getAsUnsigned = ffi.Uint64 Function(
-  ffi.Pointer<ffi.Void> E,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_EvalResult_getAsUnsigned = int Function(
-  ffi.Pointer<ffi.Void> E,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_EvalResult_getAsDouble = ffi.Double Function(
-  ffi.Pointer<ffi.Void> E,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_EvalResult_getAsDouble = double Function(
-  ffi.Pointer<ffi.Void> E,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_EvalResult_getAsStr = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<ffi.Void> E,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_EvalResult_getAsStr = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<ffi.Void> E,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_EvalResult_dispose = ffi.Void Function(
-  ffi.Pointer<ffi.Void> E,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_EvalResult_dispose = void Function(
-  ffi.Pointer<ffi.Void> E,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_getRemappings = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Int8> path,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_clang_getRemappings = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Int8> path,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_clang_getRemappingsFromFileList = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> filePaths,
-  ffi.Uint32 numFiles,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_getRemappingsFromFileList = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> filePaths,
-  int numFiles,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  int,
 );
 
 typedef _c_clang_remap_getNumFiles = ffi.Uint32 Function(
-  ffi.Pointer<ffi.Void> arg0,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_remap_getNumFiles = int Function(
-  ffi.Pointer<ffi.Void> arg0,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_remap_getFilenames = ffi.Void Function(
-  ffi.Pointer<ffi.Void> arg0,
-  ffi.Uint32 index,
-  ffi.Pointer<CXString> original,
-  ffi.Pointer<CXString> transformed,
+  ffi.Pointer<ffi.Void>,
+  ffi.Uint32,
+  ffi.Pointer<CXString>,
+  ffi.Pointer<CXString>,
 );
 
 typedef _dart_clang_remap_getFilenames = void Function(
-  ffi.Pointer<ffi.Void> arg0,
-  int index,
-  ffi.Pointer<CXString> original,
-  ffi.Pointer<CXString> transformed,
+  ffi.Pointer<ffi.Void>,
+  int,
+  ffi.Pointer<CXString>,
+  ffi.Pointer<CXString>,
 );
 
 typedef _c_clang_remap_dispose = ffi.Void Function(
-  ffi.Pointer<ffi.Void> arg0,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_remap_dispose = void Function(
-  ffi.Pointer<ffi.Void> arg0,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_index_isEntityObjCContainerKind = ffi.Int32 Function(
-  ffi.Int32 arg0,
+  ffi.Int32,
 );
 
 typedef _dart_clang_index_isEntityObjCContainerKind = int Function(
-  int arg0,
+  int,
 );
 
 typedef _c_clang_index_getObjCContainerDeclInfo
     = ffi.Pointer<CXIdxObjCContainerDeclInfo> Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
+  ffi.Pointer<CXIdxDeclInfo>,
 );
 
 typedef _dart_clang_index_getObjCContainerDeclInfo
     = ffi.Pointer<CXIdxObjCContainerDeclInfo> Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
+  ffi.Pointer<CXIdxDeclInfo>,
 );
 
 typedef _c_clang_index_getObjCInterfaceDeclInfo
     = ffi.Pointer<CXIdxObjCInterfaceDeclInfo> Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
+  ffi.Pointer<CXIdxDeclInfo>,
 );
 
 typedef _dart_clang_index_getObjCInterfaceDeclInfo
     = ffi.Pointer<CXIdxObjCInterfaceDeclInfo> Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
+  ffi.Pointer<CXIdxDeclInfo>,
 );
 
 typedef _c_clang_index_getObjCCategoryDeclInfo
     = ffi.Pointer<CXIdxObjCCategoryDeclInfo> Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
+  ffi.Pointer<CXIdxDeclInfo>,
 );
 
 typedef _dart_clang_index_getObjCCategoryDeclInfo
     = ffi.Pointer<CXIdxObjCCategoryDeclInfo> Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
+  ffi.Pointer<CXIdxDeclInfo>,
 );
 
 typedef _c_clang_index_getObjCProtocolRefListInfo
     = ffi.Pointer<CXIdxObjCProtocolRefListInfo> Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
+  ffi.Pointer<CXIdxDeclInfo>,
 );
 
 typedef _dart_clang_index_getObjCProtocolRefListInfo
     = ffi.Pointer<CXIdxObjCProtocolRefListInfo> Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
+  ffi.Pointer<CXIdxDeclInfo>,
 );
 
 typedef _c_clang_index_getObjCPropertyDeclInfo
     = ffi.Pointer<CXIdxObjCPropertyDeclInfo> Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
+  ffi.Pointer<CXIdxDeclInfo>,
 );
 
 typedef _dart_clang_index_getObjCPropertyDeclInfo
     = ffi.Pointer<CXIdxObjCPropertyDeclInfo> Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
+  ffi.Pointer<CXIdxDeclInfo>,
 );
 
 typedef _c_clang_index_getIBOutletCollectionAttrInfo
     = ffi.Pointer<CXIdxIBOutletCollectionAttrInfo> Function(
-  ffi.Pointer<CXIdxAttrInfo> arg0,
+  ffi.Pointer<CXIdxAttrInfo>,
 );
 
 typedef _dart_clang_index_getIBOutletCollectionAttrInfo
     = ffi.Pointer<CXIdxIBOutletCollectionAttrInfo> Function(
-  ffi.Pointer<CXIdxAttrInfo> arg0,
+  ffi.Pointer<CXIdxAttrInfo>,
 );
 
 typedef _c_clang_index_getCXXClassDeclInfo = ffi.Pointer<CXIdxCXXClassDeclInfo>
     Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
+  ffi.Pointer<CXIdxDeclInfo>,
 );
 
 typedef _dart_clang_index_getCXXClassDeclInfo
     = ffi.Pointer<CXIdxCXXClassDeclInfo> Function(
-  ffi.Pointer<CXIdxDeclInfo> arg0,
+  ffi.Pointer<CXIdxDeclInfo>,
 );
 
 typedef _c_clang_index_getClientContainer = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXIdxContainerInfo> arg0,
+  ffi.Pointer<CXIdxContainerInfo>,
 );
 
 typedef _dart_clang_index_getClientContainer = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXIdxContainerInfo> arg0,
+  ffi.Pointer<CXIdxContainerInfo>,
 );
 
 typedef _c_clang_index_setClientContainer = ffi.Void Function(
-  ffi.Pointer<CXIdxContainerInfo> arg0,
-  ffi.Pointer<ffi.Void> arg1,
+  ffi.Pointer<CXIdxContainerInfo>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_index_setClientContainer = void Function(
-  ffi.Pointer<CXIdxContainerInfo> arg0,
-  ffi.Pointer<ffi.Void> arg1,
+  ffi.Pointer<CXIdxContainerInfo>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_index_getClientEntity = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXIdxEntityInfo> arg0,
+  ffi.Pointer<CXIdxEntityInfo>,
 );
 
 typedef _dart_clang_index_getClientEntity = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXIdxEntityInfo> arg0,
+  ffi.Pointer<CXIdxEntityInfo>,
 );
 
 typedef _c_clang_index_setClientEntity = ffi.Void Function(
-  ffi.Pointer<CXIdxEntityInfo> arg0,
-  ffi.Pointer<ffi.Void> arg1,
+  ffi.Pointer<CXIdxEntityInfo>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_index_setClientEntity = void Function(
-  ffi.Pointer<CXIdxEntityInfo> arg0,
-  ffi.Pointer<ffi.Void> arg1,
+  ffi.Pointer<CXIdxEntityInfo>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_IndexAction_create = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> CIdx,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_IndexAction_create = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> CIdx,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_IndexAction_dispose = ffi.Void Function(
-  ffi.Pointer<ffi.Void> arg0,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_IndexAction_dispose = void Function(
-  ffi.Pointer<ffi.Void> arg0,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_indexSourceFile = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> arg0,
-  ffi.Pointer<ffi.Void> client_data,
-  ffi.Pointer<IndexerCallbacks> index_callbacks,
-  ffi.Uint32 index_callbacks_size,
-  ffi.Uint32 index_options,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
-  ffi.Int32 num_command_line_args,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  ffi.Uint32 num_unsaved_files,
-  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
-  ffi.Uint32 TU_options,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<IndexerCallbacks>,
+  ffi.Uint32,
+  ffi.Uint32,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  ffi.Int32,
+  ffi.Pointer<CXUnsavedFile>,
+  ffi.Uint32,
+  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>>,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_indexSourceFile = int Function(
-  ffi.Pointer<ffi.Void> arg0,
-  ffi.Pointer<ffi.Void> client_data,
-  ffi.Pointer<IndexerCallbacks> index_callbacks,
-  int index_callbacks_size,
-  int index_options,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
-  int num_command_line_args,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  int num_unsaved_files,
-  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
-  int TU_options,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<IndexerCallbacks>,
+  int,
+  int,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  int,
+  ffi.Pointer<CXUnsavedFile>,
+  int,
+  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>>,
+  int,
 );
 
 typedef _c_clang_indexSourceFileFullArgv = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> arg0,
-  ffi.Pointer<ffi.Void> client_data,
-  ffi.Pointer<IndexerCallbacks> index_callbacks,
-  ffi.Uint32 index_callbacks_size,
-  ffi.Uint32 index_options,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
-  ffi.Int32 num_command_line_args,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  ffi.Uint32 num_unsaved_files,
-  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
-  ffi.Uint32 TU_options,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<IndexerCallbacks>,
+  ffi.Uint32,
+  ffi.Uint32,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  ffi.Int32,
+  ffi.Pointer<CXUnsavedFile>,
+  ffi.Uint32,
+  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>>,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_indexSourceFileFullArgv = int Function(
-  ffi.Pointer<ffi.Void> arg0,
-  ffi.Pointer<ffi.Void> client_data,
-  ffi.Pointer<IndexerCallbacks> index_callbacks,
-  int index_callbacks_size,
-  int index_options,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
-  int num_command_line_args,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  int num_unsaved_files,
-  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
-  int TU_options,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<IndexerCallbacks>,
+  int,
+  int,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  int,
+  ffi.Pointer<CXUnsavedFile>,
+  int,
+  ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>>,
+  int,
 );
 
 typedef _c_clang_indexTranslationUnit = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> arg0,
-  ffi.Pointer<ffi.Void> client_data,
-  ffi.Pointer<IndexerCallbacks> index_callbacks,
-  ffi.Uint32 index_callbacks_size,
-  ffi.Uint32 index_options,
-  ffi.Pointer<CXTranslationUnitImpl> arg5,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<IndexerCallbacks>,
+  ffi.Uint32,
+  ffi.Uint32,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _dart_clang_indexTranslationUnit = int Function(
-  ffi.Pointer<ffi.Void> arg0,
-  ffi.Pointer<ffi.Void> client_data,
-  ffi.Pointer<IndexerCallbacks> index_callbacks,
-  int index_callbacks_size,
-  int index_options,
-  ffi.Pointer<CXTranslationUnitImpl> arg5,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<IndexerCallbacks>,
+  int,
+  int,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _typedefC_3 = ffi.Int32 Function(

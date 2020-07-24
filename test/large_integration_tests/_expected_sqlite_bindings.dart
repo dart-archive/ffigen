@@ -4564,19 +4564,19 @@ typedef _c_sqlite3_libversion_number = ffi.Int32 Function();
 typedef _dart_sqlite3_libversion_number = int Function();
 
 typedef _c_sqlite3_compileoption_used = ffi.Int32 Function(
-  ffi.Pointer<ffi.Int8> zOptName,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_compileoption_used = int Function(
-  ffi.Pointer<ffi.Int8> zOptName,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_compileoption_get = ffi.Pointer<ffi.Int8> Function(
-  ffi.Int32 N,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_compileoption_get = ffi.Pointer<ffi.Int8> Function(
-  int N,
+  int,
 );
 
 typedef _c_sqlite3_threadsafe = ffi.Int32 Function();
@@ -4584,19 +4584,19 @@ typedef _c_sqlite3_threadsafe = ffi.Int32 Function();
 typedef _dart_sqlite3_threadsafe = int Function();
 
 typedef _c_sqlite3_close = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _dart_sqlite3_close = int Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _c_sqlite3_close_v2 = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _dart_sqlite3_close_v2 = int Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _typedefC_13 = ffi.Int32 Function(
@@ -4607,19 +4607,19 @@ typedef _typedefC_13 = ffi.Int32 Function(
 );
 
 typedef _c_sqlite3_exec = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.Int8> sql,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_13>> callback,
-  ffi.Pointer<ffi.Void> arg3,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> errmsg,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_13>>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
 );
 
 typedef _dart_sqlite3_exec = int Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.Int8> sql,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_13>> callback,
-  ffi.Pointer<ffi.Void> arg3,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> errmsg,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_13>>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
 );
 
 typedef _c_sqlite3_initialize = ffi.Int32 Function();
@@ -4639,89 +4639,89 @@ typedef _c_sqlite3_os_end = ffi.Int32 Function();
 typedef _dart_sqlite3_os_end = int Function();
 
 typedef _c_sqlite3_config = ffi.Int32 Function(
-  ffi.Int32 arg0,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_config = int Function(
-  int arg0,
+  int,
 );
 
 typedef _c_sqlite3_db_config = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Int32 op,
+  ffi.Pointer<sqlite3>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_db_config = int Function(
-  ffi.Pointer<sqlite3> arg0,
-  int op,
+  ffi.Pointer<sqlite3>,
+  int,
 );
 
 typedef _c_sqlite3_extended_result_codes = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Int32 onoff,
+  ffi.Pointer<sqlite3>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_extended_result_codes = int Function(
-  ffi.Pointer<sqlite3> arg0,
-  int onoff,
+  ffi.Pointer<sqlite3>,
+  int,
 );
 
 typedef _c_sqlite3_last_insert_rowid = ffi.Int64 Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _dart_sqlite3_last_insert_rowid = int Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _c_sqlite3_set_last_insert_rowid = ffi.Void Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Int64 arg1,
+  ffi.Pointer<sqlite3>,
+  ffi.Int64,
 );
 
 typedef _dart_sqlite3_set_last_insert_rowid = void Function(
-  ffi.Pointer<sqlite3> arg0,
-  int arg1,
+  ffi.Pointer<sqlite3>,
+  int,
 );
 
 typedef _c_sqlite3_changes = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _dart_sqlite3_changes = int Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _c_sqlite3_total_changes = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _dart_sqlite3_total_changes = int Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _c_sqlite3_interrupt = ffi.Void Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _dart_sqlite3_interrupt = void Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _c_sqlite3_complete = ffi.Int32 Function(
-  ffi.Pointer<ffi.Int8> sql,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_complete = int Function(
-  ffi.Pointer<ffi.Int8> sql,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_complete16 = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> sql,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_sqlite3_complete16 = int Function(
-  ffi.Pointer<ffi.Void> sql,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _typedefC_32 = ffi.Int32 Function(
@@ -4730,123 +4730,123 @@ typedef _typedefC_32 = ffi.Int32 Function(
 );
 
 typedef _c_sqlite3_busy_handler = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_32>> arg1,
-  ffi.Pointer<ffi.Void> arg2,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_32>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_sqlite3_busy_handler = int Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_32>> arg1,
-  ffi.Pointer<ffi.Void> arg2,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_32>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_sqlite3_busy_timeout = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Int32 ms,
+  ffi.Pointer<sqlite3>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_busy_timeout = int Function(
-  ffi.Pointer<sqlite3> arg0,
-  int ms,
+  ffi.Pointer<sqlite3>,
+  int,
 );
 
 typedef _c_sqlite3_get_table = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zSql,
-  ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Int8>>> pazResult,
-  ffi.Pointer<ffi.Int32> pnRow,
-  ffi.Pointer<ffi.Int32> pnColumn,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> pzErrmsg,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Int8>>>,
+  ffi.Pointer<ffi.Int32>,
+  ffi.Pointer<ffi.Int32>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
 );
 
 typedef _dart_sqlite3_get_table = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zSql,
-  ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Int8>>> pazResult,
-  ffi.Pointer<ffi.Int32> pnRow,
-  ffi.Pointer<ffi.Int32> pnColumn,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> pzErrmsg,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Int8>>>,
+  ffi.Pointer<ffi.Int32>,
+  ffi.Pointer<ffi.Int32>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
 );
 
 typedef _c_sqlite3_free_table = ffi.Void Function(
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> result,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
 );
 
 typedef _dart_sqlite3_free_table = void Function(
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> result,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
 );
 
 typedef _c_sqlite3_mprintf = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<ffi.Int8> arg0,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_mprintf = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<ffi.Int8> arg0,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_snprintf = ffi.Pointer<ffi.Int8> Function(
-  ffi.Int32 arg0,
-  ffi.Pointer<ffi.Int8> arg1,
-  ffi.Pointer<ffi.Int8> arg2,
+  ffi.Int32,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_snprintf = ffi.Pointer<ffi.Int8> Function(
-  int arg0,
-  ffi.Pointer<ffi.Int8> arg1,
-  ffi.Pointer<ffi.Int8> arg2,
+  int,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_malloc = ffi.Pointer<ffi.Void> Function(
-  ffi.Int32 arg0,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_malloc = ffi.Pointer<ffi.Void> Function(
-  int arg0,
+  int,
 );
 
 typedef _c_sqlite3_malloc64 = ffi.Pointer<ffi.Void> Function(
-  ffi.Uint64 arg0,
+  ffi.Uint64,
 );
 
 typedef _dart_sqlite3_malloc64 = ffi.Pointer<ffi.Void> Function(
-  int arg0,
+  int,
 );
 
 typedef _c_sqlite3_realloc = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> arg0,
-  ffi.Int32 arg1,
+  ffi.Pointer<ffi.Void>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_realloc = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> arg0,
-  int arg1,
+  ffi.Pointer<ffi.Void>,
+  int,
 );
 
 typedef _c_sqlite3_realloc64 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> arg0,
-  ffi.Uint64 arg1,
+  ffi.Pointer<ffi.Void>,
+  ffi.Uint64,
 );
 
 typedef _dart_sqlite3_realloc64 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void> arg0,
-  int arg1,
+  ffi.Pointer<ffi.Void>,
+  int,
 );
 
 typedef _c_sqlite3_free = ffi.Void Function(
-  ffi.Pointer<ffi.Void> arg0,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_sqlite3_free = void Function(
-  ffi.Pointer<ffi.Void> arg0,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_sqlite3_msize = ffi.Uint64 Function(
-  ffi.Pointer<ffi.Void> arg0,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_sqlite3_msize = int Function(
-  ffi.Pointer<ffi.Void> arg0,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_sqlite3_memory_used = ffi.Int64 Function();
@@ -4854,21 +4854,21 @@ typedef _c_sqlite3_memory_used = ffi.Int64 Function();
 typedef _dart_sqlite3_memory_used = int Function();
 
 typedef _c_sqlite3_memory_highwater = ffi.Int64 Function(
-  ffi.Int32 resetFlag,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_memory_highwater = int Function(
-  int resetFlag,
+  int,
 );
 
 typedef _c_sqlite3_randomness = ffi.Void Function(
-  ffi.Int32 N,
-  ffi.Pointer<ffi.Void> P,
+  ffi.Int32,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_sqlite3_randomness = void Function(
-  int N,
-  ffi.Pointer<ffi.Void> P,
+  int,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _typedefC_33 = ffi.Int32 Function(
@@ -4881,15 +4881,15 @@ typedef _typedefC_33 = ffi.Int32 Function(
 );
 
 typedef _c_sqlite3_set_authorizer = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_33>> xAuth,
-  ffi.Pointer<ffi.Void> pUserData,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_33>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_sqlite3_set_authorizer = int Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_33>> xAuth,
-  ffi.Pointer<ffi.Void> pUserData,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_33>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _typedefC_34 = ffi.Void Function(
@@ -4898,15 +4898,15 @@ typedef _typedefC_34 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_trace = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_34>> xTrace,
-  ffi.Pointer<ffi.Void> arg2,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_34>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_sqlite3_trace = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_34>> xTrace,
-  ffi.Pointer<ffi.Void> arg2,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_34>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _typedefC_35 = ffi.Void Function(
@@ -4916,15 +4916,15 @@ typedef _typedefC_35 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_profile = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_35>> xProfile,
-  ffi.Pointer<ffi.Void> arg2,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_35>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_sqlite3_profile = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_35>> xProfile,
-  ffi.Pointer<ffi.Void> arg2,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_35>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _typedefC_36 = ffi.Int32 Function(
@@ -4935,17 +4935,17 @@ typedef _typedefC_36 = ffi.Int32 Function(
 );
 
 typedef _c_sqlite3_trace_v2 = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Uint32 uMask,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_36>> xCallback,
-  ffi.Pointer<ffi.Void> pCtx,
+  ffi.Pointer<sqlite3>,
+  ffi.Uint32,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_36>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_sqlite3_trace_v2 = int Function(
-  ffi.Pointer<sqlite3> arg0,
-  int uMask,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_36>> xCallback,
-  ffi.Pointer<ffi.Void> pCtx,
+  ffi.Pointer<sqlite3>,
+  int,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_36>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _typedefC_37 = ffi.Int32 Function(
@@ -4953,351 +4953,351 @@ typedef _typedefC_37 = ffi.Int32 Function(
 );
 
 typedef _c_sqlite3_progress_handler = ffi.Void Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Int32 arg1,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_37>> arg2,
-  ffi.Pointer<ffi.Void> arg3,
+  ffi.Pointer<sqlite3>,
+  ffi.Int32,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_37>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_sqlite3_progress_handler = void Function(
-  ffi.Pointer<sqlite3> arg0,
-  int arg1,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_37>> arg2,
-  ffi.Pointer<ffi.Void> arg3,
+  ffi.Pointer<sqlite3>,
+  int,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_37>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_sqlite3_open = ffi.Int32 Function(
-  ffi.Pointer<ffi.Int8> filename,
-  ffi.Pointer<ffi.Pointer<sqlite3>> ppDb,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<sqlite3>>,
 );
 
 typedef _dart_sqlite3_open = int Function(
-  ffi.Pointer<ffi.Int8> filename,
-  ffi.Pointer<ffi.Pointer<sqlite3>> ppDb,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<sqlite3>>,
 );
 
 typedef _c_sqlite3_open16 = ffi.Int32 Function(
-  ffi.Pointer<ffi.Void> filename,
-  ffi.Pointer<ffi.Pointer<sqlite3>> ppDb,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Pointer<sqlite3>>,
 );
 
 typedef _dart_sqlite3_open16 = int Function(
-  ffi.Pointer<ffi.Void> filename,
-  ffi.Pointer<ffi.Pointer<sqlite3>> ppDb,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Pointer<sqlite3>>,
 );
 
 typedef _c_sqlite3_open_v2 = ffi.Int32 Function(
-  ffi.Pointer<ffi.Int8> filename,
-  ffi.Pointer<ffi.Pointer<sqlite3>> ppDb,
-  ffi.Int32 flags,
-  ffi.Pointer<ffi.Int8> zVfs,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<sqlite3>>,
+  ffi.Int32,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_open_v2 = int Function(
-  ffi.Pointer<ffi.Int8> filename,
-  ffi.Pointer<ffi.Pointer<sqlite3>> ppDb,
-  int flags,
-  ffi.Pointer<ffi.Int8> zVfs,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<sqlite3>>,
+  int,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_uri_parameter = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<ffi.Int8> zFilename,
-  ffi.Pointer<ffi.Int8> zParam,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_uri_parameter = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<ffi.Int8> zFilename,
-  ffi.Pointer<ffi.Int8> zParam,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_uri_boolean = ffi.Int32 Function(
-  ffi.Pointer<ffi.Int8> zFile,
-  ffi.Pointer<ffi.Int8> zParam,
-  ffi.Int32 bDefault,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_uri_boolean = int Function(
-  ffi.Pointer<ffi.Int8> zFile,
-  ffi.Pointer<ffi.Int8> zParam,
-  int bDefault,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
+  int,
 );
 
 typedef _c_sqlite3_uri_int64 = ffi.Int64 Function(
-  ffi.Pointer<ffi.Int8> arg0,
-  ffi.Pointer<ffi.Int8> arg1,
-  ffi.Int64 arg2,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Int64,
 );
 
 typedef _dart_sqlite3_uri_int64 = int Function(
-  ffi.Pointer<ffi.Int8> arg0,
-  ffi.Pointer<ffi.Int8> arg1,
-  int arg2,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
+  int,
 );
 
 typedef _c_sqlite3_uri_key = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<ffi.Int8> zFilename,
-  ffi.Int32 N,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_uri_key = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<ffi.Int8> zFilename,
-  int N,
+  ffi.Pointer<ffi.Int8>,
+  int,
 );
 
 typedef _c_sqlite3_filename_database = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<ffi.Int8> arg0,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_filename_database = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<ffi.Int8> arg0,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_filename_journal = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<ffi.Int8> arg0,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_filename_journal = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<ffi.Int8> arg0,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_filename_wal = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<ffi.Int8> arg0,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_filename_wal = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<ffi.Int8> arg0,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_database_file_object = ffi.Pointer<sqlite3_file> Function(
-  ffi.Pointer<ffi.Int8> arg0,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_database_file_object = ffi.Pointer<sqlite3_file> Function(
-  ffi.Pointer<ffi.Int8> arg0,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_create_filename = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<ffi.Int8> zDatabase,
-  ffi.Pointer<ffi.Int8> zJournal,
-  ffi.Pointer<ffi.Int8> zWal,
-  ffi.Int32 nParam,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> azParam,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Int32,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
 );
 
 typedef _dart_sqlite3_create_filename = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<ffi.Int8> zDatabase,
-  ffi.Pointer<ffi.Int8> zJournal,
-  ffi.Pointer<ffi.Int8> zWal,
-  int nParam,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> azParam,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
+  int,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
 );
 
 typedef _c_sqlite3_free_filename = ffi.Void Function(
-  ffi.Pointer<ffi.Int8> arg0,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_free_filename = void Function(
-  ffi.Pointer<ffi.Int8> arg0,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_errcode = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _dart_sqlite3_errcode = int Function(
-  ffi.Pointer<sqlite3> db,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _c_sqlite3_extended_errcode = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _dart_sqlite3_extended_errcode = int Function(
-  ffi.Pointer<sqlite3> db,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _c_sqlite3_errmsg = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _dart_sqlite3_errmsg = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _c_sqlite3_errmsg16 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _dart_sqlite3_errmsg16 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _c_sqlite3_errstr = ffi.Pointer<ffi.Int8> Function(
-  ffi.Int32 arg0,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_errstr = ffi.Pointer<ffi.Int8> Function(
-  int arg0,
+  int,
 );
 
 typedef _c_sqlite3_limit = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Int32 id,
-  ffi.Int32 newVal,
+  ffi.Pointer<sqlite3>,
+  ffi.Int32,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_limit = int Function(
-  ffi.Pointer<sqlite3> arg0,
-  int id,
-  int newVal,
+  ffi.Pointer<sqlite3>,
+  int,
+  int,
 );
 
 typedef _c_sqlite3_prepare = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zSql,
-  ffi.Int32 nByte,
-  ffi.Pointer<ffi.Pointer<sqlite3_stmt>> ppStmt,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> pzTail,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Int32,
+  ffi.Pointer<ffi.Pointer<sqlite3_stmt>>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
 );
 
 typedef _dart_sqlite3_prepare = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zSql,
-  int nByte,
-  ffi.Pointer<ffi.Pointer<sqlite3_stmt>> ppStmt,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> pzTail,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  int,
+  ffi.Pointer<ffi.Pointer<sqlite3_stmt>>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
 );
 
 typedef _c_sqlite3_prepare_v2 = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zSql,
-  ffi.Int32 nByte,
-  ffi.Pointer<ffi.Pointer<sqlite3_stmt>> ppStmt,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> pzTail,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Int32,
+  ffi.Pointer<ffi.Pointer<sqlite3_stmt>>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
 );
 
 typedef _dart_sqlite3_prepare_v2 = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zSql,
-  int nByte,
-  ffi.Pointer<ffi.Pointer<sqlite3_stmt>> ppStmt,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> pzTail,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  int,
+  ffi.Pointer<ffi.Pointer<sqlite3_stmt>>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
 );
 
 typedef _c_sqlite3_prepare_v3 = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zSql,
-  ffi.Int32 nByte,
-  ffi.Uint32 prepFlags,
-  ffi.Pointer<ffi.Pointer<sqlite3_stmt>> ppStmt,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> pzTail,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Int32,
+  ffi.Uint32,
+  ffi.Pointer<ffi.Pointer<sqlite3_stmt>>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
 );
 
 typedef _dart_sqlite3_prepare_v3 = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zSql,
-  int nByte,
-  int prepFlags,
-  ffi.Pointer<ffi.Pointer<sqlite3_stmt>> ppStmt,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> pzTail,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  int,
+  int,
+  ffi.Pointer<ffi.Pointer<sqlite3_stmt>>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
 );
 
 typedef _c_sqlite3_prepare16 = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Void> zSql,
-  ffi.Int32 nByte,
-  ffi.Pointer<ffi.Pointer<sqlite3_stmt>> ppStmt,
-  ffi.Pointer<ffi.Pointer<ffi.Void>> pzTail,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Int32,
+  ffi.Pointer<ffi.Pointer<sqlite3_stmt>>,
+  ffi.Pointer<ffi.Pointer<ffi.Void>>,
 );
 
 typedef _dart_sqlite3_prepare16 = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Void> zSql,
-  int nByte,
-  ffi.Pointer<ffi.Pointer<sqlite3_stmt>> ppStmt,
-  ffi.Pointer<ffi.Pointer<ffi.Void>> pzTail,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Void>,
+  int,
+  ffi.Pointer<ffi.Pointer<sqlite3_stmt>>,
+  ffi.Pointer<ffi.Pointer<ffi.Void>>,
 );
 
 typedef _c_sqlite3_prepare16_v2 = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Void> zSql,
-  ffi.Int32 nByte,
-  ffi.Pointer<ffi.Pointer<sqlite3_stmt>> ppStmt,
-  ffi.Pointer<ffi.Pointer<ffi.Void>> pzTail,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Int32,
+  ffi.Pointer<ffi.Pointer<sqlite3_stmt>>,
+  ffi.Pointer<ffi.Pointer<ffi.Void>>,
 );
 
 typedef _dart_sqlite3_prepare16_v2 = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Void> zSql,
-  int nByte,
-  ffi.Pointer<ffi.Pointer<sqlite3_stmt>> ppStmt,
-  ffi.Pointer<ffi.Pointer<ffi.Void>> pzTail,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Void>,
+  int,
+  ffi.Pointer<ffi.Pointer<sqlite3_stmt>>,
+  ffi.Pointer<ffi.Pointer<ffi.Void>>,
 );
 
 typedef _c_sqlite3_prepare16_v3 = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Void> zSql,
-  ffi.Int32 nByte,
-  ffi.Uint32 prepFlags,
-  ffi.Pointer<ffi.Pointer<sqlite3_stmt>> ppStmt,
-  ffi.Pointer<ffi.Pointer<ffi.Void>> pzTail,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Int32,
+  ffi.Uint32,
+  ffi.Pointer<ffi.Pointer<sqlite3_stmt>>,
+  ffi.Pointer<ffi.Pointer<ffi.Void>>,
 );
 
 typedef _dart_sqlite3_prepare16_v3 = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Void> zSql,
-  int nByte,
-  int prepFlags,
-  ffi.Pointer<ffi.Pointer<sqlite3_stmt>> ppStmt,
-  ffi.Pointer<ffi.Pointer<ffi.Void>> pzTail,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Void>,
+  int,
+  int,
+  ffi.Pointer<ffi.Pointer<sqlite3_stmt>>,
+  ffi.Pointer<ffi.Pointer<ffi.Void>>,
 );
 
 typedef _c_sqlite3_sql = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_stmt> pStmt,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _dart_sqlite3_sql = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_stmt> pStmt,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _c_sqlite3_expanded_sql = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_stmt> pStmt,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _dart_sqlite3_expanded_sql = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_stmt> pStmt,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _c_sqlite3_normalized_sql = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_stmt> pStmt,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _dart_sqlite3_normalized_sql = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_stmt> pStmt,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _c_sqlite3_stmt_readonly = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> pStmt,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _dart_sqlite3_stmt_readonly = int Function(
-  ffi.Pointer<sqlite3_stmt> pStmt,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _c_sqlite3_stmt_isexplain = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> pStmt,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _dart_sqlite3_stmt_isexplain = int Function(
-  ffi.Pointer<sqlite3_stmt> pStmt,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _c_sqlite3_stmt_busy = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _dart_sqlite3_stmt_busy = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _typedefC_38 = ffi.Void Function(
@@ -5305,19 +5305,19 @@ typedef _typedefC_38 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_bind_blob = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 arg1,
-  ffi.Pointer<ffi.Void> arg2,
-  ffi.Int32 n,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_38>> arg4,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
+  ffi.Pointer<ffi.Void>,
+  ffi.Int32,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_38>>,
 );
 
 typedef _dart_sqlite3_bind_blob = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int arg1,
-  ffi.Pointer<ffi.Void> arg2,
-  int n,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_38>> arg4,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
+  ffi.Pointer<ffi.Void>,
+  int,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_38>>,
 );
 
 typedef _typedefC_39 = ffi.Void Function(
@@ -5325,65 +5325,65 @@ typedef _typedefC_39 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_bind_blob64 = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 arg1,
-  ffi.Pointer<ffi.Void> arg2,
-  ffi.Uint64 arg3,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_39>> arg4,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
+  ffi.Pointer<ffi.Void>,
+  ffi.Uint64,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_39>>,
 );
 
 typedef _dart_sqlite3_bind_blob64 = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int arg1,
-  ffi.Pointer<ffi.Void> arg2,
-  int arg3,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_39>> arg4,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
+  ffi.Pointer<ffi.Void>,
+  int,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_39>>,
 );
 
 typedef _c_sqlite3_bind_double = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 arg1,
-  ffi.Double arg2,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
+  ffi.Double,
 );
 
 typedef _dart_sqlite3_bind_double = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int arg1,
-  double arg2,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
+  double,
 );
 
 typedef _c_sqlite3_bind_int = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 arg1,
-  ffi.Int32 arg2,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_bind_int = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int arg1,
-  int arg2,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
+  int,
 );
 
 typedef _c_sqlite3_bind_int64 = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 arg1,
-  ffi.Int64 arg2,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
+  ffi.Int64,
 );
 
 typedef _dart_sqlite3_bind_int64 = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int arg1,
-  int arg2,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
+  int,
 );
 
 typedef _c_sqlite3_bind_null = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 arg1,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_bind_null = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int arg1,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
 );
 
 typedef _typedefC_40 = ffi.Void Function(
@@ -5391,19 +5391,19 @@ typedef _typedefC_40 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_bind_text = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 arg1,
-  ffi.Pointer<ffi.Int8> arg2,
-  ffi.Int32 arg3,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_40>> arg4,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Int32,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_40>>,
 );
 
 typedef _dart_sqlite3_bind_text = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int arg1,
-  ffi.Pointer<ffi.Int8> arg2,
-  int arg3,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_40>> arg4,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
+  ffi.Pointer<ffi.Int8>,
+  int,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_40>>,
 );
 
 typedef _typedefC_41 = ffi.Void Function(
@@ -5411,19 +5411,19 @@ typedef _typedefC_41 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_bind_text16 = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 arg1,
-  ffi.Pointer<ffi.Void> arg2,
-  ffi.Int32 arg3,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_41>> arg4,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
+  ffi.Pointer<ffi.Void>,
+  ffi.Int32,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_41>>,
 );
 
 typedef _dart_sqlite3_bind_text16 = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int arg1,
-  ffi.Pointer<ffi.Void> arg2,
-  int arg3,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_41>> arg4,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
+  ffi.Pointer<ffi.Void>,
+  int,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_41>>,
 );
 
 typedef _typedefC_42 = ffi.Void Function(
@@ -5431,33 +5431,33 @@ typedef _typedefC_42 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_bind_text64 = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 arg1,
-  ffi.Pointer<ffi.Int8> arg2,
-  ffi.Uint64 arg3,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_42>> arg4,
-  ffi.Uint8 encoding,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Uint64,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_42>>,
+  ffi.Uint8,
 );
 
 typedef _dart_sqlite3_bind_text64 = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int arg1,
-  ffi.Pointer<ffi.Int8> arg2,
-  int arg3,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_42>> arg4,
-  int encoding,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
+  ffi.Pointer<ffi.Int8>,
+  int,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_42>>,
+  int,
 );
 
 typedef _c_sqlite3_bind_value = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 arg1,
-  ffi.Pointer<sqlite3_value> arg2,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _dart_sqlite3_bind_value = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int arg1,
-  ffi.Pointer<sqlite3_value> arg2,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _typedefC_43 = ffi.Void Function(
@@ -5465,319 +5465,319 @@ typedef _typedefC_43 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_bind_pointer = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 arg1,
-  ffi.Pointer<ffi.Void> arg2,
-  ffi.Pointer<ffi.Int8> arg3,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_43>> arg4,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_43>>,
 );
 
 typedef _dart_sqlite3_bind_pointer = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int arg1,
-  ffi.Pointer<ffi.Void> arg2,
-  ffi.Pointer<ffi.Int8> arg3,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_43>> arg4,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_43>>,
 );
 
 typedef _c_sqlite3_bind_zeroblob = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 arg1,
-  ffi.Int32 n,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_bind_zeroblob = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int arg1,
-  int n,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
+  int,
 );
 
 typedef _c_sqlite3_bind_zeroblob64 = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 arg1,
-  ffi.Uint64 arg2,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
+  ffi.Uint64,
 );
 
 typedef _dart_sqlite3_bind_zeroblob64 = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int arg1,
-  int arg2,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
+  int,
 );
 
 typedef _c_sqlite3_bind_parameter_count = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _dart_sqlite3_bind_parameter_count = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _c_sqlite3_bind_parameter_name = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 arg1,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_bind_parameter_name = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int arg1,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
 );
 
 typedef _c_sqlite3_bind_parameter_index = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Pointer<ffi.Int8> zName,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_bind_parameter_index = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Pointer<ffi.Int8> zName,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_clear_bindings = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _dart_sqlite3_clear_bindings = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _c_sqlite3_column_count = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> pStmt,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _dart_sqlite3_column_count = int Function(
-  ffi.Pointer<sqlite3_stmt> pStmt,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _c_sqlite3_column_name = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 N,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_column_name = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int N,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
 );
 
 typedef _c_sqlite3_column_name16 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 N,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_column_name16 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int N,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
 );
 
 typedef _c_sqlite3_column_database_name = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 arg1,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_column_database_name = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int arg1,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
 );
 
 typedef _c_sqlite3_column_database_name16 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 arg1,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_column_database_name16 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int arg1,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
 );
 
 typedef _c_sqlite3_column_table_name = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 arg1,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_column_table_name = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int arg1,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
 );
 
 typedef _c_sqlite3_column_table_name16 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 arg1,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_column_table_name16 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int arg1,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
 );
 
 typedef _c_sqlite3_column_origin_name = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 arg1,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_column_origin_name = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int arg1,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
 );
 
 typedef _c_sqlite3_column_origin_name16 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 arg1,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_column_origin_name16 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int arg1,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
 );
 
 typedef _c_sqlite3_column_decltype = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 arg1,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_column_decltype = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int arg1,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
 );
 
 typedef _c_sqlite3_column_decltype16 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 arg1,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_column_decltype16 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int arg1,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
 );
 
 typedef _c_sqlite3_step = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _dart_sqlite3_step = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _c_sqlite3_data_count = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> pStmt,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _dart_sqlite3_data_count = int Function(
-  ffi.Pointer<sqlite3_stmt> pStmt,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _c_sqlite3_column_blob = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 iCol,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_column_blob = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int iCol,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
 );
 
 typedef _c_sqlite3_column_double = ffi.Double Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 iCol,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_column_double = double Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int iCol,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
 );
 
 typedef _c_sqlite3_column_int = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 iCol,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_column_int = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int iCol,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
 );
 
 typedef _c_sqlite3_column_int64 = ffi.Int64 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 iCol,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_column_int64 = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int iCol,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
 );
 
 typedef _c_sqlite3_column_text = ffi.Pointer<ffi.Uint8> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 iCol,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_column_text = ffi.Pointer<ffi.Uint8> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int iCol,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
 );
 
 typedef _c_sqlite3_column_text16 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 iCol,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_column_text16 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int iCol,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
 );
 
 typedef _c_sqlite3_column_value = ffi.Pointer<sqlite3_value> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 iCol,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_column_value = ffi.Pointer<sqlite3_value> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int iCol,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
 );
 
 typedef _c_sqlite3_column_bytes = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 iCol,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_column_bytes = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int iCol,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
 );
 
 typedef _c_sqlite3_column_bytes16 = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 iCol,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_column_bytes16 = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int iCol,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
 );
 
 typedef _c_sqlite3_column_type = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 iCol,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_column_type = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int iCol,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
 );
 
 typedef _c_sqlite3_finalize = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> pStmt,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _dart_sqlite3_finalize = int Function(
-  ffi.Pointer<sqlite3_stmt> pStmt,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _c_sqlite3_reset = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> pStmt,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _dart_sqlite3_reset = int Function(
-  ffi.Pointer<sqlite3_stmt> pStmt,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _typedefC_44 = ffi.Void Function(
@@ -5797,25 +5797,25 @@ typedef _typedefC_46 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_create_function = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zFunctionName,
-  ffi.Int32 nArg,
-  ffi.Int32 eTextRep,
-  ffi.Pointer<ffi.Void> pApp,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_44>> xFunc,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_45>> xStep,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_46>> xFinal,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Int32,
+  ffi.Int32,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_44>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_45>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_46>>,
 );
 
 typedef _dart_sqlite3_create_function = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zFunctionName,
-  int nArg,
-  int eTextRep,
-  ffi.Pointer<ffi.Void> pApp,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_44>> xFunc,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_45>> xStep,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_46>> xFinal,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  int,
+  int,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_44>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_45>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_46>>,
 );
 
 typedef _typedefC_47 = ffi.Void Function(
@@ -5835,25 +5835,25 @@ typedef _typedefC_49 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_create_function16 = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Void> zFunctionName,
-  ffi.Int32 nArg,
-  ffi.Int32 eTextRep,
-  ffi.Pointer<ffi.Void> pApp,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_47>> xFunc,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_48>> xStep,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_49>> xFinal,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Int32,
+  ffi.Int32,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_47>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_48>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_49>>,
 );
 
 typedef _dart_sqlite3_create_function16 = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Void> zFunctionName,
-  int nArg,
-  int eTextRep,
-  ffi.Pointer<ffi.Void> pApp,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_47>> xFunc,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_48>> xStep,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_49>> xFinal,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Void>,
+  int,
+  int,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_47>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_48>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_49>>,
 );
 
 typedef _typedefC_50 = ffi.Void Function(
@@ -5877,27 +5877,27 @@ typedef _typedefC_53 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_create_function_v2 = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zFunctionName,
-  ffi.Int32 nArg,
-  ffi.Int32 eTextRep,
-  ffi.Pointer<ffi.Void> pApp,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_50>> xFunc,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_51>> xStep,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_52>> xFinal,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_53>> xDestroy,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Int32,
+  ffi.Int32,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_50>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_51>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_52>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_53>>,
 );
 
 typedef _dart_sqlite3_create_function_v2 = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zFunctionName,
-  int nArg,
-  int eTextRep,
-  ffi.Pointer<ffi.Void> pApp,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_50>> xFunc,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_51>> xStep,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_52>> xFinal,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_53>> xDestroy,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  int,
+  int,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_50>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_51>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_52>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_53>>,
 );
 
 typedef _typedefC_54 = ffi.Void Function(
@@ -5925,55 +5925,55 @@ typedef _typedefC_58 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_create_window_function = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zFunctionName,
-  ffi.Int32 nArg,
-  ffi.Int32 eTextRep,
-  ffi.Pointer<ffi.Void> pApp,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_54>> xStep,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_55>> xFinal,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_56>> xValue,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_57>> xInverse,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_58>> xDestroy,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Int32,
+  ffi.Int32,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_54>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_55>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_56>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_57>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_58>>,
 );
 
 typedef _dart_sqlite3_create_window_function = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zFunctionName,
-  int nArg,
-  int eTextRep,
-  ffi.Pointer<ffi.Void> pApp,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_54>> xStep,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_55>> xFinal,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_56>> xValue,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_57>> xInverse,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_58>> xDestroy,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  int,
+  int,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_54>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_55>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_56>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_57>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_58>>,
 );
 
 typedef _c_sqlite3_aggregate_count = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_context> arg0,
+  ffi.Pointer<sqlite3_context>,
 );
 
 typedef _dart_sqlite3_aggregate_count = int Function(
-  ffi.Pointer<sqlite3_context> arg0,
+  ffi.Pointer<sqlite3_context>,
 );
 
 typedef _c_sqlite3_expired = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _dart_sqlite3_expired = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _c_sqlite3_transfer_bindings = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Pointer<sqlite3_stmt> arg1,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _dart_sqlite3_transfer_bindings = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Pointer<sqlite3_stmt> arg1,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _c_sqlite3_global_recover = ffi.Int32 Function();
@@ -5991,197 +5991,197 @@ typedef _typedefC_59 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_memory_alarm = ffi.Int32 Function(
-  ffi.Pointer<ffi.NativeFunction<_typedefC_59>> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-  ffi.Int64 arg2,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_59>>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Int64,
 );
 
 typedef _dart_sqlite3_memory_alarm = int Function(
-  ffi.Pointer<ffi.NativeFunction<_typedefC_59>> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-  int arg2,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_59>>,
+  ffi.Pointer<ffi.Void>,
+  int,
 );
 
 typedef _c_sqlite3_value_blob = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _dart_sqlite3_value_blob = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _c_sqlite3_value_double = ffi.Double Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _dart_sqlite3_value_double = double Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _c_sqlite3_value_int = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _dart_sqlite3_value_int = int Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _c_sqlite3_value_int64 = ffi.Int64 Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _dart_sqlite3_value_int64 = int Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _c_sqlite3_value_pointer = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_value> arg0,
-  ffi.Pointer<ffi.Int8> arg1,
+  ffi.Pointer<sqlite3_value>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_value_pointer = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_value> arg0,
-  ffi.Pointer<ffi.Int8> arg1,
+  ffi.Pointer<sqlite3_value>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_value_text = ffi.Pointer<ffi.Uint8> Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _dart_sqlite3_value_text = ffi.Pointer<ffi.Uint8> Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _c_sqlite3_value_text16 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _dart_sqlite3_value_text16 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _c_sqlite3_value_text16le = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _dart_sqlite3_value_text16le = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _c_sqlite3_value_text16be = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _dart_sqlite3_value_text16be = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _c_sqlite3_value_bytes = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _dart_sqlite3_value_bytes = int Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _c_sqlite3_value_bytes16 = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _dart_sqlite3_value_bytes16 = int Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _c_sqlite3_value_type = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _dart_sqlite3_value_type = int Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _c_sqlite3_value_numeric_type = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _dart_sqlite3_value_numeric_type = int Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _c_sqlite3_value_nochange = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _dart_sqlite3_value_nochange = int Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _c_sqlite3_value_frombind = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _dart_sqlite3_value_frombind = int Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _c_sqlite3_value_subtype = ffi.Uint32 Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _dart_sqlite3_value_subtype = int Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _c_sqlite3_value_dup = ffi.Pointer<sqlite3_value> Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _dart_sqlite3_value_dup = ffi.Pointer<sqlite3_value> Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _c_sqlite3_value_free = ffi.Void Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _dart_sqlite3_value_free = void Function(
-  ffi.Pointer<sqlite3_value> arg0,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _c_sqlite3_aggregate_context = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Int32 nBytes,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_aggregate_context = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  int nBytes,
+  ffi.Pointer<sqlite3_context>,
+  int,
 );
 
 typedef _c_sqlite3_user_data = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_context> arg0,
+  ffi.Pointer<sqlite3_context>,
 );
 
 typedef _dart_sqlite3_user_data = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_context> arg0,
+  ffi.Pointer<sqlite3_context>,
 );
 
 typedef _c_sqlite3_context_db_handle = ffi.Pointer<sqlite3> Function(
-  ffi.Pointer<sqlite3_context> arg0,
+  ffi.Pointer<sqlite3_context>,
 );
 
 typedef _dart_sqlite3_context_db_handle = ffi.Pointer<sqlite3> Function(
-  ffi.Pointer<sqlite3_context> arg0,
+  ffi.Pointer<sqlite3_context>,
 );
 
 typedef _c_sqlite3_get_auxdata = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Int32 N,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_get_auxdata = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  int N,
+  ffi.Pointer<sqlite3_context>,
+  int,
 );
 
 typedef _typedefC_60 = ffi.Void Function(
@@ -6189,17 +6189,17 @@ typedef _typedefC_60 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_set_auxdata = ffi.Void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Int32 N,
-  ffi.Pointer<ffi.Void> arg2,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_60>> arg3,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Int32,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_60>>,
 );
 
 typedef _dart_sqlite3_set_auxdata = void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  int N,
-  ffi.Pointer<ffi.Void> arg2,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_60>> arg3,
+  ffi.Pointer<sqlite3_context>,
+  int,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_60>>,
 );
 
 typedef _typedefC_61 = ffi.Void Function(
@@ -6207,17 +6207,17 @@ typedef _typedefC_61 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_result_blob = ffi.Void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-  ffi.Int32 arg2,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_61>> arg3,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Int32,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_61>>,
 );
 
 typedef _dart_sqlite3_result_blob = void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-  int arg2,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_61>> arg3,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Pointer<ffi.Void>,
+  int,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_61>>,
 );
 
 typedef _typedefC_62 = ffi.Void Function(
@@ -6225,105 +6225,105 @@ typedef _typedefC_62 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_result_blob64 = ffi.Void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-  ffi.Uint64 arg2,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_62>> arg3,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Uint64,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_62>>,
 );
 
 typedef _dart_sqlite3_result_blob64 = void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-  int arg2,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_62>> arg3,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Pointer<ffi.Void>,
+  int,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_62>>,
 );
 
 typedef _c_sqlite3_result_double = ffi.Void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Double arg1,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Double,
 );
 
 typedef _dart_sqlite3_result_double = void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  double arg1,
+  ffi.Pointer<sqlite3_context>,
+  double,
 );
 
 typedef _c_sqlite3_result_error = ffi.Void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Pointer<ffi.Int8> arg1,
-  ffi.Int32 arg2,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_result_error = void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Pointer<ffi.Int8> arg1,
-  int arg2,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Pointer<ffi.Int8>,
+  int,
 );
 
 typedef _c_sqlite3_result_error16 = ffi.Void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-  ffi.Int32 arg2,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_result_error16 = void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-  int arg2,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Pointer<ffi.Void>,
+  int,
 );
 
 typedef _c_sqlite3_result_error_toobig = ffi.Void Function(
-  ffi.Pointer<sqlite3_context> arg0,
+  ffi.Pointer<sqlite3_context>,
 );
 
 typedef _dart_sqlite3_result_error_toobig = void Function(
-  ffi.Pointer<sqlite3_context> arg0,
+  ffi.Pointer<sqlite3_context>,
 );
 
 typedef _c_sqlite3_result_error_nomem = ffi.Void Function(
-  ffi.Pointer<sqlite3_context> arg0,
+  ffi.Pointer<sqlite3_context>,
 );
 
 typedef _dart_sqlite3_result_error_nomem = void Function(
-  ffi.Pointer<sqlite3_context> arg0,
+  ffi.Pointer<sqlite3_context>,
 );
 
 typedef _c_sqlite3_result_error_code = ffi.Void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Int32 arg1,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_result_error_code = void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  int arg1,
+  ffi.Pointer<sqlite3_context>,
+  int,
 );
 
 typedef _c_sqlite3_result_int = ffi.Void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Int32 arg1,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_result_int = void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  int arg1,
+  ffi.Pointer<sqlite3_context>,
+  int,
 );
 
 typedef _c_sqlite3_result_int64 = ffi.Void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Int64 arg1,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Int64,
 );
 
 typedef _dart_sqlite3_result_int64 = void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  int arg1,
+  ffi.Pointer<sqlite3_context>,
+  int,
 );
 
 typedef _c_sqlite3_result_null = ffi.Void Function(
-  ffi.Pointer<sqlite3_context> arg0,
+  ffi.Pointer<sqlite3_context>,
 );
 
 typedef _dart_sqlite3_result_null = void Function(
-  ffi.Pointer<sqlite3_context> arg0,
+  ffi.Pointer<sqlite3_context>,
 );
 
 typedef _typedefC_63 = ffi.Void Function(
@@ -6331,17 +6331,17 @@ typedef _typedefC_63 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_result_text = ffi.Void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Pointer<ffi.Int8> arg1,
-  ffi.Int32 arg2,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_63>> arg3,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Int32,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_63>>,
 );
 
 typedef _dart_sqlite3_result_text = void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Pointer<ffi.Int8> arg1,
-  int arg2,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_63>> arg3,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Pointer<ffi.Int8>,
+  int,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_63>>,
 );
 
 typedef _typedefC_64 = ffi.Void Function(
@@ -6349,19 +6349,19 @@ typedef _typedefC_64 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_result_text64 = ffi.Void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Pointer<ffi.Int8> arg1,
-  ffi.Uint64 arg2,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_64>> arg3,
-  ffi.Uint8 encoding,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Uint64,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_64>>,
+  ffi.Uint8,
 );
 
 typedef _dart_sqlite3_result_text64 = void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Pointer<ffi.Int8> arg1,
-  int arg2,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_64>> arg3,
-  int encoding,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Pointer<ffi.Int8>,
+  int,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_64>>,
+  int,
 );
 
 typedef _typedefC_65 = ffi.Void Function(
@@ -6369,17 +6369,17 @@ typedef _typedefC_65 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_result_text16 = ffi.Void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-  ffi.Int32 arg2,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_65>> arg3,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Int32,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_65>>,
 );
 
 typedef _dart_sqlite3_result_text16 = void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-  int arg2,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_65>> arg3,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Pointer<ffi.Void>,
+  int,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_65>>,
 );
 
 typedef _typedefC_66 = ffi.Void Function(
@@ -6387,17 +6387,17 @@ typedef _typedefC_66 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_result_text16le = ffi.Void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-  ffi.Int32 arg2,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_66>> arg3,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Int32,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_66>>,
 );
 
 typedef _dart_sqlite3_result_text16le = void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-  int arg2,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_66>> arg3,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Pointer<ffi.Void>,
+  int,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_66>>,
 );
 
 typedef _typedefC_67 = ffi.Void Function(
@@ -6405,27 +6405,27 @@ typedef _typedefC_67 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_result_text16be = ffi.Void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-  ffi.Int32 arg2,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_67>> arg3,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Int32,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_67>>,
 );
 
 typedef _dart_sqlite3_result_text16be = void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-  int arg2,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_67>> arg3,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Pointer<ffi.Void>,
+  int,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_67>>,
 );
 
 typedef _c_sqlite3_result_value = ffi.Void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Pointer<sqlite3_value> arg1,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _dart_sqlite3_result_value = void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Pointer<sqlite3_value> arg1,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Pointer<sqlite3_value>,
 );
 
 typedef _typedefC_68 = ffi.Void Function(
@@ -6433,47 +6433,47 @@ typedef _typedefC_68 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_result_pointer = ffi.Void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-  ffi.Pointer<ffi.Int8> arg2,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_68>> arg3,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_68>>,
 );
 
 typedef _dart_sqlite3_result_pointer = void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-  ffi.Pointer<ffi.Int8> arg2,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_68>> arg3,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_68>>,
 );
 
 typedef _c_sqlite3_result_zeroblob = ffi.Void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Int32 n,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_result_zeroblob = void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  int n,
+  ffi.Pointer<sqlite3_context>,
+  int,
 );
 
 typedef _c_sqlite3_result_zeroblob64 = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Uint64 n,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Uint64,
 );
 
 typedef _dart_sqlite3_result_zeroblob64 = int Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  int n,
+  ffi.Pointer<sqlite3_context>,
+  int,
 );
 
 typedef _c_sqlite3_result_subtype = ffi.Void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  ffi.Uint32 arg1,
+  ffi.Pointer<sqlite3_context>,
+  ffi.Uint32,
 );
 
 typedef _dart_sqlite3_result_subtype = void Function(
-  ffi.Pointer<sqlite3_context> arg0,
-  int arg1,
+  ffi.Pointer<sqlite3_context>,
+  int,
 );
 
 typedef _typedefC_69 = ffi.Int32 Function(
@@ -6485,19 +6485,19 @@ typedef _typedefC_69 = ffi.Int32 Function(
 );
 
 typedef _c_sqlite3_create_collation = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.Int8> zName,
-  ffi.Int32 eTextRep,
-  ffi.Pointer<ffi.Void> pArg,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_69>> xCompare,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Int32,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_69>>,
 );
 
 typedef _dart_sqlite3_create_collation = int Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.Int8> zName,
-  int eTextRep,
-  ffi.Pointer<ffi.Void> pArg,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_69>> xCompare,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  int,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_69>>,
 );
 
 typedef _typedefC_70 = ffi.Int32 Function(
@@ -6513,21 +6513,21 @@ typedef _typedefC_71 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_create_collation_v2 = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.Int8> zName,
-  ffi.Int32 eTextRep,
-  ffi.Pointer<ffi.Void> pArg,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_70>> xCompare,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_71>> xDestroy,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Int32,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_70>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_71>>,
 );
 
 typedef _dart_sqlite3_create_collation_v2 = int Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.Int8> zName,
-  int eTextRep,
-  ffi.Pointer<ffi.Void> pArg,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_70>> xCompare,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_71>> xDestroy,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  int,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_70>>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_71>>,
 );
 
 typedef _typedefC_72 = ffi.Int32 Function(
@@ -6539,19 +6539,19 @@ typedef _typedefC_72 = ffi.Int32 Function(
 );
 
 typedef _c_sqlite3_create_collation16 = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.Void> zName,
-  ffi.Int32 eTextRep,
-  ffi.Pointer<ffi.Void> pArg,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_72>> xCompare,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Int32,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_72>>,
 );
 
 typedef _dart_sqlite3_create_collation16 = int Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.Void> zName,
-  int eTextRep,
-  ffi.Pointer<ffi.Void> pArg,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_72>> xCompare,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Void>,
+  int,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_72>>,
 );
 
 typedef _typedefC_73 = ffi.Void Function(
@@ -6562,15 +6562,15 @@ typedef _typedefC_73 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_collation_needed = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_73>> arg2,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_73>>,
 );
 
 typedef _dart_sqlite3_collation_needed = int Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_73>> arg2,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_73>>,
 );
 
 typedef _typedefC_74 = ffi.Void Function(
@@ -6581,99 +6581,99 @@ typedef _typedefC_74 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_collation_needed16 = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_74>> arg2,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_74>>,
 );
 
 typedef _dart_sqlite3_collation_needed16 = int Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.Void> arg1,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_74>> arg2,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_74>>,
 );
 
 typedef _c_sqlite3_sleep = ffi.Int32 Function(
-  ffi.Int32 arg0,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_sleep = int Function(
-  int arg0,
+  int,
 );
 
 typedef _c_sqlite3_win32_set_directory = ffi.Int32 Function(
-  ffi.Uint64 type,
-  ffi.Pointer<ffi.Void> zValue,
+  ffi.Uint64,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_sqlite3_win32_set_directory = int Function(
-  int type,
-  ffi.Pointer<ffi.Void> zValue,
+  int,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_sqlite3_win32_set_directory8 = ffi.Int32 Function(
-  ffi.Uint64 type,
-  ffi.Pointer<ffi.Int8> zValue,
+  ffi.Uint64,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_win32_set_directory8 = int Function(
-  int type,
-  ffi.Pointer<ffi.Int8> zValue,
+  int,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_win32_set_directory16 = ffi.Int32 Function(
-  ffi.Uint64 type,
-  ffi.Pointer<ffi.Void> zValue,
+  ffi.Uint64,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_sqlite3_win32_set_directory16 = int Function(
-  int type,
-  ffi.Pointer<ffi.Void> zValue,
+  int,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_sqlite3_get_autocommit = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _dart_sqlite3_get_autocommit = int Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _c_sqlite3_db_handle = ffi.Pointer<sqlite3> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _dart_sqlite3_db_handle = ffi.Pointer<sqlite3> Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _c_sqlite3_db_filename = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zDbName,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_db_filename = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zDbName,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_db_readonly = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zDbName,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_db_readonly = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zDbName,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_next_stmt = ffi.Pointer<sqlite3_stmt> Function(
-  ffi.Pointer<sqlite3> pDb,
-  ffi.Pointer<sqlite3_stmt> pStmt,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _dart_sqlite3_next_stmt = ffi.Pointer<sqlite3_stmt> Function(
-  ffi.Pointer<sqlite3> pDb,
-  ffi.Pointer<sqlite3_stmt> pStmt,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _typedefC_75 = ffi.Int32 Function(
@@ -6681,15 +6681,15 @@ typedef _typedefC_75 = ffi.Int32 Function(
 );
 
 typedef _c_sqlite3_commit_hook = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_75>> arg1,
-  ffi.Pointer<ffi.Void> arg2,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_75>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_sqlite3_commit_hook = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_75>> arg1,
-  ffi.Pointer<ffi.Void> arg2,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_75>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _typedefC_76 = ffi.Void Function(
@@ -6697,15 +6697,15 @@ typedef _typedefC_76 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_rollback_hook = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_76>> arg1,
-  ffi.Pointer<ffi.Void> arg2,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_76>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_sqlite3_rollback_hook = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_76>> arg1,
-  ffi.Pointer<ffi.Void> arg2,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_76>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _typedefC_77 = ffi.Void Function(
@@ -6717,131 +6717,131 @@ typedef _typedefC_77 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_update_hook = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_77>> arg1,
-  ffi.Pointer<ffi.Void> arg2,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_77>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_sqlite3_update_hook = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_77>> arg1,
-  ffi.Pointer<ffi.Void> arg2,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_77>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_sqlite3_enable_shared_cache = ffi.Int32 Function(
-  ffi.Int32 arg0,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_enable_shared_cache = int Function(
-  int arg0,
+  int,
 );
 
 typedef _c_sqlite3_release_memory = ffi.Int32 Function(
-  ffi.Int32 arg0,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_release_memory = int Function(
-  int arg0,
+  int,
 );
 
 typedef _c_sqlite3_db_release_memory = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _dart_sqlite3_db_release_memory = int Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _c_sqlite3_soft_heap_limit64 = ffi.Int64 Function(
-  ffi.Int64 N,
+  ffi.Int64,
 );
 
 typedef _dart_sqlite3_soft_heap_limit64 = int Function(
-  int N,
+  int,
 );
 
 typedef _c_sqlite3_hard_heap_limit64 = ffi.Int64 Function(
-  ffi.Int64 N,
+  ffi.Int64,
 );
 
 typedef _dart_sqlite3_hard_heap_limit64 = int Function(
-  int N,
+  int,
 );
 
 typedef _c_sqlite3_soft_heap_limit = ffi.Void Function(
-  ffi.Int32 N,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_soft_heap_limit = void Function(
-  int N,
+  int,
 );
 
 typedef _c_sqlite3_table_column_metadata = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zDbName,
-  ffi.Pointer<ffi.Int8> zTableName,
-  ffi.Pointer<ffi.Int8> zColumnName,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> pzDataType,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> pzCollSeq,
-  ffi.Pointer<ffi.Int32> pNotNull,
-  ffi.Pointer<ffi.Int32> pPrimaryKey,
-  ffi.Pointer<ffi.Int32> pAutoinc,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  ffi.Pointer<ffi.Int32>,
+  ffi.Pointer<ffi.Int32>,
+  ffi.Pointer<ffi.Int32>,
 );
 
 typedef _dart_sqlite3_table_column_metadata = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zDbName,
-  ffi.Pointer<ffi.Int8> zTableName,
-  ffi.Pointer<ffi.Int8> zColumnName,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> pzDataType,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> pzCollSeq,
-  ffi.Pointer<ffi.Int32> pNotNull,
-  ffi.Pointer<ffi.Int32> pPrimaryKey,
-  ffi.Pointer<ffi.Int32> pAutoinc,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  ffi.Pointer<ffi.Int32>,
+  ffi.Pointer<ffi.Int32>,
+  ffi.Pointer<ffi.Int32>,
 );
 
 typedef _c_sqlite3_load_extension = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zFile,
-  ffi.Pointer<ffi.Int8> zProc,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> pzErrMsg,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
 );
 
 typedef _dart_sqlite3_load_extension = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zFile,
-  ffi.Pointer<ffi.Int8> zProc,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> pzErrMsg,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
 );
 
 typedef _c_sqlite3_enable_load_extension = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Int32 onoff,
+  ffi.Pointer<sqlite3>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_enable_load_extension = int Function(
-  ffi.Pointer<sqlite3> db,
-  int onoff,
+  ffi.Pointer<sqlite3>,
+  int,
 );
 
 typedef _typedefC_78 = ffi.Void Function();
 
 typedef _c_sqlite3_auto_extension = ffi.Int32 Function(
-  ffi.Pointer<ffi.NativeFunction<_typedefC_78>> xEntryPoint,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_78>>,
 );
 
 typedef _dart_sqlite3_auto_extension = int Function(
-  ffi.Pointer<ffi.NativeFunction<_typedefC_78>> xEntryPoint,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_78>>,
 );
 
 typedef _typedefC_79 = ffi.Void Function();
 
 typedef _c_sqlite3_cancel_auto_extension = ffi.Int32 Function(
-  ffi.Pointer<ffi.NativeFunction<_typedefC_79>> xEntryPoint,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_79>>,
 );
 
 typedef _dart_sqlite3_cancel_auto_extension = int Function(
-  ffi.Pointer<ffi.NativeFunction<_typedefC_79>> xEntryPoint,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_79>>,
 );
 
 typedef _c_sqlite3_reset_auto_extension = ffi.Void Function();
@@ -6849,17 +6849,17 @@ typedef _c_sqlite3_reset_auto_extension = ffi.Void Function();
 typedef _dart_sqlite3_reset_auto_extension = void Function();
 
 typedef _c_sqlite3_create_module = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zName,
-  ffi.Pointer<sqlite3_module> p,
-  ffi.Pointer<ffi.Void> pClientData,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<sqlite3_module>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_sqlite3_create_module = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zName,
-  ffi.Pointer<sqlite3_module> p,
-  ffi.Pointer<ffi.Void> pClientData,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<sqlite3_module>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _typedefC_80 = ffi.Void Function(
@@ -6867,237 +6867,237 @@ typedef _typedefC_80 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_create_module_v2 = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zName,
-  ffi.Pointer<sqlite3_module> p,
-  ffi.Pointer<ffi.Void> pClientData,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_80>> xDestroy,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<sqlite3_module>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_80>>,
 );
 
 typedef _dart_sqlite3_create_module_v2 = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zName,
-  ffi.Pointer<sqlite3_module> p,
-  ffi.Pointer<ffi.Void> pClientData,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_80>> xDestroy,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<sqlite3_module>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_80>>,
 );
 
 typedef _c_sqlite3_drop_modules = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> azKeep,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
 );
 
 typedef _dart_sqlite3_drop_modules = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> azKeep,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
 );
 
 typedef _c_sqlite3_declare_vtab = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.Int8> zSQL,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_declare_vtab = int Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.Int8> zSQL,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_overload_function = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.Int8> zFuncName,
-  ffi.Int32 nArg,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_overload_function = int Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.Int8> zFuncName,
-  int nArg,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  int,
 );
 
 typedef _c_sqlite3_blob_open = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.Int8> zDb,
-  ffi.Pointer<ffi.Int8> zTable,
-  ffi.Pointer<ffi.Int8> zColumn,
-  ffi.Int64 iRow,
-  ffi.Int32 flags,
-  ffi.Pointer<ffi.Pointer<sqlite3_blob>> ppBlob,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Int64,
+  ffi.Int32,
+  ffi.Pointer<ffi.Pointer<sqlite3_blob>>,
 );
 
 typedef _dart_sqlite3_blob_open = int Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.Int8> zDb,
-  ffi.Pointer<ffi.Int8> zTable,
-  ffi.Pointer<ffi.Int8> zColumn,
-  int iRow,
-  int flags,
-  ffi.Pointer<ffi.Pointer<sqlite3_blob>> ppBlob,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
+  int,
+  int,
+  ffi.Pointer<ffi.Pointer<sqlite3_blob>>,
 );
 
 typedef _c_sqlite3_blob_reopen = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_blob> arg0,
-  ffi.Int64 arg1,
+  ffi.Pointer<sqlite3_blob>,
+  ffi.Int64,
 );
 
 typedef _dart_sqlite3_blob_reopen = int Function(
-  ffi.Pointer<sqlite3_blob> arg0,
-  int arg1,
+  ffi.Pointer<sqlite3_blob>,
+  int,
 );
 
 typedef _c_sqlite3_blob_close = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_blob> arg0,
+  ffi.Pointer<sqlite3_blob>,
 );
 
 typedef _dart_sqlite3_blob_close = int Function(
-  ffi.Pointer<sqlite3_blob> arg0,
+  ffi.Pointer<sqlite3_blob>,
 );
 
 typedef _c_sqlite3_blob_bytes = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_blob> arg0,
+  ffi.Pointer<sqlite3_blob>,
 );
 
 typedef _dart_sqlite3_blob_bytes = int Function(
-  ffi.Pointer<sqlite3_blob> arg0,
+  ffi.Pointer<sqlite3_blob>,
 );
 
 typedef _c_sqlite3_blob_read = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_blob> arg0,
-  ffi.Pointer<ffi.Void> Z,
-  ffi.Int32 N,
-  ffi.Int32 iOffset,
+  ffi.Pointer<sqlite3_blob>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Int32,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_blob_read = int Function(
-  ffi.Pointer<sqlite3_blob> arg0,
-  ffi.Pointer<ffi.Void> Z,
-  int N,
-  int iOffset,
+  ffi.Pointer<sqlite3_blob>,
+  ffi.Pointer<ffi.Void>,
+  int,
+  int,
 );
 
 typedef _c_sqlite3_blob_write = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_blob> arg0,
-  ffi.Pointer<ffi.Void> z,
-  ffi.Int32 n,
-  ffi.Int32 iOffset,
+  ffi.Pointer<sqlite3_blob>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Int32,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_blob_write = int Function(
-  ffi.Pointer<sqlite3_blob> arg0,
-  ffi.Pointer<ffi.Void> z,
-  int n,
-  int iOffset,
+  ffi.Pointer<sqlite3_blob>,
+  ffi.Pointer<ffi.Void>,
+  int,
+  int,
 );
 
 typedef _c_sqlite3_vfs_find = ffi.Pointer<sqlite3_vfs> Function(
-  ffi.Pointer<ffi.Int8> zVfsName,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_vfs_find = ffi.Pointer<sqlite3_vfs> Function(
-  ffi.Pointer<ffi.Int8> zVfsName,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_vfs_register = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_vfs> arg0,
-  ffi.Int32 makeDflt,
+  ffi.Pointer<sqlite3_vfs>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_vfs_register = int Function(
-  ffi.Pointer<sqlite3_vfs> arg0,
-  int makeDflt,
+  ffi.Pointer<sqlite3_vfs>,
+  int,
 );
 
 typedef _c_sqlite3_vfs_unregister = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_vfs> arg0,
+  ffi.Pointer<sqlite3_vfs>,
 );
 
 typedef _dart_sqlite3_vfs_unregister = int Function(
-  ffi.Pointer<sqlite3_vfs> arg0,
+  ffi.Pointer<sqlite3_vfs>,
 );
 
 typedef _c_sqlite3_mutex_alloc = ffi.Pointer<sqlite3_mutex> Function(
-  ffi.Int32 arg0,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_mutex_alloc = ffi.Pointer<sqlite3_mutex> Function(
-  int arg0,
+  int,
 );
 
 typedef _c_sqlite3_mutex_free = ffi.Void Function(
-  ffi.Pointer<sqlite3_mutex> arg0,
+  ffi.Pointer<sqlite3_mutex>,
 );
 
 typedef _dart_sqlite3_mutex_free = void Function(
-  ffi.Pointer<sqlite3_mutex> arg0,
+  ffi.Pointer<sqlite3_mutex>,
 );
 
 typedef _c_sqlite3_mutex_enter = ffi.Void Function(
-  ffi.Pointer<sqlite3_mutex> arg0,
+  ffi.Pointer<sqlite3_mutex>,
 );
 
 typedef _dart_sqlite3_mutex_enter = void Function(
-  ffi.Pointer<sqlite3_mutex> arg0,
+  ffi.Pointer<sqlite3_mutex>,
 );
 
 typedef _c_sqlite3_mutex_try = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_mutex> arg0,
+  ffi.Pointer<sqlite3_mutex>,
 );
 
 typedef _dart_sqlite3_mutex_try = int Function(
-  ffi.Pointer<sqlite3_mutex> arg0,
+  ffi.Pointer<sqlite3_mutex>,
 );
 
 typedef _c_sqlite3_mutex_leave = ffi.Void Function(
-  ffi.Pointer<sqlite3_mutex> arg0,
+  ffi.Pointer<sqlite3_mutex>,
 );
 
 typedef _dart_sqlite3_mutex_leave = void Function(
-  ffi.Pointer<sqlite3_mutex> arg0,
+  ffi.Pointer<sqlite3_mutex>,
 );
 
 typedef _c_sqlite3_mutex_held = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_mutex> arg0,
+  ffi.Pointer<sqlite3_mutex>,
 );
 
 typedef _dart_sqlite3_mutex_held = int Function(
-  ffi.Pointer<sqlite3_mutex> arg0,
+  ffi.Pointer<sqlite3_mutex>,
 );
 
 typedef _c_sqlite3_mutex_notheld = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_mutex> arg0,
+  ffi.Pointer<sqlite3_mutex>,
 );
 
 typedef _dart_sqlite3_mutex_notheld = int Function(
-  ffi.Pointer<sqlite3_mutex> arg0,
+  ffi.Pointer<sqlite3_mutex>,
 );
 
 typedef _c_sqlite3_db_mutex = ffi.Pointer<sqlite3_mutex> Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _dart_sqlite3_db_mutex = ffi.Pointer<sqlite3_mutex> Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _c_sqlite3_file_control = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.Int8> zDbName,
-  ffi.Int32 op,
-  ffi.Pointer<ffi.Void> arg3,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Int32,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_sqlite3_file_control = int Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.Int8> zDbName,
-  int op,
-  ffi.Pointer<ffi.Void> arg3,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  int,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_sqlite3_test_control = ffi.Int32 Function(
-  ffi.Int32 op,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_test_control = int Function(
-  int op,
+  int,
 );
 
 typedef _c_sqlite3_keyword_count = ffi.Int32 Function();
@@ -7105,221 +7105,221 @@ typedef _c_sqlite3_keyword_count = ffi.Int32 Function();
 typedef _dart_sqlite3_keyword_count = int Function();
 
 typedef _c_sqlite3_keyword_name = ffi.Int32 Function(
-  ffi.Int32 arg0,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> arg1,
-  ffi.Pointer<ffi.Int32> arg2,
+  ffi.Int32,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  ffi.Pointer<ffi.Int32>,
 );
 
 typedef _dart_sqlite3_keyword_name = int Function(
-  int arg0,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> arg1,
-  ffi.Pointer<ffi.Int32> arg2,
+  int,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  ffi.Pointer<ffi.Int32>,
 );
 
 typedef _c_sqlite3_keyword_check = ffi.Int32 Function(
-  ffi.Pointer<ffi.Int8> arg0,
-  ffi.Int32 arg1,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_keyword_check = int Function(
-  ffi.Pointer<ffi.Int8> arg0,
-  int arg1,
+  ffi.Pointer<ffi.Int8>,
+  int,
 );
 
 typedef _c_sqlite3_str_new = ffi.Pointer<sqlite3_str> Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _dart_sqlite3_str_new = ffi.Pointer<sqlite3_str> Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _c_sqlite3_str_finish = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_str> arg0,
+  ffi.Pointer<sqlite3_str>,
 );
 
 typedef _dart_sqlite3_str_finish = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_str> arg0,
+  ffi.Pointer<sqlite3_str>,
 );
 
 typedef _c_sqlite3_str_appendf = ffi.Void Function(
-  ffi.Pointer<sqlite3_str> arg0,
-  ffi.Pointer<ffi.Int8> zFormat,
+  ffi.Pointer<sqlite3_str>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_str_appendf = void Function(
-  ffi.Pointer<sqlite3_str> arg0,
-  ffi.Pointer<ffi.Int8> zFormat,
+  ffi.Pointer<sqlite3_str>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_str_append = ffi.Void Function(
-  ffi.Pointer<sqlite3_str> arg0,
-  ffi.Pointer<ffi.Int8> zIn,
-  ffi.Int32 N,
+  ffi.Pointer<sqlite3_str>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_str_append = void Function(
-  ffi.Pointer<sqlite3_str> arg0,
-  ffi.Pointer<ffi.Int8> zIn,
-  int N,
+  ffi.Pointer<sqlite3_str>,
+  ffi.Pointer<ffi.Int8>,
+  int,
 );
 
 typedef _c_sqlite3_str_appendall = ffi.Void Function(
-  ffi.Pointer<sqlite3_str> arg0,
-  ffi.Pointer<ffi.Int8> zIn,
+  ffi.Pointer<sqlite3_str>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_str_appendall = void Function(
-  ffi.Pointer<sqlite3_str> arg0,
-  ffi.Pointer<ffi.Int8> zIn,
+  ffi.Pointer<sqlite3_str>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_str_appendchar = ffi.Void Function(
-  ffi.Pointer<sqlite3_str> arg0,
-  ffi.Int32 N,
-  ffi.Int8 C,
+  ffi.Pointer<sqlite3_str>,
+  ffi.Int32,
+  ffi.Int8,
 );
 
 typedef _dart_sqlite3_str_appendchar = void Function(
-  ffi.Pointer<sqlite3_str> arg0,
-  int N,
-  int C,
+  ffi.Pointer<sqlite3_str>,
+  int,
+  int,
 );
 
 typedef _c_sqlite3_str_reset = ffi.Void Function(
-  ffi.Pointer<sqlite3_str> arg0,
+  ffi.Pointer<sqlite3_str>,
 );
 
 typedef _dart_sqlite3_str_reset = void Function(
-  ffi.Pointer<sqlite3_str> arg0,
+  ffi.Pointer<sqlite3_str>,
 );
 
 typedef _c_sqlite3_str_errcode = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_str> arg0,
+  ffi.Pointer<sqlite3_str>,
 );
 
 typedef _dart_sqlite3_str_errcode = int Function(
-  ffi.Pointer<sqlite3_str> arg0,
+  ffi.Pointer<sqlite3_str>,
 );
 
 typedef _c_sqlite3_str_length = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_str> arg0,
+  ffi.Pointer<sqlite3_str>,
 );
 
 typedef _dart_sqlite3_str_length = int Function(
-  ffi.Pointer<sqlite3_str> arg0,
+  ffi.Pointer<sqlite3_str>,
 );
 
 typedef _c_sqlite3_str_value = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_str> arg0,
+  ffi.Pointer<sqlite3_str>,
 );
 
 typedef _dart_sqlite3_str_value = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_str> arg0,
+  ffi.Pointer<sqlite3_str>,
 );
 
 typedef _c_sqlite3_status = ffi.Int32 Function(
-  ffi.Int32 op,
-  ffi.Pointer<ffi.Int32> pCurrent,
-  ffi.Pointer<ffi.Int32> pHighwater,
-  ffi.Int32 resetFlag,
+  ffi.Int32,
+  ffi.Pointer<ffi.Int32>,
+  ffi.Pointer<ffi.Int32>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_status = int Function(
-  int op,
-  ffi.Pointer<ffi.Int32> pCurrent,
-  ffi.Pointer<ffi.Int32> pHighwater,
-  int resetFlag,
+  int,
+  ffi.Pointer<ffi.Int32>,
+  ffi.Pointer<ffi.Int32>,
+  int,
 );
 
 typedef _c_sqlite3_status64 = ffi.Int32 Function(
-  ffi.Int32 op,
-  ffi.Pointer<ffi.Int64> pCurrent,
-  ffi.Pointer<ffi.Int64> pHighwater,
-  ffi.Int32 resetFlag,
+  ffi.Int32,
+  ffi.Pointer<ffi.Int64>,
+  ffi.Pointer<ffi.Int64>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_status64 = int Function(
-  int op,
-  ffi.Pointer<ffi.Int64> pCurrent,
-  ffi.Pointer<ffi.Int64> pHighwater,
-  int resetFlag,
+  int,
+  ffi.Pointer<ffi.Int64>,
+  ffi.Pointer<ffi.Int64>,
+  int,
 );
 
 typedef _c_sqlite3_db_status = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Int32 op,
-  ffi.Pointer<ffi.Int32> pCur,
-  ffi.Pointer<ffi.Int32> pHiwtr,
-  ffi.Int32 resetFlg,
+  ffi.Pointer<sqlite3>,
+  ffi.Int32,
+  ffi.Pointer<ffi.Int32>,
+  ffi.Pointer<ffi.Int32>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_db_status = int Function(
-  ffi.Pointer<sqlite3> arg0,
-  int op,
-  ffi.Pointer<ffi.Int32> pCur,
-  ffi.Pointer<ffi.Int32> pHiwtr,
-  int resetFlg,
+  ffi.Pointer<sqlite3>,
+  int,
+  ffi.Pointer<ffi.Int32>,
+  ffi.Pointer<ffi.Int32>,
+  int,
 );
 
 typedef _c_sqlite3_stmt_status = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  ffi.Int32 op,
-  ffi.Int32 resetFlg,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_stmt_status = int Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
-  int op,
-  int resetFlg,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
+  int,
 );
 
 typedef _c_sqlite3_backup_init = ffi.Pointer<sqlite3_backup> Function(
-  ffi.Pointer<sqlite3> pDest,
-  ffi.Pointer<ffi.Int8> zDestName,
-  ffi.Pointer<sqlite3> pSource,
-  ffi.Pointer<ffi.Int8> zSourceName,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_backup_init = ffi.Pointer<sqlite3_backup> Function(
-  ffi.Pointer<sqlite3> pDest,
-  ffi.Pointer<ffi.Int8> zDestName,
-  ffi.Pointer<sqlite3> pSource,
-  ffi.Pointer<ffi.Int8> zSourceName,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_backup_step = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_backup> p,
-  ffi.Int32 nPage,
+  ffi.Pointer<sqlite3_backup>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_backup_step = int Function(
-  ffi.Pointer<sqlite3_backup> p,
-  int nPage,
+  ffi.Pointer<sqlite3_backup>,
+  int,
 );
 
 typedef _c_sqlite3_backup_finish = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_backup> p,
+  ffi.Pointer<sqlite3_backup>,
 );
 
 typedef _dart_sqlite3_backup_finish = int Function(
-  ffi.Pointer<sqlite3_backup> p,
+  ffi.Pointer<sqlite3_backup>,
 );
 
 typedef _c_sqlite3_backup_remaining = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_backup> p,
+  ffi.Pointer<sqlite3_backup>,
 );
 
 typedef _dart_sqlite3_backup_remaining = int Function(
-  ffi.Pointer<sqlite3_backup> p,
+  ffi.Pointer<sqlite3_backup>,
 );
 
 typedef _c_sqlite3_backup_pagecount = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_backup> p,
+  ffi.Pointer<sqlite3_backup>,
 );
 
 typedef _dart_sqlite3_backup_pagecount = int Function(
-  ffi.Pointer<sqlite3_backup> p,
+  ffi.Pointer<sqlite3_backup>,
 );
 
 typedef _typedefC_81 = ffi.Void Function(
@@ -7328,69 +7328,69 @@ typedef _typedefC_81 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_unlock_notify = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> pBlocked,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_81>> xNotify,
-  ffi.Pointer<ffi.Void> pNotifyArg,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_81>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_sqlite3_unlock_notify = int Function(
-  ffi.Pointer<sqlite3> pBlocked,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_81>> xNotify,
-  ffi.Pointer<ffi.Void> pNotifyArg,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_81>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_sqlite3_stricmp = ffi.Int32 Function(
-  ffi.Pointer<ffi.Int8> arg0,
-  ffi.Pointer<ffi.Int8> arg1,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_stricmp = int Function(
-  ffi.Pointer<ffi.Int8> arg0,
-  ffi.Pointer<ffi.Int8> arg1,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_strnicmp = ffi.Int32 Function(
-  ffi.Pointer<ffi.Int8> arg0,
-  ffi.Pointer<ffi.Int8> arg1,
-  ffi.Int32 arg2,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_strnicmp = int Function(
-  ffi.Pointer<ffi.Int8> arg0,
-  ffi.Pointer<ffi.Int8> arg1,
-  int arg2,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
+  int,
 );
 
 typedef _c_sqlite3_strglob = ffi.Int32 Function(
-  ffi.Pointer<ffi.Int8> zGlob,
-  ffi.Pointer<ffi.Int8> zStr,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_strglob = int Function(
-  ffi.Pointer<ffi.Int8> zGlob,
-  ffi.Pointer<ffi.Int8> zStr,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_strlike = ffi.Int32 Function(
-  ffi.Pointer<ffi.Int8> zGlob,
-  ffi.Pointer<ffi.Int8> zStr,
-  ffi.Uint32 cEsc,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Uint32,
 );
 
 typedef _dart_sqlite3_strlike = int Function(
-  ffi.Pointer<ffi.Int8> zGlob,
-  ffi.Pointer<ffi.Int8> zStr,
-  int cEsc,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8>,
+  int,
 );
 
 typedef _c_sqlite3_log = ffi.Void Function(
-  ffi.Int32 iErrCode,
-  ffi.Pointer<ffi.Int8> zFormat,
+  ffi.Int32,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_log = void Function(
-  int iErrCode,
-  ffi.Pointer<ffi.Int8> zFormat,
+  int,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _typedefC_82 = ffi.Int32 Function(
@@ -7401,209 +7401,209 @@ typedef _typedefC_82 = ffi.Int32 Function(
 );
 
 typedef _c_sqlite3_wal_hook = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_82>> arg1,
-  ffi.Pointer<ffi.Void> arg2,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_82>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_sqlite3_wal_hook = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_82>> arg1,
-  ffi.Pointer<ffi.Void> arg2,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_82>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_sqlite3_wal_autocheckpoint = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Int32 N,
+  ffi.Pointer<sqlite3>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_wal_autocheckpoint = int Function(
-  ffi.Pointer<sqlite3> db,
-  int N,
+  ffi.Pointer<sqlite3>,
+  int,
 );
 
 typedef _c_sqlite3_wal_checkpoint = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zDb,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_wal_checkpoint = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zDb,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_wal_checkpoint_v2 = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zDb,
-  ffi.Int32 eMode,
-  ffi.Pointer<ffi.Int32> pnLog,
-  ffi.Pointer<ffi.Int32> pnCkpt,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Int32,
+  ffi.Pointer<ffi.Int32>,
+  ffi.Pointer<ffi.Int32>,
 );
 
 typedef _dart_sqlite3_wal_checkpoint_v2 = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zDb,
-  int eMode,
-  ffi.Pointer<ffi.Int32> pnLog,
-  ffi.Pointer<ffi.Int32> pnCkpt,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  int,
+  ffi.Pointer<ffi.Int32>,
+  ffi.Pointer<ffi.Int32>,
 );
 
 typedef _c_sqlite3_vtab_config = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
-  ffi.Int32 op,
+  ffi.Pointer<sqlite3>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_vtab_config = int Function(
-  ffi.Pointer<sqlite3> arg0,
-  int op,
+  ffi.Pointer<sqlite3>,
+  int,
 );
 
 typedef _c_sqlite3_vtab_on_conflict = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _dart_sqlite3_vtab_on_conflict = int Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _c_sqlite3_vtab_nochange = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_context> arg0,
+  ffi.Pointer<sqlite3_context>,
 );
 
 typedef _dart_sqlite3_vtab_nochange = int Function(
-  ffi.Pointer<sqlite3_context> arg0,
+  ffi.Pointer<sqlite3_context>,
 );
 
 typedef _c_sqlite3_vtab_collation = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_index_info> arg0,
-  ffi.Int32 arg1,
+  ffi.Pointer<sqlite3_index_info>,
+  ffi.Int32,
 );
 
 typedef _dart_sqlite3_vtab_collation = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<sqlite3_index_info> arg0,
-  int arg1,
+  ffi.Pointer<sqlite3_index_info>,
+  int,
 );
 
 typedef _c_sqlite3_stmt_scanstatus = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_stmt> pStmt,
-  ffi.Int32 idx,
-  ffi.Int32 iScanStatusOp,
-  ffi.Pointer<ffi.Void> pOut,
+  ffi.Pointer<sqlite3_stmt>,
+  ffi.Int32,
+  ffi.Int32,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_sqlite3_stmt_scanstatus = int Function(
-  ffi.Pointer<sqlite3_stmt> pStmt,
-  int idx,
-  int iScanStatusOp,
-  ffi.Pointer<ffi.Void> pOut,
+  ffi.Pointer<sqlite3_stmt>,
+  int,
+  int,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_sqlite3_stmt_scanstatus_reset = ffi.Void Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _dart_sqlite3_stmt_scanstatus_reset = void Function(
-  ffi.Pointer<sqlite3_stmt> arg0,
+  ffi.Pointer<sqlite3_stmt>,
 );
 
 typedef _c_sqlite3_db_cacheflush = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _dart_sqlite3_db_cacheflush = int Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _c_sqlite3_system_errno = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _dart_sqlite3_system_errno = int Function(
-  ffi.Pointer<sqlite3> arg0,
+  ffi.Pointer<sqlite3>,
 );
 
 typedef _c_sqlite3_snapshot_get = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zSchema,
-  ffi.Pointer<ffi.Pointer<sqlite3_snapshot>> ppSnapshot,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<sqlite3_snapshot>>,
 );
 
 typedef _dart_sqlite3_snapshot_get = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zSchema,
-  ffi.Pointer<ffi.Pointer<sqlite3_snapshot>> ppSnapshot,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<sqlite3_snapshot>>,
 );
 
 typedef _c_sqlite3_snapshot_open = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zSchema,
-  ffi.Pointer<sqlite3_snapshot> pSnapshot,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<sqlite3_snapshot>,
 );
 
 typedef _dart_sqlite3_snapshot_open = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zSchema,
-  ffi.Pointer<sqlite3_snapshot> pSnapshot,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<sqlite3_snapshot>,
 );
 
 typedef _c_sqlite3_snapshot_free = ffi.Void Function(
-  ffi.Pointer<sqlite3_snapshot> arg0,
+  ffi.Pointer<sqlite3_snapshot>,
 );
 
 typedef _dart_sqlite3_snapshot_free = void Function(
-  ffi.Pointer<sqlite3_snapshot> arg0,
+  ffi.Pointer<sqlite3_snapshot>,
 );
 
 typedef _c_sqlite3_snapshot_cmp = ffi.Int32 Function(
-  ffi.Pointer<sqlite3_snapshot> p1,
-  ffi.Pointer<sqlite3_snapshot> p2,
+  ffi.Pointer<sqlite3_snapshot>,
+  ffi.Pointer<sqlite3_snapshot>,
 );
 
 typedef _dart_sqlite3_snapshot_cmp = int Function(
-  ffi.Pointer<sqlite3_snapshot> p1,
-  ffi.Pointer<sqlite3_snapshot> p2,
+  ffi.Pointer<sqlite3_snapshot>,
+  ffi.Pointer<sqlite3_snapshot>,
 );
 
 typedef _c_sqlite3_snapshot_recover = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zDb,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _dart_sqlite3_snapshot_recover = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zDb,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
 );
 
 typedef _c_sqlite3_serialize = ffi.Pointer<ffi.Uint8> Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zSchema,
-  ffi.Pointer<ffi.Int64> piSize,
-  ffi.Uint32 mFlags,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int64>,
+  ffi.Uint32,
 );
 
 typedef _dart_sqlite3_serialize = ffi.Pointer<ffi.Uint8> Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zSchema,
-  ffi.Pointer<ffi.Int64> piSize,
-  int mFlags,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int64>,
+  int,
 );
 
 typedef _c_sqlite3_deserialize = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zSchema,
-  ffi.Pointer<ffi.Uint8> pData,
-  ffi.Int64 szDb,
-  ffi.Int64 szBuf,
-  ffi.Uint32 mFlags,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Uint8>,
+  ffi.Int64,
+  ffi.Int64,
+  ffi.Uint32,
 );
 
 typedef _dart_sqlite3_deserialize = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zSchema,
-  ffi.Pointer<ffi.Uint8> pData,
-  int szDb,
-  int szBuf,
-  int mFlags,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Uint8>,
+  int,
+  int,
+  int,
 );
 
 typedef _typedefC_83 = ffi.Int32 Function(
@@ -7614,17 +7614,17 @@ typedef _typedefC_83 = ffi.Int32 Function(
 );
 
 typedef _c_sqlite3_rtree_geometry_callback = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zGeom,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_83>> xGeom,
-  ffi.Pointer<ffi.Void> pContext,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_83>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_sqlite3_rtree_geometry_callback = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zGeom,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_83>> xGeom,
-  ffi.Pointer<ffi.Void> pContext,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_83>>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _typedefC_84 = ffi.Int32 Function(
@@ -7636,19 +7636,19 @@ typedef _typedefC_85 = ffi.Void Function(
 );
 
 typedef _c_sqlite3_rtree_query_callback = ffi.Int32 Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zQueryFunc,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_84>> xQueryFunc,
-  ffi.Pointer<ffi.Void> pContext,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_85>> xDestructor,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_84>>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_85>>,
 );
 
 typedef _dart_sqlite3_rtree_query_callback = int Function(
-  ffi.Pointer<sqlite3> db,
-  ffi.Pointer<ffi.Int8> zQueryFunc,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_84>> xQueryFunc,
-  ffi.Pointer<ffi.Void> pContext,
-  ffi.Pointer<ffi.NativeFunction<_typedefC_85>> xDestructor,
+  ffi.Pointer<sqlite3>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_84>>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_85>>,
 );
 
 typedef _typedefC_14 = ffi.Int32 Function(

@@ -1707,210 +1707,210 @@ abstract class CXChildVisitResult {
 }
 
 typedef _c_clang_createIndex = ffi.Pointer<ffi.Void> Function(
-  ffi.Int32 excludeDeclarationsFromPCH,
-  ffi.Int32 displayDiagnostics,
+  ffi.Int32,
+  ffi.Int32,
 );
 
 typedef _dart_clang_createIndex = ffi.Pointer<ffi.Void> Function(
-  int excludeDeclarationsFromPCH,
-  int displayDiagnostics,
+  int,
+  int,
 );
 
 typedef _c_clang_disposeIndex = ffi.Void Function(
-  ffi.Pointer<ffi.Void> index,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_disposeIndex = void Function(
-  ffi.Pointer<ffi.Void> index,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_getNumDiagnostics = ffi.Uint32 Function(
-  ffi.Pointer<CXTranslationUnitImpl> Unit,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _dart_clang_getNumDiagnostics = int Function(
-  ffi.Pointer<CXTranslationUnitImpl> Unit,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _c_clang_getDiagnostic = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXTranslationUnitImpl> Unit,
-  ffi.Uint32 Index,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_getDiagnostic = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<CXTranslationUnitImpl> Unit,
-  int Index,
+  ffi.Pointer<CXTranslationUnitImpl>,
+  int,
 );
 
 typedef _c_clang_disposeDiagnostic = ffi.Void Function(
-  ffi.Pointer<ffi.Void> Diagnostic,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_disposeDiagnostic = void Function(
-  ffi.Pointer<ffi.Void> Diagnostic,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_parseTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
     Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
-  ffi.Int32 num_command_line_args,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  ffi.Uint32 num_unsaved_files,
-  ffi.Uint32 options,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  ffi.Int32,
+  ffi.Pointer<CXUnsavedFile>,
+  ffi.Uint32,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_parseTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>
     Function(
-  ffi.Pointer<ffi.Void> CIdx,
-  ffi.Pointer<ffi.Int8> source_filename,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>> command_line_args,
-  int num_command_line_args,
-  ffi.Pointer<CXUnsavedFile> unsaved_files,
-  int num_unsaved_files,
-  int options,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+  int,
+  ffi.Pointer<CXUnsavedFile>,
+  int,
+  int,
 );
 
 typedef _c_clang_disposeTranslationUnit = ffi.Void Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _dart_clang_disposeTranslationUnit = void Function(
-  ffi.Pointer<CXTranslationUnitImpl> arg0,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _c_clang_getCString_wrap = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<CXString> string,
+  ffi.Pointer<CXString>,
 );
 
 typedef _dart_clang_getCString_wrap = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<CXString> string,
+  ffi.Pointer<CXString>,
 );
 
 typedef _c_clang_disposeString_wrap = ffi.Void Function(
-  ffi.Pointer<CXString> string,
+  ffi.Pointer<CXString>,
 );
 
 typedef _dart_clang_disposeString_wrap = void Function(
-  ffi.Pointer<CXString> string,
+  ffi.Pointer<CXString>,
 );
 
 typedef _c_clang_getCursorKind_wrap = ffi.Int32 Function(
-  ffi.Pointer<CXCursor> cursor,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _dart_clang_getCursorKind_wrap = int Function(
-  ffi.Pointer<CXCursor> cursor,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _c_clang_getCursorKindSpelling_wrap = ffi.Pointer<CXString> Function(
-  ffi.Int32 kind,
+  ffi.Int32,
 );
 
 typedef _dart_clang_getCursorKindSpelling_wrap = ffi.Pointer<CXString> Function(
-  int kind,
+  int,
 );
 
 typedef _c_clang_getCursorType_wrap = ffi.Pointer<CXType> Function(
-  ffi.Pointer<CXCursor> cursor,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _dart_clang_getCursorType_wrap = ffi.Pointer<CXType> Function(
-  ffi.Pointer<CXCursor> cursor,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _c_clang_getTypeSpelling_wrap = ffi.Pointer<CXString> Function(
-  ffi.Pointer<CXType> type,
+  ffi.Pointer<CXType>,
 );
 
 typedef _dart_clang_getTypeSpelling_wrap = ffi.Pointer<CXString> Function(
-  ffi.Pointer<CXType> type,
+  ffi.Pointer<CXType>,
 );
 
 typedef _c_clang_getTypeKindSpelling_wrap = ffi.Pointer<CXString> Function(
-  ffi.Int32 typeKind,
+  ffi.Int32,
 );
 
 typedef _dart_clang_getTypeKindSpelling_wrap = ffi.Pointer<CXString> Function(
-  int typeKind,
+  int,
 );
 
 typedef _c_clang_getResultType_wrap = ffi.Pointer<CXType> Function(
-  ffi.Pointer<CXType> functionType,
+  ffi.Pointer<CXType>,
 );
 
 typedef _dart_clang_getResultType_wrap = ffi.Pointer<CXType> Function(
-  ffi.Pointer<CXType> functionType,
+  ffi.Pointer<CXType>,
 );
 
 typedef _c_clang_getPointeeType_wrap = ffi.Pointer<CXType> Function(
-  ffi.Pointer<CXType> pointerType,
+  ffi.Pointer<CXType>,
 );
 
 typedef _dart_clang_getPointeeType_wrap = ffi.Pointer<CXType> Function(
-  ffi.Pointer<CXType> pointerType,
+  ffi.Pointer<CXType>,
 );
 
 typedef _c_clang_getCanonicalType_wrap = ffi.Pointer<CXType> Function(
-  ffi.Pointer<CXType> typerefType,
+  ffi.Pointer<CXType>,
 );
 
 typedef _dart_clang_getCanonicalType_wrap = ffi.Pointer<CXType> Function(
-  ffi.Pointer<CXType> typerefType,
+  ffi.Pointer<CXType>,
 );
 
 typedef _c_clang_Type_getNamedType_wrap = ffi.Pointer<CXType> Function(
-  ffi.Pointer<CXType> elaboratedType,
+  ffi.Pointer<CXType>,
 );
 
 typedef _dart_clang_Type_getNamedType_wrap = ffi.Pointer<CXType> Function(
-  ffi.Pointer<CXType> elaboratedType,
+  ffi.Pointer<CXType>,
 );
 
 typedef _c_clang_getTypeDeclaration_wrap = ffi.Pointer<CXCursor> Function(
-  ffi.Pointer<CXType> cxtype,
+  ffi.Pointer<CXType>,
 );
 
 typedef _dart_clang_getTypeDeclaration_wrap = ffi.Pointer<CXCursor> Function(
-  ffi.Pointer<CXType> cxtype,
+  ffi.Pointer<CXType>,
 );
 
 typedef _c_clang_getTypedefDeclUnderlyingType_wrap = ffi.Pointer<CXType>
     Function(
-  ffi.Pointer<CXCursor> cxcursor,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _dart_clang_getTypedefDeclUnderlyingType_wrap = ffi.Pointer<CXType>
     Function(
-  ffi.Pointer<CXCursor> cxcursor,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _c_clang_getCursorSpelling_wrap = ffi.Pointer<CXString> Function(
-  ffi.Pointer<CXCursor> cursor,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _dart_clang_getCursorSpelling_wrap = ffi.Pointer<CXString> Function(
-  ffi.Pointer<CXCursor> cursor,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _c_clang_getTranslationUnitCursor_wrap = ffi.Pointer<CXCursor> Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _dart_clang_getTranslationUnitCursor_wrap = ffi.Pointer<CXCursor>
     Function(
-  ffi.Pointer<CXTranslationUnitImpl> tu,
+  ffi.Pointer<CXTranslationUnitImpl>,
 );
 
 typedef _c_clang_formatDiagnostic_wrap = ffi.Pointer<CXString> Function(
-  ffi.Pointer<ffi.Void> diag,
-  ffi.Int32 opts,
+  ffi.Pointer<ffi.Void>,
+  ffi.Int32,
 );
 
 typedef _dart_clang_formatDiagnostic_wrap = ffi.Pointer<CXString> Function(
-  ffi.Pointer<ffi.Void> diag,
-  int opts,
+  ffi.Pointer<ffi.Void>,
+  int,
 );
 
 typedef ModifiedCXCursorVisitor_1 = ffi.Int32 Function(
@@ -1920,146 +1920,146 @@ typedef ModifiedCXCursorVisitor_1 = ffi.Int32 Function(
 );
 
 typedef _c_clang_visitChildren_wrap = ffi.Uint32 Function(
-  ffi.Pointer<CXCursor> parent,
-  ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor_1>> _modifiedVisitor,
-  ffi.Int64 uid,
+  ffi.Pointer<CXCursor>,
+  ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor_1>>,
+  ffi.Int64,
 );
 
 typedef _dart_clang_visitChildren_wrap = int Function(
-  ffi.Pointer<CXCursor> parent,
-  ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor_1>> _modifiedVisitor,
-  int uid,
+  ffi.Pointer<CXCursor>,
+  ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor_1>>,
+  int,
 );
 
 typedef _c_clang_Cursor_getNumArguments_wrap = ffi.Int32 Function(
-  ffi.Pointer<CXCursor> cursor,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _dart_clang_Cursor_getNumArguments_wrap = int Function(
-  ffi.Pointer<CXCursor> cursor,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _c_clang_Cursor_getArgument_wrap = ffi.Pointer<CXCursor> Function(
-  ffi.Pointer<CXCursor> cursor,
-  ffi.Uint32 i,
+  ffi.Pointer<CXCursor>,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_Cursor_getArgument_wrap = ffi.Pointer<CXCursor> Function(
-  ffi.Pointer<CXCursor> cursor,
-  int i,
+  ffi.Pointer<CXCursor>,
+  int,
 );
 
 typedef _c_clang_getNumArgTypes_wrap = ffi.Int32 Function(
-  ffi.Pointer<CXType> cxtype,
+  ffi.Pointer<CXType>,
 );
 
 typedef _dart_clang_getNumArgTypes_wrap = int Function(
-  ffi.Pointer<CXType> cxtype,
+  ffi.Pointer<CXType>,
 );
 
 typedef _c_clang_getArgType_wrap = ffi.Pointer<CXType> Function(
-  ffi.Pointer<CXType> cxtype,
-  ffi.Uint32 i,
+  ffi.Pointer<CXType>,
+  ffi.Uint32,
 );
 
 typedef _dart_clang_getArgType_wrap = ffi.Pointer<CXType> Function(
-  ffi.Pointer<CXType> cxtype,
-  int i,
+  ffi.Pointer<CXType>,
+  int,
 );
 
 typedef _c_clang_getEnumConstantDeclValue_wrap = ffi.Int64 Function(
-  ffi.Pointer<CXCursor> cursor,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _dart_clang_getEnumConstantDeclValue_wrap = int Function(
-  ffi.Pointer<CXCursor> cursor,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _c_clang_equalRanges_wrap = ffi.Uint32 Function(
-  ffi.Pointer<CXSourceRange> c1,
-  ffi.Pointer<CXSourceRange> c2,
+  ffi.Pointer<CXSourceRange>,
+  ffi.Pointer<CXSourceRange>,
 );
 
 typedef _dart_clang_equalRanges_wrap = int Function(
-  ffi.Pointer<CXSourceRange> c1,
-  ffi.Pointer<CXSourceRange> c2,
+  ffi.Pointer<CXSourceRange>,
+  ffi.Pointer<CXSourceRange>,
 );
 
 typedef _c_clang_Cursor_getCommentRange_wrap = ffi.Pointer<CXSourceRange>
     Function(
-  ffi.Pointer<CXCursor> cursor,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _dart_clang_Cursor_getCommentRange_wrap = ffi.Pointer<CXSourceRange>
     Function(
-  ffi.Pointer<CXCursor> cursor,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _c_clang_Cursor_getRawCommentText_wrap = ffi.Pointer<CXString> Function(
-  ffi.Pointer<CXCursor> cursor,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _dart_clang_Cursor_getRawCommentText_wrap = ffi.Pointer<CXString>
     Function(
-  ffi.Pointer<CXCursor> cursor,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _c_clang_Cursor_getBriefCommentText_wrap = ffi.Pointer<CXString>
     Function(
-  ffi.Pointer<CXCursor> cursor,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _dart_clang_Cursor_getBriefCommentText_wrap = ffi.Pointer<CXString>
     Function(
-  ffi.Pointer<CXCursor> cursor,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _c_clang_getCursorLocation_wrap = ffi.Pointer<CXSourceLocation>
     Function(
-  ffi.Pointer<CXCursor> cursor,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _dart_clang_getCursorLocation_wrap = ffi.Pointer<CXSourceLocation>
     Function(
-  ffi.Pointer<CXCursor> cursor,
+  ffi.Pointer<CXCursor>,
 );
 
 typedef _c_clang_getFileLocation_wrap = ffi.Void Function(
-  ffi.Pointer<CXSourceLocation> location,
-  ffi.Pointer<ffi.Pointer<ffi.Void>> file,
-  ffi.Pointer<ffi.Uint32> line,
-  ffi.Pointer<ffi.Uint32> column,
-  ffi.Pointer<ffi.Uint32> offset,
+  ffi.Pointer<CXSourceLocation>,
+  ffi.Pointer<ffi.Pointer<ffi.Void>>,
+  ffi.Pointer<ffi.Uint32>,
+  ffi.Pointer<ffi.Uint32>,
+  ffi.Pointer<ffi.Uint32>,
 );
 
 typedef _dart_clang_getFileLocation_wrap = void Function(
-  ffi.Pointer<CXSourceLocation> location,
-  ffi.Pointer<ffi.Pointer<ffi.Void>> file,
-  ffi.Pointer<ffi.Uint32> line,
-  ffi.Pointer<ffi.Uint32> column,
-  ffi.Pointer<ffi.Uint32> offset,
+  ffi.Pointer<CXSourceLocation>,
+  ffi.Pointer<ffi.Pointer<ffi.Void>>,
+  ffi.Pointer<ffi.Uint32>,
+  ffi.Pointer<ffi.Uint32>,
+  ffi.Pointer<ffi.Uint32>,
 );
 
 typedef _c_clang_getFileName_wrap = ffi.Pointer<CXString> Function(
-  ffi.Pointer<ffi.Void> SFile,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _dart_clang_getFileName_wrap = ffi.Pointer<CXString> Function(
-  ffi.Pointer<ffi.Void> SFile,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_getNumElements_wrap = ffi.Uint64 Function(
-  ffi.Pointer<CXType> cxtype,
+  ffi.Pointer<CXType>,
 );
 
 typedef _dart_clang_getNumElements_wrap = int Function(
-  ffi.Pointer<CXType> cxtype,
+  ffi.Pointer<CXType>,
 );
 
 typedef _c_clang_getArrayElementType_wrap = ffi.Pointer<CXType> Function(
-  ffi.Pointer<CXType> cxtype,
+  ffi.Pointer<CXType>,
 );
 
 typedef _dart_clang_getArrayElementType_wrap = ffi.Pointer<CXType> Function(
-  ffi.Pointer<CXType> cxtype,
+  ffi.Pointer<CXType>,
 );
