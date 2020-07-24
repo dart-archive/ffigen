@@ -48,14 +48,14 @@ class Typedef {
     if (typedefType == TypedefType.C) {
       s.write('typedef $typedefName = ${returnType.getCType(w)} Function(\n');
       for (final p in parameters) {
-        s.write('  ${p.type.getCType(w)} ${p.name},\n');
+        s.write('  ${p.type.getCType(w)},\n');
       }
       s.write(');\n\n');
     } else {
       s.write(
           'typedef $typedefName = ${returnType.getDartType(w)} Function(\n');
       for (final p in parameters) {
-        s.write('  ${p.type.getDartType(w)} ${p.name},\n');
+        s.write('  ${p.type.getDartType(w)},\n');
       }
       s.write(');\n\n');
     }
