@@ -1,3 +1,7 @@
+# 0.1.3
+- Handled function arguments - dart keyword name collision
+- Fix travis tests. Auto create dynamic library if it doesn't exist.
+
 # 0.1.2
 - Fixed wrapper not found error when running `pub run ffigen`.
 

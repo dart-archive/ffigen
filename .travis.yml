@@ -11,3 +11,5 @@ branches:
 cache:
   directories:
     - $HOME/.pub-cache
+before_install:
+  - sudo apt-get install -y libclang-dev

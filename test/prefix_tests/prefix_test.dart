@@ -9,6 +9,7 @@ import 'package:test/test.dart';
 import 'package:yaml/yaml.dart' as yaml;
 import 'package:ffigen/src/strings.dart' as strings;
 
+import '../../bin/setup.dart' as setup;
 import '../test_utils.dart';
 
 Library actual, expected;
@@ -23,6 +24,9 @@ final enumPrefixReplacedWith = 're';
 void main() {
   group('prefix_test', () {
     setUpAll(() {
+      if (!setup.checkDylibExist()) {
+        setup.autoCreateDylib();
+      }
       logWarnings();
       expected = expectedLibrary();
       actual = parser.parse(Config.fromYaml(yaml.loadYaml('''

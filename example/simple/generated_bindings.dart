@@ -87,51 +87,51 @@ class NativeLibrary {
 }
 
 typedef _c_sum = ffi.Int32 Function(
-  ffi.Int32,
-  ffi.Int32,
+  ffi.Int32 a,
+  ffi.Int32 b,
 );
 
 typedef _dart_sum = int Function(
-  int,
-  int,
+  int a,
+  int b,
 );
 
 typedef _c_subtract = ffi.Int32 Function(
-  ffi.Pointer<ffi.Int32>,
-  ffi.Int32,
+  ffi.Pointer<ffi.Int32> a,
+  ffi.Int32 b,
 );
 
 typedef _dart_subtract = int Function(
-  ffi.Pointer<ffi.Int32>,
-  int,
+  ffi.Pointer<ffi.Int32> a,
+  int b,
 );
 
 typedef _c_multiply = ffi.Pointer<ffi.Int32> Function(
-  ffi.Int32,
-  ffi.Int32,
+  ffi.Int32 a,
+  ffi.Int32 b,
 );
 
 typedef _dart_multiply = ffi.Pointer<ffi.Int32> Function(
-  int,
-  int,
+  int a,
+  int b,
 );
 
 typedef _c_divide = ffi.Pointer<ffi.Float> Function(
-  ffi.Int32,
-  ffi.Int32,
+  ffi.Int32 a,
+  ffi.Int32 b,
 );
 
 typedef _dart_divide = ffi.Pointer<ffi.Float> Function(
-  int,
-  int,
+  int a,
+  int b,
 );
 
 typedef _c_dividePercision = ffi.Pointer<ffi.Double> Function(
-  ffi.Pointer<ffi.Float>,
-  ffi.Pointer<ffi.Float>,
+  ffi.Pointer<ffi.Float> a,
+  ffi.Pointer<ffi.Float> b,
 );
 
 typedef _dart_dividePercision = ffi.Pointer<ffi.Double> Function(
-  ffi.Pointer<ffi.Float>,
-  ffi.Pointer<ffi.Float>,
+  ffi.Pointer<ffi.Float> a,
+  ffi.Pointer<ffi.Float> b,
 );

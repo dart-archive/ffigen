@@ -133,23 +133,23 @@ typedef _dart_noParam = int Function(
 );
 
 typedef _c_withPrimitiveParam = ffi.Uint8 Function(
-  ffi.Int32,
-  ffi.Uint8,
+  ffi.Int32 a,
+  ffi.Uint8 b,
 );
 
 typedef _dart_withPrimitiveParam = int Function(
-  int,
-  int,
+  int a,
+  int b,
 );
 
 typedef _c_withPointerParam = ffi.Pointer<ffi.Double> Function(
-  ffi.Pointer<ffi.Int32>,
-  ffi.Pointer<ffi.Pointer<ffi.Uint8>>,
+  ffi.Pointer<ffi.Int32> a,
+  ffi.Pointer<ffi.Pointer<ffi.Uint8>> b,
 );
 
 typedef _dart_withPointerParam = ffi.Pointer<ffi.Double> Function(
-  ffi.Pointer<ffi.Int32>,
-  ffi.Pointer<ffi.Pointer<ffi.Uint8>>,
+  ffi.Pointer<ffi.Int32> a,
+  ffi.Pointer<ffi.Pointer<ffi.Uint8>> b,
 );
 
 ''');
@@ -370,11 +370,11 @@ class SomeStruc extends ffi.Struct{
 }
 
 typedef _c_someFunc = ffi.Pointer<SomeStruc> Function(
-  ffi.Pointer<ffi.Pointer<SomeStruc>>,
+  ffi.Pointer<ffi.Pointer<SomeStruc>> some,
 );
 
 typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
-  ffi.Pointer<ffi.Pointer<SomeStruc>>,
+  ffi.Pointer<ffi.Pointer<SomeStruc>> some,
 );
 
 ''');

@@ -1068,129 +1068,129 @@ typedef _c_cJSON_Version = ffi.Pointer<ffi.Int8> Function();
 typedef _dart_cJSON_Version = ffi.Pointer<ffi.Int8> Function();
 
 typedef _c_cJSON_InitHooks = ffi.Void Function(
-  ffi.Pointer<cJSON_Hooks>,
+  ffi.Pointer<cJSON_Hooks> hooks,
 );
 
 typedef _dart_cJSON_InitHooks = void Function(
-  ffi.Pointer<cJSON_Hooks>,
+  ffi.Pointer<cJSON_Hooks> hooks,
 );
 
 typedef _c_cJSON_Parse = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8> value,
 );
 
 typedef _dart_cJSON_Parse = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8> value,
 );
 
 typedef _c_cJSON_ParseWithOpts = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<ffi.Int8>,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
-  ffi.Int32,
+  ffi.Pointer<ffi.Int8> value,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> return_parse_end,
+  ffi.Int32 require_null_terminated,
 );
 
 typedef _dart_cJSON_ParseWithOpts = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<ffi.Int8>,
-  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
-  int,
+  ffi.Pointer<ffi.Int8> value,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> return_parse_end,
+  int require_null_terminated,
 );
 
 typedef _c_cJSON_Print = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _dart_cJSON_Print = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _c_cJSON_PrintUnformatted = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _dart_cJSON_PrintUnformatted = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _c_cJSON_PrintBuffered = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Int32,
-  ffi.Int32,
+  ffi.Pointer<cJSON> item,
+  ffi.Int32 prebuffer,
+  ffi.Int32 fmt,
 );
 
 typedef _dart_cJSON_PrintBuffered = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<cJSON>,
-  int,
-  int,
+  ffi.Pointer<cJSON> item,
+  int prebuffer,
+  int fmt,
 );
 
 typedef _c_cJSON_PrintPreallocated = ffi.Int32 Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
-  ffi.Int32,
-  ffi.Int32,
+  ffi.Pointer<cJSON> item,
+  ffi.Pointer<ffi.Int8> buffer,
+  ffi.Int32 length,
+  ffi.Int32 format,
 );
 
 typedef _dart_cJSON_PrintPreallocated = int Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
-  int,
-  int,
+  ffi.Pointer<cJSON> item,
+  ffi.Pointer<ffi.Int8> buffer,
+  int length,
+  int format,
 );
 
 typedef _c_cJSON_Delete = ffi.Void Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _dart_cJSON_Delete = void Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _c_cJSON_GetArraySize = ffi.Int32 Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> array,
 );
 
 typedef _dart_cJSON_GetArraySize = int Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> array,
 );
 
 typedef _c_cJSON_GetArrayItem = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Int32,
+  ffi.Pointer<cJSON> array,
+  ffi.Int32 index,
 );
 
 typedef _dart_cJSON_GetArrayItem = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  int,
+  ffi.Pointer<cJSON> array,
+  int index,
 );
 
 typedef _c_cJSON_GetObjectItem = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
 );
 
 typedef _dart_cJSON_GetObjectItem = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
 );
 
 typedef _c_cJSON_GetObjectItemCaseSensitive = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
 );
 
 typedef _dart_cJSON_GetObjectItemCaseSensitive = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
 );
 
 typedef _c_cJSON_HasObjectItem = ffi.Int32 Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
 );
 
 typedef _dart_cJSON_HasObjectItem = int Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
 );
 
 typedef _c_cJSON_GetErrorPtr = ffi.Pointer<ffi.Int8> Function();
@@ -1198,91 +1198,91 @@ typedef _c_cJSON_GetErrorPtr = ffi.Pointer<ffi.Int8> Function();
 typedef _dart_cJSON_GetErrorPtr = ffi.Pointer<ffi.Int8> Function();
 
 typedef _c_cJSON_GetStringValue = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _dart_cJSON_GetStringValue = ffi.Pointer<ffi.Int8> Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _c_cJSON_IsInvalid = ffi.Int32 Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _dart_cJSON_IsInvalid = int Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _c_cJSON_IsFalse = ffi.Int32 Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _dart_cJSON_IsFalse = int Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _c_cJSON_IsTrue = ffi.Int32 Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _dart_cJSON_IsTrue = int Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _c_cJSON_IsBool = ffi.Int32 Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _dart_cJSON_IsBool = int Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _c_cJSON_IsNull = ffi.Int32 Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _dart_cJSON_IsNull = int Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _c_cJSON_IsNumber = ffi.Int32 Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _dart_cJSON_IsNumber = int Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _c_cJSON_IsString = ffi.Int32 Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _dart_cJSON_IsString = int Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _c_cJSON_IsArray = ffi.Int32 Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _dart_cJSON_IsArray = int Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _c_cJSON_IsObject = ffi.Int32 Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _dart_cJSON_IsObject = int Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _c_cJSON_IsRaw = ffi.Int32 Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _dart_cJSON_IsRaw = int Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _c_cJSON_CreateNull = ffi.Pointer<cJSON> Function();
@@ -1298,35 +1298,35 @@ typedef _c_cJSON_CreateFalse = ffi.Pointer<cJSON> Function();
 typedef _dart_cJSON_CreateFalse = ffi.Pointer<cJSON> Function();
 
 typedef _c_cJSON_CreateBool = ffi.Pointer<cJSON> Function(
-  ffi.Int32,
+  ffi.Int32 boolean,
 );
 
 typedef _dart_cJSON_CreateBool = ffi.Pointer<cJSON> Function(
-  int,
+  int boolean,
 );
 
 typedef _c_cJSON_CreateNumber = ffi.Pointer<cJSON> Function(
-  ffi.Double,
+  ffi.Double num,
 );
 
 typedef _dart_cJSON_CreateNumber = ffi.Pointer<cJSON> Function(
-  double,
+  double num,
 );
 
 typedef _c_cJSON_CreateString = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8> string,
 );
 
 typedef _dart_cJSON_CreateString = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8> string,
 );
 
 typedef _c_cJSON_CreateRaw = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8> raw,
 );
 
 typedef _dart_cJSON_CreateRaw = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8> raw,
 );
 
 typedef _c_cJSON_CreateArray = ffi.Pointer<cJSON> Function();
@@ -1338,409 +1338,409 @@ typedef _c_cJSON_CreateObject = ffi.Pointer<cJSON> Function();
 typedef _dart_cJSON_CreateObject = ffi.Pointer<cJSON> Function();
 
 typedef _c_cJSON_CreateStringReference = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8> string,
 );
 
 typedef _dart_cJSON_CreateStringReference = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8> string,
 );
 
 typedef _c_cJSON_CreateObjectReference = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> child,
 );
 
 typedef _dart_cJSON_CreateObjectReference = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> child,
 );
 
 typedef _c_cJSON_CreateArrayReference = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> child,
 );
 
 typedef _dart_cJSON_CreateArrayReference = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> child,
 );
 
 typedef _c_cJSON_CreateIntArray = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<ffi.Int32>,
-  ffi.Int32,
+  ffi.Pointer<ffi.Int32> numbers,
+  ffi.Int32 count,
 );
 
 typedef _dart_cJSON_CreateIntArray = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<ffi.Int32>,
-  int,
+  ffi.Pointer<ffi.Int32> numbers,
+  int count,
 );
 
 typedef _c_cJSON_CreateFloatArray = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<ffi.Float>,
-  ffi.Int32,
+  ffi.Pointer<ffi.Float> numbers,
+  ffi.Int32 count,
 );
 
 typedef _dart_cJSON_CreateFloatArray = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<ffi.Float>,
-  int,
+  ffi.Pointer<ffi.Float> numbers,
+  int count,
 );
 
 typedef _c_cJSON_CreateDoubleArray = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<ffi.Double>,
-  ffi.Int32,
+  ffi.Pointer<ffi.Double> numbers,
+  ffi.Int32 count,
 );
 
 typedef _dart_cJSON_CreateDoubleArray = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<ffi.Double>,
-  int,
+  ffi.Pointer<ffi.Double> numbers,
+  int count,
 );
 
 typedef _c_cJSON_CreateStringArray = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
-  ffi.Int32,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> strings,
+  ffi.Int32 count,
 );
 
 typedef _dart_cJSON_CreateStringArray = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<ffi.Pointer<ffi.Int8>>,
-  int,
+  ffi.Pointer<ffi.Pointer<ffi.Int8>> strings,
+  int count,
 );
 
 typedef _c_cJSON_AddItemToArray = ffi.Void Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> array,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _dart_cJSON_AddItemToArray = void Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> array,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _c_cJSON_AddItemToObject = ffi.Void Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _dart_cJSON_AddItemToObject = void Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _c_cJSON_AddItemToObjectCS = ffi.Void Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _dart_cJSON_AddItemToObjectCS = void Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _c_cJSON_AddItemReferenceToArray = ffi.Void Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> array,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _dart_cJSON_AddItemReferenceToArray = void Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> array,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _c_cJSON_AddItemReferenceToObject = ffi.Void Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _dart_cJSON_AddItemReferenceToObject = void Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _c_cJSON_DetachItemViaPointer = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> parent,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _dart_cJSON_DetachItemViaPointer = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> parent,
+  ffi.Pointer<cJSON> item,
 );
 
 typedef _c_cJSON_DetachItemFromArray = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Int32,
+  ffi.Pointer<cJSON> array,
+  ffi.Int32 which,
 );
 
 typedef _dart_cJSON_DetachItemFromArray = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  int,
+  ffi.Pointer<cJSON> array,
+  int which,
 );
 
 typedef _c_cJSON_DeleteItemFromArray = ffi.Void Function(
-  ffi.Pointer<cJSON>,
-  ffi.Int32,
+  ffi.Pointer<cJSON> array,
+  ffi.Int32 which,
 );
 
 typedef _dart_cJSON_DeleteItemFromArray = void Function(
-  ffi.Pointer<cJSON>,
-  int,
+  ffi.Pointer<cJSON> array,
+  int which,
 );
 
 typedef _c_cJSON_DetachItemFromObject = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
 );
 
 typedef _dart_cJSON_DetachItemFromObject = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
 );
 
 typedef _c_cJSON_DetachItemFromObjectCaseSensitive = ffi.Pointer<cJSON>
     Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
 );
 
 typedef _dart_cJSON_DetachItemFromObjectCaseSensitive = ffi.Pointer<cJSON>
     Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
 );
 
 typedef _c_cJSON_DeleteItemFromObject = ffi.Void Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
 );
 
 typedef _dart_cJSON_DeleteItemFromObject = void Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
 );
 
 typedef _c_cJSON_DeleteItemFromObjectCaseSensitive = ffi.Void Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
 );
 
 typedef _dart_cJSON_DeleteItemFromObjectCaseSensitive = void Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
 );
 
 typedef _c_cJSON_InsertItemInArray = ffi.Void Function(
-  ffi.Pointer<cJSON>,
-  ffi.Int32,
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> array,
+  ffi.Int32 which,
+  ffi.Pointer<cJSON> newitem,
 );
 
 typedef _dart_cJSON_InsertItemInArray = void Function(
-  ffi.Pointer<cJSON>,
-  int,
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> array,
+  int which,
+  ffi.Pointer<cJSON> newitem,
 );
 
 typedef _c_cJSON_ReplaceItemViaPointer = ffi.Int32 Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> parent,
+  ffi.Pointer<cJSON> item,
+  ffi.Pointer<cJSON> replacement,
 );
 
 typedef _dart_cJSON_ReplaceItemViaPointer = int Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> parent,
+  ffi.Pointer<cJSON> item,
+  ffi.Pointer<cJSON> replacement,
 );
 
 typedef _c_cJSON_ReplaceItemInArray = ffi.Void Function(
-  ffi.Pointer<cJSON>,
-  ffi.Int32,
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> array,
+  ffi.Int32 which,
+  ffi.Pointer<cJSON> newitem,
 );
 
 typedef _dart_cJSON_ReplaceItemInArray = void Function(
-  ffi.Pointer<cJSON>,
-  int,
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> array,
+  int which,
+  ffi.Pointer<cJSON> newitem,
 );
 
 typedef _c_cJSON_ReplaceItemInObject = ffi.Void Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
+  ffi.Pointer<cJSON> newitem,
 );
 
 typedef _dart_cJSON_ReplaceItemInObject = void Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
+  ffi.Pointer<cJSON> newitem,
 );
 
 typedef _c_cJSON_ReplaceItemInObjectCaseSensitive = ffi.Void Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
+  ffi.Pointer<cJSON> newitem,
 );
 
 typedef _dart_cJSON_ReplaceItemInObjectCaseSensitive = void Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
-  ffi.Pointer<cJSON>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> string,
+  ffi.Pointer<cJSON> newitem,
 );
 
 typedef _c_cJSON_Duplicate = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Int32,
+  ffi.Pointer<cJSON> item,
+  ffi.Int32 recurse,
 );
 
 typedef _dart_cJSON_Duplicate = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  int,
+  ffi.Pointer<cJSON> item,
+  int recurse,
 );
 
 typedef _c_cJSON_Compare = ffi.Int32 Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<cJSON>,
-  ffi.Int32,
+  ffi.Pointer<cJSON> a,
+  ffi.Pointer<cJSON> b,
+  ffi.Int32 case_sensitive,
 );
 
 typedef _dart_cJSON_Compare = int Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<cJSON>,
-  int,
+  ffi.Pointer<cJSON> a,
+  ffi.Pointer<cJSON> b,
+  int case_sensitive,
 );
 
 typedef _c_cJSON_Minify = ffi.Void Function(
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8> json,
 );
 
 typedef _dart_cJSON_Minify = void Function(
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<ffi.Int8> json,
 );
 
 typedef _c_cJSON_AddNullToObject = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> name,
 );
 
 typedef _dart_cJSON_AddNullToObject = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> name,
 );
 
 typedef _c_cJSON_AddTrueToObject = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> name,
 );
 
 typedef _dart_cJSON_AddTrueToObject = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> name,
 );
 
 typedef _c_cJSON_AddFalseToObject = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> name,
 );
 
 typedef _dart_cJSON_AddFalseToObject = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> name,
 );
 
 typedef _c_cJSON_AddBoolToObject = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
-  ffi.Int32,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> name,
+  ffi.Int32 boolean,
 );
 
 typedef _dart_cJSON_AddBoolToObject = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
-  int,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> name,
+  int boolean,
 );
 
 typedef _c_cJSON_AddNumberToObject = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
-  ffi.Double,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> name,
+  ffi.Double number,
 );
 
 typedef _dart_cJSON_AddNumberToObject = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
-  double,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> name,
+  double number,
 );
 
 typedef _c_cJSON_AddStringToObject = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> name,
+  ffi.Pointer<ffi.Int8> string,
 );
 
 typedef _dart_cJSON_AddStringToObject = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> name,
+  ffi.Pointer<ffi.Int8> string,
 );
 
 typedef _c_cJSON_AddRawToObject = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> name,
+  ffi.Pointer<ffi.Int8> raw,
 );
 
 typedef _dart_cJSON_AddRawToObject = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> name,
+  ffi.Pointer<ffi.Int8> raw,
 );
 
 typedef _c_cJSON_AddObjectToObject = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> name,
 );
 
 typedef _dart_cJSON_AddObjectToObject = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> name,
 );
 
 typedef _c_cJSON_AddArrayToObject = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> name,
 );
 
 typedef _dart_cJSON_AddArrayToObject = ffi.Pointer<cJSON> Function(
-  ffi.Pointer<cJSON>,
-  ffi.Pointer<ffi.Int8>,
+  ffi.Pointer<cJSON> object,
+  ffi.Pointer<ffi.Int8> name,
 );
 
 typedef _c_cJSON_SetNumberHelper = ffi.Double Function(
-  ffi.Pointer<cJSON>,
-  ffi.Double,
+  ffi.Pointer<cJSON> object,
+  ffi.Double number,
 );
 
 typedef _dart_cJSON_SetNumberHelper = double Function(
-  ffi.Pointer<cJSON>,
-  double,
+  ffi.Pointer<cJSON> object,
+  double number,
 );
 
 typedef _c_cJSON_malloc = ffi.Pointer<ffi.Void> Function(
-  ffi.Uint64,
+  ffi.Uint64 size,
 );
 
 typedef _dart_cJSON_malloc = ffi.Pointer<ffi.Void> Function(
-  int,
+  int size,
 );
 
 typedef _c_cJSON_free = ffi.Void Function(
-  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void> object,
 );
 
 typedef _dart_cJSON_free = void Function(
-  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void> object,
 );
 
 typedef _typedefC_1 = ffi.Pointer<ffi.Void> Function(
