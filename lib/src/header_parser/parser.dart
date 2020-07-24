@@ -7,6 +7,7 @@ import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/config_provider.dart';
+import 'package:ffigen/src/config_provider/config_types.dart';
 import 'package:ffigen/src/find_resource.dart';
 import 'package:ffigen/src/header_parser/translation_unit_parser.dart';
 import 'package:ffigen/src/strings.dart' as strings;
@@ -66,6 +67,14 @@ List<Binding> parseToBindings() {
 
   Pointer<Pointer<Utf8>> clangCmdArgs = nullptr;
   var cmdLen = 0;
+
+  /// Add compiler opt for comment parsing for clang based on config.
+  if (config.commentType.length != CommentLength.none &&
+      config.commentType.style == CommentStyle.any) {
+    config.compilerOpts ??= [];
+    config.compilerOpts.add(strings.fparseAllComments);
+  }
+
   if (config.compilerOpts != null) {
     clangCmdArgs = createDynamicStringArray(config.compilerOpts);
     cmdLen = config.compilerOpts.length;
