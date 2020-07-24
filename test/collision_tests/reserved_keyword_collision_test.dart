@@ -16,6 +16,7 @@ void main() {
     test('reserved keyword collision', () {
       final l1 = Library(name: 'Bindings', bindings: [
         Struc(name: 'abstract'),
+        Struc(name: 'abstract'),
         Struc(name: 'if'),
         EnumClass(name: 'return'),
         EnumClass(name: 'export'),
@@ -42,6 +43,7 @@ void main() {
       ]);
       final l2 = Library(name: 'Bindings', bindings: [
         Struc(name: 'abstract_1'),
+        Struc(name: 'abstract_2'),
         Struc(name: 'if_1'),
         EnumClass(name: 'return_1'),
         EnumClass(name: 'export_1'),
