@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:convert' show jsonDecode;
-import 'dart:io' show Platform, File, Directory;
+import 'dart:io' show File, Directory;
 
 /// Find the `.dart_tool/` folder, returns `null` if unable to find it.
 Uri findDotDartTool() {
