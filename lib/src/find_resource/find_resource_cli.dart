@@ -5,7 +5,7 @@
 import 'dart:cli' as cli;
 import 'dart:io' show File;
 import 'dart:isolate' show Isolate;
-import 'finddotdarttool_fallback.dart' as fallback;
+import 'find_resource_fallback.dart' as fallback;
 
 /// Find the `.dart_tool/` folder, returns `null` if unable to find it.
 Uri findDotDartTool() {
@@ -26,4 +26,12 @@ Uri findDotDartTool() {
   // If [Isolate.packageConfig] isn't helpful we fallback to looking at the
   // current script location and traverse up from there.
   return fallback.findDotDartTool();
+}
+
+Uri findWrapper(String wrapperName) {
+  final wrapperUri = cli.waitFor(Isolate.resolvePackageUri(
+      Uri.parse('package:ffigen/src/clang_library/$wrapperName')));
+  // If [Isolate.packageConfig] isn't helpful we fallback to looking at the
+  // current script location and traverse up from there.
+  return wrapperUri ?? fallback.findWrapper(wrapperName);
 }

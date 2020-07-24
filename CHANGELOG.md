@@ -1,3 +1,6 @@
+# 0.1.2
+- Fixed wrapper not found error when running `pub run ffigen`.
+
 # 0.1.1
 - Address pub score: follow dart File conventions, provide documentation, and pass static analysis.
 

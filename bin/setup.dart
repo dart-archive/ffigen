@@ -27,7 +27,7 @@
 import 'dart:io';
 import 'package:args/args.dart';
 import 'package:meta/meta.dart';
-import 'package:ffigen/src/find_dot_dart_tool.dart';
+import 'package:ffigen/src/find_resource.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:path/path.dart' as path;
 
@@ -140,14 +140,7 @@ String _dylibPath() {
 ///
 /// Throws error if not found.
 String _getWrapperPath(String wrapperName) {
-  final file = File(path.join(
-    Platform.script
-        .resolve(path.posix.join('..', 'lib', 'src', 'clang_library'))
-        // This needs to be in posix style or illegal character exception is
-        // thrown on windows.
-        .toFilePath(),
-    wrapperName,
-  ));
+  final file = File.fromUri(findWrapper(wrapperName));
   if (file.existsSync()) {
     return file.absolute.path;
   } else {

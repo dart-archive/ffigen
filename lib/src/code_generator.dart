@@ -14,4 +14,3 @@ export 'code_generator/library.dart';
 export 'code_generator/struc.dart';
 export 'code_generator/type.dart';
 export 'code_generator/typedef.dart';
-
