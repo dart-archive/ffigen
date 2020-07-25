@@ -1,3 +1,4 @@
+os: osx
 language: dart
 dart:
 - dev
@@ -11,3 +12,9 @@ branches:
 cache:
   directories:
     - $HOME/.pub-cache
+before_install:
+  - export HOMEBREW_NO_INSTALL_CLEANUP=1
+  - brew install llvm
+before_script:
+  - 'pub run ffigen:setup'
+  - cd test/native_test && dart build_test_dylib.dart && cd ../..
