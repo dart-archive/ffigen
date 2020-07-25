@@ -12,15 +12,11 @@ import 'package:test/test.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:path/path.dart' as path;
 
-import '../../bin/setup.dart' as setup;
 import '../test_utils.dart';
 
 void main() {
   group('large_test', () {
     setUpAll(() {
-      if (!setup.checkDylibExist()) {
-        setup.autoCreateDylib();
-      }
       logWarnings(Level.SEVERE);
     });
     test('Libclang test', () {
