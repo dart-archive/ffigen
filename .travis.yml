@@ -16,9 +16,7 @@ before_install:
   - sudo add-apt-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-10 main"
   - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add -
   - sudo apt-get update
-  - sudo apt-get install clang-10 clang-tools-10 clang-10-doc libclang-common-10-dev libclang-10-dev libclang1-10 clang-format-10 clangd-10
-  - ls -R /usr/lib/llvm-10 # remove
-  - which clang
+  - sudo apt-get install clang-10 libclang-common-10-dev libclang-10-dev libclang1-10
   # use clang from installed llvm
   - export PATH="/usr/lib/llvm-10/bin:$PATH"
 
