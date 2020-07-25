@@ -1,4 +1,3 @@
-os: osx
 language: dart
 dart:
 - dev
@@ -13,8 +12,16 @@ cache:
   directories:
     - $HOME/.pub-cache
 before_install:
-  - export HOMEBREW_NO_INSTALL_CLEANUP=1
-  - brew install llvm
+  # install libclang-dev
+  - sudo add-apt-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-10 main"
+  - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add -
+  - sudo apt-get update
+  - sudo apt-get install clang-10 clang-tools-10 clang-10-doc libclang-common-10-dev libclang-10-dev libclang1-10 clang-format-10 clangd-10
+  - ls -R /usr/lib/llvm-10 # remove
+  - which clang
+  # use clang from installed llvm
+  - export PATH="/usr/lib/llvm-10/bin:$PATH"
+
 before_script:
   - 'pub run ffigen:setup'
   - cd test/native_test && dart build_test_dylib.dart && cd ../..
