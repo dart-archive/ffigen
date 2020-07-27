@@ -347,4 +347,15 @@ CXEvalResult clang_Cursor_Evaluate_wrap(CXCursor *cursor)
 {
     return clang_Cursor_Evaluate(*cursor);
 }
+
+unsigned clang_Cursor_isAnonymous_wrap(CXCursor *cursor)
+{
+    return clang_Cursor_isAnonymous(*cursor);
+}
+
+unsigned clang_Cursor_isAnonymousRecordDecl_wrap(CXCursor *cursor)
+{
+    return clang_Cursor_isAnonymousRecordDecl(*cursor);
+}
+
 // END ===== WRAPPER FUNCTIONS =====================

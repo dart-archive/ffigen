@@ -356,3 +356,5 @@ clang_getArrayElementType_wrap
 clang_Cursor_isMacroFunctionLike_wrap
 clang_Cursor_isMacroBuiltin_wrap
 clang_Cursor_Evaluate_wrap
+clang_Cursor_isAnonymous_wrap
+clang_Cursor_isAnonymousRecordDecl_wrap

@@ -31,7 +31,6 @@ EnumClass parseEnumDeclaration(
   String name,
 }) {
   _stack.push(_ParsedEnum());
-
   final enumName = name ?? cursor.spelling();
   if (enumName == '') {
     _logger.finest('unnamed enum declaration');

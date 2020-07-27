@@ -188,7 +188,8 @@ class Clang {
 
   _dart_clang_EvalResult_getKind _clang_EvalResult_getKind;
 
-  /// Returns the evaluation result as integer if the kind is Int.
+  /// Returns the evaluation result as integer if the
+  /// kind is Int.
   int clang_EvalResult_getAsInt(
     ffi.Pointer<ffi.Void> E,
   ) {
@@ -202,9 +203,9 @@ class Clang {
 
   _dart_clang_EvalResult_getAsInt _clang_EvalResult_getAsInt;
 
-  /// Returns the evaluation result as a long long integer if the kind is Int.
-  /// This prevents overflows that may happen if the result is returned with
-  /// clang_EvalResult_getAsInt.
+  /// Returns the evaluation result as a long long integer if the
+  /// kind is Int. This prevents overflows that may happen if the result is
+  /// returned with clang_EvalResult_getAsInt.
   int clang_EvalResult_getAsLongLong(
     ffi.Pointer<ffi.Void> E,
   ) {
@@ -218,7 +219,8 @@ class Clang {
 
   _dart_clang_EvalResult_getAsLongLong _clang_EvalResult_getAsLongLong;
 
-  /// Returns the evaluation result as double if the kind is double.
+  /// Returns the evaluation result as double if the
+  /// kind is double.
   double clang_EvalResult_getAsDouble(
     ffi.Pointer<ffi.Void> E,
   ) {
@@ -232,10 +234,10 @@ class Clang {
 
   _dart_clang_EvalResult_getAsDouble _clang_EvalResult_getAsDouble;
 
-  /// Returns the evaluation result as a constant string if the kind is other
-  /// than Int or float. User must not free this pointer, instead call
-  /// clang_EvalResult_dispose on the CXEvalResult returned by
-  /// clang_Cursor_Evaluate.
+  /// Returns the evaluation result as a constant string if the
+  /// kind is other than Int or float. User must not free this pointer,
+  /// instead call clang_EvalResult_dispose on the CXEvalResult returned
+  /// by clang_Cursor_Evaluate.
   ffi.Pointer<ffi.Int8> clang_EvalResult_getAsStr(
     ffi.Pointer<ffi.Void> E,
   ) {
@@ -743,6 +745,34 @@ class Clang {
   }
 
   _dart_clang_Cursor_Evaluate_wrap _clang_Cursor_Evaluate_wrap;
+
+  int clang_Cursor_isAnonymous_wrap(
+    ffi.Pointer<CXCursor> cursor,
+  ) {
+    _clang_Cursor_isAnonymous_wrap ??= _dylib.lookupFunction<
+        _c_clang_Cursor_isAnonymous_wrap,
+        _dart_clang_Cursor_isAnonymous_wrap>('clang_Cursor_isAnonymous_wrap');
+    return _clang_Cursor_isAnonymous_wrap(
+      cursor,
+    );
+  }
+
+  _dart_clang_Cursor_isAnonymous_wrap _clang_Cursor_isAnonymous_wrap;
+
+  int clang_Cursor_isAnonymousRecordDecl_wrap(
+    ffi.Pointer<CXCursor> cursor,
+  ) {
+    _clang_Cursor_isAnonymousRecordDecl_wrap ??= _dylib.lookupFunction<
+            _c_clang_Cursor_isAnonymousRecordDecl_wrap,
+            _dart_clang_Cursor_isAnonymousRecordDecl_wrap>(
+        'clang_Cursor_isAnonymousRecordDecl_wrap');
+    return _clang_Cursor_isAnonymousRecordDecl_wrap(
+      cursor,
+    );
+  }
+
+  _dart_clang_Cursor_isAnonymousRecordDecl_wrap
+      _clang_Cursor_isAnonymousRecordDecl_wrap;
 }
 
 /// A character string.
@@ -2143,7 +2173,7 @@ abstract class CXChildVisitResult {
   static const int CXChildVisit_Recurse = 2;
 }
 
-class CXEvalResultKind {
+abstract class CXEvalResultKind {
   static const int CXEval_Int = 1;
   static const int CXEval_Float = 2;
   static const int CXEval_ObjCStrLiteral = 3;
@@ -2588,5 +2618,21 @@ typedef _c_clang_Cursor_Evaluate_wrap = ffi.Pointer<ffi.Void> Function(
 );
 
 typedef _dart_clang_Cursor_Evaluate_wrap = ffi.Pointer<ffi.Void> Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _c_clang_Cursor_isAnonymous_wrap = ffi.Uint32 Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _dart_clang_Cursor_isAnonymous_wrap = int Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _c_clang_Cursor_isAnonymousRecordDecl_wrap = ffi.Uint32 Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _dart_clang_Cursor_isAnonymousRecordDecl_wrap = int Function(
   ffi.Pointer<CXCursor> cursor,
 );
