@@ -106,6 +106,7 @@ ${strings.description}: Bindings to SQLite.
 ${strings.output}: unused
 ${strings.arrayWorkaround}: true
 ${strings.comments}:
+  ${strings.style}: ${strings.any}
   ${strings.length}: ${strings.full}
 ${strings.headers}:
   - third_party/sqlite/sqlite3.h

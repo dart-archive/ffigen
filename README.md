@@ -142,9 +142,9 @@ functions:
     <td>comments</td>
     <td>no</td>
     <td>Extract documentation comments for declarations.<br>
-    You can specify the style and length of the comment from one of these options<br>
+    The style and length of the comments can be specified with the following options.<br>
     <i>style: doxygen(default) | any </i><br>
-    <i>length: brief(default) | full </i><br>
+    <i>length: brief | full(default) </i><br>
     If you want to disable all comments you can also pass<br>
     <code>comments: false</code>.
     </td>

@@ -310,11 +310,18 @@ CommentType commentExtractor(dynamic value) {
   final ct = CommentType.def();
   if (value is YamlMap) {
     for (final key in value.keys) {
-      if (key == strings.style && value[key] == strings.any) {
-        ct.style = CommentStyle.any;
-      }
-      if (key == strings.length && value[key] == strings.full) {
-        ct.length = CommentLength.full;
+      if (key == strings.style) {
+        if (value[key] == strings.any) {
+          ct.style = CommentStyle.any;
+        } else if (value[key] == strings.doxygen) {
+          ct.style = CommentStyle.doxygen;
+        }
+      } else if (key == strings.length) {
+        if (value[key] == strings.full) {
+          ct.length = CommentLength.full;
+        } else if (value[key] == strings.brief) {
+          ct.length = CommentLength.brief;
+        }
       }
     }
   }

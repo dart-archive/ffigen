@@ -12,10 +12,10 @@ class CommentType {
   CommentType(this.style, this.length);
 
   /// Sets default style as [CommentStyle.doxygen], default length as
-  /// [CommentLength.brief].
+  /// [CommentLength.full].
   CommentType.def()
       : style = CommentStyle.doxygen,
-        length = CommentLength.brief;
+        length = CommentLength.full;
 
   /// Disables any comments.
   CommentType.none()
