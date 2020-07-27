@@ -2,6 +2,64 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+/// Contains all the neccesary classes required by config.
+
+import 'package:meta/meta.dart';
+
+class CommentType {
+  CommentStyle style;
+  CommentLength length;
+  CommentType(this.style, this.length);
+
+  /// Sets default style as [CommentStyle.doxygen], default length as
+  /// [CommentLength.full].
+  CommentType.def()
+      : style = CommentStyle.doxygen,
+        length = CommentLength.full;
+
+  /// Disables any comments.
+  CommentType.none()
+      : style = CommentStyle.doxygen,
+        length = CommentLength.none;
+}
+
+enum CommentStyle { doxygen, any }
+enum CommentLength { none, brief, full }
+
+/// Represents a single specification in configurations.
+///
+/// [E] is the return type of the extractedResult.
+class Specification<E> {
+  final String description;
+  final bool Function(String name, dynamic value) validator;
+  final E Function(dynamic map) extractor;
+  final E Function() defaultValue;
+
+  final Requirement requirement;
+  final void Function(dynamic result) extractedResult;
+
+  Specification({
+    @required this.extractedResult,
+    @required this.description,
+    @required this.validator,
+    @required this.extractor,
+    this.defaultValue,
+    this.requirement = Requirement.no,
+  });
+}
+
+enum Requirement { yes, prefer, no }
+
+class HeaderFilter {
+  Set<String> includedInclusionHeaders;
+  Set<String> excludedInclusionHeaders;
+
+  HeaderFilter({
+    this.includedInclusionHeaders = const {},
+    this.excludedInclusionHeaders = const {},
+  });
+}
+
 /// A generic declaration config.
 class Declaration {
   // matchers

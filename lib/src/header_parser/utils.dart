@@ -6,9 +6,9 @@ import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
+import 'package:ffigen/src/config_provider/config_types.dart';
 import 'package:logging/logging.dart';
 
-import '../strings.dart' as strings;
 import 'clang_bindings/clang_bindings.dart' as clang_types;
 import 'data.dart';
 import 'type_extractor/extractor.dart';
@@ -146,13 +146,13 @@ String getCursorDocComment(Pointer<clang_types.CXCursor> cursor,
           0) {
     formattedDocComment = null;
   } else {
-    switch (config.comment) {
-      case strings.full:
+    switch (config.commentType.length) {
+      case CommentLength.full:
         formattedDocComment = removeRawCommentMarkups(clang
             .clang_Cursor_getRawCommentText_wrap(cursor)
             .toStringAndDispose());
         break;
-      case strings.brief:
+      case CommentLength.brief:
         formattedDocComment = _wrapNoNewLineString(
             clang
                 .clang_Cursor_getBriefCommentText_wrap(cursor)

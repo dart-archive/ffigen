@@ -23,3 +23,4 @@ ffigen:
   header-filter:
     include:
       - 'cJSON.h'
+  comments: false
