@@ -76,4 +76,4 @@ ffigen:
   # Comments can be disabled by using comments: false
   comments:
     style: doxygen # Options - doxygen(default) / any.
-    length: full # Options - brief(default) / full.
+    length: full # Options - brief / full(default).

@@ -12,6 +12,43 @@ class Clang {
   Clang(ffi.DynamicLibrary dynamicLibrary) : _dylib = dynamicLibrary;
 
   /// Provides a shared context for creating translation units.
+  ///
+  /// It provides two options:
+  ///
+  /// - excludeDeclarationsFromPCH: When non-zero, allows enumeration of "local"
+  /// declarations (when loading any new translation units). A "local" declaration
+  /// is one that belongs in the translation unit itself and not in a precompiled
+  /// header that was used by the translation unit. If zero, all declarations
+  /// will be enumerated.
+  ///
+  /// Here is an example:
+  ///
+  /// \code
+  /// // excludeDeclsFromPCH = 1, displayDiagnostics=1
+  /// Idx = clang_createIndex(1, 1);
+  ///
+  /// // IndexTest.pch was produced with the following command:
+  /// // "clang -x c IndexTest.h -emit-ast -o IndexTest.pch"
+  /// TU = clang_createTranslationUnit(Idx, "IndexTest.pch");
+  ///
+  /// // This will load all the symbols from 'IndexTest.pch'
+  /// clang_visitChildren(clang_getTranslationUnitCursor(TU),
+  /// TranslationUnitVisitor, 0);
+  /// clang_disposeTranslationUnit(TU);
+  ///
+  /// // This will load all the symbols from 'IndexTest.c', excluding symbols
+  /// // from 'IndexTest.pch'.
+  /// char *args[] = { "-Xclang", "-include-pch=IndexTest.pch" };
+  /// TU = clang_createTranslationUnitFromSourceFile(Idx, "IndexTest.c", 2, args,
+  /// 0, 0);
+  /// clang_visitChildren(clang_getTranslationUnitCursor(TU),
+  /// TranslationUnitVisitor, 0);
+  /// clang_disposeTranslationUnit(TU);
+  /// \endcode
+  ///
+  /// This process of creating the 'pch', loading it separately, and using it (via
+  /// -include-pch) allows 'excludeDeclsFromPCH' to remove redundant callbacks
+  /// (which gives the indexer the same performance benefit as the compiler).
   ffi.Pointer<ffi.Void> clang_createIndex(
     int excludeDeclarationsFromPCH,
     int displayDiagnostics,
@@ -28,6 +65,9 @@ class Clang {
   _dart_clang_createIndex _clang_createIndex;
 
   /// Destroy the given index.
+  ///
+  /// The index must not be destroyed until all of the translation units created
+  /// within that index have been destroyed.
   void clang_disposeIndex(
     ffi.Pointer<ffi.Void> index,
   ) {
@@ -41,8 +81,8 @@ class Clang {
 
   _dart_clang_disposeIndex _clang_disposeIndex;
 
-  /// Determine the number of diagnostics produced for the given translation
-  /// unit.
+  /// Determine the number of diagnostics produced for the given
+  /// translation unit.
   int clang_getNumDiagnostics(
     ffi.Pointer<CXTranslationUnitImpl> Unit,
   ) {
@@ -57,6 +97,12 @@ class Clang {
   _dart_clang_getNumDiagnostics _clang_getNumDiagnostics;
 
   /// Retrieve a diagnostic associated with the given translation unit.
+  ///
+  /// \param Unit the translation unit to query.
+  /// \param Index the zero-based diagnostic number to retrieve.
+  ///
+  /// \returns the requested diagnostic. This diagnostic must be freed
+  /// via a call to \c clang_disposeDiagnostic().
   ffi.Pointer<ffi.Void> clang_getDiagnostic(
     ffi.Pointer<CXTranslationUnitImpl> Unit,
     int Index,
@@ -85,9 +131,10 @@ class Clang {
 
   _dart_clang_disposeDiagnostic _clang_disposeDiagnostic;
 
-  /// Same as clang_parseTranslationUnit2, but returns the CXTranslationUnit
-  /// instead of an error code. In case of an error this routine returns a NULL
-  /// CXTranslationUnit, without further detailed error codes.
+  /// Same as \c clang_parseTranslationUnit2, but returns
+  /// the \c CXTranslationUnit instead of an error code.  In case of an error this
+  /// routine returns a \c NULL \c CXTranslationUnit, without further detailed
+  /// error codes.
   ffi.Pointer<CXTranslationUnitImpl> clang_parseTranslationUnit(
     ffi.Pointer<ffi.Void> CIdx,
     ffi.Pointer<ffi.Int8> source_filename,
@@ -568,6 +615,11 @@ class Clang {
 }
 
 /// A character string.
+///
+/// The \c CXString type is used to return strings from the interface when
+/// the ownership of that string might differ from one call to the next.
+/// Use \c clang_getCString() to retrieve the string data and, once finished
+/// with the string data, call \c clang_disposeString() to free the string.
 class CXString extends ffi.Struct {
   ffi.Pointer<ffi.Void> data;
 
@@ -578,8 +630,14 @@ class CXString extends ffi.Struct {
 class CXTranslationUnitImpl extends ffi.Struct {}
 
 /// Provides the contents of a file that has not yet been saved to disk.
+///
+/// Each CXUnsavedFile instance provides the name of a file on the
+/// system along with the current contents of that file that have not
+/// yet been saved to disk.
 class CXUnsavedFile extends ffi.Struct {
   /// The file whose contents have not yet been saved.
+  ///
+  /// This file must already exist in the file system.
   ffi.Pointer<ffi.Int8> Filename;
 
   /// A buffer containing the unsaved contents of this file.
@@ -590,7 +648,11 @@ class CXUnsavedFile extends ffi.Struct {
   int Length;
 }
 
-/// Identifies a specific source location within a translation unit.
+/// Identifies a specific source location within a translation
+/// unit.
+///
+/// Use clang_getExpansionLocation() or clang_getSpellingLocation()
+/// to map a source location to a particular file, line, and column.
 class CXSourceLocation extends ffi.Struct {
   ffi.Pointer<ffi.Void> _unique_ptr_data_item_0;
   ffi.Pointer<ffi.Void> _unique_ptr_data_item_1;
@@ -646,6 +708,9 @@ class ArrayHelper_CXSourceLocation_ptr_data_level0 {
 }
 
 /// Identifies a half-open character range in the source code.
+///
+/// Use clang_getRangeStart() and clang_getRangeEnd() to retrieve the
+/// starting and end locations from a source range, respectively.
 class CXSourceRange extends ffi.Struct {
   ffi.Pointer<ffi.Void> _unique_ptr_data_item_0;
   ffi.Pointer<ffi.Void> _unique_ptr_data_item_1;
@@ -704,77 +769,159 @@ class ArrayHelper_CXSourceRange_ptr_data_level0 {
 }
 
 /// Options to control the display of diagnostics.
+///
+/// The values in this enum are meant to be combined to customize the
+/// behavior of \c clang_formatDiagnostic().
 abstract class CXDiagnosticDisplayOptions {
-  /// Display the source-location information where the diagnostic was located.
+  /// Display the source-location information where the
+  /// diagnostic was located.
+  ///
+  /// When set, diagnostics will be prefixed by the file, line, and
+  /// (optionally) column to which the diagnostic refers. For example,
+  ///
+  /// \code
+  /// test.c:28: warning: extra tokens at end of #endif directive
+  /// \endcode
+  ///
+  /// This option corresponds to the clang flag \c -fshow-source-location.
   static const int CXDiagnostic_DisplaySourceLocation = 1;
 
-  /// If displaying the source-location information of the diagnostic, also
-  /// include the column number.
+  /// If displaying the source-location information of the
+  /// diagnostic, also include the column number.
+  ///
+  /// This option corresponds to the clang flag \c -fshow-column.
   static const int CXDiagnostic_DisplayColumn = 2;
 
-  /// If displaying the source-location information of the diagnostic, also
-  /// include information about source ranges in a machine-parsable format.
+  /// If displaying the source-location information of the
+  /// diagnostic, also include information about source ranges in a
+  /// machine-parsable format.
+  ///
+  /// This option corresponds to the clang flag
+  /// \c -fdiagnostics-print-source-range-info.
   static const int CXDiagnostic_DisplaySourceRanges = 4;
 
   /// Display the option name associated with this diagnostic, if any.
+  ///
+  /// The option name displayed (e.g., -Wconversion) will be placed in brackets
+  /// after the diagnostic text. This option corresponds to the clang flag
+  /// \c -fdiagnostics-show-option.
   static const int CXDiagnostic_DisplayOption = 8;
 
   /// Display the category number associated with this diagnostic, if any.
+  ///
+  /// The category number is displayed within brackets after the diagnostic text.
+  /// This option corresponds to the clang flag
+  /// \c -fdiagnostics-show-category=id.
   static const int CXDiagnostic_DisplayCategoryId = 16;
 
   /// Display the category name associated with this diagnostic, if any.
+  ///
+  /// The category name is displayed within brackets after the diagnostic text.
+  /// This option corresponds to the clang flag
+  /// \c -fdiagnostics-show-category=name.
   static const int CXDiagnostic_DisplayCategoryName = 32;
 }
 
 /// Flags that control the creation of translation units.
+///
+/// The enumerators in this enumeration type are meant to be bitwise
+/// ORed together to specify which options should be used when
+/// constructing the translation unit.
 abstract class CXTranslationUnit_Flags {
-  /// Used to indicate that no special translation-unit options are needed.
+  /// Used to indicate that no special translation-unit options are
+  /// needed.
   static const int CXTranslationUnit_None = 0;
 
   /// Used to indicate that the parser should construct a "detailed"
   /// preprocessing record, including all macro definitions and instantiations.
+  ///
+  /// Constructing a detailed preprocessing record requires more memory
+  /// and time to parse, since the information contained in the record
+  /// is usually not retained. However, it can be useful for
+  /// applications that require more detailed information about the
+  /// behavior of the preprocessor.
   static const int CXTranslationUnit_DetailedPreprocessingRecord = 1;
 
   /// Used to indicate that the translation unit is incomplete.
+  ///
+  /// When a translation unit is considered "incomplete", semantic
+  /// analysis that is typically performed at the end of the
+  /// translation unit will be suppressed. For example, this suppresses
+  /// the completion of tentative declarations in C and of
+  /// instantiation of implicitly-instantiation function templates in
+  /// C++. This option is typically used when parsing a header with the
+  /// intent of producing a precompiled header.
   static const int CXTranslationUnit_Incomplete = 2;
 
   /// Used to indicate that the translation unit should be built with an
   /// implicit precompiled header for the preamble.
+  ///
+  /// An implicit precompiled header is used as an optimization when a
+  /// particular translation unit is likely to be reparsed many times
+  /// when the sources aren't changing that often. In this case, an
+  /// implicit precompiled header will be built containing all of the
+  /// initial includes at the top of the main file (what we refer to as
+  /// the "preamble" of the file). In subsequent parses, if the
+  /// preamble or the files in it have not changed, \c
+  /// clang_reparseTranslationUnit() will re-use the implicit
+  /// precompiled header to improve parsing performance.
   static const int CXTranslationUnit_PrecompiledPreamble = 4;
 
   /// Used to indicate that the translation unit should cache some
   /// code-completion results with each reparse of the source file.
+  ///
+  /// Caching of code-completion results is a performance optimization that
+  /// introduces some overhead to reparsing but improves the performance of
+  /// code-completion operations.
   static const int CXTranslationUnit_CacheCompletionResults = 8;
 
   /// Used to indicate that the translation unit will be serialized with
-  /// clang_saveTranslationUnit.
+  /// \c clang_saveTranslationUnit.
+  ///
+  /// This option is typically used when parsing a header with the intent of
+  /// producing a precompiled header.
   static const int CXTranslationUnit_ForSerialization = 16;
 
   /// DEPRECATED: Enabled chained precompiled preambles in C++.
+  ///
+  /// Note: this is a *temporary* option that is available only while
+  /// we are testing C++ precompiled preamble support. It is deprecated.
   static const int CXTranslationUnit_CXXChainedPCH = 32;
 
   /// Used to indicate that function/method bodies should be skipped while
   /// parsing.
+  ///
+  /// This option can be used to search for declarations/definitions while
+  /// ignoring the usages.
   static const int CXTranslationUnit_SkipFunctionBodies = 64;
 
-  /// Used to indicate that brief documentation comments should be included into
-  /// the set of code completions returned from this translation unit.
+  /// Used to indicate that brief documentation comments should be
+  /// included into the set of code completions returned from this translation
+  /// unit.
   static const int CXTranslationUnit_IncludeBriefCommentsInCodeCompletion = 128;
 
-  /// Used to indicate that the precompiled preamble should be created on the
-  /// first parse. Otherwise it will be created on the first reparse. This
-  /// trades runtime on the first parse (serializing the preamble takes time)
-  /// for reduced runtime on the second parse (can now reuse the preamble).
+  /// Used to indicate that the precompiled preamble should be created on
+  /// the first parse. Otherwise it will be created on the first reparse. This
+  /// trades runtime on the first parse (serializing the preamble takes time) for
+  /// reduced runtime on the second parse (can now reuse the preamble).
   static const int CXTranslationUnit_CreatePreambleOnFirstParse = 256;
 
   /// Do not stop processing when fatal errors are encountered.
+  ///
+  /// When fatal errors are encountered while parsing a translation unit,
+  /// semantic analysis is typically stopped early when compiling code. A common
+  /// source for fatal errors are unresolvable include files. For the
+  /// purposes of an IDE, this is undesirable behavior and as much information
+  /// as possible should be reported. Use this flag to enable this behavior.
   static const int CXTranslationUnit_KeepGoing = 512;
 
   /// Sets the preprocessor in a mode for parsing a single file only.
   static const int CXTranslationUnit_SingleFileParse = 1024;
 
-  /// Used in combination with CXTranslationUnit_SkipFunctionBodies to constrain
-  /// the skipping of function bodies to the preamble.
+  /// Used in combination with CXTranslationUnit_SkipFunctionBodies to
+  /// constrain the skipping of function bodies to the preamble.
+  ///
+  /// The function bodies of the main file are not skipped.
   static const int CXTranslationUnit_LimitSkipFunctionBodiesToPreamble = 2048;
 
   /// Used to indicate that attributed types should be included in CXType.
@@ -784,6 +931,11 @@ abstract class CXTranslationUnit_Flags {
   static const int CXTranslationUnit_VisitImplicitAttributes = 8192;
 
   /// Used to indicate that non-errors from included files should be ignored.
+  ///
+  /// If set, clang_getDiagnosticSetFromTU() will not report e.g. warnings from
+  /// included files anymore. This speeds up clang_getDiagnosticSetFromTU() for
+  /// the case where these warnings are not of interest, as for an IDE for
+  /// example, which typically shows only the diagnostics in the main file.
   static const int CXTranslationUnit_IgnoreNonErrorsFromIncludedFiles = 16384;
 
   /// Tells the preprocessor not to skip excluded conditional blocks.
@@ -792,7 +944,13 @@ abstract class CXTranslationUnit_Flags {
 
 /// Describes the kind of entity that a cursor refers to.
 abstract class CXCursorKind {
-  /// A declaration whose specific kind is not exposed via this interface.
+  /// A declaration whose specific kind is not exposed via this
+  /// interface.
+  ///
+  /// Unexposed declarations have the same operations as any other kind
+  /// of declaration; one can extract their location information,
+  /// spelling, find their definitions, etc. However, the specific kind
+  /// of the declaration is not reported.
   static const int CXCursor_UnexposedDecl = 1;
 
   /// A C or C++ struct.
@@ -807,8 +965,8 @@ abstract class CXCursorKind {
   /// An enumeration.
   static const int CXCursor_EnumDecl = 5;
 
-  /// A field (in C) or non-static data member (in C++) in a struct, union, or
-  /// C++ class.
+  /// A field (in C) or non-static data member (in C++) in a
+  /// struct, union, or C++ class.
   static const int CXCursor_FieldDecl = 6;
 
   /// An enumerator constant.
@@ -823,16 +981,16 @@ abstract class CXCursorKind {
   /// A function or method parameter.
   static const int CXCursor_ParmDecl = 10;
 
-  /// An Objective-C @interface.
+  /// An Objective-C \@interface.
   static const int CXCursor_ObjCInterfaceDecl = 11;
 
-  /// An Objective-C @interface for a category.
+  /// An Objective-C \@interface for a category.
   static const int CXCursor_ObjCCategoryDecl = 12;
 
-  /// An Objective-C @protocol declaration.
+  /// An Objective-C \@protocol declaration.
   static const int CXCursor_ObjCProtocolDecl = 13;
 
-  /// An Objective-C @property declaration.
+  /// An Objective-C \@property declaration.
   static const int CXCursor_ObjCPropertyDecl = 14;
 
   /// An Objective-C instance variable.
@@ -844,10 +1002,10 @@ abstract class CXCursorKind {
   /// An Objective-C class method.
   static const int CXCursor_ObjCClassMethodDecl = 17;
 
-  /// An Objective-C @implementation.
+  /// An Objective-C \@implementation.
   static const int CXCursor_ObjCImplementationDecl = 18;
 
-  /// An Objective-C @implementation for a category.
+  /// An Objective-C \@implementation for a category.
   static const int CXCursor_ObjCCategoryImplDecl = 19;
 
   /// A typedef.
@@ -901,10 +1059,10 @@ abstract class CXCursorKind {
   /// A C++ alias declaration
   static const int CXCursor_TypeAliasDecl = 36;
 
-  /// An Objective-C @synthesize definition.
+  /// An Objective-C \@synthesize definition.
   static const int CXCursor_ObjCSynthesizeDecl = 37;
 
-  /// An Objective-C @dynamic definition.
+  /// An Objective-C \@dynamic definition.
   static const int CXCursor_ObjCDynamicDecl = 38;
 
   /// An access specifier.
@@ -917,29 +1075,85 @@ abstract class CXCursorKind {
   static const int CXCursor_ObjCClassRef = 42;
 
   /// A reference to a type declaration.
+  ///
+  /// A type reference occurs anywhere where a type is named but not
+  /// declared. For example, given:
+  ///
+  /// \code
+  /// typedef unsigned size_type;
+  /// size_type size;
+  /// \endcode
+  ///
+  /// The typedef is a declaration of size_type (CXCursor_TypedefDecl),
+  /// while the type of the variable "size" is referenced. The cursor
+  /// referenced by the type of size is the typedef for size_type.
   static const int CXCursor_TypeRef = 43;
   static const int CXCursor_CXXBaseSpecifier = 44;
 
-  /// A reference to a class template, function template, template template
-  /// parameter, or class template partial specialization.
+  /// A reference to a class template, function template, template
+  /// template parameter, or class template partial specialization.
   static const int CXCursor_TemplateRef = 45;
 
   /// A reference to a namespace or namespace alias.
   static const int CXCursor_NamespaceRef = 46;
 
-  /// A reference to a member of a struct, union, or class that occurs in some
-  /// non-expression context, e.g., a designated initializer.
+  /// A reference to a member of a struct, union, or class that occurs in
+  /// some non-expression context, e.g., a designated initializer.
   static const int CXCursor_MemberRef = 47;
 
   /// A reference to a labeled statement.
+  ///
+  /// This cursor kind is used to describe the jump to "start_over" in the
+  /// goto statement in the following example:
+  ///
+  /// \code
+  /// start_over:
+  /// ++counter;
+  ///
+  /// goto start_over;
+  /// \endcode
+  ///
+  /// A label reference cursor refers to a label statement.
   static const int CXCursor_LabelRef = 48;
 
-  /// A reference to a set of overloaded functions or function templates that
-  /// has not yet been resolved to a specific function or function template.
+  /// A reference to a set of overloaded functions or function templates
+  /// that has not yet been resolved to a specific function or function template.
+  ///
+  /// An overloaded declaration reference cursor occurs in C++ templates where
+  /// a dependent name refers to a function. For example:
+  ///
+  /// \code
+  /// template<typename T> void swap(T&, T&);
+  ///
+  /// struct X { ... };
+  /// void swap(X&, X&);
+  ///
+  /// template<typename T>
+  /// void reverse(T* first, T* last) {
+  /// while (first < last - 1) {
+  /// swap(*first, *--last);
+  /// ++first;
+  /// }
+  /// }
+  ///
+  /// struct Y { };
+  /// void swap(Y&, Y&);
+  /// \endcode
+  ///
+  /// Here, the identifier "swap" is associated with an overloaded declaration
+  /// reference. In the template definition, "swap" refers to either of the two
+  /// "swap" functions declared above, so both results will be available. At
+  /// instantiation time, "swap" may also refer to other functions found via
+  /// argument-dependent lookup (e.g., the "swap" function at the end of the
+  /// example).
+  ///
+  /// The functions \c clang_getNumOverloadedDecls() and
+  /// \c clang_getOverloadedDecl() can be used to retrieve the definitions
+  /// referenced by this cursor.
   static const int CXCursor_OverloadedDeclRef = 49;
 
-  /// A reference to a variable that occurs in some non-expression context,
-  /// e.g., a C++ lambda capture list.
+  /// A reference to a variable that occurs in some non-expression
+  /// context, e.g., a C++ lambda capture list.
   static const int CXCursor_VariableRef = 50;
   static const int CXCursor_LastRef = 50;
   static const int CXCursor_FirstInvalid = 70;
@@ -950,21 +1164,28 @@ abstract class CXCursorKind {
   static const int CXCursor_LastInvalid = 73;
   static const int CXCursor_FirstExpr = 100;
 
-  /// An expression whose specific kind is not exposed via this interface.
+  /// An expression whose specific kind is not exposed via this
+  /// interface.
+  ///
+  /// Unexposed expressions have the same operations as any other kind
+  /// of expression; one can extract their location information,
+  /// spelling, children, etc. However, the specific kind of the
+  /// expression is not reported.
   static const int CXCursor_UnexposedExpr = 100;
 
-  /// An expression that refers to some value declaration, such as a function,
-  /// variable, or enumerator.
+  /// An expression that refers to some value declaration, such
+  /// as a function, variable, or enumerator.
   static const int CXCursor_DeclRefExpr = 101;
 
-  /// An expression that refers to a member of a struct, union, class,
-  /// Objective-C class, etc.
+  /// An expression that refers to a member of a struct, union,
+  /// class, Objective-C class, etc.
   static const int CXCursor_MemberRefExpr = 102;
 
   /// An expression that calls a function.
   static const int CXCursor_CallExpr = 103;
 
-  /// An expression that sends a message to an Objective-C object or class.
+  /// An expression that sends a message to an Objective-C
+  /// object or class.
   static const int CXCursor_ObjCMessageExpr = 104;
 
   /// An expression that represents a block literal.
@@ -986,15 +1207,19 @@ abstract class CXCursorKind {
   static const int CXCursor_CharacterLiteral = 110;
 
   /// A parenthesized expression, e.g. "(1)".
+  ///
+  /// This AST node is only formed if full location information is requested.
   static const int CXCursor_ParenExpr = 111;
 
-  /// This represents the unary-expression's (except sizeof and alignof).
+  /// This represents the unary-expression's (except sizeof and
+  /// alignof).
   static const int CXCursor_UnaryOperator = 112;
 
   /// [C99 6.5.2.1] Array Subscripting.
   static const int CXCursor_ArraySubscriptExpr = 113;
 
-  /// A builtin binary operation expression such as "x + y" or "x <= y".
+  /// A builtin binary operation expression such as "x + y" or
+  /// "x <= y".
   static const int CXCursor_BinaryOperator = 114;
 
   /// Compound assignment such as "+=".
@@ -1003,8 +1228,10 @@ abstract class CXCursorKind {
   /// The ?: ternary operator.
   static const int CXCursor_ConditionalOperator = 116;
 
-  /// An explicit cast in C (C99 6.5.4) or a C-style cast in C++ (C++
-  /// [expr.cast]), which uses the syntax (Type)expr.
+  /// An explicit cast in C (C99 6.5.4) or a C-style cast in C++
+  /// (C++ [expr.cast]), which uses the syntax (Type)expr.
+  ///
+  /// For example: (int)f.
   static const int CXCursor_CStyleCastExpr = 117;
 
   /// [C99 6.5.2.5]
@@ -1022,9 +1249,13 @@ abstract class CXCursorKind {
   /// Represents a C11 generic selection.
   static const int CXCursor_GenericSelectionExpr = 122;
 
-  /// Implements the GNU __null extension, which is a name for a null pointer
-  /// constant that has integral type (e.g., int or long) and is the same size
-  /// and alignment as a pointer.
+  /// Implements the GNU __null extension, which is a name for a null
+  /// pointer constant that has integral type (e.g., int or long) and is the same
+  /// size and alignment as a pointer.
+  ///
+  /// The __null extension is typically only used by system headers, which define
+  /// NULL as __null in C++ rather than using 0 (which is an integer that may not
+  /// match the size of a pointer).
   static const int CXCursor_GNUNullExpr = 123;
 
   /// C++'s static_cast<> expression.
@@ -1039,8 +1270,13 @@ abstract class CXCursorKind {
   /// C++'s const_cast<> expression.
   static const int CXCursor_CXXConstCastExpr = 127;
 
-  /// Represents an explicit C++ type conversion that uses "functional" notion
-  /// (C++ [expr.type.conv]).
+  /// Represents an explicit C++ type conversion that uses "functional"
+  /// notion (C++ [expr.type.conv]).
+  ///
+  /// Example:
+  /// \code
+  /// x = int(0.5);
+  /// \endcode
   static const int CXCursor_CXXFunctionalCastExpr = 128;
 
   /// A C++ typeid expression (C++ [expr.typeid]).
@@ -1056,39 +1292,65 @@ abstract class CXCursorKind {
   static const int CXCursor_CXXThisExpr = 132;
 
   /// [C++ 15] C++ Throw Expression.
+  ///
+  /// This handles 'throw' and 'throw' assignment-expression. When
+  /// assignment-expression isn't present, Op will be null.
   static const int CXCursor_CXXThrowExpr = 133;
 
-  /// A new expression for memory allocation and constructor calls, e.g: "new
-  /// CXXNewExpr(foo)".
+  /// A new expression for memory allocation and constructor calls, e.g:
+  /// "new CXXNewExpr(foo)".
   static const int CXCursor_CXXNewExpr = 134;
 
-  /// A delete expression for memory deallocation and destructor calls, e.g.
-  /// "delete[] pArray".
+  /// A delete expression for memory deallocation and destructor calls,
+  /// e.g. "delete[] pArray".
   static const int CXCursor_CXXDeleteExpr = 135;
 
   /// A unary expression. (noexcept, sizeof, or other traits)
   static const int CXCursor_UnaryExpr = 136;
 
-  /// An Objective-C string literal i.e. "foo".
+  /// An Objective-C string literal i.e. @"foo".
   static const int CXCursor_ObjCStringLiteral = 137;
 
-  /// An Objective-C @encode expression.
+  /// An Objective-C \@encode expression.
   static const int CXCursor_ObjCEncodeExpr = 138;
 
-  /// An Objective-C @selector expression.
+  /// An Objective-C \@selector expression.
   static const int CXCursor_ObjCSelectorExpr = 139;
 
-  /// An Objective-C @protocol expression.
+  /// An Objective-C \@protocol expression.
   static const int CXCursor_ObjCProtocolExpr = 140;
 
-  /// An Objective-C "bridged" cast expression, which casts between Objective-C
-  /// pointers and C pointers, transferring ownership in the process.
+  /// An Objective-C "bridged" cast expression, which casts between
+  /// Objective-C pointers and C pointers, transferring ownership in the process.
+  ///
+  /// \code
+  /// NSString *str = (__bridge_transfer NSString *)CFCreateString();
+  /// \endcode
   static const int CXCursor_ObjCBridgedCastExpr = 141;
 
-  /// Represents a C++0x pack expansion that produces a sequence of expressions.
+  /// Represents a C++0x pack expansion that produces a sequence of
+  /// expressions.
+  ///
+  /// A pack expansion expression contains a pattern (which itself is an
+  /// expression) followed by an ellipsis. For example:
+  ///
+  /// \code
+  /// template<typename F, typename ...Types>
+  /// void forward(F f, Types &&...args) {
+  /// f(static_cast<Types&&>(args)...);
+  /// }
+  /// \endcode
   static const int CXCursor_PackExpansionExpr = 142;
 
-  /// Represents an expression that computes the length of a parameter pack.
+  /// Represents an expression that computes the length of a parameter
+  /// pack.
+  ///
+  /// \code
+  /// template<typename ...Types>
+  /// struct count {
+  /// static const unsigned value = sizeof...(Types);
+  /// };
+  /// \endcode
   static const int CXCursor_SizeOfPackExpr = 143;
   static const int CXCursor_LambdaExpr = 144;
 
@@ -1101,7 +1363,7 @@ abstract class CXCursorKind {
   /// OpenMP 4.0 [2.4, Array Section].
   static const int CXCursor_OMPArraySectionExpr = 147;
 
-  /// Represents an (...) check.
+  /// Represents an @available(...) check.
   static const int CXCursor_ObjCAvailabilityCheckExpr = 148;
 
   /// Fixed point literal
@@ -1109,13 +1371,30 @@ abstract class CXCursorKind {
   static const int CXCursor_LastExpr = 149;
   static const int CXCursor_FirstStmt = 200;
 
-  /// A statement whose specific kind is not exposed via this interface.
+  /// A statement whose specific kind is not exposed via this
+  /// interface.
+  ///
+  /// Unexposed statements have the same operations as any other kind of
+  /// statement; one can extract their location information, spelling,
+  /// children, etc. However, the specific kind of the statement is not
+  /// reported.
   static const int CXCursor_UnexposedStmt = 200;
 
   /// A labelled statement in a function.
+  ///
+  /// This cursor kind is used to describe the "start_over:" label statement in
+  /// the following example:
+  ///
+  /// \code
+  /// start_over:
+  /// ++counter;
+  /// \endcode
   static const int CXCursor_LabelStmt = 201;
 
   /// A group of statements like { stmt stmt }.
+  ///
+  /// This cursor kind is used to describe compound statements, e.g. function
+  /// bodies.
   static const int CXCursor_CompoundStmt = 202;
 
   /// A case statement.
@@ -1158,19 +1437,19 @@ abstract class CXCursorKind {
   static const int CXCursor_GCCAsmStmt = 215;
   static const int CXCursor_AsmStmt = 215;
 
-  /// Objective-C's overall @try-@catch-@finally statement.
+  /// Objective-C's overall \@try-\@catch-\@finally statement.
   static const int CXCursor_ObjCAtTryStmt = 216;
 
-  /// Objective-C's @catch statement.
+  /// Objective-C's \@catch statement.
   static const int CXCursor_ObjCAtCatchStmt = 217;
 
-  /// Objective-C's @finally statement.
+  /// Objective-C's \@finally statement.
   static const int CXCursor_ObjCAtFinallyStmt = 218;
 
-  /// Objective-C's @throw statement.
+  /// Objective-C's \@throw statement.
   static const int CXCursor_ObjCAtThrowStmt = 219;
 
-  /// Objective-C's @synchronized statement.
+  /// Objective-C's \@synchronized statement.
   static const int CXCursor_ObjCAtSynchronizedStmt = 220;
 
   /// Objective-C's autorelease pool statement.
@@ -1201,9 +1480,12 @@ abstract class CXCursorKind {
   static const int CXCursor_MSAsmStmt = 229;
 
   /// The null statement ";": C99 6.8.3p3.
+  ///
+  /// This cursor kind is used to describe the null statement.
   static const int CXCursor_NullStmt = 230;
 
-  /// Adaptor class for mixing declarations with statements and expressions.
+  /// Adaptor class for mixing declarations with statements and
+  /// expressions.
   static const int CXCursor_DeclStmt = 231;
 
   /// OpenMP parallel directive.
@@ -1371,10 +1653,14 @@ abstract class CXCursorKind {
   static const int CXCursor_LastStmt = 285;
 
   /// Cursor that represents the translation unit itself.
+  ///
+  /// The translation unit cursor exists primarily to act as the root
+  /// cursor for traversing the contents of a translation unit.
   static const int CXCursor_TranslationUnit = 300;
   static const int CXCursor_FirstAttr = 400;
 
-  /// An attribute whose specific kind is not exposed via this interface.
+  /// An attribute whose specific kind is not exposed via this
+  /// interface.
   static const int CXCursor_UnexposedAttr = 400;
   static const int CXCursor_IBActionAttr = 401;
   static const int CXCursor_IBOutletAttr = 402;
@@ -1442,8 +1728,22 @@ abstract class CXCursorKind {
   static const int CXCursor_OverloadCandidate = 700;
 }
 
-/// A cursor representing some element in the abstract syntax tree for a
-/// translation unit.
+/// A cursor representing some element in the abstract syntax tree for
+/// a translation unit.
+///
+/// The cursor abstraction unifies the different kinds of entities in a
+/// program--declaration, statements, expressions, references to declarations,
+/// etc.--under a single "cursor" abstraction with a common set of operations.
+/// Common operation for a cursor include: getting the physical location in
+/// a source file where the cursor points, getting the name associated with a
+/// cursor, and retrieving cursors for any child nodes of a particular cursor.
+///
+/// Cursors can be produced in two specific ways.
+/// clang_getTranslationUnitCursor() produces a cursor for a translation unit,
+/// from which one can use clang_visitChildren() to explore the rest of the
+/// translation unit. clang_getCursor() maps from a physical source location
+/// to the entity that resides at that location, allowing one to map from the
+/// source code into the AST.
 class CXCursor extends ffi.Struct {
   @ffi.Int32()
   int kind;
@@ -1513,7 +1813,8 @@ abstract class CXTypeKind {
   /// Represents an invalid type (e.g., where no type is available).
   static const int CXType_Invalid = 0;
 
-  /// A type whose specific kind is not exposed via this interface.
+  /// A type whose specific kind is not exposed via this
+  /// interface.
   static const int CXType_Unexposed = 1;
   static const int CXType_Void = 2;
   static const int CXType_Bool = 3;
@@ -1575,6 +1876,8 @@ abstract class CXTypeKind {
   static const int CXType_Auto = 118;
 
   /// Represents a type that was referred to using an elaborated type keyword.
+  ///
+  /// E.g., struct S, or via a qualified name, e.g., N::M::type, or both.
   static const int CXType_Elaborated = 119;
   static const int CXType_Pipe = 120;
   static const int CXType_OCLImage1dRO = 121;
@@ -1691,18 +1994,21 @@ class ArrayHelper_CXType_data_level0 {
   }
 }
 
-/// Describes how the traversal of the children of a particular cursor should
-/// proceed after visiting a particular child cursor.
+/// Describes how the traversal of the children of a particular
+/// cursor should proceed after visiting a particular child cursor.
+///
+/// A value of this enumeration type should be returned by each
+/// \c CXCursorVisitor to indicate how clang_visitChildren() proceed.
 abstract class CXChildVisitResult {
   /// Terminates the cursor traversal.
   static const int CXChildVisit_Break = 0;
 
-  /// Continues the cursor traversal with the next sibling of the cursor just
-  /// visited, without visiting its children.
+  /// Continues the cursor traversal with the next sibling of
+  /// the cursor just visited, without visiting its children.
   static const int CXChildVisit_Continue = 1;
 
-  /// Recursively traverse the children of this cursor, using the same visitor
-  /// and client data.
+  /// Recursively traverse the children of this cursor, using
+  /// the same visitor and client data.
   static const int CXChildVisit_Recurse = 2;
 }
 
