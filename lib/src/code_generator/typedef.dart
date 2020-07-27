@@ -44,18 +44,21 @@ class Typedef {
       s.write(makeDartDoc(dartDoc));
     }
     final typedefName = name;
-
+    final paramNamer = UniqueNamer({});
     if (typedefType == TypedefType.C) {
       s.write('typedef $typedefName = ${returnType.getCType(w)} Function(\n');
       for (final p in parameters) {
-        s.write('  ${p.type.getCType(w)} ${p.name},\n');
+        final name = p.name.isNotEmpty ? paramNamer.makeUnique(p.name) : p.name;
+        s.write('  ${p.type.getCType(w)} ${name},\n');
       }
       s.write(');\n\n');
     } else {
       s.write(
           'typedef $typedefName = ${returnType.getDartType(w)} Function(\n');
       for (final p in parameters) {
-        s.write('  ${p.type.getDartType(w)} ${p.name},\n');
+        final name = p.name.isNotEmpty ? paramNamer.makeUnique(p.name) : p.name;
+
+        s.write('  ${p.type.getDartType(w)} ${name},\n');
       }
       s.write(');\n\n');
     }
