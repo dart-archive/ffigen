@@ -17,7 +17,7 @@ Library actual, expected;
 void main() {
   group('macros_test', () {
     setUpAll(() {
-      logWarnings(Level.ALL);
+      logWarnings(Level.WARNING);
       expected = expectedLibrary();
       actual = parser.parse(
         Config.fromYaml(yaml.loadYaml('''

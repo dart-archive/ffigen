@@ -216,7 +216,7 @@ File createFileForMacros() {
 /// Deals with encoding/decoding name of the variable generated for a Macro.
 class MacroVariableString {
   static String encode(String s) {
-    return '_${s.length}_${s}_macro_var';
+    return '_${s.length}_${s}_generated_macro_variable';
   }
 
   static String decode(String s) {
