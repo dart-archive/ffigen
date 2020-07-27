@@ -117,7 +117,11 @@ class Func extends LookUpBinding {
     if (dartDoc != null) {
       s.write(makeDartDoc(dartDoc));
     }
-
+    // Resolve name conflicts in function parameter names.
+    final paramNamer = UniqueNamer({});
+    for (final p in parameters) {
+      p.name = paramNamer.makeUnique(p.name);
+    }
     // Write enclosing function.
     s.write('${returnType.getDartType(w)} $enclosingFuncName(\n');
     for (final p in parameters) {

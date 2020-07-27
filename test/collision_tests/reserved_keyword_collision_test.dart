@@ -16,6 +16,7 @@ void main() {
     test('reserved keyword collision', () {
       final l1 = Library(name: 'Bindings', bindings: [
         Struc(name: 'abstract'),
+        Struc(name: 'abstract'),
         Struc(name: 'if'),
         EnumClass(name: 'return'),
         EnumClass(name: 'export'),
@@ -24,10 +25,25 @@ void main() {
             returnType: Type.nativeType(SupportedNativeType.Void)),
         Func(
             name: 'implements',
+            parameters: [
+              Parameter(
+                type: Type.nativeType(SupportedNativeType.Int32),
+                name: 'if',
+              ),
+              Parameter(
+                type: Type.nativeType(SupportedNativeType.Int32),
+                name: 'abstract',
+              ),
+              Parameter(
+                type: Type.nativeType(SupportedNativeType.Int32),
+                name: 'in',
+              ),
+            ],
             returnType: Type.nativeType(SupportedNativeType.Void)),
       ]);
       final l2 = Library(name: 'Bindings', bindings: [
         Struc(name: 'abstract_1'),
+        Struc(name: 'abstract_2'),
         Struc(name: 'if_1'),
         EnumClass(name: 'return_1'),
         EnumClass(name: 'export_1'),
@@ -38,9 +54,22 @@ void main() {
         Func(
             name: 'implements_1',
             originalName: 'implements',
+            parameters: [
+              Parameter(
+                type: Type.nativeType(SupportedNativeType.Int32),
+                name: 'if_1',
+              ),
+              Parameter(
+                type: Type.nativeType(SupportedNativeType.Int32),
+                name: 'abstract_1',
+              ),
+              Parameter(
+                type: Type.nativeType(SupportedNativeType.Int32),
+                name: 'in_1',
+              ),
+            ],
             returnType: Type.nativeType(SupportedNativeType.Void)),
       ]);
-
       expect(l1.generate(), l2.generate());
     });
   });

@@ -5,7 +5,6 @@
 import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 import 'package:test/test.dart';
-
 import '../test_utils.dart';
 
 void main() {

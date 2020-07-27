@@ -13,12 +13,12 @@ class LibClang {
 
   /// Free the given string set.
   void clang_disposeStringSet(
-    ffi.Pointer<CXStringSet> set,
+    ffi.Pointer<CXStringSet> set_1,
   ) {
     _clang_disposeStringSet ??= _dylib.lookupFunction<_c_clang_disposeStringSet,
         _dart_clang_disposeStringSet>('clang_disposeStringSet');
     return _clang_disposeStringSet(
-      set,
+      set_1,
     );
   }
 
@@ -4419,11 +4419,11 @@ abstract class CXIndexOptFlags {
 }
 
 typedef _c_clang_disposeStringSet = ffi.Void Function(
-  ffi.Pointer<CXStringSet> set,
+  ffi.Pointer<CXStringSet> set_1,
 );
 
 typedef _dart_clang_disposeStringSet = void Function(
-  ffi.Pointer<CXStringSet> set,
+  ffi.Pointer<CXStringSet> set_1,
 );
 
 typedef _c_clang_getBuildSessionTimestamp = ffi.Uint64 Function();
