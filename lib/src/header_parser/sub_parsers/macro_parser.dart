@@ -51,6 +51,11 @@ List<Constant> _bindings;
 /// by evaluating the value of the variable.
 List<Constant> parseSavedMacros() {
   _bindings = [];
+
+  if (_savedMacros.keys.isEmpty) {
+    return _bindings;
+  }
+
   // Create a file for parsing macros;
   final file = createFileForMacros();
 
