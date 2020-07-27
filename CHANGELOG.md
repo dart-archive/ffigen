@@ -1,5 +1,5 @@
 # 0.1.4
-- Comments config now has a style and length sub keys - `style: doxygen(default) | any`, `length: brief(default) | full`, and can be disabled by passing `comments: false`.
+- Comments config now has a style and length sub keys - `style: doxygen(default) | any`, `length: brief | full(default)`, and can be disabled by passing `comments: false`.
 
 # 0.1.3
 - Handled function arguments - dart keyword name collision
