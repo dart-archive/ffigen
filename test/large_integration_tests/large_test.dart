@@ -26,6 +26,9 @@ ${strings.description}: Bindings to LibClang.
 ${strings.output}: unused
 ${strings.compilerOpts}: -I${path.join('third_party', 'libclang', 'include')}
 ${strings.arrayWorkaround}: true
+${strings.comments}:
+  ${strings.style}: ${strings.doxygen}
+  ${strings.length}: ${strings.brief}
 ${strings.headers}:
   - third_party/libclang/include/clang-c/Index.h
 ${strings.headerFilter}:
@@ -64,7 +67,8 @@ ${strings.headerFilter}:
 ${strings.name}: CJson
 ${strings.description}: Bindings to Cjson.
 ${strings.output}: unused
-${strings.comments}: full
+${strings.comments}:
+  ${strings.length}: ${strings.full}
 ${strings.arrayWorkaround}: true
 ${strings.headers}:
   - third_party/cjson_library/cJSON.h
@@ -101,7 +105,9 @@ ${strings.name}: SQLite
 ${strings.description}: Bindings to SQLite.
 ${strings.output}: unused
 ${strings.arrayWorkaround}: true
-${strings.comments}: full
+${strings.comments}:
+  ${strings.style}: ${strings.any}
+  ${strings.length}: ${strings.full}
 ${strings.headers}:
   - third_party/sqlite/sqlite3.h
 ${strings.headerFilter}:

@@ -11,8 +11,7 @@ import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
 
 import '../strings.dart' as strings;
-import './config.dart';
-import 'declaration.dart';
+import 'config_types.dart';
 
 var _logger = Logger('ffigen.config_provider.spec_utils');
 
@@ -300,19 +299,63 @@ bool dartClassNameValidator(String name, dynamic value) {
   }
 }
 
-String commentExtractor(dynamic value) => value as String;
+CommentType commentExtractor(dynamic value) {
+  if (value is bool) {
+    if (value) {
+      return CommentType.def();
+    } else {
+      return CommentType.none();
+    }
+  }
+  final ct = CommentType.def();
+  if (value is YamlMap) {
+    for (final key in value.keys) {
+      if (key == strings.style) {
+        if (value[key] == strings.any) {
+          ct.style = CommentStyle.any;
+        } else if (value[key] == strings.doxygen) {
+          ct.style = CommentStyle.doxygen;
+        }
+      } else if (key == strings.length) {
+        if (value[key] == strings.full) {
+          ct.length = CommentLength.full;
+        } else if (value[key] == strings.brief) {
+          ct.length = CommentLength.brief;
+        }
+      }
+    }
+  }
+  return ct;
+}
 
 bool commentValidator(String name, dynamic value) {
-  if (value is! String) {
-    _logger.severe("Expected value of key '$name' to be a String.");
-    return false;
-  } else {
-    if (strings.commentTypeSet.contains(value as String)) {
-      return true;
-    } else {
-      _logger.severe(
-          "Value of key '$name' must be one of the following - ${strings.commentTypeSet}.");
-      return false;
+  if (value is bool) {
+    return true;
+  } else if (value is YamlMap) {
+    var result = true;
+    for (final key in value.keys) {
+      if (key == strings.style) {
+        if (value[key] is! String ||
+            !(value[key] == strings.doxygen || value[key] == strings.any)) {
+          _logger.severe(
+              "'$name'>'${strings.style}' must be one of the following - {${strings.doxygen}, ${strings.any}}");
+          result = false;
+        }
+      } else if (key == strings.length) {
+        if (value[key] is! String ||
+            !(value[key] == strings.brief || value[key] == strings.full)) {
+          _logger.severe(
+              "'$name'>'${strings.length}' must be one of the following - {${strings.brief}, ${strings.full}}");
+          result = false;
+        }
+      } else {
+        _logger.severe("Unknown key '$key' in '$name'.");
+        result = false;
+      }
     }
+    return result;
+  } else {
+    _logger.severe("Expected value of key '$name' to be a bool or a Map.");
+    return false;
   }
 }

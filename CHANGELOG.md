@@ -1,3 +1,6 @@
+# 0.1.4
+- Comments config now has a style and length sub keys - `style: doxygen(default) | any`, `length: brief | full(default)`, and can be disabled by passing `comments: false`.
+
 # 0.1.3
 - Handled function arguments - dart keyword name collision
 - Fix travis tests: the dynamic library is created using `pub run ffigen:setup` before running the tests.

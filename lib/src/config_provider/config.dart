@@ -8,11 +8,10 @@ import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser/type_extractor/cxtypekindmap.dart';
 
 import 'package:logging/logging.dart';
-import 'package:meta/meta.dart';
 import 'package:yaml/yaml.dart';
 
 import '../strings.dart' as strings;
-import 'declaration.dart';
+import 'config_types.dart';
 import 'spec_utils.dart';
 
 var _logger = Logger('ffigen.config_provider.config');
@@ -51,7 +50,7 @@ class Config {
   bool useSupportedTypedefs;
 
   /// Extracted Doc comment type.
-  String comment;
+  CommentType commentType;
 
   /// If tool should generate array workarounds.
   ///
@@ -221,13 +220,14 @@ class Config {
         extractedResult: (dynamic result) =>
             useSupportedTypedefs = result as bool,
       ),
-      strings.comments: Specification<String>(
+      strings.comments: Specification<CommentType>(
         description: 'Type of comment to extract',
         requirement: Requirement.no,
         validator: commentValidator,
         extractor: commentExtractor,
-        defaultValue: () => strings.brief,
-        extractedResult: (dynamic result) => comment = result as String,
+        defaultValue: () => CommentType.def(),
+        extractedResult: (dynamic result) =>
+            commentType = result as CommentType,
       ),
       strings.arrayWorkaround: Specification<bool>(
         description:
@@ -264,40 +264,6 @@ class Config {
       ),
     };
   }
-}
-
-/// Represents a single specification in configurations.
-///
-/// [E] is the return type of the extractedResult.
-class Specification<E> {
-  final String description;
-  final bool Function(String name, dynamic value) validator;
-  final E Function(dynamic map) extractor;
-  final E Function() defaultValue;
-
-  final Requirement requirement;
-  final void Function(dynamic result) extractedResult;
-
-  Specification({
-    @required this.extractedResult,
-    @required this.description,
-    @required this.validator,
-    @required this.extractor,
-    this.defaultValue,
-    this.requirement = Requirement.no,
-  });
-}
-
-enum Requirement { yes, prefer, no }
-
-class HeaderFilter {
-  Set<String> includedInclusionHeaders;
-  Set<String> excludedInclusionHeaders;
-
-  HeaderFilter({
-    this.includedInclusionHeaders = const {},
-    this.excludedInclusionHeaders = const {},
-  });
 }
 
 class ConfigError implements Exception {
