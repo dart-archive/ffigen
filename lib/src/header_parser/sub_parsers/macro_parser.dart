@@ -177,7 +177,7 @@ File createFileForMacros() {
 
   // Find a filename which doesn't already exist.
   var file = File('$fileNameBase.$fileExt');
-  int i = 0;
+  var i = 0;
   while (file.existsSync()) {
     i++;
     file = File('${fileNameBase.split('.')[0]}_$i.$fileExt');

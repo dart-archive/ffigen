@@ -113,7 +113,7 @@ header-filter:
     <td><pre lang="yaml"><code>compiler-opts: '-I/usr/lib/llvm-9/include/'</code></pre></td>
   </tr>
   <tr>
-    <td>functions<br>structs<br>enums</td>
+    <td>functions<br>structs<br>enums<br>macros</td>
     <td>no</td>
     <td>Filters for declarations.<br><b>Default: all are included</b></td>
     <td><pre lang="yaml"><code>
