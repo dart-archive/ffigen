@@ -61,6 +61,9 @@ class Config {
   /// members removed.
   bool arrayWorkaround;
 
+  /// If constants should be generated for unnamed enums.
+  bool unnamedEnums;
+
   /// Name of the wrapper class.
   String wrapperName;
 
@@ -250,6 +253,14 @@ class Config {
         extractor: booleanExtractor,
         defaultValue: () => false,
         extractedResult: (dynamic result) => arrayWorkaround = result as bool,
+      ),
+      strings.unnamedEnums: Specification<bool>(
+        description: 'whether or not to generate constants for unnamed enums.',
+        requirement: Requirement.no,
+        validator: booleanValidator,
+        extractor: booleanExtractor,
+        defaultValue: () => true,
+        extractedResult: (dynamic result) => unnamedEnums = result as bool,
       ),
       strings.name: Specification<String>(
         description: 'Name of the wrapper class',

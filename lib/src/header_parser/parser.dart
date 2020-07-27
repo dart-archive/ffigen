@@ -10,6 +10,7 @@ import 'package:ffigen/src/config_provider.dart';
 import 'package:ffigen/src/header_parser/sub_parsers/macro_parser.dart';
 import 'package:ffigen/src/config_provider/config_types.dart';
 import 'package:ffigen/src/find_resource.dart';
+import 'package:ffigen/src/header_parser/sub_parsers/unnamed_enumdecl_parser.dart';
 import 'package:ffigen/src/header_parser/translation_unit_parser.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
@@ -118,6 +119,9 @@ List<Binding> parseToBindings() {
     rootCursor.dispose();
     clang.clang_disposeTranslationUnit(tu);
   }
+
+  // Add all saved unnamed enums.
+  bindings.addAll(getSavedUnNamedEnums());
 
   // Parse all saved macros.
   bindings.addAll(parseSavedMacros());

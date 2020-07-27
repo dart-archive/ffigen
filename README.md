@@ -170,6 +170,14 @@ comments:
     </td>
     <td><pre lang="yaml"><code>use-supported-typedefs: true</code></pre></td>
   </tr>
+  <tr>
+    <td>unnamed-enums</td>
+    <td>no</td>
+    <td>Should generate constants for anonymous unnamed enums.<br>
+    <b>Default: true</b>
+    </td>
+    <td><pre lang="yaml"><code>unnamed-enums: true</code></pre></td>
+  </tr>
    <tr>
     <td>preamble</td>
     <td>no</td>
