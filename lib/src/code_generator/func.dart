@@ -33,7 +33,8 @@ class Func extends LookUpBinding {
   final Type returnType;
   final List<Parameter> parameters;
 
-  /// [lookupSymbolName], if not provided, takes the value of [name].
+  /// [originalName] is looked up in dynamic library, if not
+  /// provided, takes the value of [name].
   Func({
     @required String name,
     String originalName,
@@ -82,8 +83,8 @@ class Func extends LookUpBinding {
   /// And only marks it as used at top-level.
   String _uniqueTypedefName(String name, Writer w) {
     final base = name;
-    String uniqueName = name;
-    int suffix = 0;
+    var uniqueName = name;
+    var suffix = 0;
     while (w.topLevelUniqueNamer.isUsed(uniqueName) ||
         w.wrapperLevelUniqueNamer.isUsed(uniqueName)) {
       suffix++;
@@ -116,7 +117,11 @@ class Func extends LookUpBinding {
     if (dartDoc != null) {
       s.write(makeDartDoc(dartDoc));
     }
-
+    // Resolve name conflicts in function parameter names.
+    final paramNamer = UniqueNamer({});
+    for (final p in parameters) {
+      p.name = paramNamer.makeUnique(p.name);
+    }
     // Write enclosing function.
     s.write('${returnType.getDartType(w)} $enclosingFuncName(\n');
     for (final p in parameters) {

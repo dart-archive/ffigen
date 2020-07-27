@@ -46,7 +46,7 @@ typedef _dart_sum = int Function(int a,int b);
 
 #### Windows
 1. Install Visual Studio with C++ development support.
-2. Install [LLVM](https://releases.llvm.org/download.html).
+2. Install [LLVM](https://releases.llvm.org/download.html) or `winget install -e --id LLVM.LLVM`.
 
 #### MacOS
 1. Install Xcode.

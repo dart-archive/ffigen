@@ -6,8 +6,7 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:ffigen/src/config_provider.dart';
-import 'package:ffigen/src/header_parser.dart' as parser;
+import 'package:ffigen/ffigen.dart';
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart' as yaml;
 
@@ -16,6 +15,9 @@ import 'setup.dart';
 var _logger = Logger('ffigen.ffigen');
 
 void main(List<String> args) {
+  // Parses the cmd args. This will print usage and exit if --help was passed.
+  final argResult = getArgResults(args);
+
   /// Prompt user if dylib doesn't exist and cannot be auto created to run
   /// `pub run ffigen:setup -Ipath/to/llvm/include -Lpath/to/llvm/lib`.
   if (!checkDylibExist() && !autoCreateDylib()) {
@@ -25,23 +27,20 @@ void main(List<String> args) {
     exit(1);
   }
 
-  // Parses the cmd args.
-  final result = getArgResults(args);
-
   // Setup logging level and printing.
-  setupLogger(result);
+  setupLogger(argResult);
 
   // Create a config object.
   Config config;
   try {
-    config = getConfig(result);
+    config = getConfig(argResult);
   } on ConfigError {
     print('Please fix configuration errors and re-run the tool.');
     exit(1);
   }
 
   // Parse the bindings according to config object provided.
-  final library = parser.parse(config);
+  final library = parse(config);
 
   if (config.sort) {
     library.sort();

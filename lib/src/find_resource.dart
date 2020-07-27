@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library finddotdarttool;
+library find_resource;
 
-export 'find_dot_dart_tool/finddotdarttool_fallback.dart'
-    if (dart.library.cli) 'find_dot_dart_tool/finddotdarttool_cli.dart';
+export 'find_resource/find_resource_fallback.dart'
+    if (dart.library.cli) 'find_resource/find_resource_cli.dart';

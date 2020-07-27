@@ -1,3 +1,13 @@
+# 0.1.3
+- Handled function arguments - dart keyword name collision
+- Fix travis tests: the dynamic library is created using `pub run ffigen:setup` before running the tests.
+
+# 0.1.2
+- Fixed wrapper not found error when running `pub run ffigen`.
+
+# 0.1.1
+- Address pub score: follow dart File conventions, provide documentation, and pass static analysis.
+
 # 0.1.0
 - Support for Functions, Structs and Enums.
 - Glob support for specifying headers.

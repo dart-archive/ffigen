@@ -127,8 +127,8 @@ class Type {
 
   /// Get base type for any type.
   ///
-  /// E.g int** has base [Type] with [Broadtype] as NativeType,
-  /// double[2][3] has base [Type] with [Broadtype] as double.
+  /// E.g int** has base [Type] of int.
+  /// double[2][3] has base [Type] of double.
   Type getBaseType() {
     if (child != null) {
       return child.getBaseType();

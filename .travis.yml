@@ -11,3 +11,15 @@ branches:
 cache:
   directories:
     - $HOME/.pub-cache
+before_install:
+  # install libclang-dev
+  - sudo add-apt-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-10 main"
+  - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add -
+  - sudo apt-get update
+  - sudo apt-get install clang-10 libclang-10-dev
+  # use clang from installed llvm
+  - export PATH="/usr/lib/llvm-10/bin:$PATH"
+
+before_script:
+  - 'pub run ffigen:setup'
+  - cd test/native_test && dart build_test_dylib.dart && cd ../..

@@ -27,7 +27,7 @@
 import 'dart:io';
 import 'package:args/args.dart';
 import 'package:meta/meta.dart';
-import 'package:ffigen/src/find_dot_dart_tool.dart';
+import 'package:ffigen/src/find_resource.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:path/path.dart' as path;
 
@@ -76,16 +76,19 @@ Map<String, _Options> _platformOptions = {
 
 /// If main is called directly we always re-create the dynamic library.
 void main(List<String> arguments) {
+  // Parses the cmd args. This will print usage and exit if --help was passed.
+  final argResults = _getArgResults(arguments);
+
   print('Building Dynamic Library for libclang wrapper...');
   final options = _getPlatformOptions();
   _deleteOldDylib();
 
   // Updates header/lib includes in platform options.
-  _changeIncludesUsingCmdArgs(arguments, options);
+  _changeIncludesUsingCmdArgs(argResults, options);
 
   // Run clang compiler to generate the dynamic library.
-  final ProcessResult result = _runClangProcess(options);
-  _printDetails(result, options);
+  final processResult = _runClangProcess(options);
+  _printDetails(processResult, options);
 }
 
 /// Returns true if auto creating dylib was successful.
@@ -95,8 +98,8 @@ void main(List<String> arguments) {
 bool autoCreateDylib() {
   _deleteOldDylib();
   final options = _getPlatformOptions();
-  final ProcessResult result = _runClangProcess(options);
-  if ((result.stderr as String).isNotEmpty) {
+  final processResult = _runClangProcess(options);
+  if ((processResult.stderr as String).isNotEmpty) {
     print(stderr);
   }
   return checkDylibExist();
@@ -137,14 +140,7 @@ String _dylibPath() {
 ///
 /// Throws error if not found.
 String _getWrapperPath(String wrapperName) {
-  final file = File(path.join(
-    Platform.script
-        .resolve(path.posix.join('..', 'lib', 'src', 'clang_library'))
-        // This needs to be in posix style or illegal character exception is
-        // thrown on windows.
-        .toFilePath(),
-    wrapperName,
-  ));
+  final file = File.fromUri(findWrapper(wrapperName));
   if (file.existsSync()) {
     return file.absolute.path;
   } else {
@@ -195,8 +191,7 @@ void _printDetails(ProcessResult result, _Options options) {
 
 ArgResults _getArgResults(List<String> args) {
   final parser = ArgParser(allowTrailingOptions: true);
-  parser.addSeparator(
-      'Build Script to generate dynamic library used by this package:');
+  parser.addSeparator('Generates LLVM Wrapper used by this package:');
   parser.addMultiOption('include-header',
       abbr: 'I', help: 'Path to header include directories');
   parser.addMultiOption('include-lib',
@@ -226,8 +221,7 @@ ArgResults _getArgResults(List<String> args) {
 }
 
 /// Use cmd args(if any) to change header/lib include paths.
-void _changeIncludesUsingCmdArgs(List<String> arguments, _Options options) {
-  final argResult = _getArgResults(arguments);
+void _changeIncludesUsingCmdArgs(ArgResults argResult, _Options options) {
   if (argResult.wasParsed('include-header')) {
     options.headerIncludes = (argResult['include-header'] as List<String>)
         .map((header) => '-I$header')
