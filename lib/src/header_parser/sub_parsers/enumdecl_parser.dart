@@ -6,6 +6,7 @@ import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser/data.dart';
+import 'package:ffigen/src/header_parser/sub_parsers/unnamed_enumdecl_parser.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
@@ -31,10 +32,16 @@ EnumClass parseEnumDeclaration(
   String name,
 }) {
   _stack.push(_ParsedEnum());
-
   final enumName = name ?? cursor.spelling();
   if (enumName == '') {
-    _logger.finest('unnamed enum declaration');
+    // Save this unnamed enum if it is anonymous (therefore not in a typedef).
+    if (config.unnamedEnums &&
+        clang.clang_Cursor_isAnonymous_wrap(cursor) != 0) {
+      _logger.fine('Saving anonymous enum.');
+      saveUnNamedEnum(cursor);
+    } else {
+      _logger.fine('Unnamed enum inside a typedef.');
+    }
   } else if (shouldIncludeEnumClass(enumName) && !isSeenEnumClass(enumName)) {
     _logger.fine('++++ Adding Enum: ${cursor.completeStringRepr()}');
     _stack.top.enumClass = EnumClass(

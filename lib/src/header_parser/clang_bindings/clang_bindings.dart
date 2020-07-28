@@ -174,6 +174,97 @@ class Clang {
 
   _dart_clang_disposeTranslationUnit _clang_disposeTranslationUnit;
 
+  /// Returns the kind of the evaluated result.
+  int clang_EvalResult_getKind(
+    ffi.Pointer<ffi.Void> E,
+  ) {
+    _clang_EvalResult_getKind ??= _dylib.lookupFunction<
+        _c_clang_EvalResult_getKind,
+        _dart_clang_EvalResult_getKind>('clang_EvalResult_getKind');
+    return _clang_EvalResult_getKind(
+      E,
+    );
+  }
+
+  _dart_clang_EvalResult_getKind _clang_EvalResult_getKind;
+
+  /// Returns the evaluation result as integer if the
+  /// kind is Int.
+  int clang_EvalResult_getAsInt(
+    ffi.Pointer<ffi.Void> E,
+  ) {
+    _clang_EvalResult_getAsInt ??= _dylib.lookupFunction<
+        _c_clang_EvalResult_getAsInt,
+        _dart_clang_EvalResult_getAsInt>('clang_EvalResult_getAsInt');
+    return _clang_EvalResult_getAsInt(
+      E,
+    );
+  }
+
+  _dart_clang_EvalResult_getAsInt _clang_EvalResult_getAsInt;
+
+  /// Returns the evaluation result as a long long integer if the
+  /// kind is Int. This prevents overflows that may happen if the result is
+  /// returned with clang_EvalResult_getAsInt.
+  int clang_EvalResult_getAsLongLong(
+    ffi.Pointer<ffi.Void> E,
+  ) {
+    _clang_EvalResult_getAsLongLong ??= _dylib.lookupFunction<
+        _c_clang_EvalResult_getAsLongLong,
+        _dart_clang_EvalResult_getAsLongLong>('clang_EvalResult_getAsLongLong');
+    return _clang_EvalResult_getAsLongLong(
+      E,
+    );
+  }
+
+  _dart_clang_EvalResult_getAsLongLong _clang_EvalResult_getAsLongLong;
+
+  /// Returns the evaluation result as double if the
+  /// kind is double.
+  double clang_EvalResult_getAsDouble(
+    ffi.Pointer<ffi.Void> E,
+  ) {
+    _clang_EvalResult_getAsDouble ??= _dylib.lookupFunction<
+        _c_clang_EvalResult_getAsDouble,
+        _dart_clang_EvalResult_getAsDouble>('clang_EvalResult_getAsDouble');
+    return _clang_EvalResult_getAsDouble(
+      E,
+    );
+  }
+
+  _dart_clang_EvalResult_getAsDouble _clang_EvalResult_getAsDouble;
+
+  /// Returns the evaluation result as a constant string if the
+  /// kind is other than Int or float. User must not free this pointer,
+  /// instead call clang_EvalResult_dispose on the CXEvalResult returned
+  /// by clang_Cursor_Evaluate.
+  ffi.Pointer<ffi.Int8> clang_EvalResult_getAsStr(
+    ffi.Pointer<ffi.Void> E,
+  ) {
+    _clang_EvalResult_getAsStr ??= _dylib.lookupFunction<
+        _c_clang_EvalResult_getAsStr,
+        _dart_clang_EvalResult_getAsStr>('clang_EvalResult_getAsStr');
+    return _clang_EvalResult_getAsStr(
+      E,
+    );
+  }
+
+  _dart_clang_EvalResult_getAsStr _clang_EvalResult_getAsStr;
+
+  /// Disposes the created Eval memory.
+  void clang_EvalResult_dispose(
+    ffi.Pointer<ffi.Void> E,
+  ) {
+    _clang_EvalResult_dispose ??= _dylib.lookupFunction<
+        _c_clang_EvalResult_dispose,
+        _dart_clang_EvalResult_dispose>('clang_EvalResult_dispose');
+    return _clang_EvalResult_dispose(
+      E,
+    );
+  }
+
+  _dart_clang_EvalResult_dispose _clang_EvalResult_dispose;
+
   ffi.Pointer<ffi.Int8> clang_getCString_wrap(
     ffi.Pointer<CXString> string,
   ) {
@@ -612,6 +703,76 @@ class Clang {
   }
 
   _dart_clang_getArrayElementType_wrap _clang_getArrayElementType_wrap;
+
+  int clang_Cursor_isMacroFunctionLike_wrap(
+    ffi.Pointer<CXCursor> cursor,
+  ) {
+    _clang_Cursor_isMacroFunctionLike_wrap ??= _dylib.lookupFunction<
+            _c_clang_Cursor_isMacroFunctionLike_wrap,
+            _dart_clang_Cursor_isMacroFunctionLike_wrap>(
+        'clang_Cursor_isMacroFunctionLike_wrap');
+    return _clang_Cursor_isMacroFunctionLike_wrap(
+      cursor,
+    );
+  }
+
+  _dart_clang_Cursor_isMacroFunctionLike_wrap
+      _clang_Cursor_isMacroFunctionLike_wrap;
+
+  int clang_Cursor_isMacroBuiltin_wrap(
+    ffi.Pointer<CXCursor> cursor,
+  ) {
+    _clang_Cursor_isMacroBuiltin_wrap ??= _dylib.lookupFunction<
+            _c_clang_Cursor_isMacroBuiltin_wrap,
+            _dart_clang_Cursor_isMacroBuiltin_wrap>(
+        'clang_Cursor_isMacroBuiltin_wrap');
+    return _clang_Cursor_isMacroBuiltin_wrap(
+      cursor,
+    );
+  }
+
+  _dart_clang_Cursor_isMacroBuiltin_wrap _clang_Cursor_isMacroBuiltin_wrap;
+
+  ffi.Pointer<ffi.Void> clang_Cursor_Evaluate_wrap(
+    ffi.Pointer<CXCursor> cursor,
+  ) {
+    _clang_Cursor_Evaluate_wrap ??= _dylib.lookupFunction<
+        _c_clang_Cursor_Evaluate_wrap,
+        _dart_clang_Cursor_Evaluate_wrap>('clang_Cursor_Evaluate_wrap');
+    return _clang_Cursor_Evaluate_wrap(
+      cursor,
+    );
+  }
+
+  _dart_clang_Cursor_Evaluate_wrap _clang_Cursor_Evaluate_wrap;
+
+  int clang_Cursor_isAnonymous_wrap(
+    ffi.Pointer<CXCursor> cursor,
+  ) {
+    _clang_Cursor_isAnonymous_wrap ??= _dylib.lookupFunction<
+        _c_clang_Cursor_isAnonymous_wrap,
+        _dart_clang_Cursor_isAnonymous_wrap>('clang_Cursor_isAnonymous_wrap');
+    return _clang_Cursor_isAnonymous_wrap(
+      cursor,
+    );
+  }
+
+  _dart_clang_Cursor_isAnonymous_wrap _clang_Cursor_isAnonymous_wrap;
+
+  int clang_Cursor_isAnonymousRecordDecl_wrap(
+    ffi.Pointer<CXCursor> cursor,
+  ) {
+    _clang_Cursor_isAnonymousRecordDecl_wrap ??= _dylib.lookupFunction<
+            _c_clang_Cursor_isAnonymousRecordDecl_wrap,
+            _dart_clang_Cursor_isAnonymousRecordDecl_wrap>(
+        'clang_Cursor_isAnonymousRecordDecl_wrap');
+    return _clang_Cursor_isAnonymousRecordDecl_wrap(
+      cursor,
+    );
+  }
+
+  _dart_clang_Cursor_isAnonymousRecordDecl_wrap
+      _clang_Cursor_isAnonymousRecordDecl_wrap;
 }
 
 /// A character string.
@@ -2012,6 +2173,24 @@ abstract class CXChildVisitResult {
   static const int CXChildVisit_Recurse = 2;
 }
 
+abstract class CXEvalResultKind {
+  static const int CXEval_Int = 1;
+  static const int CXEval_Float = 2;
+  static const int CXEval_ObjCStrLiteral = 3;
+  static const int CXEval_StrLiteral = 4;
+  static const int CXEval_CFStr = 5;
+  static const int CXEval_Other = 6;
+  static const int CXEval_UnExposed = 0;
+}
+
+const int CINDEX_VERSION_MAJOR = 0;
+
+const int CINDEX_VERSION_MINOR = 59;
+
+const int CINDEX_VERSION = 59;
+
+const String CINDEX_VERSION_STRING = '0.59';
+
 typedef _c_clang_createIndex = ffi.Pointer<ffi.Void> Function(
   ffi.Int32 excludeDeclarationsFromPCH,
   ffi.Int32 displayDiagnostics,
@@ -2084,6 +2263,54 @@ typedef _c_clang_disposeTranslationUnit = ffi.Void Function(
 
 typedef _dart_clang_disposeTranslationUnit = void Function(
   ffi.Pointer<CXTranslationUnitImpl> arg0,
+);
+
+typedef _c_clang_EvalResult_getKind = ffi.Int32 Function(
+  ffi.Pointer<ffi.Void> E,
+);
+
+typedef _dart_clang_EvalResult_getKind = int Function(
+  ffi.Pointer<ffi.Void> E,
+);
+
+typedef _c_clang_EvalResult_getAsInt = ffi.Int32 Function(
+  ffi.Pointer<ffi.Void> E,
+);
+
+typedef _dart_clang_EvalResult_getAsInt = int Function(
+  ffi.Pointer<ffi.Void> E,
+);
+
+typedef _c_clang_EvalResult_getAsLongLong = ffi.Int64 Function(
+  ffi.Pointer<ffi.Void> E,
+);
+
+typedef _dart_clang_EvalResult_getAsLongLong = int Function(
+  ffi.Pointer<ffi.Void> E,
+);
+
+typedef _c_clang_EvalResult_getAsDouble = ffi.Double Function(
+  ffi.Pointer<ffi.Void> E,
+);
+
+typedef _dart_clang_EvalResult_getAsDouble = double Function(
+  ffi.Pointer<ffi.Void> E,
+);
+
+typedef _c_clang_EvalResult_getAsStr = ffi.Pointer<ffi.Int8> Function(
+  ffi.Pointer<ffi.Void> E,
+);
+
+typedef _dart_clang_EvalResult_getAsStr = ffi.Pointer<ffi.Int8> Function(
+  ffi.Pointer<ffi.Void> E,
+);
+
+typedef _c_clang_EvalResult_dispose = ffi.Void Function(
+  ffi.Pointer<ffi.Void> E,
+);
+
+typedef _dart_clang_EvalResult_dispose = void Function(
+  ffi.Pointer<ffi.Void> E,
 );
 
 typedef _c_clang_getCString_wrap = ffi.Pointer<ffi.Int8> Function(
@@ -2368,4 +2595,44 @@ typedef _c_clang_getArrayElementType_wrap = ffi.Pointer<CXType> Function(
 
 typedef _dart_clang_getArrayElementType_wrap = ffi.Pointer<CXType> Function(
   ffi.Pointer<CXType> cxtype,
+);
+
+typedef _c_clang_Cursor_isMacroFunctionLike_wrap = ffi.Uint32 Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _dart_clang_Cursor_isMacroFunctionLike_wrap = int Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _c_clang_Cursor_isMacroBuiltin_wrap = ffi.Uint32 Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _dart_clang_Cursor_isMacroBuiltin_wrap = int Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _c_clang_Cursor_Evaluate_wrap = ffi.Pointer<ffi.Void> Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _dart_clang_Cursor_Evaluate_wrap = ffi.Pointer<ffi.Void> Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _c_clang_Cursor_isAnonymous_wrap = ffi.Uint32 Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _dart_clang_Cursor_isAnonymous_wrap = int Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _c_clang_Cursor_isAnonymousRecordDecl_wrap = ffi.Uint32 Function(
+  ffi.Pointer<CXCursor> cursor,
+);
+
+typedef _dart_clang_Cursor_isAnonymousRecordDecl_wrap = int Function(
+  ffi.Pointer<CXCursor> cursor,
 );

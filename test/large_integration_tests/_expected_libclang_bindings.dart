@@ -4418,6 +4418,14 @@ abstract class CXIndexOptFlags {
   static const int CXIndexOpt_SkipParsedBodiesInSession = 16;
 }
 
+const int CINDEX_VERSION_MAJOR = 0;
+
+const int CINDEX_VERSION_MINOR = 59;
+
+const int CINDEX_VERSION = 59;
+
+const String CINDEX_VERSION_STRING = '0.59';
+
 typedef _c_clang_disposeStringSet = ffi.Void Function(
   ffi.Pointer<CXStringSet> set_1,
 );

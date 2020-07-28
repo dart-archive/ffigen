@@ -7,7 +7,7 @@ import 'package:ffigen/src/header_parser/clang_bindings/clang_bindings.dart'
     as clang;
 
 // This version must be updated whenever we update the libclang wrapper.
-const dylibVersion = 'v1';
+const dylibVersion = 'v2';
 
 /// Name of the dynamic library file according to current platform.
 String get dylibFileName {
@@ -36,6 +36,7 @@ const filters = 'filters';
 const functions = 'functions';
 const structs = 'structs';
 const enums = 'enums';
+const macros = 'macros';
 
 // Sub-fields of Declarations.
 const include = 'include';
@@ -82,6 +83,7 @@ const sort = 'sort';
 const useSupportedTypedefs = 'use-supported-typedefs';
 const warnWhenRemoving = 'warn-when-removing';
 const arrayWorkaround = 'array-workaround';
+const unnamedEnums = 'unnamed-enums';
 
 const comments = 'comments';
 // Sub-fields of comments

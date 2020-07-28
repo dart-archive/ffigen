@@ -1,3 +1,6 @@
+# 0.1.5
+- Added support for parsing macros and anonymous unnamed enums. These are generated as top level constants.
+
 # 0.1.4
 - Comments config now has a style and length sub keys - `style: doxygen(default) | any`, `length: brief | full(default)`, and can be disabled by passing `comments: false`.
 

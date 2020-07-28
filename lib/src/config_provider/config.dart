@@ -43,6 +43,9 @@ class Config {
   /// Declaration config for Enums.
   Declaration enumClassDecl;
 
+  /// Declaration config for Enums.
+  Declaration macroDecl;
+
   /// If generated bindings should be sorted alphabetically.
   bool sort;
 
@@ -57,6 +60,9 @@ class Config {
   /// If false(default), structs with inline array members will have all its
   /// members removed.
   bool arrayWorkaround;
+
+  /// If constants should be generated for unnamed enums.
+  bool unnamedEnums;
 
   /// Name of the wrapper class.
   String wrapperName;
@@ -189,6 +195,16 @@ class Config {
           enumClassDecl = result as Declaration;
         },
       ),
+      strings.macros: Specification<Declaration>(
+        description: 'Filter for macros',
+        requirement: Requirement.no,
+        validator: declarationConfigValidator,
+        extractor: declarationConfigExtractor,
+        defaultValue: () => Declaration(),
+        extractedResult: (dynamic result) {
+          macroDecl = result as Declaration;
+        },
+      ),
       strings.sizemap: Specification<Map<int, SupportedNativeType>>(
         description: 'map of types: byte size in int',
         validator: sizemapValidator,
@@ -237,6 +253,14 @@ class Config {
         extractor: booleanExtractor,
         defaultValue: () => false,
         extractedResult: (dynamic result) => arrayWorkaround = result as bool,
+      ),
+      strings.unnamedEnums: Specification<bool>(
+        description: 'whether or not to generate constants for unnamed enums.',
+        requirement: Requirement.no,
+        validator: booleanValidator,
+        extractor: booleanExtractor,
+        defaultValue: () => true,
+        extractedResult: (dynamic result) => unnamedEnums = result as bool,
       ),
       strings.name: Specification<String>(
         description: 'Name of the wrapper class',

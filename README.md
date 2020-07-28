@@ -63,21 +63,18 @@ The following configuration options are available-
 <thead>
   <tr>
     <th>Key</th>
-    <th>Required</th>
     <th>Explaination</th>
     <th>Example</th>
   </tr>
 </thead>
 <tbody>
   <tr>
-    <td>output</td>
-    <td>yes</td>
+    <td>output<br><i>(Required)</i></td>
     <td>Output path of the generated bindings.</td>
     <td><pre lang="yaml"><code>output: 'generated_bindings.dart'</code></pre></td>
   </tr>
   <tr>
-    <td>headers</td>
-    <td>yes</td>
+    <td>headers<br><i>(Required)</i></td>
     <td>List of C headers to use. Glob syntax is allowed.</td>
     <td><pre lang="yaml"><code>
 headers:
@@ -86,7 +83,6 @@ headers:
   </tr>
   <tr>
     <td>header-filter</td>
-    <td>no</td>
     <td>Name of headers to include/exclude.</td>
     <td><pre lang="yaml"><code>
 header-filter:
@@ -95,26 +91,22 @@ header-filter:
     - 'platform.h'</code></pre></td>
   </tr>
   <tr>
-    <td>name</td>
-    <td>prefer</td>
+    <td>name<br><i>(Prefer)</i></td>
     <td>Name of generated class.</td>
     <td><pre lang="yaml"><code>name: 'SQLite'</code></pre></td>
   </tr>
   <tr>
-    <td>description</td>
-    <td>prefer</td>
+    <td>description<br><i>(Prefer)</i></td>
     <td>Dart Doc for generated class.</td>
     <td><pre lang="yaml"><code>description: 'Bindings to SQLite'</code></pre></td>
   </tr>
   <tr>
     <td>compiler-opts</td>
-    <td>no</td>
     <td>Pass compiler options to clang.</td>
     <td><pre lang="yaml"><code>compiler-opts: '-I/usr/lib/llvm-9/include/'</code></pre></td>
   </tr>
   <tr>
-    <td>functions<br>structs<br>enums</td>
-    <td>no</td>
+    <td>functions<br>structs<br>enums<br>macros</td>
     <td>Filters for declarations.<br><b>Default: all are included</b></td>
     <td><pre lang="yaml"><code>
 functions:
@@ -132,7 +124,6 @@ functions:
   </tr>
   <tr>
     <td>array-workaround</td>
-    <td>no</td>
     <td>Should generate workaround for fixed arrays in Structs. See <a href="#array-workaround">Array Workaround</a><br>
       <b>Default: false</b>
     </td>
@@ -140,7 +131,6 @@ functions:
   </tr>
   <tr>
     <td>comments</td>
-    <td>no</td>
     <td>Extract documentation comments for declarations.<br>
     The style and length of the comments can be specified with the following options.<br>
     <i>style: doxygen(default) | any </i><br>
@@ -156,7 +146,6 @@ comments:
   </tr>
   <tr>
     <td>sort</td>
-    <td>no</td>
     <td>Sort the bindings according to name.<br>
       <b>Default: false</b>, i.e keep the order as in the source files.
     </td>
@@ -164,15 +153,20 @@ comments:
   </tr>
   <tr>
     <td>use-supported-typedefs</td>
-    <td>no</td>
     <td>Should automatically map typedefs, E.g uint8_t => Uint8, int16_t => Int16 etc.<br>
     <b>Default: true</b>
     </td>
     <td><pre lang="yaml"><code>use-supported-typedefs: true</code></pre></td>
   </tr>
+  <tr>
+    <td>unnamed-enums</td>
+    <td>Should generate constants for anonymous unnamed enums.<br>
+    <b>Default: true</b>
+    </td>
+    <td><pre lang="yaml"><code>unnamed-enums: true</code></pre></td>
+  </tr>
    <tr>
     <td>preamble</td>
-    <td>no</td>
     <td>Raw header of the file, pasted as-it-is.</td>
     <td><pre lang="yaml"><code>
 preamble: |
@@ -182,7 +176,6 @@ preamble: |
   </tr>
   <tr>
     <td>size-map</td>
-    <td>no</td>
     <td>Size of integers to use (in bytes).<br>
     <b>The defaults (see example) <i>may</i> not be portable on all OS.
     Do not change these unless absolutely sure.</b>

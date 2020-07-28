@@ -15,10 +15,12 @@ Library actual, expected;
 final functionPrefix = 'fff';
 final structPrefix = 'sss';
 final enumPrefix = 'eee';
+final macroPrefix = 'mmm';
 
 final functionPrefixReplacedWith = 'rf';
 final structPrefixReplacedWith = 'rs';
 final enumPrefixReplacedWith = 're';
+final macroPrefixReplacedWith = 'rm';
 
 void main() {
   group('prefix_test', () {
@@ -51,6 +53,10 @@ enums:
   ${strings.prefix_replacement}:
     'Test_': '$enumPrefixReplacedWith'
 
+macros:
+  ${strings.prefix}: $macroPrefix
+  ${strings.prefix_replacement}:
+    'Test_': '$macroPrefixReplacedWith'
     ''') as yaml.YamlMap));
     });
 
@@ -65,6 +71,10 @@ enums:
     test('Enum prefix', () {
       expect(actual.getBindingAsString('${enumPrefix}Enum1'),
           expected.getBindingAsString('${enumPrefix}Enum1'));
+    });
+    test('Macro prefix', () {
+      expect(actual.getBindingAsString('${macroPrefix}Macro1'),
+          expected.getBindingAsString('${macroPrefix}Macro1'));
     });
     test('Function prefix-replacement', () {
       expect(
@@ -86,6 +96,13 @@ enums:
               '${enumPrefix}${enumPrefixReplacedWith}Enum2'),
           expected.getBindingAsString(
               '${enumPrefix}${enumPrefixReplacedWith}Enum2'));
+    });
+    test('Macro prefix-replacement', () {
+      expect(
+          actual.getBindingAsString(
+              '${macroPrefix}${macroPrefixReplacedWith}Macro2'),
+          expected.getBindingAsString(
+              '${macroPrefix}${macroPrefixReplacedWith}Macro2'));
     });
   });
 }
@@ -140,6 +157,18 @@ Library expectedLibrary() {
           EnumConstant(name: 'f', value: 1),
           EnumConstant(name: 'g', value: 2),
         ],
+      ),
+      Constant(
+        originalName: 'Macro1',
+        name: '${macroPrefix}Macro1',
+        rawType: 'int',
+        rawValue: '1',
+      ),
+      Constant(
+        originalName: 'TestMacro2',
+        name: '${macroPrefix}${macroPrefixReplacedWith}Macro2',
+        rawType: 'int',
+        rawValue: '2',
       ),
     ],
   );

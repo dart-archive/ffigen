@@ -7,7 +7,6 @@ import 'package:meta/meta.dart';
 
 import 'binding.dart';
 import 'binding_string.dart';
-import 'type.dart';
 import 'utils.dart';
 import 'writer.dart';
 
@@ -23,7 +22,8 @@ import 'writer.dart';
 /// const int name = 10;
 /// ```
 class Constant extends NoLookUpBinding {
-  final Type type;
+  /// The rawType is pasted as it is. E.g 'int', 'String', 'double'
+  final String rawType;
 
   /// The rawValue is pasted as it is.
   ///
@@ -34,7 +34,7 @@ class Constant extends NoLookUpBinding {
     String originalName,
     @required String name,
     String dartDoc,
-    @required this.type,
+    @required this.rawType,
     @required this.rawValue,
   }) : super(originalName: originalName ?? name, name: name, dartDoc: dartDoc);
 
@@ -47,7 +47,7 @@ class Constant extends NoLookUpBinding {
       s.write(makeDartDoc(dartDoc));
     }
 
-    s.write('const ${type.getDartType(w)} $constantName = $rawValue;\n\n');
+    s.write('const ${rawType} $constantName = $rawValue;\n\n');
 
     return BindingString(
         type: BindingStringType.constant, string: s.toString());

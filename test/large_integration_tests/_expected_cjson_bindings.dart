@@ -1063,6 +1063,38 @@ class cJSON_Hooks extends ffi.Struct {
   ffi.Pointer<ffi.NativeFunction<_typedefC_12>> free_fn;
 }
 
+const int CJSON_VERSION_MAJOR = 1;
+
+const int CJSON_VERSION_MINOR = 7;
+
+const int CJSON_VERSION_PATCH = 12;
+
+const int cJSON_Invalid = 0;
+
+const int cJSON_False = 1;
+
+const int cJSON_True = 2;
+
+const int cJSON_NULL = 4;
+
+const int cJSON_Number = 8;
+
+const int cJSON_String = 16;
+
+const int cJSON_Array = 32;
+
+const int cJSON_Object = 64;
+
+const int cJSON_Raw = 128;
+
+const int cJSON_IsReference = 256;
+
+const int cJSON_StringIsConst = 512;
+
+const int CJSON_NESTING_LIMIT = 1000;
+
+const double CJSON_DOUBLE_PRECISION = 1e-16;
+
 typedef _c_cJSON_Version = ffi.Pointer<ffi.Int8> Function();
 
 typedef _dart_cJSON_Version = ffi.Pointer<ffi.Int8> Function();

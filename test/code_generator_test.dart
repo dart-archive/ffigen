@@ -471,16 +471,12 @@ class Some extends ffi.Struct{
         bindings: [
           Constant(
             name: 'test1',
-            type: Type.nativeType(
-              SupportedNativeType.Int32,
-            ),
+            rawType: 'int',
             rawValue: '20',
           ),
           Constant(
             name: 'test2',
-            type: Type.nativeType(
-              SupportedNativeType.Float,
-            ),
+            rawType: 'double',
             rawValue: '20.0',
           ),
         ],

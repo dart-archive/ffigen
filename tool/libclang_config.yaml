@@ -32,6 +32,7 @@ enums:
       - CXTypeKind
       - CXDiagnosticDisplayOptions
       - CXTranslationUnit_Flags
+      - CXEvalResultKind
 
 structs:
   include:
@@ -54,6 +55,12 @@ functions:
       - clang_disposeDiagnostic
       - clang_parseTranslationUnit
       - clang_disposeTranslationUnit
+      - clang_EvalResult_getKind
+      - clang_EvalResult_getAsInt
+      - clang_EvalResult_getAsLongLong
+      - clang_EvalResult_getAsDouble
+      - clang_EvalResult_getAsStr
+      - clang_EvalResult_dispose
       - clang_getCString_wrap
       - clang_disposeString_wrap
       - clang_getCursorKind_wrap
@@ -85,3 +92,8 @@ functions:
       - clang_getFileName_wrap
       - clang_getNumElements_wrap
       - clang_getArrayElementType_wrap
+      - clang_Cursor_isMacroFunctionLike_wrap
+      - clang_Cursor_isMacroBuiltin_wrap
+      - clang_Cursor_Evaluate_wrap
+      - clang_Cursor_isAnonymous_wrap
+      - clang_Cursor_isAnonymousRecordDecl_wrap
