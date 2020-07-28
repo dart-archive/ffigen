@@ -53,6 +53,19 @@ ${strings.headerFilter}:
       expect(actual.getBindingAsString('TEST4'),
           expected.getBindingAsString('TEST4'));
     });
+
+    test('TEST5', () {
+      expect(actual.getBindingAsString('TEST5'),
+          expected.getBindingAsString('TEST5'));
+    });
+    test('TEST6', () {
+      expect(actual.getBindingAsString('TEST6'),
+          expected.getBindingAsString('TEST6'));
+    });
+    test('TEST8', () {
+      expect(actual.getBindingAsString('TEST8'),
+          expected.getBindingAsString('TEST8'));
+    });
   });
 }
 
@@ -64,8 +77,9 @@ Library expectedLibrary() {
       Constant(name: 'TEST2', rawType: 'int', rawValue: '10'),
       Constant(name: 'TEST3', rawType: 'double', rawValue: '11.1'),
       Constant(name: 'TEST4', rawType: 'String', rawValue: "'test'"),
-      Constant(name: 'TEST5', rawType: 'int', rawValue: '1'),
+      Constant(name: 'TEST5', rawType: 'int', rawValue: '4'),
       Constant(name: 'TEST6', rawType: 'int', rawValue: '1'),
+      Constant(name: 'TEST8', rawType: 'int', rawValue: '5'),
     ],
   );
 }

@@ -28,7 +28,7 @@ void saveMacroDefinition(Pointer<clang_types.CXCursor> cursor) {
       !isSeenMacro(originalMacroName) &&
       clang.clang_Cursor_isMacroBuiltin_wrap(cursor) == 0 &&
       clang.clang_Cursor_isMacroFunctionLike_wrap(cursor) == 0) {
-    // Parse macro only if its not builtin or function-like.
+    // Parse macro only if it's not builtin or function-like.
     _logger.fine(
         "++++ Saved Macro '$originalMacroName' for later : ${cursor.completeStringRepr()}");
     final prefixedName = config.macroDecl.getPrefixedName(originalMacroName);
@@ -92,9 +92,9 @@ List<Constant> parseSavedMacros() {
     rootCursor.dispose();
   }
 
-  // Cleanup
   clang.clang_disposeTranslationUnit(tu);
   clang.clang_disposeIndex(index);
+  // Delete the temp file created for macros.
   file.deleteSync();
 
   return _bindings;
