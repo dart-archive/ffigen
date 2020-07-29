@@ -24,16 +24,19 @@ String _replaceSeparators(String path) {
   }
 }
 
+/// Checks if type of value is [T], logs an error if it's not.
+bool checkType<T>(String key, dynamic value) {
+  if (value is! T) {
+    _logger.severe("Expected value of key '$key' to be of type '${T}'.");
+    return false;
+  }
+  return true;
+}
+
 bool booleanExtractor(dynamic value) => value as bool;
 
-bool booleanValidator(String name, dynamic value) {
-  if (value is! bool) {
-    _logger.severe("Expected value of key '$name' to be a bool.");
-    return false;
-  } else {
-    return true;
-  }
-}
+bool booleanValidator(String name, dynamic value) =>
+    checkType<bool>(name, value);
 
 Map<int, SupportedNativeType> sizemapExtractor(dynamic yamlConfig) {
   final resultMap = <int, SupportedNativeType>{};
@@ -52,8 +55,7 @@ Map<int, SupportedNativeType> sizemapExtractor(dynamic yamlConfig) {
 }
 
 bool sizemapValidator(String name, dynamic yamlConfig) {
-  if (yamlConfig is! YamlMap) {
-    _logger.severe("Expected value of key '$name' to be a Map.");
+  if (!checkType<YamlMap>(name, yamlConfig)) {
     return false;
   }
   for (final key in (yamlConfig as YamlMap).keys) {
@@ -68,14 +70,8 @@ bool sizemapValidator(String name, dynamic yamlConfig) {
 List<String> compilerOptsExtractor(dynamic value) =>
     (value as String)?.split(' ');
 
-bool compilerOptsValidator(String name, dynamic value) {
-  if (value is! String) {
-    _logger.severe("Expected value of key '$name' to be a string.");
-    return false;
-  } else {
-    return true;
-  }
-}
+bool compilerOptsValidator(String name, dynamic value) =>
+    checkType<String>(name, value);
 
 HeaderFilter headerFilterExtractor(dynamic yamlConfig) {
   final includedInclusionHeaders = <String>{};
@@ -97,14 +93,8 @@ HeaderFilter headerFilterExtractor(dynamic yamlConfig) {
   );
 }
 
-bool headerFilterValidator(String name, dynamic value) {
-  if (value is! YamlMap) {
-    _logger.severe("Expected value of key '$name' to be a Map.");
-    return false;
-  } else {
-    return true;
-  }
-}
+bool headerFilterValidator(String name, dynamic value) =>
+    checkType<YamlMap>(name, value);
 
 List<String> headersExtractor(dynamic yamlConfig) {
   final headers = <String>[];
@@ -127,21 +117,13 @@ List<String> headersExtractor(dynamic yamlConfig) {
   return headers;
 }
 
-bool headersValidator(String name, dynamic value) {
-  if (value is! YamlList) {
-    _logger.severe(
-        "Expected value of key '${strings.headers}' to be a List of String.");
-    return false;
-  } else {
-    return true;
-  }
-}
+bool headersValidator(String name, dynamic value) =>
+    checkType<YamlList>(name, value);
 
 String libclangDylibExtractor(dynamic value) => getDylibPath(value as String);
 
 bool libclangDylibValidator(String name, dynamic value) {
-  if (value is! String) {
-    _logger.severe("Expected value of key '$name' to be a string.");
+  if (!checkType<String>(name, value)) {
     return false;
   } else {
     final dylibPath = getDylibPath(value as String);
@@ -170,14 +152,8 @@ String getDylibPath(String dylibParentFoler) {
 
 String outputExtractor(dynamic value) => _replaceSeparators(value as String);
 
-bool outputValidator(String name, dynamic value) {
-  if (value is String) {
-    return true;
-  } else {
-    _logger.severe("Expected value of key '$name' to be a String.");
-    return false;
-  }
-}
+bool outputValidator(String name, dynamic value) =>
+    checkType<String>(name, value);
 
 Declaration declarationConfigExtractor(dynamic yamlMap) {
   List<String> includeMatchers, includeFull, excludeMatchers, excludeFull;
