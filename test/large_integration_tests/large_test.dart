@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:io';
-
 import 'package:ffigen/src/header_parser.dart';
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart';
@@ -42,24 +40,12 @@ ${strings.headers}:
     - '**Index.h'
       ''') as YamlMap);
       final library = parse(config);
-      final file = File(
-        path.join('test', 'debug_generated', 'large_test_libclang.dart'),
-      );
-      library.generateFile(file);
 
-      try {
-        final actual = file.readAsStringSync();
-        final expected = File(path.join('test', 'large_integration_tests',
-                '_expected_libclang_bindings.dart'))
-            .readAsStringSync();
-        expect(actual, expected);
-        if (file.existsSync()) {
-          file.delete();
-        }
-      } catch (e) {
-        print('Failed test: Debug generated file: ${file.absolute?.path}');
-        rethrow;
-      }
+      matchLibraryWithExpected(
+        library,
+        ['test', 'debug_generated', 'large_test_libclang.dart'],
+        ['test', 'large_integration_tests', '_expected_libclang_bindings.dart'],
+      );
     });
 
     test('CJSON test', () {
@@ -77,24 +63,12 @@ ${strings.headers}:
     - '**cJSON.h'
       ''') as YamlMap);
       final library = parse(config);
-      final file = File(
-        path.join('test', 'debug_generated', 'large_test_cjson.dart'),
-      );
-      library.generateFile(file);
 
-      try {
-        final actual = file.readAsStringSync();
-        final expected = File(path.join('test', 'large_integration_tests',
-                '_expected_cjson_bindings.dart'))
-            .readAsStringSync();
-        expect(actual, expected);
-        if (file.existsSync()) {
-          file.delete();
-        }
-      } catch (e) {
-        print('Failed test: Debug generated file: ${file.absolute?.path}');
-        rethrow;
-      }
+      matchLibraryWithExpected(
+        library,
+        ['test', 'debug_generated', 'large_test_cjson.dart'],
+        ['test', 'large_integration_tests', '_expected_cjson_bindings.dart'],
+      );
     });
 
     test('SQLite test', () {
@@ -121,24 +95,12 @@ ${strings.functions}:
       - sqlite3_str_vappendf
       ''') as YamlMap);
       final library = parse(config);
-      final file = File(
-        path.join('test', 'debug_generated', 'large_test_sqlite.dart'),
-      );
-      library.generateFile(file);
 
-      try {
-        final actual = file.readAsStringSync();
-        final expected = File(path.join('test', 'large_integration_tests',
-                '_expected_sqlite_bindings.dart'))
-            .readAsStringSync();
-        expect(actual, expected);
-        if (file.existsSync()) {
-          file.delete();
-        }
-      } catch (e) {
-        print('Failed test: Debug generated file: ${file.absolute?.path}');
-        rethrow;
-      }
+      matchLibraryWithExpected(
+        library,
+        ['test', 'debug_generated', 'large_test_sqlite.dart'],
+        ['test', 'large_integration_tests', '_expected_sqlite_bindings.dart'],
+      );
     });
   });
 }

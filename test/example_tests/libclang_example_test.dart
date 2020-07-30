@@ -2,15 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:io';
-
 import 'package:ffigen/src/header_parser.dart';
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart';
 import 'package:ffigen/src/config_provider/config.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:test/test.dart';
-import 'package:path/path.dart' as path;
 
 import '../test_utils.dart';
 
@@ -57,24 +54,12 @@ ${strings.comments}:
   ${strings.length}: ${strings.full}
 ''') as YamlMap);
       final library = parse(config);
-      final file = File(
-        path.join('test', 'debug_generated', 'libclang-example.dart'),
-      );
-      library.generateFile(file);
 
-      try {
-        final actual = file.readAsStringSync();
-        final expected =
-            File(path.join('example', 'libclang-example', config.output))
-                .readAsStringSync();
-        expect(actual, expected);
-        if (file.existsSync()) {
-          file.delete();
-        }
-      } catch (e) {
-        print('Failed test: Debug generated file: ${file.absolute?.path}');
-        rethrow;
-      }
+      matchLibraryWithExpected(
+        library,
+        ['test', 'debug_generated', 'libclang-example.dart'],
+        ['example', 'libclang-example', config.output],
+      );
     });
   });
 }
