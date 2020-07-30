@@ -1,4 +1,4 @@
-# 0.2.0
+# 0.2.0-dev
 - Updated header config. Header `entry-points` and `include-directives` are now specified under `headers` key. Glob syntax is allowed.
 
 # 0.1.5
