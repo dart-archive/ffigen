@@ -25,14 +25,12 @@ ${strings.description}: 'Nested Parsing Test'
 ${strings.output}: 'unused'
 
 ${strings.headers}:
-  - 'test/header_parser_tests/nested_parsing.h'
-structs:
-  include:
-    names:
-      - Struct1
-${strings.headerFilter}:
+  ${strings.entryPoints}:
+    - 'test/header_parser_tests/nested_parsing.h'
+${strings.structs}:
   ${strings.include}:
-    - 'nested_parsing.h'
+    ${strings.names}:
+      - Struct1
         ''') as yaml.YamlMap),
       );
     });

@@ -30,16 +30,16 @@ ${strings.comments}:
   ${strings.style}: ${strings.doxygen}
   ${strings.length}: ${strings.brief}
 ${strings.headers}:
-  - third_party/libclang/include/clang-c/Index.h
-${strings.headerFilter}:
-  include:
-    - 'BuildSystem.h'
-    - 'CXCompilationDatabase.h'
-    - 'CXErrorCode.h'
-    - 'CXString.h'
-    - 'Documentation.h'
-    - 'FataErrorHandler.h'
-    - 'Index.h'
+  ${strings.entryPoints}:
+    - third_party/libclang/include/clang-c/Index.h
+  ${strings.includeDirectives}:
+    - '**/BuildSystem.h'
+    - '**/CXCompilationDatabase.h'
+    - '**/CXErrorCode.h'
+    - '**/CXString.h'
+    - '**/Documentation.h'
+    - '**/FataErrorHandler.h'
+    - '**/Index.h'
       ''') as YamlMap);
       final library = parse(config);
       final file = File(
@@ -71,10 +71,10 @@ ${strings.comments}:
   ${strings.length}: ${strings.full}
 ${strings.arrayWorkaround}: true
 ${strings.headers}:
-  - third_party/cjson_library/cJSON.h
-${strings.headerFilter}:
-  include:
-    - 'cJSON.h'
+  ${strings.entryPoints}:
+    - third_party/cjson_library/cJSON.h
+  ${strings.includeDirectives}:
+    - '**/cJSON.h'
       ''') as YamlMap);
       final library = parse(config);
       final file = File(
@@ -109,10 +109,10 @@ ${strings.comments}:
   ${strings.style}: ${strings.any}
   ${strings.length}: ${strings.full}
 ${strings.headers}:
-  - third_party/sqlite/sqlite3.h
-${strings.headerFilter}:
-  ${strings.include}:
-    - 'sqlite3.h'
+  ${strings.entryPoints}:
+    - third_party/sqlite/sqlite3.h
+  ${strings.includeDirectives}:
+    - '**/sqlite3.h'
 ${strings.functions}:
   ${strings.exclude}:
     ${strings.names}:

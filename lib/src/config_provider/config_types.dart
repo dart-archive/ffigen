@@ -5,6 +5,7 @@
 /// Contains all the neccesary classes required by config.
 
 import 'package:meta/meta.dart';
+import 'package:quiver/pattern.dart' as quiver;
 
 class CommentType {
   CommentStyle style;
@@ -50,14 +51,46 @@ class Specification<E> {
 
 enum Requirement { yes, prefer, no }
 
-class HeaderFilter {
-  Set<String> includedInclusionHeaders;
-  Set<String> excludedInclusionHeaders;
+// Holds headers and filters for header.
+class Headers {
+  /// Path to headers.
+  ///
+  /// This contains all the headers, after extraction from Globs.
+  List<String> entryPoints = [];
 
-  HeaderFilter({
-    this.includedInclusionHeaders = const {},
-    this.excludedInclusionHeaders = const {},
+  /// Include filter for headers.
+  HeaderIncludeFilter includeFilter = GlobHeaderFilter();
+
+  Headers({this.entryPoints, this.includeFilter});
+}
+
+abstract class HeaderIncludeFilter {
+  bool shouldInclude(String headerSourceFile);
+}
+
+class GlobHeaderFilter extends HeaderIncludeFilter {
+  List<quiver.Glob> includeGlobs = [];
+
+  GlobHeaderFilter({
+    this.includeGlobs,
   });
+
+  @override
+  bool shouldInclude(String header) {
+    // Return true if header was included.
+    for (final globPattern in includeGlobs) {
+      if (quiver.matchesFull(globPattern, header)) {
+        return true;
+      }
+    }
+
+    // If any includedInclusionHeaders is provided, return false.
+    if (includeGlobs.isNotEmpty) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 }
 
 /// A generic declaration config.

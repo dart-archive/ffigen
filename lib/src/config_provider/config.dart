@@ -23,13 +23,8 @@ class Config {
   /// output file name.
   String output;
 
-  /// Path to headers.
-  ///
-  /// This contains all the headers, after extraction from Globs.
-  List<String> headers;
-
-  /// Filter for headers.
-  HeaderFilter headerFilter;
+  // Holds headers and filters for header.
+  Headers headers;
 
   /// CommandLine Arguments to pass to clang_compiler.
   List<String> compilerOpts;
@@ -141,21 +136,12 @@ class Config {
         extractor: outputExtractor,
         extractedResult: (dynamic result) => output = result as String,
       ),
-      strings.headers: Specification<List<String>>(
-        description: 'List of C headers to generate bindings of',
+      strings.headers: Specification<Headers>(
+        description: 'Headers.',
         requirement: Requirement.yes,
         validator: headersValidator,
         extractor: headersExtractor,
-        extractedResult: (dynamic result) => headers = result as List<String>,
-      ),
-      strings.headerFilter: Specification<HeaderFilter>(
-        description: 'Include/Exclude inclusion headers',
-        validator: headerFilterValidator,
-        extractor: headerFilterExtractor,
-        defaultValue: () => HeaderFilter(),
-        extractedResult: (dynamic result) {
-          return headerFilter = result as HeaderFilter;
-        },
+        extractedResult: (dynamic result) => headers = result as Headers,
       ),
       strings.compilerOpts: Specification<List<String>>(
         description: 'Raw compiler options to pass to clang compiler',

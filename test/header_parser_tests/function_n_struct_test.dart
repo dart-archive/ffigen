@@ -26,7 +26,8 @@ ${strings.description}: 'Function And Struct Test'
 ${strings.output}: 'unused'
 
 ${strings.headers}:
-  - 'test/header_parser_tests/function_n_struct.h'
+  ${strings.entryPoints}:
+    - 'test/header_parser_tests/function_n_struct.h'
         ''') as yaml.YamlMap),
       );
     });

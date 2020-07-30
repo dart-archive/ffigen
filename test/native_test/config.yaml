@@ -9,8 +9,8 @@
 output: 'native_test_bindings.dart'
 sort: true
 headers:
-  - 'native_test.c'
-header-filter:
-  include:
+  entry-points:
     - 'native_test.c'
+  include-directives:
+    - '**/native_test.c'
 array-workaround: true

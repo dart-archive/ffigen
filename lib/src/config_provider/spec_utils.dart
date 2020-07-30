@@ -9,6 +9,7 @@ import 'package:glob/glob.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
+import 'package:quiver/pattern.dart' as quiver;
 
 import '../strings.dart' as strings;
 import 'config_types.dart';
@@ -73,52 +74,65 @@ List<String> compilerOptsExtractor(dynamic value) =>
 bool compilerOptsValidator(String name, dynamic value) =>
     checkType<String>(name, value);
 
-HeaderFilter headerFilterExtractor(dynamic yamlConfig) {
-  final includedInclusionHeaders = <String>{};
-  final excludedInclusionHeaders = <String>{};
-
-  final headerFilter = yamlConfig as YamlMap;
-  if (headerFilter != null) {
-    // Add include/excluded header-filter from Yaml.
-    final include = headerFilter[strings.include] as YamlList;
-    include?.cast<String>()?.forEach(includedInclusionHeaders.add);
-
-    final exclude = headerFilter[strings.exclude] as YamlList;
-    exclude?.cast<String>()?.forEach(excludedInclusionHeaders.add);
-  }
-
-  return HeaderFilter(
-    includedInclusionHeaders: includedInclusionHeaders,
-    excludedInclusionHeaders: excludedInclusionHeaders,
-  );
-}
-
-bool headerFilterValidator(String name, dynamic value) =>
-    checkType<YamlMap>(name, value);
-
-List<String> headersExtractor(dynamic yamlConfig) {
-  final headers = <String>[];
-  for (final h in (yamlConfig as YamlList)) {
-    final headerGlob = h as String;
-    // Add file directly to header if it's not a Glob but a File.
-    if (File(headerGlob).existsSync()) {
-      final osSpecificPath = _replaceSeparators(headerGlob);
-      headers.add(osSpecificPath);
-      _logger.fine('Adding header/file: $headerGlob');
-    } else {
-      final glob = Glob(headerGlob);
-      for (final file in glob.listSync(followLinks: true)) {
-        final fixedPath = _replaceSeparators(file.path);
-        headers.add(fixedPath);
-        _logger.fine('Adding header/file: ${fixedPath}');
+Headers headersExtractor(dynamic yamlConfig) {
+  final entryPoints = <String>[];
+  final includeGlobs = <quiver.Glob>[];
+  for (final key in (yamlConfig as YamlMap).keys) {
+    if (key == strings.entryPoints) {
+      for (final h in (yamlConfig[key] as YamlList)) {
+        final headerGlob = h as String;
+        // Add file directly to header if it's not a Glob but a File.
+        if (File(headerGlob).existsSync()) {
+          final osSpecificPath = _replaceSeparators(headerGlob);
+          entryPoints.add(osSpecificPath);
+          _logger.fine('Adding header/file: $headerGlob');
+        } else {
+          final glob = Glob(headerGlob);
+          for (final file in glob.listSync(followLinks: true)) {
+            final fixedPath = _replaceSeparators(file.path);
+            entryPoints.add(fixedPath);
+            _logger.fine('Adding header/file: ${fixedPath}');
+          }
+        }
+      }
+    }
+    if (key == strings.includeDirectives) {
+      for (final h in (yamlConfig[key] as YamlList)) {
+        final headerGlob = h as String;
+        includeGlobs.add(quiver.Glob(headerGlob));
       }
     }
   }
-  return headers;
+  return Headers(
+    entryPoints: entryPoints,
+    includeFilter: GlobHeaderFilter(
+      includeGlobs: includeGlobs,
+    ),
+  );
 }
 
-bool headersValidator(String name, dynamic value) =>
-    checkType<YamlList>(name, value);
+bool headersValidator(String name, dynamic value) {
+  if (!checkType<YamlMap>(name, value)) {
+    return false;
+  }
+  if (!(value as YamlMap).containsKey(strings.entryPoints)) {
+    _logger.severe("Expected '$name -> ${strings.entryPoints}' to be a Map.");
+    return false;
+  } else {
+    for (final key in (value as YamlMap).keys) {
+      if (key == strings.entryPoints || key == strings.includeDirectives) {
+        if (!checkType<YamlList>(key as String, value[key])) {
+          _logger.severe("Expected '$name -> $key' to be a Map.");
+          return false;
+        }
+      } else {
+        _logger.severe("Unknown key '$key' in '$name'.");
+        return false;
+      }
+    }
+    return true;
+  }
+}
 
 String libclangDylibExtractor(dynamic value) => getDylibPath(value as String);
 
