@@ -86,9 +86,9 @@ List<Binding> parseToBindings() {
   final bindings = <Binding>[];
 
   // Log all headers for user.
-  _logger.info('Input Headers: ${config.headers}');
+  _logger.info('Input Headers: ${config.headers.entryPoints}');
 
-  for (final headerLocation in config.headers) {
+  for (final headerLocation in config.headers.entryPoints) {
     _logger.fine('Creating TranslationUnit for header: $headerLocation');
 
     final tu = clang.clang_parseTranslationUnit(

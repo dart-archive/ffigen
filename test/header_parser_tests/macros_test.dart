@@ -25,10 +25,8 @@ ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Macros Test'
 ${strings.output}: 'unused'
 ${strings.headers}:
-  - 'test/header_parser_tests/macros.h'
-${strings.headerFilter}:
-  ${strings.include}:
-    - 'macros.h'
+  ${strings.entryPoints}:
+    - 'test/header_parser_tests/macros.h'
         ''') as yaml.YamlMap),
       );
     });

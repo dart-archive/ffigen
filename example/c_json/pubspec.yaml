@@ -19,8 +19,8 @@ ffigen:
   name: 'CJson'
   description: 'Holds bindings to cJSON.'
   headers:
-    - '../../third_party/cjson_library/cJSON.h'
-  header-filter:
-    include:
-      - 'cJSON.h'
+    entry-points:
+      - '../../third_party/cjson_library/cJSON.h'
+    include-directives:
+      - '**cJSON.h'
   comments: false

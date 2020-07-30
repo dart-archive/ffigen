@@ -248,8 +248,8 @@ class ArrayHelper {
         s.write('''
   ${helperClassGroupName}_level${dim + 1} operator [](int index) {
     $checkBoundsFunctionIdentifier(index);
-    int offset = index;
-    for (int i = level + 1; i < $dimensionsIdentifier.length; i++) {
+    var offset = index;
+    for (var i = level + 1; i < $dimensionsIdentifier.length; i++) {
       offset *= $dimensionsIdentifier[i];
     }
     return ${helperClassGroupName}_level${dim + 1}(

@@ -9,6 +9,7 @@ import 'package:glob/glob.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 import 'package:yaml/yaml.dart';
+import 'package:quiver/pattern.dart' as quiver;
 
 import '../strings.dart' as strings;
 import 'config_types.dart';
@@ -24,16 +25,19 @@ String _replaceSeparators(String path) {
   }
 }
 
+/// Checks if type of value is [T], logs an error if it's not.
+bool checkType<T>(String key, dynamic value) {
+  if (value is! T) {
+    _logger.severe("Expected value of key '$key' to be of type '${T}'.");
+    return false;
+  }
+  return true;
+}
+
 bool booleanExtractor(dynamic value) => value as bool;
 
-bool booleanValidator(String name, dynamic value) {
-  if (value is! bool) {
-    _logger.severe("Expected value of key '$name' to be a bool.");
-    return false;
-  } else {
-    return true;
-  }
-}
+bool booleanValidator(String name, dynamic value) =>
+    checkType<bool>(name, value);
 
 Map<int, SupportedNativeType> sizemapExtractor(dynamic yamlConfig) {
   final resultMap = <int, SupportedNativeType>{};
@@ -52,8 +56,7 @@ Map<int, SupportedNativeType> sizemapExtractor(dynamic yamlConfig) {
 }
 
 bool sizemapValidator(String name, dynamic yamlConfig) {
-  if (yamlConfig is! YamlMap) {
-    _logger.severe("Expected value of key '$name' to be a Map.");
+  if (!checkType<YamlMap>(name, yamlConfig)) {
     return false;
   }
   for (final key in (yamlConfig as YamlMap).keys) {
@@ -68,71 +71,65 @@ bool sizemapValidator(String name, dynamic yamlConfig) {
 List<String> compilerOptsExtractor(dynamic value) =>
     (value as String)?.split(' ');
 
-bool compilerOptsValidator(String name, dynamic value) {
-  if (value is! String) {
-    _logger.severe("Expected value of key '$name' to be a string.");
-    return false;
-  } else {
-    return true;
-  }
-}
+bool compilerOptsValidator(String name, dynamic value) =>
+    checkType<String>(name, value);
 
-HeaderFilter headerFilterExtractor(dynamic yamlConfig) {
-  final includedInclusionHeaders = <String>{};
-  final excludedInclusionHeaders = <String>{};
-
-  final headerFilter = yamlConfig as YamlMap;
-  if (headerFilter != null) {
-    // Add include/excluded header-filter from Yaml.
-    final include = headerFilter[strings.include] as YamlList;
-    include?.cast<String>()?.forEach(includedInclusionHeaders.add);
-
-    final exclude = headerFilter[strings.exclude] as YamlList;
-    exclude?.cast<String>()?.forEach(excludedInclusionHeaders.add);
-  }
-
-  return HeaderFilter(
-    includedInclusionHeaders: includedInclusionHeaders,
-    excludedInclusionHeaders: excludedInclusionHeaders,
-  );
-}
-
-bool headerFilterValidator(String name, dynamic value) {
-  if (value is! YamlMap) {
-    _logger.severe("Expected value of key '$name' to be a Map.");
-    return false;
-  } else {
-    return true;
-  }
-}
-
-List<String> headersExtractor(dynamic yamlConfig) {
-  final headers = <String>[];
-  for (final h in (yamlConfig as YamlList)) {
-    final headerGlob = h as String;
-    // Add file directly to header if it's not a Glob but a File.
-    if (File(headerGlob).existsSync()) {
-      final osSpecificPath = _replaceSeparators(headerGlob);
-      headers.add(osSpecificPath);
-      _logger.fine('Adding header/file: $headerGlob');
-    } else {
-      final glob = Glob(headerGlob);
-      for (final file in glob.listSync(followLinks: true)) {
-        final fixedPath = _replaceSeparators(file.path);
-        headers.add(fixedPath);
-        _logger.fine('Adding header/file: ${fixedPath}');
+Headers headersExtractor(dynamic yamlConfig) {
+  final entryPoints = <String>[];
+  final includeGlobs = <quiver.Glob>[];
+  for (final key in (yamlConfig as YamlMap).keys) {
+    if (key == strings.entryPoints) {
+      for (final h in (yamlConfig[key] as YamlList)) {
+        final headerGlob = h as String;
+        // Add file directly to header if it's not a Glob but a File.
+        if (File(headerGlob).existsSync()) {
+          final osSpecificPath = _replaceSeparators(headerGlob);
+          entryPoints.add(osSpecificPath);
+          _logger.fine('Adding header/file: $headerGlob');
+        } else {
+          final glob = Glob(headerGlob);
+          for (final file in glob.listSync(followLinks: true)) {
+            final fixedPath = _replaceSeparators(file.path);
+            entryPoints.add(fixedPath);
+            _logger.fine('Adding header/file: ${fixedPath}');
+          }
+        }
+      }
+    }
+    if (key == strings.includeDirectives) {
+      for (final h in (yamlConfig[key] as YamlList)) {
+        final headerGlob = h as String;
+        includeGlobs.add(quiver.Glob(headerGlob));
       }
     }
   }
-  return headers;
+  return Headers(
+    entryPoints: entryPoints,
+    includeFilter: GlobHeaderFilter(
+      includeGlobs: includeGlobs,
+    ),
+  );
 }
 
 bool headersValidator(String name, dynamic value) {
-  if (value is! YamlList) {
-    _logger.severe(
-        "Expected value of key '${strings.headers}' to be a List of String.");
+  if (!checkType<YamlMap>(name, value)) {
+    return false;
+  }
+  if (!(value as YamlMap).containsKey(strings.entryPoints)) {
+    _logger.severe("Expected '$name -> ${strings.entryPoints}' to be a Map.");
     return false;
   } else {
+    for (final key in (value as YamlMap).keys) {
+      if (key == strings.entryPoints || key == strings.includeDirectives) {
+        if (!checkType<YamlList>(key as String, value[key])) {
+          _logger.severe("Expected '$name -> $key' to be a Map.");
+          return false;
+        }
+      } else {
+        _logger.severe("Unknown key '$key' in '$name'.");
+        return false;
+      }
+    }
     return true;
   }
 }
@@ -140,8 +137,7 @@ bool headersValidator(String name, dynamic value) {
 String libclangDylibExtractor(dynamic value) => getDylibPath(value as String);
 
 bool libclangDylibValidator(String name, dynamic value) {
-  if (value is! String) {
-    _logger.severe("Expected value of key '$name' to be a string.");
+  if (!checkType<String>(name, value)) {
     return false;
   } else {
     final dylibPath = getDylibPath(value as String);
@@ -170,14 +166,8 @@ String getDylibPath(String dylibParentFoler) {
 
 String outputExtractor(dynamic value) => _replaceSeparators(value as String);
 
-bool outputValidator(String name, dynamic value) {
-  if (value is String) {
-    return true;
-  } else {
-    _logger.severe("Expected value of key '$name' to be a String.");
-    return false;
-  }
-}
+bool outputValidator(String name, dynamic value) =>
+    checkType<String>(name, value);
 
 Declaration declarationConfigExtractor(dynamic yamlMap) {
   List<String> includeMatchers, includeFull, excludeMatchers, excludeFull;

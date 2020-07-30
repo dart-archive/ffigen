@@ -75,20 +75,17 @@ The following configuration options are available-
   </tr>
   <tr>
     <td>headers<br><i>(Required)</i></td>
-    <td>List of C headers to use. Glob syntax is allowed.</td>
+    <td>The header entry-points and include-directives. Glob syntax is allowed.</td>
     <td><pre lang="yaml"><code>
 headers:
-  - 'folder/**.h'
-  - 'folder/specific_header.h'</code></pre></td>
-  </tr>
-  <tr>
-    <td>header-filter</td>
-    <td>Name of headers to include/exclude.</td>
-    <td><pre lang="yaml"><code>
-header-filter:
-  include:
-    - 'index.h'
-    - 'platform.h'</code></pre></td>
+  entry-points:
+    - 'folder/**.h'
+    - 'folder/specific_header.h'
+  include-directives:
+    - '**index.h'
+    - '**/clang-c/**'
+    - '/full/path/to/a/header.h'
+  </code></pre></td>
   </tr>
   <tr>
     <td>name<br><i>(Prefer)</i></td>

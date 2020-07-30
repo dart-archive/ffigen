@@ -6,12 +6,15 @@ import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:ffigen/ffigen.dart';
+import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
-
+import 'package:yaml/yaml.dart';
 import '../test_utils.dart';
-import 'native_test_bindings.dart' as bindings;
+import 'native_test_bindings.dart';
 
 void main() {
+  NativeLibrary bindings;
   group('native_test', () {
     setUpAll(() {
       logWarnings();
@@ -21,8 +24,31 @@ void main() {
       } else if (Platform.isWindows) {
         dylibName = r'test\native_test\native_test.dll';
       }
-      bindings.init(
+      bindings = NativeLibrary(
           DynamicLibrary.open(File(dylibName).absolute?.path ?? dylibName));
+    });
+
+    test('generate_bindings', () {
+      final config = Config.fromYaml(loadYaml(
+          File(path.join('test', 'native_test', 'config.yaml'))
+              .readAsStringSync()) as YamlMap);
+      final library = parse(config);
+      final file = File(
+        path.join('test', 'debug_generated', 'native_test_bindings.dart'),
+      );
+      library.generateFile(file);
+
+      try {
+        final actual = file.readAsStringSync();
+        final expected = File(path.join(config.output)).readAsStringSync();
+        expect(actual, expected);
+        if (file.existsSync()) {
+          file.delete();
+        }
+      } catch (e) {
+        print('Failed test: Debug generated file: ${file.absolute?.path}');
+        rethrow;
+      }
     });
     test('uint8_t', () {
       expect(bindings.Function1Uint8(pow(2, 8).toInt()), 42);

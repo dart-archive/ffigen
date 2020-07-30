@@ -18,13 +18,11 @@ ffigen:
   # Bash style Glob matching is also supported.
   # TODO(11): Globs dont work on windows if they begin with '.' or '..'.
   headers:
-    - ../../third_party/libclang/include/clang-c/Index.h
-
-  # Excludes included headers based on their names (not fullpath name).
-  header-filter:
-    include:
-      - 'CXString.h'
-      - 'Index.h'
+    entry-points:
+      - ../../third_party/libclang/include/clang-c/Index.h
+    include-directives: # use glob syntax to match with header file path.
+      - '**CXString.h'
+      - '**Index.h'
 
   compiler-opts: '-I/usr/lib/llvm-9/include/ -I/usr/lib/llvm-10/include/ -IC:\Progra~1\LLVM\include -I/usr/local/opt/llvm/include/ -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/ -Wno-nullability-completeness'
   functions:

@@ -3,14 +3,16 @@
 # BSD-style license that can be found in the LICENSE file.
 
 # =================== GENERATING TEST BINDINGS ==================
-#    dart ../../bin/ffigen.dart --config config.yaml
+#    pub run ffigen --config test/native_test/config.yaml
 # ===============================================================
 
-output: 'native_test_bindings.dart'
+name: NativeLibrary
+description: 'Native tests.'
+output: 'test/native_test/native_test_bindings.dart'
 sort: true
 headers:
-  - 'native_test.c'
-header-filter:
-  include:
-    - 'native_test.c'
+  entry-points:
+    - 'test/native_test/native_test.c'
+  include-directives:
+    - '**native_test.c'
 array-workaround: true

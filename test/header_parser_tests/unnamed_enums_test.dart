@@ -24,10 +24,8 @@ ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Unnamed Enums Test'
 ${strings.output}: 'unused'
 ${strings.headers}:
-  - 'test/header_parser_tests/unnamed_enums.h'
-${strings.headerFilter}:
-  ${strings.include}:
-    - 'unnamed_enums.h'
+  ${strings.entryPoints}:
+    - 'test/header_parser_tests/unnamed_enums.h'
 ${strings.enums}:
   ${strings.exclude}:
     ${strings.names}:

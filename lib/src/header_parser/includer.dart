@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:path/path.dart' as p;
 import 'data.dart';
 
 /// Utility functions to check whether a binding should be parsed or not
@@ -58,7 +57,10 @@ bool shouldIncludeMacro(String name) {
   }
 }
 
-/// True if a cursor should be included based on header-filter, use for root
+/// Cache for headers.
+final _headerCache = <String, bool>{};
+
+/// True if a cursor should be included based on headers config, used on root
 /// declarations.
 bool shouldIncludeRootCursor(String sourceFile) {
   // Handle null in case of system headers or macros.
@@ -66,22 +68,13 @@ bool shouldIncludeRootCursor(String sourceFile) {
     return false;
   }
 
-  final name = p.basename(sourceFile);
-
-  if (config.headerFilter.excludedInclusionHeaders.contains(name)) {
-    return false;
+  // Add header to cache if its not.
+  if (!_headerCache.containsKey(sourceFile)) {
+    _headerCache[sourceFile] =
+        config.headers.includeFilter.shouldInclude(sourceFile);
   }
 
-  if (config.headerFilter.includedInclusionHeaders.contains(name)) {
-    return true;
-  }
-
-  // If any includedInclusionHeaders is provided, return false.
-  if (config.headerFilter.includedInclusionHeaders.isNotEmpty) {
-    return false;
-  } else {
-    return true;
-  }
+  return _headerCache[sourceFile];
 }
 
 bool isSeenStruc(String originalName) {

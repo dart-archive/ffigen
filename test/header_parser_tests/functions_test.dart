@@ -25,10 +25,10 @@ ${strings.description}: 'Functions Test'
 ${strings.output}: 'unused'
 
 ${strings.headers}:
-  - 'test/header_parser_tests/functions.h'
-${strings.headerFilter}:
-  ${strings.include}:
-    - 'functions.h'
+  ${strings.entryPoints}:
+    - 'test/header_parser_tests/functions.h'
+  ${strings.includeDirectives}:
+    - '**functions.h'
         ''') as yaml.YamlMap),
       );
     });

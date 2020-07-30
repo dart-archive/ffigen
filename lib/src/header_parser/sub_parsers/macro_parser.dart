@@ -195,7 +195,7 @@ File createFileForMacros() {
 
   // Write file contents.
   final sb = StringBuffer();
-  for (final h in config.headers) {
+  for (final h in config.headers.entryPoints) {
     sb.writeln('#include "$h"');
   }
 

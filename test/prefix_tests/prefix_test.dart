@@ -33,10 +33,8 @@ ${strings.description}: 'Prefix Test'
 ${strings.output}: 'unused'
 
 ${strings.headers}:
-  - 'test/prefix_tests/prefix.h'
-${strings.headerFilter}:
-  ${strings.include}:
-    - 'prefix.h'
+  ${strings.entryPoints}:
+    - 'test/prefix_tests/prefix.h'
 
 functions:
   ${strings.prefix}: $functionPrefix

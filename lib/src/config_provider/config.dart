@@ -23,13 +23,8 @@ class Config {
   /// output file name.
   String output;
 
-  /// Path to headers.
-  ///
-  /// This contains all the headers, after extraction from Globs.
-  List<String> headers;
-
-  /// Filter for headers.
-  HeaderFilter headerFilter;
+  // Holds headers and filters for header.
+  Headers headers;
 
   /// CommandLine Arguments to pass to clang_compiler.
   List<String> compilerOpts;
@@ -135,30 +130,18 @@ class Config {
   Map<String, Specification> _getSpecs() {
     return <String, Specification>{
       strings.output: Specification<String>(
-        description: 'Output file name',
         requirement: Requirement.yes,
         validator: outputValidator,
         extractor: outputExtractor,
         extractedResult: (dynamic result) => output = result as String,
       ),
-      strings.headers: Specification<List<String>>(
-        description: 'List of C headers to generate bindings of',
+      strings.headers: Specification<Headers>(
         requirement: Requirement.yes,
         validator: headersValidator,
         extractor: headersExtractor,
-        extractedResult: (dynamic result) => headers = result as List<String>,
-      ),
-      strings.headerFilter: Specification<HeaderFilter>(
-        description: 'Include/Exclude inclusion headers',
-        validator: headerFilterValidator,
-        extractor: headerFilterExtractor,
-        defaultValue: () => HeaderFilter(),
-        extractedResult: (dynamic result) {
-          return headerFilter = result as HeaderFilter;
-        },
+        extractedResult: (dynamic result) => headers = result as Headers,
       ),
       strings.compilerOpts: Specification<List<String>>(
-        description: 'Raw compiler options to pass to clang compiler',
         requirement: Requirement.no,
         validator: compilerOptsValidator,
         extractor: compilerOptsExtractor,
@@ -166,7 +149,6 @@ class Config {
             compilerOpts = result as List<String>,
       ),
       strings.functions: Specification<Declaration>(
-        description: 'Filter for functions',
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
@@ -176,7 +158,6 @@ class Config {
         },
       ),
       strings.structs: Specification<Declaration>(
-        description: 'Filter for Structs',
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
@@ -186,7 +167,6 @@ class Config {
         },
       ),
       strings.enums: Specification<Declaration>(
-        description: 'Filter for enums',
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
@@ -196,7 +176,6 @@ class Config {
         },
       ),
       strings.macros: Specification<Declaration>(
-        description: 'Filter for macros',
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
@@ -206,7 +185,6 @@ class Config {
         },
       ),
       strings.sizemap: Specification<Map<int, SupportedNativeType>>(
-        description: 'map of types: byte size in int',
         validator: sizemapValidator,
         extractor: sizemapExtractor,
         defaultValue: () => <int, SupportedNativeType>{},
@@ -220,7 +198,6 @@ class Config {
         },
       ),
       strings.sort: Specification<bool>(
-        description: 'whether or not to sort the bindings alphabetically',
         requirement: Requirement.no,
         validator: booleanValidator,
         extractor: booleanExtractor,
@@ -228,7 +205,6 @@ class Config {
         extractedResult: (dynamic result) => sort = result as bool,
       ),
       strings.useSupportedTypedefs: Specification<bool>(
-        description: 'whether or not to directly map supported typedef by name',
         requirement: Requirement.no,
         validator: booleanValidator,
         extractor: booleanExtractor,
@@ -237,7 +213,6 @@ class Config {
             useSupportedTypedefs = result as bool,
       ),
       strings.comments: Specification<CommentType>(
-        description: 'Type of comment to extract',
         requirement: Requirement.no,
         validator: commentValidator,
         extractor: commentExtractor,
@@ -246,8 +221,6 @@ class Config {
             commentType = result as CommentType,
       ),
       strings.arrayWorkaround: Specification<bool>(
-        description:
-            'whether or not to generate workarounds for inline arrays in structures',
         requirement: Requirement.no,
         validator: booleanValidator,
         extractor: booleanExtractor,
@@ -255,7 +228,6 @@ class Config {
         extractedResult: (dynamic result) => arrayWorkaround = result as bool,
       ),
       strings.unnamedEnums: Specification<bool>(
-        description: 'whether or not to generate constants for unnamed enums.',
         requirement: Requirement.no,
         validator: booleanValidator,
         extractor: booleanExtractor,
@@ -263,7 +235,6 @@ class Config {
         extractedResult: (dynamic result) => unnamedEnums = result as bool,
       ),
       strings.name: Specification<String>(
-        description: 'Name of the wrapper class',
         requirement: Requirement.prefer,
         validator: dartClassNameValidator,
         extractor: stringExtractor,
@@ -271,7 +242,6 @@ class Config {
         extractedResult: (dynamic result) => wrapperName = result as String,
       ),
       strings.description: Specification<String>(
-        description: 'Doc comment for the wrapper class',
         requirement: Requirement.prefer,
         validator: nonEmptyStringValidator,
         extractor: stringExtractor,
@@ -280,7 +250,6 @@ class Config {
             wrapperDocComment = result as String,
       ),
       strings.preamble: Specification<String>(
-        description: 'Raw header string for the generated file',
         requirement: Requirement.no,
         validator: nonEmptyStringValidator,
         extractor: stringExtractor,

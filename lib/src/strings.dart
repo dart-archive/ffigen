@@ -27,10 +27,14 @@ String get dylibFileName {
 const ffigenFolderName = 'ffigen';
 
 const output = 'output';
+
 const headers = 'headers';
-const headerFilter = 'header-filter';
+
+// Sub-fields of headers
+const entryPoints = 'entry-points';
+const includeDirectives = 'include-directives';
+
 const compilerOpts = 'compiler-opts';
-const filters = 'filters';
 
 // Declarations.
 const functions = 'functions';

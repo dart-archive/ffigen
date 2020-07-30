@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:io';
-
 import 'package:ffigen/src/header_parser.dart';
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart';
@@ -30,36 +28,24 @@ ${strings.comments}:
   ${strings.style}: ${strings.doxygen}
   ${strings.length}: ${strings.brief}
 ${strings.headers}:
-  - third_party/libclang/include/clang-c/Index.h
-${strings.headerFilter}:
-  include:
-    - 'BuildSystem.h'
-    - 'CXCompilationDatabase.h'
-    - 'CXErrorCode.h'
-    - 'CXString.h'
-    - 'Documentation.h'
-    - 'FataErrorHandler.h'
-    - 'Index.h'
+  ${strings.entryPoints}:
+    - third_party/libclang/include/clang-c/Index.h
+  ${strings.includeDirectives}:
+    - '**BuildSystem.h'
+    - '**CXCompilationDatabase.h'
+    - '**CXErrorCode.h'
+    - '**CXString.h'
+    - '**Documentation.h'
+    - '**FataErrorHandler.h'
+    - '**Index.h'
       ''') as YamlMap);
       final library = parse(config);
-      final file = File(
-        path.join('test', 'debug_generated', 'large_test_libclang.dart'),
-      );
-      library.generateFile(file);
 
-      try {
-        final actual = file.readAsStringSync();
-        final expected = File(path.join('test', 'large_integration_tests',
-                '_expected_libclang_bindings.dart'))
-            .readAsStringSync();
-        expect(actual, expected);
-        if (file.existsSync()) {
-          file.delete();
-        }
-      } catch (e) {
-        print('Failed test: Debug generated file: ${file.absolute?.path}');
-        rethrow;
-      }
+      matchLibraryWithExpected(
+        library,
+        ['test', 'debug_generated', 'large_test_libclang.dart'],
+        ['test', 'large_integration_tests', '_expected_libclang_bindings.dart'],
+      );
     });
 
     test('CJSON test', () {
@@ -71,30 +57,18 @@ ${strings.comments}:
   ${strings.length}: ${strings.full}
 ${strings.arrayWorkaround}: true
 ${strings.headers}:
-  - third_party/cjson_library/cJSON.h
-${strings.headerFilter}:
-  include:
-    - 'cJSON.h'
+  ${strings.entryPoints}:
+    - third_party/cjson_library/cJSON.h
+  ${strings.includeDirectives}:
+    - '**cJSON.h'
       ''') as YamlMap);
       final library = parse(config);
-      final file = File(
-        path.join('test', 'debug_generated', 'large_test_cjson.dart'),
-      );
-      library.generateFile(file);
 
-      try {
-        final actual = file.readAsStringSync();
-        final expected = File(path.join('test', 'large_integration_tests',
-                '_expected_cjson_bindings.dart'))
-            .readAsStringSync();
-        expect(actual, expected);
-        if (file.existsSync()) {
-          file.delete();
-        }
-      } catch (e) {
-        print('Failed test: Debug generated file: ${file.absolute?.path}');
-        rethrow;
-      }
+      matchLibraryWithExpected(
+        library,
+        ['test', 'debug_generated', 'large_test_cjson.dart'],
+        ['test', 'large_integration_tests', '_expected_cjson_bindings.dart'],
+      );
     });
 
     test('SQLite test', () {
@@ -109,10 +83,10 @@ ${strings.comments}:
   ${strings.style}: ${strings.any}
   ${strings.length}: ${strings.full}
 ${strings.headers}:
-  - third_party/sqlite/sqlite3.h
-${strings.headerFilter}:
-  ${strings.include}:
-    - 'sqlite3.h'
+  ${strings.entryPoints}:
+    - third_party/sqlite/sqlite3.h
+  ${strings.includeDirectives}:
+    - '**sqlite3.h'
 ${strings.functions}:
   ${strings.exclude}:
     ${strings.names}:
@@ -121,24 +95,12 @@ ${strings.functions}:
       - sqlite3_str_vappendf
       ''') as YamlMap);
       final library = parse(config);
-      final file = File(
-        path.join('test', 'debug_generated', 'large_test_sqlite.dart'),
-      );
-      library.generateFile(file);
 
-      try {
-        final actual = file.readAsStringSync();
-        final expected = File(path.join('test', 'large_integration_tests',
-                '_expected_sqlite_bindings.dart'))
-            .readAsStringSync();
-        expect(actual, expected);
-        if (file.existsSync()) {
-          file.delete();
-        }
-      } catch (e) {
-        print('Failed test: Debug generated file: ${file.absolute?.path}');
-        rethrow;
-      }
+      matchLibraryWithExpected(
+        library,
+        ['test', 'debug_generated', 'large_test_sqlite.dart'],
+        ['test', 'large_integration_tests', '_expected_sqlite_bindings.dart'],
+      );
     });
   });
 }
