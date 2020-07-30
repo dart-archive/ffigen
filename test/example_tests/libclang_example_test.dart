@@ -23,24 +23,21 @@ ${strings.sort}: true
 ${strings.headers}:
   ${strings.entryPoints}:
     - third_party/libclang/include/clang-c/Index.h
-  ${strings.include}-directives:
+  ${strings.includeDirectives}:
     - '**CXString.h'
     - '**Index.h'
 
 ${strings.compilerOpts}: '-I/usr/lib/llvm-9/include/ -I/usr/lib/llvm-10/include/ -IC:\Progra~1\LLVM\include -I/usr/local/opt/llvm/include/ -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/ -Wno-nullability-completeness'
 ${strings.functions}:
   ${strings.include}:
-    ${strings.matches}:
-      - 'clang_.*'
+    - 'clang_.*'
 ${strings.structs}:
   ${strings.include}:
-      ${strings.matches}:
-        - 'CX.*'
+      - 'CX.*'
 ${strings.enums}:
   ${strings.include}:
-    ${strings.names}:
-      - 'CXTypeKind'
-      - 'CXGlobalOptFlags'
+    - 'CXTypeKind'
+    - 'CXGlobalOptFlags'
 
 ${strings.name}: 'LibClang'
 ${strings.description}: 'Holds bindings to LibClang.'

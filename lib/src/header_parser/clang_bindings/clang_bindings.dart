@@ -484,7 +484,7 @@ class Clang {
   /// instead of cxcursor by default.
   int clang_visitChildren_wrap(
     ffi.Pointer<CXCursor> parent,
-    ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor_1>> _modifiedVisitor,
+    ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor>> _modifiedVisitor,
     int uid,
   ) {
     _clang_visitChildren_wrap ??= _dylib.lookupFunction<
@@ -2446,7 +2446,7 @@ typedef _dart_clang_formatDiagnostic_wrap = ffi.Pointer<CXString> Function(
   int opts,
 );
 
-typedef ModifiedCXCursorVisitor_1 = ffi.Int32 Function(
+typedef ModifiedCXCursorVisitor = ffi.Int32 Function(
   ffi.Pointer<CXCursor>,
   ffi.Pointer<CXCursor>,
   ffi.Pointer<ffi.Void>,
@@ -2454,13 +2454,13 @@ typedef ModifiedCXCursorVisitor_1 = ffi.Int32 Function(
 
 typedef _c_clang_visitChildren_wrap = ffi.Uint32 Function(
   ffi.Pointer<CXCursor> parent,
-  ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor_1>> _modifiedVisitor,
+  ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor>> _modifiedVisitor,
   ffi.Int64 uid,
 );
 
 typedef _dart_clang_visitChildren_wrap = int Function(
   ffi.Pointer<CXCursor> parent,
-  ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor_1>> _modifiedVisitor,
+  ffi.Pointer<ffi.NativeFunction<ModifiedCXCursorVisitor>> _modifiedVisitor,
   int uid,
 );
 

@@ -26,74 +26,71 @@ array-workaround: true
 
 enums:
   include:
-    names:
-      - CXChildVisitResult
-      - CXCursorKind
-      - CXTypeKind
-      - CXDiagnosticDisplayOptions
-      - CXTranslationUnit_Flags
-      - CXEvalResultKind
+    - CXChildVisitResult
+    - CXCursorKind
+    - CXTypeKind
+    - CXDiagnosticDisplayOptions
+    - CXTranslationUnit_Flags
+    - CXEvalResultKind
 
 structs:
   include:
-    names:
-      - CXCursor
-      - CXType
-      - CXSourceLocation
-      - CXString
-      - CXTranslationUnitImpl
-      - CXUnsavedFile
-      - CXSourceRange
+    - CXCursor
+    - CXType
+    - CXSourceLocation
+    - CXString
+    - CXTranslationUnitImpl
+    - CXUnsavedFile
+    - CXSourceRange
 
 functions:
   include:
-    names:
-      - clang_createIndex
-      - clang_disposeIndex
-      - clang_getNumDiagnostics
-      - clang_getDiagnostic
-      - clang_disposeDiagnostic
-      - clang_parseTranslationUnit
-      - clang_disposeTranslationUnit
-      - clang_EvalResult_getKind
-      - clang_EvalResult_getAsInt
-      - clang_EvalResult_getAsLongLong
-      - clang_EvalResult_getAsDouble
-      - clang_EvalResult_getAsStr
-      - clang_EvalResult_dispose
-      - clang_getCString_wrap
-      - clang_disposeString_wrap
-      - clang_getCursorKind_wrap
-      - clang_getCursorKindSpelling_wrap
-      - clang_getCursorType_wrap
-      - clang_getTypeSpelling_wrap
-      - clang_getTypeKindSpelling_wrap
-      - clang_getResultType_wrap
-      - clang_getPointeeType_wrap
-      - clang_getCanonicalType_wrap
-      - clang_Type_getNamedType_wrap
-      - clang_getTypeDeclaration_wrap
-      - clang_getTypedefDeclUnderlyingType_wrap
-      - clang_getCursorSpelling_wrap
-      - clang_getTranslationUnitCursor_wrap
-      - clang_formatDiagnostic_wrap
-      - clang_visitChildren_wrap
-      - clang_Cursor_getNumArguments_wrap
-      - clang_Cursor_getArgument_wrap
-      - clang_getNumArgTypes_wrap
-      - clang_getArgType_wrap
-      - clang_getEnumConstantDeclValue_wrap
-      - clang_equalRanges_wrap
-      - clang_Cursor_getCommentRange_wrap
-      - clang_Cursor_getRawCommentText_wrap
-      - clang_Cursor_getBriefCommentText_wrap
-      - clang_getCursorLocation_wrap
-      - clang_getFileLocation_wrap
-      - clang_getFileName_wrap
-      - clang_getNumElements_wrap
-      - clang_getArrayElementType_wrap
-      - clang_Cursor_isMacroFunctionLike_wrap
-      - clang_Cursor_isMacroBuiltin_wrap
-      - clang_Cursor_Evaluate_wrap
-      - clang_Cursor_isAnonymous_wrap
-      - clang_Cursor_isAnonymousRecordDecl_wrap
+    - clang_createIndex
+    - clang_disposeIndex
+    - clang_getNumDiagnostics
+    - clang_getDiagnostic
+    - clang_disposeDiagnostic
+    - clang_parseTranslationUnit
+    - clang_disposeTranslationUnit
+    - clang_EvalResult_getKind
+    - clang_EvalResult_getAsInt
+    - clang_EvalResult_getAsLongLong
+    - clang_EvalResult_getAsDouble
+    - clang_EvalResult_getAsStr
+    - clang_EvalResult_dispose
+    - clang_getCString_wrap
+    - clang_disposeString_wrap
+    - clang_getCursorKind_wrap
+    - clang_getCursorKindSpelling_wrap
+    - clang_getCursorType_wrap
+    - clang_getTypeSpelling_wrap
+    - clang_getTypeKindSpelling_wrap
+    - clang_getResultType_wrap
+    - clang_getPointeeType_wrap
+    - clang_getCanonicalType_wrap
+    - clang_Type_getNamedType_wrap
+    - clang_getTypeDeclaration_wrap
+    - clang_getTypedefDeclUnderlyingType_wrap
+    - clang_getCursorSpelling_wrap
+    - clang_getTranslationUnitCursor_wrap
+    - clang_formatDiagnostic_wrap
+    - clang_visitChildren_wrap
+    - clang_Cursor_getNumArguments_wrap
+    - clang_Cursor_getArgument_wrap
+    - clang_getNumArgTypes_wrap
+    - clang_getArgType_wrap
+    - clang_getEnumConstantDeclValue_wrap
+    - clang_equalRanges_wrap
+    - clang_Cursor_getCommentRange_wrap
+    - clang_Cursor_getRawCommentText_wrap
+    - clang_Cursor_getBriefCommentText_wrap
+    - clang_getCursorLocation_wrap
+    - clang_getFileLocation_wrap
+    - clang_getFileName_wrap
+    - clang_getNumElements_wrap
+    - clang_getArrayElementType_wrap
+    - clang_Cursor_isMacroFunctionLike_wrap
+    - clang_Cursor_isMacroBuiltin_wrap
+    - clang_Cursor_Evaluate_wrap
+    - clang_Cursor_isAnonymous_wrap
+    - clang_Cursor_isAnonymousRecordDecl_wrap

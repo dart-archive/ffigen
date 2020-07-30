@@ -28,8 +28,7 @@ ${strings.headers}:
     - 'test/header_parser_tests/unnamed_enums.h'
 ${strings.enums}:
   ${strings.exclude}:
-    ${strings.names}:
-      - Named
+    - Named
         ''') as yaml.YamlMap),
       );
     });

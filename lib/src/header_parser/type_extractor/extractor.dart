@@ -135,9 +135,9 @@ Type _extractFromFunctionProto(
 
   // Set a name for typedefc incase it was null or empty.
   if (name == null || name == '') {
-    name = _getNextIncrementedString('_typedefC');
+    name = '_typedefC'; // Any name conflicts will be resolved by UniqueNamer.
   } else {
-    name = _getNextIncrementedString(name);
+    name = name;
   }
   final _parameters = <Parameter>[];
   final totalArgs = clang.clang_getNumArgTypes_wrap(cxtype);
@@ -165,13 +165,3 @@ Type _extractFromFunctionProto(
 
   return Type.nativeFunc(typedefC);
 }
-
-/// Generate a unique string for naming in [Typedef].
-String _getNextIncrementedString(String prefix) {
-  var i = _incrementedStringCounters[prefix] ?? 0;
-  i++;
-  _incrementedStringCounters[prefix] = i;
-  return '${prefix}_$i';
-}
-
-Map<String, int> _incrementedStringCounters = {};
