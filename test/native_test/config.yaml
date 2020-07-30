@@ -12,5 +12,5 @@ headers:
   entry-points:
     - 'native_test.c'
   include-directives:
-    - '**/native_test.c'
+    - '**native_test.c'
 array-workaround: true

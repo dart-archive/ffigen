@@ -28,7 +28,7 @@ ${strings.headers}:
   ${strings.entryPoints}:
     - 'test/header_parser_tests/functions.h'
   ${strings.includeDirectives}:
-    - '**/functions.h'
+    - '**functions.h'
         ''') as yaml.YamlMap),
       );
     });

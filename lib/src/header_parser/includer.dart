@@ -60,7 +60,7 @@ bool shouldIncludeMacro(String name) {
 /// Cache for headers.
 final _headerCache = <String, bool>{};
 
-/// True if a cursor should be included based on header-filter, use for root
+/// True if a cursor should be included based on headers config, used on root
 /// declarations.
 bool shouldIncludeRootCursor(String sourceFile) {
   // Handle null in case of system headers or macros.

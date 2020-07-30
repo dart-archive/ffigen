@@ -33,13 +33,13 @@ ${strings.headers}:
   ${strings.entryPoints}:
     - third_party/libclang/include/clang-c/Index.h
   ${strings.includeDirectives}:
-    - '**/BuildSystem.h'
-    - '**/CXCompilationDatabase.h'
-    - '**/CXErrorCode.h'
-    - '**/CXString.h'
-    - '**/Documentation.h'
-    - '**/FataErrorHandler.h'
-    - '**/Index.h'
+    - '**BuildSystem.h'
+    - '**CXCompilationDatabase.h'
+    - '**CXErrorCode.h'
+    - '**CXString.h'
+    - '**Documentation.h'
+    - '**FataErrorHandler.h'
+    - '**Index.h'
       ''') as YamlMap);
       final library = parse(config);
       final file = File(
@@ -74,7 +74,7 @@ ${strings.headers}:
   ${strings.entryPoints}:
     - third_party/cjson_library/cJSON.h
   ${strings.includeDirectives}:
-    - '**/cJSON.h'
+    - '**cJSON.h'
       ''') as YamlMap);
       final library = parse(config);
       final file = File(
@@ -112,7 +112,7 @@ ${strings.headers}:
   ${strings.entryPoints}:
     - third_party/sqlite/sqlite3.h
   ${strings.includeDirectives}:
-    - '**/sqlite3.h'
+    - '**sqlite3.h'
 ${strings.functions}:
   ${strings.exclude}:
     ${strings.names}:

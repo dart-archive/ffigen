@@ -9,9 +9,10 @@ import 'dart:math';
 import 'package:test/test.dart';
 
 import '../test_utils.dart';
-import 'native_test_bindings.dart' as bindings;
+import 'native_test_bindings.dart';
 
 void main() {
+  NativeLibrary bindings;
   group('native_test', () {
     setUpAll(() {
       logWarnings();
@@ -21,7 +22,7 @@ void main() {
       } else if (Platform.isWindows) {
         dylibName = r'test\native_test\native_test.dll';
       }
-      bindings.init(
+      bindings = NativeLibrary(
           DynamicLibrary.open(File(dylibName).absolute?.path ?? dylibName));
     });
     test('uint8_t', () {

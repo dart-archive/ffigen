@@ -22,5 +22,5 @@ ffigen:
     entry-points:
       - '../../third_party/cjson_library/cJSON.h'
     include-directives:
-      - '**/cJSON.h'
+      - '**cJSON.h'
   comments: false
