@@ -31,7 +31,6 @@ enum CommentLength { none, brief, full }
 ///
 /// [E] is the return type of the extractedResult.
 class Specification<E> {
-  final String description;
   final bool Function(String name, dynamic value) validator;
   final E Function(dynamic map) extractor;
   final E Function() defaultValue;
@@ -41,7 +40,6 @@ class Specification<E> {
 
   Specification({
     @required this.extractedResult,
-    @required this.description,
     @required this.validator,
     @required this.extractor,
     this.defaultValue,
