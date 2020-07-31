@@ -1471,7 +1471,7 @@ class LibClang {
   _dart_clang_enableStackTraces _clang_enableStackTraces;
 
   void clang_executeOnThread(
-    ffi.Pointer<ffi.NativeFunction<_typedefC>> fn,
+    ffi.Pointer<ffi.NativeFunction<_typedefC_1>> fn,
     ffi.Pointer<ffi.Void> user_data,
     int stack_size,
   ) {
@@ -1889,7 +1889,7 @@ class LibClang {
   /// is inspecting the inclusions in the PCH file itself).
   void clang_getInclusions(
     ffi.Pointer<CXTranslationUnitImpl> tu,
-    ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor>> visitor,
+    ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor_1>> visitor,
     ffi.Pointer<ffi.Void> client_data,
   ) {
     _clang_getInclusions ??= _dylib.lookupFunction<_c_clang_getInclusions,
@@ -3266,15 +3266,15 @@ class CXIdxEntityRefInfo extends ffi.Struct {}
 class IndexerCallbacks extends ffi.Struct {
   /// Called periodically to check whether indexing should be aborted.
   /// Should return 0 to continue, and non-zero to abort.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_1>> abortQuery;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_3>> abortQuery;
 
   /// Called at the end of indexing; passes the complete diagnostic set.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_2>> diagnostic;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_4>> diagnostic;
 
-  ffi.Pointer<ffi.NativeFunction<_typedefC_3>> enteredMainFile;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_5>> enteredMainFile;
 
   /// Called when a file gets \#included/\#imported.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_4>> ppIncludedFile;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_6>> ppIncludedFile;
 
   /// Called when a AST file (PCH or module) gets imported.
   ///
@@ -3282,15 +3282,15 @@ class IndexerCallbacks extends ffi.Struct {
   /// the entities in an AST file). The recommended action is that, if the AST
   /// file is not already indexed, to initiate a new indexing job specific to
   /// the AST file.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_5>> importedASTFile;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_7>> importedASTFile;
 
   /// Called at the beginning of indexing a translation unit.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_6>> startedTranslationUnit;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_8>> startedTranslationUnit;
 
-  ffi.Pointer<ffi.NativeFunction<_typedefC_7>> indexDeclaration;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_9>> indexDeclaration;
 
   /// Called to index a reference of an entity.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_8>> indexEntityReference;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_10>> indexEntityReference;
 }
 
 const int CINDEX_VERSION_MAJOR = 0;
@@ -3980,18 +3980,18 @@ typedef _c_clang_enableStackTraces = ffi.Void Function();
 
 typedef _dart_clang_enableStackTraces = void Function();
 
-typedef _typedefC = ffi.Void Function(
+typedef _typedefC_1 = ffi.Void Function(
   ffi.Pointer<ffi.Void>,
 );
 
 typedef _c_clang_executeOnThread = ffi.Void Function(
-  ffi.Pointer<ffi.NativeFunction<_typedefC>> fn,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_1>> fn,
   ffi.Pointer<ffi.Void> user_data,
   ffi.Uint32 stack_size,
 );
 
 typedef _dart_clang_executeOnThread = void Function(
-  ffi.Pointer<ffi.NativeFunction<_typedefC>> fn,
+  ffi.Pointer<ffi.NativeFunction<_typedefC_1>> fn,
   ffi.Pointer<ffi.Void> user_data,
   int stack_size,
 );
@@ -4147,7 +4147,7 @@ typedef _dart_clang_toggleCrashRecovery = void Function(
   int isEnabled,
 );
 
-typedef CXInclusionVisitor = ffi.Void Function(
+typedef CXInclusionVisitor_1 = ffi.Void Function(
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<CXSourceLocation>,
   ffi.Uint32,
@@ -4156,13 +4156,13 @@ typedef CXInclusionVisitor = ffi.Void Function(
 
 typedef _c_clang_getInclusions = ffi.Void Function(
   ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor>> visitor,
+  ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor_1>> visitor,
   ffi.Pointer<ffi.Void> client_data,
 );
 
 typedef _dart_clang_getInclusions = void Function(
   ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor>> visitor,
+  ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor_1>> visitor,
   ffi.Pointer<ffi.Void> client_data,
 );
 
@@ -4486,44 +4486,44 @@ typedef _dart_clang_indexTranslationUnit = int Function(
   ffi.Pointer<CXTranslationUnitImpl> arg5,
 );
 
-typedef _typedefC_1 = ffi.Int32 Function(
+typedef _typedefC_3 = ffi.Int32 Function(
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<ffi.Void>,
 );
 
-typedef _typedefC_2 = ffi.Void Function(
+typedef _typedefC_4 = ffi.Void Function(
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<ffi.Void>,
-);
-
-typedef _typedefC_3 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void>,
-  ffi.Pointer<ffi.Void>,
-  ffi.Pointer<ffi.Void>,
-);
-
-typedef _typedefC_4 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void>,
-  ffi.Pointer<CXIdxIncludedFileInfo>,
 );
 
 typedef _typedefC_5 = ffi.Pointer<ffi.Void> Function(
   ffi.Pointer<ffi.Void>,
-  ffi.Pointer<CXIdxImportedASTFileInfo>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _typedefC_6 = ffi.Pointer<ffi.Void> Function(
   ffi.Pointer<ffi.Void>,
+  ffi.Pointer<CXIdxIncludedFileInfo>,
+);
+
+typedef _typedefC_7 = ffi.Pointer<ffi.Void> Function(
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<CXIdxImportedASTFileInfo>,
+);
+
+typedef _typedefC_8 = ffi.Pointer<ffi.Void> Function(
+  ffi.Pointer<ffi.Void>,
   ffi.Pointer<ffi.Void>,
 );
 
-typedef _typedefC_7 = ffi.Void Function(
+typedef _typedefC_9 = ffi.Void Function(
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<CXIdxDeclInfo>,
 );
 
-typedef _typedefC_8 = ffi.Void Function(
+typedef _typedefC_10 = ffi.Void Function(
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<CXIdxEntityRefInfo>,
 );

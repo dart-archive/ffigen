@@ -135,9 +135,9 @@ Type _extractFromFunctionProto(
 
   // Set a name for typedefc incase it was null or empty.
   if (name == null || name == '') {
-    name = '_typedefC'; // Any name conflicts will be resolved by UniqueNamer.
+    name = incrementalNamer.name('_typedefC');
   } else {
-    name = name;
+    name = incrementalNamer.name(name);
   }
   final _parameters = <Parameter>[];
   final totalArgs = clang.clang_getNumArgTypes_wrap(cxtype);

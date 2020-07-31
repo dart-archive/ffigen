@@ -310,3 +310,15 @@ class Stack<T> {
   T pop() => _stack.removeLast();
   void push(T item) => _stack.add(item);
 }
+
+class IncrementalNamer {
+  final _incrementedStringCounters = <String, int>{};
+
+  /// Appends `_<int>` to base. <int> is incremented on every call.
+  String name(String base) {
+    var i = _incrementedStringCounters[base] ?? 0;
+    i++;
+    _incrementedStringCounters[base] = i;
+    return '${base}_$i';
+  }
+}
