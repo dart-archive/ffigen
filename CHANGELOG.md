@@ -1,5 +1,6 @@
 # 0.2.0-dev
 - Updated header config. Header `entry-points` and `include-directives` are now specified under `headers` key. Glob syntax is allowed.
+- Added Regexp based declaration renaming using `rename` subkey.
 
 # 0.1.5
 - Added support for parsing macros and anonymous unnamed enums. These are generated as top level constants.
