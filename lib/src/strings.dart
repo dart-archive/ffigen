@@ -45,9 +45,7 @@ const macros = 'macros';
 // Sub-fields of Declarations.
 const include = 'include';
 const exclude = 'exclude';
-const prefix = 'prefix';
-const prefix_replacement = 'prefix-replacement';
-
+const rename = 'rename';
 const sizemap = 'size-map';
 
 // Sizemap values.

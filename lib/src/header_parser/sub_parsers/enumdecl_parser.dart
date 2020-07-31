@@ -47,7 +47,7 @@ EnumClass parseEnumDeclaration(
     _stack.top.enumClass = EnumClass(
       dartDoc: getCursorDocComment(cursor),
       originalName: enumName,
-      name: config.enumClassDecl.getPrefixedName(enumName),
+      name: config.enumClassDecl.renameUsingConfig(enumName),
     );
     addEnumClassToSeen(enumName, _stack.top.enumClass);
     _addEnumConstant(cursor);

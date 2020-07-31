@@ -31,7 +31,7 @@ void saveMacroDefinition(Pointer<clang_types.CXCursor> cursor) {
     // Parse macro only if it's not builtin or function-like.
     _logger.fine(
         "++++ Saved Macro '$originalMacroName' for later : ${cursor.completeStringRepr()}");
-    final prefixedName = config.macroDecl.getPrefixedName(originalMacroName);
+    final prefixedName = config.macroDecl.renameUsingConfig(originalMacroName);
     addMacroToSeen(originalMacroName, prefixedName);
     _saveMacro(prefixedName, originalMacroName);
   }

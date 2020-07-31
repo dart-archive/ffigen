@@ -47,7 +47,7 @@ Struc parseStructDeclaration(
         '++++ Adding Structure: structName: ${structName}, ${cursor.completeStringRepr()}');
     _stack.top.struc = Struc(
       originalName: structName,
-      name: config.structDecl.getPrefixedName(structName),
+      name: config.structDecl.renameUsingConfig(structName),
       dartDoc: getCursorDocComment(cursor),
     );
     // Adding to seen here to stop recursion if a struct has itself as a

@@ -17,98 +17,103 @@ final structPrefix = 'sss';
 final enumPrefix = 'eee';
 final macroPrefix = 'mmm';
 
-final functionPrefixReplacedWith = 'rf';
-final structPrefixReplacedWith = 'rs';
-final enumPrefixReplacedWith = 're';
-final macroPrefixReplacedWith = 'rm';
-
 void main() {
-  group('prefix_test', () {
+  group('rename_test', () {
     setUpAll(() {
       logWarnings();
       expected = expectedLibrary();
       actual = parser.parse(Config.fromYaml(yaml.loadYaml('''
 ${strings.name}: 'NativeLibrary'
-${strings.description}: 'Prefix Test'
+${strings.description}: 'Rename Test'
 ${strings.output}: 'unused'
 
 ${strings.headers}:
   ${strings.entryPoints}:
-    - 'test/prefix_tests/prefix.h'
+    - 'test/rename_tests/rename.h'
 
 functions:
-  ${strings.prefix}: $functionPrefix
-  ${strings.prefix_replacement}:
-    'test_': '$functionPrefixReplacedWith'
+  ${strings.rename}:
+    'test_(.*)': '\$1'
+    '.*': '$functionPrefix\$0'
+    'fullMatch_func3': 'func3'
+
 
 structs:
-  ${strings.prefix}: $structPrefix
-  ${strings.prefix_replacement}:
-    'Test_': '$structPrefixReplacedWith'
+  ${strings.rename}:
+    'Test_(.*)': '\$1'
+    '.*': '$structPrefix\$0'
+    'FullMatchStruct3': 'Struct3'
 
 enums:
-  ${strings.prefix}: $enumPrefix
-  ${strings.prefix_replacement}:
-    'Test_': '$enumPrefixReplacedWith'
+  ${strings.rename}:
+    'Test_(.*)': '\$1'
+    '.*': '$enumPrefix\$0'
+    'FullMatchEnum3': 'Enum3'
 
 macros:
-  ${strings.prefix}: $macroPrefix
-  ${strings.prefix_replacement}:
-    'Test_': '$macroPrefixReplacedWith'
+  ${strings.rename}:
+    'Test_(.*)': '\$1'
+    '.*': '$macroPrefix\$0'
+    'FullMatchMacro3': 'Macro3'
+
     ''') as yaml.YamlMap));
     });
 
-    test('Function prefix', () {
+    test('Function addPrefix', () {
       expect(actual.getBindingAsString('${functionPrefix}func1'),
           expected.getBindingAsString('${functionPrefix}func1'));
     });
-    test('Struct prefix', () {
+    test('Struct addPrefix', () {
       expect(actual.getBindingAsString('${structPrefix}Struct1'),
           expected.getBindingAsString('${structPrefix}Struct1'));
     });
-    test('Enum prefix', () {
+    test('Enum addPrefix', () {
       expect(actual.getBindingAsString('${enumPrefix}Enum1'),
           expected.getBindingAsString('${enumPrefix}Enum1'));
     });
-    test('Macro prefix', () {
+    test('Macro addPrefix', () {
       expect(actual.getBindingAsString('${macroPrefix}Macro1'),
           expected.getBindingAsString('${macroPrefix}Macro1'));
     });
-    test('Function prefix-replacement', () {
-      expect(
-          actual.getBindingAsString(
-              '${functionPrefix}${functionPrefixReplacedWith}func2'),
-          expected.getBindingAsString(
-              '${functionPrefix}${functionPrefixReplacedWith}func2'));
+    test('Function rename with pattern', () {
+      expect(actual.getBindingAsString('func2'),
+          expected.getBindingAsString('func2'));
     });
-    test('Struct prefix-replacement', () {
-      expect(
-          actual.getBindingAsString(
-              '${structPrefix}${structPrefixReplacedWith}Struct2'),
-          expected.getBindingAsString(
-              '${structPrefix}${structPrefixReplacedWith}Struct2'));
+    test('Struct rename with pattern', () {
+      expect(actual.getBindingAsString('Struct2'),
+          expected.getBindingAsString('Struct2'));
     });
-    test('Enum prefix-replacement', () {
-      expect(
-          actual.getBindingAsString(
-              '${enumPrefix}${enumPrefixReplacedWith}Enum2'),
-          expected.getBindingAsString(
-              '${enumPrefix}${enumPrefixReplacedWith}Enum2'));
+    test('Enum rename with pattern', () {
+      expect(actual.getBindingAsString('Enum2'),
+          expected.getBindingAsString('Enum2'));
     });
-    test('Macro prefix-replacement', () {
-      expect(
-          actual.getBindingAsString(
-              '${macroPrefix}${macroPrefixReplacedWith}Macro2'),
-          expected.getBindingAsString(
-              '${macroPrefix}${macroPrefixReplacedWith}Macro2'));
+    test('Macro rename with pattern', () {
+      expect(actual.getBindingAsString('Macro2'),
+          expected.getBindingAsString('Macro2'));
+    });
+    test('Function full match rename', () {
+      expect(actual.getBindingAsString('func3'),
+          expected.getBindingAsString('func3'));
+    });
+    test('Struct full match rename', () {
+      expect(actual.getBindingAsString('Struct3'),
+          expected.getBindingAsString('Struct3'));
+    });
+    test('Enum full match rename', () {
+      expect(actual.getBindingAsString('Enum3'),
+          expected.getBindingAsString('Enum3'));
+    });
+    test('Macro full match rename', () {
+      expect(actual.getBindingAsString('Macro3'),
+          expected.getBindingAsString('Macro3'));
     });
   });
 }
 
 Library expectedLibrary() {
   final struc1 = Struc(name: '${structPrefix}Struct1');
-  final struc2 =
-      Struc(name: '${structPrefix}${structPrefixReplacedWith}Struct2');
+  final struc2 = Struc(name: 'Struct2');
+  final struc3 = Struc(name: 'Struct3');
   return Library(
     name: 'Bindings',
     bindings: [
@@ -126,7 +131,7 @@ Library expectedLibrary() {
         ],
       ),
       Func(
-        name: '${functionPrefix}${functionPrefixReplacedWith}func2',
+        name: 'func2',
         originalName: 'test_func2',
         returnType: Type.nativeType(
           SupportedNativeType.Void,
@@ -138,8 +143,22 @@ Library expectedLibrary() {
           ),
         ],
       ),
+      Func(
+        name: 'func3',
+        originalName: 'fullMatch_func3',
+        returnType: Type.nativeType(
+          SupportedNativeType.Void,
+        ),
+        parameters: [
+          Parameter(
+            name: 's',
+            type: Type.pointer(Type.struct(struc3)),
+          ),
+        ],
+      ),
       struc1,
       struc2,
+      struc3,
       EnumClass(
         name: '${enumPrefix}Enum1',
         enumConstants: [
@@ -149,24 +168,35 @@ Library expectedLibrary() {
         ],
       ),
       EnumClass(
-        name: '${enumPrefix}${enumPrefixReplacedWith}Enum2',
+        name: 'Enum2',
         enumConstants: [
           EnumConstant(name: 'e', value: 0),
           EnumConstant(name: 'f', value: 1),
           EnumConstant(name: 'g', value: 2),
         ],
       ),
+      EnumClass(
+        name: 'Enum3',
+        enumConstants: [
+          EnumConstant(name: 'i', value: 0),
+          EnumConstant(name: 'j', value: 1),
+          EnumConstant(name: 'k', value: 2),
+        ],
+      ),
       Constant(
-        originalName: 'Macro1',
         name: '${macroPrefix}Macro1',
         rawType: 'int',
         rawValue: '1',
       ),
       Constant(
-        originalName: 'TestMacro2',
-        name: '${macroPrefix}${macroPrefixReplacedWith}Macro2',
+        name: 'Macro2',
         rawType: 'int',
         rawValue: '2',
+      ),
+      Constant(
+        name: 'Macro3',
+        rawType: 'int',
+        rawValue: '3',
       ),
     ],
   );

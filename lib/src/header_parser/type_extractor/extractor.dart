@@ -100,7 +100,7 @@ Type _extractfromRecord(Pointer<clang_types.CXType> cxtype) {
         structName = cxtype.spelling();
       }
 
-      final fixedStructName = config.structDecl.getPrefixedName(structName);
+      final fixedStructName = config.structDecl.renameUsingConfig(structName);
 
       // Also add a struct binding, if its unseen.
       // TODO(23): Check if we should auto add struct.

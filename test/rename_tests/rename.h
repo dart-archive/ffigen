@@ -4,6 +4,7 @@
 
 #define Macro1 1
 #define Test_Macro2 2
+#define FullMatchMacro3 3
 
 struct Struct1
 {
@@ -11,9 +12,13 @@ struct Struct1
 struct Test_Struct2
 {
 };
+struct FullMatchStruct3
+{
+};
 
 void func1(struct Struct1 *s);
 void test_func2(struct Test_Struct2 *s);
+void fullMatch_func3(struct FullMatchStruct3 *s);
 
 enum Enum1
 {
@@ -26,4 +31,10 @@ enum Test_Enum2
     e = 0,
     f = 1,
     g = 2
+};
+enum FullMatchEnum3
+{
+    i = 0,
+    j = 1,
+    k = 2
 };

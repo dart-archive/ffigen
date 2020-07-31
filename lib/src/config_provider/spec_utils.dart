@@ -178,12 +178,12 @@ bool isFullDeclarationName(String str) =>
     quiver.matchesFull(RegExp('[a-zA-Z_0-9]*'), str);
 
 Declaration declarationConfigExtractor(dynamic yamlMap) {
-  final includeMatchers = <String>[],
-      includeFull = <String>[],
-      excludeMatchers = <String>[],
-      excludeFull = <String>[];
-  String prefix;
-  Map<String, String> prefixReplacement;
+  final includeMatchers = <RegExp>[],
+      includeFull = <String>{},
+      excludeMatchers = <RegExp>[],
+      excludeFull = <String>{};
+  final renamePatterns = <RenamePattern>[];
+  final renameFull = <String, String>{};
 
   final include = (yamlMap[strings.include] as YamlList)?.cast<String>();
   if (include != null) {
@@ -191,7 +191,7 @@ Declaration declarationConfigExtractor(dynamic yamlMap) {
       if (isFullDeclarationName(str)) {
         includeFull.add(str);
       } else {
-        includeMatchers.add(str);
+        includeMatchers.add(RegExp(str, dotAll: true));
       }
     }
   }
@@ -202,23 +202,31 @@ Declaration declarationConfigExtractor(dynamic yamlMap) {
       if (isFullDeclarationName(str)) {
         excludeFull.add(str);
       } else {
-        excludeMatchers.add(str);
+        excludeMatchers.add(RegExp(str, dotAll: true));
       }
     }
   }
 
-  prefix = yamlMap[strings.prefix] as String;
+  final rename = (yamlMap[strings.rename] as YamlMap)?.cast<String, String>();
 
-  prefixReplacement =
-      (yamlMap[strings.prefix_replacement] as YamlMap)?.cast<String, String>();
+  if (rename != null) {
+    for (final str in rename.keys) {
+      if (isFullDeclarationName(str)) {
+        renameFull[str] = rename[str];
+      } else {
+        renamePatterns
+            .add(RenamePattern(RegExp(str, dotAll: true), rename[str]));
+      }
+    }
+  }
 
   return Declaration(
     includeMatchers: includeMatchers,
     includeFull: includeFull,
     excludeMatchers: excludeMatchers,
     excludeFull: excludeFull,
-    globalPrefix: prefix,
-    prefixReplacement: prefixReplacement,
+    renameFull: renameFull,
+    renamePatterns: renamePatterns,
   );
 }
 
@@ -230,11 +238,7 @@ bool declarationConfigValidator(String name, dynamic value) {
         if (!checkType<YamlList>([name, key as String], value[key])) {
           _result = false;
         }
-      } else if (key == strings.prefix) {
-        if (!checkType<String>([name, key as String], value[key])) {
-          _result = false;
-        }
-      } else if (key == strings.prefix_replacement) {
+      } else if (key == strings.rename) {
         if (!checkType<YamlMap>([name, key as String], value[key])) {
           _result = false;
         } else {
