@@ -14,7 +14,8 @@ Add configurations to Pubspec File:
 ffigen:
   output: 'generated_bindings.dart'
   headers:
-    - 'example.h'
+    entry-points:
+      - 'example.h'
 ```
 Output (_generated_bindings.dart_).
 ```dart
@@ -39,7 +40,7 @@ typedef _dart_sum = int Function(int a,int b);
 - Run the tool- `pub run ffigen`.
 
 ## Setup
-`package:ffigen` uses LLVM. Install LLVM in the following way.
+`package:ffigen` uses LLVM. Install LLVM (9+) in the following way.
 
 #### ubuntu/linux
 1. Install libclangdev - `sudo apt-get install libclang-dev`.
