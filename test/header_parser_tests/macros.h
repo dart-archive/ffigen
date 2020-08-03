@@ -14,3 +14,7 @@
 #define TEST7(x, y) x *y
 
 #define TEST8 5,2,3
+
+// These tests that special characters are escaped properly.
+#define TEST9 "$dollar"
+#define TEST10 "test's"
