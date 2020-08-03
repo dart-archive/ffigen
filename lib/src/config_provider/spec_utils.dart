@@ -221,12 +221,16 @@ Declaration declarationConfigExtractor(dynamic yamlMap) {
   }
 
   return Declaration(
-    includeMatchers: includeMatchers,
-    includeFull: includeFull,
-    excludeMatchers: excludeMatchers,
-    excludeFull: excludeFull,
-    renameFull: renameFull,
-    renamePatterns: renamePatterns,
+    includer: Includer(
+      includeMatchers: includeMatchers,
+      includeFull: includeFull,
+      excludeMatchers: excludeMatchers,
+      excludeFull: excludeFull,
+    ),
+    renamer: Renamer(
+      renameFull: renameFull,
+      renamePatterns: renamePatterns,
+    ),
   );
 }
 
