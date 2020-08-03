@@ -170,7 +170,7 @@ class Includer {
     }
 
     for (final em in _excludeMatchers) {
-      if (em.firstMatch(name)?.end == name.length) {
+      if (quiver.matchesFull(em, name)) {
         return false;
       }
     }
@@ -180,7 +180,7 @@ class Includer {
     }
 
     for (final im in _includeMatchers) {
-      if (im.firstMatch(name)?.end == name.length) {
+      if (quiver.matchesFull(im, name)) {
         return true;
       }
     }
