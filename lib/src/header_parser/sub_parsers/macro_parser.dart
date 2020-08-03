@@ -132,12 +132,16 @@ int _macroVariablevisitor(Pointer<clang_types.CXCursor> cursor,
           );
           break;
         case clang_types.CXEvalResultKind.CXEval_StrLiteral:
+          var value = Utf8.fromUtf8(clang.clang_EvalResult_getAsStr(e).cast());
+          // Escape $ character.
+          value = value.replaceAll(r'$', r'\$');
+          // Escape ' character, because our strings are enclosed with '.
+          value = value.replaceAll("'", r"\'");
           constant = Constant(
             originalName: _savedMacros[macroName],
             name: macroName,
             rawType: 'String',
-            rawValue:
-                "'${Utf8.fromUtf8(clang.clang_EvalResult_getAsStr(e).cast())}'",
+            rawValue: "'${value}'",
           );
           break;
       }
