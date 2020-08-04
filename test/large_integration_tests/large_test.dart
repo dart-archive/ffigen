@@ -89,10 +89,9 @@ ${strings.headers}:
     - '**sqlite3.h'
 ${strings.functions}:
   ${strings.exclude}:
-    ${strings.names}:
-      - sqlite3_vmprintf
-      - sqlite3_vsnprintf
-      - sqlite3_str_vappendf
+    - sqlite3_vmprintf
+    - sqlite3_vsnprintf
+    - sqlite3_str_vappendf
       ''') as YamlMap);
       final library = parse(config);
 

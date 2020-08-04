@@ -65,7 +65,7 @@ Func parseFunctionDeclaration(Pointer<clang_types.CXCursor> cursor) {
         cursor,
         nesting.length + commentPrefix.length,
       ),
-      name: config.functionDecl.getPrefixedName(funcName),
+      name: config.functionDecl.renameUsingConfig(funcName),
       originalName: funcName,
       returnType: rt,
       parameters: parameters,

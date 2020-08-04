@@ -29,8 +29,7 @@ ${strings.headers}:
     - 'test/header_parser_tests/nested_parsing.h'
 ${strings.structs}:
   ${strings.include}:
-    ${strings.names}:
-      - Struct1
+    - Struct1
         ''') as yaml.YamlMap),
       );
     });

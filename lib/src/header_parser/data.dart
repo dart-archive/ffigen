@@ -8,6 +8,8 @@ import 'dart:isolate';
 import 'package:ffigen/src/config_provider.dart';
 import 'clang_bindings/clang_bindings.dart' show Clang;
 
+import 'utils.dart';
+
 /// Holds all Global shared variables.
 
 /// Holds configurations.
@@ -15,6 +17,9 @@ Config config;
 
 /// Holds clang functions.
 Clang clang;
+
+/// Used for naming typedefs.
+IncrementalNamer incrementalNamer;
 
 /// Holds the unique id refering to this isolate.
 ///

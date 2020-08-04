@@ -91,72 +91,86 @@ class GlobHeaderFilter extends HeaderIncludeFilter {
   }
 }
 
-/// A generic declaration config.
+/// A generic declaration config, used for Functions, Structs and Enums.
 class Declaration {
-  // matchers
-  List<RegExp> _includeMatchers = [];
-  Set<String> _includeFull = {};
-  List<RegExp> _excludeMatchers = [];
-  Set<String> _excludeFull = {};
-  String _globalPrefix = '';
-  Map<String, String> _prefixReplacement = {};
+  final Includer _includer;
+  final Renamer _renamer;
 
   Declaration({
-    List<String> includeMatchers,
-    List<String> includeFull,
-    List<String> excludeMatchers,
-    List<String> excludeFull,
-    String globalPrefix,
-    Map<String, String> prefixReplacement,
-  }) {
-    if (includeMatchers != null) {
-      _includeMatchers =
-          includeMatchers.map((e) => RegExp(e, dotAll: true)).toList();
-    }
-    if (includeFull != null) {
-      _includeFull = includeFull.map((e) => e).toSet();
-    }
-    if (excludeMatchers != null) {
-      _excludeMatchers =
-          excludeMatchers.map((e) => RegExp(e, dotAll: true)).toList();
-    }
-    if (excludeFull != null) {
-      _excludeFull = excludeFull.map((e) => e).toSet();
-    }
-    if (globalPrefix != null) {
-      _globalPrefix = globalPrefix;
-    }
-    if (prefixReplacement != null) {
-      _prefixReplacement = prefixReplacement;
-    }
-  }
+    Includer includer,
+    Renamer renamer,
+  })  : _includer = includer ?? Includer(),
+        _renamer = renamer ?? Renamer();
 
-  /// Applies prefix and replacement and returns the result.
-  ///
-  /// Also logs warnings if declaration starts with '_'.
-  String getPrefixedName(String name) {
-    // Apply prefix replacement.
-    for (final pattern in _prefixReplacement.keys) {
-      if (name.startsWith(pattern)) {
-        name = name.replaceFirst(pattern, _prefixReplacement[pattern]);
-        break;
-      }
-    }
-
-    // Apply global prefixes.
-    name = '${_globalPrefix}$name';
-
-    return name;
-  }
+  /// Applies renaming and returns the result.
+  String renameUsingConfig(String name) => _renamer.renameUsingConfig(name);
 
   /// Checks if a name is allowed by a filter.
+  bool shouldInclude(String name) => _includer.shouldInclude(name);
+}
+
+/// Matches `$<single_digit_int>`, value can be accessed in group 1 of match.
+final replaceGroupRegexp = RegExp(r'\$([0-9])');
+
+class RenamePattern {
+  final RegExp regExp;
+  final String replacementPattern;
+
+  RenamePattern(this.regExp, this.replacementPattern);
+
+  /// Returns true if [str] has a full match with [regExp].
+  bool matches(String str) => quiver.matchesFull(regExp, str);
+
+  /// Renames [str] according to [replacementPattern].
+  String rename(String str) {
+    if (quiver.matchesFull(regExp, str)) {
+      final regExpMatch = regExp.firstMatch(str);
+      final groups = regExpMatch.groups(
+          List.generate(regExpMatch.groupCount, (index) => index) +
+              [regExpMatch.groupCount]);
+
+      final result =
+          replacementPattern.replaceAllMapped(replaceGroupRegexp, (match) {
+        final groupInt = int.parse(match.group(1));
+        return groups[groupInt];
+      });
+      return result;
+    } else {
+      /// We return [str] if pattern doesn't have a full match.
+      return str;
+    }
+  }
+
+  @override
+  String toString() {
+    return 'Regexp: $regExp, ReplacementPattern: $replacementPattern';
+  }
+}
+
+class Includer {
+  // matchers
+  final List<RegExp> _includeMatchers;
+  final Set<String> _includeFull;
+  final List<RegExp> _excludeMatchers;
+  final Set<String> _excludeFull;
+
+  Includer({
+    List<RegExp> includeMatchers,
+    Set<String> includeFull,
+    List<RegExp> excludeMatchers,
+    Set<String> excludeFull,
+  })  : _includeMatchers = includeMatchers ?? [],
+        _includeFull = includeFull ?? {},
+        _excludeMatchers = excludeMatchers ?? [],
+        _excludeFull = excludeFull ?? {};
+
   bool shouldInclude(String name) {
     if (_excludeFull.contains(name)) {
       return false;
     }
 
     for (final em in _excludeMatchers) {
-      if (em.firstMatch(name)?.end == name.length) {
+      if (quiver.matchesFull(em, name)) {
         return false;
       }
     }
@@ -166,7 +180,7 @@ class Declaration {
     }
 
     for (final im in _includeMatchers) {
-      if (im.firstMatch(name)?.end == name.length) {
+      if (quiver.matchesFull(im, name)) {
         return true;
       }
     }
@@ -178,5 +192,33 @@ class Declaration {
     } else {
       return true;
     }
+  }
+}
+
+class Renamer {
+  final Map<String, String> _renameFull;
+  final List<RenamePattern> _renameMatchers;
+
+  Renamer({
+    List<RenamePattern> renamePatterns,
+    Map<String, String> renameFull,
+  })  : _renameMatchers = renamePatterns ?? [],
+        _renameFull = renameFull ?? {};
+
+  String renameUsingConfig(String name) {
+    // Apply full rename (if any).
+    if (_renameFull.containsKey(name)) {
+      return _renameFull[name];
+    }
+
+    // Apply rename regexp (if matches).
+    for (final renamer in _renameMatchers) {
+      if (renamer.matches(name)) {
+        return renamer.rename(name);
+      }
+    }
+
+    // No renaming is provided for this declaration, return unchanged.
+    return name;
   }
 }

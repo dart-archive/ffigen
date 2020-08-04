@@ -100,7 +100,7 @@ Type _extractfromRecord(Pointer<clang_types.CXType> cxtype) {
         structName = cxtype.spelling();
       }
 
-      final fixedStructName = config.structDecl.getPrefixedName(structName);
+      final fixedStructName = config.structDecl.renameUsingConfig(structName);
 
       // Also add a struct binding, if its unseen.
       // TODO(23): Check if we should auto add struct.
@@ -135,9 +135,9 @@ Type _extractFromFunctionProto(
 
   // Set a name for typedefc incase it was null or empty.
   if (name == null || name == '') {
-    name = _getNextIncrementedString('_typedefC');
+    name = incrementalNamer.name('_typedefC');
   } else {
-    name = _getNextIncrementedString(name);
+    name = incrementalNamer.name(name);
   }
   final _parameters = <Parameter>[];
   final totalArgs = clang.clang_getNumArgTypes_wrap(cxtype);
@@ -165,13 +165,3 @@ Type _extractFromFunctionProto(
 
   return Type.nativeFunc(typedefC);
 }
-
-/// Generate a unique string for naming in [Typedef].
-String _getNextIncrementedString(String prefix) {
-  var i = _incrementedStringCounters[prefix] ?? 0;
-  i++;
-  _incrementedStringCounters[prefix] = i;
-  return '${prefix}_$i';
-}
-
-Map<String, int> _incrementedStringCounters = {};

@@ -26,9 +26,12 @@ String _replaceSeparators(String path) {
 }
 
 /// Checks if type of value is [T], logs an error if it's not.
-bool checkType<T>(String key, dynamic value) {
+///
+/// [key] is printed as `'item1 -> item2 => item3'` in log message.
+bool checkType<T>(List<String> keys, dynamic value) {
   if (value is! T) {
-    _logger.severe("Expected value of key '$key' to be of type '${T}'.");
+    _logger.severe(
+        "Expected value of key '${keys.join(' -> ')}' to be of type '${T}'.");
     return false;
   }
   return true;
@@ -37,7 +40,7 @@ bool checkType<T>(String key, dynamic value) {
 bool booleanExtractor(dynamic value) => value as bool;
 
 bool booleanValidator(String name, dynamic value) =>
-    checkType<bool>(name, value);
+    checkType<bool>([name], value);
 
 Map<int, SupportedNativeType> sizemapExtractor(dynamic yamlConfig) {
   final resultMap = <int, SupportedNativeType>{};
@@ -56,7 +59,7 @@ Map<int, SupportedNativeType> sizemapExtractor(dynamic yamlConfig) {
 }
 
 bool sizemapValidator(String name, dynamic yamlConfig) {
-  if (!checkType<YamlMap>(name, yamlConfig)) {
+  if (!checkType<YamlMap>([name], yamlConfig)) {
     return false;
   }
   for (final key in (yamlConfig as YamlMap).keys) {
@@ -72,7 +75,7 @@ List<String> compilerOptsExtractor(dynamic value) =>
     (value as String)?.split(' ');
 
 bool compilerOptsValidator(String name, dynamic value) =>
-    checkType<String>(name, value);
+    checkType<String>([name], value);
 
 Headers headersExtractor(dynamic yamlConfig) {
   final entryPoints = <String>[];
@@ -112,7 +115,7 @@ Headers headersExtractor(dynamic yamlConfig) {
 }
 
 bool headersValidator(String name, dynamic value) {
-  if (!checkType<YamlMap>(name, value)) {
+  if (!checkType<YamlMap>([name], value)) {
     return false;
   }
   if (!(value as YamlMap).containsKey(strings.entryPoints)) {
@@ -121,8 +124,7 @@ bool headersValidator(String name, dynamic value) {
   } else {
     for (final key in (value as YamlMap).keys) {
       if (key == strings.entryPoints || key == strings.includeDirectives) {
-        if (!checkType<YamlList>(key as String, value[key])) {
-          _logger.severe("Expected '$name -> $key' to be a Map.");
+        if (!checkType<YamlList>([name, key as String], value[key])) {
           return false;
         }
       } else {
@@ -137,7 +139,7 @@ bool headersValidator(String name, dynamic value) {
 String libclangDylibExtractor(dynamic value) => getDylibPath(value as String);
 
 bool libclangDylibValidator(String name, dynamic value) {
-  if (!checkType<String>(name, value)) {
+  if (!checkType<String>([name], value)) {
     return false;
   } else {
     final dylibPath = getDylibPath(value as String);
@@ -167,37 +169,68 @@ String getDylibPath(String dylibParentFoler) {
 String outputExtractor(dynamic value) => _replaceSeparators(value as String);
 
 bool outputValidator(String name, dynamic value) =>
-    checkType<String>(name, value);
+    checkType<String>([name], value);
+
+/// Returns true if [str] is not a full name.
+///
+/// E.g `abc` is a full name, `abc.*` is not.
+bool isFullDeclarationName(String str) =>
+    quiver.matchesFull(RegExp('[a-zA-Z_0-9]*'), str);
 
 Declaration declarationConfigExtractor(dynamic yamlMap) {
-  List<String> includeMatchers, includeFull, excludeMatchers, excludeFull;
-  String prefix;
-  Map<String, String> prefixReplacement;
+  final includeMatchers = <RegExp>[],
+      includeFull = <String>{},
+      excludeMatchers = <RegExp>[],
+      excludeFull = <String>{};
+  final renamePatterns = <RenamePattern>[];
+  final renameFull = <String, String>{};
 
-  final include = yamlMap[strings.include] as YamlMap;
+  final include = (yamlMap[strings.include] as YamlList)?.cast<String>();
   if (include != null) {
-    includeMatchers = (include[strings.matches] as YamlList)?.cast<String>();
-    includeFull = (include[strings.names] as YamlList)?.cast<String>();
+    for (final str in include) {
+      if (isFullDeclarationName(str)) {
+        includeFull.add(str);
+      } else {
+        includeMatchers.add(RegExp(str, dotAll: true));
+      }
+    }
   }
 
-  final exclude = yamlMap[strings.exclude] as YamlMap;
+  final exclude = (yamlMap[strings.exclude] as YamlList)?.cast<String>();
   if (exclude != null) {
-    excludeMatchers = (exclude[strings.matches] as YamlList)?.cast<String>();
-    excludeFull = (exclude[strings.names] as YamlList)?.cast<String>();
+    for (final str in exclude) {
+      if (isFullDeclarationName(str)) {
+        excludeFull.add(str);
+      } else {
+        excludeMatchers.add(RegExp(str, dotAll: true));
+      }
+    }
   }
 
-  prefix = yamlMap[strings.prefix] as String;
+  final rename = (yamlMap[strings.rename] as YamlMap)?.cast<String, String>();
 
-  prefixReplacement =
-      (yamlMap[strings.prefix_replacement] as YamlMap)?.cast<String, String>();
+  if (rename != null) {
+    for (final str in rename.keys) {
+      if (isFullDeclarationName(str)) {
+        renameFull[str] = rename[str];
+      } else {
+        renamePatterns
+            .add(RenamePattern(RegExp(str, dotAll: true), rename[str]));
+      }
+    }
+  }
 
   return Declaration(
-    includeMatchers: includeMatchers,
-    includeFull: includeFull,
-    excludeMatchers: excludeMatchers,
-    excludeFull: excludeFull,
-    globalPrefix: prefix,
-    prefixReplacement: prefixReplacement,
+    includer: Includer(
+      includeMatchers: includeMatchers,
+      includeFull: includeFull,
+      excludeMatchers: excludeMatchers,
+      excludeFull: excludeFull,
+    ),
+    renamer: Renamer(
+      renameFull: renameFull,
+      renamePatterns: renamePatterns,
+    ),
   );
 }
 
@@ -206,35 +239,16 @@ bool declarationConfigValidator(String name, dynamic value) {
   if (value is YamlMap) {
     for (final key in value.keys) {
       if (key == strings.include || key == strings.exclude) {
-        if (value[key] is! YamlMap) {
-          _logger.severe("Expected '$name -> $key' to be a Map.");
+        if (!checkType<YamlList>([name, key as String], value[key])) {
           _result = false;
         }
-        for (final subkey in value[key].keys) {
-          if (subkey == strings.matches || subkey == strings.names) {
-            if (value[key][subkey] is! YamlList) {
-              _logger
-                  .severe("Expected '$name -> $key -> $subkey' to be a List.");
-              _result = false;
-            }
-          } else {
-            _logger.severe("Unknown key '$subkey' in '$name -> $key'.");
-          }
-        }
-      } else if (key == strings.prefix) {
-        if (value[key] is! String) {
-          _logger.severe("Expected '$name -> $key' to be a String.");
-          _result = false;
-        }
-      } else if (key == strings.prefix_replacement) {
-        if (value[key] is! YamlMap) {
-          _logger.severe("Expected '$name -> $key' to be a Map.");
+      } else if (key == strings.rename) {
+        if (!checkType<YamlMap>([name, key as String], value[key])) {
           _result = false;
         } else {
           for (final subkey in value[key].keys) {
-            if (value[key][subkey] is! String) {
-              _logger.severe(
-                  "Expected '$name -> $key -> $subkey' to be a String.");
+            if (!checkType<String>(
+                [name, key as String, subkey as String], value[key][subkey])) {
               _result = false;
             }
           }
@@ -280,7 +294,7 @@ bool nonEmptyStringValidator(String name, dynamic value) {
 
 bool dartClassNameValidator(String name, dynamic value) {
   if (value is String &&
-      RegExp('[a-zA-Z]+[_a-zA-Z0-9]*').stringMatch(value) == value) {
+      quiver.matchesFull(RegExp('[a-zA-Z]+[_a-zA-Z0-9]*'), value)) {
     return true;
   } else {
     _logger.severe(

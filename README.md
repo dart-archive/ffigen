@@ -14,7 +14,8 @@ Add configurations to Pubspec File:
 ffigen:
   output: 'generated_bindings.dart'
   headers:
-    - 'example.h'
+    entry-points:
+      - 'example.h'
 ```
 Output (_generated_bindings.dart_).
 ```dart
@@ -39,7 +40,7 @@ typedef _dart_sum = int Function(int a,int b);
 - Run the tool- `pub run ffigen`.
 
 ## Setup
-`package:ffigen` uses LLVM. Install LLVM in the following way.
+`package:ffigen` uses LLVM. Install LLVM (9+) in the following way.
 
 #### ubuntu/linux
 1. Install libclangdev - `sudo apt-get install libclang-dev`.
@@ -107,17 +108,16 @@ headers:
     <td>Filters for declarations.<br><b>Default: all are included</b></td>
     <td><pre lang="yaml"><code>
 functions:
-  include: # Exclude is also available.
-    names: # Matches with exact name.
-      - someFuncName
-      - anotherName
-    matches: # Matches using regexp.
-      - prefix.*
-      - [a-z][a-zA-Z0-9]*
-  prefix: 'cx_' # Prefix added to all functions.
-  prefix-replacement: # Replaces a functions's prefix.
-    'clang_': ''
-    '_': 'C'</code></pre></td>
+  include: # 'exclude' is also available.
+    - [a-z][a-zA-Z0-9]* # Matches using regexp.
+    - prefix.* # '.' matches any character.
+    - someFuncName # Matches with exact name
+    - anotherName # full names have higher priority.
+  rename:
+    'clang_(.*)': '$1' # Regexp groups based replacement.
+    'clang_dispose': 'dispose' # full name matches have higher priority.
+    '_(.*)': '$1' # Removes '_' from beginning of a name.
+    </code></pre></td>
   </tr>
   <tr>
     <td>array-workaround</td>

@@ -49,6 +49,7 @@ var _logger = Logger('ffigen.header_parser.parser');
 void initParser(Config c) {
   // Set global configurations.
   config = c;
+  incrementalNamer = IncrementalNamer();
 
   // Find full path of dynamic library and initialise bindings.
   if (findDotDartTool() == null) {

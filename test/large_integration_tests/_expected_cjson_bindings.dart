@@ -1058,9 +1058,9 @@ class cJSON extends ffi.Struct {
 }
 
 class cJSON_Hooks extends ffi.Struct {
-  ffi.Pointer<ffi.NativeFunction<_typedefC_11>> malloc_fn;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_1>> malloc_fn;
 
-  ffi.Pointer<ffi.NativeFunction<_typedefC_12>> free_fn;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_2>> free_fn;
 }
 
 const int CJSON_VERSION_MAJOR = 1;
@@ -1775,10 +1775,10 @@ typedef _dart_cJSON_free = void Function(
   ffi.Pointer<ffi.Void> object,
 );
 
-typedef _typedefC_11 = ffi.Pointer<ffi.Void> Function(
+typedef _typedefC_1 = ffi.Pointer<ffi.Void> Function(
   ffi.Uint64,
 );
 
-typedef _typedefC_12 = ffi.Void Function(
+typedef _typedefC_2 = ffi.Void Function(
   ffi.Pointer<ffi.Void>,
 );
