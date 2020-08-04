@@ -130,7 +130,11 @@ int _structMembersVisitor(Pointer<clang_types.CXCursor> cursor,
             cursor,
             nesting.length + commentPrefix.length,
           ),
-          name: cursor.spelling(),
+          originalName: cursor.spelling(),
+          name: config.structDecl.renameMemberUsingConfig(
+            _stack.top.struc.originalName,
+            cursor.spelling(),
+          ),
           type: mt,
         ),
       );

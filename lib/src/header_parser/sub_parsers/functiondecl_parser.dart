@@ -36,7 +36,7 @@ Func parseFunctionDeclaration(Pointer<clang_types.CXCursor> cursor) {
     _logger.fine('++++ Adding Function: ${cursor.completeStringRepr()}');
 
     final rt = _getFunctionReturnType(cursor);
-    final parameters = _getParameters(cursor);
+    final parameters = _getParameters(cursor, funcName);
 
     //TODO(3): Remove this when support for Structs by value arrives.
     if (rt.broadType == BroadType.Struct || _stack.top.structByValueParameter) {
@@ -80,7 +80,8 @@ Type _getFunctionReturnType(Pointer<clang_types.CXCursor> cursor) {
   return cursor.returnType().toCodeGenTypeAndDispose();
 }
 
-List<Parameter> _getParameters(Pointer<clang_types.CXCursor> cursor) {
+List<Parameter> _getParameters(
+    Pointer<clang_types.CXCursor> cursor, String funcName) {
   final parameters = <Parameter>[];
 
   final totalArgs = clang.clang_Cursor_getNumArguments_wrap(cursor);
@@ -102,7 +103,8 @@ List<Parameter> _getParameters(Pointer<clang_types.CXCursor> cursor) {
     /// If [pn] is null or empty, its set to `arg$i` by code_generator.
     parameters.add(
       Parameter(
-        name: pn,
+        originalName: pn,
+        name: config.functionDecl.renameMemberUsingConfig(funcName, pn),
         type: pt,
       ),
     );

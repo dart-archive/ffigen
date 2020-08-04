@@ -72,8 +72,14 @@ class EnumClass extends NoLookUpBinding {
 
 /// Represents a single value in an enum.
 class EnumConstant {
+  final String originalName;
   final String dartDoc;
   final String name;
   final int value;
-  const EnumConstant({@required this.name, @required this.value, this.dartDoc});
+  const EnumConstant({
+    String originalName,
+    @required this.name,
+    @required this.value,
+    this.dartDoc,
+  }) : originalName = originalName ?? name;
 }

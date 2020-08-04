@@ -95,15 +95,22 @@ class GlobHeaderFilter extends HeaderIncludeFilter {
 class Declaration {
   final Includer _includer;
   final Renamer _renamer;
+  final MemberRenamer _memberRenamer;
 
   Declaration({
     Includer includer,
     Renamer renamer,
+    MemberRenamer memberRenamer,
   })  : _includer = includer ?? Includer(),
-        _renamer = renamer ?? Renamer();
+        _renamer = renamer ?? Renamer(),
+        _memberRenamer = memberRenamer ?? MemberRenamer();
 
   /// Applies renaming and returns the result.
-  String renameUsingConfig(String name) => _renamer.renameUsingConfig(name);
+  String renameUsingConfig(String name) => _renamer.rename(name);
+
+  /// Applies member renaming and returns the result.
+  String renameMemberUsingConfig(String declaration, String member) =>
+      _memberRenamer.rename(declaration, member);
 
   /// Checks if a name is allowed by a filter.
   bool shouldInclude(String name) => _includer.shouldInclude(name);
@@ -205,7 +212,11 @@ class Renamer {
   })  : _renameMatchers = renamePatterns ?? [],
         _renameFull = renameFull ?? {};
 
-  String renameUsingConfig(String name) {
+  Renamer.noRename()
+      : _renameMatchers = [],
+        _renameFull = {};
+
+  String rename(String name) {
     // Apply full rename (if any).
     if (_renameFull.containsKey(name)) {
       return _renameFull[name];
@@ -220,5 +231,59 @@ class Renamer {
 
     // No renaming is provided for this declaration, return unchanged.
     return name;
+  }
+}
+
+class MemberRenamePattern {
+  final RegExp declarationNameMatcher;
+  final Renamer memberRenamer;
+
+  MemberRenamePattern(this.declarationNameMatcher, this.memberRenamer);
+
+  /// Returns true if [declaration] has a full match with [regExp].
+  bool matchesDeclarationName(String declaration) =>
+      quiver.matchesFull(declarationNameMatcher, declaration);
+
+  @override
+  String toString() {
+    return 'DeclarationNameMatcher: $declarationNameMatcher, MemberRenamer: $memberRenamer';
+  }
+}
+
+class MemberRenamer {
+  final Map<String, Renamer> _memberRenameFull;
+  final List<MemberRenamePattern> _memberRenameMatchers;
+
+  final Map<String, Renamer> _cache = {};
+
+  MemberRenamer({
+    Map<String, Renamer> memberRenameFull,
+    List<MemberRenamePattern> memberRenamePattern,
+  })  : _memberRenameFull = memberRenameFull ?? {},
+        _memberRenameMatchers = memberRenamePattern ?? [];
+
+  String rename(String declaration, String member) {
+    if (_cache.containsKey(declaration)) {
+      return _cache[declaration].rename(member);
+    }
+
+    // Apply full rename (if any).
+    if (_memberRenameFull.containsKey(declaration)) {
+      // Add to cache.
+      _cache[declaration] = _memberRenameFull[declaration];
+      return _cache[declaration].rename(member);
+    }
+
+    // Apply rename regexp (if matches).
+    for (final renamer in _memberRenameMatchers) {
+      if (renamer.matchesDeclarationName(declaration)) {
+        // Add to cache.
+        _cache[declaration] = renamer.memberRenamer;
+        return _cache[declaration].rename(member);
+      }
+    }
+
+    // No renaming is provided for this declaration, return unchanged.
+    return member;
   }
 }
