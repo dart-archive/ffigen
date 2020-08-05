@@ -182,9 +182,9 @@ Declaration declarationConfigExtractor(dynamic yamlMap) {
       includeFull = <String>{},
       excludeMatchers = <RegExp>[],
       excludeFull = <String>{};
-  final renamePatterns = <RenamePattern>[];
+  final renamePatterns = <RegExpRenamer>[];
   final renameFull = <String, String>{};
-  final memberRenamePatterns = <MemberRenamePattern>[];
+  final memberRenamePatterns = <RegExpMemberRenamer>[];
   final memberRenamerFull = <String, Renamer>{};
 
   final include = (yamlMap[strings.include] as YamlList)?.cast<String>();
@@ -217,7 +217,7 @@ Declaration declarationConfigExtractor(dynamic yamlMap) {
         renameFull[str] = rename[str];
       } else {
         renamePatterns
-            .add(RenamePattern(RegExp(str, dotAll: true), rename[str]));
+            .add(RegExpRenamer(RegExp(str, dotAll: true), rename[str]));
       }
     }
   }
@@ -227,7 +227,7 @@ Declaration declarationConfigExtractor(dynamic yamlMap) {
 
   if (memberRename != null) {
     for (final decl in memberRename.keys) {
-      final renamePatterns = <RenamePattern>[];
+      final renamePatterns = <RegExpRenamer>[];
       final renameFull = <String, String>{};
 
       final memberRenameMap = memberRename[decl].cast<String, String>();
@@ -235,7 +235,7 @@ Declaration declarationConfigExtractor(dynamic yamlMap) {
         if (isFullDeclarationName(member)) {
           renameFull[member] = memberRenameMap[member];
         } else {
-          renamePatterns.add(RenamePattern(
+          renamePatterns.add(RegExpRenamer(
               RegExp(member, dotAll: true), memberRenameMap[member]));
         }
       }
@@ -246,7 +246,7 @@ Declaration declarationConfigExtractor(dynamic yamlMap) {
         );
       } else {
         memberRenamePatterns.add(
-          MemberRenamePattern(
+          RegExpMemberRenamer(
             RegExp(decl, dotAll: true),
             Renamer(
               renameFull: renameFull,

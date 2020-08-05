@@ -119,23 +119,32 @@ class Declaration {
 /// Matches `$<single_digit_int>`, value can be accessed in group 1 of match.
 final replaceGroupRegexp = RegExp(r'\$([0-9])');
 
-class RenamePattern {
+/// Match/rename using [regExp].
+class RegExpRenamer {
   final RegExp regExp;
   final String replacementPattern;
 
-  RenamePattern(this.regExp, this.replacementPattern);
+  RegExpRenamer(this.regExp, this.replacementPattern);
 
   /// Returns true if [str] has a full match with [regExp].
   bool matches(String str) => quiver.matchesFull(regExp, str);
 
   /// Renames [str] according to [replacementPattern].
+  ///
+  /// Returns [str] if [regExp] doesn't have a full match.
   String rename(String str) {
-    if (quiver.matchesFull(regExp, str)) {
+    if (matches(str)) {
+      // Get match.
       final regExpMatch = regExp.firstMatch(str);
+
+      /// Get group values.
+      /// E.g for `str`: `clang_dispose` and `regExp`: `clang_(.*)`
+      /// groups will be `0`: `clang_disponse`, `1`: `dispose`.
       final groups = regExpMatch.groups(
           List.generate(regExpMatch.groupCount, (index) => index) +
               [regExpMatch.groupCount]);
 
+      /// Replace all `$<int>` symbols with respective groups (if any).
       final result =
           replacementPattern.replaceAllMapped(replaceGroupRegexp, (match) {
         final groupInt = int.parse(match.group(1));
@@ -143,7 +152,6 @@ class RenamePattern {
       });
       return result;
     } else {
-      /// We return [str] if pattern doesn't have a full match.
       return str;
     }
   }
@@ -154,8 +162,8 @@ class RenamePattern {
   }
 }
 
+/// Handles `include/exclude` logic for a declaration.
 class Includer {
-  // matchers
   final List<RegExp> _includeMatchers;
   final Set<String> _includeFull;
   final List<RegExp> _excludeMatchers;
@@ -171,6 +179,9 @@ class Includer {
         _excludeMatchers = excludeMatchers ?? [],
         _excludeFull = excludeFull ?? {};
 
+  /// Returns true if [name] is allowed.
+  ///
+  /// Exclude overrides include.
   bool shouldInclude(String name) {
     if (_excludeFull.contains(name)) {
       return false;
@@ -202,12 +213,13 @@ class Includer {
   }
 }
 
+/// Handles `full/regexp` renaming logic.
 class Renamer {
   final Map<String, String> _renameFull;
-  final List<RenamePattern> _renameMatchers;
+  final List<RegExpRenamer> _renameMatchers;
 
   Renamer({
-    List<RenamePattern> renamePatterns,
+    List<RegExpRenamer> renamePatterns,
     Map<String, String> renameFull,
   })  : _renameMatchers = renamePatterns ?? [],
         _renameFull = renameFull ?? {};
@@ -234,31 +246,33 @@ class Renamer {
   }
 }
 
-class MemberRenamePattern {
-  final RegExp declarationNameMatcher;
+/// Match declaration name using [declarationRegExp].
+class RegExpMemberRenamer {
+  final RegExp declarationRegExp;
   final Renamer memberRenamer;
 
-  MemberRenamePattern(this.declarationNameMatcher, this.memberRenamer);
+  RegExpMemberRenamer(this.declarationRegExp, this.memberRenamer);
 
   /// Returns true if [declaration] has a full match with [regExp].
   bool matchesDeclarationName(String declaration) =>
-      quiver.matchesFull(declarationNameMatcher, declaration);
+      quiver.matchesFull(declarationRegExp, declaration);
 
   @override
   String toString() {
-    return 'DeclarationNameMatcher: $declarationNameMatcher, MemberRenamer: $memberRenamer';
+    return 'DeclarationRegExp: $declarationRegExp, MemberRenamer: $memberRenamer';
   }
 }
 
+/// Handles `full/regexp` member renaming.
 class MemberRenamer {
   final Map<String, Renamer> _memberRenameFull;
-  final List<MemberRenamePattern> _memberRenameMatchers;
+  final List<RegExpMemberRenamer> _memberRenameMatchers;
 
   final Map<String, Renamer> _cache = {};
 
   MemberRenamer({
     Map<String, Renamer> memberRenameFull,
-    List<MemberRenamePattern> memberRenamePattern,
+    List<RegExpMemberRenamer> memberRenamePattern,
   })  : _memberRenameFull = memberRenameFull ?? {},
         _memberRenameMatchers = memberRenamePattern ?? [];
 
