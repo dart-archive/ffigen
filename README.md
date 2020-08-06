@@ -112,11 +112,17 @@ functions:
     - [a-z][a-zA-Z0-9]* # Matches using regexp.
     - prefix.* # '.' matches any character.
     - someFuncName # Matches with exact name
-    - anotherName # full names have higher priority.
+    - anotherName # Full names have higher priority.
   rename:
     'clang_(.*)': '$1' # Regexp groups based replacement.
     'clang_dispose': 'dispose' # full name matches have higher priority.
     '_(.*)': '$1' # Removes '_' from beginning of a name.
+enums:
+  member-rename:
+    '(.*)': # Matches any enum.
+      '_(.*)': '$1' # Removes '_' from beginning enum member name.
+    'CXTypeKind': # Full names have higher priority.
+      'CXType(.*)': '$1' # $1 keeps only the 1st group i.e '(.*)'.
     </code></pre></td>
   </tr>
   <tr>

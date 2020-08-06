@@ -151,10 +151,16 @@ class Struc extends NoLookUpBinding {
 
 class Member {
   final String dartDoc;
+  final String originalName;
   final String name;
   final Type type;
 
-  const Member({@required this.name, @required this.type, this.dartDoc});
+  const Member({
+    String originalName,
+    @required this.name,
+    @required this.type,
+    this.dartDoc,
+  }) : originalName = originalName ?? name;
 }
 
 // Helper bindings for struct array.

@@ -36,19 +36,36 @@ functions:
     'test_(.*)': '\$1'
     '.*': '$functionPrefix\$0'
     'fullMatch_func3': 'func3'
-
+  ${strings.memberRename}:
+    'memberRename_.*':
+      '_(.*)': '\$1'
+      'fullMatch': 'fullMatchSuccess'
+      '': 'unnamed'
 
 structs:
   ${strings.rename}:
     'Test_(.*)': '\$1'
     '.*': '$structPrefix\$0'
     'FullMatchStruct3': 'Struct3'
+  ${strings.memberRename}:
+    'MemberRenameStruct4':
+      '_(.*)': '\$1'
+      'fullMatch': 'fullMatchSuccess'
+    '.*':
+      '_(.*)': '\$1'
 
 enums:
   ${strings.rename}:
     'Test_(.*)': '\$1'
     '.*': '$enumPrefix\$0'
     'FullMatchEnum3': 'Enum3'
+  ${strings.memberRename}:
+    'MemberRenameEnum4':
+      '_(.*)': '\$1'
+      'fullMatch': 'fullMatchSuccess'
+    '':
+      '_(.*)': '\$1'
+      'unnamedFullMatch': 'unnamedFullMatchSuccess'
 
 macros:
   ${strings.rename}:
@@ -107,6 +124,30 @@ macros:
       expect(actual.getBindingAsString('Macro3'),
           expected.getBindingAsString('Macro3'));
     });
+    test('Struct member rename', () {
+      expect(actual.getBindingAsString('${structPrefix}MemberRenameStruct4'),
+          expected.getBindingAsString('${structPrefix}MemberRenameStruct4'));
+    });
+    test('Any Struct member rename', () {
+      expect(actual.getBindingAsString('${structPrefix}AnyMatchStruct5'),
+          expected.getBindingAsString('${structPrefix}AnyMatchStruct5'));
+    });
+    test('Function member rename', () {
+      expect(actual.getBindingAsString('${functionPrefix}memberRename_func4'),
+          expected.getBindingAsString('${functionPrefix}memberRename_func4'));
+    });
+    test('Enum member rename', () {
+      expect(actual.getBindingAsString('${enumPrefix}MemberRenameEnum4'),
+          expected.getBindingAsString('${enumPrefix}MemberRenameEnum4'));
+    });
+    test('unnamed Enum regexp rename', () {
+      expect(actual.getBindingAsString('unnamed_underscore'),
+          expected.getBindingAsString('unnamed_underscore'));
+    });
+    test('unnamed Enum full match rename', () {
+      expect(actual.getBindingAsString('unnamedFullMatchSuccess'),
+          expected.getBindingAsString('unnamedFullMatchSuccess'));
+    });
   });
 }
 
@@ -156,9 +197,52 @@ Library expectedLibrary() {
           ),
         ],
       ),
+      Func(
+        name: '${functionPrefix}memberRename_func4',
+        originalName: 'memberRename_func4',
+        returnType: Type.nativeType(
+          SupportedNativeType.Void,
+        ),
+        parameters: [
+          Parameter(
+            name: 'underscore',
+            type: Type.nativeType(SupportedNativeType.Int32),
+          ),
+          Parameter(
+            name: 'fullMatchSuccess',
+            type: Type.nativeType(SupportedNativeType.Float),
+          ),
+          Parameter(
+            name: 'unnamed',
+            type: Type.nativeType(SupportedNativeType.Int32),
+          ),
+        ],
+      ),
       struc1,
       struc2,
       struc3,
+      Struc(
+        name: '${structPrefix}MemberRenameStruct4',
+        members: [
+          Member(
+            name: 'underscore',
+            type: Type.nativeType(SupportedNativeType.Int32),
+          ),
+          Member(
+            name: 'fullMatchSuccess',
+            type: Type.nativeType(SupportedNativeType.Float),
+          ),
+        ],
+      ),
+      Struc(
+        name: '${structPrefix}AnyMatchStruct5',
+        members: [
+          Member(
+            name: 'underscore',
+            type: Type.nativeType(SupportedNativeType.Int32),
+          ),
+        ],
+      ),
       EnumClass(
         name: '${enumPrefix}Enum1',
         enumConstants: [
@@ -183,6 +267,13 @@ Library expectedLibrary() {
           EnumConstant(name: 'k', value: 2),
         ],
       ),
+      EnumClass(
+        name: '${enumPrefix}MemberRenameEnum4',
+        enumConstants: [
+          EnumConstant(name: 'underscore', value: 0),
+          EnumConstant(name: 'fullMatchSuccess', value: 1),
+        ],
+      ),
       Constant(
         name: '${macroPrefix}Macro1',
         rawType: 'int',
@@ -197,6 +288,16 @@ Library expectedLibrary() {
         name: 'Macro3',
         rawType: 'int',
         rawValue: '3',
+      ),
+      Constant(
+        name: 'unnamed_underscore',
+        rawType: 'int',
+        rawValue: '0',
+      ),
+      Constant(
+        name: 'unnamedFullMatchSuccess',
+        rawType: 'int',
+        rawValue: '1',
       ),
     ],
   );

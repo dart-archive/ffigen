@@ -100,7 +100,11 @@ void _addEnumConstantToEnumClass(Pointer<clang_types.CXCursor> cursor) {
           cursor,
           nesting.length + commentPrefix.length,
         ),
-        name: cursor.spelling(),
+        originalName: cursor.spelling(),
+        name: config.enumClassDecl.renameMemberUsingConfig(
+          _stack.top.enumClass.originalName,
+          cursor.spelling(),
+        ),
         value: clang.clang_getEnumConstantDeclValue_wrap(cursor)),
   );
 }

@@ -182,8 +182,10 @@ Declaration declarationConfigExtractor(dynamic yamlMap) {
       includeFull = <String>{},
       excludeMatchers = <RegExp>[],
       excludeFull = <String>{};
-  final renamePatterns = <RenamePattern>[];
+  final renamePatterns = <RegExpRenamer>[];
   final renameFull = <String, String>{};
+  final memberRenamePatterns = <RegExpMemberRenamer>[];
+  final memberRenamerFull = <String, Renamer>{};
 
   final include = (yamlMap[strings.include] as YamlList)?.cast<String>();
   if (include != null) {
@@ -215,7 +217,43 @@ Declaration declarationConfigExtractor(dynamic yamlMap) {
         renameFull[str] = rename[str];
       } else {
         renamePatterns
-            .add(RenamePattern(RegExp(str, dotAll: true), rename[str]));
+            .add(RegExpRenamer(RegExp(str, dotAll: true), rename[str]));
+      }
+    }
+  }
+
+  final memberRename =
+      (yamlMap[strings.memberRename] as YamlMap)?.cast<String, YamlMap>();
+
+  if (memberRename != null) {
+    for (final decl in memberRename.keys) {
+      final renamePatterns = <RegExpRenamer>[];
+      final renameFull = <String, String>{};
+
+      final memberRenameMap = memberRename[decl].cast<String, String>();
+      for (final member in memberRenameMap.keys) {
+        if (isFullDeclarationName(member)) {
+          renameFull[member] = memberRenameMap[member];
+        } else {
+          renamePatterns.add(RegExpRenamer(
+              RegExp(member, dotAll: true), memberRenameMap[member]));
+        }
+      }
+      if (isFullDeclarationName(decl)) {
+        memberRenamerFull[decl] = Renamer(
+          renameFull: renameFull,
+          renamePatterns: renamePatterns,
+        );
+      } else {
+        memberRenamePatterns.add(
+          RegExpMemberRenamer(
+            RegExp(decl, dotAll: true),
+            Renamer(
+              renameFull: renameFull,
+              renamePatterns: renamePatterns,
+            ),
+          ),
+        );
       }
     }
   }
@@ -230,6 +268,10 @@ Declaration declarationConfigExtractor(dynamic yamlMap) {
     renamer: Renamer(
       renameFull: renameFull,
       renamePatterns: renamePatterns,
+    ),
+    memberRenamer: MemberRenamer(
+      memberRenameFull: memberRenamerFull,
+      memberRenamePattern: memberRenamePatterns,
     ),
   );
 }
@@ -250,6 +292,29 @@ bool declarationConfigValidator(String name, dynamic value) {
             if (!checkType<String>(
                 [name, key as String, subkey as String], value[key][subkey])) {
               _result = false;
+            }
+          }
+        }
+      } else if (key == strings.memberRename) {
+        if (!checkType<YamlMap>([name, key as String], value[key])) {
+          _result = false;
+        } else {
+          for (final declNameKey in value[key].keys) {
+            if (!checkType<YamlMap>(
+                [name, key as String, declNameKey as String],
+                value[key][declNameKey])) {
+              _result = false;
+            } else {
+              for (final memberNameKey in value[key][declNameKey].keys) {
+                if (!checkType<String>([
+                  name,
+                  key as String,
+                  declNameKey as String,
+                  memberNameKey as String,
+                ], value[key][declNameKey][memberNameKey])) {
+                  _result = false;
+                }
+              }
             }
           }
         }

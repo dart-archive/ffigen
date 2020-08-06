@@ -46,6 +46,7 @@ const macros = 'macros';
 const include = 'include';
 const exclude = 'exclude';
 const rename = 'rename';
+const memberRename = 'member-rename';
 const sizemap = 'size-map';
 
 // Sizemap values.

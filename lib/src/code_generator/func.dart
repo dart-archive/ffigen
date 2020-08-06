@@ -147,8 +147,10 @@ class Func extends LookUpBinding {
 
 /// Represents a Function's parameter.
 class Parameter {
+  final String originalName;
   String name;
   final Type type;
 
-  Parameter({this.name, @required this.type});
+  Parameter({String originalName, this.name, @required this.type})
+      : originalName = originalName ?? name;
 }
