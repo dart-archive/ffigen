@@ -116,7 +116,7 @@ class Type {
   }
   factory Type.incompleteArray(Type elementType) {
     return Type._(
-      broadType: BroadType.ConstantArray,
+      broadType: BroadType.IncompleteArray,
       child: elementType,
     );
   }

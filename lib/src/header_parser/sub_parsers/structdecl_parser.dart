@@ -19,6 +19,7 @@ class _ParsedStruc {
   Struc struc;
   bool nestedStructMember = false;
   bool unimplementedMemberType = false;
+  bool flexibleArrayMember = false;
   bool arrayMember = false;
   _ParsedStruc();
 }
@@ -92,6 +93,12 @@ void _setStructMembers(Pointer<clang_types.CXCursor> cursor) {
     _logger.warning(
         'Removed All Struct Members from ${_stack.top.struc.name}(${_stack.top.struc.originalName}), struct member has an unsupported type.');
     return _stack.top.struc.members.clear();
+  } else if (_stack.top.flexibleArrayMember) {
+    _logger.fine(
+        '---- Removed Struct members, reason: incomplete array member ${cursor.completeStringRepr()}');
+    _logger.warning(
+        'Removed All Struct Members from ${_stack.top.struc.name}(${_stack.top.struc.originalName}), Flexible array members not supported.');
+    return _stack.top.struc.members.clear();
   }
 }
 
@@ -118,6 +125,9 @@ int _structMembersVisitor(Pointer<clang_types.CXCursor> cursor,
           // bindings.
           _stack.top.nestedStructMember = true;
         }
+      } else if (mt.broadType == BroadType.IncompleteArray) {
+        // TODO(68): Structs with flexible Array Members are not supported.
+        _stack.top.flexibleArrayMember = true;
       }
 
       if (mt.getBaseType().broadType == BroadType.Unimplemented) {

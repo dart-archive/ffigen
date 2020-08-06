@@ -12,4 +12,13 @@ struct Struct2
     struct Struct1 a;
 };
 
+struct Struct3
+{
+    int a;
+    int b[]; // Flexible array member.
+};
+
 void func1(struct Struct2 *s);
+
+// Incomplete array parameter will be treated as a pointer.
+void func2(struct Struct3 s[]);
