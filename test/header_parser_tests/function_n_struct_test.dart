@@ -32,22 +32,31 @@ ${strings.headers}:
       );
     });
 
-    test('func1', () {
+    test('func1 struct pointer parameter', () {
       expect(actual.getBindingAsString('func1'),
           expected.getBindingAsString('func1'));
     });
-    test('Struct2', () {
+    test('func2 incomplete array parameter', () {
+      expect(actual.getBindingAsString('func2'),
+          expected.getBindingAsString('func2'));
+    });
+    test('Struct2 nested struct member', () {
       expect((actual.getBinding('Struct2') as Struc).members.isEmpty, true);
+    });
+    test('Struct3 flexible array member', () {
+      expect((actual.getBinding('Struct3') as Struc).members.isEmpty, true);
     });
   });
 }
 
 Library expectedLibrary() {
   final struc2 = Struc(name: 'Struct2', members: []);
+  final struc3 = Struc(name: 'Struct3', members: []);
   return Library(
     name: 'Bindings',
     bindings: [
       struc2,
+      struc3,
       Struc(name: 'Struct1', members: [
         Member(
           name: 'a',
@@ -58,6 +67,15 @@ Library expectedLibrary() {
         name: 'func1',
         parameters: [
           Parameter(name: 's', type: Type.pointer(Type.struct(struc2))),
+        ],
+        returnType: Type.nativeType(
+          SupportedNativeType.Void,
+        ),
+      ),
+      Func(
+        name: 'func2',
+        parameters: [
+          Parameter(name: 's', type: Type.pointer(Type.struct(struc3))),
         ],
         returnType: Type.nativeType(
           SupportedNativeType.Void,
