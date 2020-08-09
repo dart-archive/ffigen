@@ -79,7 +79,7 @@ class Config {
 
     final result = configspecs._checkConfigs(map, specs);
     if (!result) {
-      throw ConfigError();
+      throw FormatException('Invalid configurations provided.');
     }
 
     configspecs._extract(map, specs);
@@ -145,6 +145,7 @@ class Config {
         requirement: Requirement.no,
         validator: compilerOptsValidator,
         extractor: compilerOptsExtractor,
+        defaultValue: () => [],
         extractedResult: (dynamic result) =>
             compilerOpts = result as List<String>,
       ),
@@ -256,19 +257,5 @@ class Config {
         extractedResult: (dynamic result) => preamble = result as String,
       ),
     };
-  }
-}
-
-class ConfigError implements Exception {
-  final String message;
-  ConfigError([this.message]);
-
-  @override
-  String toString() {
-    if (message == null) {
-      return 'ConfigError: Invalid configurations provided.';
-    } else {
-      return 'ConfigError: $message';
-    }
   }
 }

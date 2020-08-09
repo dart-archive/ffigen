@@ -34,7 +34,7 @@ void main(List<String> args) {
   Config config;
   try {
     config = getConfig(argResult);
-  } on ConfigError {
+  } on FormatException {
     print('Please fix configuration errors and re-run the tool.');
     exit(1);
   }

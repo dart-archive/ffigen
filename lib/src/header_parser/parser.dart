@@ -74,7 +74,6 @@ List<Binding> parseToBindings() {
   /// Add compiler opt for comment parsing for clang based on config.
   if (config.commentType.length != CommentLength.none &&
       config.commentType.style == CommentStyle.any) {
-    config.compilerOpts ??= [];
     config.compilerOpts.add(strings.fparseAllComments);
   }
 
