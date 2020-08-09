@@ -42,14 +42,15 @@ EnumClass parseEnumDeclaration(
     } else {
       _logger.fine('Unnamed enum inside a typedef.');
     }
-  } else if (shouldIncludeEnumClass(enumName) && !isSeenEnumClass(enumName)) {
+  } else if (shouldIncludeEnumClass(enumName) &&
+      !seenTracker.isSeenEnumClass(enumName)) {
     _logger.fine('++++ Adding Enum: ${cursor.completeStringRepr()}');
     _stack.top.enumClass = EnumClass(
       dartDoc: getCursorDocComment(cursor),
       originalName: enumName,
       name: config.enumClassDecl.renameUsingConfig(enumName),
     );
-    addEnumClassToSeen(enumName, _stack.top.enumClass);
+    seenTracker.addEnumClassToSeen(enumName, _stack.top.enumClass);
     _addEnumConstant(cursor);
   }
 

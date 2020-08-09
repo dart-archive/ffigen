@@ -32,7 +32,7 @@ Func parseFunctionDeclaration(Pointer<clang_types.CXCursor> cursor) {
   _stack.top.unimplementedParameterType = false;
 
   final funcName = cursor.spelling();
-  if (shouldIncludeFunc(funcName) && !isSeenFunc(funcName)) {
+  if (shouldIncludeFunc(funcName) && !seenTracker.isSeenFunc(funcName)) {
     _logger.fine('++++ Adding Function: ${cursor.completeStringRepr()}');
 
     final rt = _getFunctionReturnType(cursor);
@@ -70,7 +70,7 @@ Func parseFunctionDeclaration(Pointer<clang_types.CXCursor> cursor) {
       returnType: rt,
       parameters: parameters,
     );
-    addFuncToSeen(funcName, _stack.top.func);
+    seenTracker.addFuncToSeen(funcName, _stack.top.func);
   }
 
   return _stack.pop().func;
