@@ -42,10 +42,6 @@ void main(List<String> args) {
   // Parse the bindings according to config object provided.
   final library = parse(config);
 
-  if (config.sort) {
-    library.sort();
-  }
-
   // Generate file for the parsed bindings.
   final gen = File(config.output);
   library.generateFile(gen);

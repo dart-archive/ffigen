@@ -21,8 +21,8 @@ import 'data.dart';
 import 'utils.dart';
 
 /// Main entrypoint for header_parser.
-Library parse(Config conf, {bool sort = false}) {
-  initParser(conf);
+Library parse(Config c) {
+  initParser(c);
 
   final bindings = parseToBindings();
 
@@ -33,7 +33,7 @@ Library parse(Config conf, {bool sort = false}) {
     header: config.preamble,
   );
 
-  if (sort) {
+  if (config.sort) {
     library.sort();
   }
   return library;
