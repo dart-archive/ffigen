@@ -1,3 +1,4 @@
+[![pub package](https://img.shields.io/pub/v/ffigen.svg)](https://pub.dev/packages/ffigen)
 [![Build Status](https://travis-ci.org/dart-lang/ffigen.svg?branch=master)](https://travis-ci.org/dart-lang/ffigen)
 
 Experimental binding generator for [FFI](https://dart.dev/guides/libraries/c-interop)
