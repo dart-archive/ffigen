@@ -47,10 +47,6 @@ var _logger = Logger('ffigen.header_parser.parser');
 
 /// Initialises parser, clears any previous values.
 void initParser(Config c) {
-  // Set global configurations.
-  config = c;
-  incrementalNamer = IncrementalNamer();
-
   // Find full path of dynamic library and initialise bindings.
   if (findDotDartTool() == null) {
     throw Exception('Unable to find .dart_tool.');
@@ -60,7 +56,12 @@ void initParser(Config c) {
       strings.ffigenFolderName,
       strings.dylibFileName,
     );
-    clang = clang_types.Clang(DynamicLibrary.open(fullDylibPath));
+
+    // Initialise global variables.
+    initialiseGlobals(
+      config: c,
+      clang: clang_types.Clang(DynamicLibrary.open(fullDylibPath)),
+    );
   }
 }
 
@@ -121,7 +122,7 @@ List<Binding> parseToBindings() {
   }
 
   // Add all saved unnamed enums.
-  bindings.addAll(getSavedUnNamedEnums());
+  bindings.addAll(unnamedEnumConstants);
 
   // Parse all saved macros.
   bindings.addAll(parseSavedMacros());
