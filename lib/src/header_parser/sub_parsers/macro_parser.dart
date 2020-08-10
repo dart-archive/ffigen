@@ -18,21 +18,18 @@ import '../utils.dart';
 
 var _logger = Logger('ffigen.header_parser.macro_parser');
 
-/// Saved macros, Key: prefixedName, Value originalName.
-final _savedMacros = <String, String>{};
-
 /// Adds a macro definition to be parsed later.
 void saveMacroDefinition(Pointer<clang_types.CXCursor> cursor) {
   final originalMacroName = cursor.spelling();
   if (shouldIncludeMacro(originalMacroName) &&
-      !isSeenMacro(originalMacroName) &&
+      !bindingsIndex.isSeenMacro(originalMacroName) &&
       clang.clang_Cursor_isMacroBuiltin_wrap(cursor) == 0 &&
       clang.clang_Cursor_isMacroFunctionLike_wrap(cursor) == 0) {
     // Parse macro only if it's not builtin or function-like.
     _logger.fine(
         "++++ Saved Macro '$originalMacroName' for later : ${cursor.completeStringRepr()}");
     final prefixedName = config.macroDecl.renameUsingConfig(originalMacroName);
-    addMacroToSeen(originalMacroName, prefixedName);
+    bindingsIndex.addMacroToSeen(originalMacroName, prefixedName);
     _saveMacro(prefixedName, originalMacroName);
   }
 }
@@ -41,7 +38,7 @@ void saveMacroDefinition(Pointer<clang_types.CXCursor> cursor) {
 ///
 /// Macros are parsed later in [parseSavedMacros()].
 void _saveMacro(String name, String originalName) {
-  _savedMacros[name] = originalName;
+  savedMacros[name] = originalName;
 }
 
 List<Constant> _bindings;
@@ -52,7 +49,7 @@ List<Constant> _bindings;
 List<Constant> parseSavedMacros() {
   _bindings = [];
 
-  if (_savedMacros.keys.isEmpty) {
+  if (savedMacros.keys.isEmpty) {
     return _bindings;
   }
 
@@ -117,7 +114,7 @@ int _macroVariablevisitor(Pointer<clang_types.CXCursor> cursor,
       switch (k) {
         case clang_types.CXEvalResultKind.CXEval_Int:
           constant = Constant(
-            originalName: _savedMacros[macroName],
+            originalName: savedMacros[macroName],
             name: macroName,
             rawType: 'int',
             rawValue: clang.clang_EvalResult_getAsLongLong(e).toString(),
@@ -125,7 +122,7 @@ int _macroVariablevisitor(Pointer<clang_types.CXCursor> cursor,
           break;
         case clang_types.CXEvalResultKind.CXEval_Float:
           constant = Constant(
-            originalName: _savedMacros[macroName],
+            originalName: savedMacros[macroName],
             name: macroName,
             rawType: 'double',
             rawValue: clang.clang_EvalResult_getAsDouble(e).toString(),
@@ -138,7 +135,7 @@ int _macroVariablevisitor(Pointer<clang_types.CXCursor> cursor,
           // Escape ' character, because our strings are enclosed with '.
           value = value.replaceAll("'", r"\'");
           constant = Constant(
-            originalName: _savedMacros[macroName],
+            originalName: savedMacros[macroName],
             name: macroName,
             rawType: 'String',
             rawValue: "'${value}'",
@@ -177,7 +174,7 @@ String _generatedFileBaseName;
 /// Generated macro variable names.
 ///
 /// Used to determine if macro should be included in bindings or not.
-Set<String> _macroVarNames = {};
+Set<String> _macroVarNames;
 
 /// Creates a temporary file for parsing macros in current directory.
 File createFileForMacros() {
@@ -204,10 +201,10 @@ File createFileForMacros() {
   }
 
   _macroVarNames = {};
-  for (final prefixedMacroName in _savedMacros.keys) {
+  for (final prefixedMacroName in savedMacros.keys) {
     // Write macro.
     final macroVarName = MacroVariableString.encode(prefixedMacroName);
-    sb.writeln('auto ${macroVarName} = ${_savedMacros[prefixedMacroName]};');
+    sb.writeln('auto ${macroVarName} = ${savedMacros[prefixedMacroName]};');
     // Add to _macroVarNames.
     _macroVarNames.add(macroVarName);
   }

@@ -10,7 +10,6 @@ import 'package:ffigen/src/config_provider.dart';
 import 'package:ffigen/src/header_parser/sub_parsers/macro_parser.dart';
 import 'package:ffigen/src/config_provider/config_types.dart';
 import 'package:ffigen/src/find_resource.dart';
-import 'package:ffigen/src/header_parser/sub_parsers/unnamed_enumdecl_parser.dart';
 import 'package:ffigen/src/header_parser/translation_unit_parser.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
@@ -21,8 +20,8 @@ import 'data.dart';
 import 'utils.dart';
 
 /// Main entrypoint for header_parser.
-Library parse(Config conf, {bool sort = false}) {
-  initParser(conf);
+Library parse(Config c) {
+  initParser(c);
 
   final bindings = parseToBindings();
 
@@ -33,7 +32,7 @@ Library parse(Config conf, {bool sort = false}) {
     header: config.preamble,
   );
 
-  if (sort) {
+  if (config.sort) {
     library.sort();
   }
   return library;
@@ -45,13 +44,9 @@ Library parse(Config conf, {bool sort = false}) {
 
 var _logger = Logger('ffigen.header_parser.parser');
 
-/// Initialises parser, clears any previous values.
+/// Initializes parser, clears any previous values.
 void initParser(Config c) {
-  // Set global configurations.
-  config = c;
-  incrementalNamer = IncrementalNamer();
-
-  // Find full path of dynamic library and initialise bindings.
+  // Find full path of dynamic library and initialize bindings.
   if (findDotDartTool() == null) {
     throw Exception('Unable to find .dart_tool.');
   } else {
@@ -60,7 +55,12 @@ void initParser(Config c) {
       strings.ffigenFolderName,
       strings.dylibFileName,
     );
-    clang = clang_types.Clang(DynamicLibrary.open(fullDylibPath));
+
+    // Initialize global variables.
+    initializeGlobals(
+      config: c,
+      clang: clang_types.Clang(DynamicLibrary.open(fullDylibPath)),
+    );
   }
 }
 
@@ -74,7 +74,6 @@ List<Binding> parseToBindings() {
   /// Add compiler opt for comment parsing for clang based on config.
   if (config.commentType.length != CommentLength.none &&
       config.commentType.style == CommentStyle.any) {
-    config.compilerOpts ??= [];
     config.compilerOpts.add(strings.fparseAllComments);
   }
 
@@ -122,7 +121,7 @@ List<Binding> parseToBindings() {
   }
 
   // Add all saved unnamed enums.
-  bindings.addAll(getSavedUnNamedEnums());
+  bindings.addAll(unnamedEnumConstants);
 
   // Parse all saved macros.
   bindings.addAll(parseSavedMacros());

@@ -54,12 +54,14 @@ class Headers {
   /// Path to headers.
   ///
   /// This contains all the headers, after extraction from Globs.
-  List<String> entryPoints = [];
+  final List<String> entryPoints;
 
   /// Include filter for headers.
-  HeaderIncludeFilter includeFilter = GlobHeaderFilter();
+  final HeaderIncludeFilter includeFilter;
 
-  Headers({this.entryPoints, this.includeFilter});
+  Headers({List<String> entryPoints, HeaderIncludeFilter includeFilter})
+      : entryPoints = entryPoints ?? [],
+        includeFilter = includeFilter ?? GlobHeaderFilter();
 }
 
 abstract class HeaderIncludeFilter {

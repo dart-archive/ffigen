@@ -34,17 +34,13 @@ void main(List<String> args) {
   Config config;
   try {
     config = getConfig(argResult);
-  } on ConfigError {
+  } on FormatException {
     print('Please fix configuration errors and re-run the tool.');
     exit(1);
   }
 
   // Parse the bindings according to config object provided.
   final library = parse(config);
-
-  if (config.sort) {
-    library.sort();
-  }
 
   // Generate file for the parsed bindings.
   final gen = File(config.output);

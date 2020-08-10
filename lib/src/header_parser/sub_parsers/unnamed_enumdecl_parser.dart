@@ -14,10 +14,6 @@ import '../utils.dart';
 
 var _logger = Logger('ffigen.header_parser.unnamed_enumdecl_parser');
 
-List<Constant> _constants = [];
-
-List<Constant> getSavedUnNamedEnums() => _constants;
-
 /// Saves unnamed enums.
 void saveUnNamedEnum(Pointer<clang_types.CXCursor> cursor) {
   final resultCode = clang.clang_visitChildren_wrap(
@@ -58,7 +54,7 @@ int _unnamedenumCursorVisitor(Pointer<clang_types.CXCursor> cursor,
 
 /// Adds the parameter to func in [functiondecl_parser.dart].
 void _addUnNamedEnumConstant(Pointer<clang_types.CXCursor> cursor) {
-  _constants.add(
+  unnamedEnumConstants.add(
     Constant(
       originalName: cursor.spelling(),
       name: config.enumClassDecl.renameMemberUsingConfig(

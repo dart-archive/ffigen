@@ -43,7 +43,7 @@ Struc parseStructDeclaration(
   if (structName.isEmpty) {
     _logger.finest('unnamed structure or typedef structure declaration');
   } else if ((ignoreFilter || shouldIncludeStruct(structName)) &&
-      (!isSeenStruc(structName))) {
+      (!bindingsIndex.isSeenStruct(structName))) {
     _logger.fine(
         '++++ Adding Structure: structName: ${structName}, ${cursor.completeStringRepr()}');
     _stack.top.struc = Struc(
@@ -53,7 +53,7 @@ Struc parseStructDeclaration(
     );
     // Adding to seen here to stop recursion if a struct has itself as a
     // member, members are updated later.
-    addStrucToSeen(structName, _stack.top.struc);
+    bindingsIndex.addStructToSeen(structName, _stack.top.struc);
     _setStructMembers(cursor);
   }
 

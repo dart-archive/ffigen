@@ -322,3 +322,60 @@ class IncrementalNamer {
     return '${base}_$i';
   }
 }
+
+/// Tracks if a binding is 'seen' or not.
+class BindingsIndex {
+  // Stores binding names already seen. Map key is same as their original name.
+  final Map<String, Struc> _structs = {};
+  final Map<String, Func> _functions = {};
+  final Map<String, EnumClass> _enumClass = {};
+  final Map<String, String> _macros = {};
+
+  bool isSeenStruct(String originalName) {
+    return _structs.containsKey(originalName);
+  }
+
+  void addStructToSeen(String originalName, Struc struc) {
+    _structs[originalName] = struc;
+  }
+
+  Struc getSeenStruct(String originalName) {
+    return _structs[originalName];
+  }
+
+  bool isSeenFunc(String originalName) {
+    return _functions.containsKey(originalName);
+  }
+
+  void addFuncToSeen(String originalName, Func func) {
+    _functions[originalName] = func;
+  }
+
+  Func getSeenFunc(String originalName) {
+    return _functions[originalName];
+  }
+
+  bool isSeenEnumClass(String originalName) {
+    return _enumClass.containsKey(originalName);
+  }
+
+  void addEnumClassToSeen(String originalName, EnumClass enumClass) {
+    _enumClass[originalName] = enumClass;
+  }
+
+  EnumClass getSeenEnumClass(String originalName) {
+    return _enumClass[originalName];
+  }
+
+  bool isSeenMacro(String originalName) {
+    return _macros.containsKey(originalName);
+  }
+
+  void addMacroToSeen(String originalName, String macro) {
+    _macros[originalName] = macro;
+  }
+
+  String getSeenMacro(String originalName) {
+    return _macros[originalName];
+  }
+}

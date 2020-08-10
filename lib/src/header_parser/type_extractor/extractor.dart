@@ -10,7 +10,6 @@ import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
 import '../data.dart';
-import '../includer.dart';
 import '../sub_parsers/structdecl_parser.dart';
 import '../translation_unit_parser.dart';
 import '../type_extractor/cxtypekindmap.dart';
@@ -104,8 +103,8 @@ Type _extractfromRecord(Pointer<clang_types.CXType> cxtype) {
 
       // Also add a struct binding, if its unseen.
       // TODO(23): Check if we should auto add struct.
-      if (isSeenStruc(structName)) {
-        type = Type.struct(getSeenStruc(structName));
+      if (bindingsIndex.isSeenStruct(structName)) {
+        type = Type.struct(bindingsIndex.getSeenStruct(structName));
       } else {
         final struc = parseStructDeclaration(cursor,
             name: fixedStructName, ignoreFilter: true);
@@ -113,7 +112,7 @@ Type _extractfromRecord(Pointer<clang_types.CXType> cxtype) {
         // Add to bindings.
         addToBindings(struc);
         // Add to seen.
-        addStrucToSeen(structName, struc);
+        bindingsIndex.addStructToSeen(structName, struc);
       }
 
       cxtype.dispose();

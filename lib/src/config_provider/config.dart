@@ -21,53 +21,66 @@ var _logger = Logger('ffigen.config_provider.config');
 /// Handles validation, extraction of confiurations from yaml file.
 class Config {
   /// output file name.
-  String output;
-
+  String get output => _output;
+  String _output;
   // Holds headers and filters for header.
-  Headers headers;
+  Headers get headers => _headers;
+  Headers _headers;
 
   /// CommandLine Arguments to pass to clang_compiler.
-  List<String> compilerOpts;
+  List<String> get compilerOpts => _compilerOpts;
+  List<String> _compilerOpts;
 
   /// Declaration config for Functions.
-  Declaration functionDecl;
+  Declaration get functionDecl => _functionDecl;
+  Declaration _functionDecl;
 
   /// Declaration config for Structs.
-  Declaration structDecl;
+  Declaration get structDecl => _structDecl;
+  Declaration _structDecl;
 
   /// Declaration config for Enums.
-  Declaration enumClassDecl;
+  Declaration get enumClassDecl => _enumClassDecl;
+  Declaration _enumClassDecl;
 
   /// Declaration config for Enums.
-  Declaration macroDecl;
+  Declaration get macroDecl => _macroDecl;
+  Declaration _macroDecl;
 
   /// If generated bindings should be sorted alphabetically.
-  bool sort;
+  bool get sort => _sort;
+  bool _sort;
 
   /// If typedef of supported types(int8_t) should be directly used.
-  bool useSupportedTypedefs;
+  bool get useSupportedTypedefs => _useSupportedTypedefs;
+  bool _useSupportedTypedefs;
 
   /// Extracted Doc comment type.
-  CommentType commentType;
+  CommentType get commentType => _commentType;
+  CommentType _commentType;
 
   /// If tool should generate array workarounds.
   ///
   /// If false(default), structs with inline array members will have all its
   /// members removed.
-  bool arrayWorkaround;
+  bool get arrayWorkaround => _arrayWorkaround;
+  bool _arrayWorkaround;
 
   /// If constants should be generated for unnamed enums.
-  bool unnamedEnums;
+  bool get unnamedEnums => _unnamedEnums;
+  bool _unnamedEnums;
 
   /// Name of the wrapper class.
-  String wrapperName;
+  String get wrapperName => _wrapperName;
+  String _wrapperName;
 
   /// Doc comment for the wrapper class.
-  String wrapperDocComment;
+  String get wrapperDocComment => _wrapperDocComment;
+  String _wrapperDocComment;
 
   /// Header of the generated bindings.
-  String preamble;
-
+  String get preamble => _preamble;
+  String _preamble;
   Config._();
 
   /// Create config from Yaml map.
@@ -79,7 +92,7 @@ class Config {
 
     final result = configspecs._checkConfigs(map, specs);
     if (!result) {
-      throw ConfigError();
+      throw FormatException('Invalid configurations provided.');
     }
 
     configspecs._extract(map, specs);
@@ -133,20 +146,21 @@ class Config {
         requirement: Requirement.yes,
         validator: outputValidator,
         extractor: outputExtractor,
-        extractedResult: (dynamic result) => output = result as String,
+        extractedResult: (dynamic result) => _output = result as String,
       ),
       strings.headers: Specification<Headers>(
         requirement: Requirement.yes,
         validator: headersValidator,
         extractor: headersExtractor,
-        extractedResult: (dynamic result) => headers = result as Headers,
+        extractedResult: (dynamic result) => _headers = result as Headers,
       ),
       strings.compilerOpts: Specification<List<String>>(
         requirement: Requirement.no,
         validator: compilerOptsValidator,
         extractor: compilerOptsExtractor,
+        defaultValue: () => [],
         extractedResult: (dynamic result) =>
-            compilerOpts = result as List<String>,
+            _compilerOpts = result as List<String>,
       ),
       strings.functions: Specification<Declaration>(
         requirement: Requirement.no,
@@ -154,7 +168,7 @@ class Config {
         extractor: declarationConfigExtractor,
         defaultValue: () => Declaration(),
         extractedResult: (dynamic result) {
-          functionDecl = result as Declaration;
+          _functionDecl = result as Declaration;
         },
       ),
       strings.structs: Specification<Declaration>(
@@ -163,7 +177,7 @@ class Config {
         extractor: declarationConfigExtractor,
         defaultValue: () => Declaration(),
         extractedResult: (dynamic result) {
-          structDecl = result as Declaration;
+          _structDecl = result as Declaration;
         },
       ),
       strings.enums: Specification<Declaration>(
@@ -172,7 +186,7 @@ class Config {
         extractor: declarationConfigExtractor,
         defaultValue: () => Declaration(),
         extractedResult: (dynamic result) {
-          enumClassDecl = result as Declaration;
+          _enumClassDecl = result as Declaration;
         },
       ),
       strings.macros: Specification<Declaration>(
@@ -181,7 +195,7 @@ class Config {
         extractor: declarationConfigExtractor,
         defaultValue: () => Declaration(),
         extractedResult: (dynamic result) {
-          macroDecl = result as Declaration;
+          _macroDecl = result as Declaration;
         },
       ),
       strings.sizemap: Specification<Map<int, SupportedNativeType>>(
@@ -202,7 +216,7 @@ class Config {
         validator: booleanValidator,
         extractor: booleanExtractor,
         defaultValue: () => false,
-        extractedResult: (dynamic result) => sort = result as bool,
+        extractedResult: (dynamic result) => _sort = result as bool,
       ),
       strings.useSupportedTypedefs: Specification<bool>(
         requirement: Requirement.no,
@@ -210,7 +224,7 @@ class Config {
         extractor: booleanExtractor,
         defaultValue: () => true,
         extractedResult: (dynamic result) =>
-            useSupportedTypedefs = result as bool,
+            _useSupportedTypedefs = result as bool,
       ),
       strings.comments: Specification<CommentType>(
         requirement: Requirement.no,
@@ -218,28 +232,28 @@ class Config {
         extractor: commentExtractor,
         defaultValue: () => CommentType.def(),
         extractedResult: (dynamic result) =>
-            commentType = result as CommentType,
+            _commentType = result as CommentType,
       ),
       strings.arrayWorkaround: Specification<bool>(
         requirement: Requirement.no,
         validator: booleanValidator,
         extractor: booleanExtractor,
         defaultValue: () => false,
-        extractedResult: (dynamic result) => arrayWorkaround = result as bool,
+        extractedResult: (dynamic result) => _arrayWorkaround = result as bool,
       ),
       strings.unnamedEnums: Specification<bool>(
         requirement: Requirement.no,
         validator: booleanValidator,
         extractor: booleanExtractor,
         defaultValue: () => true,
-        extractedResult: (dynamic result) => unnamedEnums = result as bool,
+        extractedResult: (dynamic result) => _unnamedEnums = result as bool,
       ),
       strings.name: Specification<String>(
         requirement: Requirement.prefer,
         validator: dartClassNameValidator,
         extractor: stringExtractor,
         defaultValue: () => 'NativeLibrary',
-        extractedResult: (dynamic result) => wrapperName = result as String,
+        extractedResult: (dynamic result) => _wrapperName = result as String,
       ),
       strings.description: Specification<String>(
         requirement: Requirement.prefer,
@@ -247,28 +261,14 @@ class Config {
         extractor: stringExtractor,
         defaultValue: () => null,
         extractedResult: (dynamic result) =>
-            wrapperDocComment = result as String,
+            _wrapperDocComment = result as String,
       ),
       strings.preamble: Specification<String>(
         requirement: Requirement.no,
         validator: nonEmptyStringValidator,
         extractor: stringExtractor,
-        extractedResult: (dynamic result) => preamble = result as String,
+        extractedResult: (dynamic result) => _preamble = result as String,
       ),
     };
-  }
-}
-
-class ConfigError implements Exception {
-  final String message;
-  ConfigError([this.message]);
-
-  @override
-  String toString() {
-    if (message == null) {
-      return 'ConfigError: Invalid configurations provided.';
-    } else {
-      return 'ConfigError: $message';
-    }
   }
 }
