@@ -325,7 +325,7 @@ class IncrementalNamer {
 
 /// Tracks if a binding is 'seen' or not.
 class BindingsIndex {
-  // Stores binding names already scene. Mp key is same as their original name.
+  // Stores binding names already seen. Map key is same as their original name.
   final Map<String, Struc> _structs = {};
   final Map<String, Func> _functions = {};
   final Map<String, EnumClass> _enumClass = {};
