@@ -324,22 +324,22 @@ class IncrementalNamer {
 }
 
 /// Tracks if a binding is 'seen' or not.
-class SeenTracker {
+class BindingsIndex {
   // Stores binding names already scene. Mp key is same as their original name.
   final Map<String, Struc> _structs = {};
   final Map<String, Func> _functions = {};
   final Map<String, EnumClass> _enumClass = {};
   final Map<String, String> _macros = {};
 
-  bool isSeenStruc(String originalName) {
+  bool isSeenStruct(String originalName) {
     return _structs.containsKey(originalName);
   }
 
-  void addStrucToSeen(String originalName, Struc struc) {
+  void addStructToSeen(String originalName, Struc struc) {
     _structs[originalName] = struc;
   }
 
-  Struc getSeenStruc(String originalName) {
+  Struc getSeenStruct(String originalName) {
     return _structs[originalName];
   }
 

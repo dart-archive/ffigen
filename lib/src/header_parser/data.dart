@@ -23,8 +23,8 @@ Clang get clang => _clang;
 Clang _clang;
 
 // Tracks seen status for bindings
-SeenTracker get seenTracker => _seenTracker;
-SeenTracker _seenTracker;
+BindingsIndex get bindingsIndex => _bindingsIndex;
+BindingsIndex _bindingsIndex;
 
 /// Used for naming typedefs.
 IncrementalNamer get incrementalNamer => _incrementalNamer;
@@ -44,11 +44,11 @@ Map<String, String> _savedMacros;
 List<Constant> get unnamedEnumConstants => _unnamedEnumConstants;
 List<Constant> _unnamedEnumConstants;
 
-void initialiseGlobals({@required Config config, @required Clang clang}) {
+void initializeGlobals({@required Config config, @required Clang clang}) {
   _config = config;
   _clang = clang;
   _incrementalNamer = IncrementalNamer();
   _savedMacros = {};
   _unnamedEnumConstants = [];
-  _seenTracker = SeenTracker();
+  _bindingsIndex = BindingsIndex();
 }

@@ -8,7 +8,7 @@ import 'data.dart';
 /// based on filters.
 
 bool shouldIncludeStruct(String name) {
-  if (seenTracker.isSeenStruc(name) || name == '') {
+  if (bindingsIndex.isSeenStruct(name) || name == '') {
     return false;
   } else if (config.structDecl == null ||
       config.structDecl.shouldInclude(name)) {
@@ -19,7 +19,7 @@ bool shouldIncludeStruct(String name) {
 }
 
 bool shouldIncludeFunc(String name) {
-  if (seenTracker.isSeenFunc(name) || name == '') {
+  if (bindingsIndex.isSeenFunc(name) || name == '') {
     return false;
   } else if (config.functionDecl == null ||
       config.functionDecl.shouldInclude(name)) {
@@ -30,7 +30,7 @@ bool shouldIncludeFunc(String name) {
 }
 
 bool shouldIncludeEnumClass(String name) {
-  if (seenTracker.isSeenEnumClass(name) || name == '') {
+  if (bindingsIndex.isSeenEnumClass(name) || name == '') {
     return false;
   } else if (config.enumClassDecl == null ||
       config.enumClassDecl.shouldInclude(name)) {
@@ -41,7 +41,7 @@ bool shouldIncludeEnumClass(String name) {
 }
 
 bool shouldIncludeMacro(String name) {
-  if (seenTracker.isSeenMacro(name) || name == '') {
+  if (bindingsIndex.isSeenMacro(name) || name == '') {
     return false;
   } else if (config.macroDecl == null || config.macroDecl.shouldInclude(name)) {
     return true;

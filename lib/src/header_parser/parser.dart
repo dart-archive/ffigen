@@ -44,9 +44,9 @@ Library parse(Config c) {
 
 var _logger = Logger('ffigen.header_parser.parser');
 
-/// Initialises parser, clears any previous values.
+/// Initializes parser, clears any previous values.
 void initParser(Config c) {
-  // Find full path of dynamic library and initialise bindings.
+  // Find full path of dynamic library and initialize bindings.
   if (findDotDartTool() == null) {
     throw Exception('Unable to find .dart_tool.');
   } else {
@@ -56,8 +56,8 @@ void initParser(Config c) {
       strings.dylibFileName,
     );
 
-    // Initialise global variables.
-    initialiseGlobals(
+    // Initialize global variables.
+    initializeGlobals(
       config: c,
       clang: clang_types.Clang(DynamicLibrary.open(fullDylibPath)),
     );

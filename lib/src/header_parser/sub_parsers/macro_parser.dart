@@ -22,14 +22,14 @@ var _logger = Logger('ffigen.header_parser.macro_parser');
 void saveMacroDefinition(Pointer<clang_types.CXCursor> cursor) {
   final originalMacroName = cursor.spelling();
   if (shouldIncludeMacro(originalMacroName) &&
-      !seenTracker.isSeenMacro(originalMacroName) &&
+      !bindingsIndex.isSeenMacro(originalMacroName) &&
       clang.clang_Cursor_isMacroBuiltin_wrap(cursor) == 0 &&
       clang.clang_Cursor_isMacroFunctionLike_wrap(cursor) == 0) {
     // Parse macro only if it's not builtin or function-like.
     _logger.fine(
         "++++ Saved Macro '$originalMacroName' for later : ${cursor.completeStringRepr()}");
     final prefixedName = config.macroDecl.renameUsingConfig(originalMacroName);
-    seenTracker.addMacroToSeen(originalMacroName, prefixedName);
+    bindingsIndex.addMacroToSeen(originalMacroName, prefixedName);
     _saveMacro(prefixedName, originalMacroName);
   }
 }
