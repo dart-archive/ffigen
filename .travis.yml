@@ -23,3 +23,14 @@ before_install:
 before_script:
   - 'pub run ffigen:setup'
   - cd test/native_test && dart build_test_dylib.dart && cd ../..
+
+after_success:
+  - pub global activate remove_from_coverage
+  - pub global activate dart_coveralls
+  - pub global activate coveralls
+    # Generate coverage report.
+  - pub global run dart_coveralls calc test/test_coverage.dart > lcov.info
+    # Remove extra files from coverage report.
+  - pub global run remove_from_coverage -f lcov.info -r ".pub-cache"
+    # Upload to coveralls.
+  - 'coveralls lcov.info'
