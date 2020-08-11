@@ -10,4 +10,4 @@ struct Struct1
     void (*unnamed)();
 };
 
-NamedFunctionProto func1(NamedFunctionProto named, void (*unnamed)(int));
+extern NamedFunctionProto func1(NamedFunctionProto named, void (*unnamed)(int));
