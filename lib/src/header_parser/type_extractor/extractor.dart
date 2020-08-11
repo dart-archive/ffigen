@@ -56,8 +56,11 @@ Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String parentName}) {
       return Type.nativeType(
         enumNativeType,
       );
-    case clang_types.CXTypeKind
-        .CXType_FunctionProto: // Primarily used for function pointers.
+    case clang_types.CXTypeKind.CXType_FunctionProto:
+      // Primarily used for function pointers.
+      return _extractFromFunctionProto(cxtype, parentName);
+    case clang_types.CXTypeKind.CXType_FunctionNoProto:
+      // Primarily used for function types with zero arguments.
       return _extractFromFunctionProto(cxtype, parentName);
     case clang_types.CXTypeKind
         .CXType_ConstantArray: // Primarily used for constant array in struct members.
@@ -132,12 +135,9 @@ Type _extractFromFunctionProto(
     Pointer<clang_types.CXType> cxtype, String parentName) {
   var name = parentName;
 
-  // Set a name for typedefc incase it was null or empty.
-  if (name == null || name == '') {
-    name = incrementalNamer.name('_typedefC');
-  } else {
-    name = incrementalNamer.name(name);
-  }
+  // An empty name means the function prototype was declared in-place, instead
+  // of using a typedef.
+  name = name ?? '';
   final _parameters = <Parameter>[];
   final totalArgs = clang.clang_getNumArgTypes_wrap(cxtype);
   for (var i = 0; i < totalArgs; i++) {
@@ -154,13 +154,23 @@ Type _extractFromFunctionProto(
       Parameter(name: '', type: pt),
     );
   }
-  final typedefC = Typedef(
-    name: name,
-    typedefType: TypedefType.C,
-    parameters: _parameters,
-    returnType:
-        clang.clang_getResultType_wrap(cxtype).toCodeGenTypeAndDispose(),
-  );
+
+  Typedef typedefC;
+  if (bindingsIndex.isSeenFunctionTypedef(name)) {
+    typedefC = bindingsIndex.getSeenFunctionTypedef(name);
+  } else {
+    typedefC = Typedef(
+      name: name.isNotEmpty ? name : incrementalNamer.name('_typedefC'),
+      typedefType: TypedefType.C,
+      parameters: _parameters,
+      returnType:
+          clang.clang_getResultType_wrap(cxtype).toCodeGenTypeAndDispose(),
+    );
+    // Add to seen, if name isn't empty.
+    if (name.isNotEmpty) {
+      bindingsIndex.addFunctionTypedefToSeen(name, typedefC);
+    }
+  }
 
   return Type.nativeFunc(typedefC);
 }

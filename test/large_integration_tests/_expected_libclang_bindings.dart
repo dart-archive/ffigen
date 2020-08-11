@@ -1628,7 +1628,7 @@ class LibClang {
   /// inspecting the inclusions in the PCH file itself).
   void clang_getInclusions(
     ffi.Pointer<CXTranslationUnitImpl> tu,
-    ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor_1>> visitor,
+    ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor>> visitor,
     ffi.Pointer<ffi.Void> client_data,
   ) {
     _clang_getInclusions ??= _dylib.lookupFunction<_c_clang_getInclusions,
@@ -4370,26 +4370,26 @@ class CXIdxEntityRefInfo extends ffi.Struct {}
 class IndexerCallbacks extends ffi.Struct {
   /// Called periodically to check whether indexing should be aborted. Should
   /// return 0 to continue, and non-zero to abort.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_3>> abortQuery;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_2>> abortQuery;
 
   /// Called at the end of indexing; passes the complete diagnostic set.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_4>> diagnostic;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_3>> diagnostic;
 
-  ffi.Pointer<ffi.NativeFunction<_typedefC_5>> enteredMainFile;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_4>> enteredMainFile;
 
   /// Called when a file gets #included/#imported.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_6>> ppIncludedFile;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_5>> ppIncludedFile;
 
   /// Called when a AST file (PCH or module) gets imported.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_7>> importedASTFile;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_6>> importedASTFile;
 
   /// Called at the beginning of indexing a translation unit.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_8>> startedTranslationUnit;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_7>> startedTranslationUnit;
 
-  ffi.Pointer<ffi.NativeFunction<_typedefC_9>> indexDeclaration;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_8>> indexDeclaration;
 
   /// Called to index a reference of an entity.
-  ffi.Pointer<ffi.NativeFunction<_typedefC_10>> indexEntityReference;
+  ffi.Pointer<ffi.NativeFunction<_typedefC_9>> indexEntityReference;
 }
 
 abstract class CXIndexOptFlags {
@@ -5391,7 +5391,7 @@ typedef _dart_clang_toggleCrashRecovery = void Function(
   int isEnabled,
 );
 
-typedef CXInclusionVisitor_1 = ffi.Void Function(
+typedef CXInclusionVisitor = ffi.Void Function(
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<CXSourceLocation>,
   ffi.Uint32,
@@ -5400,13 +5400,13 @@ typedef CXInclusionVisitor_1 = ffi.Void Function(
 
 typedef _c_clang_getInclusions = ffi.Void Function(
   ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor_1>> visitor,
+  ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor>> visitor,
   ffi.Pointer<ffi.Void> client_data,
 );
 
 typedef _dart_clang_getInclusions = void Function(
   ffi.Pointer<CXTranslationUnitImpl> tu,
-  ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor_1>> visitor,
+  ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor>> visitor,
   ffi.Pointer<ffi.Void> client_data,
 );
 
@@ -5730,12 +5730,18 @@ typedef _dart_clang_indexTranslationUnit = int Function(
   ffi.Pointer<CXTranslationUnitImpl> arg5,
 );
 
-typedef _typedefC_3 = ffi.Int32 Function(
+typedef _typedefC_2 = ffi.Int32 Function(
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<ffi.Void>,
 );
 
-typedef _typedefC_4 = ffi.Void Function(
+typedef _typedefC_3 = ffi.Void Function(
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void>,
+);
+
+typedef _typedefC_4 = ffi.Pointer<ffi.Void> Function(
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<ffi.Void>,
@@ -5743,31 +5749,25 @@ typedef _typedefC_4 = ffi.Void Function(
 
 typedef _typedefC_5 = ffi.Pointer<ffi.Void> Function(
   ffi.Pointer<ffi.Void>,
-  ffi.Pointer<ffi.Void>,
-  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<CXIdxIncludedFileInfo>,
 );
 
 typedef _typedefC_6 = ffi.Pointer<ffi.Void> Function(
   ffi.Pointer<ffi.Void>,
-  ffi.Pointer<CXIdxIncludedFileInfo>,
+  ffi.Pointer<CXIdxImportedASTFileInfo>,
 );
 
 typedef _typedefC_7 = ffi.Pointer<ffi.Void> Function(
   ffi.Pointer<ffi.Void>,
-  ffi.Pointer<CXIdxImportedASTFileInfo>,
-);
-
-typedef _typedefC_8 = ffi.Pointer<ffi.Void> Function(
-  ffi.Pointer<ffi.Void>,
   ffi.Pointer<ffi.Void>,
 );
 
-typedef _typedefC_9 = ffi.Void Function(
+typedef _typedefC_8 = ffi.Void Function(
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<CXIdxDeclInfo>,
 );
 
-typedef _typedefC_10 = ffi.Void Function(
+typedef _typedefC_9 = ffi.Void Function(
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<CXIdxEntityRefInfo>,
 );

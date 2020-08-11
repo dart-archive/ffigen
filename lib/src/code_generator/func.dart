@@ -58,16 +58,16 @@ class Func extends LookUpBinding {
     if (_typedefDependencies == null) {
       _typedefDependencies = <Typedef>[];
 
-      /// Ensure name conflicts are resolved for [cType] and [dartType] typedefs.
-      cType.name = _uniqueTypedefName(cType.name, w);
-      dartType.name = _uniqueTypedefName(dartType.name, w);
+      // Add typedef's required by return type.
+      final returnTypeBase = returnType.getBaseType();
+      if (returnTypeBase.broadType == BroadType.NativeFunction) {
+        _typedefDependencies.add(returnTypeBase.nativeFunc);
+      }
 
       // Add typedef's required by parameters.
       for (final p in parameters) {
         final base = p.type.getBaseType();
         if (base.broadType == BroadType.NativeFunction) {
-          // Resolve name conflicts in typedef's required by parameters before using.
-          base.nativeFunc.name = _uniqueTypedefName(base.nativeFunc.name, w);
           _typedefDependencies.add(base.nativeFunc);
         }
       }
@@ -77,21 +77,6 @@ class Func extends LookUpBinding {
       _typedefDependencies.add(dartType);
     }
     return _typedefDependencies;
-  }
-
-  /// Checks if typedef name is unique in both top level and wrapper level.
-  /// And only marks it as used at top-level.
-  String _uniqueTypedefName(String name, Writer w) {
-    final base = name;
-    var uniqueName = name;
-    var suffix = 0;
-    while (w.topLevelUniqueNamer.isUsed(uniqueName) ||
-        w.wrapperLevelUniqueNamer.isUsed(uniqueName)) {
-      suffix++;
-      uniqueName = base + suffix.toString();
-    }
-    w.topLevelUniqueNamer.markUsed(uniqueName);
-    return uniqueName;
   }
 
   Typedef _cType, _dartType;
@@ -151,6 +136,6 @@ class Parameter {
   String name;
   final Type type;
 
-  Parameter({String originalName, this.name, @required this.type})
+  Parameter({String originalName, this.name = '', @required this.type})
       : originalName = originalName ?? name;
 }

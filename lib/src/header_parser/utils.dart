@@ -330,6 +330,8 @@ class BindingsIndex {
   final Map<String, Func> _functions = {};
   final Map<String, EnumClass> _enumClass = {};
   final Map<String, String> _macros = {};
+  // Stores only named typedefC used in NativeFunc.
+  final Map<String, Typedef> _functionTypedefs = {};
 
   bool isSeenStruct(String originalName) {
     return _structs.containsKey(originalName);
@@ -377,5 +379,17 @@ class BindingsIndex {
 
   String getSeenMacro(String originalName) {
     return _macros[originalName];
+  }
+
+  bool isSeenFunctionTypedef(String originalName) {
+    return _functionTypedefs.containsKey(originalName);
+  }
+
+  void addFunctionTypedefToSeen(String originalName, Typedef t) {
+    _functionTypedefs[originalName] = t;
+  }
+
+  Typedef getSeenFunctionTypedef(String originalName) {
+    return _functionTypedefs[originalName];
   }
 }
