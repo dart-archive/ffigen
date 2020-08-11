@@ -65,19 +65,6 @@ class Typedef {
 
     return s.toString();
   }
-
-  @override
-  bool operator ==(Object a) {
-    if (a is Typedef) {
-      if (name != a.name || name.isEmpty) {
-        return false;
-      } else {
-        return typedefType == a.typedefType;
-      }
-    } else {
-      return false;
-    }
-  }
 }
 
 enum TypedefType { C, Dart }
