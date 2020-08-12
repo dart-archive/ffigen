@@ -68,12 +68,13 @@ The following configuration options are available-
 <thead>
   <tr>
     <th>Key</th>
-    <th>
-    <!-- Adding &nbsp to increase column width. -->
-    Explaination&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-    </th>
+    <th>Explaination</th>
     <th>Example</th>
   </tr>
+  <colgroup>
+      <col>
+      <col style="width: 100px;">
+  </colgroup>
 </thead>
 <tbody>
   <tr>
@@ -306,7 +307,7 @@ class ArrayHelper_CXFileUniqueID_data_level0 {
 Run tests from the root of the package with `pub run test`.
 
 ## FAQ
-<details><summary>Removing underscores or renaming declarations.</summary>
+<details><summary>Can ffigen removing underscores or renaming declarations?</summary>
 
 Ffigen supports **regexp based renaming**, the regexp must be a
 full match, for renaming you can use regexp groups (`$1` means group 1).
@@ -325,7 +326,7 @@ structs:
       '_(.*)': '$1' # Removes prefix underscores from members.
 ```
 </details>
-<details><summary>Generating declarations only from particular headers.</summary>
+<details><summary>How to generate declarations only from particular headers?</summary>
 The default behaviour is to include everything directly/transitively under
 each of the `entry-points` specified.
 
@@ -339,7 +340,7 @@ headers:
     - '**my_header.h' # This glob pattern matches the header path.
 ```
 </details>
-<details><summary>Filtering declarations by name</summary>
+<details><summary>Can ffigen filter declarations by name?</summary>
 Ffigen supports including/excluding declarations using full regexp matching.
 
 Here's an example to filter functions using names
@@ -354,7 +355,7 @@ This will include `clang_help`. But will exclude `clang_dispose`.
 
 Note: exclude overrides include.
 </details>
-<details><summary>Working with Strings.</summary>
+<details><summary>How does ffigen handle C Strings?</summary>
 
 Ffigen treats `char*` just as any other pointer,(`Pointer<Int8>`).
 To convert these to/from `String`, you can use [package:ffi](https://pub.dev/packages/ffi) and use `Utf8.fromUtf8(ptr.cast())` to convert `char*` to dart `string`.
