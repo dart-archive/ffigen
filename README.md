@@ -307,7 +307,7 @@ class ArrayHelper_CXFileUniqueID_data_level0 {
 Run tests from the root of the package with `pub run test`.
 
 ## FAQ
-### Can ffigen removing underscores or renaming declarations?
+### Can ffigen be used for removing underscores or renaming declarations?
 Ffigen supports **regexp based renaming**, the regexp must be a
 full match, for renaming you can use regexp groups (`$1` means group 1).
 
