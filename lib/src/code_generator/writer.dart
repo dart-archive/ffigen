@@ -115,15 +115,19 @@ class Writer {
     s.write("import 'dart:ffi' as $ffiLibraryPrefix;\n");
     s.write('\n');
 
-    final dependencies = <Typedef>[];
+    // Will contain duplicates, must be processed.
+    final rawDependencies = <Typedef>[];
 
     /// Get typedef dependencies, these will be written at the end.
     for (final b in lookUpBindings) {
-      dependencies.addAll(b.getTypedefDependencies(this));
+      rawDependencies.addAll(b.getTypedefDependencies(this));
     }
     for (final b in noLookUpBindings) {
-      dependencies.addAll(b.getTypedefDependencies(this));
+      rawDependencies.addAll(b.getTypedefDependencies(this));
     }
+
+    // Dependencies, processed to remove duplicates and resolve name conflicts.
+    final dependencies = processDependencies(rawDependencies);
 
     /// Write [lookUpBindings].
     if (lookUpBindings.isNotEmpty) {
@@ -159,5 +163,30 @@ class Writer {
     }
 
     return s.toString();
+  }
+
+  /// Removes duplicates and resolves all name conflicts.
+  Set<Typedef> processDependencies(List<Typedef> dependencies) {
+    final processedDependencies = dependencies.toSet();
+
+    for (final d in processedDependencies) {
+      d.name = _makeUniqueTypedefName(d.name);
+    }
+    return processedDependencies;
+  }
+
+  /// Returns a typedef name that is unique in both top level and wrapper level,
+  /// ans only marks it as used at top-level.
+  String _makeUniqueTypedefName(String name) {
+    final base = name;
+    var uniqueName = name;
+    var suffix = 0;
+    while (topLevelUniqueNamer.isUsed(uniqueName) ||
+        wrapperLevelUniqueNamer.isUsed(uniqueName)) {
+      suffix++;
+      uniqueName = base + suffix.toString();
+    }
+    topLevelUniqueNamer.markUsed(uniqueName);
+    return uniqueName;
   }
 }
