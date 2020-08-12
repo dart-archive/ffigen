@@ -1,3 +1,6 @@
+# 0.2.1
+- Fixed missing/duplicate typedef generation.
+
 # 0.2.0
 - Updated header config. Header `entry-points` and `include-directives` are now specified under `headers` key. Glob syntax is allowed.
 - Updated declaration `include`/`exclude` config. These are now specified as a list.
