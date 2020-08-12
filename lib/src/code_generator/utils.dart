@@ -47,13 +47,25 @@ class UniqueNamer {
   UniqueNamer clone() => UniqueNamer._raw({..._usedUpNames});
 }
 
-/// Converts [text] to a dart doc comment.
+/// Converts [text] to a dart doc comment(`///`).
 ///
 /// Comment is split on new lines only.
 String makeDartDoc(String text) {
   final s = StringBuffer();
   s.write('/// ');
   s.writeAll(text.split('\n'), '\n/// ');
+  s.write('\n');
+
+  return s.toString();
+}
+
+/// Converts [text] to a dart comment (`//`).
+///
+/// Comment is split on new lines only.
+String makeDoc(String text) {
+  final s = StringBuffer();
+  s.write('// ');
+  s.writeAll(text.split('\n'), '\n// ');
   s.write('\n');
 
   return s.toString();
