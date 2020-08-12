@@ -66,7 +66,10 @@ The following configuration options are available-
 <thead>
   <tr>
     <th>Key</th>
-    <th>Explaination</th>
+    <!-- Adding &nbsp to increase column width. -->
+    <th>
+      Explaination&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+    </th>
     <th>Example</th>
   </tr>
 </thead>
@@ -116,15 +119,20 @@ functions:
     - someFuncName # Matches with exact name
     - anotherName # Full names have higher priority.
   rename:
-    'clang_(.*)': '$1' # Regexp groups based replacement.
-    'clang_dispose': 'dispose' # full name matches have higher priority.
-    '_(.*)': '$1' # Removes '_' from beginning of a name.
+    # Regexp groups based replacement.
+    'clang_(.*)': '$1'
+    # full name matches have higher priority.
+    'clang_dispose': 'dispose'
+    # Removes '_' from beginning of a name.
+    '_(.*)': '$1'
 enums:
   member-rename:
     '(.*)': # Matches any enum.
-      '_(.*)': '$1' # Removes '_' from beginning enum member name.
+      # Removes '_' from beginning enum member name.
+      '_(.*)': '$1'
     'CXTypeKind': # Full names have higher priority.
-      'CXType(.*)': '$1' # $1 keeps only the 1st group i.e '(.*)'.
+      # $1 keeps only the 1st group i.e '(.*)'.
+      'CXType(.*)': '$1'
     </code></pre></td>
   </tr>
   <tr>
@@ -294,3 +302,59 @@ class ArrayHelper_CXFileUniqueID_data_level0 {
   2. Run `dart build_test_dylib.dart`.
 
 Run tests from the root of the package with `pub run test`.
+
+# FAQ's and Help
+<details><summary>Removing underscores or renaming declarations.</summary>
+
+There is support for a simple regexp based renaming. The regexp must be a
+full match and for renaming, you can use `$1` for placing regexp groups.
+
+E.g - For renaming `clang_dispose_string` to `string_dispose`.
+We can can match it using `clang_(.*)_(.*)` and rename with `$2_$1`.
+
+Here's an example of how to remove prefix underscores from any struct and its members.
+```yaml
+structs:
+  ...
+  rename:
+    '_(.*)': '$1' # Removes prefix underscores from all structures.
+  member-rename:
+    '.*': # Matches any struct.
+      '_(.*)': '$1' # Removes prefix underscores from members of any structs
+```
+</details>
+<details><summary>Generating declarations only from particular headers.</summary>
+The default behaviour is to include everything directly/indirectly under
+each of the `entry-points` specified.
+
+If you only want to have declarations directly particular header you can do so
+using `include-directives`. You can use glob matching to match header names.
+```yaml
+headers:
+  entry-points:
+    - 'path/to/my_header.h'
+  include-directives:
+    - '**my_header.h' # This glob pattern matches the header path.
+```
+</details>
+<details><summary>Filtering declarations by name</summary>
+The default behavious is to include all declarations.
+But ffigen supports including/excluding declarations with regexp support.
+
+Here's an example to filter functions using names
+```yaml
+functions:
+  include:
+    - 'clang.*' # Include all functions starting with clang.
+  exclude:
+    - '.*dispose': # Exclude all functions ending with dispose.
+```
+This will include `clang_help`. But will exclude `clang_dispose`.
+
+Note: exclude overrides include.
+</details>
+<details><summary>Working with Strings.</summary>
+
+Ffigen deals with `char*` as `Pointer<Int8>`.
+To convert `char*` to/from `String`, you can use [package:ffi](https://pub.dev/packages/ffi) and convert using `Utf8.fromUtf8(ptr.cast())`
+</details>
