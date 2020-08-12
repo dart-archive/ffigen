@@ -41,6 +41,8 @@ typedef _dart_sum = int Function(int a,int b);
 - Configurations must be provided in `pubspec.yaml` or in a custom YAML file (see [configurations](#configurations)).
 - Run the tool- `pub run ffigen`.
 
+Jump to [FAQ](#faq).
+
 ## Setup
 `package:ffigen` uses LLVM. Install LLVM (9+) in the following way.
 
@@ -69,17 +71,21 @@ The following configuration options are available-
     <th>Explaination</th>
     <th>Example</th>
   </tr>
+  <colgroup>
+      <col>
+      <col style="width: 100px;">
+  </colgroup>
 </thead>
 <tbody>
   <tr>
     <td>output<br><i>(Required)</i></td>
     <td>Output path of the generated bindings.</td>
-    <td><pre lang="yaml"><code>output: 'generated_bindings.dart'</code></pre></td>
+    <td><pre lang="yaml">output: 'generated_bindings.dart'</pre></td>
   </tr>
   <tr>
     <td>headers<br><i>(Required)</i></td>
     <td>The header entry-points and include-directives. Glob syntax is allowed.</td>
-    <td><pre lang="yaml"><code>
+    <td><pre lang="yaml">
 headers:
   entry-points:
     - 'folder/**.h'
@@ -88,27 +94,27 @@ headers:
     - '**index.h'
     - '**/clang-c/**'
     - '/full/path/to/a/header.h'
-  </code></pre></td>
+  </pre></td>
   </tr>
   <tr>
     <td>name<br><i>(Prefer)</i></td>
     <td>Name of generated class.</td>
-    <td><pre lang="yaml"><code>name: 'SQLite'</code></pre></td>
+    <td><pre lang="yaml">name: 'SQLite'</pre></td>
   </tr>
   <tr>
     <td>description<br><i>(Prefer)</i></td>
     <td>Dart Doc for generated class.</td>
-    <td><pre lang="yaml"><code>description: 'Bindings to SQLite'</code></pre></td>
+    <td><pre lang="yaml">description: 'Bindings to SQLite'</pre></td>
   </tr>
   <tr>
     <td>compiler-opts</td>
     <td>Pass compiler options to clang.</td>
-    <td><pre lang="yaml"><code>compiler-opts: '-I/usr/lib/llvm-9/include/'</code></pre></td>
+    <td><pre lang="yaml">compiler-opts: '-I/usr/lib/llvm-9/include/'</pre></td>
   </tr>
   <tr>
     <td>functions<br>structs<br>enums<br>macros</td>
     <td>Filters for declarations.<br><b>Default: all are included</b></td>
-    <td><pre lang="yaml"><code>
+    <td><pre lang="yaml">
 functions:
   include: # 'exclude' is also available.
     - [a-z][a-zA-Z0-9]* # Matches using regexp.
@@ -116,23 +122,28 @@ functions:
     - someFuncName # Matches with exact name
     - anotherName # Full names have higher priority.
   rename:
-    'clang_(.*)': '$1' # Regexp groups based replacement.
-    'clang_dispose': 'dispose' # full name matches have higher priority.
-    '_(.*)': '$1' # Removes '_' from beginning of a name.
+    # Regexp groups based replacement.
+    'clang_(.*)': '$1'
+    # full name matches have higher priority.
+    'clang_dispose': 'dispose'
+    # Removes '_' from beginning of a name.
+    '_(.*)': '$1'
 enums:
   member-rename:
     '(.*)': # Matches any enum.
-      '_(.*)': '$1' # Removes '_' from beginning enum member name.
+      # Removes '_' from beginning enum member name.
+      '_(.*)': '$1'
     'CXTypeKind': # Full names have higher priority.
-      'CXType(.*)': '$1' # $1 keeps only the 1st group i.e '(.*)'.
-    </code></pre></td>
+      # $1 keeps only the 1st group i.e '(.*)'.
+      'CXType(.*)': '$1'
+    </pre></td>
   </tr>
   <tr>
     <td>array-workaround</td>
     <td>Should generate workaround for fixed arrays in Structs. See <a href="#array-workaround">Array Workaround</a><br>
       <b>Default: false</b>
     </td>
-    <td><pre lang="yaml"><code>array-workaround: true</code></pre></td>
+    <td><pre lang="yaml">array-workaround: true</pre></td>
   </tr>
   <tr>
     <td>comments</td>
@@ -141,43 +152,43 @@ enums:
     <i>style: doxygen(default) | any </i><br>
     <i>length: brief | full(default) </i><br>
     If you want to disable all comments you can also pass<br>
-    <code>comments: false</code>.
+    comments: false.
     </td>
-    <td><pre lang="yaml"><code>
+    <td><pre lang="yaml">
 comments:
   style: doxygen
   length: full
-    </code></pre></td>
+    </pre></td>
   </tr>
   <tr>
     <td>sort</td>
     <td>Sort the bindings according to name.<br>
       <b>Default: false</b>, i.e keep the order as in the source files.
     </td>
-    <td><pre lang="yaml"><code>sort: true</code></pre></td>
+    <td><pre lang="yaml">sort: true</pre></td>
   </tr>
   <tr>
     <td>use-supported-typedefs</td>
     <td>Should automatically map typedefs, E.g uint8_t => Uint8, int16_t => Int16 etc.<br>
     <b>Default: true</b>
     </td>
-    <td><pre lang="yaml"><code>use-supported-typedefs: true</code></pre></td>
+    <td><pre lang="yaml">use-supported-typedefs: true</pre></td>
   </tr>
   <tr>
     <td>unnamed-enums</td>
     <td>Should generate constants for anonymous unnamed enums.<br>
     <b>Default: true</b>
     </td>
-    <td><pre lang="yaml"><code>unnamed-enums: true</code></pre></td>
+    <td><pre lang="yaml">unnamed-enums: true</pre></td>
   </tr>
    <tr>
     <td>preamble</td>
     <td>Raw header of the file, pasted as-it-is.</td>
-    <td><pre lang="yaml"><code>
+    <td><pre lang="yaml">
 preamble: |
   /// AUTO GENERATED FILE, DO NOT EDIT.
   ///
-  /// Generated by `package:ffigen`.</code></pre></td>
+  /// Generated by `package:ffigen`.</pre></td>
   </tr>
   <tr>
     <td>size-map</td>
@@ -185,7 +196,7 @@ preamble: |
     <b>The defaults (see example) <i>may</i> not be portable on all OS.
     Do not change these unless absolutely sure.</b>
     </td>
-    <td><pre lang="yaml"><code>
+    <td><pre lang="yaml">
 # These are optional and also default,
 # Omitting any and the default will be used.
 size-map:
@@ -199,7 +210,7 @@ size-map:
   unsigned long: 8
   long long: 8
   unsigned long long: 8
-  enum: 4</code></pre></td>
+  enum: 4</pre></td>
   </tr>
 </tbody>
 </table>
@@ -294,3 +305,53 @@ class ArrayHelper_CXFileUniqueID_data_level0 {
   2. Run `dart build_test_dylib.dart`.
 
 Run tests from the root of the package with `pub run test`.
+
+## FAQ
+### Can ffigen be used for removing underscores or renaming declarations?
+Ffigen supports **regexp based renaming**, the regexp must be a
+full match, for renaming you can use regexp groups (`$1` means group 1).
+
+E.g - For renaming `clang_dispose_string` to `string_dispose`.
+We can can match it using `clang_(.*)_(.*)` and rename with `$2_$1`.
+
+Here's an example of how to remove prefix underscores from any struct and its members.
+```yaml
+structs:
+  ...
+  rename:
+    '_(.*)': '$1' # Removes prefix underscores from all structures.
+  member-rename:
+    '.*': # Matches any struct.
+      '_(.*)': '$1' # Removes prefix underscores from members.
+```
+### How to generate declarations only from particular headers?
+The default behaviour is to include everything directly/transitively under
+each of the `entry-points` specified.
+
+If you only want to have declarations directly particular header you can do so
+using `include-directives`. You can use **glob matching** to match header paths.
+```yaml
+headers:
+  entry-points:
+    - 'path/to/my_header.h'
+  include-directives:
+    - '**my_header.h' # This glob pattern matches the header path.
+```
+### Can ffigen filter declarations by name?
+Ffigen supports including/excluding declarations using full regexp matching.
+
+Here's an example to filter functions using names
+```yaml
+functions:
+  include:
+    - 'clang.*' # Include all functions starting with clang.
+  exclude:
+    - '.*dispose': # Exclude all functions ending with dispose.
+```
+This will include `clang_help`. But will exclude `clang_dispose`.
+
+Note: exclude overrides include.
+### How does ffigen handle C Strings?
+
+Ffigen treats `char*` just as any other pointer,(`Pointer<Int8>`).
+To convert these to/from `String`, you can use [package:ffi](https://pub.dev/packages/ffi) and use `Utf8.fromUtf8(ptr.cast())` to convert `char*` to dart `string`.

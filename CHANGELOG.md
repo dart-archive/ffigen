@@ -1,3 +1,6 @@
+# 0.2.1+1
+- Added FAQ to readme.
+
 # 0.2.1
 - Fixed missing/duplicate typedef generation.
 
