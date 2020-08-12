@@ -219,6 +219,6 @@ Software.
 
 
 Files generated from libclang source code are
-- test/large_integration_tests/_expected_libclang_bindings.dart
 - example/libclang-example/generated_bindings.dart
 - lib/src/header_parser/clang_bindings/clang_bindings.dart
+- test/large_integration_tests/_expected_libclang_bindings.dart
