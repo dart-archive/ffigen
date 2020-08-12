@@ -307,8 +307,7 @@ class ArrayHelper_CXFileUniqueID_data_level0 {
 Run tests from the root of the package with `pub run test`.
 
 ## FAQ
-<details><summary>Can ffigen removing underscores or renaming declarations?</summary>
-
+### Can ffigen removing underscores or renaming declarations?
 Ffigen supports **regexp based renaming**, the regexp must be a
 full match, for renaming you can use regexp groups (`$1` means group 1).
 
@@ -325,8 +324,7 @@ structs:
     '.*': # Matches any struct.
       '_(.*)': '$1' # Removes prefix underscores from members.
 ```
-</details>
-<details><summary>How to generate declarations only from particular headers?</summary>
+### How to generate declarations only from particular headers?
 The default behaviour is to include everything directly/transitively under
 each of the `entry-points` specified.
 
@@ -339,8 +337,7 @@ headers:
   include-directives:
     - '**my_header.h' # This glob pattern matches the header path.
 ```
-</details>
-<details><summary>Can ffigen filter declarations by name?</summary>
+### Can ffigen filter declarations by name?
 Ffigen supports including/excluding declarations using full regexp matching.
 
 Here's an example to filter functions using names
@@ -354,9 +351,7 @@ functions:
 This will include `clang_help`. But will exclude `clang_dispose`.
 
 Note: exclude overrides include.
-</details>
-<details><summary>How does ffigen handle C Strings?</summary>
+### How does ffigen handle C Strings?
 
 Ffigen treats `char*` just as any other pointer,(`Pointer<Int8>`).
 To convert these to/from `String`, you can use [package:ffi](https://pub.dev/packages/ffi) and use `Utf8.fromUtf8(ptr.cast())` to convert `char*` to dart `string`.
-</details>
