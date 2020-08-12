@@ -41,6 +41,8 @@ typedef _dart_sum = int Function(int a,int b);
 - Configurations must be provided in `pubspec.yaml` or in a custom YAML file (see [configurations](#configurations)).
 - Run the tool- `pub run ffigen`.
 
+Jump to [FAQ](#faq).
+
 ## Setup
 `package:ffigen` uses LLVM. Install LLVM (9+) in the following way.
 
@@ -303,11 +305,11 @@ class ArrayHelper_CXFileUniqueID_data_level0 {
 
 Run tests from the root of the package with `pub run test`.
 
-# FAQ's and Help
+## FAQ
 <details><summary>Removing underscores or renaming declarations.</summary>
 
-There is support for a simple regexp based renaming. The regexp must be a
-full match and for renaming, you can use `$1` for placing regexp groups.
+Ffigen supports **regexp based renaming**, the regexp must be a
+full match, for renaming you can use regexp groups (`$1` means group 1).
 
 E.g - For renaming `clang_dispose_string` to `string_dispose`.
 We can can match it using `clang_(.*)_(.*)` and rename with `$2_$1`.
@@ -320,15 +322,15 @@ structs:
     '_(.*)': '$1' # Removes prefix underscores from all structures.
   member-rename:
     '.*': # Matches any struct.
-      '_(.*)': '$1' # Removes prefix underscores from members of any structs
+      '_(.*)': '$1' # Removes prefix underscores from members.
 ```
 </details>
 <details><summary>Generating declarations only from particular headers.</summary>
-The default behaviour is to include everything directly/indirectly under
+The default behaviour is to include everything directly/transitively under
 each of the `entry-points` specified.
 
 If you only want to have declarations directly particular header you can do so
-using `include-directives`. You can use glob matching to match header names.
+using `include-directives`. You can use **glob matching** to match header paths.
 ```yaml
 headers:
   entry-points:
@@ -338,8 +340,7 @@ headers:
 ```
 </details>
 <details><summary>Filtering declarations by name</summary>
-The default behavious is to include all declarations.
-But ffigen supports including/excluding declarations with regexp support.
+Ffigen supports including/excluding declarations using full regexp matching.
 
 Here's an example to filter functions using names
 ```yaml
@@ -355,6 +356,6 @@ Note: exclude overrides include.
 </details>
 <details><summary>Working with Strings.</summary>
 
-Ffigen deals with `char*` as `Pointer<Int8>`.
-To convert `char*` to/from `String`, you can use [package:ffi](https://pub.dev/packages/ffi) and convert using `Utf8.fromUtf8(ptr.cast())`
+Ffigen treats `char*` just as any other pointer,(`Pointer<Int8>`).
+To convert these to/from `String`, you can use [package:ffi](https://pub.dev/packages/ffi) and use `Utf8.fromUtf8(ptr.cast())` to convert `char*` to dart `string`.
 </details>
