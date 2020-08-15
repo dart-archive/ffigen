@@ -1,3 +1,6 @@
+# 0.2.1+2
+- Updated `package:meta` version to `^1.1.8` for compatibility with flutter sdk.
+
 # 0.2.1+1
 - Added FAQ to readme.
 
