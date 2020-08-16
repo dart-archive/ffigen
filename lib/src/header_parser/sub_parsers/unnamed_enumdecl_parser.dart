@@ -56,6 +56,7 @@ int _unnamedenumCursorVisitor(Pointer<clang_types.CXCursor> cursor,
 void _addUnNamedEnumConstant(Pointer<clang_types.CXCursor> cursor) {
   unnamedEnumConstants.add(
     Constant(
+      usr: cursor.usr(),
       originalName: cursor.spelling(),
       name: config.enumClassDecl.renameMemberUsingConfig(
         '', // Un-named enum constants have an empty declaration name.

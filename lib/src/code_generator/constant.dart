@@ -31,12 +31,18 @@ class Constant extends NoLookUpBinding {
   final String rawValue;
 
   Constant({
+    String usr,
     String originalName,
     @required String name,
     String dartDoc,
     @required this.rawType,
     @required this.rawValue,
-  }) : super(originalName: originalName ?? name, name: name, dartDoc: dartDoc);
+  }) : super(
+          usr: usr,
+          originalName: originalName,
+          name: name,
+          dartDoc: dartDoc,
+        );
 
   @override
   BindingString toBindingString(Writer w) {

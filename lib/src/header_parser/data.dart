@@ -37,8 +37,8 @@ IncrementalNamer _incrementalNamer;
 final uid = Isolate.current.controlPort.nativePort;
 
 /// Saved macros, Key: prefixedName, Value originalName.
-Map<String, String> get savedMacros => _savedMacros;
-Map<String, String> _savedMacros;
+Map<String, Macro> get savedMacros => _savedMacros;
+Map<String, Macro> _savedMacros;
 
 /// Saved unnamed EnumConstants.
 List<Constant> get unnamedEnumConstants => _unnamedEnumConstants;

@@ -96,6 +96,7 @@ Type _extractfromRecord(Pointer<clang_types.CXType> cxtype) {
   switch (clang.clang_getCursorKind_wrap(cursor)) {
     case clang_types.CXCursorKind.CXCursor_StructDecl:
       final cxtype = cursor.type();
+      final structUsr = cursor.usr();
       var structName = cursor.spelling();
       if (structName == '') {
         // Incase of anonymous structs defined inside a typedef.
@@ -106,16 +107,14 @@ Type _extractfromRecord(Pointer<clang_types.CXType> cxtype) {
 
       // Also add a struct binding, if its unseen.
       // TODO(23): Check if we should auto add struct.
-      if (bindingsIndex.isSeenStruct(structName)) {
-        type = Type.struct(bindingsIndex.getSeenStruct(structName));
+      if (bindingsIndex.isSeenStruct(structUsr)) {
+        type = Type.struct(bindingsIndex.getSeenStruct(structUsr));
       } else {
         final struc = parseStructDeclaration(cursor,
             name: fixedStructName, ignoreFilter: true);
         type = Type.struct(struc);
         // Add to bindings.
         addToBindings(struc);
-        // Add to seen.
-        bindingsIndex.addStructToSeen(structName, struc);
       }
 
       cxtype.dispose();
