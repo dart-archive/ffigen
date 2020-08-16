@@ -358,4 +358,9 @@ unsigned clang_Cursor_isAnonymousRecordDecl_wrap(CXCursor *cursor)
     return clang_Cursor_isAnonymousRecordDecl(*cursor);
 }
 
+CXString *clang_getCursorUSR_wrap(CXCursor *cursor)
+{
+    return ptrToCXString(clang_getCursorUSR(*cursor));
+}
+
 // END ===== WRAPPER FUNCTIONS =====================
