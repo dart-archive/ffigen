@@ -40,7 +40,8 @@ Struc parseStructDeclaration(
   _stack.push(_ParsedStruc());
 
   final structUsr = cursor.usr();
-  final structName = name ?? cursor.spelling();
+  final baseName = cursor.spelling();
+  final structName = name ?? baseName;
 
   if (structName.isEmpty) {
     _logger.finest('unnamed structure or typedef structure declaration');
@@ -50,7 +51,7 @@ Struc parseStructDeclaration(
         '++++ Adding Structure: structName: ${structName}, ${cursor.completeStringRepr()}');
     _stack.top.struc = Struc(
       usr: structUsr,
-      originalName: structName,
+      originalName: baseName.isEmpty ? structName : baseName,
       name: config.structDecl.renameUsingConfig(structName),
       dartDoc: getCursorDocComment(cursor),
     );
@@ -60,6 +61,14 @@ Struc parseStructDeclaration(
     _setStructMembers(cursor);
   }
 
+  // If struct is seen, update name if structName is unseen.
+  if (bindingsIndex.isSeenStruct(structUsr)) {
+    final holder = bindingsIndex.getSeenStructBindingHolder(structUsr);
+    if (!holder.isNameSeen(structName)) {
+      holder.binding.name = config.structDecl
+          .renameUsingConfig(holder.getPrefferedName(structName));
+    }
+  }
   return _stack.pop().struc;
 }
 

@@ -51,7 +51,7 @@ Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String parentName}) {
       et.dispose();
       return s;
     case clang_types.CXTypeKind.CXType_Record:
-      return _extractfromRecord(cxtype);
+      return _extractfromRecord(cxtype, parentName);
     case clang_types.CXTypeKind.CXType_Enum:
       return Type.nativeType(
         enumNativeType,
@@ -87,7 +87,7 @@ Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String parentName}) {
   }
 }
 
-Type _extractfromRecord(Pointer<clang_types.CXType> cxtype) {
+Type _extractfromRecord(Pointer<clang_types.CXType> cxtype, String parentName) {
   Type type;
 
   final cursor = clang.clang_getTypeDeclaration_wrap(cxtype);
@@ -97,13 +97,9 @@ Type _extractfromRecord(Pointer<clang_types.CXType> cxtype) {
     case clang_types.CXCursorKind.CXCursor_StructDecl:
       final cxtype = cursor.type();
       final structUsr = cursor.usr();
-      var structName = cursor.spelling();
-      if (structName == '') {
-        // Incase of anonymous structs defined inside a typedef.
-        structName = cxtype.spelling();
-      }
 
-      final fixedStructName = config.structDecl.renameUsingConfig(structName);
+      // Name of typedef (parentName) is used if available.
+      final structName = parentName ?? cursor.spelling();
 
       // Also add a struct binding, if its unseen.
       // TODO(23): Check if we should auto add struct.
@@ -111,7 +107,7 @@ Type _extractfromRecord(Pointer<clang_types.CXType> cxtype) {
         type = Type.struct(bindingsIndex.getSeenStruct(structUsr));
       } else {
         final struc = parseStructDeclaration(cursor,
-            name: fixedStructName, ignoreFilter: true);
+            name: structName, ignoreFilter: true);
         type = Type.struct(struc);
         // Add to bindings.
         addToBindings(struc);

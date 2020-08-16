@@ -334,12 +334,43 @@ class Macro {
   Macro(this.usr, this.originalName);
 }
 
+/// Holds a binding of type [T] with alternate names.
+///
+/// Certain bindings, like structs and enums, can have different names defined
+/// as typedefs. This holder is useful for working with these names.
+class BindingHolder<T extends Binding> {
+  /// Holds all names used for this Binding.
+  ///
+  /// Names will be put in the order -
+  /// 1. Struct name (if any, not available in case of anonymous structs)
+  /// 2. Typedef name 1, typedef name 2, typedef name 3...
+  final Set<String> _names;
+  final T binding;
+
+  BindingHolder(String name, this.binding) : _names = {name};
+
+  bool isNameSeen(String newName) => _names.contains(newName);
+
+  /// Gets the preffered names of all the names supplied till now.
+  ///
+  /// For choice between exactly 2, the 2nd name will be used(i.e typedef name)
+  /// else, the 1st name (struct name) is used.
+  String getPrefferedName(String newName) {
+    _names.add(newName);
+    if (_names.length == 2) {
+      return _names.last;
+    } else {
+      return _names.first;
+    }
+  }
+}
+
 /// Tracks if a binding is 'seen' or not.
 class BindingsIndex {
   // Tracks if bindings are already seen, Map key is USR obtained from libclang.
-  final Map<String, Struc> _structs = {};
+  final Map<String, BindingHolder<Struc>> _structs = {};
   final Map<String, Func> _functions = {};
-  final Map<String, EnumClass> _enumClass = {};
+  final Map<String, BindingHolder<EnumClass>> _enumClass = {};
   final Map<String, String> _macros = {};
   // Stores only named typedefC used in NativeFunc.
   final Map<String, Typedef> _functionTypedefs = {};
@@ -349,10 +380,14 @@ class BindingsIndex {
   }
 
   void addStructToSeen(String usr, Struc struc) {
-    _structs[usr] = struc;
+    _structs[usr] = BindingHolder<Struc>(struc.originalName, struc);
   }
 
   Struc getSeenStruct(String usr) {
+    return _structs[usr].binding;
+  }
+
+  BindingHolder<Struc> getSeenStructBindingHolder(String usr) {
     return _structs[usr];
   }
 
@@ -373,10 +408,14 @@ class BindingsIndex {
   }
 
   void addEnumClassToSeen(String usr, EnumClass enumClass) {
-    _enumClass[usr] = enumClass;
+    _enumClass[usr] = BindingHolder<EnumClass>(enumClass.name, enumClass);
   }
 
   EnumClass getSeenEnumClass(String usr) {
+    return _enumClass[usr].binding;
+  }
+
+  BindingHolder<EnumClass> getSeenEnumClassBindingHolder(String usr) {
     return _enumClass[usr];
   }
 

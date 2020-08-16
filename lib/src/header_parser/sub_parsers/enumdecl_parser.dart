@@ -33,6 +33,7 @@ EnumClass parseEnumDeclaration(
 }) {
   _stack.push(_ParsedEnum());
   final enumUsr = cursor.usr();
+  final baseName = cursor.spelling();
   final enumName = name ?? cursor.spelling();
   if (enumName == '') {
     // Save this unnamed enum if it is anonymous (therefore not in a typedef).
@@ -48,13 +49,21 @@ EnumClass parseEnumDeclaration(
     _stack.top.enumClass = EnumClass(
       usr: enumUsr,
       dartDoc: getCursorDocComment(cursor),
-      originalName: enumName,
+      originalName: baseName.isEmpty ? enumName : baseName,
       name: config.enumClassDecl.renameUsingConfig(enumName),
     );
     bindingsIndex.addEnumClassToSeen(enumUsr, _stack.top.enumClass);
     _addEnumConstant(cursor);
   }
 
+  // If enum is seen, update name if enumName is unseen.
+  if (bindingsIndex.isSeenEnumClass(enumUsr)) {
+    final holder = bindingsIndex.getSeenEnumClassBindingHolder(enumUsr);
+    if (!holder.isNameSeen(enumName)) {
+      holder.binding.name = config.enumClassDecl
+          .renameUsingConfig(holder.getPrefferedName(enumName));
+    }
+  }
   return _stack.pop().enumClass;
 }
 
