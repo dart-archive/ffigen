@@ -62,11 +62,9 @@ Struc parseStructDeclaration(
 
   if (bindingsIndex.isSeenStruct(structUsr)) {
     _stack.top.struc = bindingsIndex.getSeenStruct(structUsr);
-  }
-  // If struct is seen, update it's name.
-  if (bindingsIndex.isSeenStruct(structUsr)) {
-    final struc = bindingsIndex.getSeenStruct(structUsr);
-    struc.name = config.structDecl.renameUsingConfig(structName);
+
+    // If struct is seen, update it's name.
+    _stack.top.struc.name = config.structDecl.renameUsingConfig(structName);
   }
   return _stack.pop().struc;
 }

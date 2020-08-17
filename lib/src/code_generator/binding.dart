@@ -48,7 +48,7 @@ abstract class LookUpBinding extends Binding {
     @required String name,
     String dartDoc,
   }) : super(
-          usr: usr,
+          usr: usr ?? name,
           originalName: originalName ?? name,
           name: name,
           dartDoc: dartDoc,

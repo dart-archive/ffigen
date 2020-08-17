@@ -82,7 +82,7 @@ List<Binding> parseToBindings() {
     cmdLen = config.compilerOpts.length;
   }
 
-  // Contains all bindings. A set is used so that we have no object duplicates.
+  // Contains all bindings. A set ensures we never have duplicates.
   final bindings = <Binding>{};
 
   // Log all headers for user.

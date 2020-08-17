@@ -56,11 +56,10 @@ EnumClass parseEnumDeclaration(
   }
   if (bindingsIndex.isSeenEnumClass(enumUsr)) {
     _stack.top.enumClass = bindingsIndex.getSeenEnumClass(enumUsr);
-  }
-  // If enum is seen, update it's name.
-  if (bindingsIndex.isSeenEnumClass(enumUsr)) {
-    final enumClass = bindingsIndex.getSeenEnumClass(enumUsr);
-    enumClass.name = config.enumClassDecl.renameUsingConfig(enumName);
+
+    // If enum is seen, update it's name.
+    _stack.top.enumClass.name =
+        config.enumClassDecl.renameUsingConfig(enumName);
   }
 
   return _stack.pop().enumClass;
