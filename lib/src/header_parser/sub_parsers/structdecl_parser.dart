@@ -40,8 +40,7 @@ Struc parseStructDeclaration(
   _stack.push(_ParsedStruc());
 
   final structUsr = cursor.usr();
-  final baseName = cursor.spelling();
-  final structName = name ?? baseName;
+  final structName = name ?? cursor.spelling();
 
   if (structName.isEmpty) {
     _logger.finest('unnamed structure or typedef structure declaration');
@@ -51,7 +50,7 @@ Struc parseStructDeclaration(
         '++++ Adding Structure: structName: ${structName}, ${cursor.completeStringRepr()}');
     _stack.top.struc = Struc(
       usr: structUsr,
-      originalName: baseName.isEmpty ? structName : baseName,
+      originalName: structName,
       name: config.structDecl.renameUsingConfig(structName),
       dartDoc: getCursorDocComment(cursor),
     );
@@ -64,21 +63,12 @@ Struc parseStructDeclaration(
   if (bindingsIndex.isSeenStruct(structUsr)) {
     _stack.top.struc = bindingsIndex.getSeenStruct(structUsr);
   }
-
-  updateStructPreferredName(structUsr, structName);
-
-  return _stack.pop().struc;
-}
-
-/// Updates the struct name according to preffered name [prefferedName].
-void updateStructPreferredName(String structUsr, String prefferedName) {
+  // If struct is seen, update it's name.
   if (bindingsIndex.isSeenStruct(structUsr)) {
-    final holder = bindingsIndex.getSeenStructBindingHolder(structUsr);
-    if (!holder.isNameSeen(prefferedName)) {
-      holder.binding.name = config.structDecl
-          .renameUsingConfig(holder.getPrefferedName(prefferedName));
-    }
+    final struc = bindingsIndex.getSeenStruct(structUsr);
+    struc.name = config.structDecl.renameUsingConfig(structName);
   }
+  return _stack.pop().struc;
 }
 
 void _setStructMembers(Pointer<clang_types.CXCursor> cursor) {

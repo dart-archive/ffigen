@@ -77,7 +77,7 @@ int _rootCursorVisitor(Pointer<clang_types.CXCursor> cursor,
   return clang_types.CXChildVisitResult.CXChildVisit_Continue;
 }
 
-/// Adds to binding if not null and unseen.
+/// Adds to binding if unseen and not null.
 void addToBindings(Binding b) {
   if (b != null) {
     // This is a set, and hence will not have duplicates.
