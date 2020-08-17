@@ -36,6 +36,7 @@ class Func extends LookUpBinding {
   /// [originalName] is looked up in dynamic library, if not
   /// provided, takes the value of [name].
   Func({
+    String usr,
     @required String name,
     String originalName,
     String dartDoc,
@@ -43,7 +44,11 @@ class Func extends LookUpBinding {
     List<Parameter> parameters,
   })  : parameters = parameters ?? [],
         super(
-            originalName: originalName ?? name, name: name, dartDoc: dartDoc) {
+          usr: usr,
+          originalName: originalName,
+          name: name,
+          dartDoc: dartDoc,
+        ) {
     for (var i = 0; i < this.parameters.length; i++) {
       if (this.parameters[i].name == null ||
           this.parameters[i].name.trim() == '') {

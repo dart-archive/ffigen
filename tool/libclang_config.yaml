@@ -99,3 +99,4 @@ functions:
     - clang_Cursor_Evaluate_wrap
     - clang_Cursor_isAnonymous_wrap
     - clang_Cursor_isAnonymousRecordDecl_wrap
+    - clang_getCursorUSR_wrap

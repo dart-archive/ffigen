@@ -1,3 +1,7 @@
+# 0.2.2
+- Fixed multiple generation/skipping of typedef enclosed declarations.
+- Typedef names are now given higher preference over inner names, See [#83](https://github.com/dart-lang/ffigen/pull/83).
+
 # 0.2.1+1
 - Added FAQ to readme.
 

@@ -39,12 +39,18 @@ class Struc extends NoLookUpBinding {
   List<Member> members;
 
   Struc({
+    String usr,
     String originalName,
     @required String name,
     String dartDoc,
     List<Member> members,
   })  : members = members ?? [],
-        super(originalName: originalName ?? name, name: name, dartDoc: dartDoc);
+        super(
+          usr: usr,
+          originalName: originalName,
+          name: name,
+          dartDoc: dartDoc,
+        );
 
   List<int> _getArrayDimensionLengths(Type type) {
     final array = <int>[];

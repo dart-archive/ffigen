@@ -7,8 +7,8 @@ import 'data.dart';
 /// Utility functions to check whether a binding should be parsed or not
 /// based on filters.
 
-bool shouldIncludeStruct(String name) {
-  if (bindingsIndex.isSeenStruct(name) || name == '') {
+bool shouldIncludeStruct(String usr, String name) {
+  if (bindingsIndex.isSeenStruct(usr) || name == '') {
     return false;
   } else if (config.structDecl == null ||
       config.structDecl.shouldInclude(name)) {
@@ -18,8 +18,8 @@ bool shouldIncludeStruct(String name) {
   }
 }
 
-bool shouldIncludeFunc(String name) {
-  if (bindingsIndex.isSeenFunc(name) || name == '') {
+bool shouldIncludeFunc(String usr, String name) {
+  if (bindingsIndex.isSeenFunc(usr) || name == '') {
     return false;
   } else if (config.functionDecl == null ||
       config.functionDecl.shouldInclude(name)) {
@@ -29,8 +29,8 @@ bool shouldIncludeFunc(String name) {
   }
 }
 
-bool shouldIncludeEnumClass(String name) {
-  if (bindingsIndex.isSeenEnumClass(name) || name == '') {
+bool shouldIncludeEnumClass(String usr, String name) {
+  if (bindingsIndex.isSeenEnumClass(usr) || name == '') {
     return false;
   } else if (config.enumClassDecl == null ||
       config.enumClassDecl.shouldInclude(name)) {
@@ -40,8 +40,8 @@ bool shouldIncludeEnumClass(String name) {
   }
 }
 
-bool shouldIncludeMacro(String name) {
-  if (bindingsIndex.isSeenMacro(name) || name == '') {
+bool shouldIncludeMacro(String usr, String name) {
+  if (bindingsIndex.isSeenMacro(usr) || name == '') {
     return false;
   } else if (config.macroDecl == null || config.macroDecl.shouldInclude(name)) {
     return true;

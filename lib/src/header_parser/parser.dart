@@ -82,8 +82,8 @@ List<Binding> parseToBindings() {
     cmdLen = config.compilerOpts.length;
   }
 
-  // Contains all bindings.
-  final bindings = <Binding>[];
+  // Contains all bindings. A set ensures we never have duplicates.
+  final bindings = <Binding>{};
 
   // Log all headers for user.
   _logger.info('Input Headers: ${config.headers.entryPoints}');
@@ -130,5 +130,5 @@ List<Binding> parseToBindings() {
     clangCmdArgs.dispose(config.compilerOpts.length);
   }
   clang.clang_disposeIndex(index);
-  return bindings;
+  return bindings.toList();
 }
