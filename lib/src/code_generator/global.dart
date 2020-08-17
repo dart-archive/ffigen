@@ -25,11 +25,17 @@ class Global extends LookUpBinding {
   final Type type;
 
   Global({
+    String usr,
     String originalName,
     @required String name,
     @required this.type,
     String dartDoc,
-  }) : super(originalName: originalName ?? name, name: name, dartDoc: dartDoc);
+  }) : super(
+          usr: usr,
+          originalName: originalName,
+          name: name,
+          dartDoc: dartDoc,
+        );
 
   @override
   BindingString toBindingString(Writer w) {

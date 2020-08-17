@@ -38,25 +38,34 @@ Struc parseStructDeclaration(
   bool ignoreFilter = false,
 }) {
   _stack.push(_ParsedStruc());
+
+  final structUsr = cursor.usr();
   final structName = name ?? cursor.spelling();
 
   if (structName.isEmpty) {
     _logger.finest('unnamed structure or typedef structure declaration');
-  } else if ((ignoreFilter || shouldIncludeStruct(structName)) &&
-      (!bindingsIndex.isSeenStruct(structName))) {
+  } else if ((ignoreFilter || shouldIncludeStruct(structUsr, structName)) &&
+      (!bindingsIndex.isSeenStruct(structUsr))) {
     _logger.fine(
         '++++ Adding Structure: structName: ${structName}, ${cursor.completeStringRepr()}');
     _stack.top.struc = Struc(
+      usr: structUsr,
       originalName: structName,
       name: config.structDecl.renameUsingConfig(structName),
       dartDoc: getCursorDocComment(cursor),
     );
     // Adding to seen here to stop recursion if a struct has itself as a
     // member, members are updated later.
-    bindingsIndex.addStructToSeen(structName, _stack.top.struc);
+    bindingsIndex.addStructToSeen(structUsr, _stack.top.struc);
     _setStructMembers(cursor);
   }
 
+  if (bindingsIndex.isSeenStruct(structUsr)) {
+    _stack.top.struc = bindingsIndex.getSeenStruct(structUsr);
+
+    // If struct is seen, update it's name.
+    _stack.top.struc.name = config.structDecl.renameUsingConfig(structName);
+  }
   return _stack.pop().struc;
 }
 

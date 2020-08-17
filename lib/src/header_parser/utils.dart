@@ -57,6 +57,10 @@ extension CXSourceRangeExt on Pointer<clang_types.CXSourceRange> {
 }
 
 extension CXCursorExt on Pointer<clang_types.CXCursor> {
+  String usr() {
+    return clang.clang_getCursorUSR_wrap(this).toStringAndDispose();
+  }
+
   /// Returns the kind int from [clang_types.CXCursorKind].
   int kind() {
     return clang.clang_getCursorKind_wrap(this);
@@ -78,7 +82,7 @@ extension CXCursorExt on Pointer<clang_types.CXCursor> {
   String completeStringRepr() {
     final cxtype = type();
     final s =
-        '(Cursor) spelling: ${spelling()}, kind: ${kind()}, kindSpelling: ${kindSpelling()}, type: ${cxtype.kind()}, typeSpelling: ${cxtype.spelling()}';
+        '(Cursor) spelling: ${spelling()}, kind: ${kind()}, kindSpelling: ${kindSpelling()}, type: ${cxtype.kind()}, typeSpelling: ${cxtype.spelling()}, usr: ${usr()}';
     cxtype.dispose();
     return s;
   }
@@ -323,9 +327,16 @@ class IncrementalNamer {
   }
 }
 
+class Macro {
+  final String usr;
+  final String originalName;
+
+  Macro(this.usr, this.originalName);
+}
+
 /// Tracks if a binding is 'seen' or not.
 class BindingsIndex {
-  // Stores binding names already seen. Map key is same as their original name.
+  // Tracks if bindings are already seen, Map key is USR obtained from libclang.
   final Map<String, Struc> _structs = {};
   final Map<String, Func> _functions = {};
   final Map<String, EnumClass> _enumClass = {};
@@ -333,52 +344,52 @@ class BindingsIndex {
   // Stores only named typedefC used in NativeFunc.
   final Map<String, Typedef> _functionTypedefs = {};
 
-  bool isSeenStruct(String originalName) {
-    return _structs.containsKey(originalName);
+  bool isSeenStruct(String usr) {
+    return _structs.containsKey(usr);
   }
 
-  void addStructToSeen(String originalName, Struc struc) {
-    _structs[originalName] = struc;
+  void addStructToSeen(String usr, Struc struc) {
+    _structs[usr] = struc;
   }
 
-  Struc getSeenStruct(String originalName) {
-    return _structs[originalName];
+  Struc getSeenStruct(String usr) {
+    return _structs[usr];
   }
 
-  bool isSeenFunc(String originalName) {
-    return _functions.containsKey(originalName);
+  bool isSeenFunc(String usr) {
+    return _functions.containsKey(usr);
   }
 
-  void addFuncToSeen(String originalName, Func func) {
-    _functions[originalName] = func;
+  void addFuncToSeen(String usr, Func func) {
+    _functions[usr] = func;
   }
 
-  Func getSeenFunc(String originalName) {
-    return _functions[originalName];
+  Func getSeenFunc(String usr) {
+    return _functions[usr];
   }
 
-  bool isSeenEnumClass(String originalName) {
-    return _enumClass.containsKey(originalName);
+  bool isSeenEnumClass(String usr) {
+    return _enumClass.containsKey(usr);
   }
 
-  void addEnumClassToSeen(String originalName, EnumClass enumClass) {
-    _enumClass[originalName] = enumClass;
+  void addEnumClassToSeen(String usr, EnumClass enumClass) {
+    _enumClass[usr] = enumClass;
   }
 
-  EnumClass getSeenEnumClass(String originalName) {
-    return _enumClass[originalName];
+  EnumClass getSeenEnumClass(String usr) {
+    return _enumClass[usr];
   }
 
-  bool isSeenMacro(String originalName) {
-    return _macros.containsKey(originalName);
+  bool isSeenMacro(String usr) {
+    return _macros.containsKey(usr);
   }
 
-  void addMacroToSeen(String originalName, String macro) {
-    _macros[originalName] = macro;
+  void addMacroToSeen(String usr, String macro) {
+    _macros[usr] = macro;
   }
 
-  String getSeenMacro(String originalName) {
-    return _macros[originalName];
+  String getSeenMacro(String usr) {
+    return _macros[usr];
   }
 
   bool isSeenFunctionTypedef(String originalName) {

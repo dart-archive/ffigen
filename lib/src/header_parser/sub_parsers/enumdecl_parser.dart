@@ -28,10 +28,11 @@ final _stack = Stack<_ParsedEnum>();
 EnumClass parseEnumDeclaration(
   Pointer<clang_types.CXCursor> cursor, {
 
-  /// Optionally provide name to use (useful in case struct is inside a typedef).
+  /// Optionally provide name to use (useful in case enum is inside a typedef).
   String name,
 }) {
   _stack.push(_ParsedEnum());
+  final enumUsr = cursor.usr();
   final enumName = name ?? cursor.spelling();
   if (enumName == '') {
     // Save this unnamed enum if it is anonymous (therefore not in a typedef).
@@ -42,16 +43,23 @@ EnumClass parseEnumDeclaration(
     } else {
       _logger.fine('Unnamed enum inside a typedef.');
     }
-  } else if (shouldIncludeEnumClass(enumName) &&
-      !bindingsIndex.isSeenEnumClass(enumName)) {
+  } else if (shouldIncludeEnumClass(enumUsr, enumName)) {
     _logger.fine('++++ Adding Enum: ${cursor.completeStringRepr()}');
     _stack.top.enumClass = EnumClass(
+      usr: enumUsr,
       dartDoc: getCursorDocComment(cursor),
       originalName: enumName,
       name: config.enumClassDecl.renameUsingConfig(enumName),
     );
-    bindingsIndex.addEnumClassToSeen(enumName, _stack.top.enumClass);
+    bindingsIndex.addEnumClassToSeen(enumUsr, _stack.top.enumClass);
     _addEnumConstant(cursor);
+  }
+  if (bindingsIndex.isSeenEnumClass(enumUsr)) {
+    _stack.top.enumClass = bindingsIndex.getSeenEnumClass(enumUsr);
+
+    // If enum is seen, update it's name.
+    _stack.top.enumClass.name =
+        config.enumClassDecl.renameUsingConfig(enumName);
   }
 
   return _stack.pop().enumClass;

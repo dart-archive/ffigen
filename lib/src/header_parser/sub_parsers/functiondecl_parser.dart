@@ -31,8 +31,9 @@ Func parseFunctionDeclaration(Pointer<clang_types.CXCursor> cursor) {
   _stack.top.structByValueParameter = false;
   _stack.top.unimplementedParameterType = false;
 
+  final funcUsr = cursor.usr();
   final funcName = cursor.spelling();
-  if (shouldIncludeFunc(funcName) && !bindingsIndex.isSeenFunc(funcName)) {
+  if (shouldIncludeFunc(funcUsr, funcName)) {
     _logger.fine('++++ Adding Function: ${cursor.completeStringRepr()}');
 
     final rt = _getFunctionReturnType(cursor);
@@ -65,12 +66,15 @@ Func parseFunctionDeclaration(Pointer<clang_types.CXCursor> cursor) {
         cursor,
         nesting.length + commentPrefix.length,
       ),
+      usr: funcUsr,
       name: config.functionDecl.renameUsingConfig(funcName),
       originalName: funcName,
       returnType: rt,
       parameters: parameters,
     );
-    bindingsIndex.addFuncToSeen(funcName, _stack.top.func);
+    bindingsIndex.addFuncToSeen(funcUsr, _stack.top.func);
+  } else if (bindingsIndex.isSeenFunc(funcUsr)) {
+    _stack.top.func = bindingsIndex.getSeenFunc(funcUsr);
   }
 
   return _stack.pop().func;
