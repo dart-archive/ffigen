@@ -73,6 +73,8 @@ Func parseFunctionDeclaration(Pointer<clang_types.CXCursor> cursor) {
       parameters: parameters,
     );
     bindingsIndex.addFuncToSeen(funcUsr, _stack.top.func);
+  } else if (bindingsIndex.isSeenFunc(funcUsr)) {
+    _stack.top.func = bindingsIndex.getSeenFunc(funcUsr);
   }
 
   return _stack.pop().func;

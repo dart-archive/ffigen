@@ -61,15 +61,24 @@ Struc parseStructDeclaration(
     _setStructMembers(cursor);
   }
 
-  // If struct is seen, update name if structName is unseen.
+  if (bindingsIndex.isSeenStruct(structUsr)) {
+    _stack.top.struc = bindingsIndex.getSeenStruct(structUsr);
+  }
+
+  updateStructPreferredName(structUsr, structName);
+
+  return _stack.pop().struc;
+}
+
+/// Updates the struct name according to preffered name [prefferedName].
+void updateStructPreferredName(String structUsr, String prefferedName) {
   if (bindingsIndex.isSeenStruct(structUsr)) {
     final holder = bindingsIndex.getSeenStructBindingHolder(structUsr);
-    if (!holder.isNameSeen(structName)) {
+    if (!holder.isNameSeen(prefferedName)) {
       holder.binding.name = config.structDecl
-          .renameUsingConfig(holder.getPrefferedName(structName));
+          .renameUsingConfig(holder.getPrefferedName(prefferedName));
     }
   }
-  return _stack.pop().struc;
 }
 
 void _setStructMembers(Pointer<clang_types.CXCursor> cursor) {

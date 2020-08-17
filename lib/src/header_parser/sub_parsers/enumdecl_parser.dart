@@ -55,16 +55,22 @@ EnumClass parseEnumDeclaration(
     bindingsIndex.addEnumClassToSeen(enumUsr, _stack.top.enumClass);
     _addEnumConstant(cursor);
   }
+  if (bindingsIndex.isSeenEnumClass(enumUsr)) {
+    _stack.top.enumClass = bindingsIndex.getSeenEnumClass(enumUsr);
+  }
+  updateEnumClassPreferredName(enumUsr, enumName);
+  return _stack.pop().enumClass;
+}
 
-  // If enum is seen, update name if enumName is unseen.
+void updateEnumClassPreferredName(String enumUsr, String prefferedName) {
+// If enum is seen, update name if enumName is unseen.
   if (bindingsIndex.isSeenEnumClass(enumUsr)) {
     final holder = bindingsIndex.getSeenEnumClassBindingHolder(enumUsr);
-    if (!holder.isNameSeen(enumName)) {
+    if (!holder.isNameSeen(prefferedName)) {
       holder.binding.name = config.enumClassDecl
-          .renameUsingConfig(holder.getPrefferedName(enumName));
+          .renameUsingConfig(holder.getPrefferedName(prefferedName));
     }
   }
-  return _stack.pop().enumClass;
 }
 
 void _addEnumConstant(Pointer<clang_types.CXCursor> cursor) {
