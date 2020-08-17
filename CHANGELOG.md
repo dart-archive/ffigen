@@ -1,3 +1,6 @@
+# 0.2.2
+- Fixed multiple generation of typedef enclosed declarations.
+
 # 0.2.1+1
 - Added FAQ to readme.
 

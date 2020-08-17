@@ -21,6 +21,8 @@ import 'header_parser_tests/macros_test.dart'
     as header_parser_tests_macros_test;
 import 'header_parser_tests/nested_parsing_test.dart'
     as header_parser_tests_nested_parsing_test;
+import 'header_parser_tests/typedef_test.dart'
+    as header_parser_tests_typedef_test;
 import 'header_parser_tests/unnamed_enums_test.dart'
     as header_parser_tests_unnamed_enums_test;
 import 'large_integration_tests/large_test.dart'
@@ -39,6 +41,7 @@ void main() {
   header_parser_tests_macros_test.main();
   header_parser_tests_function_n_struct_test.main();
   header_parser_tests_nested_parsing_test.main();
+  header_parser_tests_typedef_test.main();
   header_parser_tests_unnamed_enums_test.main();
   native_test_native_test.main();
   rename_tests_rename_test.main();
