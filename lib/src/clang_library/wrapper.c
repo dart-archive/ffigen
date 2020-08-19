@@ -363,4 +363,8 @@ CXString *clang_getCursorUSR_wrap(CXCursor *cursor)
     return ptrToCXString(clang_getCursorUSR(*cursor));
 }
 
+int clang_getFieldDeclBitWidth_wrap(CXCursor *cursor){
+    return clang_getFieldDeclBitWidth(*cursor);
+}
+
 // END ===== WRAPPER FUNCTIONS =====================

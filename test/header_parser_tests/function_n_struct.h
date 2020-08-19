@@ -18,6 +18,13 @@ struct Struct3
     int b[]; // Flexible array member.
 };
 
+// All members should be removed, Bit fields are not supported.
+struct Struct4
+{
+    int a:3;
+    int :2; // Unnamed bit field.
+};
+
 void func1(struct Struct2 *s);
 
 // Incomplete array parameter will be treated as a pointer.
