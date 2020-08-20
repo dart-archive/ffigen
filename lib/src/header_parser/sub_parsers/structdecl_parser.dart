@@ -21,6 +21,7 @@ class _ParsedStruc {
   bool unimplementedMemberType = false;
   bool flexibleArrayMember = false;
   bool arrayMember = false;
+  bool bitFieldMember = false;
   _ParsedStruc();
 }
 
@@ -108,6 +109,12 @@ void _setStructMembers(Pointer<clang_types.CXCursor> cursor) {
     _logger.warning(
         'Removed All Struct Members from ${_stack.top.struc.name}(${_stack.top.struc.originalName}), Flexible array members not supported.');
     return _stack.top.struc.members.clear();
+  } else if (_stack.top.bitFieldMember) {
+    _logger.fine(
+        '---- Removed Struct members, reason: bitfield members ${cursor.completeStringRepr()}');
+    _logger.warning(
+        'Removed All Struct Members from ${_stack.top.struc.name}(${_stack.top.struc.originalName}), Bit Field members not supported.');
+    return _stack.top.struc.members.clear();
   }
 }
 
@@ -121,7 +128,6 @@ int _structMembersVisitor(Pointer<clang_types.CXCursor> cursor,
       _logger.finer('===== member: ${cursor.completeStringRepr()}');
 
       final mt = cursor.type().toCodeGenTypeAndDispose();
-
       //TODO(4): Remove these when support for Structs by value arrives.
       if (mt.broadType == BroadType.Struct) {
         // Setting this flag will exclude adding members for this struct's
@@ -137,6 +143,9 @@ int _structMembersVisitor(Pointer<clang_types.CXCursor> cursor,
       } else if (mt.broadType == BroadType.IncompleteArray) {
         // TODO(68): Structs with flexible Array Members are not supported.
         _stack.top.flexibleArrayMember = true;
+      } else if (clang.clang_getFieldDeclBitWidth_wrap(cursor) != -1) {
+        // TODO(84): Struct with bitfields are not suppoorted.
+        _stack.top.bitFieldMember = true;
       }
 
       if (mt.getBaseType().broadType == BroadType.Unimplemented) {

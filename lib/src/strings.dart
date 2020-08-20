@@ -7,7 +7,7 @@ import 'package:ffigen/src/header_parser/clang_bindings/clang_bindings.dart'
     as clang;
 
 // This version must be updated whenever we update the libclang wrapper.
-const dylibVersion = 'v3';
+const dylibVersion = 'v4';
 
 /// Name of the dynamic library file according to current platform.
 String get dylibFileName {
