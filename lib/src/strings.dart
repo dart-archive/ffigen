@@ -83,6 +83,7 @@ const useSupportedTypedefs = 'use-supported-typedefs';
 const warnWhenRemoving = 'warn-when-removing';
 const arrayWorkaround = 'array-workaround';
 const unnamedEnums = 'unnamed-enums';
+const dartBool = 'dart-bool';
 
 const comments = 'comments';
 // Sub-fields of comments

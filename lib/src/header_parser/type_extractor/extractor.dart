@@ -74,7 +74,7 @@ Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String parentName}) {
         clang.clang_getArrayElementType_wrap(cxtype).toCodeGenTypeAndDispose(),
       );
     case clang_types.CXTypeKind.CXType_Bool:
-      return Type.nativeType(SupportedNativeType.Uint8);
+      return Type.boolean();
     default:
       if (cxTypeKindToSupportedNativeTypes.containsKey(kind)) {
         return Type.nativeType(

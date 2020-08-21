@@ -33,6 +33,7 @@ enum SupportedNativeType {
 
 /// The basic types in which all types can be broadly classified into.
 enum BroadType {
+  Boolean,
   NativeType,
   Pointer,
   Struct,
@@ -120,6 +121,11 @@ class Type {
       child: elementType,
     );
   }
+  factory Type.boolean() {
+    return Type._(
+      broadType: BroadType.Boolean,
+    );
+  }
   factory Type.unimplemented(String reason) {
     return Type._(
         broadType: BroadType.Unimplemented, unimplementedReason: reason);
@@ -167,6 +173,8 @@ class Type {
       case BroadType
           .ConstantArray: // Array parameters are treated as Pointers in C.
         return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
+      case BroadType.Boolean: // Booleans are treated as uint8.
+        return '${w.ffiLibraryPrefix}.${_primitives[SupportedNativeType.Uint8].c}';
       default:
         throw Exception('cType unknown');
     }
@@ -188,6 +196,8 @@ class Type {
       case BroadType
           .ConstantArray: // Array parameters are treated as Pointers in C.
         return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
+      case BroadType.Boolean: // Booleans are treated as uint8.
+        return _primitives[SupportedNativeType.Uint8].dart;
       default:
         throw Exception('dart type unknown for ${broadType.toString()}');
     }

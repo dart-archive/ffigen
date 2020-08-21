@@ -1,3 +1,7 @@
+# 0.2.4
+- Added support for C booleans as Uint8.
+- Added config `dart-bool` (default: true) to use dart bool instead of int in function parameters and return type.
+
 # 0.2.3
 - Fixed parsing structs with bitfields, all members of structs with bit field members will now be removed. See [#84](https://github.com/dart-lang/ffigen/issues/84)
 

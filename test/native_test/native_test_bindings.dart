@@ -11,14 +11,15 @@ class NativeLibrary {
   /// The symbols are looked up in [dynamicLibrary].
   NativeLibrary(ffi.DynamicLibrary dynamicLibrary) : _dylib = dynamicLibrary;
 
-  int Function1Bool(
-    int x,
+  bool Function1Bool(
+    bool x,
   ) {
     _Function1Bool ??= _dylib
         .lookupFunction<_c_Function1Bool, _dart_Function1Bool>('Function1Bool');
     return _Function1Bool(
-      x,
-    );
+          x ? 1 : 0,
+        ) !=
+        0;
   }
 
   _dart_Function1Bool _Function1Bool;
