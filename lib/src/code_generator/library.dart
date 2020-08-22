@@ -106,7 +106,7 @@ class Library {
         if (result.stderr.toString().isNotEmpty) {
           _logger.severe(result.stderr);
         }
-      } catch (e) {
+      } on ProcessException {
         _logger.severe(
             "Couldn't format bindings, unable to call 'dartfmt' or 'flutter format'.");
       }
