@@ -155,7 +155,8 @@ class Type {
     }
   }
 
-  bool get isPrimitive => broadType == BroadType.NativeType;
+  bool get isPrimitive =>
+      (broadType == BroadType.NativeType || broadType == BroadType.Boolean);
 
   String getCType(Writer w) {
     switch (broadType) {

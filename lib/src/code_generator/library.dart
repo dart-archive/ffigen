@@ -52,7 +52,7 @@ class Library {
       className: name,
       classDocComment: description,
       header: header,
-      dartBool: dartBool ?? false,
+      dartBool: dartBool,
     );
   }
 
