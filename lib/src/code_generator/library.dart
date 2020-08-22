@@ -93,10 +93,23 @@ class Library {
 
   /// Formats a file using `dartfmt`.
   void _dartFmt(String path) {
-    final result = Process.runSync('dartfmt', ['-w', path],
-        runInShell: Platform.isWindows);
-    if (result.stderr.toString().isNotEmpty) {
-      _logger.severe(result.stderr);
+    try {
+      final result = Process.runSync('dartfmt', ['-w', path],
+          runInShell: Platform.isWindows);
+      if (result.stderr.toString().isNotEmpty) {
+        _logger.severe(result.stderr);
+      }
+    } on ProcessException {
+      try {
+        final result = Process.runSync('flutter', ['format', path],
+            runInShell: Platform.isWindows);
+        if (result.stderr.toString().isNotEmpty) {
+          _logger.severe(result.stderr);
+        }
+      } catch (e) {
+        _logger.severe(
+            "Couldn't format bindings, unable to call 'dartfmt' or 'flutter format'.");
+      }
     }
   }
 
