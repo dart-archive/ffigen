@@ -106,6 +106,10 @@ bool autoCreateDylib() {
 }
 
 bool checkDylibExist() {
+  if (strings.dylibVersion != strings.fallbackDylibVersion) {
+    // So that we recreate dynamic library everytime we use fallback.
+    return false;
+  }
   return File(path.join(
     _getDotDartToolPath(),
     strings.ffigenFolderName,
