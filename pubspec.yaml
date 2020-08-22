@@ -5,7 +5,7 @@
 name: ffigen
 version: 0.2.4
 homepage: https://github.com/dart-lang/ffigen
-description: Experimental generator for FFI bindings, using LibClang to parse C/C++ header files.
+description: Experimental generator for FFI bindings, using LibClang to parse C header files.
 
 environment:
   sdk: '>=2.7.0 <3.0.0'

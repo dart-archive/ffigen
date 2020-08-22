@@ -175,6 +175,13 @@ comments:
     <td><pre lang="yaml">use-supported-typedefs: true</pre></td>
   </tr>
   <tr>
+    <td>dart-bool</td>
+    <td>Should generate dart `bool` for c99 bool in functions.<br>
+    <b>Default: true</b>
+    </td>
+    <td><pre lang="yaml">dart-bool: true</pre></td>
+  </tr>
+  <tr>
     <td>unnamed-enums</td>
     <td>Should generate constants for anonymous unnamed enums.<br>
     <b>Default: true</b>
@@ -355,3 +362,8 @@ Note: exclude overrides include.
 
 Ffigen treats `char*` just as any other pointer,(`Pointer<Int8>`).
 To convert these to/from `String`, you can use [package:ffi](https://pub.dev/packages/ffi) and use `Utf8.fromUtf8(ptr.cast())` to convert `char*` to dart `string`.
+### How does ffigen handle C99 bool data type?
+
+Although `dart:ffi` doesn't have a NativeType for `bool`, they can be implemented as `Uint8`.
+Ffigen generates dart `bool` for function parameters and return type by default.
+To disable this, and use `int` instead, set `dart-bool: false` in configurations.

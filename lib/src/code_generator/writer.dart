@@ -52,7 +52,8 @@ class Writer {
     @required this.dartBool,
     this.classDocComment,
     this.header,
-  }) : assert(className != null) {
+  })  : assert(className != null),
+        assert(dartBool != null) {
     final globalLevelNameSet = noLookUpBindings.map((e) => e.name).toSet();
     final wrapperLevelNameSet = lookUpBindings.map((e) => e.name).toSet();
     final allNameSet = <String>{}
