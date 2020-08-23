@@ -14,7 +14,7 @@ import 'package:quiver/pattern.dart' as quiver;
 import '../strings.dart' as strings;
 import 'config_types.dart';
 
-var _logger = Logger('ffigen.config_provider.spec_utils');
+final _logger = Logger('ffigen.config_provider.spec_utils');
 
 /// Replaces the path separators according to current platform.
 String _replaceSeparators(String path) {

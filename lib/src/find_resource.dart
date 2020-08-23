@@ -92,9 +92,9 @@ String get ffigenVersion {
       _ffigenVersion =
           'v_${rawVersion.replaceAll('.', '_').replaceAll('+', '_')}';
     } catch (e) {
-      _logger.warning(
-          'Unable to extract ffigen version from pubspec.lock, Using ${fallbackDylibVersion} as fallback.');
-      // Use v0 instead to not break the tool.
+      print(
+          'Unable to extract ffigen version from pubspec.lock, Using ${fallbackDylibVersion} as fallback version.');
+      // Use fallback instead to not break the tool.
       _ffigenVersion = fallbackDylibVersion;
     }
   }

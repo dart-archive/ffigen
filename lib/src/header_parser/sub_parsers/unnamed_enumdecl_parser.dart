@@ -12,7 +12,7 @@ import '../clang_bindings/clang_bindings.dart' as clang_types;
 import '../data.dart';
 import '../utils.dart';
 
-var _logger = Logger('ffigen.header_parser.unnamed_enumdecl_parser');
+final _logger = Logger('ffigen.header_parser.unnamed_enumdecl_parser');
 
 /// Saves unnamed enums.
 void saveUnNamedEnum(Pointer<clang_types.CXCursor> cursor) {
