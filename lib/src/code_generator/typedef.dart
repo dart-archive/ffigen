@@ -38,6 +38,19 @@ class Typedef {
     List<Parameter> parameters,
   }) : parameters = parameters ?? [];
 
+  /// Returns the [Typedef] dependencies required by this typedef including itself.
+  List<Typedef> getDependencies() {
+    final dep = <Typedef>[];
+    for (final p in parameters) {
+      final base = p.type.getBaseType();
+      if (base.broadType == BroadType.NativeFunction) {
+        dep.addAll(base.nativeFunc.getDependencies());
+      }
+    }
+    dep.add(this);
+    return dep;
+  }
+
   String toTypedefString(Writer w) {
     final s = StringBuffer();
     if (dartDoc != null) {

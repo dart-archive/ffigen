@@ -2,7 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:ffigen/src/code_generator/typedef.dart';
 import 'package:meta/meta.dart';
 
 import 'binding.dart';
@@ -58,7 +57,4 @@ class Constant extends NoLookUpBinding {
     return BindingString(
         type: BindingStringType.constant, string: s.toString());
   }
-
-  @override
-  List<Typedef> getTypedefDependencies(Writer w) => const [];
 }
