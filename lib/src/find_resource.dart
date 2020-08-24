@@ -32,7 +32,8 @@ Uri findDotDartTool() {
   return null;
 }
 
-Uri findWrapper(String wrapperName) {
+/// Get [Uri] for [posixPath] inside ffigen's rootUri.
+Uri _findInPackageRoot(String posixPath) {
   var root = Directory.current.uri;
   // Traverse up until we see a `.dart_tool/package_config.json` file.
   do {
@@ -56,7 +57,7 @@ Uri findWrapper(String wrapperName) {
           /// filesystem so we need to resolve it from .dart_tool first.
           return file.parent.uri
               .resolve(ffigenRootUriString)
-              .resolve('lib/src/clang_library/$wrapperName');
+              .resolve(posixPath);
         }
       } catch (e, s) {
         print(s);
@@ -67,16 +68,12 @@ Uri findWrapper(String wrapperName) {
   return null;
 }
 
-Uri _findPubspecLock() {
-  var root = Directory.current.uri;
-  // Traverse up until we see a `.dart_tool/package_config.json` file.
-  do {
-    final file = File.fromUri(root.resolve('.dart_tool/package_config.json'));
-    if (file.existsSync()) {
-      return root.resolve('pubspec.lock');
-    }
-  } while (root != (root = root.resolve('..')));
-  return null;
+Uri findWrapper(String wrapperName) {
+  return _findInPackageRoot('lib/src/clang_library/$wrapperName');
+}
+
+Uri _findFfigenPubspecYaml() {
+  return _findInPackageRoot('pubspec.yaml');
 }
 
 String _ffigenVersion;
@@ -85,16 +82,16 @@ String _ffigenVersion;
 String get ffigenVersion {
   if (_ffigenVersion == null) {
     try {
-      final yaml = loadYaml(File.fromUri(_findPubspecLock()).readAsStringSync())
-          as YamlMap;
-      final rawVersion = yaml['packages']['ffigen']['version'] as String;
+      final yaml =
+          loadYaml(File.fromUri(_findFfigenPubspecYaml()).readAsStringSync())
+              as YamlMap;
+      final rawVersion = yaml['version'] as String;
       // Sanitize name to be used as a file name.
       _ffigenVersion =
           'v_${rawVersion.replaceAll('.', '_').replaceAll('+', '_')}';
     } catch (e) {
-      // For a  user projects, we should generally never reach here.
-      _logger.info(
-          'Unable to extract ffigen version from pubspec.lock, Using ${fallbackDylibVersion} as wrapper version.');
+      _logger.severe(
+          'Unable to extract ffigen version, Fallback to ${fallbackDylibVersion} for now.');
       // Use fallback instead to not break the tool.
       _ffigenVersion = fallbackDylibVersion;
     }
