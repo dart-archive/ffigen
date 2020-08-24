@@ -16,7 +16,7 @@ import '../clang_bindings/clang_bindings.dart' as clang_types;
 import '../data.dart';
 import '../utils.dart';
 
-var _logger = Logger('ffigen.header_parser.macro_parser');
+final _logger = Logger('ffigen.header_parser.macro_parser');
 
 /// Adds a macro definition to be parsed later.
 void saveMacroDefinition(Pointer<clang_types.CXCursor> cursor) {

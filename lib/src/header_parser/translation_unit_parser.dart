@@ -17,7 +17,7 @@ import 'sub_parsers/structdecl_parser.dart';
 import 'sub_parsers/typedefdecl_parser.dart';
 import 'utils.dart';
 
-var _logger = Logger('ffigen.header_parser.translation_unit_parser');
+final _logger = Logger('ffigen.header_parser.translation_unit_parser');
 
 Set<Binding> _bindings;
 

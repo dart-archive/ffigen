@@ -3,11 +3,11 @@
 // BSD-style license that can be found in the LICENSE file.
 import 'dart:io';
 
+import 'package:ffigen/src/find_resource.dart';
 import 'package:ffigen/src/header_parser/clang_bindings/clang_bindings.dart'
     as clang;
 
-// This version must be updated whenever we update the libclang wrapper.
-const dylibVersion = 'v4';
+String get dylibVersion => ffigenVersion;
 
 /// Name of the dynamic library file according to current platform.
 String get dylibFileName {

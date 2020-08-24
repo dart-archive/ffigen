@@ -13,7 +13,7 @@ import 'package:yaml/yaml.dart' as yaml;
 
 import 'setup.dart';
 
-var _logger = Logger('ffigen.ffigen');
+final _logger = Logger('ffigen.ffigen');
 final _ansi = Ansi(Ansi.terminalSupportsAnsi);
 
 String successPen(String str) {
@@ -28,24 +28,25 @@ void main(List<String> args) {
   // Parses the cmd args. This will print usage and exit if --help was passed.
   final argResult = getArgResults(args);
 
+  // Setup logging level and printing.
+  setupLogger(argResult);
+
   /// Prompt user if dylib doesn't exist and cannot be auto created to run
   /// `pub run ffigen:setup -Ipath/to/llvm/include -Lpath/to/llvm/lib`.
   if (!checkDylibExist() && !autoCreateDylib()) {
-    print('Unable to create dynamic library automatically.');
-    print('If LLVM is installed, try running:');
-    print('  pub run ffigen:setup -Ipath/to/llvm/include -Lpath/to/llvm/lib');
+    _logger.severe('Unable to create dynamic library automatically.');
+    _logger.severe('If LLVM is installed, try running:');
+    _logger.severe(
+        '  pub run ffigen:setup -Ipath/to/llvm/include -Lpath/to/llvm/lib');
     exit(1);
   }
-
-  // Setup logging level and printing.
-  setupLogger(argResult);
 
   // Create a config object.
   Config config;
   try {
     config = getConfig(argResult);
   } on FormatException {
-    print('Please fix configuration errors and re-run the tool.');
+    _logger.severe('Please fix configuration errors and re-run the tool.');
     exit(1);
   }
 

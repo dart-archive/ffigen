@@ -13,7 +13,7 @@ import '../data.dart' show clang;
 import '../includer.dart';
 import '../utils.dart';
 
-var _logger = Logger('ffigen.header_parser.functiondecl_parser');
+final _logger = Logger('ffigen.header_parser.functiondecl_parser');
 
 /// Holds temporary information regarding [Func] while parsing.
 class _ParserFunc {

@@ -14,7 +14,7 @@ import '../data.dart';
 import '../includer.dart';
 import '../utils.dart';
 
-var _logger = Logger('ffigen.header_parser.enumdecl_parser');
+final _logger = Logger('ffigen.header_parser.enumdecl_parser');
 
 /// Holds temporary information regarding [EnumClass] while parsing.
 class _ParsedEnum {
@@ -89,7 +89,7 @@ int _enumCursorVisitor(Pointer<clang_types.CXCursor> cursor,
         _addEnumConstantToEnumClass(cursor);
         break;
       default:
-        print('invalid enum constant');
+        _logger.fine('invalid enum constant');
     }
     cursor.dispose();
     parent.dispose();

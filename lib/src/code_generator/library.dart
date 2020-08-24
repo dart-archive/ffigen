@@ -12,7 +12,7 @@ import 'binding.dart';
 import 'utils.dart';
 import 'writer.dart';
 
-var _logger = Logger('ffigen.code_generator.library');
+final _logger = Logger('ffigen.code_generator.library');
 
 /// Container for all Bindings.
 class Library {
