@@ -66,14 +66,15 @@ class Func extends LookUpBinding {
       // Add typedef's required by return type.
       final returnTypeBase = returnType.getBaseType();
       if (returnTypeBase.broadType == BroadType.NativeFunction) {
-        _typedefDependencies.add(returnTypeBase.nativeFunc);
+        _typedefDependencies
+            .addAll(returnTypeBase.nativeFunc.getDependencies());
       }
 
       // Add typedef's required by parameters.
       for (final p in parameters) {
         final base = p.type.getBaseType();
         if (base.broadType == BroadType.NativeFunction) {
-          _typedefDependencies.add(base.nativeFunc);
+          _typedefDependencies.addAll(base.nativeFunc.getDependencies());
         }
       }
       // Add C function typedef.
