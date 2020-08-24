@@ -1,5 +1,5 @@
 # 0.2.3+3
-- Wrapper dynamic library version now uses ffigen version from pubspec.lock
+- Wrapper dynamic library version now uses ffigen version from its pubspec.yaml file.
 
 # 0.2.3+2
 - Handle code formatting using dartfmt by finding dart-sdk.

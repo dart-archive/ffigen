@@ -7,9 +7,6 @@ import 'package:ffigen/src/find_resource.dart';
 import 'package:ffigen/src/header_parser/clang_bindings/clang_bindings.dart'
     as clang;
 
-// Used if ffigen version couldn't be extracted from pubspec.lock.
-final fallbackDylibVersion = 'v_fallback';
-
 String get dylibVersion => ffigenVersion;
 
 /// Name of the dynamic library file according to current platform.

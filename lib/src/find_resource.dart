@@ -5,7 +5,6 @@
 import 'dart:convert' show jsonDecode;
 import 'dart:io' show File, Directory;
 
-import 'package:ffigen/src/strings.dart';
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart';
 
@@ -78,7 +77,7 @@ Uri _findFfigenPubspecYaml() {
 
 String _ffigenVersion;
 
-/// Gets ffigen version from pubspec.lock file.
+/// Gets ffigen version from ffigen's pubspec.yaml
 String get ffigenVersion {
   if (_ffigenVersion == null) {
     try {
@@ -90,10 +89,7 @@ String get ffigenVersion {
       _ffigenVersion =
           'v_${rawVersion.replaceAll('.', '_').replaceAll('+', '_')}';
     } catch (e) {
-      _logger.severe(
-          'Unable to extract ffigen version, Fallback to ${fallbackDylibVersion} for now.');
-      // Use fallback instead to not break the tool.
-      _ffigenVersion = fallbackDylibVersion;
+      _logger.severe('Unable to extract ffigen version.');
     }
   }
   return _ffigenVersion;
