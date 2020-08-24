@@ -7,7 +7,7 @@ import 'dart:io';
 import 'package:cli_util/cli_util.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
-
+import 'package:path/path.dart' as p;
 import 'binding.dart';
 import 'utils.dart';
 import 'writer.dart';
@@ -94,7 +94,7 @@ class Library {
 
   /// Formats a file using `dartfmt`.
   void _dartFmt(String path) {
-    final dartFmt = '${getSdkPath()}/bin/dartfmt';
+    final dartFmt = p.join(getSdkPath(), 'bin', 'dartfmt');
     try {
       final result = Process.runSync(dartFmt, ['-w', path],
           runInShell: Platform.isWindows);
