@@ -100,7 +100,7 @@ bool autoCreateDylib() {
   final options = _getPlatformOptions();
   final processResult = _runClangProcess(options);
   if ((processResult.stderr as String).isNotEmpty) {
-    print(stderr);
+    print(processResult.stderr);
   }
   return checkDylibExist();
 }
