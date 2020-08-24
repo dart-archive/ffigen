@@ -1,3 +1,6 @@
+# 0.2.3+2
+- Handle code formatting using dartfmt by finding dart-sdk.
+
 # 0.2.3+1
 - Fixed missing typedefs of nested function pointers.
 
