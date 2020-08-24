@@ -70,6 +70,10 @@ class Config {
   bool get unnamedEnums => _unnamedEnums;
   bool _unnamedEnums;
 
+  /// If dart bool should be generated for C booleans.
+  bool get dartBool => _dartBool;
+  bool _dartBool;
+
   /// Name of the wrapper class.
   String get wrapperName => _wrapperName;
   String _wrapperName;
@@ -247,6 +251,13 @@ class Config {
         extractor: booleanExtractor,
         defaultValue: () => true,
         extractedResult: (dynamic result) => _unnamedEnums = result as bool,
+      ),
+      strings.dartBool: Specification<bool>(
+        requirement: Requirement.no,
+        validator: booleanValidator,
+        extractor: booleanExtractor,
+        defaultValue: () => true,
+        extractedResult: (dynamic result) => _dartBool = result as bool,
       ),
       strings.name: Specification<String>(
         requirement: Requirement.prefer,

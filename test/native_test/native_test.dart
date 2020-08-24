@@ -50,6 +50,10 @@ void main() {
         rethrow;
       }
     });
+    test('bool', () {
+      expect(bindings.Function1Bool(true), false);
+      expect(bindings.Function1Bool(false), true);
+    });
     test('uint8_t', () {
       expect(bindings.Function1Uint8(pow(2, 8).toInt()), 42);
     });

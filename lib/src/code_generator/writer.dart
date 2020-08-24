@@ -27,6 +27,8 @@ class Writer {
   String _dylibIdentifier;
   String get dylibIdentifier => _dylibIdentifier;
 
+  final bool dartBool;
+
   /// Initial namers set after running constructor. Namers are reset to this
   /// initial state everytime [generate] is called.
   UniqueNamer _initialTopLevelUniqueNamer, _initialWrapperLevelUniqueNamer;
@@ -47,9 +49,11 @@ class Writer {
     @required this.lookUpBindings,
     @required this.noLookUpBindings,
     @required String className,
+    @required this.dartBool,
     this.classDocComment,
     this.header,
-  }) : assert(className != null) {
+  })  : assert(className != null),
+        assert(dartBool != null) {
     final globalLevelNameSet = noLookUpBindings.map((e) => e.name).toSet();
     final wrapperLevelNameSet = lookUpBindings.map((e) => e.name).toSet();
     final allNameSet = <String>{}

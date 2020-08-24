@@ -30,6 +30,7 @@ Library parse(Config c) {
     name: config.wrapperName,
     description: config.wrapperDocComment,
     header: config.preamble,
+    dartBool: config.dartBool,
   );
 
   if (config.sort) {

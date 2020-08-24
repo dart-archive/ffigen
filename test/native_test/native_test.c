@@ -5,6 +5,9 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdbool.h>
+
+bool Function1Bool(bool x) { return !x; }
 
 uint8_t Function1Uint8(uint8_t x) { return x + 42; }
 

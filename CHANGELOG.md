@@ -1,3 +1,7 @@
+# 0.2.4
+- Added support for C booleans as Uint8.
+- Added config `dart-bool` (default: true) to use dart bool instead of int in function parameters and return type.
+
 # 0.2.3+3
 - Wrapper dynamic library version now uses ffigen version from its pubspec.yaml file.
 

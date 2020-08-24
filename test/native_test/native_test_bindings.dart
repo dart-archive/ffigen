@@ -11,6 +11,19 @@ class NativeLibrary {
   /// The symbols are looked up in [dynamicLibrary].
   NativeLibrary(ffi.DynamicLibrary dynamicLibrary) : _dylib = dynamicLibrary;
 
+  bool Function1Bool(
+    bool x,
+  ) {
+    _Function1Bool ??= _dylib
+        .lookupFunction<_c_Function1Bool, _dart_Function1Bool>('Function1Bool');
+    return _Function1Bool(
+          x ? 1 : 0,
+        ) !=
+        0;
+  }
+
+  _dart_Function1Bool _Function1Bool;
+
   int Function1Uint8(
     int x,
   ) {
@@ -300,6 +313,14 @@ class ArrayHelper_Struct1_data_level2 {
     }
   }
 }
+
+typedef _c_Function1Bool = ffi.Uint8 Function(
+  ffi.Uint8 x,
+);
+
+typedef _dart_Function1Bool = int Function(
+  int x,
+);
 
 typedef _c_Function1Uint8 = ffi.Uint8 Function(
   ffi.Uint8 x,

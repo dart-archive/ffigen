@@ -27,6 +27,7 @@ class Library {
     String description,
     @required this.bindings,
     String header,
+    bool dartBool = true,
   }) {
     // Seperate bindings which require lookup.
     final lookUpBindings = bindings.whereType<LookUpBinding>().toList();
@@ -35,15 +36,15 @@ class Library {
     /// Handle any declaration-declaration name conflict in [lookUpBindings].
     final lookUpDeclConflictHandler = UniqueNamer({});
     for (final b in lookUpBindings) {
-      _warnPrivateDeclaration(b);
-      _resolveNameConflict(lookUpDeclConflictHandler, b);
+      _warnIfPrivateDeclaration(b);
+      _resolveIfNameConflicts(lookUpDeclConflictHandler, b);
     }
 
     /// Handle any declaration-declaration name conflict in [noLookUpBindings].
     final noLookUpDeclConflictHandler = UniqueNamer({});
     for (final b in noLookUpBindings) {
-      _warnPrivateDeclaration(b);
-      _resolveNameConflict(noLookUpDeclConflictHandler, b);
+      _warnIfPrivateDeclaration(b);
+      _resolveIfNameConflicts(noLookUpDeclConflictHandler, b);
     }
 
     _writer = Writer(
@@ -52,19 +53,20 @@ class Library {
       className: name,
       classDocComment: description,
       header: header,
+      dartBool: dartBool,
     );
   }
 
   /// Logs a warning if generated declaration will be private.
-  void _warnPrivateDeclaration(Binding b) {
+  void _warnIfPrivateDeclaration(Binding b) {
     if (b.name.startsWith('_')) {
       _logger.warning(
           "Generated declaration '${b.name}' start's with '_' and therefore will be private.");
     }
   }
 
-  /// LResolves name conflict(if any) and logs a warning.
-  void _resolveNameConflict(UniqueNamer namer, Binding b) {
+  /// Resolves name conflict(if any) and logs a warning.
+  void _resolveIfNameConflicts(UniqueNamer namer, Binding b) {
     // Print warning if name was conflicting and has been changed.
     if (namer.isUsed(b.name)) {
       final oldName = b.name;
