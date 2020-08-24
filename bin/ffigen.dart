@@ -35,7 +35,7 @@ void main(List<String> args) {
   /// `pub run ffigen:setup -Ipath/to/llvm/include -Lpath/to/llvm/lib`.
   if (!checkDylibExist() && !autoCreateDylib()) {
     _logger.severe('Unable to create dynamic library automatically.');
-    _logger.severe('If LLVM is installed, try running:');
+    _logger.severe('If LLVM (9+) is installed, try running:');
     _logger.severe(
         '  pub run ffigen:setup -Ipath/to/llvm/include -Lpath/to/llvm/lib');
     exit(1);
