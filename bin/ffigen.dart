@@ -6,36 +6,47 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
+import 'package:cli_util/cli_logging.dart' show Ansi;
 import 'package:ffigen/ffigen.dart';
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart' as yaml;
 
 import 'setup.dart';
 
-var _logger = Logger('ffigen.ffigen');
+final _logger = Logger('ffigen.ffigen');
+final _ansi = Ansi(Ansi.terminalSupportsAnsi);
+
+String successPen(String str) {
+  return '${_ansi.green}$str${_ansi.none}';
+}
+
+String errorPen(String str) {
+  return '${_ansi.red}$str${_ansi.none}';
+}
 
 void main(List<String> args) {
   // Parses the cmd args. This will print usage and exit if --help was passed.
   final argResult = getArgResults(args);
 
+  // Setup logging level and printing.
+  setupLogger(argResult);
+
   /// Prompt user if dylib doesn't exist and cannot be auto created to run
   /// `pub run ffigen:setup -Ipath/to/llvm/include -Lpath/to/llvm/lib`.
   if (!checkDylibExist() && !autoCreateDylib()) {
-    print('Unable to create dynamic library automatically.');
-    print('If LLVM is installed, try running:');
-    print('  pub run ffigen:setup -Ipath/to/llvm/include -Lpath/to/llvm/lib');
+    _logger.severe('Unable to create dynamic library automatically.');
+    _logger.severe('If LLVM is installed, try running:');
+    _logger.severe(
+        '  pub run ffigen:setup -Ipath/to/llvm/include -Lpath/to/llvm/lib');
     exit(1);
   }
-
-  // Setup logging level and printing.
-  setupLogger(argResult);
 
   // Create a config object.
   Config config;
   try {
     config = getConfig(argResult);
   } on FormatException {
-    print('Please fix configuration errors and re-run the tool.');
+    _logger.severe('Please fix configuration errors and re-run the tool.');
     exit(1);
   }
 
@@ -45,7 +56,8 @@ void main(List<String> args) {
   // Generate file for the parsed bindings.
   final gen = File(config.output);
   library.generateFile(gen);
-  _logger.info('Finished, Bindings generated in ${gen?.absolute?.path}');
+  _logger.info(
+      successPen('Finished, Bindings generated in ${gen?.absolute?.path}'));
 }
 
 Config getConfig(ArgResults result) {
@@ -173,16 +185,27 @@ void setupLogger(ArgResults result) {
     }
     // Setup logger for printing (if verbosity was set by user).
     Logger.root.onRecord.listen((record) {
-      print('${record.level.name.padRight(8)}: ${record.message}');
+      final level = '[${record.level.name}]'.padRight(9);
+      printLog('${level}: ${record.message}', record.level);
     });
   } else {
     // Setup logger for printing (if verbosity was not set by user).
     Logger.root.onRecord.listen((record) {
       if (record.level.value > Level.INFO.value) {
-        print('  ${record.level.name.padRight(8)}: ${record.message}');
+        final level = '[${record.level.name}]'.padRight(9);
+        printLog('${level}: ${record.message}', record.level);
       } else {
-        print(record.message);
+        printLog(record.message, record.level);
       }
     });
+  }
+}
+
+void printLog(String log, Level level) {
+  // Prints text in red for Severe logs only.
+  if (level < Level.SEVERE) {
+    print(log);
+  } else {
+    print(errorPen(log));
   }
 }

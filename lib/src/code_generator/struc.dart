@@ -72,7 +72,7 @@ class Struc extends NoLookUpBinding {
       for (final m in members) {
         final base = m.type.getBaseType();
         if (base.broadType == BroadType.NativeFunction) {
-          _typedefDependencies.add(base.nativeFunc);
+          _typedefDependencies.addAll(base.nativeFunc.getDependencies());
         }
       }
     }

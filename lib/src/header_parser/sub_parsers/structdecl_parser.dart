@@ -12,7 +12,7 @@ import '../data.dart';
 import '../includer.dart';
 import '../utils.dart';
 
-var _logger = Logger('ffigen.header_parser.structdecl_parser');
+final _logger = Logger('ffigen.header_parser.structdecl_parser');
 
 /// Holds temporary information regarding [struc] while parsing.
 class _ParsedStruc {

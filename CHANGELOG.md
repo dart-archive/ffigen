@@ -2,6 +2,15 @@
 - Added support for C booleans as Uint8.
 - Added config `dart-bool` (default: true) to use dart bool instead of int in function parameters and return type.
 
+# 0.2.3+3
+- Wrapper dynamic library version now uses ffigen version from its pubspec.yaml file.
+
+# 0.2.3+2
+- Handle code formatting using dartfmt by finding dart-sdk.
+
+# 0.2.3+1
+- Fixed missing typedefs of nested function pointers.
+
 # 0.2.3
 - Fixed parsing structs with bitfields, all members of structs with bit field members will now be removed. See [#84](https://github.com/dart-lang/ffigen/issues/84)
 
