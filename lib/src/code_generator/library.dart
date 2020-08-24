@@ -4,6 +4,7 @@
 
 import 'dart:io';
 
+import 'package:cli_util/cli_util.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 
@@ -93,23 +94,15 @@ class Library {
 
   /// Formats a file using `dartfmt`.
   void _dartFmt(String path) {
+    final dartFmt = '${getSdkPath()}/bin/dartfmt';
     try {
-      final result = Process.runSync('dartfmt', ['-w', path],
+      final result = Process.runSync(dartFmt, ['-w', path],
           runInShell: Platform.isWindows);
       if (result.stderr.toString().isNotEmpty) {
         _logger.severe(result.stderr);
       }
     } on ProcessException {
-      try {
-        final result = Process.runSync('flutter', ['format', path],
-            runInShell: Platform.isWindows);
-        if (result.stderr.toString().isNotEmpty) {
-          _logger.severe(result.stderr);
-        }
-      } on ProcessException {
-        _logger.severe(
-            "Couldn't format bindings, unable to call 'dartfmt' or 'flutter format'.");
-      }
+      _logger.severe("Couldn't format bindings, unable to call $dartFmt.");
     }
   }
 

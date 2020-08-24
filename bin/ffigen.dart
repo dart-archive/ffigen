@@ -5,8 +5,8 @@
 // Executable script to generate bindings for some C library.
 import 'dart:io';
 
-import 'package:ansicolor/ansicolor.dart';
 import 'package:args/args.dart';
+import 'package:cli_util/cli_logging.dart' show Ansi;
 import 'package:ffigen/ffigen.dart';
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart' as yaml;
@@ -14,8 +14,15 @@ import 'package:yaml/yaml.dart' as yaml;
 import 'setup.dart';
 
 var _logger = Logger('ffigen.ffigen');
-final successPen = AnsiPen()..green();
-final severePen = AnsiPen()..red(bold: true);
+final _ansi = Ansi(Ansi.terminalSupportsAnsi);
+
+String successPen(String str) {
+  return '${_ansi.green}$str${_ansi.none}';
+}
+
+String errorPen(String str) {
+  return '${_ansi.red}$str${_ansi.none}';
+}
 
 void main(List<String> args) {
   // Parses the cmd args. This will print usage and exit if --help was passed.
@@ -48,8 +55,8 @@ void main(List<String> args) {
   // Generate file for the parsed bindings.
   final gen = File(config.output);
   library.generateFile(gen);
-  _logger.info(successPen
-      .write('Finished, Bindings generated in ${gen?.absolute?.path}'));
+  _logger.info(
+      successPen('Finished, Bindings generated in ${gen?.absolute?.path}'));
 }
 
 Config getConfig(ArgResults result) {
@@ -195,9 +202,9 @@ void setupLogger(ArgResults result) {
 
 void printLog(String log, Level level) {
   // Prints text in red for Severe logs only.
-  if (level != Level.SEVERE) {
+  if (level < Level.SEVERE) {
     print(log);
   } else {
-    print(severePen.write(log));
+    print(errorPen(log));
   }
 }
