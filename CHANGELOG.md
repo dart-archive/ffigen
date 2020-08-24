@@ -1,3 +1,6 @@
+# 0.2.4+1
+- Minor changes to dylib creation error log.
+
 # 0.2.4
 - Added support for C booleans as Uint8.
 - Added config `dart-bool` (default: true) to use dart bool instead of int in function parameters and return type.
