@@ -36,8 +36,7 @@ EnumClass parseEnumDeclaration(
   final enumName = name ?? cursor.spelling();
   if (enumName == '') {
     // Save this unnamed enum if it is anonymous (therefore not in a typedef).
-    if (config.unnamedEnums &&
-        clang.clang_Cursor_isAnonymous_wrap(cursor) != 0) {
+    if (clang.clang_Cursor_isAnonymous_wrap(cursor) != 0) {
       _logger.fine('Saving anonymous enum.');
       saveUnNamedEnum(cursor);
     } else {

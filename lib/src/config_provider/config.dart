@@ -43,7 +43,11 @@ class Config {
   Declaration get enumClassDecl => _enumClassDecl;
   Declaration _enumClassDecl;
 
-  /// Declaration config for Enums.
+  /// Declaration config for Unnamed enum constants.
+  Declaration get unnamedEnumConstants => _unnamedEnumConstants;
+  Declaration _unnamedEnumConstants;
+
+  /// Declaration config for Macro constants.
   Declaration get macroDecl => _macroDecl;
   Declaration _macroDecl;
 
@@ -65,10 +69,6 @@ class Config {
   /// members removed.
   bool get arrayWorkaround => _arrayWorkaround;
   bool _arrayWorkaround;
-
-  /// If constants should be generated for unnamed enums.
-  bool get unnamedEnums => _unnamedEnums;
-  bool _unnamedEnums;
 
   /// If dart bool should be generated for C booleans.
   bool get dartBool => _dartBool;
@@ -193,6 +193,14 @@ class Config {
           _enumClassDecl = result as Declaration;
         },
       ),
+      strings.unnamedEnums: Specification<Declaration>(
+        requirement: Requirement.no,
+        validator: declarationConfigValidator,
+        extractor: declarationConfigExtractor,
+        defaultValue: () => Declaration(),
+        extractedResult: (dynamic result) =>
+            _unnamedEnumConstants = result as Declaration,
+      ),
       strings.macros: Specification<Declaration>(
         requirement: Requirement.no,
         validator: declarationConfigValidator,
@@ -244,13 +252,6 @@ class Config {
         extractor: booleanExtractor,
         defaultValue: () => false,
         extractedResult: (dynamic result) => _arrayWorkaround = result as bool,
-      ),
-      strings.unnamedEnums: Specification<bool>(
-        requirement: Requirement.no,
-        validator: booleanValidator,
-        extractor: booleanExtractor,
-        defaultValue: () => true,
-        extractedResult: (dynamic result) => _unnamedEnums = result as bool,
       ),
       strings.dartBool: Specification<bool>(
         requirement: Requirement.no,

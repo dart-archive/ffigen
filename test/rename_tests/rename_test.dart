@@ -63,9 +63,11 @@ enums:
     'MemberRenameEnum4':
       '_(.*)': '\$1'
       'fullMatch': 'fullMatchSuccess'
-    '':
-      '_(.*)': '\$1'
-      'unnamedFullMatch': 'unnamedFullMatchSuccess'
+
+unnamed-enums:
+  ${strings.rename}:
+    '_(.*)': '\$1'
+    'unnamedFullMatch': 'unnamedFullMatchSuccess'
 
 macros:
   ${strings.rename}:

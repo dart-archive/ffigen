@@ -6,6 +6,7 @@ import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser/data.dart';
+import 'package:ffigen/src/header_parser/includer.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
@@ -37,7 +38,9 @@ int _unnamedenumCursorVisitor(Pointer<clang_types.CXCursor> cursor,
         .finest('  unnamedenumCursorVisitor: ${cursor.completeStringRepr()}');
     switch (clang.clang_getCursorKind_wrap(cursor)) {
       case clang_types.CXCursorKind.CXCursor_EnumConstantDecl:
-        _addUnNamedEnumConstant(cursor);
+        if (shouldIncludeUnnamedEnumConstant(cursor.usr(), cursor.spelling())) {
+          _addUnNamedEnumConstant(cursor);
+        }
         break;
       default:
         _logger.severe('Invalid enum constant.');
@@ -58,8 +61,7 @@ void _addUnNamedEnumConstant(Pointer<clang_types.CXCursor> cursor) {
     Constant(
       usr: cursor.usr(),
       originalName: cursor.spelling(),
-      name: config.enumClassDecl.renameMemberUsingConfig(
-        '', // Un-named enum constants have an empty declaration name.
+      name: config.unnamedEnumConstants.renameUsingConfig(
         cursor.spelling(),
       ),
       rawType: 'int',

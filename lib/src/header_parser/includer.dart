@@ -40,6 +40,17 @@ bool shouldIncludeEnumClass(String usr, String name) {
   }
 }
 
+bool shouldIncludeUnnamedEnumConstant(String usr, String name) {
+  if (bindingsIndex.isSeenUnnamedEnumConstant(usr) || name == '') {
+    return false;
+  } else if (config.unnamedEnumConstants == null ||
+      config.unnamedEnumConstants.shouldInclude(name)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 bool shouldIncludeMacro(String usr, String name) {
   if (bindingsIndex.isSeenMacro(usr) || name == '') {
     return false;

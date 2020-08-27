@@ -40,6 +40,7 @@ const compilerOpts = 'compiler-opts';
 const functions = 'functions';
 const structs = 'structs';
 const enums = 'enums';
+const unnamedEnums = 'unnamed-enums';
 const macros = 'macros';
 
 // Sub-fields of Declarations.
@@ -82,7 +83,6 @@ const sort = 'sort';
 const useSupportedTypedefs = 'use-supported-typedefs';
 const warnWhenRemoving = 'warn-when-removing';
 const arrayWorkaround = 'array-workaround';
-const unnamedEnums = 'unnamed-enums';
 const dartBool = 'dart-bool';
 
 const comments = 'comments';

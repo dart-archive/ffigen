@@ -340,6 +340,7 @@ class BindingsIndex {
   final Map<String, Struc> _structs = {};
   final Map<String, Func> _functions = {};
   final Map<String, EnumClass> _enumClass = {};
+  final Map<String, Constant> _unnamedEnumConstants = {};
   final Map<String, String> _macros = {};
   // Stores only named typedefC used in NativeFunc.
   final Map<String, Typedef> _functionTypedefs = {};
@@ -378,6 +379,18 @@ class BindingsIndex {
 
   EnumClass getSeenEnumClass(String usr) {
     return _enumClass[usr];
+  }
+
+  bool isSeenUnnamedEnumConstant(String usr) {
+    return _unnamedEnumConstants.containsKey(usr);
+  }
+
+  void addUnnamedEnumConstantToSeen(String usr, Constant enumConstant) {
+    _unnamedEnumConstants[usr] = enumConstant;
+  }
+
+  Constant getSeenUnnamedEnumConstant(String usr) {
+    return _unnamedEnumConstants[usr];
   }
 
   bool isSeenMacro(String usr) {
