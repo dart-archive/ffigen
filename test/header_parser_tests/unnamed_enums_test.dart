@@ -29,6 +29,9 @@ ${strings.headers}:
 ${strings.enums}:
   ${strings.exclude}:
     - Named
+${strings.unnamedEnums}:
+  ${strings.exclude}:
+    - B
         ''') as yaml.YamlMap),
       );
     });
@@ -39,7 +42,6 @@ ${strings.enums}:
 
     test('Parse unnamed enum Values', () {
       expect(actual.getBindingAsString('A'), expected.getBindingAsString('A'));
-      expect(actual.getBindingAsString('B'), expected.getBindingAsString('B'));
       expect(actual.getBindingAsString('C'), expected.getBindingAsString('C'));
     });
 
@@ -62,11 +64,6 @@ Library expectedLibrary() {
         name: 'A',
         rawType: 'int',
         rawValue: '1',
-      ),
-      Constant(
-        name: 'B',
-        rawType: 'int',
-        rawValue: '2',
       ),
       Constant(
         name: 'C',

@@ -1,3 +1,6 @@
+# 0.3.0
+- Added support for including/excluding/renaming _un-named enums_ using key `unnamed_enums`.
+
 # 0.2.4+1
 - Minor changes to dylib creation error log.
 

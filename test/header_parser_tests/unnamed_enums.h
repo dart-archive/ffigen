@@ -1,7 +1,7 @@
 // Only this should be parsed.
 enum{
     A=1,
-    B=2,
+    B=2, // This will be excluded by config.
     C=3
 };
 

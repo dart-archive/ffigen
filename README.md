@@ -112,7 +112,7 @@ headers:
     <td><pre lang="yaml">compiler-opts: '-I/usr/lib/llvm-9/include/'</pre></td>
   </tr>
   <tr>
-    <td>functions<br>structs<br>enums<br>macros</td>
+    <td>functions<br>structs<br>enums<br>unnamed-enums<br>macros</td>
     <td>Filters for declarations.<br><b>Default: all are included</b></td>
     <td><pre lang="yaml">
 functions:
@@ -180,13 +180,6 @@ comments:
     <b>Default: true</b>
     </td>
     <td><pre lang="yaml">dart-bool: true</pre></td>
-  </tr>
-  <tr>
-    <td>unnamed-enums</td>
-    <td>Should generate constants for anonymous unnamed enums.<br>
-    <b>Default: true</b>
-    </td>
-    <td><pre lang="yaml">unnamed-enums: true</pre></td>
   </tr>
    <tr>
     <td>preamble</td>
@@ -367,3 +360,23 @@ To convert these to/from `String`, you can use [package:ffi](https://pub.dev/pac
 Although `dart:ffi` doesn't have a NativeType for `bool`, they can be implemented as `Uint8`.
 Ffigen generates dart `bool` for function parameters and return type by default.
 To disable this, and use `int` instead, set `dart-bool: false` in configurations.
+
+### How are unnamed enums handled?
+
+Unnamed enums are handled separately, under the key `unnamed-enums`, and are generated as top level constants.
+
+Here's an example that shows how to include/exclude/rename unnamed enums
+```yaml
+unnamed-enums:
+  include:
+    - 'CX_.*'
+  exclude:
+    - '.*Flag'
+  rename:
+    'CXType_(.*)': '$1'
+```
+
+### Why are some struct declarations generated even after excluded them in config?
+
+This happens when an excluded struct is a dependency to some included declaration.
+(A dependency means a struct is being passed/returned by a function or is member of another struct in some way)
