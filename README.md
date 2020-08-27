@@ -36,7 +36,7 @@ typedef _c_sum = ffi.Int32 Function(Int32 a, Int32 b);
 typedef _dart_sum = int Function(int a,int b);
 ```
 ## Using this package
-- Add this package as dev_dependency in your `pubspec.yaml`.
+- Add `ffigen` under `dev_dependencies` in your `pubspec.yaml`.
 - Setup for use (see [Setup](#Setup)).
 - Configurations must be provided in `pubspec.yaml` or in a custom YAML file (see [configurations](#configurations)).
 - Run the tool- `pub run ffigen`.
