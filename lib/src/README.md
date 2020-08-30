@@ -12,7 +12,6 @@
     1. [Config Provider](#Config-Provider)
     2. [Header Parser](#Header-Parser)
     3. [Code Generator](#Code-Generator)
-5. [Project Structure](#Project-Structure)
 # Overview
 `package:ffigen` simplifies the process of generating `dart:ffi` bindings from C header files. It is simple to use, with the input being a small YAML config file. It requires LLVM (9+) to work. This document tries to give a complete overview of every component without going into too much details about every single class/file.
 # LibClang
