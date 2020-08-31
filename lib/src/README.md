@@ -45,10 +45,12 @@ This is the main entry point for the user-  `pub run ffigen`.
     - Finally, the code is generated from the `Library` object to the specified file.
 ## setup.dart
 Used to generate the wrapper dynamic library. Users will need to explicitly call this if `pub run ffigen` is unable to auto-create the dynamic library.
+> `clang` must be on user's path for `setup.dart` to work.
+
 - Command-line options:
     - `-I`: for specifying header includes.
     - `-L`: for specifying library includes.
-- Generates dynamic library using `clang`.
+- `setup.dart` generates the dynamic library to the project's `.dart_tool/ffigen` folder using `clang`.
 # Components
 ## Config Provider
 Holds all configurations required by other modules.
