@@ -143,7 +143,7 @@ Type _extractFromFunctionProto(
 
     if (pt.broadType == BroadType.Struct) {
       return Type.unimplemented('Struct by value in function parameter.');
-    } else if (pt.broadType == BroadType.Unimplemented) {
+    } else if (pt.getBaseType().broadType == BroadType.Unimplemented) {
       return Type.unimplemented('Function parameter has an unsupported type.');
     }
 

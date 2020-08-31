@@ -97,8 +97,18 @@ Library expectedLibrary() {
           Parameter(type: Type.pointer(Type.struct(excludedNtyperef)))
         ],
       ),
-      EnumClass(name: 'AnonymousEnumInTypedef'),
-      EnumClass(name: 'NamedEnumInTypedef'),
+      EnumClass(
+        name: 'AnonymousEnumInTypedef',
+        enumConstants: [
+          EnumConstant(name: 'a', value: 0),
+        ],
+      ),
+      EnumClass(
+        name: 'NamedEnumInTypedef',
+        enumConstants: [
+          EnumConstant(name: 'b', value: 0),
+        ],
+      ),
     ],
   );
 }

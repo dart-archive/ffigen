@@ -40,14 +40,11 @@ void func2(NTyperef1 *);
 
 typedef enum
 {
-
+    a=0
 } AnonymousEnumInTypedef;
-// These typerefs do not affect the name of AnonymousEnumInTypedef.
-typedef AnonymousEnumInTypedef Typeref1;
-typedef AnonymousEnumInTypedef Typeref2;
 
 // Name from global namespace is used.
 typedef enum _NamedEnumInTypedef
 {
-
+    b=0
 } NamedEnumInTypedef;
