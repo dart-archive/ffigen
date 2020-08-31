@@ -1,5 +1,5 @@
 # **_package:ffigen_**: Internal Working
-## Table of Content -
+## Table of Contents -
 1. [Overview](#overview)
 2. [LibClang](#LibClang)
     1. [The Wrapper library](#The-Wrapper-library)
@@ -48,19 +48,19 @@ Used to generate the wrapper dynamic library. Users will need to explicitly call
 > `clang` must be on user's path for `setup.dart` to work.
 
 - Command-line options:
-    - `-I`: for specifying header includes.
-    - `-L`: for specifying library includes.
+    - `-I`: Specifies header includes.
+    - `-L`: Specifies library includes.
 - `setup.dart` generates the dynamic library to the project's `.dart_tool/ffigen` folder using `clang`.
 # Components
 ## Config Provider
-Holds all configurations required by other modules.
-- Validates and Extracts configurations from YAML files.
+The Config Provider holds all the configurations required by other modules.
+- Config Provider handles validation and extraction of configurations from YAML files.
+- Config Provider converts configurations to the format required by other modules. This object is passed around to every other module.
 ## Header Parser
-Parses C header files and converts them into a `Library` object.
-- Handles including/excluding/renaming of declarations.
-- Filters out _unimplemented_ or _unsupported_ declaration before generating a Library object.
-
+The Header Parser parses C header files and converts them into a `Library` object.
+- Header Parser handles including/excluding/renaming of declarations.
+- Header Parser also filters out any _unimplemented_ or _unsupported_ declarations before generating a `Library` object.
 ## Code Generator
-Generates bindings from a `Library` object.
-- Handles name collisions.
-- Generates workarounds for arrays and bool according to config.
+The Code Generator generates the actual string bindings.
+- Code generator handles all external name collisions, while internal name conflicts are handled by each specific `Binding`.
+- Code Generator also handles how workarounds for arrays and bools are generated.
