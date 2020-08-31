@@ -79,6 +79,8 @@ ${strings.name}: SQLite
 ${strings.description}: Bindings to SQLite.
 ${strings.output}: unused
 ${strings.arrayWorkaround}: true
+# Needed for stdarg.h in MacOS
+${strings.compilerOpts}: '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/'
 ${strings.comments}:
   ${strings.style}: ${strings.any}
   ${strings.length}: ${strings.full}

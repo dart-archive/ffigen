@@ -34,7 +34,7 @@ void logTuDiagnostics(
     return;
   }
 
-  logger.warning('Header $header: Total errors/warnings: $total.');
+  logger.severe('Header $header: Total errors/warnings: $total.');
   for (var i = 0; i < total; i++) {
     final diag = clang.clang_getDiagnostic(tu, i);
     final cxstring = clang.clang_formatDiagnostic_wrap(
@@ -45,7 +45,7 @@ void logTuDiagnostics(
           clang_types
               .CXDiagnosticDisplayOptions.CXDiagnostic_DisplayCategoryName,
     );
-    logger.warning('    ' + cxstring.toStringAndDispose());
+    logger.severe('    ' + cxstring.toStringAndDispose());
     clang.clang_disposeDiagnostic(diag);
   }
 }

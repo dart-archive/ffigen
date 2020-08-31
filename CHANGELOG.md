@@ -1,3 +1,8 @@
+# 1.0.0
+- Bump version to 1.0.0.
+- Handle unimplememnted function pointers causing errors.
+- Log lexical/semantic issues in headers as SEVERE.
+
 # 0.3.0
 - Added support for including/excluding/renaming _un-named enums_ using key `unnamed_enums`.
 
