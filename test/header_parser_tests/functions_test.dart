@@ -117,61 +117,44 @@ Library expectedLibrary() {
         ],
       ),
       Func(
-        name: 'func4',
-        returnType: Type.pointer(Type.nativeType(SupportedNativeType.Void)),
-        parameters: [
-          Parameter(
-              type: Type.pointer(
-                  Type.pointer(Type.nativeType(SupportedNativeType.Int8)))),
-          Parameter(type: Type.nativeType(SupportedNativeType.Double)),
-          Parameter(
-            type: Type.pointer(Type.pointer(
-                Type.pointer(Type.nativeType(SupportedNativeType.Int32)))),
-          ),
-        ],
-      ),
+          name: 'func4',
+          returnType: Type.pointer(Type.nativeType(SupportedNativeType.Void)),
+          parameters: [
+            Parameter(
+                type: Type.pointer(
+                    Type.pointer(Type.nativeType(SupportedNativeType.Int8)))),
+            Parameter(type: Type.nativeType(SupportedNativeType.Double)),
+            Parameter(
+              type: Type.pointer(Type.pointer(
+                  Type.pointer(Type.nativeType(SupportedNativeType.Int32)))),
+            ),
+          ]),
       Func(
         name: 'func5',
         returnType: Type.nativeType(SupportedNativeType.Void),
         parameters: [
           Parameter(
-            name: 'a',
-            type: Type.pointer(
-              Type.nativeFunc(
-                Typedef(
-                  name: 'shortHand',
-                  returnType: Type.nativeType(SupportedNativeType.Void),
-                  typedefType: TypedefType.C,
-                  parameters: [
-                    Parameter(
-                      type: Type.pointer(
-                        Type.nativeFunc(
-                          Typedef(
-                            name: 'b',
-                            returnType:
-                                Type.nativeType(SupportedNativeType.Void),
-                            typedefType: TypedefType.C,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+              name: 'a',
+              type: Type.pointer(Type.nativeFunc(Typedef(
+                name: 'shortHand',
+                returnType: Type.nativeType(SupportedNativeType.Void),
+                typedefType: TypedefType.C,
+                parameters: [
+                  Parameter(
+                      type: Type.pointer(Type.nativeFunc(Typedef(
+                    name: 'b',
+                    returnType: Type.nativeType(SupportedNativeType.Void),
+                    typedefType: TypedefType.C,
+                  )))),
+                ],
+              )))),
           Parameter(
-            name: 'b',
-            type: Type.pointer(
-              Type.nativeFunc(
-                Typedef(
-                  name: '_typedefC_2',
-                  returnType: Type.nativeType(SupportedNativeType.Void),
-                  typedefType: TypedefType.C,
-                ),
-              ),
-            ),
-          ),
+              name: 'b',
+              type: Type.pointer(Type.nativeFunc(Typedef(
+                name: '_typedefC_2',
+                returnType: Type.nativeType(SupportedNativeType.Void),
+                typedefType: TypedefType.C,
+              )))),
         ],
       ),
     ],
