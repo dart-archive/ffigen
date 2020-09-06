@@ -156,12 +156,17 @@ class Func extends LookUpBinding {
   }
 }
 
-/// Represents a Function's parameter.
+/// Represents a Parameter, used in [Func] and [Typedef].
 class Parameter {
   final String originalName;
   String name;
   final Type type;
 
-  Parameter({String originalName, this.name = '', @required this.type})
-      : originalName = originalName ?? name;
+  Parameter({String originalName, this.name = '', @required Type type})
+      : originalName = originalName ?? name,
+        // A type with broadtype [BroadType.NativeFunction] is wrapped with a
+        // pointer because this is a shorthand used in C for Pointer to function.
+        type = type.broadType == BroadType.NativeFunction
+            ? Type.pointer(type)
+            : type;
 }
