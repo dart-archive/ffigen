@@ -1,3 +1,6 @@
+# 1.0.1
+- Fixed generation of `NativeFunction` parameters instead of `Pointer<NativeFunction>` in type signatures.
+
 # 1.0.0
 - Bump version to 1.0.0.
 - Handle unimplememnted function pointers causing errors.
