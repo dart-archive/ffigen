@@ -1,3 +1,6 @@
+# 1.0.2
+- Fix indentation for pub's readme.
+
 # 1.0.1
 - Fixed generation of `NativeFunction` parameters instead of `Pointer<NativeFunction>` in type signatures.
 
