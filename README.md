@@ -93,7 +93,6 @@ output: 'generated_bindings.dart'
     <td>
 
 ```yaml
-
 headers:
   entry-points:
     - 'folder/**.h'
