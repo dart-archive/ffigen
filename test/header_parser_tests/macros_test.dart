@@ -72,6 +72,14 @@ ${strings.headers}:
       expect(actual.getBindingAsString('TEST10'),
           expected.getBindingAsString('TEST10'));
     });
+    test('TEST11', () {
+      expect(actual.getBindingAsString('TEST11'),
+          expected.getBindingAsString('TEST11'));
+    });
+    test('TEST12', () {
+      expect(actual.getBindingAsString('TEST12'),
+          expected.getBindingAsString('TEST12'));
+    });
   });
 }
 
@@ -88,6 +96,9 @@ Library expectedLibrary() {
       Constant(name: 'TEST8', rawType: 'int', rawValue: '5'),
       Constant(name: 'TEST9', rawType: 'String', rawValue: r"'\$dollar'"),
       Constant(name: 'TEST10', rawType: 'String', rawValue: r"'test\'s'"),
+      Constant(name: 'TEST11', rawType: 'String', rawValue: r"'\x80'"),
+      Constant(
+          name: 'TEST12', rawType: 'String', rawValue: r"'hello\x0A\x09\x0D'"),
     ],
   );
 }

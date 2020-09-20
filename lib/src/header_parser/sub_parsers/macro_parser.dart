@@ -4,6 +4,7 @@
 
 import 'dart:ffi';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:path/path.dart' as p;
 import 'package:ffi/ffi.dart';
@@ -131,17 +132,39 @@ int _macroVariablevisitor(Pointer<clang_types.CXCursor> cursor,
           );
           break;
         case clang_types.CXEvalResultKind.CXEval_StrLiteral:
-          var value = Utf8.fromUtf8(clang.clang_EvalResult_getAsStr(e).cast());
-          // Escape $ character.
-          value = value.replaceAll(r'$', r'\$');
-          // Escape ' character, because our strings are enclosed with '.
-          value = value.replaceAll("'", r"\'");
+          final strPtr = clang.clang_EvalResult_getAsStr(e); // Do not free.
+          final length = Utf8.strlen(strPtr.cast());
+          final charList = Uint8List.view(
+              strPtr.cast<Uint8>().asTypedList(length).buffer, 0, length);
+
+          final sb = StringBuffer();
+          for (final char in charList) {
+            if (char >= 32 && char <= 126) {
+              // Handle the printable range of ASCII.
+              final printableChar = String.fromCharCode(char);
+              // Escape $ and ' character.
+              if (printableChar == '\$' || printableChar == "'") {
+                sb.write('\\$printableChar');
+              } else {
+                sb.write(printableChar);
+              }
+            } else {
+              /// Range [127..255] are extended ASCII and [0..31, 127] are
+              /// Control characters. Extended ASCII set cannot be decoded by
+              /// dart:convert and the Control characters cannot be printed
+              /// either, so we use their hexadecimal to write them.
+              /// E.g the New Line character `\n` (ASCII - 10) will be written
+              /// as `\x0A`.
+              final hexa = char.toRadixString(16).toUpperCase().padLeft(2, '0');
+              sb.write('\\x${hexa}');
+            }
+          }
           constant = Constant(
             usr: savedMacros[macroName].usr,
             originalName: savedMacros[macroName].originalName,
             name: macroName,
             rawType: 'String',
-            rawValue: "'${value}'",
+            rawValue: "'${sb.toString()}'",
           );
           break;
       }
