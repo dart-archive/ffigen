@@ -80,6 +80,10 @@ ${strings.headers}:
       expect(actual.getBindingAsString('TEST12'),
           expected.getBindingAsString('TEST12'));
     });
+    test('TEST13', () {
+      expect(actual.getBindingAsString('TEST13'),
+          expected.getBindingAsString('TEST13'));
+    });
   });
 }
 
@@ -99,6 +103,7 @@ Library expectedLibrary() {
       Constant(name: 'TEST11', rawType: 'String', rawValue: r"'\x80'"),
       Constant(
           name: 'TEST12', rawType: 'String', rawValue: r"'hello\x0A\x09\x0D'"),
+      Constant(name: 'TEST13', rawType: 'String', rawValue: r"'test\\'"),
     ],
   );
 }

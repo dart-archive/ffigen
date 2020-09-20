@@ -143,7 +143,9 @@ int _macroVariablevisitor(Pointer<clang_types.CXCursor> cursor,
               // Handle the printable range of ASCII.
               final printableChar = String.fromCharCode(char);
               // Escape $ and ' character.
-              if (printableChar == '\$' || printableChar == "'") {
+              if (printableChar == '\$' ||
+                  printableChar == "'" ||
+                  printableChar == '\\') {
                 sb.write('\\$printableChar');
               } else {
                 sb.write(printableChar);
