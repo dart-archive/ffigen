@@ -256,35 +256,7 @@ String _getWrittenRepresentation(String macroName, Pointer<Int8> strPtr) {
     // in the catch block.
     final result = Utf8.fromUtf8(strPtr.cast());
     for (final s in result.runes) {
-      // Handle ASCII control characters separately.
-      if (s >= 0 && s < 32 || s == 127) {
-        /// Handle these - `\b \t \n \v \f \r` as special cases.
-        switch (s) {
-          case 8: // \b
-            sb.write(r'\b');
-            break;
-          case 9: // \t
-            sb.write(r'\t');
-            break;
-          case 10: // \n
-            sb.write(r'\n');
-            break;
-          case 11: // \v
-            sb.write(r'\v');
-            break;
-          case 12: // \f
-            sb.write(r'\f');
-            break;
-          case 13: // \r
-            sb.write(r'\r');
-            break;
-          default: // For any other control character.
-            final h = s.toRadixString(16).toUpperCase().padLeft(2, '0');
-            sb.write('\\x${h}');
-        }
-      } else {
-        sb.write(_getWritableChar(s));
-      }
+      sb.write(_getWritableChar(s));
     }
   } catch (e) {
     // Handle string if it isn't Utf8. String is considered to be
@@ -297,20 +269,7 @@ String _getWrittenRepresentation(String macroName, Pointer<Int8> strPtr) {
         strPtr.cast<Uint8>().asTypedList(length).buffer, 0, length);
 
     for (final char in charList) {
-      if (char >= 32 && char <= 126) {
-        // Handle the printable range of ASCII.
-        final printableChar = _getWritableChar(char);
-        sb.write(printableChar);
-      } else {
-        /// Range [127..255] are extended ASCII and [0..31, 127] are
-        /// Control characters. Extended ASCII set cannot be decoded by
-        /// dart:convert and the Control characters cannot be printed
-        /// either, so we use their hexadecimal to write them.
-        /// E.g the New Line character `\n` (ASCII - 10) will be written
-        /// as `\x0A`.
-        final hexa = char.toRadixString(16).toUpperCase().padLeft(2, '0');
-        sb.write('\\x${hexa}');
-      }
+      sb.write(_getWritableChar(char, utf8: false));
     }
   }
 
@@ -320,15 +279,46 @@ String _getWrittenRepresentation(String macroName, Pointer<Int8> strPtr) {
 /// Creates a writable char from [char] code.
 ///
 /// E.g- `\` is converted to `\\`.
-String _getWritableChar(int char) {
-  final res = String.fromCharCode(char);
-  switch (res) {
-    case r"'":
-      return r"\'";
-    case r'$':
+String _getWritableChar(int char, {bool utf8 = true}) {
+  /// Handle control characters.
+  if (char >= 0 && char < 32 || char == 127) {
+    /// Handle these - `\b \t \n \v \f \r` as special cases.
+    switch (char) {
+      case 8: // \b
+        return r'\b';
+      case 9: // \t
+        return r'\t';
+      case 10: // \n
+        return r'\n';
+      case 11: // \v
+        return r'\v';
+      case 12: // \f
+        return r'\f';
+      case 13: // \r
+        return r'\r';
+      default:
+        final h = char.toRadixString(16).toUpperCase().padLeft(2, '0');
+        return '\\x${h}';
+    }
+  }
+
+  /// Handle characters - `$ ' \` these need to be escaped when writing to file.
+  switch (char) {
+    case 36: // $
       return r'\$';
-    case r'\':
+    case 39: // '
+      return r"\'";
+    case 92: // \
       return r'\\';
   }
-  return res;
+
+  /// Incase encoding is not Utf8, we know all characters will fall in [0..255]
+  /// Print range [128..255] as `\xHH`.
+  if (!utf8) {
+    final h = char.toRadixString(16).toUpperCase().padLeft(2, '0');
+    return '\\x${h}';
+  }
+
+  /// In all other cases, simply convert to string.
+  return String.fromCharCode(char);
 }
