@@ -132,41 +132,16 @@ int _macroVariablevisitor(Pointer<clang_types.CXCursor> cursor,
           );
           break;
         case clang_types.CXEvalResultKind.CXEval_StrLiteral:
-          final strPtr = clang.clang_EvalResult_getAsStr(e); // Do not free.
-          final length = Utf8.strlen(strPtr.cast());
-          final charList = Uint8List.view(
-              strPtr.cast<Uint8>().asTypedList(length).buffer, 0, length);
-
-          final sb = StringBuffer();
-          for (final char in charList) {
-            if (char >= 32 && char <= 126) {
-              // Handle the printable range of ASCII.
-              final printableChar = String.fromCharCode(char);
-              // Escape $ and ' character.
-              if (printableChar == '\$' ||
-                  printableChar == "'" ||
-                  printableChar == '\\') {
-                sb.write('\\$printableChar');
-              } else {
-                sb.write(printableChar);
-              }
-            } else {
-              /// Range [127..255] are extended ASCII and [0..31, 127] are
-              /// Control characters. Extended ASCII set cannot be decoded by
-              /// dart:convert and the Control characters cannot be printed
-              /// either, so we use their hexadecimal to write them.
-              /// E.g the New Line character `\n` (ASCII - 10) will be written
-              /// as `\x0A`.
-              final hexa = char.toRadixString(16).toUpperCase().padLeft(2, '0');
-              sb.write('\\x${hexa}');
-            }
-          }
+          final rawValue = _getWrittenRepresentation(
+            macroName,
+            clang.clang_EvalResult_getAsStr(e),
+          );
           constant = Constant(
             usr: savedMacros[macroName].usr,
             originalName: savedMacros[macroName].originalName,
             name: macroName,
             rawType: 'String',
-            rawValue: "'${sb.toString()}'",
+            rawValue: "'${rawValue}'",
           );
           break;
       }
@@ -265,4 +240,95 @@ class MacroVariableString {
     final nameStart = lengthEnd + 1;
     return s.substring(nameStart, nameStart + len);
   }
+}
+
+/// Gets a written representation string of a C string.
+///
+/// E.g- For a string "Hello\nWorld", The new line character is converted to \n.
+/// Note: The string is considered to be Utf8, but is treated as Extended ASCII,
+/// if the conversion fails.
+String _getWrittenRepresentation(String macroName, Pointer<Int8> strPtr) {
+  final sb = StringBuffer();
+  try {
+    // Consider string to be Utf8 encoded by default.
+    sb.clear();
+    // This throws a Format Exception if string isn't Utf8 so that we handle it
+    // in the catch block.
+    final result = Utf8.fromUtf8(strPtr.cast());
+    for (final s in result.runes) {
+      // Handle ASCII control characters separately.
+      if (s >= 0 && s < 32 || s == 127) {
+        /// Handle these - `\b \t \n \v \f \r` as special cases.
+        switch (s) {
+          case 8: // \b
+            sb.write(r'\b');
+            break;
+          case 9: // \t
+            sb.write(r'\t');
+            break;
+          case 10: // \n
+            sb.write(r'\n');
+            break;
+          case 11: // \v
+            sb.write(r'\v');
+            break;
+          case 12: // \f
+            sb.write(r'\f');
+            break;
+          case 13: // \r
+            sb.write(r'\r');
+            break;
+          default: // For any other control character.
+            final h = s.toRadixString(16).toUpperCase().padLeft(2, '0');
+            sb.write('\\x${h}');
+        }
+      } else {
+        sb.write(_getWritableChar(s));
+      }
+    }
+  } catch (e) {
+    // Handle string if it isn't Utf8. String is considered to be
+    // Extended ASCII in this case.
+    _logger.warning(
+        "Couldn't decode Macro string '$macroName' as Utf8, using ASCII instead.");
+    sb.clear();
+    final length = Utf8.strlen(strPtr.cast());
+    final charList = Uint8List.view(
+        strPtr.cast<Uint8>().asTypedList(length).buffer, 0, length);
+
+    for (final char in charList) {
+      if (char >= 32 && char <= 126) {
+        // Handle the printable range of ASCII.
+        final printableChar = _getWritableChar(char);
+        sb.write(printableChar);
+      } else {
+        /// Range [127..255] are extended ASCII and [0..31, 127] are
+        /// Control characters. Extended ASCII set cannot be decoded by
+        /// dart:convert and the Control characters cannot be printed
+        /// either, so we use their hexadecimal to write them.
+        /// E.g the New Line character `\n` (ASCII - 10) will be written
+        /// as `\x0A`.
+        final hexa = char.toRadixString(16).toUpperCase().padLeft(2, '0');
+        sb.write('\\x${hexa}');
+      }
+    }
+  }
+
+  return sb.toString();
+}
+
+/// Creates a writable char from [char] code.
+///
+/// E.g- `\` is converted to `\\`.
+String _getWritableChar(int char) {
+  final res = String.fromCharCode(char);
+  switch (res) {
+    case r"'":
+      return r"\'";
+    case r'$':
+      return r'\$';
+    case r'\':
+      return r'\\';
+  }
+  return res;
 }

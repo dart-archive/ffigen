@@ -102,7 +102,7 @@ Library expectedLibrary() {
       Constant(name: 'TEST10', rawType: 'String', rawValue: r"'test\'s'"),
       Constant(name: 'TEST11', rawType: 'String', rawValue: r"'\x80'"),
       Constant(
-          name: 'TEST12', rawType: 'String', rawValue: r"'hello\x0A\x09\x0D'"),
+          name: 'TEST12', rawType: 'String', rawValue: r"'hello\n\t\r\v\b'"),
       Constant(name: 'TEST13', rawType: 'String', rawValue: r"'test\\'"),
     ],
   );

@@ -21,5 +21,5 @@
 
 // These test that extended ASCII and control characters are handled properly.
 #define TEST11 "\x80"
-#define TEST12 "hello\n\t\r"
+#define TEST12 "hello\n\t\r\v\b"
 #define TEST13 "test\\"
