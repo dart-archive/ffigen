@@ -15,6 +15,11 @@
 
 #define TEST8 5,2,3
 
-// These tests that special characters are escaped properly.
+// These test that special characters are escaped properly.
 #define TEST9 "$dollar"
 #define TEST10 "test's"
+
+// These test that extended ASCII and control characters are handled properly.
+#define TEST11 "\x80"
+#define TEST12 "hello\n\t\r\v\b"
+#define TEST13 "test\\"

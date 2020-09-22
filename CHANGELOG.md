@@ -1,3 +1,6 @@
+# 1.0.3
+- Fixed errors due to extended ASCII and control characters in macro strings.
+
 # 1.0.2
 - Fix indentation for pub's readme.
 

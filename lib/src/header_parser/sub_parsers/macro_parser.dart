@@ -4,6 +4,7 @@
 
 import 'dart:ffi';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:path/path.dart' as p;
 import 'package:ffi/ffi.dart';
@@ -131,17 +132,16 @@ int _macroVariablevisitor(Pointer<clang_types.CXCursor> cursor,
           );
           break;
         case clang_types.CXEvalResultKind.CXEval_StrLiteral:
-          var value = Utf8.fromUtf8(clang.clang_EvalResult_getAsStr(e).cast());
-          // Escape $ character.
-          value = value.replaceAll(r'$', r'\$');
-          // Escape ' character, because our strings are enclosed with '.
-          value = value.replaceAll("'", r"\'");
+          final rawValue = _getWrittenRepresentation(
+            macroName,
+            clang.clang_EvalResult_getAsStr(e),
+          );
           constant = Constant(
             usr: savedMacros[macroName].usr,
             originalName: savedMacros[macroName].originalName,
             name: macroName,
             rawType: 'String',
-            rawValue: "'${value}'",
+            rawValue: "'${rawValue}'",
           );
           break;
       }
@@ -240,4 +240,85 @@ class MacroVariableString {
     final nameStart = lengthEnd + 1;
     return s.substring(nameStart, nameStart + len);
   }
+}
+
+/// Gets a written representation string of a C string.
+///
+/// E.g- For a string "Hello\nWorld", The new line character is converted to \n.
+/// Note: The string is considered to be Utf8, but is treated as Extended ASCII,
+/// if the conversion fails.
+String _getWrittenRepresentation(String macroName, Pointer<Int8> strPtr) {
+  final sb = StringBuffer();
+  try {
+    // Consider string to be Utf8 encoded by default.
+    sb.clear();
+    // This throws a Format Exception if string isn't Utf8 so that we handle it
+    // in the catch block.
+    final result = Utf8.fromUtf8(strPtr.cast());
+    for (final s in result.runes) {
+      sb.write(_getWritableChar(s));
+    }
+  } catch (e) {
+    // Handle string if it isn't Utf8. String is considered to be
+    // Extended ASCII in this case.
+    _logger.warning(
+        "Couldn't decode Macro string '$macroName' as Utf8, using ASCII instead.");
+    sb.clear();
+    final length = Utf8.strlen(strPtr.cast());
+    final charList = Uint8List.view(
+        strPtr.cast<Uint8>().asTypedList(length).buffer, 0, length);
+
+    for (final char in charList) {
+      sb.write(_getWritableChar(char, utf8: false));
+    }
+  }
+
+  return sb.toString();
+}
+
+/// Creates a writable char from [char] code.
+///
+/// E.g- `\` is converted to `\\`.
+String _getWritableChar(int char, {bool utf8 = true}) {
+  /// Handle control characters.
+  if (char >= 0 && char < 32 || char == 127) {
+    /// Handle these - `\b \t \n \v \f \r` as special cases.
+    switch (char) {
+      case 8: // \b
+        return r'\b';
+      case 9: // \t
+        return r'\t';
+      case 10: // \n
+        return r'\n';
+      case 11: // \v
+        return r'\v';
+      case 12: // \f
+        return r'\f';
+      case 13: // \r
+        return r'\r';
+      default:
+        final h = char.toRadixString(16).toUpperCase().padLeft(2, '0');
+        return '\\x${h}';
+    }
+  }
+
+  /// Handle characters - `$ ' \` these need to be escaped when writing to file.
+  switch (char) {
+    case 36: // $
+      return r'\$';
+    case 39: // '
+      return r"\'";
+    case 92: // \
+      return r'\\';
+  }
+
+  /// In case encoding is not Utf8, we know all characters will fall in [0..255]
+  /// Print range [128..255] as `\xHH`.
+  if (!utf8) {
+    final h = char.toRadixString(16).toUpperCase().padLeft(2, '0');
+    return '\\x${h}';
+  }
+
+  /// In all other cases, simply convert to string.
+  return String.fromCharCode(char);
 }
