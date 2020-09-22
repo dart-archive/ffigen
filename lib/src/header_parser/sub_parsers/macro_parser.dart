@@ -312,7 +312,7 @@ String _getWritableChar(int char, {bool utf8 = true}) {
       return r'\\';
   }
 
-  /// Incase encoding is not Utf8, we know all characters will fall in [0..255]
+  /// In case encoding is not Utf8, we know all characters will fall in [0..255]
   /// Print range [128..255] as `\xHH`.
   if (!utf8) {
     final h = char.toRadixString(16).toUpperCase().padLeft(2, '0');
