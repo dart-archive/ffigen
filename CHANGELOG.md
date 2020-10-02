@@ -1,3 +1,6 @@
+# 1.0.4
+- Updated code to use `dart format` instead of `dartfmt` for sdk version `>= 2.10.0`.
+
 # 1.0.3
 - Fixed errors due to extended ASCII and control characters in macro strings.
 

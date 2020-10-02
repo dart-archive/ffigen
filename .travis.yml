@@ -21,7 +21,7 @@ before_install:
   - export PATH="/usr/lib/llvm-10/bin:$PATH"
 
 before_script:
-  - 'pub run ffigen:setup'
+  - 'dart pub run ffigen:setup'
   - cd test/native_test && dart build_test_dylib.dart && cd ../..
 
 matrix:

@@ -8,6 +8,7 @@ import 'package:cli_util/cli_util.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 import 'package:path/path.dart' as p;
+import 'package:pub_semver/pub_semver.dart';
 import 'binding.dart';
 import 'utils.dart';
 import 'writer.dart';
@@ -96,15 +97,20 @@ class Library {
 
   /// Formats a file using `dartfmt`.
   void _dartFmt(String path) {
-    final dartFmt = p.join(getSdkPath(), 'bin', 'dartfmt');
-    try {
-      final result = Process.runSync(dartFmt, ['-w', path],
-          runInShell: Platform.isWindows);
-      if (result.stderr.toString().isNotEmpty) {
-        _logger.severe(result.stderr);
-      }
-    } on ProcessException {
-      _logger.severe("Couldn't format bindings, unable to call $dartFmt.");
+    final sdkPath = getSdkPath();
+    final versionAtleast2dot10 = Version.parse(
+            File(p.join(sdkPath, 'version')).readAsStringSync().trim()) >=
+        Version(2, 10, 0);
+
+    /// Starting from version `>=2.10.0` the dart sdk has a unified `dart` tool
+    /// So we call `dart format` instead of `dartfmt`.
+    final result = versionAtleast2dot10
+        ? Process.runSync(p.join(sdkPath, 'bin', 'dart'), ['format', path],
+            runInShell: Platform.isWindows)
+        : Process.runSync(p.join(sdkPath, 'bin', 'dartfmt'), ['-w', path],
+            runInShell: Platform.isWindows);
+    if (result.stderr.toString().isNotEmpty) {
+      _logger.severe(result.stderr);
     }
   }
 
