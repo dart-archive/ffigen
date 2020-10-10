@@ -27,6 +27,8 @@ ${strings.output}: 'unused'
 ${strings.headers}:
   ${strings.entryPoints}:
     - 'test/header_parser_tests/macros.h'
+  ${strings.includeDirectives}:
+    - '**macros.h'
         ''') as yaml.YamlMap),
       );
     });
@@ -84,6 +86,18 @@ ${strings.headers}:
       expect(actual.getBindingAsString('TEST13'),
           expected.getBindingAsString('TEST13'));
     });
+    test('TEST14', () {
+      expect(actual.getBindingAsString('TEST14'),
+          expected.getBindingAsString('TEST14'));
+    });
+    test('TEST15', () {
+      expect(actual.getBindingAsString('TEST15'),
+          expected.getBindingAsString('TEST15'));
+    });
+    test('TEST16', () {
+      expect(actual.getBindingAsString('TEST16'),
+          expected.getBindingAsString('TEST16'));
+    });
   });
 }
 
@@ -104,6 +118,13 @@ Library expectedLibrary() {
       Constant(
           name: 'TEST12', rawType: 'String', rawValue: r"'hello\n\t\r\v\b'"),
       Constant(name: 'TEST13', rawType: 'String', rawValue: r"'test\\'"),
+      Constant(
+          name: 'TEST14', rawType: 'double', rawValue: strings.doubleInfinity),
+      Constant(
+          name: 'TEST15',
+          rawType: 'double',
+          rawValue: strings.doubleNegativeInfinity),
+      Constant(name: 'TEST16', rawType: 'double', rawValue: strings.doubleNaN),
     ],
   );
 }

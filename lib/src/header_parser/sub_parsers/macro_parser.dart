@@ -6,6 +6,7 @@ import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:ffigen/src/strings.dart';
 import 'package:path/path.dart' as p;
 import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
@@ -326,12 +327,13 @@ String _getWritableChar(int char, {bool utf8 = true}) {
 
 /// Converts a double to a string, handling cases like Infinity and NaN.
 String _writeDoubleAsString(double d) {
-  if (d.isInfinite) {
-    return d.isNegative ? 'double.negativeInfinity' : 'double.infinity';
+  if (d.isFinite) {
+    return d.toString();
+  } else {
+    // The only Non-Finite numbers are Infinity, NegativeInfinity and NaN.
+    if (d.isInfinite) {
+      return d.isNegative ? doubleNegativeInfinity : doubleInfinity;
+    }
+    return doubleNaN;
   }
-  if (d.isNaN) {
-    return 'double.nan';
-  }
-
-  return d.toString();
 }

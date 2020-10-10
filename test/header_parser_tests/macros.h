@@ -1,3 +1,5 @@
+#include<math.h>
+
 #define TEST1 1.1
 #define TEST2 10
 #define TEST3 (TEST1 + TEST2)
@@ -23,3 +25,8 @@
 #define TEST11 "\x80"
 #define TEST12 "hello\n\t\r\v\b"
 #define TEST13 "test\\"
+
+// Infinity, NaN and Negative Infinity.
+#define TEST14 INFINITY
+#define TEST15 -INFINITY
+#define TEST16 NAN
