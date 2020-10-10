@@ -1,3 +1,6 @@
+# 1.0.5
+- Fixed issues with generating macros of type `double.Infinity` and `double.NaN`.
+
 # 1.0.4
 - Updated code to use `dart format` instead of `dartfmt` for sdk version `>= 2.10.0`.
 

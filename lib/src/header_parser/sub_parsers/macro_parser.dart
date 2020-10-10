@@ -128,7 +128,8 @@ int _macroVariablevisitor(Pointer<clang_types.CXCursor> cursor,
             originalName: savedMacros[macroName].originalName,
             name: macroName,
             rawType: 'double',
-            rawValue: clang.clang_EvalResult_getAsDouble(e).toString(),
+            rawValue:
+                _writeDoubleAsString(clang.clang_EvalResult_getAsDouble(e)),
           );
           break;
         case clang_types.CXEvalResultKind.CXEval_StrLiteral:
@@ -321,4 +322,16 @@ String _getWritableChar(int char, {bool utf8 = true}) {
 
   /// In all other cases, simply convert to string.
   return String.fromCharCode(char);
+}
+
+/// Converts a double to a string, handling cases like Infinity and NaN.
+String _writeDoubleAsString(double d) {
+  if (d.isInfinite) {
+    return d.isNegative ? 'double.negativeInfinity' : 'double.infinity';
+  }
+  if (d.isNaN) {
+    return 'double.nan';
+  }
+
+  return d.toString();
 }
