@@ -6,7 +6,7 @@ import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:ffigen/src/strings.dart';
+import 'package:ffigen/src/strings.dart' as strings;
 import 'package:path/path.dart' as p;
 import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
@@ -332,8 +332,10 @@ String _writeDoubleAsString(double d) {
   } else {
     // The only Non-Finite numbers are Infinity, NegativeInfinity and NaN.
     if (d.isInfinite) {
-      return d.isNegative ? doubleNegativeInfinity : doubleInfinity;
+      return d.isNegative
+          ? strings.doubleNegativeInfinity
+          : strings.doubleInfinity;
     }
-    return doubleNaN;
+    return strings.doubleNaN;
   }
 }
