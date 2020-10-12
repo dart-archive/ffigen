@@ -108,3 +108,8 @@ const preamble = 'preamble';
 const libclang_dylib_linux = 'libwrapped_clang.so';
 const libclang_dylib_macos = 'libwrapped_clang.dylib';
 const libclang_dylib_windows = 'wrapped_clang.dll';
+
+// Writen doubles
+const doubleInfinity = 'double.infinity';
+const doubleNegativeInfinity = 'double.negativeInfinity';
+const doubleNaN = 'double.nan';

@@ -6,6 +6,7 @@ import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:ffigen/src/strings.dart' as strings;
 import 'package:path/path.dart' as p;
 import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
@@ -128,7 +129,8 @@ int _macroVariablevisitor(Pointer<clang_types.CXCursor> cursor,
             originalName: savedMacros[macroName].originalName,
             name: macroName,
             rawType: 'double',
-            rawValue: clang.clang_EvalResult_getAsDouble(e).toString(),
+            rawValue:
+                _writeDoubleAsString(clang.clang_EvalResult_getAsDouble(e)),
           );
           break;
         case clang_types.CXEvalResultKind.CXEval_StrLiteral:
@@ -321,4 +323,19 @@ String _getWritableChar(int char, {bool utf8 = true}) {
 
   /// In all other cases, simply convert to string.
   return String.fromCharCode(char);
+}
+
+/// Converts a double to a string, handling cases like Infinity and NaN.
+String _writeDoubleAsString(double d) {
+  if (d.isFinite) {
+    return d.toString();
+  } else {
+    // The only Non-Finite numbers are Infinity, NegativeInfinity and NaN.
+    if (d.isInfinite) {
+      return d.isNegative
+          ? strings.doubleNegativeInfinity
+          : strings.doubleInfinity;
+    }
+    return strings.doubleNaN;
+  }
 }
