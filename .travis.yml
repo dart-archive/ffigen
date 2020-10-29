@@ -1,6 +1,6 @@
 language: dart
 dart:
-- dev
+- stable
 # Only building master means that we don't run two builds for each pull request.
 dart_task:
 - test: --platform vm
@@ -26,6 +26,6 @@ before_script:
 
 matrix:
   include:
-  - dart: dev
+  - dart: stable
     script: ./tool/travis.sh
     name: Collect and report coverage.
