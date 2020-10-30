@@ -47,6 +47,10 @@ class Typedef {
         dep.addAll(base.nativeFunc.getDependencies());
       }
     }
+    final returnTypeBase = returnType.getBaseType();
+    if (returnTypeBase.broadType == BroadType.NativeFunction) {
+      dep.addAll(returnTypeBase.nativeFunc.getDependencies());
+    }
     dep.add(this);
     return dep;
   }

@@ -66,6 +66,16 @@ _func ??= _dylib.lookupFunction<_c_func,_dart_func>('func');
 }
 _dart_func _func;
 
+void funcWithNativeFunc(
+  ffi.Pointer<ffi.NativeFunction<withTypedefReturnType>> named,
+) {
+_funcWithNativeFunc ??= _dylib.lookupFunction<_c_funcWithNativeFunc,_dart_funcWithNativeFunc>('funcWithNativeFunc');
+  return _funcWithNativeFunc(
+    named,
+  );
+}
+_dart_funcWithNativeFunc _funcWithNativeFunc;
+
 }
 
 class struc extends ffi.Struct{
@@ -86,6 +96,20 @@ typedef _c_func = ffi.Void Function(
 
 typedef _dart_func = void Function(
   ffi.Pointer<ffi.NativeFunction<_typedefC_4>> unnamed1,
+);
+
+typedef _typedefC_5 = ffi.Void Function(
+);
+
+typedef withTypedefReturnType = ffi.Pointer<ffi.NativeFunction<_typedefC_5>> Function(
+);
+
+typedef _c_funcWithNativeFunc = ffi.Void Function(
+  ffi.Pointer<ffi.NativeFunction<withTypedefReturnType>> named,
+);
+
+typedef _dart_funcWithNativeFunc = void Function(
+  ffi.Pointer<ffi.NativeFunction<withTypedefReturnType>> named,
 );
 
 typedef _typedefC_1 = ffi.Void Function(

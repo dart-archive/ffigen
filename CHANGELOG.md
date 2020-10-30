@@ -1,3 +1,6 @@
+# 1.0.6
+- Fixed missing typedefs nested in another typedef's return types.
+
 # 1.0.5
 - Fixed issues with generating macros of type `double.Infinity` and `double.NaN`.
 

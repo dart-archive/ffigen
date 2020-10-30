@@ -11,3 +11,7 @@ void func(void (*unnamed1)(void (*unnamed2)()));
 
 // This will be removed because 'long double' is unsupported.
 void funcNestedUnimplemented(void (*unnamed1)(void (*unnamed2)(long double)));
+
+typedef void (*insideReturnType)();
+typedef insideReturnType (*withTypedefReturnType)();
+void funcWithNativeFunc(withTypedefReturnType named);
