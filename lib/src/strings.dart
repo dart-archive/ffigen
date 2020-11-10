@@ -81,6 +81,7 @@ const sizemap_native_mapping = <String, int>{
 };
 
 const supportedNativeType_mappings = <String, SupportedNativeType>{
+  'Void': SupportedNativeType.Void,
   'Uint8': SupportedNativeType.Uint8,
   'Uint16': SupportedNativeType.Uint16,
   'Uint32': SupportedNativeType.Uint32,
@@ -90,6 +91,8 @@ const supportedNativeType_mappings = <String, SupportedNativeType>{
   'Int32': SupportedNativeType.Int32,
   'Int64': SupportedNativeType.Int64,
   'IntPtr': SupportedNativeType.IntPtr,
+  'Float': SupportedNativeType.Float,
+  'Double': SupportedNativeType.Double,
 };
 
 // Boolean flags.
