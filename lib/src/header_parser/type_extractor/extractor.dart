@@ -30,9 +30,13 @@ Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String parentName}) {
       pt.dispose();
       return Type.pointer(s);
     case clang_types.CXTypeKind.CXType_Typedef:
-      // Get name from typedef name if config allows.
+      final spelling = cxtype.spelling();
+      if (config.typedefNativeTypeMappings.containsKey(spelling)) {
+        _logger.fine('  Type Mapped from typedef-map');
+        return Type.nativeType(config.typedefNativeTypeMappings[spelling]);
+      }
+      // Get name from supported typedef name if config allows.
       if (config.useSupportedTypedefs) {
-        final spelling = cxtype.spelling();
         if (suportedTypedefToSuportedNativeType.containsKey(spelling)) {
           _logger.fine('  Type Mapped from supported typedef');
           return Type.nativeType(suportedTypedefToSuportedNativeType[spelling]);

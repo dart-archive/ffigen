@@ -48,3 +48,9 @@ typedef enum _NamedEnumInTypedef
 {
     b=0
 } NamedEnumInTypedef;
+
+// Should be treated as IntPtr when used.
+typedef char specified_type_as_IntPtr;
+typedef specified_type_as_IntPtr nesting_a_specified_type;
+
+void func3(specified_type_as_IntPtr, nesting_a_specified_type b);
