@@ -40,7 +40,8 @@ Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String parentName}) {
       }
 
       // This is important or we get stuck in infinite recursion.
-      final ct = clang.clang_getCanonicalType_wrap(cxtype);
+      final ct = clang.clang_getTypedefDeclUnderlyingType_wrap(
+          clang.clang_getTypeDeclaration_wrap(cxtype));
 
       final s = getCodeGenType(ct, parentName: parentName ?? cxtype.spelling());
       ct.dispose();

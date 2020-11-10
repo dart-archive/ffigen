@@ -98,10 +98,10 @@ typedef _dart_func = void Function(
   ffi.Pointer<ffi.NativeFunction<_typedefC_4>> unnamed1,
 );
 
-typedef _typedefC_5 = ffi.Void Function(
+typedef insideReturnType = ffi.Void Function(
 );
 
-typedef withTypedefReturnType = ffi.Pointer<ffi.NativeFunction<_typedefC_5>> Function(
+typedef withTypedefReturnType = ffi.Pointer<ffi.NativeFunction<insideReturnType>> Function(
 );
 
 typedef _c_funcWithNativeFunc = ffi.Void Function(
