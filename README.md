@@ -244,6 +244,20 @@ preamble: |
 </td>
   </tr>
   <tr>
+    <td>typedef-map</td>
+    <td>Map typedefs to Native Types.<br> Values can only be
+    <i>Void, Uint8, Int8, Uint16, Int16, Uint32, Int32, Uint64, Int64, IntPtr, Float and Double.</i>
+    </td>
+    <td>
+
+```yaml
+typedef-map:
+  'my_custom_type': 'IntPtr'
+  'size_t': 'Int64'
+```
+  </td>
+  </tr>
+  <tr>
     <td>size-map</td>
     <td>Size of integers to use (in bytes).<br>
     <b>The defaults (see example) <i>may</i> not be portable on all OS.

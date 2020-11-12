@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 import 'dart:io';
 
+import 'package:ffigen/src/code_generator/type.dart';
 import 'package:ffigen/src/find_resource.dart';
 import 'package:ffigen/src/header_parser/clang_bindings/clang_bindings.dart'
     as clang;
@@ -49,6 +50,7 @@ const exclude = 'exclude';
 const rename = 'rename';
 const memberRename = 'member-rename';
 const sizemap = 'size-map';
+const typedefmap = 'typedef-map';
 
 // Sizemap values.
 const SChar = 'char';
@@ -76,6 +78,21 @@ const sizemap_native_mapping = <String, int>{
   LongLong: clang.CXTypeKind.CXType_LongLong,
   ULongLong: clang.CXTypeKind.CXType_ULongLong,
   Enum: clang.CXTypeKind.CXType_Enum
+};
+
+const supportedNativeType_mappings = <String, SupportedNativeType>{
+  'Void': SupportedNativeType.Void,
+  'Uint8': SupportedNativeType.Uint8,
+  'Uint16': SupportedNativeType.Uint16,
+  'Uint32': SupportedNativeType.Uint32,
+  'Uint64': SupportedNativeType.Uint64,
+  'Int8': SupportedNativeType.Int8,
+  'Int16': SupportedNativeType.Int16,
+  'Int32': SupportedNativeType.Int32,
+  'Int64': SupportedNativeType.Int64,
+  'IntPtr': SupportedNativeType.IntPtr,
+  'Float': SupportedNativeType.Float,
+  'Double': SupportedNativeType.Double,
 };
 
 // Boolean flags.

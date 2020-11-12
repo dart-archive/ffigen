@@ -1,3 +1,6 @@
+# 1.1.0
+- `typedef-map` can now be used to map a typedef name to a native type directly.
+
 # 1.0.6
 - Fixed missing typedefs nested in another typedef's return types.
 

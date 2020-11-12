@@ -31,6 +31,8 @@ ${strings.structs}:
   ${strings.exclude}:
     - ExcludedStruct
     - _ExcludedStruct
+${strings.typedefmap}:
+  'specified_type_as_IntPtr': 'IntPtr'
         ''') as yaml.YamlMap),
       );
     });
@@ -107,6 +109,17 @@ Library expectedLibrary() {
         name: 'NamedEnumInTypedef',
         enumConstants: [
           EnumConstant(name: 'b', value: 0),
+        ],
+      ),
+      Func(
+        name: 'func3',
+        returnType: Type.nativeType(SupportedNativeType.Void),
+        parameters: [
+          Parameter(type: Type.nativeType(SupportedNativeType.IntPtr)),
+          Parameter(
+            type: Type.nativeType(SupportedNativeType.IntPtr),
+            name: 'b',
+          ),
         ],
       ),
     ],

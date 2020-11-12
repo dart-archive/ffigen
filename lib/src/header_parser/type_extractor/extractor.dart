@@ -30,9 +30,13 @@ Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String parentName}) {
       pt.dispose();
       return Type.pointer(s);
     case clang_types.CXTypeKind.CXType_Typedef:
-      // Get name from typedef name if config allows.
+      final spelling = cxtype.spelling();
+      if (config.typedefNativeTypeMappings.containsKey(spelling)) {
+        _logger.fine('  Type Mapped from typedef-map');
+        return Type.nativeType(config.typedefNativeTypeMappings[spelling]);
+      }
+      // Get name from supported typedef name if config allows.
       if (config.useSupportedTypedefs) {
-        final spelling = cxtype.spelling();
         if (suportedTypedefToSuportedNativeType.containsKey(spelling)) {
           _logger.fine('  Type Mapped from supported typedef');
           return Type.nativeType(suportedTypedefToSuportedNativeType[spelling]);
@@ -40,7 +44,8 @@ Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String parentName}) {
       }
 
       // This is important or we get stuck in infinite recursion.
-      final ct = clang.clang_getCanonicalType_wrap(cxtype);
+      final ct = clang.clang_getTypedefDeclUnderlyingType_wrap(
+          clang.clang_getTypeDeclaration_wrap(cxtype));
 
       final s = getCodeGenType(ct, parentName: parentName ?? cxtype.spelling());
       ct.dispose();

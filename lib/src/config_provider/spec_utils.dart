@@ -71,6 +71,37 @@ bool sizemapValidator(String name, dynamic yamlConfig) {
   return true;
 }
 
+Map<String, SupportedNativeType> typedefmapExtractor(dynamic yamlConfig) {
+  final resultMap = <String, SupportedNativeType>{};
+  final typedefmap = yamlConfig as YamlMap;
+  if (typedefmap != null) {
+    for (final typeName in typedefmap.keys) {
+      if (typedefmap[typeName] is String &&
+          strings.supportedNativeType_mappings
+              .containsKey(typedefmap[typeName])) {
+        // Map this typename to specified supportedNativeType.
+        resultMap[typeName as String] =
+            strings.supportedNativeType_mappings[typedefmap[typeName]];
+      }
+    }
+  }
+  return resultMap;
+}
+
+bool typedefmapValidator(String name, dynamic yamlConfig) {
+  if (!checkType<YamlMap>([name], yamlConfig)) {
+    return false;
+  }
+  for (final value in (yamlConfig as YamlMap).values) {
+    if (value is! String ||
+        !strings.supportedNativeType_mappings.containsKey(value)) {
+      _logger.severe("Unknown value of subkey '$value' in '$name'.");
+    }
+  }
+
+  return true;
+}
+
 List<String> compilerOptsExtractor(dynamic value) =>
     (value as String)?.split(' ');
 

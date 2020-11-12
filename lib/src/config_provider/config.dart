@@ -59,6 +59,11 @@ class Config {
   bool get useSupportedTypedefs => _useSupportedTypedefs;
   bool _useSupportedTypedefs;
 
+  /// Stores typedef name to NativeType mappings specified by user.
+  Map<String, SupportedNativeType> get typedefNativeTypeMappings =>
+      _typedefNativeTypeMappings;
+  Map<String, SupportedNativeType> _typedefNativeTypeMappings;
+
   /// Extracted Doc comment type.
   CommentType get commentType => _commentType;
   CommentType _commentType;
@@ -222,6 +227,13 @@ class Config {
             }
           }
         },
+      ),
+      strings.typedefmap: Specification<Map<String, SupportedNativeType>>(
+        validator: typedefmapValidator,
+        extractor: typedefmapExtractor,
+        defaultValue: () => <String, SupportedNativeType>{},
+        extractedResult: (dynamic result) => _typedefNativeTypeMappings =
+            result as Map<String, SupportedNativeType>,
       ),
       strings.sort: Specification<bool>(
         requirement: Requirement.no,
