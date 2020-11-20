@@ -92,7 +92,7 @@ class Config {
   String _preamble;
   Config._();
 
-  /// If typedef of supported types(int8_t) should be directly used.
+  /// If `Dart_Handle` should be mapped with Handle/Object.
   bool get useDartHandle => _useDartHandle;
   bool _useDartHandle;
 

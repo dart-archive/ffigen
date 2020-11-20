@@ -30,7 +30,7 @@ Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String parentName}) {
       final s = getCodeGenType(pt, parentName: parentName);
       pt.dispose();
 
-      // Handle Pointer to Dart_Handle as Handle.
+      // Replace Pointer<_Dart_Handle> with Handle.
       if (config.useDartHandle &&
           s.broadType == BroadType.Struct &&
           s.struc.usr == strings.dartHandleUsr) {
@@ -125,7 +125,7 @@ Type _extractfromRecord(Pointer<clang_types.CXType> cxtype, String parentName) {
             name: structName, ignoreFilter: true);
         type = Type.struct(struc);
 
-        // Add to bindings if it's not DartHandle.
+        // Add to bindings if it's not Dart_Handle.
         if (!(config.useDartHandle && structUsr == strings.dartHandleUsr)) {
           addToBindings(struc);
         }
