@@ -101,19 +101,20 @@ const useSupportedTypedefs = 'use-supported-typedefs';
 const warnWhenRemoving = 'warn-when-removing';
 const arrayWorkaround = 'array-workaround';
 const dartBool = 'dart-bool';
+const useDartHandle = 'use-dart-handle';
 
 const comments = 'comments';
-// Sub-fields of comments
+// Sub-fields of comments.
 const style = 'style';
 const length = 'length';
 
-// Sub-fields of style
+// Sub-fields of style.
 const doxygen = 'doxygen';
 const any = 'any';
-// Sub-fields of length
+// Sub-fields of length.
 const brief = 'brief';
 const full = 'full';
-// Cmd line comment option
+// Cmd line comment option.
 const fparseAllComments = '-fparse-all-comments';
 
 // Library input.
@@ -126,7 +127,10 @@ const libclang_dylib_linux = 'libwrapped_clang.so';
 const libclang_dylib_macos = 'libwrapped_clang.dylib';
 const libclang_dylib_windows = 'wrapped_clang.dll';
 
-// Writen doubles
+// Writen doubles.
 const doubleInfinity = 'double.infinity';
 const doubleNegativeInfinity = 'double.negativeInfinity';
 const doubleNaN = 'double.nan';
+
+/// USR for struct `_Dart_Handle`.
+const dartHandleUsr = 'c:@S@_Dart_Handle';

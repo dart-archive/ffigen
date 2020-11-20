@@ -39,6 +39,9 @@ enum BroadType {
   Struct,
   NativeFunction,
 
+  /// Represents a Dart_Handle.
+  Handle,
+
   /// Stores its element type in NativeType as only those are supported.
   ConstantArray,
   IncompleteArray,
@@ -130,6 +133,9 @@ class Type {
     return Type._(
         broadType: BroadType.Unimplemented, unimplementedReason: reason);
   }
+  factory Type.handle() {
+    return Type._(broadType: BroadType.Handle);
+  }
 
   /// Get base type for any type.
   ///
@@ -176,6 +182,8 @@ class Type {
         return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
       case BroadType.Boolean: // Booleans are treated as uint8.
         return '${w.ffiLibraryPrefix}.${_primitives[SupportedNativeType.Uint8].c}';
+      case BroadType.Handle:
+        return '${w.ffiLibraryPrefix}.Handle';
       default:
         throw Exception('cType unknown');
     }
@@ -199,6 +207,8 @@ class Type {
         return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
       case BroadType.Boolean: // Booleans are treated as uint8.
         return _primitives[SupportedNativeType.Uint8].dart;
+      case BroadType.Handle:
+        return 'Object';
       default:
         throw Exception('dart type unknown for ${broadType.toString()}');
     }

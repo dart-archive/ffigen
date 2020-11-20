@@ -92,6 +92,10 @@ class Config {
   String _preamble;
   Config._();
 
+  /// If typedef of supported types(int8_t) should be directly used.
+  bool get useDartHandle => _useDartHandle;
+  bool _useDartHandle;
+
   /// Create config from Yaml map.
   factory Config.fromYaml(YamlMap map) {
     final configspecs = Config._();
@@ -292,6 +296,13 @@ class Config {
         validator: nonEmptyStringValidator,
         extractor: stringExtractor,
         extractedResult: (dynamic result) => _preamble = result as String,
+      ),
+      strings.useDartHandle: Specification<bool>(
+        requirement: Requirement.no,
+        validator: booleanValidator,
+        extractor: booleanExtractor,
+        defaultValue: () => true,
+        extractedResult: (dynamic result) => _useDartHandle = result as bool,
       ),
     };
   }

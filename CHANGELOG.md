@@ -1,3 +1,6 @@
+# 1.2.0
+- Added support for `Dart_Handle` from `dart_api.h`.
+
 # 1.1.0
 - `typedef-map` can now be used to map a typedef name to a native type directly.
 

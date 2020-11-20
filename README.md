@@ -230,7 +230,19 @@ dart-bool: true
 ```
   </td>
   </tr>
-   <tr>
+  <tr>
+    <td>use-dart-handle</td>
+    <td>Should map `Dart_Handle` to `Handle`.<br>
+    <b>Default: true</b>
+    </td>
+    <td>
+
+```yaml
+use-dart-handle: true
+```
+  </td>
+  </tr>
+  <tr>
     <td>preamble</td>
     <td>Raw header of the file, pasted as-it-is.</td>
     <td>
