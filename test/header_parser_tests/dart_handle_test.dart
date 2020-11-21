@@ -51,6 +51,10 @@ ${strings.headers}:
       expect(actual.getBindingAsString('func3'),
           expected.getBindingAsString('func3'));
     });
+    test('func4', () {
+      expect(actual.getBindingAsString('func4'),
+          expected.getBindingAsString('func4'));
+    });
     test('struc1', () {
       expect(actual.getBindingAsString('struc1'),
           expected.getBindingAsString('struc1'));
@@ -63,6 +67,12 @@ ${strings.headers}:
 }
 
 Library expectedLibrary() {
+  final namedTypedef = Typedef(
+    name: 'typedef1',
+    typedefType: TypedefType.C,
+    returnType: Type.nativeType(SupportedNativeType.Void),
+    parameters: [Parameter(type: Type.handle())],
+  );
   return Library(
     name: 'NativeLibrary',
     bindings: [
@@ -85,6 +95,15 @@ Library expectedLibrary() {
         parameters: [
           Parameter(
             type: Type.pointer(Type.handle()),
+          ),
+        ],
+      ),
+      Func(
+        name: 'func4',
+        returnType: Type.nativeType(SupportedNativeType.Void),
+        parameters: [
+          Parameter(
+            type: Type.pointer(Type.nativeFunc(namedTypedef)),
           ),
         ],
       ),

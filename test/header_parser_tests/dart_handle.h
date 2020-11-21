@@ -8,6 +8,9 @@ void func1(Dart_Handle);
 Dart_Handle func2();
 Dart_Handle **func3(Dart_Handle *);
 
+typedef void (*typedef1)(Dart_Handle);
+void func4(typedef1);
+
 // Dart_Handle isn't supported directly, so all members are removed.
 struct struc1
 {
