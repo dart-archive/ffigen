@@ -22,6 +22,7 @@ class _ParsedStruc {
   bool flexibleArrayMember = false;
   bool arrayMember = false;
   bool bitFieldMember = false;
+  bool dartHandleMember = false;
   _ParsedStruc();
 }
 
@@ -115,6 +116,12 @@ void _setStructMembers(Pointer<clang_types.CXCursor> cursor) {
     _logger.warning(
         'Removed All Struct Members from ${_stack.top.struc.name}(${_stack.top.struc.originalName}), Bit Field members not supported.');
     return _stack.top.struc.members.clear();
+  } else if (_stack.top.dartHandleMember) {
+    _logger.fine(
+        '---- Removed Struct members, reason: Dart_Handle member. ${cursor.completeStringRepr()}');
+    _logger.warning(
+        'Removed All Struct Members from ${_stack.top.struc.name}(${_stack.top.struc.originalName}), Dart_Handle member not supported.');
+    return _stack.top.struc.members.clear();
   }
 }
 
@@ -146,6 +153,8 @@ int _structMembersVisitor(Pointer<clang_types.CXCursor> cursor,
       } else if (clang.clang_getFieldDeclBitWidth_wrap(cursor) != -1) {
         // TODO(84): Struct with bitfields are not suppoorted.
         _stack.top.bitFieldMember = true;
+      } else if (mt.broadType == BroadType.Handle) {
+        _stack.top.dartHandleMember = true;
       }
 
       if (mt.getBaseType().broadType == BroadType.Unimplemented) {

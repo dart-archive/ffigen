@@ -51,6 +51,14 @@ ${strings.headers}:
       expect(actual.getBindingAsString('func3'),
           expected.getBindingAsString('func3'));
     });
+    test('struc1', () {
+      expect(actual.getBindingAsString('struc1'),
+          expected.getBindingAsString('struc1'));
+    });
+    test('struc2', () {
+      expect(actual.getBindingAsString('struc2'),
+          expected.getBindingAsString('struc2'));
+    });
   });
 }
 
@@ -78,6 +86,14 @@ Library expectedLibrary() {
           Parameter(
             type: Type.pointer(Type.handle()),
           ),
+        ],
+      ),
+      // struc1 should have no members.
+      Struc(name: 'struc1'),
+      Struc(
+        name: 'struc2',
+        members: [
+          Member(name: 'h', type: Type.pointer(Type.handle())),
         ],
       ),
     ],
