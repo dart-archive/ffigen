@@ -18,4 +18,4 @@ headers:
 array-workaround: true
 
 # Needed for stdbool.h in MacOS
-compiler-opts: '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/'
+compiler-opts: '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/ -Wno-nullability-completeness'

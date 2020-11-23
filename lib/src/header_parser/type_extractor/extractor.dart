@@ -6,6 +6,7 @@
 import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
+import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
@@ -28,6 +29,13 @@ Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String parentName}) {
       final pt = clang.clang_getPointeeType_wrap(cxtype);
       final s = getCodeGenType(pt, parentName: parentName);
       pt.dispose();
+
+      // Replace Pointer<_Dart_Handle> with Handle.
+      if (config.useDartHandle &&
+          s.broadType == BroadType.Struct &&
+          s.struc.usr == strings.dartHandleUsr) {
+        return Type.handle();
+      }
       return Type.pointer(s);
     case clang_types.CXTypeKind.CXType_Typedef:
       final spelling = cxtype.spelling();
@@ -116,8 +124,11 @@ Type _extractfromRecord(Pointer<clang_types.CXType> cxtype, String parentName) {
         final struc = parseStructDeclaration(cursor,
             name: structName, ignoreFilter: true);
         type = Type.struct(struc);
-        // Add to bindings.
-        addToBindings(struc);
+
+        // Add to bindings if it's not Dart_Handle.
+        if (!(config.useDartHandle && structUsr == strings.dartHandleUsr)) {
+          addToBindings(struc);
+        }
       }
 
       cxtype.dispose();
