@@ -14,7 +14,7 @@ import 'package:ffigen/src/strings.dart' as strings;
 
 import '../test_utils.dart';
 
-Library actual;
+Library? actual;
 void main() {
   group('unnamed_enums_test', () {
     setUpAll(() {
@@ -32,12 +32,12 @@ ${strings.headers}:
     });
 
     test('Remove deeply nested unsupported types', () {
-      expect(() => actual.getBindingAsString('funcNestedUnimplemented'),
+      expect(() => actual!.getBindingAsString('funcNestedUnimplemented'),
           throwsA(TypeMatcher<NotFoundException>()));
     });
 
     test('Expected bindings', () {
-      final gen = actual.generate();
+      final gen = actual!.generate();
       // Writing to file for debug purpose.
       final file =
           File('test/debug_generated/native_func_typedef_test-output.dart');
@@ -125,7 +125,7 @@ typedef _typedefC_2 = ffi.Void Function(
         }
       } catch (e) {
         file.writeAsStringSync(gen);
-        print('Failed test, Debug output: ${file.absolute?.path}');
+        print('Failed test, Debug output: ${file.absolute.path}');
         rethrow;
       }
     });

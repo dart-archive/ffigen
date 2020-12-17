@@ -12,7 +12,7 @@ import 'package:ffigen/src/strings.dart' as strings;
 
 import '../test_utils.dart';
 
-Library actual, expected;
+Library? actual, expected;
 
 void main() {
   group('function_n_struct_test', () {
@@ -33,21 +33,21 @@ ${strings.headers}:
     });
 
     test('func1 struct pointer parameter', () {
-      expect(actual.getBindingAsString('func1'),
-          expected.getBindingAsString('func1'));
+      expect(actual!.getBindingAsString('func1'),
+          expected!.getBindingAsString('func1'));
     });
     test('func2 incomplete array parameter', () {
-      expect(actual.getBindingAsString('func2'),
-          expected.getBindingAsString('func2'));
+      expect(actual!.getBindingAsString('func2'),
+          expected!.getBindingAsString('func2'));
     });
     test('Struct2 nested struct member', () {
-      expect((actual.getBinding('Struct2') as Struc).members.isEmpty, true);
+      expect((actual!.getBinding('Struct2') as Struc).members.isEmpty, true);
     });
     test('Struct3 flexible array member', () {
-      expect((actual.getBinding('Struct3') as Struc).members.isEmpty, true);
+      expect((actual!.getBinding('Struct3') as Struc).members.isEmpty, true);
     });
     test('Struct4 bit field member', () {
-      expect((actual.getBinding('Struct4') as Struc).members.isEmpty, true);
+      expect((actual!.getBinding('Struct4') as Struc).members.isEmpty, true);
     });
   });
 }

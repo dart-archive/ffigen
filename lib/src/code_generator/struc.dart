@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator/typedef.dart';
-import 'package:meta/meta.dart';
 
 import 'binding.dart';
 import 'binding_string.dart';
@@ -39,11 +38,11 @@ class Struc extends NoLookUpBinding {
   List<Member> members;
 
   Struc({
-    String usr,
-    String originalName,
-    @required String name,
-    String dartDoc,
-    List<Member> members,
+    String? usr,
+    String? originalName,
+    required String name,
+    String? dartDoc,
+    List<Member>? members,
   })  : members = members ?? [],
         super(
           usr: usr,
@@ -56,13 +55,13 @@ class Struc extends NoLookUpBinding {
     final array = <int>[];
     var startType = type;
     while (startType.broadType == BroadType.ConstantArray) {
-      array.add(startType.length);
-      startType = startType.child;
+      array.add(startType.length!);
+      startType = startType.child!;
     }
     return array;
   }
 
-  List<Typedef> _typedefDependencies;
+  List<Typedef>? _typedefDependencies;
   @override
   List<Typedef> getTypedefDependencies(Writer w) {
     if (_typedefDependencies == null) {
@@ -72,20 +71,20 @@ class Struc extends NoLookUpBinding {
       for (final m in members) {
         final base = m.type.getBaseType();
         if (base.broadType == BroadType.NativeFunction) {
-          _typedefDependencies.addAll(base.nativeFunc.getDependencies());
+          _typedefDependencies!.addAll(base.nativeFunc!.getDependencies());
         }
       }
     }
-    return _typedefDependencies;
+    return _typedefDependencies ?? [];
   }
 
   @override
-  BindingString toBindingString(Writer w) {
-    members = members ?? [];
+  BindingString toBindingString(Writer? w) {
+    members = members;
     final s = StringBuffer();
     final enclosingClassName = name;
     if (dartDoc != null) {
-      s.write(makeDartDoc(dartDoc));
+      s.write(makeDartDoc(dartDoc!));
     }
 
     final helpers = <ArrayHelper>[];
@@ -98,7 +97,7 @@ class Struc extends NoLookUpBinding {
 
     // Write class declaration.
     s.write(
-        'class $enclosingClassName extends ${w.ffiLibraryPrefix}.Struct{\n');
+        'class $enclosingClassName extends ${w!.ffiLibraryPrefix}.Struct{\n');
     for (final m in members) {
       final memberName = localUniqueNamer.makeUnique(m.name);
       if (m.type.broadType == BroadType.ConstantArray) {
@@ -118,7 +117,7 @@ class Struc extends NoLookUpBinding {
         const depth = '  ';
         if (m.dartDoc != null) {
           s.write(depth + '/// ');
-          s.writeAll(m.dartDoc.split('\n'), '\n' + depth + '/// ');
+          s.writeAll(m.dartDoc!.split('\n'), '\n' + depth + '/// ');
           s.write('\n');
         }
         if (m.type.isPrimitive) {
@@ -154,15 +153,15 @@ class Struc extends NoLookUpBinding {
 }
 
 class Member {
-  final String dartDoc;
+  final String? dartDoc;
   final String originalName;
   final String name;
   final Type type;
 
   const Member({
-    String originalName,
-    @required this.name,
-    @required this.type,
+    String? originalName,
+    required this.name,
+    required this.type,
     this.dartDoc,
   }) : originalName = originalName ?? name;
 }
@@ -170,40 +169,40 @@ class Member {
 // Helper bindings for struct array.
 class ArrayHelper {
   final Type elementType;
-  final List<int> dimensions;
-  final String structName;
+  final List<int?> dimensions;
+  final String? structName;
 
-  final String name;
+  final String? name;
   final String helperClassGroupName;
   final String elementNamePrefix;
 
-  int _expandedArrayLength;
-  int get expandedArrayLength {
+  int? _expandedArrayLength;
+  int? get expandedArrayLength {
     if (_expandedArrayLength != null) return _expandedArrayLength;
 
     var arrayLength = 1;
     for (final i in dimensions) {
-      arrayLength = arrayLength * i;
+      arrayLength = arrayLength * i!;
     }
     return arrayLength;
   }
 
   ArrayHelper({
-    @required this.elementType,
-    @required this.dimensions,
-    @required this.structName,
-    @required this.name,
-    @required this.helperClassGroupName,
-    @required this.elementNamePrefix,
+    required this.elementType,
+    required this.dimensions,
+    required this.structName,
+    required this.name,
+    required this.helperClassGroupName,
+    required this.elementNamePrefix,
   });
 
   /// Create declaration binding, added inside the struct binding.
-  String declarationString(Writer w) {
+  String declarationString(Writer? w) {
     final s = StringBuffer();
     final arrayDartType = elementType.getDartType(w);
     final arrayCType = elementType.getCType(w);
 
-    for (var i = 0; i < expandedArrayLength; i++) {
+    for (var i = 0; i < expandedArrayLength!; i++) {
       if (elementType.isPrimitive) {
         s.write('  @${arrayCType}()\n');
       }
@@ -217,7 +216,7 @@ class ArrayHelper {
     return s.toString();
   }
 
-  String helperClassString(Writer w) {
+  String helperClassString(Writer? w) {
     final s = StringBuffer();
     final arrayType = elementType.getDartType(w);
     for (var dim = 0; dim < dimensions.length; dim++) {
@@ -272,7 +271,7 @@ class ArrayHelper {
         s.write('$arrayType operator[](int index){\n');
         s.write('$checkBoundsFunctionIdentifier(index);\n');
         s.write('switch($absoluteIndexIdentifier+index){\n');
-        for (var i = 0; i < expandedArrayLength; i++) {
+        for (var i = 0; i < expandedArrayLength!; i++) {
           s.write('case $i:\n');
           s.write('  return $structIdentifier.${elementNamePrefix}$i;\n');
         }
@@ -285,7 +284,7 @@ class ArrayHelper {
         s.write('void operator[]=(int index, $arrayType value){\n');
         s.write('$checkBoundsFunctionIdentifier(index);\n');
         s.write('switch($absoluteIndexIdentifier+index){\n');
-        for (var i = 0; i < expandedArrayLength; i++) {
+        for (var i = 0; i < expandedArrayLength!; i++) {
           s.write('case $i:\n');
           s.write('  $structIdentifier.${elementNamePrefix}$i = value;\n');
           s.write('  break;\n');

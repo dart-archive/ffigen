@@ -7,11 +7,11 @@ import 'data.dart';
 /// Utility functions to check whether a binding should be parsed or not
 /// based on filters.
 
-bool shouldIncludeStruct(String usr, String name) {
-  if (bindingsIndex.isSeenStruct(usr) || name == '') {
+bool shouldIncludeStruct(String? usr, String name) {
+  if (bindingsIndex!.isSeenStruct(usr) || name == '') {
     return false;
-  } else if (config.structDecl == null ||
-      config.structDecl.shouldInclude(name)) {
+  } else if (config!.structDecl == null ||
+      config!.structDecl!.shouldInclude(name)) {
     return true;
   } else {
     return false;
@@ -19,10 +19,10 @@ bool shouldIncludeStruct(String usr, String name) {
 }
 
 bool shouldIncludeFunc(String usr, String name) {
-  if (bindingsIndex.isSeenFunc(usr) || name == '') {
+  if (bindingsIndex!.isSeenFunc(usr) || name == '') {
     return false;
-  } else if (config.functionDecl == null ||
-      config.functionDecl.shouldInclude(name)) {
+  } else if (config!.functionDecl == null ||
+      config!.functionDecl!.shouldInclude(name)) {
     return true;
   } else {
     return false;
@@ -30,10 +30,10 @@ bool shouldIncludeFunc(String usr, String name) {
 }
 
 bool shouldIncludeEnumClass(String usr, String name) {
-  if (bindingsIndex.isSeenEnumClass(usr) || name == '') {
+  if (bindingsIndex!.isSeenEnumClass(usr) || name == '') {
     return false;
-  } else if (config.enumClassDecl == null ||
-      config.enumClassDecl.shouldInclude(name)) {
+  } else if (config!.enumClassDecl == null ||
+      config!.enumClassDecl!.shouldInclude(name)) {
     return true;
   } else {
     return false;
@@ -41,10 +41,10 @@ bool shouldIncludeEnumClass(String usr, String name) {
 }
 
 bool shouldIncludeUnnamedEnumConstant(String usr, String name) {
-  if (bindingsIndex.isSeenUnnamedEnumConstant(usr) || name == '') {
+  if (bindingsIndex!.isSeenUnnamedEnumConstant(usr) || name == '') {
     return false;
-  } else if (config.unnamedEnumConstants == null ||
-      config.unnamedEnumConstants.shouldInclude(name)) {
+  } else if (config!.unnamedEnumConstants == null ||
+      config!.unnamedEnumConstants!.shouldInclude(name)) {
     return true;
   } else {
     return false;
@@ -52,9 +52,10 @@ bool shouldIncludeUnnamedEnumConstant(String usr, String name) {
 }
 
 bool shouldIncludeMacro(String usr, String name) {
-  if (bindingsIndex.isSeenMacro(usr) || name == '') {
+  if (bindingsIndex!.isSeenMacro(usr) || name == '') {
     return false;
-  } else if (config.macroDecl == null || config.macroDecl.shouldInclude(name)) {
+  } else if (config!.macroDecl == null ||
+      config!.macroDecl!.shouldInclude(name)) {
     return true;
   } else {
     return false;
@@ -66,7 +67,7 @@ final _headerCache = <String, bool>{};
 
 /// True if a cursor should be included based on headers config, used on root
 /// declarations.
-bool shouldIncludeRootCursor(String sourceFile) {
+bool shouldIncludeRootCursor(String? sourceFile) {
   // Handle null in case of system headers or macros.
   if (sourceFile == null) {
     return false;
@@ -75,8 +76,8 @@ bool shouldIncludeRootCursor(String sourceFile) {
   // Add header to cache if its not.
   if (!_headerCache.containsKey(sourceFile)) {
     _headerCache[sourceFile] =
-        config.headers.includeFilter.shouldInclude(sourceFile);
+        config!.headers!.includeFilter.shouldInclude(sourceFile);
   }
 
-  return _headerCache[sourceFile];
+  return _headerCache[sourceFile]!;
 }

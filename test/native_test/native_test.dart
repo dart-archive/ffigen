@@ -14,7 +14,7 @@ import '../test_utils.dart';
 import 'native_test_bindings.dart';
 
 void main() {
-  NativeLibrary bindings;
+  late NativeLibrary bindings;
   group('native_test', () {
     setUpAll(() {
       logWarnings();
@@ -24,8 +24,8 @@ void main() {
       } else if (Platform.isWindows) {
         dylibName = r'test\native_test\native_test.dll';
       }
-      bindings = NativeLibrary(
-          DynamicLibrary.open(File(dylibName).absolute?.path ?? dylibName));
+      bindings =
+          NativeLibrary(DynamicLibrary.open(File(dylibName).absolute.path));
     });
 
     test('generate_bindings', () {
@@ -40,13 +40,13 @@ void main() {
 
       try {
         final actual = file.readAsStringSync();
-        final expected = File(path.join(config.output)).readAsStringSync();
+        final expected = File(path.join(config.output!)).readAsStringSync();
         expect(actual, expected);
         if (file.existsSync()) {
           file.delete();
         }
       } catch (e) {
-        print('Failed test: Debug generated file: ${file.absolute?.path}');
+        print('Failed test: Debug generated file: ${file.absolute.path}');
         rethrow;
       }
     });

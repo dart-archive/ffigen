@@ -26,7 +26,7 @@ String errorPen(String str) {
 
 void main(List<String> args) {
   // Parses the cmd args. This will print usage and exit if --help was passed.
-  final argResult = getArgResults(args);
+  final argResult = getArgResults(args)!;
 
   // Setup logging level and printing.
   setupLogger(argResult);
@@ -42,7 +42,7 @@ void main(List<String> args) {
   }
 
   // Create a config object.
-  Config config;
+  Config? config;
   try {
     config = getConfig(argResult);
   } on FormatException {
@@ -54,10 +54,10 @@ void main(List<String> args) {
   final library = parse(config);
 
   // Generate file for the parsed bindings.
-  final gen = File(config.output);
+  final gen = File(config.output!);
   library.generateFile(gen);
-  _logger.info(
-      successPen('Finished, Bindings generated in ${gen?.absolute?.path}'));
+  _logger
+      .info(successPen('Finished, Bindings generated in ${gen.absolute.path}'));
 }
 
 Config getConfig(ArgResults result) {
@@ -87,7 +87,7 @@ Config getConfigFromPubspec() {
 
   // Throws a [YamlException] if it's unable to parse the Yaml.
   final bindingsConfigMap =
-      yaml.loadYaml(pubspecFile.readAsStringSync())[configKey] as yaml.YamlMap;
+      yaml.loadYaml(pubspecFile.readAsStringSync())[configKey] as yaml.YamlMap?;
 
   if (bindingsConfigMap == null) {
     _logger.severe("Couldn't find an entry for '$configKey' in $pubspecName.");
@@ -113,7 +113,7 @@ Config getConfigFromCustomYaml(String yamlPath) {
 }
 
 /// Parses the cmd line arguments.
-ArgResults getArgResults(List<String> args) {
+ArgResults? getArgResults(List<String> args) {
   final parser = ArgParser(allowTrailingOptions: true);
 
   parser.addSeparator(
@@ -141,7 +141,7 @@ ArgResults getArgResults(List<String> args) {
     negatable: false,
   );
 
-  ArgResults results;
+  ArgResults? results;
   try {
     results = parser.parse(args);
 
@@ -161,7 +161,7 @@ ArgResults getArgResults(List<String> args) {
 /// Sets up the logging level and printing.
 void setupLogger(ArgResults result) {
   if (result.wasParsed('verbose')) {
-    switch (result['verbose'] as String) {
+    switch (result['verbose'] as String?) {
       case 'all':
         // Logs everything, the entire AST touched by our parser.
         Logger.root.level = Level.ALL;

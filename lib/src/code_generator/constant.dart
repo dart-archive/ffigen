@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:meta/meta.dart';
-
 import 'binding.dart';
 import 'binding_string.dart';
 import 'utils.dart';
@@ -30,12 +28,12 @@ class Constant extends NoLookUpBinding {
   final String rawValue;
 
   Constant({
-    String usr,
-    String originalName,
-    @required String name,
-    String dartDoc,
-    @required this.rawType,
-    @required this.rawValue,
+    String? usr,
+    String? originalName,
+    required String name,
+    String? dartDoc,
+    required this.rawType,
+    required this.rawValue,
   }) : super(
           usr: usr,
           originalName: originalName,
@@ -44,12 +42,12 @@ class Constant extends NoLookUpBinding {
         );
 
   @override
-  BindingString toBindingString(Writer w) {
+  BindingString toBindingString(Writer? w) {
     final s = StringBuffer();
     final constantName = name;
 
     if (dartDoc != null) {
-      s.write(makeDartDoc(dartDoc));
+      s.write(makeDartDoc(dartDoc!));
     }
 
     s.write('const ${rawType} $constantName = $rawValue;\n\n');

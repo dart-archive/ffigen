@@ -18,19 +18,19 @@ final _logger = Logger('ffigen.header_parser.typedefdecl_parser');
 /// Holds temporary information regarding a typedef referenced [Binding]
 /// while parsing.
 class _ParsedTypedef {
-  Binding binding;
-  String typedefName;
+  Binding? binding;
+  String? typedefName;
   _ParsedTypedef();
 }
 
 final _stack = Stack<_ParsedTypedef>();
 
 /// Parses a typedef declaration.
-Binding parseTypedefDeclaration(Pointer<clang_types.CXCursor> cursor) {
+Binding? parseTypedefDeclaration(Pointer<clang_types.CXCursor> cursor) {
   _stack.push(_ParsedTypedef());
   // Name of typedef.
   _stack.top.typedefName = cursor.spelling();
-  final resultCode = clang.clang_visitChildren_wrap(
+  final resultCode = clang!.clang_visitChildren_wrap(
     cursor,
     Pointer.fromFunction(_typedefdeclarationCursorVisitor,
         clang_types.CXChildVisitResult.CXChildVisit_Break),
@@ -52,7 +52,7 @@ int _typedefdeclarationCursorVisitor(Pointer<clang_types.CXCursor> cursor,
     _logger.finest(
         'typedefdeclarationCursorVisitor: ${cursor.completeStringRepr()}');
 
-    switch (clang.clang_getCursorKind_wrap(cursor)) {
+    switch (clang!.clang_getCursorKind_wrap(cursor)) {
       case clang_types.CXCursorKind.CXCursor_StructDecl:
         _stack.top.binding =
             parseStructDeclaration(cursor, name: _stack.top.typedefName);

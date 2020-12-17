@@ -20,20 +20,20 @@ import 'data.dart';
 import 'utils.dart';
 
 /// Main entrypoint for header_parser.
-Library parse(Config c) {
+Library parse(Config? c) {
   initParser(c);
 
   final bindings = parseToBindings();
 
   final library = Library(
     bindings: bindings,
-    name: config.wrapperName,
-    description: config.wrapperDocComment,
-    header: config.preamble,
-    dartBool: config.dartBool,
+    name: config!.wrapperName!,
+    description: config!.wrapperDocComment,
+    header: config!.preamble,
+    dartBool: config!.dartBool!,
   );
 
-  if (config.sort) {
+  if (config!.sort!) {
     library.sort();
   }
   return library;
@@ -46,13 +46,13 @@ Library parse(Config c) {
 final _logger = Logger('ffigen.header_parser.parser');
 
 /// Initializes parser, clears any previous values.
-void initParser(Config c) {
+void initParser(Config? c) {
   // Find full path of dynamic library and initialize bindings.
   if (findDotDartTool() == null) {
     throw Exception('Unable to find .dart_tool.');
   } else {
     final fullDylibPath = path.join(
-      findDotDartTool().toFilePath(),
+      findDotDartTool()!.toFilePath(),
       strings.ffigenFolderName,
       strings.dylibFileName,
     );
@@ -67,32 +67,32 @@ void initParser(Config c) {
 
 /// Parses source files and adds generated bindings to [bindings].
 List<Binding> parseToBindings() {
-  final index = clang.clang_createIndex(0, 0);
+  final index = clang!.clang_createIndex(0, 0);
 
   Pointer<Pointer<Utf8>> clangCmdArgs = nullptr;
   var cmdLen = 0;
 
   /// Add compiler opt for comment parsing for clang based on config.
-  if (config.commentType.length != CommentLength.none &&
-      config.commentType.style == CommentStyle.any) {
-    config.compilerOpts.add(strings.fparseAllComments);
+  if (config!.commentType!.length != CommentLength.none &&
+      config!.commentType!.style == CommentStyle.any) {
+    config!.compilerOpts!.add(strings.fparseAllComments);
   }
 
-  if (config.compilerOpts != null) {
-    clangCmdArgs = createDynamicStringArray(config.compilerOpts);
-    cmdLen = config.compilerOpts.length;
+  if (config!.compilerOpts != null) {
+    clangCmdArgs = createDynamicStringArray(config!.compilerOpts!);
+    cmdLen = config!.compilerOpts!.length;
   }
 
   // Contains all bindings. A set ensures we never have duplicates.
   final bindings = <Binding>{};
 
   // Log all headers for user.
-  _logger.info('Input Headers: ${config.headers.entryPoints}');
+  _logger.info('Input Headers: ${config!.headers!.entryPoints}');
 
-  for (final headerLocation in config.headers.entryPoints) {
+  for (final headerLocation in config!.headers!.entryPoints) {
     _logger.fine('Creating TranslationUnit for header: $headerLocation');
 
-    final tu = clang.clang_parseTranslationUnit(
+    final tu = clang!.clang_parseTranslationUnit(
       index,
       Utf8.toUtf8(headerLocation).cast(),
       clangCmdArgs.cast(),
@@ -112,24 +112,24 @@ List<Binding> parseToBindings() {
     }
 
     logTuDiagnostics(tu, _logger, headerLocation);
-    final rootCursor = clang.clang_getTranslationUnitCursor_wrap(tu);
+    final rootCursor = clang!.clang_getTranslationUnitCursor_wrap(tu);
 
-    bindings.addAll(parseTranslationUnit(rootCursor));
+    bindings.addAll(parseTranslationUnit(rootCursor)!);
 
     // Cleanup.
     rootCursor.dispose();
-    clang.clang_disposeTranslationUnit(tu);
+    clang!.clang_disposeTranslationUnit(tu);
   }
 
   // Add all saved unnamed enums.
-  bindings.addAll(unnamedEnumConstants);
+  bindings.addAll(unnamedEnumConstants!);
 
   // Parse all saved macros.
-  bindings.addAll(parseSavedMacros());
+  bindings.addAll(parseSavedMacros()!);
 
-  if (config.compilerOpts != null) {
-    clangCmdArgs.dispose(config.compilerOpts.length);
+  if (config!.compilerOpts != null) {
+    clangCmdArgs.dispose(config!.compilerOpts!.length);
   }
-  clang.clang_disposeIndex(index);
+  clang!.clang_disposeIndex(index);
   return bindings.toList();
 }

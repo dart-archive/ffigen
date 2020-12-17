@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:meta/meta.dart';
 
 import 'func.dart' show Parameter;
 import 'type.dart';
@@ -25,17 +24,17 @@ import 'writer.dart';
 /// Note: re-set [name] after resolving name conflicts.
 class Typedef {
   String name;
-  String dartDoc;
+  String? dartDoc;
   final Type returnType;
   final TypedefType typedefType;
   final List<Parameter> parameters;
 
   Typedef({
-    @required this.name,
+    required this.name,
     this.dartDoc,
-    @required this.returnType,
-    @required this.typedefType,
-    List<Parameter> parameters,
+    required this.returnType,
+    required this.typedefType,
+    List<Parameter>? parameters,
   }) : parameters = parameters ?? [];
 
   /// Returns the [Typedef] dependencies required by this typedef including itself.
@@ -44,12 +43,12 @@ class Typedef {
     for (final p in parameters) {
       final base = p.type.getBaseType();
       if (base.broadType == BroadType.NativeFunction) {
-        dep.addAll(base.nativeFunc.getDependencies());
+        dep.addAll(base.nativeFunc!.getDependencies());
       }
     }
     final returnTypeBase = returnType.getBaseType();
     if (returnTypeBase.broadType == BroadType.NativeFunction) {
-      dep.addAll(returnTypeBase.nativeFunc.getDependencies());
+      dep.addAll(returnTypeBase.nativeFunc!.getDependencies());
     }
     dep.add(this);
     return dep;
@@ -58,7 +57,7 @@ class Typedef {
   String toTypedefString(Writer w) {
     final s = StringBuffer();
     if (dartDoc != null) {
-      s.write(makeDartDoc(dartDoc));
+      s.write(makeDartDoc(dartDoc!));
     }
     final typedefName = name;
     final paramNamer = UniqueNamer({});

@@ -17,7 +17,7 @@ final _logger = Logger('ffigen.header_parser.functiondecl_parser');
 
 /// Holds temporary information regarding [Func] while parsing.
 class _ParserFunc {
-  Func func;
+  Func? func;
   bool structByValueParameter = false;
   bool unimplementedParameterType = false;
   _ParserFunc();
@@ -26,7 +26,7 @@ class _ParserFunc {
 final _stack = Stack<_ParserFunc>();
 
 /// Parses a function declaration.
-Func parseFunctionDeclaration(Pointer<clang_types.CXCursor> cursor) {
+Func? parseFunctionDeclaration(Pointer<clang_types.CXCursor> cursor) {
   _stack.push(_ParserFunc());
   _stack.top.structByValueParameter = false;
   _stack.top.unimplementedParameterType = false;
@@ -67,14 +67,14 @@ Func parseFunctionDeclaration(Pointer<clang_types.CXCursor> cursor) {
         nesting.length + commentPrefix.length,
       ),
       usr: funcUsr,
-      name: config.functionDecl.renameUsingConfig(funcName),
+      name: config!.functionDecl!.renameUsingConfig(funcName),
       originalName: funcName,
       returnType: rt,
       parameters: parameters,
     );
-    bindingsIndex.addFuncToSeen(funcUsr, _stack.top.func);
-  } else if (bindingsIndex.isSeenFunc(funcUsr)) {
-    _stack.top.func = bindingsIndex.getSeenFunc(funcUsr);
+    bindingsIndex!.addFuncToSeen(funcUsr, _stack.top.func);
+  } else if (bindingsIndex!.isSeenFunc(funcUsr)) {
+    _stack.top.func = bindingsIndex!.getSeenFunc(funcUsr);
   }
 
   return _stack.pop().func;
@@ -88,9 +88,9 @@ List<Parameter> _getParameters(
     Pointer<clang_types.CXCursor> cursor, String funcName) {
   final parameters = <Parameter>[];
 
-  final totalArgs = clang.clang_Cursor_getNumArguments_wrap(cursor);
+  final totalArgs = clang!.clang_Cursor_getNumArguments_wrap(cursor);
   for (var i = 0; i < totalArgs; i++) {
-    final paramCursor = clang.clang_Cursor_getArgument_wrap(cursor, i);
+    final paramCursor = clang!.clang_Cursor_getArgument_wrap(cursor, i);
 
     _logger.finer('===== parameter: ${paramCursor.completeStringRepr()}');
 
@@ -108,7 +108,7 @@ List<Parameter> _getParameters(
     parameters.add(
       Parameter(
         originalName: pn,
-        name: config.functionDecl.renameMemberUsingConfig(funcName, pn),
+        name: config!.functionDecl!.renameMemberUsingConfig(funcName, pn),
         type: pt,
       ),
     );

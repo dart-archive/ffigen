@@ -158,7 +158,7 @@ typedef _dart_withPointerParam = ffi.Pointer<ffi.Double> Function(
         }
       } catch (e) {
         file.writeAsStringSync(gen);
-        print('Failed test, Debug output: ${file.absolute?.path}');
+        print('Failed test, Debug output: ${file.absolute.path}');
         rethrow;
       }
     });
@@ -270,7 +270,7 @@ class WithPointerMember extends ffi.Struct{
         }
       } catch (e) {
         file.writeAsStringSync(gen);
-        print('Failed test, Debug output: ${file.absolute?.path}');
+        print('Failed test, Debug output: ${file.absolute.path}');
         rethrow;
       }
     });
@@ -383,7 +383,7 @@ typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
         }
       } catch (e) {
         file.writeAsStringSync(gen);
-        print('Failed test, Debug output: ${file.absolute?.path}');
+        print('Failed test, Debug output: ${file.absolute.path}');
         rethrow;
       }
     });
@@ -460,7 +460,7 @@ class Some extends ffi.Struct{
         }
       } catch (e) {
         file.writeAsStringSync(gen);
-        print('Failed test, Debug output: ${file.absolute?.path}');
+        print('Failed test, Debug output: ${file.absolute.path}');
         rethrow;
       }
     });
@@ -504,7 +504,7 @@ const double test2 = 20.0;
         }
       } catch (e) {
         file.writeAsStringSync(gen);
-        print('Failed test, Debug output: ${file.absolute?.path}');
+        print('Failed test, Debug output: ${file.absolute.path}');
         rethrow;
       }
     });
@@ -553,7 +553,7 @@ abstract class Constants {
         }
       } catch (e) {
         file.writeAsStringSync(gen);
-        print('Failed test, Debug output: ${file.absolute?.path}');
+        print('Failed test, Debug output: ${file.absolute.path}');
         rethrow;
       }
     });
@@ -753,7 +753,7 @@ typedef _dart_Test = void Function(
         }
       } catch (e) {
         file.writeAsStringSync(gen);
-        print('Failed test, Debug output: ${file.absolute?.path}');
+        print('Failed test, Debug output: ${file.absolute.path}');
         rethrow;
       }
     });
@@ -835,7 +835,7 @@ typedef _dart_test1 = int Function(
       }
     } catch (e) {
       file.writeAsStringSync(gen);
-      print('Failed test, Debug output: ${file.absolute?.path}');
+      print('Failed test, Debug output: ${file.absolute.path}');
       rethrow;
     }
   });
@@ -916,7 +916,7 @@ typedef _dart_test1 = int Function(
       }
     } catch (e) {
       file.writeAsStringSync(gen);
-      print('Failed test, Debug output: ${file.absolute?.path}');
+      print('Failed test, Debug output: ${file.absolute.path}');
       rethrow;
     }
   });

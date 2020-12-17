@@ -19,13 +19,13 @@ import 'utils.dart';
 
 final _logger = Logger('ffigen.header_parser.translation_unit_parser');
 
-Set<Binding> _bindings;
+Set<Binding>? _bindings;
 
 /// Parses the translation unit and returns the generated bindings.
-Set<Binding> parseTranslationUnit(
+Set<Binding>? parseTranslationUnit(
     Pointer<clang_types.CXCursor> translationUnitCursor) {
   _bindings = {};
-  final resultCode = clang.clang_visitChildren_wrap(
+  final resultCode = clang!.clang_visitChildren_wrap(
     translationUnitCursor,
     Pointer.fromFunction(
         _rootCursorVisitor, clang_types.CXChildVisitResult.CXChildVisit_Break),
@@ -43,7 +43,7 @@ int _rootCursorVisitor(Pointer<clang_types.CXCursor> cursor,
   try {
     if (shouldIncludeRootCursor(cursor.sourceFileName())) {
       _logger.finest('rootCursorVisitor: ${cursor.completeStringRepr()}');
-      switch (clang.clang_getCursorKind_wrap(cursor)) {
+      switch (clang!.clang_getCursorKind_wrap(cursor)) {
         case clang_types.CXCursorKind.CXCursor_FunctionDecl:
           addToBindings(parseFunctionDeclaration(cursor));
           break;
@@ -78,9 +78,9 @@ int _rootCursorVisitor(Pointer<clang_types.CXCursor> cursor,
 }
 
 /// Adds to binding if unseen and not null.
-void addToBindings(Binding b) {
+void addToBindings(Binding? b) {
   if (b != null) {
     // This is a set, and hence will not have duplicates.
-    _bindings.add(b);
+    _bindings!.add(b);
   }
 }

@@ -4,6 +4,7 @@
 
 import 'dart:io';
 
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
@@ -14,8 +15,7 @@ import 'package:test/test.dart';
 extension LibraryTestExt on Library {
   /// Get a [Binding]'s generated string with a given name.
   String getBindingAsString(String name) {
-    final b = bindings.firstWhere((element) => element.name == name,
-        orElse: () => null);
+    final b = bindings.firstWhereOrNull((element) => element.name == name);
     if (b == null) {
       throw NotFoundException("Binding '$name' not found.");
     } else {
@@ -25,8 +25,7 @@ extension LibraryTestExt on Library {
 
   /// Get a [Binding] with a given name.
   Binding getBinding(String name) {
-    final b = bindings.firstWhere((element) => element.name == name,
-        orElse: () => null);
+    final b = bindings.firstWhereOrNull((element) => element.name == name);
     if (b == null) {
       throw NotFoundException("Binding '$name' not found.");
     } else {
@@ -39,7 +38,7 @@ extension LibraryTestExt on Library {
 ///
 /// This will not delete the actual debug file incase [expect] throws an error.
 void matchLibraryWithExpected(
-    Library library, List<String> pathForActual, List<String> pathToExpected) {
+    Library library, List<String> pathForActual, List<String?> pathToExpected) {
   final file = File(
     path.joinAll(pathForActual),
   );
@@ -47,13 +46,14 @@ void matchLibraryWithExpected(
 
   try {
     final actual = file.readAsStringSync();
-    final expected = File(path.joinAll(pathToExpected)).readAsStringSync();
+    final expected = File(path.joinAll(pathToExpected as Iterable<String>))
+        .readAsStringSync();
     expect(actual, expected);
     if (file.existsSync()) {
       file.delete();
     }
   } catch (e) {
-    print('Failed test: Debug generated file: ${file.absolute?.path}');
+    print('Failed test: Debug generated file: ${file.absolute.path}');
     rethrow;
   }
 }

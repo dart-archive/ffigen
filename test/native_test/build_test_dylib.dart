@@ -28,8 +28,6 @@
 
 import 'dart:io';
 
-import 'package:meta/meta.dart';
-
 const macOS = 'macos';
 const windows = 'windows';
 const linux = 'linux';
@@ -57,7 +55,7 @@ Map<String, Options> platformOptions = {
 
 void main(List<String> arguments) {
   print('Building Dynamic Library for Native Tests... ');
-  final options = getPlatformOptions();
+  final options = getPlatformOptions()!;
 
   // Run clang compiler to generate the dynamic library.
   // ignore: omit_local_variable_types
@@ -93,7 +91,7 @@ void printSuccess(ProcessResult result, Options options) {
 }
 
 /// Get options based on current platform.
-Options getPlatformOptions() {
+Options? getPlatformOptions() {
   if (Platform.isMacOS) {
     return platformOptions[macOS];
   } else if (Platform.isWindows) {
@@ -123,9 +121,9 @@ class Options {
   final String moduleDefPath;
 
   Options({
-    @required this.outputfilename,
-    @required this.sharedFlag,
-    @required this.inputHeader,
+    required this.outputfilename,
+    required this.sharedFlag,
+    required this.inputHeader,
     this.fPIC = '',
     this.moduleDefPath = '',
   });

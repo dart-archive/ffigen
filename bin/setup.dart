@@ -26,7 +26,6 @@
 
 import 'dart:io';
 import 'package:args/args.dart';
-import 'package:meta/meta.dart';
 import 'package:ffigen/src/find_resource.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:path/path.dart' as path;
@@ -77,10 +76,10 @@ Map<String, _Options> _platformOptions = {
 /// If main is called directly we always re-create the dynamic library.
 void main(List<String> arguments) {
   // Parses the cmd args. This will print usage and exit if --help was passed.
-  final argResults = _getArgResults(arguments);
+  final argResults = _getArgResults(arguments)!;
 
   print('Building Dynamic Library for libclang wrapper...');
-  final options = _getPlatformOptions();
+  final options = _getPlatformOptions()!;
   _deleteOldDylib();
 
   // Updates header/lib includes in platform options.
@@ -97,7 +96,7 @@ void main(List<String> arguments) {
 /// doesn't exist.
 bool autoCreateDylib() {
   _deleteOldDylib();
-  final options = _getPlatformOptions();
+  final options = _getPlatformOptions()!;
   final processResult = _runClangProcess(options);
   if ((processResult.stderr as String).isNotEmpty) {
     print(processResult.stderr);
@@ -140,7 +139,7 @@ String _dylibPath() {
 ///
 /// Throws error if not found.
 String _getWrapperPath(String wrapperName) {
-  final file = File.fromUri(findWrapper(wrapperName));
+  final file = File.fromUri(findWrapper(wrapperName)!);
   if (file.existsSync()) {
     return file.absolute.path;
   } else {
@@ -189,7 +188,7 @@ void _printDetails(ProcessResult result, _Options options) {
   }
 }
 
-ArgResults _getArgResults(List<String> args) {
+ArgResults? _getArgResults(List<String> args) {
   final parser = ArgParser(allowTrailingOptions: true);
   parser.addSeparator('Generates LLVM Wrapper used by this package:');
   parser.addMultiOption('include-header',
@@ -203,7 +202,7 @@ ArgResults _getArgResults(List<String> args) {
     negatable: false,
   );
 
-  ArgResults results;
+  ArgResults? results;
   try {
     results = parser.parse(args);
 
@@ -235,7 +234,7 @@ void _changeIncludesUsingCmdArgs(ArgResults argResult, _Options options) {
 }
 
 /// Get options based on current platform.
-_Options _getPlatformOptions() {
+_Options? _getPlatformOptions() {
   if (Platform.isMacOS) {
     return _platformOptions[_macOS];
   } else if (Platform.isWindows) {
@@ -271,9 +270,9 @@ class _Options {
   final String ldLibFlag;
 
   _Options({
-    @required this.sharedFlag,
-    @required this.inputHeader,
-    @required this.ldLibFlag,
+    required this.sharedFlag,
+    required this.inputHeader,
+    required this.ldLibFlag,
     this.headerIncludes = const [],
     this.libIncludes = const [],
     this.fPIC = '',
