@@ -128,9 +128,9 @@ class Func extends LookUpBinding {
     }
     s.write(') {\n');
     s.write(
-        "$funcVarName ??= ${w.dylibIdentifier}.lookupFunction<${cType.name},${dartType.name}>('$originalName');\n");
+        "return ($funcVarName ??= ${w.dylibIdentifier}.lookupFunction<${cType.name},${dartType.name}>('$originalName'))");
 
-    s.write('  return $funcVarName(\n');
+    s.write('(\n');
     for (final p in parameters) {
       if (w.dartBool && p.type.broadType == BroadType.Boolean) {
         // Convert bool parameter to int before calling.
@@ -148,7 +148,7 @@ class Func extends LookUpBinding {
     s.write('}\n');
 
     // Write function variable.
-    s.write('${dartType.name} $funcVarName;\n\n');
+    s.write('${dartType.name}? $funcVarName;\n\n');
 
     return BindingString(type: BindingStringType.func, string: s.toString());
   }
