@@ -11,7 +11,7 @@ import 'package:ffigen/src/strings.dart' as strings;
 
 import '../test_utils.dart';
 
-Library? actual, expected;
+late Library actual, expected;
 final functionPrefix = 'fff';
 final structPrefix = 'sss';
 final enumPrefix = 'eee';
@@ -79,76 +79,76 @@ macros:
     });
 
     test('Function addPrefix', () {
-      expect(actual!.getBindingAsString('${functionPrefix}func1'),
-          expected!.getBindingAsString('${functionPrefix}func1'));
+      expect(actual.getBindingAsString('${functionPrefix}func1'),
+          expected.getBindingAsString('${functionPrefix}func1'));
     });
     test('Struct addPrefix', () {
-      expect(actual!.getBindingAsString('${structPrefix}Struct1'),
-          expected!.getBindingAsString('${structPrefix}Struct1'));
+      expect(actual.getBindingAsString('${structPrefix}Struct1'),
+          expected.getBindingAsString('${structPrefix}Struct1'));
     });
     test('Enum addPrefix', () {
-      expect(actual!.getBindingAsString('${enumPrefix}Enum1'),
-          expected!.getBindingAsString('${enumPrefix}Enum1'));
+      expect(actual.getBindingAsString('${enumPrefix}Enum1'),
+          expected.getBindingAsString('${enumPrefix}Enum1'));
     });
     test('Macro addPrefix', () {
-      expect(actual!.getBindingAsString('${macroPrefix}Macro1'),
-          expected!.getBindingAsString('${macroPrefix}Macro1'));
+      expect(actual.getBindingAsString('${macroPrefix}Macro1'),
+          expected.getBindingAsString('${macroPrefix}Macro1'));
     });
     test('Function rename with pattern', () {
-      expect(actual!.getBindingAsString('func2'),
-          expected!.getBindingAsString('func2'));
+      expect(actual.getBindingAsString('func2'),
+          expected.getBindingAsString('func2'));
     });
     test('Struct rename with pattern', () {
-      expect(actual!.getBindingAsString('Struct2'),
-          expected!.getBindingAsString('Struct2'));
+      expect(actual.getBindingAsString('Struct2'),
+          expected.getBindingAsString('Struct2'));
     });
     test('Enum rename with pattern', () {
-      expect(actual!.getBindingAsString('Enum2'),
-          expected!.getBindingAsString('Enum2'));
+      expect(actual.getBindingAsString('Enum2'),
+          expected.getBindingAsString('Enum2'));
     });
     test('Macro rename with pattern', () {
-      expect(actual!.getBindingAsString('Macro2'),
-          expected!.getBindingAsString('Macro2'));
+      expect(actual.getBindingAsString('Macro2'),
+          expected.getBindingAsString('Macro2'));
     });
     test('Function full match rename', () {
-      expect(actual!.getBindingAsString('func3'),
-          expected!.getBindingAsString('func3'));
+      expect(actual.getBindingAsString('func3'),
+          expected.getBindingAsString('func3'));
     });
     test('Struct full match rename', () {
-      expect(actual!.getBindingAsString('Struct3'),
-          expected!.getBindingAsString('Struct3'));
+      expect(actual.getBindingAsString('Struct3'),
+          expected.getBindingAsString('Struct3'));
     });
     test('Enum full match rename', () {
-      expect(actual!.getBindingAsString('Enum3'),
-          expected!.getBindingAsString('Enum3'));
+      expect(actual.getBindingAsString('Enum3'),
+          expected.getBindingAsString('Enum3'));
     });
     test('Macro full match rename', () {
-      expect(actual!.getBindingAsString('Macro3'),
-          expected!.getBindingAsString('Macro3'));
+      expect(actual.getBindingAsString('Macro3'),
+          expected.getBindingAsString('Macro3'));
     });
     test('Struct member rename', () {
-      expect(actual!.getBindingAsString('${structPrefix}MemberRenameStruct4'),
-          expected!.getBindingAsString('${structPrefix}MemberRenameStruct4'));
+      expect(actual.getBindingAsString('${structPrefix}MemberRenameStruct4'),
+          expected.getBindingAsString('${structPrefix}MemberRenameStruct4'));
     });
     test('Any Struct member rename', () {
-      expect(actual!.getBindingAsString('${structPrefix}AnyMatchStruct5'),
-          expected!.getBindingAsString('${structPrefix}AnyMatchStruct5'));
+      expect(actual.getBindingAsString('${structPrefix}AnyMatchStruct5'),
+          expected.getBindingAsString('${structPrefix}AnyMatchStruct5'));
     });
     test('Function member rename', () {
-      expect(actual!.getBindingAsString('${functionPrefix}memberRename_func4'),
-          expected!.getBindingAsString('${functionPrefix}memberRename_func4'));
+      expect(actual.getBindingAsString('${functionPrefix}memberRename_func4'),
+          expected.getBindingAsString('${functionPrefix}memberRename_func4'));
     });
     test('Enum member rename', () {
-      expect(actual!.getBindingAsString('${enumPrefix}MemberRenameEnum4'),
-          expected!.getBindingAsString('${enumPrefix}MemberRenameEnum4'));
+      expect(actual.getBindingAsString('${enumPrefix}MemberRenameEnum4'),
+          expected.getBindingAsString('${enumPrefix}MemberRenameEnum4'));
     });
     test('unnamed Enum regexp rename', () {
-      expect(actual!.getBindingAsString('unnamed_underscore'),
-          expected!.getBindingAsString('unnamed_underscore'));
+      expect(actual.getBindingAsString('unnamed_underscore'),
+          expected.getBindingAsString('unnamed_underscore'));
     });
     test('unnamed Enum full match rename', () {
-      expect(actual!.getBindingAsString('unnamedFullMatchSuccess'),
-          expected!.getBindingAsString('unnamedFullMatchSuccess'));
+      expect(actual.getBindingAsString('unnamedFullMatchSuccess'),
+          expected.getBindingAsString('unnamedFullMatchSuccess'));
     });
   });
 }

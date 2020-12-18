@@ -26,7 +26,7 @@ String errorPen(String str) {
 
 void main(List<String> args) {
   // Parses the cmd args. This will print usage and exit if --help was passed.
-  final argResult = getArgResults(args)!;
+  final argResult = getArgResults(args);
 
   // Setup logging level and printing.
   setupLogger(argResult);
@@ -42,7 +42,7 @@ void main(List<String> args) {
   }
 
   // Create a config object.
-  Config? config;
+  Config config;
   try {
     config = getConfig(argResult);
   } on FormatException {
@@ -113,7 +113,7 @@ Config getConfigFromCustomYaml(String yamlPath) {
 }
 
 /// Parses the cmd line arguments.
-ArgResults? getArgResults(List<String> args) {
+ArgResults getArgResults(List<String> args) {
   final parser = ArgParser(allowTrailingOptions: true);
 
   parser.addSeparator(
@@ -141,7 +141,7 @@ ArgResults? getArgResults(List<String> args) {
     negatable: false,
   );
 
-  ArgResults? results;
+  ArgResults results;
   try {
     results = parser.parse(args);
 

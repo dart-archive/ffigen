@@ -12,7 +12,7 @@ import 'package:ffigen/src/strings.dart' as strings;
 
 import '../test_utils.dart';
 
-Library? actual, expected;
+late Library actual, expected;
 
 void main() {
   group('macros_test', () {
@@ -33,70 +33,70 @@ ${strings.headers}:
       );
     });
     test('Total bindings count', () {
-      expect(actual!.bindings.length, expected!.bindings.length);
+      expect(actual.bindings.length, expected.bindings.length);
     });
 
     test('TEST1', () {
-      expect(actual!.getBindingAsString('TEST1'),
-          expected!.getBindingAsString('TEST1'));
+      expect(actual.getBindingAsString('TEST1'),
+          expected.getBindingAsString('TEST1'));
     });
     test('TEST2', () {
-      expect(actual!.getBindingAsString('TEST2'),
-          expected!.getBindingAsString('TEST2'));
+      expect(actual.getBindingAsString('TEST2'),
+          expected.getBindingAsString('TEST2'));
     });
     test('TEST3', () {
-      expect(actual!.getBindingAsString('TEST3'),
-          expected!.getBindingAsString('TEST3'));
+      expect(actual.getBindingAsString('TEST3'),
+          expected.getBindingAsString('TEST3'));
     });
 
     test('TEST4', () {
-      expect(actual!.getBindingAsString('TEST4'),
-          expected!.getBindingAsString('TEST4'));
+      expect(actual.getBindingAsString('TEST4'),
+          expected.getBindingAsString('TEST4'));
     });
 
     test('TEST5', () {
-      expect(actual!.getBindingAsString('TEST5'),
-          expected!.getBindingAsString('TEST5'));
+      expect(actual.getBindingAsString('TEST5'),
+          expected.getBindingAsString('TEST5'));
     });
     test('TEST6', () {
-      expect(actual!.getBindingAsString('TEST6'),
-          expected!.getBindingAsString('TEST6'));
+      expect(actual.getBindingAsString('TEST6'),
+          expected.getBindingAsString('TEST6'));
     });
     test('TEST8', () {
-      expect(actual!.getBindingAsString('TEST8'),
-          expected!.getBindingAsString('TEST8'));
+      expect(actual.getBindingAsString('TEST8'),
+          expected.getBindingAsString('TEST8'));
     });
     test('TEST9', () {
-      expect(actual!.getBindingAsString('TEST9'),
-          expected!.getBindingAsString('TEST9'));
+      expect(actual.getBindingAsString('TEST9'),
+          expected.getBindingAsString('TEST9'));
     });
     test('TEST10', () {
-      expect(actual!.getBindingAsString('TEST10'),
-          expected!.getBindingAsString('TEST10'));
+      expect(actual.getBindingAsString('TEST10'),
+          expected.getBindingAsString('TEST10'));
     });
     test('TEST11', () {
-      expect(actual!.getBindingAsString('TEST11'),
-          expected!.getBindingAsString('TEST11'));
+      expect(actual.getBindingAsString('TEST11'),
+          expected.getBindingAsString('TEST11'));
     });
     test('TEST12', () {
-      expect(actual!.getBindingAsString('TEST12'),
-          expected!.getBindingAsString('TEST12'));
+      expect(actual.getBindingAsString('TEST12'),
+          expected.getBindingAsString('TEST12'));
     });
     test('TEST13', () {
-      expect(actual!.getBindingAsString('TEST13'),
-          expected!.getBindingAsString('TEST13'));
+      expect(actual.getBindingAsString('TEST13'),
+          expected.getBindingAsString('TEST13'));
     });
     test('TEST14', () {
-      expect(actual!.getBindingAsString('TEST14'),
-          expected!.getBindingAsString('TEST14'));
+      expect(actual.getBindingAsString('TEST14'),
+          expected.getBindingAsString('TEST14'));
     });
     test('TEST15', () {
-      expect(actual!.getBindingAsString('TEST15'),
-          expected!.getBindingAsString('TEST15'));
+      expect(actual.getBindingAsString('TEST15'),
+          expected.getBindingAsString('TEST15'));
     });
     test('TEST16', () {
-      expect(actual!.getBindingAsString('TEST16'),
-          expected!.getBindingAsString('TEST16'));
+      expect(actual.getBindingAsString('TEST16'),
+          expected.getBindingAsString('TEST16'));
     });
   });
 }

@@ -19,8 +19,8 @@ class Library {
   /// List of bindings in this library.
   final List<Binding> bindings;
 
-  Writer? _writer;
-  Writer? get writer => _writer;
+  late Writer _writer;
+  Writer get writer => _writer;
 
   Library({
     required String name,
@@ -115,8 +115,7 @@ class Library {
 
   /// Generates the bindings.
   String generate() {
-    final w = writer!;
-    return w.generate();
+    return writer.generate();
   }
 
   @override

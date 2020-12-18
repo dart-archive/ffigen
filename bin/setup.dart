@@ -30,56 +30,50 @@ import 'package:ffigen/src/find_resource.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:path/path.dart' as path;
 
-const _macOS = 'macos';
-const _windows = 'windows';
-const _linux = 'linux';
-
 /// Default platform options.
-Map<String, _Options> _platformOptions = {
-  _linux: _Options(
-    sharedFlag: '-shared',
-    inputHeader: _getWrapperPath('wrapper.c'),
-    fPIC: '-fpic',
-    ldLibFlag: '-lclang',
-    headerIncludes: [
-      '-I/usr/lib/llvm-9/include/',
-      '-I/usr/lib/llvm-10/include/',
-    ],
-  ),
-  _windows: _Options(
-    sharedFlag: '-shared',
-    inputHeader: _getWrapperPath('wrapper.c'),
-    moduleDefPath: '-Wl,/DEF:${_getWrapperPath("wrapper.def")}',
-    ldLibFlag: '-llibclang',
-    headerIncludes: [
-      r'-IC:\Progra~1\LLVM\include',
-    ],
-    libIncludes: [
-      r'-LC:\Progra~1\LLVM\lib',
-    ],
-  ),
-  _macOS: _Options(
-    sharedFlag: '-shared',
-    inputHeader: _getWrapperPath('wrapper.c'),
-    fPIC: '-fpic',
-    ldLibFlag: '-lclang',
-    headerIncludes: [
-      '-I/usr/local/opt/llvm/include/',
-      '-I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/',
-    ],
-    libIncludes: [
-      '-L/usr/local/opt/llvm/lib/',
-    ],
-  ),
-};
+final _linuxOpts = _Options(
+  sharedFlag: '-shared',
+  inputHeader: _getWrapperPath('wrapper.c'),
+  fPIC: '-fpic',
+  ldLibFlag: '-lclang',
+  headerIncludes: [
+    '-I/usr/lib/llvm-9/include/',
+    '-I/usr/lib/llvm-10/include/',
+  ],
+);
+final _windowsOpts = _Options(
+  sharedFlag: '-shared',
+  inputHeader: _getWrapperPath('wrapper.c'),
+  moduleDefPath: '-Wl,/DEF:${_getWrapperPath("wrapper.def")}',
+  ldLibFlag: '-llibclang',
+  headerIncludes: [
+    r'-IC:\Progra~1\LLVM\include',
+  ],
+  libIncludes: [
+    r'-LC:\Progra~1\LLVM\lib',
+  ],
+);
+final _macOSOpts = _Options(
+  sharedFlag: '-shared',
+  inputHeader: _getWrapperPath('wrapper.c'),
+  fPIC: '-fpic',
+  ldLibFlag: '-lclang',
+  headerIncludes: [
+    '-I/usr/local/opt/llvm/include/',
+    '-I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/',
+  ],
+  libIncludes: [
+    '-L/usr/local/opt/llvm/lib/',
+  ],
+);
 
 /// If main is called directly we always re-create the dynamic library.
 void main(List<String> arguments) {
   // Parses the cmd args. This will print usage and exit if --help was passed.
-  final argResults = _getArgResults(arguments)!;
+  final argResults = _getArgResults(arguments);
 
   print('Building Dynamic Library for libclang wrapper...');
-  final options = _getPlatformOptions()!;
+  final options = _getPlatformOptions();
   _deleteOldDylib();
 
   // Updates header/lib includes in platform options.
@@ -96,7 +90,7 @@ void main(List<String> arguments) {
 /// doesn't exist.
 bool autoCreateDylib() {
   _deleteOldDylib();
-  final options = _getPlatformOptions()!;
+  final options = _getPlatformOptions();
   final processResult = _runClangProcess(options);
   if ((processResult.stderr as String).isNotEmpty) {
     print(processResult.stderr);
@@ -188,7 +182,7 @@ void _printDetails(ProcessResult result, _Options options) {
   }
 }
 
-ArgResults? _getArgResults(List<String> args) {
+ArgResults _getArgResults(List<String> args) {
   final parser = ArgParser(allowTrailingOptions: true);
   parser.addSeparator('Generates LLVM Wrapper used by this package:');
   parser.addMultiOption('include-header',
@@ -202,7 +196,7 @@ ArgResults? _getArgResults(List<String> args) {
     negatable: false,
   );
 
-  ArgResults? results;
+  ArgResults results;
   try {
     results = parser.parse(args);
 
@@ -234,13 +228,13 @@ void _changeIncludesUsingCmdArgs(ArgResults argResult, _Options options) {
 }
 
 /// Get options based on current platform.
-_Options? _getPlatformOptions() {
+_Options _getPlatformOptions() {
   if (Platform.isMacOS) {
-    return _platformOptions[_macOS];
+    return _macOSOpts;
   } else if (Platform.isWindows) {
-    return _platformOptions[_windows];
+    return _windowsOpts;
   } else if (Platform.isLinux) {
-    return _platformOptions[_linux];
+    return _linuxOpts;
   } else {
     throw Exception('Unknown Platform.');
   }

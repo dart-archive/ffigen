@@ -7,10 +7,10 @@ import 'typedef.dart';
 import 'writer.dart';
 
 class _SubType {
-  final String? c;
-  final String? dart;
+  final String c;
+  final String dart;
 
-  const _SubType({this.c, this.dart});
+  const _SubType({required this.c, required this.dart});
 }
 
 enum SupportedNativeType {
@@ -162,47 +162,47 @@ class Type {
   bool get isPrimitive =>
       (broadType == BroadType.NativeType || broadType == BroadType.Boolean);
 
-  String getCType(Writer? w) {
+  String getCType(Writer w) {
     switch (broadType) {
       case BroadType.NativeType:
-        return '${w!.ffiLibraryPrefix}.${_primitives[nativeType!]!.c}';
+        return '${w.ffiLibraryPrefix}.${_primitives[nativeType!]!.c}';
       case BroadType.Pointer:
-        return '${w!.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
+        return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
       case BroadType.Struct:
         return '${struc!.name}';
       case BroadType.NativeFunction:
-        return '${w!.ffiLibraryPrefix}.NativeFunction<${nativeFunc!.name}>';
+        return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc!.name}>';
       case BroadType
           .IncompleteArray: // Array parameters are treated as Pointers in C.
-        return '${w!.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
+        return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
       case BroadType
           .ConstantArray: // Array parameters are treated as Pointers in C.
-        return '${w!.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
+        return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
       case BroadType.Boolean: // Booleans are treated as uint8.
-        return '${w!.ffiLibraryPrefix}.${_primitives[SupportedNativeType.Uint8]!.c}';
+        return '${w.ffiLibraryPrefix}.${_primitives[SupportedNativeType.Uint8]!.c}';
       case BroadType.Handle:
-        return '${w!.ffiLibraryPrefix}.Handle';
+        return '${w.ffiLibraryPrefix}.Handle';
       default:
         throw Exception('cType unknown');
     }
   }
 
-  String? getDartType(Writer? w) {
+  String? getDartType(Writer w) {
     switch (broadType) {
       case BroadType.NativeType:
         return _primitives[nativeType!]!.dart;
       case BroadType.Pointer:
-        return '${w!.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
+        return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
       case BroadType.Struct:
         return '${struc!.name}';
       case BroadType.NativeFunction:
-        return '${w!.ffiLibraryPrefix}.NativeFunction<${nativeFunc!.name}>';
+        return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc!.name}>';
       case BroadType
           .IncompleteArray: // Array parameters are treated as Pointers in C.
-        return '${w!.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
+        return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
       case BroadType
           .ConstantArray: // Array parameters are treated as Pointers in C.
-        return '${w!.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
+        return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
       case BroadType.Boolean: // Booleans are treated as uint8.
         return _primitives[SupportedNativeType.Uint8]!.dart;
       case BroadType.Handle:

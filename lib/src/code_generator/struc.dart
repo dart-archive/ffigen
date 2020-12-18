@@ -79,7 +79,7 @@ class Struc extends NoLookUpBinding {
   }
 
   @override
-  BindingString toBindingString(Writer? w) {
+  BindingString toBindingString(Writer w) {
     members = members;
     final s = StringBuffer();
     final enclosingClassName = name;
@@ -97,7 +97,7 @@ class Struc extends NoLookUpBinding {
 
     // Write class declaration.
     s.write(
-        'class $enclosingClassName extends ${w!.ffiLibraryPrefix}.Struct{\n');
+        'class $enclosingClassName extends ${w.ffiLibraryPrefix}.Struct{\n');
     for (final m in members) {
       final memberName = localUniqueNamer.makeUnique(m.name);
       if (m.type.broadType == BroadType.ConstantArray) {
@@ -177,8 +177,8 @@ class ArrayHelper {
   final String elementNamePrefix;
 
   int? _expandedArrayLength;
-  int? get expandedArrayLength {
-    if (_expandedArrayLength != null) return _expandedArrayLength;
+  int get expandedArrayLength {
+    if (_expandedArrayLength != null) return _expandedArrayLength!;
 
     var arrayLength = 1;
     for (final i in dimensions) {
@@ -197,12 +197,12 @@ class ArrayHelper {
   });
 
   /// Create declaration binding, added inside the struct binding.
-  String declarationString(Writer? w) {
+  String declarationString(Writer w) {
     final s = StringBuffer();
     final arrayDartType = elementType.getDartType(w);
     final arrayCType = elementType.getCType(w);
 
-    for (var i = 0; i < expandedArrayLength!; i++) {
+    for (var i = 0; i < expandedArrayLength; i++) {
       if (elementType.isPrimitive) {
         s.write('  @${arrayCType}()\n');
       }
@@ -216,7 +216,7 @@ class ArrayHelper {
     return s.toString();
   }
 
-  String helperClassString(Writer? w) {
+  String helperClassString(Writer w) {
     final s = StringBuffer();
     final arrayType = elementType.getDartType(w);
     for (var dim = 0; dim < dimensions.length; dim++) {
@@ -271,7 +271,7 @@ class ArrayHelper {
         s.write('$arrayType operator[](int index){\n');
         s.write('$checkBoundsFunctionIdentifier(index);\n');
         s.write('switch($absoluteIndexIdentifier+index){\n');
-        for (var i = 0; i < expandedArrayLength!; i++) {
+        for (var i = 0; i < expandedArrayLength; i++) {
           s.write('case $i:\n');
           s.write('  return $structIdentifier.${elementNamePrefix}$i;\n');
         }
@@ -284,7 +284,7 @@ class ArrayHelper {
         s.write('void operator[]=(int index, $arrayType value){\n');
         s.write('$checkBoundsFunctionIdentifier(index);\n');
         s.write('switch($absoluteIndexIdentifier+index){\n');
-        for (var i = 0; i < expandedArrayLength!; i++) {
+        for (var i = 0; i < expandedArrayLength; i++) {
           s.write('case $i:\n');
           s.write('  $structIdentifier.${elementNamePrefix}$i = value;\n');
           s.write('  break;\n');

@@ -13,7 +13,7 @@ import 'package:ffigen/src/strings.dart' as strings;
 
 import '../test_utils.dart';
 
-Library? actual, expected;
+late Library actual, expected;
 
 void main() {
   group('dart_handle_test', () {
@@ -36,32 +36,32 @@ ${strings.headers}:
       );
     });
     test('Total bindings count', () {
-      expect(actual!.bindings.length, expected!.bindings.length);
+      expect(actual.bindings.length, expected.bindings.length);
     });
 
     test('func1', () {
-      expect(actual!.getBindingAsString('func1'),
-          expected!.getBindingAsString('func1'));
+      expect(actual.getBindingAsString('func1'),
+          expected.getBindingAsString('func1'));
     });
     test('func2', () {
-      expect(actual!.getBindingAsString('func2'),
-          expected!.getBindingAsString('func2'));
+      expect(actual.getBindingAsString('func2'),
+          expected.getBindingAsString('func2'));
     });
     test('func3', () {
-      expect(actual!.getBindingAsString('func3'),
-          expected!.getBindingAsString('func3'));
+      expect(actual.getBindingAsString('func3'),
+          expected.getBindingAsString('func3'));
     });
     test('func4', () {
-      expect(actual!.getBindingAsString('func4'),
-          expected!.getBindingAsString('func4'));
+      expect(actual.getBindingAsString('func4'),
+          expected.getBindingAsString('func4'));
     });
     test('struc1', () {
-      expect(actual!.getBindingAsString('struc1'),
-          expected!.getBindingAsString('struc1'));
+      expect(actual.getBindingAsString('struc1'),
+          expected.getBindingAsString('struc1'));
     });
     test('struc2', () {
-      expect(actual!.getBindingAsString('struc2'),
-          expected!.getBindingAsString('struc2'));
+      expect(actual.getBindingAsString('struc2'),
+          expected.getBindingAsString('struc2'));
     });
   });
 }

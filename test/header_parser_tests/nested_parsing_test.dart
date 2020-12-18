@@ -11,7 +11,7 @@ import 'package:ffigen/src/strings.dart' as strings;
 
 import '../test_utils.dart';
 
-Library? actual, expected;
+late Library actual, expected;
 
 void main() {
   group('nested_parsing_test', () {
@@ -35,16 +35,16 @@ ${strings.structs}:
     });
 
     test('Total bindings count', () {
-      expect(actual!.bindings.length, expected!.bindings.length);
+      expect(actual.bindings.length, expected.bindings.length);
     });
 
     test('Struct1', () {
-      expect(actual!.getBindingAsString('Struct1'),
-          expected!.getBindingAsString('Struct1'));
+      expect(actual.getBindingAsString('Struct1'),
+          expected.getBindingAsString('Struct1'));
     });
     test('Struct2', () {
-      expect(actual!.getBindingAsString('Struct2'),
-          expected!.getBindingAsString('Struct2'));
+      expect(actual.getBindingAsString('Struct2'),
+          expected.getBindingAsString('Struct2'));
     });
   });
 }

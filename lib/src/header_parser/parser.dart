@@ -48,11 +48,12 @@ final _logger = Logger('ffigen.header_parser.parser');
 /// Initializes parser, clears any previous values.
 void initParser(Config c) {
   // Find full path of dynamic library and initialize bindings.
-  if (findDotDartTool() == null) {
+  final ddt = findDotDartTool();
+  if (ddt == null) {
     throw Exception('Unable to find .dart_tool.');
   } else {
     final fullDylibPath = path.join(
-      findDotDartTool()!.toFilePath(),
+      ddt.toFilePath(),
       strings.ffigenFolderName,
       strings.dylibFileName,
     );

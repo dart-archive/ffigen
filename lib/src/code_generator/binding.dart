@@ -35,7 +35,7 @@ abstract class Binding {
   ///
   /// Note: This does not print the typedef dependencies.
   /// Must call [getTypedefDependencies] first.
-  BindingString toBindingString(Writer? w);
+  BindingString toBindingString(Writer w);
 }
 
 /// Base class for bindings which look up symbols in dynamic library.

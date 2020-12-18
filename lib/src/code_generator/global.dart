@@ -35,7 +35,7 @@ class Global extends LookUpBinding {
         );
 
   @override
-  BindingString toBindingString(Writer? w) {
+  BindingString toBindingString(Writer w) {
     final s = StringBuffer();
     final globalVarName = name;
     if (dartDoc != null) {
@@ -43,7 +43,7 @@ class Global extends LookUpBinding {
     }
 
     final holderVarName =
-        w!.wrapperLevelUniqueNamer!.makeUnique('_$globalVarName');
+        w.wrapperLevelUniqueNamer.makeUnique('_$globalVarName');
     s.write(
         '${w.ffiLibraryPrefix}.Pointer<${type.getCType(w)}> $holderVarName;\n');
     s.write(

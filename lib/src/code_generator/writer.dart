@@ -33,9 +33,9 @@ class Writer {
   late UniqueNamer _initialTopLevelUniqueNamer, _initialWrapperLevelUniqueNamer;
 
   /// Used by [Binding]s for generating required code.
-  UniqueNamer? _topLevelUniqueNamer, _wrapperLevelUniqueNamer;
-  UniqueNamer? get topLevelUniqueNamer => _topLevelUniqueNamer;
-  UniqueNamer? get wrapperLevelUniqueNamer => _wrapperLevelUniqueNamer;
+  late UniqueNamer _topLevelUniqueNamer, _wrapperLevelUniqueNamer;
+  UniqueNamer get topLevelUniqueNamer => _topLevelUniqueNamer;
+  UniqueNamer get wrapperLevelUniqueNamer => _wrapperLevelUniqueNamer;
 
   String? _arrayHelperClassPrefix;
 
@@ -183,12 +183,12 @@ class Writer {
     final base = name;
     var uniqueName = name;
     var suffix = 0;
-    while (topLevelUniqueNamer!.isUsed(uniqueName) ||
-        wrapperLevelUniqueNamer!.isUsed(uniqueName)) {
+    while (topLevelUniqueNamer.isUsed(uniqueName) ||
+        wrapperLevelUniqueNamer.isUsed(uniqueName)) {
       suffix++;
       uniqueName = base + suffix.toString();
     }
-    topLevelUniqueNamer!.markUsed(uniqueName);
+    topLevelUniqueNamer.markUsed(uniqueName);
     return uniqueName;
   }
 }

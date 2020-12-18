@@ -42,7 +42,7 @@ class Constant extends NoLookUpBinding {
         );
 
   @override
-  BindingString toBindingString(Writer? w) {
+  BindingString toBindingString(Writer w) {
     final s = StringBuffer();
     final constantName = name;
 

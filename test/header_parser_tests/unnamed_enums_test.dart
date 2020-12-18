@@ -11,7 +11,7 @@ import 'package:ffigen/src/strings.dart' as strings;
 
 import '../test_utils.dart';
 
-Library? actual, expected;
+late Library actual, expected;
 
 void main() {
   group('unnamed_enums_test', () {
@@ -37,22 +37,20 @@ ${strings.unnamedEnums}:
     });
 
     test('Total bindings count', () {
-      expect(actual!.bindings.length, expected!.bindings.length);
+      expect(actual.bindings.length, expected.bindings.length);
     });
 
     test('Parse unnamed enum Values', () {
-      expect(
-          actual!.getBindingAsString('A'), expected!.getBindingAsString('A'));
-      expect(
-          actual!.getBindingAsString('C'), expected!.getBindingAsString('C'));
+      expect(actual.getBindingAsString('A'), expected.getBindingAsString('A'));
+      expect(actual.getBindingAsString('C'), expected.getBindingAsString('C'));
     });
 
     test('Ignore unnamed enums inside typedefs', () {
-      expect(() => actual!.getBindingAsString('E'),
+      expect(() => actual.getBindingAsString('E'),
           throwsA(TypeMatcher<NotFoundException>()));
-      expect(() => actual!.getBindingAsString('F'),
+      expect(() => actual.getBindingAsString('F'),
           throwsA(TypeMatcher<NotFoundException>()));
-      expect(() => actual!.getBindingAsString('G'),
+      expect(() => actual.getBindingAsString('G'),
           throwsA(TypeMatcher<NotFoundException>()));
     });
   });

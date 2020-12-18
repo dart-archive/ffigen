@@ -80,7 +80,7 @@ class Func extends LookUpBinding {
       // Add Dart function typedef.
       _typedefDependencies!.add(dartType);
     }
-    return _typedefDependencies ?? [];
+    return _typedefDependencies!;
   }
 
   Typedef? _cType, _dartType;
@@ -98,10 +98,10 @@ class Func extends LookUpBinding {
       );
 
   @override
-  BindingString toBindingString(Writer? w) {
+  BindingString toBindingString(Writer w) {
     final s = StringBuffer();
     final enclosingFuncName = name;
-    final funcVarName = w!.wrapperLevelUniqueNamer!.makeUnique('_$name');
+    final funcVarName = w.wrapperLevelUniqueNamer.makeUnique('_$name');
 
     if (dartDoc != null) {
       s.write(makeDartDoc(dartDoc!));
