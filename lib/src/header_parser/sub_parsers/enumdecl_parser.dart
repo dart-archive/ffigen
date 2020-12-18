@@ -36,7 +36,7 @@ EnumClass? parseEnumDeclaration(
   final enumName = name ?? cursor.spelling();
   if (enumName == '') {
     // Save this unnamed enum if it is anonymous (therefore not in a typedef).
-    if (clang!.clang_Cursor_isAnonymous_wrap(cursor) != 0) {
+    if (clang.clang_Cursor_isAnonymous_wrap(cursor) != 0) {
       _logger.fine('Saving anonymous enum.');
       saveUnNamedEnum(cursor);
     } else {
@@ -48,24 +48,24 @@ EnumClass? parseEnumDeclaration(
       usr: enumUsr,
       dartDoc: getCursorDocComment(cursor),
       originalName: enumName,
-      name: config!.enumClassDecl!.renameUsingConfig(enumName),
+      name: config.enumClassDecl.renameUsingConfig(enumName),
     );
-    bindingsIndex!.addEnumClassToSeen(enumUsr, _stack.top.enumClass);
+    bindingsIndex.addEnumClassToSeen(enumUsr, _stack.top.enumClass!);
     _addEnumConstant(cursor);
   }
-  if (bindingsIndex!.isSeenEnumClass(enumUsr)) {
-    _stack.top.enumClass = bindingsIndex!.getSeenEnumClass(enumUsr);
+  if (bindingsIndex.isSeenEnumClass(enumUsr)) {
+    _stack.top.enumClass = bindingsIndex.getSeenEnumClass(enumUsr);
 
     // If enum is seen, update it's name.
     _stack.top.enumClass!.name =
-        config!.enumClassDecl!.renameUsingConfig(enumName);
+        config.enumClassDecl.renameUsingConfig(enumName);
   }
 
   return _stack.pop().enumClass;
 }
 
 void _addEnumConstant(Pointer<clang_types.CXCursor> cursor) {
-  final resultCode = clang!.clang_visitChildren_wrap(
+  final resultCode = clang.clang_visitChildren_wrap(
     cursor,
     Pointer.fromFunction(
         _enumCursorVisitor, clang_types.CXChildVisitResult.CXChildVisit_Break),
@@ -83,7 +83,7 @@ int _enumCursorVisitor(Pointer<clang_types.CXCursor> cursor,
     Pointer<clang_types.CXCursor> parent, Pointer<Void> clientData) {
   try {
     _logger.finest('  enumCursorVisitor: ${cursor.completeStringRepr()}');
-    switch (clang!.clang_getCursorKind_wrap(cursor)) {
+    switch (clang.clang_getCursorKind_wrap(cursor)) {
       case clang_types.CXCursorKind.CXCursor_EnumConstantDecl:
         _addEnumConstantToEnumClass(cursor);
         break;
@@ -109,10 +109,10 @@ void _addEnumConstantToEnumClass(Pointer<clang_types.CXCursor> cursor) {
           nesting.length + commentPrefix.length,
         ),
         originalName: cursor.spelling(),
-        name: config!.enumClassDecl!.renameMemberUsingConfig(
+        name: config.enumClassDecl.renameMemberUsingConfig(
           _stack.top.enumClass!.originalName,
           cursor.spelling(),
         ),
-        value: clang!.clang_getEnumConstantDeclValue_wrap(cursor)),
+        value: clang.clang_getEnumConstantDeclValue_wrap(cursor)),
   );
 }

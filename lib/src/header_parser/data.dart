@@ -14,20 +14,20 @@ import 'utils.dart';
 /// Holds all Global shared variables.
 
 /// Holds configurations.
-Config? get config => _config;
-Config? _config;
+Config get config => _config;
+late Config _config;
 
 /// Holds clang functions.
-Clang? get clang => _clang;
-Clang? _clang;
+Clang get clang => _clang;
+late Clang _clang;
 
 // Tracks seen status for bindings
-BindingsIndex? get bindingsIndex => _bindingsIndex;
-BindingsIndex? _bindingsIndex;
+BindingsIndex get bindingsIndex => _bindingsIndex;
+BindingsIndex _bindingsIndex = BindingsIndex();
 
 /// Used for naming typedefs.
-IncrementalNamer? get incrementalNamer => _incrementalNamer;
-IncrementalNamer? _incrementalNamer;
+IncrementalNamer get incrementalNamer => _incrementalNamer;
+IncrementalNamer _incrementalNamer = IncrementalNamer();
 
 /// Holds the unique id refering to this isolate.
 ///
@@ -36,14 +36,14 @@ IncrementalNamer? _incrementalNamer;
 final uid = Isolate.current.controlPort.nativePort;
 
 /// Saved macros, Key: prefixedName, Value originalName.
-Map<String?, Macro>? get savedMacros => _savedMacros;
-Map<String?, Macro>? _savedMacros;
+Map<String, Macro> get savedMacros => _savedMacros;
+Map<String, Macro> _savedMacros = {};
 
 /// Saved unnamed EnumConstants.
-List<Constant>? get unnamedEnumConstants => _unnamedEnumConstants;
-List<Constant>? _unnamedEnumConstants;
+List<Constant> get unnamedEnumConstants => _unnamedEnumConstants;
+List<Constant> _unnamedEnumConstants = [];
 
-void initializeGlobals({required Config? config, required Clang clang}) {
+void initializeGlobals({required Config config, required Clang clang}) {
   _config = config;
   _clang = clang;
   _incrementalNamer = IncrementalNamer();

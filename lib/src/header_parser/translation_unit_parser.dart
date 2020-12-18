@@ -25,7 +25,7 @@ Set<Binding>? _bindings;
 Set<Binding>? parseTranslationUnit(
     Pointer<clang_types.CXCursor> translationUnitCursor) {
   _bindings = {};
-  final resultCode = clang!.clang_visitChildren_wrap(
+  final resultCode = clang.clang_visitChildren_wrap(
     translationUnitCursor,
     Pointer.fromFunction(
         _rootCursorVisitor, clang_types.CXChildVisitResult.CXChildVisit_Break),
@@ -43,7 +43,7 @@ int _rootCursorVisitor(Pointer<clang_types.CXCursor> cursor,
   try {
     if (shouldIncludeRootCursor(cursor.sourceFileName())) {
       _logger.finest('rootCursorVisitor: ${cursor.completeStringRepr()}');
-      switch (clang!.clang_getCursorKind_wrap(cursor)) {
+      switch (clang.clang_getCursorKind_wrap(cursor)) {
         case clang_types.CXCursorKind.CXCursor_FunctionDecl:
           addToBindings(parseFunctionDeclaration(cursor));
           break;

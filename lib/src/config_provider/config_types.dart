@@ -269,7 +269,7 @@ class MemberRenamer {
   final Map<String, Renamer> _memberRenameFull;
   final List<RegExpMemberRenamer> _memberRenameMatchers;
 
-  final Map<String?, Renamer?> _cache = {};
+  final Map<String, Renamer> _cache = {};
 
   MemberRenamer({
     Map<String, Renamer>? memberRenameFull,
@@ -285,7 +285,7 @@ class MemberRenamer {
     // Apply full rename (if any).
     if (_memberRenameFull.containsKey(declaration)) {
       // Add to cache.
-      _cache[declaration] = _memberRenameFull[declaration];
+      _cache[declaration] = _memberRenameFull[declaration]!;
       return _cache[declaration]!.rename(member);
     }
 

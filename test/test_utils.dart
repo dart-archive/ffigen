@@ -38,7 +38,7 @@ extension LibraryTestExt on Library {
 ///
 /// This will not delete the actual debug file incase [expect] throws an error.
 void matchLibraryWithExpected(
-    Library library, List<String> pathForActual, List<String?> pathToExpected) {
+    Library library, List<String> pathForActual, List<String> pathToExpected) {
   final file = File(
     path.joinAll(pathForActual),
   );
@@ -46,8 +46,7 @@ void matchLibraryWithExpected(
 
   try {
     final actual = file.readAsStringSync();
-    final expected = File(path.joinAll(pathToExpected as Iterable<String>))
-        .readAsStringSync();
+    final expected = File(path.joinAll(pathToExpected)).readAsStringSync();
     expect(actual, expected);
     if (file.existsSync()) {
       file.delete();

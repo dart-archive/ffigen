@@ -29,15 +29,15 @@ void logTuDiagnostics(
   Logger logger,
   String header,
 ) {
-  final total = clang!.clang_getNumDiagnostics(tu);
+  final total = clang.clang_getNumDiagnostics(tu);
   if (total == 0) {
     return;
   }
 
   logger.severe('Header $header: Total errors/warnings: $total.');
   for (var i = 0; i < total; i++) {
-    final diag = clang!.clang_getDiagnostic(tu, i);
-    final cxstring = clang!.clang_formatDiagnostic_wrap(
+    final diag = clang.clang_getDiagnostic(tu, i);
+    final cxstring = clang.clang_formatDiagnostic_wrap(
       diag,
       clang_types
               .CXDiagnosticDisplayOptions.CXDiagnostic_DisplaySourceLocation |
@@ -46,7 +46,7 @@ void logTuDiagnostics(
               .CXDiagnosticDisplayOptions.CXDiagnostic_DisplayCategoryName,
     );
     logger.severe('    ' + cxstring.toStringAndDispose()!);
-    clang!.clang_disposeDiagnostic(diag);
+    clang.clang_disposeDiagnostic(diag);
   }
 }
 
@@ -58,23 +58,23 @@ extension CXSourceRangeExt on Pointer<clang_types.CXSourceRange> {
 
 extension CXCursorExt on Pointer<clang_types.CXCursor> {
   String usr() {
-    return clang!.clang_getCursorUSR_wrap(this).toStringAndDispose()!;
+    return clang.clang_getCursorUSR_wrap(this).toStringAndDispose()!;
   }
 
   /// Returns the kind int from [clang_types.CXCursorKind].
   int kind() {
-    return clang!.clang_getCursorKind_wrap(this);
+    return clang.clang_getCursorKind_wrap(this);
   }
 
   /// Name of the cursor (E.g function name, Struct name, Parameter name).
   String spelling() {
-    return clang!.clang_getCursorSpelling_wrap(this).toStringAndDispose()!;
+    return clang.clang_getCursorSpelling_wrap(this).toStringAndDispose()!;
   }
 
   /// Spelling for a [clang_types.CXCursorKind], useful for debug purposes.
   String kindSpelling() {
-    return clang!
-        .clang_getCursorKindSpelling_wrap(clang!.clang_getCursorKind_wrap(this))
+    return clang
+        .clang_getCursorKindSpelling_wrap(clang.clang_getCursorKind_wrap(this))
         .toStringAndDispose()!;
   }
 
@@ -89,7 +89,7 @@ extension CXCursorExt on Pointer<clang_types.CXCursor> {
 
   /// Dispose type using [type.dispose].
   Pointer<clang_types.CXType> type() {
-    return clang!.clang_getCursorType_wrap(this);
+    return clang.clang_getCursorType_wrap(this);
   }
 
   /// Only valid for [clang.CXCursorKind.CXCursor_FunctionDecl].
@@ -97,23 +97,22 @@ extension CXCursorExt on Pointer<clang_types.CXCursor> {
   /// Dispose type using [type.dispose].
   Pointer<clang_types.CXType> returnType() {
     final t = type();
-    final r = clang!.clang_getResultType_wrap(t);
+    final r = clang.clang_getResultType_wrap(t);
     t.dispose();
     return r;
   }
 
   String? sourceFileName() {
-    final cxsource = clang!.clang_getCursorLocation_wrap(this);
+    final cxsource = clang.clang_getCursorLocation_wrap(this);
     final cxfilePtr = allocate<Pointer<Void>>();
     final line = allocate<Uint32>();
     final column = allocate<Uint32>();
     final offset = allocate<Uint32>();
 
     // Puts the values in these pointers.
-    clang!
-        .clang_getFileLocation_wrap(cxsource, cxfilePtr, line, column, offset);
+    clang.clang_getFileLocation_wrap(cxsource, cxfilePtr, line, column, offset);
     final s =
-        clang!.clang_getFileName_wrap(cxfilePtr.value).toStringAndDispose();
+        clang.clang_getFileName_wrap(cxfilePtr.value).toStringAndDispose();
     free(cxsource);
     free(cxfilePtr);
     free(line);
@@ -141,25 +140,25 @@ Pointer<clang_types.CXSourceRange> lastCommentRange = nullptr;
 String? getCursorDocComment(Pointer<clang_types.CXCursor> cursor,
     [int indent = commentPrefix.length]) {
   String? formattedDocComment;
-  final currentCommentRange = clang!.clang_Cursor_getCommentRange_wrap(cursor);
+  final currentCommentRange = clang.clang_Cursor_getCommentRange_wrap(cursor);
 
   // See if this comment and the last comment both point to the same source
   // range.
   if (lastCommentRange != nullptr &&
       currentCommentRange != nullptr &&
-      clang!.clang_equalRanges_wrap(lastCommentRange, currentCommentRange) !=
+      clang.clang_equalRanges_wrap(lastCommentRange, currentCommentRange) !=
           0) {
     formattedDocComment = null;
   } else {
-    switch (config!.commentType!.length) {
+    switch (config.commentType.length) {
       case CommentLength.full:
-        formattedDocComment = removeRawCommentMarkups(clang!
+        formattedDocComment = removeRawCommentMarkups(clang
             .clang_Cursor_getRawCommentText_wrap(cursor)
             .toStringAndDispose());
         break;
       case CommentLength.brief:
         formattedDocComment = _wrapNoNewLineString(
-            clang!
+            clang
                 .clang_Cursor_getBriefCommentText_wrap(cursor)
                 .toStringAndDispose(),
             80 - indent);
@@ -236,7 +235,7 @@ extension CXTypeExt on Pointer<clang_types.CXType> {
 
   /// Spelling for a [clang_types.CXTypeKind], useful for debug purposes.
   String? spelling() {
-    return clang!.clang_getTypeSpelling_wrap(this).toStringAndDispose();
+    return clang.clang_getTypeSpelling_wrap(this).toStringAndDispose();
   }
 
   /// Returns the typeKind int from [clang_types.CXTypeKind].
@@ -245,7 +244,7 @@ extension CXTypeExt on Pointer<clang_types.CXType> {
   }
 
   String? kindSpelling() {
-    return clang!.clang_getTypeKindSpelling_wrap(kind()).toStringAndDispose();
+    return clang.clang_getTypeKindSpelling_wrap(kind()).toStringAndDispose();
   }
 
   /// For debugging: returns [spelling] [kind] [kindSpelling].
@@ -267,7 +266,7 @@ extension CXStringExt on Pointer<clang_types.CXString> {
   /// [toStringAndDispose] method.
   String? string() {
     String? s;
-    final cstring = clang!.clang_getCString_wrap(this);
+    final cstring = clang.clang_getCString_wrap(this);
     if (cstring != nullptr) {
       s = Utf8.fromUtf8(cstring.cast());
     }
@@ -278,12 +277,12 @@ extension CXStringExt on Pointer<clang_types.CXString> {
   String? toStringAndDispose() {
     // Note: clang_getCString_wrap returns a const char *, calling free will result in error.
     final s = string();
-    clang!.clang_disposeString_wrap(this);
+    clang.clang_disposeString_wrap(this);
     return s;
   }
 
   void dispose() {
-    clang!.clang_disposeString_wrap(this);
+    clang.clang_disposeString_wrap(this);
   }
 }
 
@@ -329,7 +328,7 @@ class IncrementalNamer {
 }
 
 class Macro {
-  final String? usr;
+  final String usr;
   final String? originalName;
 
   Macro(this.usr, this.originalName);
@@ -338,51 +337,51 @@ class Macro {
 /// Tracks if a binding is 'seen' or not.
 class BindingsIndex {
   // Tracks if bindings are already seen, Map key is USR obtained from libclang.
-  final Map<String?, Struc?> _structs = {};
-  final Map<String?, Func?> _functions = {};
-  final Map<String?, EnumClass?> _enumClass = {};
+  final Map<String, Struc> _structs = {};
+  final Map<String, Func> _functions = {};
+  final Map<String, EnumClass> _enumClass = {};
   final Map<String, Constant> _unnamedEnumConstants = {};
-  final Map<String?, String?> _macros = {};
+  final Map<String, String> _macros = {};
   // Stores only named typedefC used in NativeFunc.
   final Map<String, Typedef> _functionTypedefs = {};
 
-  bool isSeenStruct(String? usr) {
+  bool isSeenStruct(String usr) {
     return _structs.containsKey(usr);
   }
 
-  void addStructToSeen(String? usr, Struc? struc) {
+  void addStructToSeen(String usr, Struc struc) {
     _structs[usr] = struc;
   }
 
-  Struc? getSeenStruct(String? usr) {
+  Struc? getSeenStruct(String usr) {
     return _structs[usr];
   }
 
-  bool isSeenFunc(String? usr) {
+  bool isSeenFunc(String usr) {
     return _functions.containsKey(usr);
   }
 
-  void addFuncToSeen(String? usr, Func? func) {
+  void addFuncToSeen(String usr, Func func) {
     _functions[usr] = func;
   }
 
-  Func? getSeenFunc(String? usr) {
+  Func? getSeenFunc(String usr) {
     return _functions[usr];
   }
 
-  bool isSeenEnumClass(String? usr) {
+  bool isSeenEnumClass(String usr) {
     return _enumClass.containsKey(usr);
   }
 
-  void addEnumClassToSeen(String? usr, EnumClass? enumClass) {
+  void addEnumClassToSeen(String usr, EnumClass enumClass) {
     _enumClass[usr] = enumClass;
   }
 
-  EnumClass? getSeenEnumClass(String? usr) {
+  EnumClass? getSeenEnumClass(String usr) {
     return _enumClass[usr];
   }
 
-  bool isSeenUnnamedEnumConstant(String? usr) {
+  bool isSeenUnnamedEnumConstant(String usr) {
     return _unnamedEnumConstants.containsKey(usr);
   }
 
@@ -394,11 +393,11 @@ class BindingsIndex {
     return _unnamedEnumConstants[usr];
   }
 
-  bool isSeenMacro(String? usr) {
+  bool isSeenMacro(String usr) {
     return _macros.containsKey(usr);
   }
 
-  void addMacroToSeen(String? usr, String? macro) {
+  void addMacroToSeen(String usr, String macro) {
     _macros[usr] = macro;
   }
 

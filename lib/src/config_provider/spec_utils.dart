@@ -28,7 +28,7 @@ String _replaceSeparators(String path) {
 /// Checks if type of value is [T], logs an error if it's not.
 ///
 /// [key] is printed as `'item1 -> item2 => item3'` in log message.
-bool checkType<T>(List<String?> keys, dynamic value) {
+bool checkType<T>(List<String> keys, dynamic value) {
   if (value is! T) {
     _logger.severe(
         "Expected value of key '${keys.join(' -> ')}' to be of type '${T}'.");

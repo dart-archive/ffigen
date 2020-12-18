@@ -17,7 +17,7 @@ final _logger = Logger('ffigen.header_parser.unnamed_enumdecl_parser');
 
 /// Saves unnamed enums.
 void saveUnNamedEnum(Pointer<clang_types.CXCursor> cursor) {
-  final resultCode = clang!.clang_visitChildren_wrap(
+  final resultCode = clang.clang_visitChildren_wrap(
     cursor,
     Pointer.fromFunction(_unnamedenumCursorVisitor,
         clang_types.CXChildVisitResult.CXChildVisit_Break),
@@ -36,7 +36,7 @@ int _unnamedenumCursorVisitor(Pointer<clang_types.CXCursor> cursor,
   try {
     _logger
         .finest('  unnamedenumCursorVisitor: ${cursor.completeStringRepr()}');
-    switch (clang!.clang_getCursorKind_wrap(cursor)) {
+    switch (clang.clang_getCursorKind_wrap(cursor)) {
       case clang_types.CXCursorKind.CXCursor_EnumConstantDecl:
         if (shouldIncludeUnnamedEnumConstant(cursor.usr(), cursor.spelling())) {
           _addUnNamedEnumConstant(cursor);
@@ -57,15 +57,15 @@ int _unnamedenumCursorVisitor(Pointer<clang_types.CXCursor> cursor,
 
 /// Adds the parameter to func in [functiondecl_parser.dart].
 void _addUnNamedEnumConstant(Pointer<clang_types.CXCursor> cursor) {
-  unnamedEnumConstants!.add(
+  unnamedEnumConstants.add(
     Constant(
       usr: cursor.usr(),
       originalName: cursor.spelling(),
-      name: config!.unnamedEnumConstants!.renameUsingConfig(
+      name: config.unnamedEnumConstants.renameUsingConfig(
         cursor.spelling(),
       ),
       rawType: 'int',
-      rawValue: clang!.clang_getEnumConstantDeclValue_wrap(cursor).toString(),
+      rawValue: clang.clang_getEnumConstantDeclValue_wrap(cursor).toString(),
     ),
   );
 }

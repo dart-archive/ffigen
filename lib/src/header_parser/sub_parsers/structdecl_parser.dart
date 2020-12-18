@@ -47,26 +47,26 @@ Struc? parseStructDeclaration(
   if (structName.isEmpty) {
     _logger.finest('unnamed structure or typedef structure declaration');
   } else if ((ignoreFilter || shouldIncludeStruct(structUsr, structName)) &&
-      (!bindingsIndex!.isSeenStruct(structUsr))) {
+      (!bindingsIndex.isSeenStruct(structUsr))) {
     _logger.fine(
         '++++ Adding Structure: structName: ${structName}, ${cursor.completeStringRepr()}');
     _stack.top.struc = Struc(
       usr: structUsr,
       originalName: structName,
-      name: config!.structDecl!.renameUsingConfig(structName),
+      name: config.structDecl.renameUsingConfig(structName),
       dartDoc: getCursorDocComment(cursor),
     );
     // Adding to seen here to stop recursion if a struct has itself as a
     // member, members are updated later.
-    bindingsIndex!.addStructToSeen(structUsr, _stack.top.struc);
+    bindingsIndex.addStructToSeen(structUsr, _stack.top.struc!);
     _setStructMembers(cursor);
   }
 
-  if (bindingsIndex!.isSeenStruct(structUsr)) {
-    _stack.top.struc = bindingsIndex!.getSeenStruct(structUsr);
+  if (bindingsIndex.isSeenStruct(structUsr)) {
+    _stack.top.struc = bindingsIndex.getSeenStruct(structUsr);
 
     // If struct is seen, update it's name.
-    _stack.top.struc!.name = config!.structDecl!.renameUsingConfig(structName);
+    _stack.top.struc!.name = config.structDecl.renameUsingConfig(structName);
   }
   return _stack.pop().struc;
 }
@@ -76,7 +76,7 @@ void _setStructMembers(Pointer<clang_types.CXCursor> cursor) {
   _stack.top.nestedStructMember = false;
   _stack.top.unimplementedMemberType = false;
 
-  final resultCode = clang!.clang_visitChildren_wrap(
+  final resultCode = clang.clang_visitChildren_wrap(
     cursor,
     Pointer.fromFunction(_structMembersVisitor,
         clang_types.CXChildVisitResult.CXChildVisit_Break),
@@ -86,7 +86,7 @@ void _setStructMembers(Pointer<clang_types.CXCursor> cursor) {
   visitChildrenResultChecker(resultCode);
 
   // Returning null to exclude the struct members as it has a struct by value field.
-  if (_stack.top.arrayMember && !config!.arrayWorkaround!) {
+  if (_stack.top.arrayMember && !config.arrayWorkaround) {
     _logger.fine(
         '---- Removed Struct members, reason: struct has array members ${cursor.completeStringRepr()}');
     _logger.warning(
@@ -150,7 +150,7 @@ int _structMembersVisitor(Pointer<clang_types.CXCursor> cursor,
       } else if (mt.broadType == BroadType.IncompleteArray) {
         // TODO(68): Structs with flexible Array Members are not supported.
         _stack.top.flexibleArrayMember = true;
-      } else if (clang!.clang_getFieldDeclBitWidth_wrap(cursor) != -1) {
+      } else if (clang.clang_getFieldDeclBitWidth_wrap(cursor) != -1) {
         // TODO(84): Struct with bitfields are not suppoorted.
         _stack.top.bitFieldMember = true;
       } else if (mt.broadType == BroadType.Handle) {
@@ -168,7 +168,7 @@ int _structMembersVisitor(Pointer<clang_types.CXCursor> cursor,
             nesting.length + commentPrefix.length,
           ),
           originalName: cursor.spelling(),
-          name: config!.structDecl!.renameMemberUsingConfig(
+          name: config.structDecl.renameMemberUsingConfig(
             _stack.top.struc!.originalName,
             cursor.spelling(),
           ),

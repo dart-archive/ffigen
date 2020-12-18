@@ -40,7 +40,7 @@ void main() {
 
       try {
         final actual = file.readAsStringSync();
-        final expected = File(path.join(config.output!)).readAsStringSync();
+        final expected = File(path.join(config.output)).readAsStringSync();
         expect(actual, expected);
         if (file.existsSync()) {
           file.delete();

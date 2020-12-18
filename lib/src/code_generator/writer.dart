@@ -54,7 +54,7 @@ class Writer {
   }) {
     final globalLevelNameSet = noLookUpBindings.map((e) => e.name).toSet();
     final wrapperLevelNameSet = lookUpBindings.map((e) => e.name).toSet();
-    final allNameSet = <String?>{}
+    final allNameSet = <String>{}
       ..addAll(globalLevelNameSet)
       ..addAll(wrapperLevelNameSet);
 
@@ -64,8 +64,8 @@ class Writer {
 
     /// Wrapper class name must be unique among all names.
     _className = allLevelsUniqueNamer.makeUnique(className);
-    _initialWrapperLevelUniqueNamer.markUsed(_className);
-    _initialTopLevelUniqueNamer.markUsed(_className);
+    _initialWrapperLevelUniqueNamer.markUsed(_className!);
+    _initialTopLevelUniqueNamer.markUsed(_className!);
 
     /// [_ffiLibraryPrefix] should be unique in top level.
     _ffiLibraryPrefix = _initialTopLevelUniqueNamer.makeUnique('ffi');
@@ -79,7 +79,7 @@ class Writer {
     _arrayHelperClassPrefix = base;
     var suffixInt = 0;
     for (var i = 0; i < allNameSet.length; i++) {
-      if (allNameSet.elementAt(i)!.startsWith(_arrayHelperClassPrefix!)) {
+      if (allNameSet.elementAt(i).startsWith(_arrayHelperClassPrefix!)) {
         // Not a unique prefix, start over with a new suffix.
         i = -1;
         suffixInt++;

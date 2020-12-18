@@ -21,80 +21,81 @@ final _logger = Logger('ffigen.config_provider.config');
 /// Handles validation, extraction of confiurations from yaml file.
 class Config {
   /// output file name.
-  String? get output => _output;
-  String? _output;
+  String get output => _output;
+  late String _output;
   // Holds headers and filters for header.
-  Headers? get headers => _headers;
-  Headers? _headers;
+  Headers get headers => _headers;
+  late Headers _headers;
 
   /// CommandLine Arguments to pass to clang_compiler.
-  List<String>? get compilerOpts => _compilerOpts;
-  List<String>? _compilerOpts;
+  List<String> get compilerOpts => _compilerOpts;
+  late List<String> _compilerOpts;
 
   /// Declaration config for Functions.
-  Declaration? get functionDecl => _functionDecl;
-  Declaration? _functionDecl;
+  Declaration get functionDecl => _functionDecl;
+  late Declaration _functionDecl;
 
   /// Declaration config for Structs.
-  Declaration? get structDecl => _structDecl;
-  Declaration? _structDecl;
+  Declaration get structDecl => _structDecl;
+  late Declaration _structDecl;
 
   /// Declaration config for Enums.
-  Declaration? get enumClassDecl => _enumClassDecl;
-  Declaration? _enumClassDecl;
+  Declaration get enumClassDecl => _enumClassDecl;
+  late Declaration _enumClassDecl;
 
   /// Declaration config for Unnamed enum constants.
-  Declaration? get unnamedEnumConstants => _unnamedEnumConstants;
-  Declaration? _unnamedEnumConstants;
+  Declaration get unnamedEnumConstants => _unnamedEnumConstants;
+  late Declaration _unnamedEnumConstants;
 
   /// Declaration config for Macro constants.
-  Declaration? get macroDecl => _macroDecl;
-  Declaration? _macroDecl;
+  Declaration get macroDecl => _macroDecl;
+  late Declaration _macroDecl;
 
   /// If generated bindings should be sorted alphabetically.
-  bool? get sort => _sort;
-  bool? _sort;
+  bool get sort => _sort;
+  late bool _sort;
 
   /// If typedef of supported types(int8_t) should be directly used.
-  bool? get useSupportedTypedefs => _useSupportedTypedefs;
-  bool? _useSupportedTypedefs;
+  bool get useSupportedTypedefs => _useSupportedTypedefs;
+  late bool _useSupportedTypedefs;
 
   /// Stores typedef name to NativeType mappings specified by user.
-  Map<String, SupportedNativeType>? get typedefNativeTypeMappings =>
+  Map<String, SupportedNativeType> get typedefNativeTypeMappings =>
       _typedefNativeTypeMappings;
-  Map<String, SupportedNativeType>? _typedefNativeTypeMappings;
+  late Map<String, SupportedNativeType> _typedefNativeTypeMappings;
 
   /// Extracted Doc comment type.
-  CommentType? get commentType => _commentType;
-  CommentType? _commentType;
+  CommentType get commentType => _commentType;
+  late CommentType _commentType;
 
   /// If tool should generate array workarounds.
   ///
   /// If false(default), structs with inline array members will have all its
   /// members removed.
-  bool? get arrayWorkaround => _arrayWorkaround;
-  bool? _arrayWorkaround;
+  bool get arrayWorkaround => _arrayWorkaround;
+  late bool _arrayWorkaround;
 
   /// If dart bool should be generated for C booleans.
-  bool? get dartBool => _dartBool;
-  bool? _dartBool;
+  bool get dartBool => _dartBool;
+  late bool _dartBool;
 
   /// Name of the wrapper class.
-  String? get wrapperName => _wrapperName;
-  String? _wrapperName;
+  String get wrapperName => _wrapperName;
+  late String _wrapperName;
 
   /// Doc comment for the wrapper class.
-  String? get wrapperDocComment => _wrapperDocComment;
-  String? _wrapperDocComment;
+  String get wrapperDocComment => _wrapperDocComment;
+  late String _wrapperDocComment;
 
   /// Header of the generated bindings.
-  String? get preamble => _preamble;
-  String? _preamble;
-  Config._();
+  String get preamble => _preamble;
+  late String _preamble;
 
   /// If `Dart_Handle` should be mapped with Handle/Object.
-  bool? get useDartHandle => _useDartHandle;
-  bool? _useDartHandle;
+  bool get useDartHandle => _useDartHandle;
+  late bool _useDartHandle;
+
+  Config._();
 
   /// Create config from Yaml map.
   factory Config.fromYaml(YamlMap map) {
@@ -219,7 +220,7 @@ class Config {
           _macroDecl = result as Declaration;
         },
       ),
-      strings.sizemap: Specification<Map<int?, SupportedNativeType>>(
+      strings.sizemap: Specification<Map<int, SupportedNativeType>>(
         validator: sizemapValidator,
         extractor: sizemapExtractor,
         defaultValue: () => <int, SupportedNativeType>{},
@@ -227,12 +228,12 @@ class Config {
           final map = result as Map<int, SupportedNativeType>;
           for (final key in map.keys) {
             if (cxTypeKindToSupportedNativeTypes.containsKey(key)) {
-              cxTypeKindToSupportedNativeTypes[key] = map[key];
+              cxTypeKindToSupportedNativeTypes[key] = map[key]!;
             }
           }
         },
       ),
-      strings.typedefmap: Specification<Map<String?, SupportedNativeType?>>(
+      strings.typedefmap: Specification<Map<String, SupportedNativeType>>(
         validator: typedefmapValidator,
         extractor: typedefmapExtractor,
         defaultValue: () => <String, SupportedNativeType>{},

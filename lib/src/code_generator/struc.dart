@@ -169,7 +169,7 @@ class Member {
 // Helper bindings for struct array.
 class ArrayHelper {
   final Type elementType;
-  final List<int?> dimensions;
+  final List<int> dimensions;
   final String? structName;
 
   final String? name;
@@ -182,7 +182,7 @@ class ArrayHelper {
 
     var arrayLength = 1;
     for (final i in dimensions) {
-      arrayLength = arrayLength * i!;
+      arrayLength = arrayLength * i;
     }
     return arrayLength;
   }

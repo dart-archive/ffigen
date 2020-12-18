@@ -1,10 +1,10 @@
 import 'dart_keywords.dart';
 
 class UniqueNamer {
-  final Set<String?> _usedUpNames;
+  final Set<String> _usedUpNames;
 
   /// Creates a UniqueNamer with given [usedUpNames] and Dart reserved keywords.
-  UniqueNamer(Set<String?> usedUpNames)
+  UniqueNamer(Set<String> usedUpNames)
       : assert(keywords.intersection(usedUpNames).isEmpty),
         _usedUpNames = {...keywords, ...usedUpNames};
 
@@ -30,12 +30,12 @@ class UniqueNamer {
   /// Adds a name to used names.
   ///
   /// Note: [makeUnique] also adds the name by default.
-  void markUsed(String? name) {
+  void markUsed(String name) {
     _usedUpNames.add(name);
   }
 
   /// Returns true if a name has been used before.
-  bool isUsed(String? name) {
+  bool isUsed(String name) {
     return _usedUpNames.contains(name);
   }
 
