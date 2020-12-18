@@ -8,12 +8,12 @@
 set -e
 
 # Gather coverage and upload to Coveralls.
-pub global activate remove_from_coverage
-pub global activate dart_coveralls
+dart pub global activate remove_from_coverage
+dart pub global activate dart_coveralls
 # Generate coverage report.
-pub global run dart_coveralls calc test/test_coverage.dart > lcov.info
+dart pub global run dart_coveralls calc test/test_coverage.dart > lcov.info
 # Remove extra files from coverage report.
-pub global run remove_from_coverage -f lcov.info -r ".pub-cache"
+dart pub global run remove_from_coverage -f lcov.info -r ".pub-cache"
 # Upload to coveralls.
 gem install coveralls-lcov
 coveralls-lcov lcov.info

@@ -41,8 +41,10 @@ ${strings.unnamedEnums}:
     });
 
     test('Parse unnamed enum Values', () {
-      expect(actual!.getBindingAsString('A'), expected!.getBindingAsString('A'));
-      expect(actual!.getBindingAsString('C'), expected!.getBindingAsString('C'));
+      expect(
+          actual!.getBindingAsString('A'), expected!.getBindingAsString('A'));
+      expect(
+          actual!.getBindingAsString('C'), expected!.getBindingAsString('C'));
     });
 
     test('Ignore unnamed enums inside typedefs', () {

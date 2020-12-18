@@ -47,7 +47,8 @@ Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String? parentName}) {
       if (config!.useSupportedTypedefs!) {
         if (suportedTypedefToSuportedNativeType.containsKey(spelling)) {
           _logger.fine('  Type Mapped from supported typedef');
-          return Type.nativeType(suportedTypedefToSuportedNativeType[spelling!]);
+          return Type.nativeType(
+              suportedTypedefToSuportedNativeType[spelling!]);
         }
       }
 
@@ -102,7 +103,8 @@ Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String? parentName}) {
   }
 }
 
-Type _extractfromRecord(Pointer<clang_types.CXType> cxtype, String? parentName) {
+Type _extractfromRecord(
+    Pointer<clang_types.CXType> cxtype, String? parentName) {
   Type type;
 
   final cursor = clang!.clang_getTypeDeclaration_wrap(cxtype);
