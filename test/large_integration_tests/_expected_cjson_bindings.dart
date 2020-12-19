@@ -12,9 +12,9 @@ class CJson {
   CJson(ffi.DynamicLibrary dynamicLibrary) : _dylib = dynamicLibrary;
 
   ffi.Pointer<ffi.Int8> cJSON_Version() {
-    _cJSON_Version ??= _dylib
-        .lookupFunction<_c_cJSON_Version, _dart_cJSON_Version>('cJSON_Version');
-    return _cJSON_Version!();
+    return (_cJSON_Version ??=
+        _dylib.lookupFunction<_c_cJSON_Version, _dart_cJSON_Version>(
+            'cJSON_Version'))();
   }
 
   _dart_cJSON_Version? _cJSON_Version;
@@ -22,10 +22,9 @@ class CJson {
   void cJSON_InitHooks(
     ffi.Pointer<cJSON_Hooks> hooks,
   ) {
-    _cJSON_InitHooks ??=
+    return (_cJSON_InitHooks ??=
         _dylib.lookupFunction<_c_cJSON_InitHooks, _dart_cJSON_InitHooks>(
-            'cJSON_InitHooks');
-    return _cJSON_InitHooks!(
+            'cJSON_InitHooks'))(
       hooks,
     );
   }
@@ -35,9 +34,8 @@ class CJson {
   ffi.Pointer<cJSON> cJSON_Parse(
     ffi.Pointer<ffi.Int8> value,
   ) {
-    _cJSON_Parse ??=
-        _dylib.lookupFunction<_c_cJSON_Parse, _dart_cJSON_Parse>('cJSON_Parse');
-    return _cJSON_Parse!(
+    return (_cJSON_Parse ??= _dylib
+        .lookupFunction<_c_cJSON_Parse, _dart_cJSON_Parse>('cJSON_Parse'))(
       value,
     );
   }
@@ -49,9 +47,9 @@ class CJson {
     ffi.Pointer<ffi.Pointer<ffi.Int8>> return_parse_end,
     int require_null_terminated,
   ) {
-    _cJSON_ParseWithOpts ??= _dylib.lookupFunction<_c_cJSON_ParseWithOpts,
-        _dart_cJSON_ParseWithOpts>('cJSON_ParseWithOpts');
-    return _cJSON_ParseWithOpts!(
+    return (_cJSON_ParseWithOpts ??= _dylib.lookupFunction<
+        _c_cJSON_ParseWithOpts,
+        _dart_cJSON_ParseWithOpts>('cJSON_ParseWithOpts'))(
       value,
       return_parse_end,
       require_null_terminated,
@@ -63,9 +61,8 @@ class CJson {
   ffi.Pointer<ffi.Int8> cJSON_Print(
     ffi.Pointer<cJSON> item,
   ) {
-    _cJSON_Print ??=
-        _dylib.lookupFunction<_c_cJSON_Print, _dart_cJSON_Print>('cJSON_Print');
-    return _cJSON_Print!(
+    return (_cJSON_Print ??= _dylib
+        .lookupFunction<_c_cJSON_Print, _dart_cJSON_Print>('cJSON_Print'))(
       item,
     );
   }
@@ -75,9 +72,9 @@ class CJson {
   ffi.Pointer<ffi.Int8> cJSON_PrintUnformatted(
     ffi.Pointer<cJSON> item,
   ) {
-    _cJSON_PrintUnformatted ??= _dylib.lookupFunction<_c_cJSON_PrintUnformatted,
-        _dart_cJSON_PrintUnformatted>('cJSON_PrintUnformatted');
-    return _cJSON_PrintUnformatted!(
+    return (_cJSON_PrintUnformatted ??= _dylib.lookupFunction<
+        _c_cJSON_PrintUnformatted,
+        _dart_cJSON_PrintUnformatted>('cJSON_PrintUnformatted'))(
       item,
     );
   }
@@ -89,9 +86,9 @@ class CJson {
     int prebuffer,
     int fmt,
   ) {
-    _cJSON_PrintBuffered ??= _dylib.lookupFunction<_c_cJSON_PrintBuffered,
-        _dart_cJSON_PrintBuffered>('cJSON_PrintBuffered');
-    return _cJSON_PrintBuffered!(
+    return (_cJSON_PrintBuffered ??= _dylib.lookupFunction<
+        _c_cJSON_PrintBuffered,
+        _dart_cJSON_PrintBuffered>('cJSON_PrintBuffered'))(
       item,
       prebuffer,
       fmt,
@@ -106,10 +103,9 @@ class CJson {
     int length,
     int format,
   ) {
-    _cJSON_PrintPreallocated ??= _dylib.lookupFunction<
+    return (_cJSON_PrintPreallocated ??= _dylib.lookupFunction<
         _c_cJSON_PrintPreallocated,
-        _dart_cJSON_PrintPreallocated>('cJSON_PrintPreallocated');
-    return _cJSON_PrintPreallocated!(
+        _dart_cJSON_PrintPreallocated>('cJSON_PrintPreallocated'))(
       item,
       buffer,
       length,
@@ -122,9 +118,8 @@ class CJson {
   void cJSON_Delete(
     ffi.Pointer<cJSON> item,
   ) {
-    _cJSON_Delete ??= _dylib
-        .lookupFunction<_c_cJSON_Delete, _dart_cJSON_Delete>('cJSON_Delete');
-    return _cJSON_Delete!(
+    return (_cJSON_Delete ??= _dylib
+        .lookupFunction<_c_cJSON_Delete, _dart_cJSON_Delete>('cJSON_Delete'))(
       item,
     );
   }
@@ -134,10 +129,9 @@ class CJson {
   int cJSON_GetArraySize(
     ffi.Pointer<cJSON> array,
   ) {
-    _cJSON_GetArraySize ??=
+    return (_cJSON_GetArraySize ??=
         _dylib.lookupFunction<_c_cJSON_GetArraySize, _dart_cJSON_GetArraySize>(
-            'cJSON_GetArraySize');
-    return _cJSON_GetArraySize!(
+            'cJSON_GetArraySize'))(
       array,
     );
   }
@@ -148,10 +142,9 @@ class CJson {
     ffi.Pointer<cJSON> array,
     int index,
   ) {
-    _cJSON_GetArrayItem ??=
+    return (_cJSON_GetArrayItem ??=
         _dylib.lookupFunction<_c_cJSON_GetArrayItem, _dart_cJSON_GetArrayItem>(
-            'cJSON_GetArrayItem');
-    return _cJSON_GetArrayItem!(
+            'cJSON_GetArrayItem'))(
       array,
       index,
     );
@@ -163,9 +156,9 @@ class CJson {
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> string,
   ) {
-    _cJSON_GetObjectItem ??= _dylib.lookupFunction<_c_cJSON_GetObjectItem,
-        _dart_cJSON_GetObjectItem>('cJSON_GetObjectItem');
-    return _cJSON_GetObjectItem!(
+    return (_cJSON_GetObjectItem ??= _dylib.lookupFunction<
+        _c_cJSON_GetObjectItem,
+        _dart_cJSON_GetObjectItem>('cJSON_GetObjectItem'))(
       object,
       string,
     );
@@ -177,11 +170,10 @@ class CJson {
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> string,
   ) {
-    _cJSON_GetObjectItemCaseSensitive ??= _dylib.lookupFunction<
+    return (_cJSON_GetObjectItemCaseSensitive ??= _dylib.lookupFunction<
             _c_cJSON_GetObjectItemCaseSensitive,
             _dart_cJSON_GetObjectItemCaseSensitive>(
-        'cJSON_GetObjectItemCaseSensitive');
-    return _cJSON_GetObjectItemCaseSensitive!(
+        'cJSON_GetObjectItemCaseSensitive'))(
       object,
       string,
     );
@@ -193,9 +185,9 @@ class CJson {
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> string,
   ) {
-    _cJSON_HasObjectItem ??= _dylib.lookupFunction<_c_cJSON_HasObjectItem,
-        _dart_cJSON_HasObjectItem>('cJSON_HasObjectItem');
-    return _cJSON_HasObjectItem!(
+    return (_cJSON_HasObjectItem ??= _dylib.lookupFunction<
+        _c_cJSON_HasObjectItem,
+        _dart_cJSON_HasObjectItem>('cJSON_HasObjectItem'))(
       object,
       string,
     );
@@ -204,10 +196,9 @@ class CJson {
   _dart_cJSON_HasObjectItem? _cJSON_HasObjectItem;
 
   ffi.Pointer<ffi.Int8> cJSON_GetErrorPtr() {
-    _cJSON_GetErrorPtr ??=
+    return (_cJSON_GetErrorPtr ??=
         _dylib.lookupFunction<_c_cJSON_GetErrorPtr, _dart_cJSON_GetErrorPtr>(
-            'cJSON_GetErrorPtr');
-    return _cJSON_GetErrorPtr!();
+            'cJSON_GetErrorPtr'))();
   }
 
   _dart_cJSON_GetErrorPtr? _cJSON_GetErrorPtr;
@@ -215,9 +206,9 @@ class CJson {
   ffi.Pointer<ffi.Int8> cJSON_GetStringValue(
     ffi.Pointer<cJSON> item,
   ) {
-    _cJSON_GetStringValue ??= _dylib.lookupFunction<_c_cJSON_GetStringValue,
-        _dart_cJSON_GetStringValue>('cJSON_GetStringValue');
-    return _cJSON_GetStringValue!(
+    return (_cJSON_GetStringValue ??= _dylib.lookupFunction<
+        _c_cJSON_GetStringValue,
+        _dart_cJSON_GetStringValue>('cJSON_GetStringValue'))(
       item,
     );
   }
@@ -227,10 +218,9 @@ class CJson {
   int cJSON_IsInvalid(
     ffi.Pointer<cJSON> item,
   ) {
-    _cJSON_IsInvalid ??=
+    return (_cJSON_IsInvalid ??=
         _dylib.lookupFunction<_c_cJSON_IsInvalid, _dart_cJSON_IsInvalid>(
-            'cJSON_IsInvalid');
-    return _cJSON_IsInvalid!(
+            'cJSON_IsInvalid'))(
       item,
     );
   }
@@ -240,9 +230,9 @@ class CJson {
   int cJSON_IsFalse(
     ffi.Pointer<cJSON> item,
   ) {
-    _cJSON_IsFalse ??= _dylib
-        .lookupFunction<_c_cJSON_IsFalse, _dart_cJSON_IsFalse>('cJSON_IsFalse');
-    return _cJSON_IsFalse!(
+    return (_cJSON_IsFalse ??=
+        _dylib.lookupFunction<_c_cJSON_IsFalse, _dart_cJSON_IsFalse>(
+            'cJSON_IsFalse'))(
       item,
     );
   }
@@ -252,9 +242,8 @@ class CJson {
   int cJSON_IsTrue(
     ffi.Pointer<cJSON> item,
   ) {
-    _cJSON_IsTrue ??= _dylib
-        .lookupFunction<_c_cJSON_IsTrue, _dart_cJSON_IsTrue>('cJSON_IsTrue');
-    return _cJSON_IsTrue!(
+    return (_cJSON_IsTrue ??= _dylib
+        .lookupFunction<_c_cJSON_IsTrue, _dart_cJSON_IsTrue>('cJSON_IsTrue'))(
       item,
     );
   }
@@ -264,9 +253,8 @@ class CJson {
   int cJSON_IsBool(
     ffi.Pointer<cJSON> item,
   ) {
-    _cJSON_IsBool ??= _dylib
-        .lookupFunction<_c_cJSON_IsBool, _dart_cJSON_IsBool>('cJSON_IsBool');
-    return _cJSON_IsBool!(
+    return (_cJSON_IsBool ??= _dylib
+        .lookupFunction<_c_cJSON_IsBool, _dart_cJSON_IsBool>('cJSON_IsBool'))(
       item,
     );
   }
@@ -276,9 +264,8 @@ class CJson {
   int cJSON_IsNull(
     ffi.Pointer<cJSON> item,
   ) {
-    _cJSON_IsNull ??= _dylib
-        .lookupFunction<_c_cJSON_IsNull, _dart_cJSON_IsNull>('cJSON_IsNull');
-    return _cJSON_IsNull!(
+    return (_cJSON_IsNull ??= _dylib
+        .lookupFunction<_c_cJSON_IsNull, _dart_cJSON_IsNull>('cJSON_IsNull'))(
       item,
     );
   }
@@ -288,10 +275,9 @@ class CJson {
   int cJSON_IsNumber(
     ffi.Pointer<cJSON> item,
   ) {
-    _cJSON_IsNumber ??=
+    return (_cJSON_IsNumber ??=
         _dylib.lookupFunction<_c_cJSON_IsNumber, _dart_cJSON_IsNumber>(
-            'cJSON_IsNumber');
-    return _cJSON_IsNumber!(
+            'cJSON_IsNumber'))(
       item,
     );
   }
@@ -301,10 +287,9 @@ class CJson {
   int cJSON_IsString(
     ffi.Pointer<cJSON> item,
   ) {
-    _cJSON_IsString ??=
+    return (_cJSON_IsString ??=
         _dylib.lookupFunction<_c_cJSON_IsString, _dart_cJSON_IsString>(
-            'cJSON_IsString');
-    return _cJSON_IsString!(
+            'cJSON_IsString'))(
       item,
     );
   }
@@ -314,9 +299,9 @@ class CJson {
   int cJSON_IsArray(
     ffi.Pointer<cJSON> item,
   ) {
-    _cJSON_IsArray ??= _dylib
-        .lookupFunction<_c_cJSON_IsArray, _dart_cJSON_IsArray>('cJSON_IsArray');
-    return _cJSON_IsArray!(
+    return (_cJSON_IsArray ??=
+        _dylib.lookupFunction<_c_cJSON_IsArray, _dart_cJSON_IsArray>(
+            'cJSON_IsArray'))(
       item,
     );
   }
@@ -326,10 +311,9 @@ class CJson {
   int cJSON_IsObject(
     ffi.Pointer<cJSON> item,
   ) {
-    _cJSON_IsObject ??=
+    return (_cJSON_IsObject ??=
         _dylib.lookupFunction<_c_cJSON_IsObject, _dart_cJSON_IsObject>(
-            'cJSON_IsObject');
-    return _cJSON_IsObject!(
+            'cJSON_IsObject'))(
       item,
     );
   }
@@ -339,9 +323,8 @@ class CJson {
   int cJSON_IsRaw(
     ffi.Pointer<cJSON> item,
   ) {
-    _cJSON_IsRaw ??=
-        _dylib.lookupFunction<_c_cJSON_IsRaw, _dart_cJSON_IsRaw>('cJSON_IsRaw');
-    return _cJSON_IsRaw!(
+    return (_cJSON_IsRaw ??= _dylib
+        .lookupFunction<_c_cJSON_IsRaw, _dart_cJSON_IsRaw>('cJSON_IsRaw'))(
       item,
     );
   }
@@ -349,28 +332,25 @@ class CJson {
   _dart_cJSON_IsRaw? _cJSON_IsRaw;
 
   ffi.Pointer<cJSON> cJSON_CreateNull() {
-    _cJSON_CreateNull ??=
+    return (_cJSON_CreateNull ??=
         _dylib.lookupFunction<_c_cJSON_CreateNull, _dart_cJSON_CreateNull>(
-            'cJSON_CreateNull');
-    return _cJSON_CreateNull!();
+            'cJSON_CreateNull'))();
   }
 
   _dart_cJSON_CreateNull? _cJSON_CreateNull;
 
   ffi.Pointer<cJSON> cJSON_CreateTrue() {
-    _cJSON_CreateTrue ??=
+    return (_cJSON_CreateTrue ??=
         _dylib.lookupFunction<_c_cJSON_CreateTrue, _dart_cJSON_CreateTrue>(
-            'cJSON_CreateTrue');
-    return _cJSON_CreateTrue!();
+            'cJSON_CreateTrue'))();
   }
 
   _dart_cJSON_CreateTrue? _cJSON_CreateTrue;
 
   ffi.Pointer<cJSON> cJSON_CreateFalse() {
-    _cJSON_CreateFalse ??=
+    return (_cJSON_CreateFalse ??=
         _dylib.lookupFunction<_c_cJSON_CreateFalse, _dart_cJSON_CreateFalse>(
-            'cJSON_CreateFalse');
-    return _cJSON_CreateFalse!();
+            'cJSON_CreateFalse'))();
   }
 
   _dart_cJSON_CreateFalse? _cJSON_CreateFalse;
@@ -378,10 +358,9 @@ class CJson {
   ffi.Pointer<cJSON> cJSON_CreateBool(
     int boolean,
   ) {
-    _cJSON_CreateBool ??=
+    return (_cJSON_CreateBool ??=
         _dylib.lookupFunction<_c_cJSON_CreateBool, _dart_cJSON_CreateBool>(
-            'cJSON_CreateBool');
-    return _cJSON_CreateBool!(
+            'cJSON_CreateBool'))(
       boolean,
     );
   }
@@ -391,10 +370,9 @@ class CJson {
   ffi.Pointer<cJSON> cJSON_CreateNumber(
     double num,
   ) {
-    _cJSON_CreateNumber ??=
+    return (_cJSON_CreateNumber ??=
         _dylib.lookupFunction<_c_cJSON_CreateNumber, _dart_cJSON_CreateNumber>(
-            'cJSON_CreateNumber');
-    return _cJSON_CreateNumber!(
+            'cJSON_CreateNumber'))(
       num,
     );
   }
@@ -404,10 +382,9 @@ class CJson {
   ffi.Pointer<cJSON> cJSON_CreateString(
     ffi.Pointer<ffi.Int8> string,
   ) {
-    _cJSON_CreateString ??=
+    return (_cJSON_CreateString ??=
         _dylib.lookupFunction<_c_cJSON_CreateString, _dart_cJSON_CreateString>(
-            'cJSON_CreateString');
-    return _cJSON_CreateString!(
+            'cJSON_CreateString'))(
       string,
     );
   }
@@ -417,10 +394,9 @@ class CJson {
   ffi.Pointer<cJSON> cJSON_CreateRaw(
     ffi.Pointer<ffi.Int8> raw,
   ) {
-    _cJSON_CreateRaw ??=
+    return (_cJSON_CreateRaw ??=
         _dylib.lookupFunction<_c_cJSON_CreateRaw, _dart_cJSON_CreateRaw>(
-            'cJSON_CreateRaw');
-    return _cJSON_CreateRaw!(
+            'cJSON_CreateRaw'))(
       raw,
     );
   }
@@ -428,19 +404,17 @@ class CJson {
   _dart_cJSON_CreateRaw? _cJSON_CreateRaw;
 
   ffi.Pointer<cJSON> cJSON_CreateArray() {
-    _cJSON_CreateArray ??=
+    return (_cJSON_CreateArray ??=
         _dylib.lookupFunction<_c_cJSON_CreateArray, _dart_cJSON_CreateArray>(
-            'cJSON_CreateArray');
-    return _cJSON_CreateArray!();
+            'cJSON_CreateArray'))();
   }
 
   _dart_cJSON_CreateArray? _cJSON_CreateArray;
 
   ffi.Pointer<cJSON> cJSON_CreateObject() {
-    _cJSON_CreateObject ??=
+    return (_cJSON_CreateObject ??=
         _dylib.lookupFunction<_c_cJSON_CreateObject, _dart_cJSON_CreateObject>(
-            'cJSON_CreateObject');
-    return _cJSON_CreateObject!();
+            'cJSON_CreateObject'))();
   }
 
   _dart_cJSON_CreateObject? _cJSON_CreateObject;
@@ -448,10 +422,9 @@ class CJson {
   ffi.Pointer<cJSON> cJSON_CreateStringReference(
     ffi.Pointer<ffi.Int8> string,
   ) {
-    _cJSON_CreateStringReference ??= _dylib.lookupFunction<
+    return (_cJSON_CreateStringReference ??= _dylib.lookupFunction<
         _c_cJSON_CreateStringReference,
-        _dart_cJSON_CreateStringReference>('cJSON_CreateStringReference');
-    return _cJSON_CreateStringReference!(
+        _dart_cJSON_CreateStringReference>('cJSON_CreateStringReference'))(
       string,
     );
   }
@@ -461,10 +434,9 @@ class CJson {
   ffi.Pointer<cJSON> cJSON_CreateObjectReference(
     ffi.Pointer<cJSON> child,
   ) {
-    _cJSON_CreateObjectReference ??= _dylib.lookupFunction<
+    return (_cJSON_CreateObjectReference ??= _dylib.lookupFunction<
         _c_cJSON_CreateObjectReference,
-        _dart_cJSON_CreateObjectReference>('cJSON_CreateObjectReference');
-    return _cJSON_CreateObjectReference!(
+        _dart_cJSON_CreateObjectReference>('cJSON_CreateObjectReference'))(
       child,
     );
   }
@@ -474,10 +446,9 @@ class CJson {
   ffi.Pointer<cJSON> cJSON_CreateArrayReference(
     ffi.Pointer<cJSON> child,
   ) {
-    _cJSON_CreateArrayReference ??= _dylib.lookupFunction<
+    return (_cJSON_CreateArrayReference ??= _dylib.lookupFunction<
         _c_cJSON_CreateArrayReference,
-        _dart_cJSON_CreateArrayReference>('cJSON_CreateArrayReference');
-    return _cJSON_CreateArrayReference!(
+        _dart_cJSON_CreateArrayReference>('cJSON_CreateArrayReference'))(
       child,
     );
   }
@@ -488,9 +459,9 @@ class CJson {
     ffi.Pointer<ffi.Int32> numbers,
     int count,
   ) {
-    _cJSON_CreateIntArray ??= _dylib.lookupFunction<_c_cJSON_CreateIntArray,
-        _dart_cJSON_CreateIntArray>('cJSON_CreateIntArray');
-    return _cJSON_CreateIntArray!(
+    return (_cJSON_CreateIntArray ??= _dylib.lookupFunction<
+        _c_cJSON_CreateIntArray,
+        _dart_cJSON_CreateIntArray>('cJSON_CreateIntArray'))(
       numbers,
       count,
     );
@@ -502,9 +473,9 @@ class CJson {
     ffi.Pointer<ffi.Float> numbers,
     int count,
   ) {
-    _cJSON_CreateFloatArray ??= _dylib.lookupFunction<_c_cJSON_CreateFloatArray,
-        _dart_cJSON_CreateFloatArray>('cJSON_CreateFloatArray');
-    return _cJSON_CreateFloatArray!(
+    return (_cJSON_CreateFloatArray ??= _dylib.lookupFunction<
+        _c_cJSON_CreateFloatArray,
+        _dart_cJSON_CreateFloatArray>('cJSON_CreateFloatArray'))(
       numbers,
       count,
     );
@@ -516,10 +487,9 @@ class CJson {
     ffi.Pointer<ffi.Double> numbers,
     int count,
   ) {
-    _cJSON_CreateDoubleArray ??= _dylib.lookupFunction<
+    return (_cJSON_CreateDoubleArray ??= _dylib.lookupFunction<
         _c_cJSON_CreateDoubleArray,
-        _dart_cJSON_CreateDoubleArray>('cJSON_CreateDoubleArray');
-    return _cJSON_CreateDoubleArray!(
+        _dart_cJSON_CreateDoubleArray>('cJSON_CreateDoubleArray'))(
       numbers,
       count,
     );
@@ -531,10 +501,9 @@ class CJson {
     ffi.Pointer<ffi.Pointer<ffi.Int8>> strings,
     int count,
   ) {
-    _cJSON_CreateStringArray ??= _dylib.lookupFunction<
+    return (_cJSON_CreateStringArray ??= _dylib.lookupFunction<
         _c_cJSON_CreateStringArray,
-        _dart_cJSON_CreateStringArray>('cJSON_CreateStringArray');
-    return _cJSON_CreateStringArray!(
+        _dart_cJSON_CreateStringArray>('cJSON_CreateStringArray'))(
       strings,
       count,
     );
@@ -546,9 +515,9 @@ class CJson {
     ffi.Pointer<cJSON> array,
     ffi.Pointer<cJSON> item,
   ) {
-    _cJSON_AddItemToArray ??= _dylib.lookupFunction<_c_cJSON_AddItemToArray,
-        _dart_cJSON_AddItemToArray>('cJSON_AddItemToArray');
-    return _cJSON_AddItemToArray!(
+    return (_cJSON_AddItemToArray ??= _dylib.lookupFunction<
+        _c_cJSON_AddItemToArray,
+        _dart_cJSON_AddItemToArray>('cJSON_AddItemToArray'))(
       array,
       item,
     );
@@ -561,9 +530,9 @@ class CJson {
     ffi.Pointer<ffi.Int8> string,
     ffi.Pointer<cJSON> item,
   ) {
-    _cJSON_AddItemToObject ??= _dylib.lookupFunction<_c_cJSON_AddItemToObject,
-        _dart_cJSON_AddItemToObject>('cJSON_AddItemToObject');
-    return _cJSON_AddItemToObject!(
+    return (_cJSON_AddItemToObject ??= _dylib.lookupFunction<
+        _c_cJSON_AddItemToObject,
+        _dart_cJSON_AddItemToObject>('cJSON_AddItemToObject'))(
       object,
       string,
       item,
@@ -577,10 +546,9 @@ class CJson {
     ffi.Pointer<ffi.Int8> string,
     ffi.Pointer<cJSON> item,
   ) {
-    _cJSON_AddItemToObjectCS ??= _dylib.lookupFunction<
+    return (_cJSON_AddItemToObjectCS ??= _dylib.lookupFunction<
         _c_cJSON_AddItemToObjectCS,
-        _dart_cJSON_AddItemToObjectCS>('cJSON_AddItemToObjectCS');
-    return _cJSON_AddItemToObjectCS!(
+        _dart_cJSON_AddItemToObjectCS>('cJSON_AddItemToObjectCS'))(
       object,
       string,
       item,
@@ -593,10 +561,9 @@ class CJson {
     ffi.Pointer<cJSON> array,
     ffi.Pointer<cJSON> item,
   ) {
-    _cJSON_AddItemReferenceToArray ??= _dylib.lookupFunction<
+    return (_cJSON_AddItemReferenceToArray ??= _dylib.lookupFunction<
         _c_cJSON_AddItemReferenceToArray,
-        _dart_cJSON_AddItemReferenceToArray>('cJSON_AddItemReferenceToArray');
-    return _cJSON_AddItemReferenceToArray!(
+        _dart_cJSON_AddItemReferenceToArray>('cJSON_AddItemReferenceToArray'))(
       array,
       item,
     );
@@ -609,10 +576,10 @@ class CJson {
     ffi.Pointer<ffi.Int8> string,
     ffi.Pointer<cJSON> item,
   ) {
-    _cJSON_AddItemReferenceToObject ??= _dylib.lookupFunction<
-        _c_cJSON_AddItemReferenceToObject,
-        _dart_cJSON_AddItemReferenceToObject>('cJSON_AddItemReferenceToObject');
-    return _cJSON_AddItemReferenceToObject!(
+    return (_cJSON_AddItemReferenceToObject ??= _dylib.lookupFunction<
+            _c_cJSON_AddItemReferenceToObject,
+            _dart_cJSON_AddItemReferenceToObject>(
+        'cJSON_AddItemReferenceToObject'))(
       object,
       string,
       item,
@@ -625,10 +592,9 @@ class CJson {
     ffi.Pointer<cJSON> parent,
     ffi.Pointer<cJSON> item,
   ) {
-    _cJSON_DetachItemViaPointer ??= _dylib.lookupFunction<
+    return (_cJSON_DetachItemViaPointer ??= _dylib.lookupFunction<
         _c_cJSON_DetachItemViaPointer,
-        _dart_cJSON_DetachItemViaPointer>('cJSON_DetachItemViaPointer');
-    return _cJSON_DetachItemViaPointer!(
+        _dart_cJSON_DetachItemViaPointer>('cJSON_DetachItemViaPointer'))(
       parent,
       item,
     );
@@ -640,10 +606,9 @@ class CJson {
     ffi.Pointer<cJSON> array,
     int which,
   ) {
-    _cJSON_DetachItemFromArray ??= _dylib.lookupFunction<
+    return (_cJSON_DetachItemFromArray ??= _dylib.lookupFunction<
         _c_cJSON_DetachItemFromArray,
-        _dart_cJSON_DetachItemFromArray>('cJSON_DetachItemFromArray');
-    return _cJSON_DetachItemFromArray!(
+        _dart_cJSON_DetachItemFromArray>('cJSON_DetachItemFromArray'))(
       array,
       which,
     );
@@ -655,10 +620,9 @@ class CJson {
     ffi.Pointer<cJSON> array,
     int which,
   ) {
-    _cJSON_DeleteItemFromArray ??= _dylib.lookupFunction<
+    return (_cJSON_DeleteItemFromArray ??= _dylib.lookupFunction<
         _c_cJSON_DeleteItemFromArray,
-        _dart_cJSON_DeleteItemFromArray>('cJSON_DeleteItemFromArray');
-    return _cJSON_DeleteItemFromArray!(
+        _dart_cJSON_DeleteItemFromArray>('cJSON_DeleteItemFromArray'))(
       array,
       which,
     );
@@ -670,10 +634,9 @@ class CJson {
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> string,
   ) {
-    _cJSON_DetachItemFromObject ??= _dylib.lookupFunction<
+    return (_cJSON_DetachItemFromObject ??= _dylib.lookupFunction<
         _c_cJSON_DetachItemFromObject,
-        _dart_cJSON_DetachItemFromObject>('cJSON_DetachItemFromObject');
-    return _cJSON_DetachItemFromObject!(
+        _dart_cJSON_DetachItemFromObject>('cJSON_DetachItemFromObject'))(
       object,
       string,
     );
@@ -685,11 +648,10 @@ class CJson {
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> string,
   ) {
-    _cJSON_DetachItemFromObjectCaseSensitive ??= _dylib.lookupFunction<
+    return (_cJSON_DetachItemFromObjectCaseSensitive ??= _dylib.lookupFunction<
             _c_cJSON_DetachItemFromObjectCaseSensitive,
             _dart_cJSON_DetachItemFromObjectCaseSensitive>(
-        'cJSON_DetachItemFromObjectCaseSensitive');
-    return _cJSON_DetachItemFromObjectCaseSensitive!(
+        'cJSON_DetachItemFromObjectCaseSensitive'))(
       object,
       string,
     );
@@ -702,10 +664,9 @@ class CJson {
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> string,
   ) {
-    _cJSON_DeleteItemFromObject ??= _dylib.lookupFunction<
+    return (_cJSON_DeleteItemFromObject ??= _dylib.lookupFunction<
         _c_cJSON_DeleteItemFromObject,
-        _dart_cJSON_DeleteItemFromObject>('cJSON_DeleteItemFromObject');
-    return _cJSON_DeleteItemFromObject!(
+        _dart_cJSON_DeleteItemFromObject>('cJSON_DeleteItemFromObject'))(
       object,
       string,
     );
@@ -717,11 +678,10 @@ class CJson {
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> string,
   ) {
-    _cJSON_DeleteItemFromObjectCaseSensitive ??= _dylib.lookupFunction<
+    return (_cJSON_DeleteItemFromObjectCaseSensitive ??= _dylib.lookupFunction<
             _c_cJSON_DeleteItemFromObjectCaseSensitive,
             _dart_cJSON_DeleteItemFromObjectCaseSensitive>(
-        'cJSON_DeleteItemFromObjectCaseSensitive');
-    return _cJSON_DeleteItemFromObjectCaseSensitive!(
+        'cJSON_DeleteItemFromObjectCaseSensitive'))(
       object,
       string,
     );
@@ -735,10 +695,9 @@ class CJson {
     int which,
     ffi.Pointer<cJSON> newitem,
   ) {
-    _cJSON_InsertItemInArray ??= _dylib.lookupFunction<
+    return (_cJSON_InsertItemInArray ??= _dylib.lookupFunction<
         _c_cJSON_InsertItemInArray,
-        _dart_cJSON_InsertItemInArray>('cJSON_InsertItemInArray');
-    return _cJSON_InsertItemInArray!(
+        _dart_cJSON_InsertItemInArray>('cJSON_InsertItemInArray'))(
       array,
       which,
       newitem,
@@ -752,10 +711,9 @@ class CJson {
     ffi.Pointer<cJSON> item,
     ffi.Pointer<cJSON> replacement,
   ) {
-    _cJSON_ReplaceItemViaPointer ??= _dylib.lookupFunction<
+    return (_cJSON_ReplaceItemViaPointer ??= _dylib.lookupFunction<
         _c_cJSON_ReplaceItemViaPointer,
-        _dart_cJSON_ReplaceItemViaPointer>('cJSON_ReplaceItemViaPointer');
-    return _cJSON_ReplaceItemViaPointer!(
+        _dart_cJSON_ReplaceItemViaPointer>('cJSON_ReplaceItemViaPointer'))(
       parent,
       item,
       replacement,
@@ -769,10 +727,9 @@ class CJson {
     int which,
     ffi.Pointer<cJSON> newitem,
   ) {
-    _cJSON_ReplaceItemInArray ??= _dylib.lookupFunction<
+    return (_cJSON_ReplaceItemInArray ??= _dylib.lookupFunction<
         _c_cJSON_ReplaceItemInArray,
-        _dart_cJSON_ReplaceItemInArray>('cJSON_ReplaceItemInArray');
-    return _cJSON_ReplaceItemInArray!(
+        _dart_cJSON_ReplaceItemInArray>('cJSON_ReplaceItemInArray'))(
       array,
       which,
       newitem,
@@ -786,10 +743,9 @@ class CJson {
     ffi.Pointer<ffi.Int8> string,
     ffi.Pointer<cJSON> newitem,
   ) {
-    _cJSON_ReplaceItemInObject ??= _dylib.lookupFunction<
+    return (_cJSON_ReplaceItemInObject ??= _dylib.lookupFunction<
         _c_cJSON_ReplaceItemInObject,
-        _dart_cJSON_ReplaceItemInObject>('cJSON_ReplaceItemInObject');
-    return _cJSON_ReplaceItemInObject!(
+        _dart_cJSON_ReplaceItemInObject>('cJSON_ReplaceItemInObject'))(
       object,
       string,
       newitem,
@@ -803,11 +759,10 @@ class CJson {
     ffi.Pointer<ffi.Int8> string,
     ffi.Pointer<cJSON> newitem,
   ) {
-    _cJSON_ReplaceItemInObjectCaseSensitive ??= _dylib.lookupFunction<
+    return (_cJSON_ReplaceItemInObjectCaseSensitive ??= _dylib.lookupFunction<
             _c_cJSON_ReplaceItemInObjectCaseSensitive,
             _dart_cJSON_ReplaceItemInObjectCaseSensitive>(
-        'cJSON_ReplaceItemInObjectCaseSensitive');
-    return _cJSON_ReplaceItemInObjectCaseSensitive!(
+        'cJSON_ReplaceItemInObjectCaseSensitive'))(
       object,
       string,
       newitem,
@@ -821,10 +776,9 @@ class CJson {
     ffi.Pointer<cJSON> item,
     int recurse,
   ) {
-    _cJSON_Duplicate ??=
+    return (_cJSON_Duplicate ??=
         _dylib.lookupFunction<_c_cJSON_Duplicate, _dart_cJSON_Duplicate>(
-            'cJSON_Duplicate');
-    return _cJSON_Duplicate!(
+            'cJSON_Duplicate'))(
       item,
       recurse,
     );
@@ -837,9 +791,9 @@ class CJson {
     ffi.Pointer<cJSON> b,
     int case_sensitive,
   ) {
-    _cJSON_Compare ??= _dylib
-        .lookupFunction<_c_cJSON_Compare, _dart_cJSON_Compare>('cJSON_Compare');
-    return _cJSON_Compare!(
+    return (_cJSON_Compare ??=
+        _dylib.lookupFunction<_c_cJSON_Compare, _dart_cJSON_Compare>(
+            'cJSON_Compare'))(
       a,
       b,
       case_sensitive,
@@ -851,9 +805,8 @@ class CJson {
   void cJSON_Minify(
     ffi.Pointer<ffi.Int8> json,
   ) {
-    _cJSON_Minify ??= _dylib
-        .lookupFunction<_c_cJSON_Minify, _dart_cJSON_Minify>('cJSON_Minify');
-    return _cJSON_Minify!(
+    return (_cJSON_Minify ??= _dylib
+        .lookupFunction<_c_cJSON_Minify, _dart_cJSON_Minify>('cJSON_Minify'))(
       json,
     );
   }
@@ -864,9 +817,9 @@ class CJson {
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> name,
   ) {
-    _cJSON_AddNullToObject ??= _dylib.lookupFunction<_c_cJSON_AddNullToObject,
-        _dart_cJSON_AddNullToObject>('cJSON_AddNullToObject');
-    return _cJSON_AddNullToObject!(
+    return (_cJSON_AddNullToObject ??= _dylib.lookupFunction<
+        _c_cJSON_AddNullToObject,
+        _dart_cJSON_AddNullToObject>('cJSON_AddNullToObject'))(
       object,
       name,
     );
@@ -878,9 +831,9 @@ class CJson {
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> name,
   ) {
-    _cJSON_AddTrueToObject ??= _dylib.lookupFunction<_c_cJSON_AddTrueToObject,
-        _dart_cJSON_AddTrueToObject>('cJSON_AddTrueToObject');
-    return _cJSON_AddTrueToObject!(
+    return (_cJSON_AddTrueToObject ??= _dylib.lookupFunction<
+        _c_cJSON_AddTrueToObject,
+        _dart_cJSON_AddTrueToObject>('cJSON_AddTrueToObject'))(
       object,
       name,
     );
@@ -892,9 +845,9 @@ class CJson {
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> name,
   ) {
-    _cJSON_AddFalseToObject ??= _dylib.lookupFunction<_c_cJSON_AddFalseToObject,
-        _dart_cJSON_AddFalseToObject>('cJSON_AddFalseToObject');
-    return _cJSON_AddFalseToObject!(
+    return (_cJSON_AddFalseToObject ??= _dylib.lookupFunction<
+        _c_cJSON_AddFalseToObject,
+        _dart_cJSON_AddFalseToObject>('cJSON_AddFalseToObject'))(
       object,
       name,
     );
@@ -907,9 +860,9 @@ class CJson {
     ffi.Pointer<ffi.Int8> name,
     int boolean,
   ) {
-    _cJSON_AddBoolToObject ??= _dylib.lookupFunction<_c_cJSON_AddBoolToObject,
-        _dart_cJSON_AddBoolToObject>('cJSON_AddBoolToObject');
-    return _cJSON_AddBoolToObject!(
+    return (_cJSON_AddBoolToObject ??= _dylib.lookupFunction<
+        _c_cJSON_AddBoolToObject,
+        _dart_cJSON_AddBoolToObject>('cJSON_AddBoolToObject'))(
       object,
       name,
       boolean,
@@ -923,10 +876,9 @@ class CJson {
     ffi.Pointer<ffi.Int8> name,
     double number,
   ) {
-    _cJSON_AddNumberToObject ??= _dylib.lookupFunction<
+    return (_cJSON_AddNumberToObject ??= _dylib.lookupFunction<
         _c_cJSON_AddNumberToObject,
-        _dart_cJSON_AddNumberToObject>('cJSON_AddNumberToObject');
-    return _cJSON_AddNumberToObject!(
+        _dart_cJSON_AddNumberToObject>('cJSON_AddNumberToObject'))(
       object,
       name,
       number,
@@ -940,10 +892,9 @@ class CJson {
     ffi.Pointer<ffi.Int8> name,
     ffi.Pointer<ffi.Int8> string,
   ) {
-    _cJSON_AddStringToObject ??= _dylib.lookupFunction<
+    return (_cJSON_AddStringToObject ??= _dylib.lookupFunction<
         _c_cJSON_AddStringToObject,
-        _dart_cJSON_AddStringToObject>('cJSON_AddStringToObject');
-    return _cJSON_AddStringToObject!(
+        _dart_cJSON_AddStringToObject>('cJSON_AddStringToObject'))(
       object,
       name,
       string,
@@ -957,9 +908,9 @@ class CJson {
     ffi.Pointer<ffi.Int8> name,
     ffi.Pointer<ffi.Int8> raw,
   ) {
-    _cJSON_AddRawToObject ??= _dylib.lookupFunction<_c_cJSON_AddRawToObject,
-        _dart_cJSON_AddRawToObject>('cJSON_AddRawToObject');
-    return _cJSON_AddRawToObject!(
+    return (_cJSON_AddRawToObject ??= _dylib.lookupFunction<
+        _c_cJSON_AddRawToObject,
+        _dart_cJSON_AddRawToObject>('cJSON_AddRawToObject'))(
       object,
       name,
       raw,
@@ -972,10 +923,9 @@ class CJson {
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> name,
   ) {
-    _cJSON_AddObjectToObject ??= _dylib.lookupFunction<
+    return (_cJSON_AddObjectToObject ??= _dylib.lookupFunction<
         _c_cJSON_AddObjectToObject,
-        _dart_cJSON_AddObjectToObject>('cJSON_AddObjectToObject');
-    return _cJSON_AddObjectToObject!(
+        _dart_cJSON_AddObjectToObject>('cJSON_AddObjectToObject'))(
       object,
       name,
     );
@@ -987,9 +937,9 @@ class CJson {
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> name,
   ) {
-    _cJSON_AddArrayToObject ??= _dylib.lookupFunction<_c_cJSON_AddArrayToObject,
-        _dart_cJSON_AddArrayToObject>('cJSON_AddArrayToObject');
-    return _cJSON_AddArrayToObject!(
+    return (_cJSON_AddArrayToObject ??= _dylib.lookupFunction<
+        _c_cJSON_AddArrayToObject,
+        _dart_cJSON_AddArrayToObject>('cJSON_AddArrayToObject'))(
       object,
       name,
     );
@@ -1001,9 +951,9 @@ class CJson {
     ffi.Pointer<cJSON> object,
     double number,
   ) {
-    _cJSON_SetNumberHelper ??= _dylib.lookupFunction<_c_cJSON_SetNumberHelper,
-        _dart_cJSON_SetNumberHelper>('cJSON_SetNumberHelper');
-    return _cJSON_SetNumberHelper!(
+    return (_cJSON_SetNumberHelper ??= _dylib.lookupFunction<
+        _c_cJSON_SetNumberHelper,
+        _dart_cJSON_SetNumberHelper>('cJSON_SetNumberHelper'))(
       object,
       number,
     );
@@ -1014,9 +964,8 @@ class CJson {
   ffi.Pointer<ffi.Void> cJSON_malloc(
     int size,
   ) {
-    _cJSON_malloc ??= _dylib
-        .lookupFunction<_c_cJSON_malloc, _dart_cJSON_malloc>('cJSON_malloc');
-    return _cJSON_malloc!(
+    return (_cJSON_malloc ??= _dylib
+        .lookupFunction<_c_cJSON_malloc, _dart_cJSON_malloc>('cJSON_malloc'))(
       size,
     );
   }
@@ -1026,9 +975,8 @@ class CJson {
   void cJSON_free(
     ffi.Pointer<ffi.Void> object,
   ) {
-    _cJSON_free ??=
-        _dylib.lookupFunction<_c_cJSON_free, _dart_cJSON_free>('cJSON_free');
-    return _cJSON_free!(
+    return (_cJSON_free ??=
+        _dylib.lookupFunction<_c_cJSON_free, _dart_cJSON_free>('cJSON_free'))(
       object,
     );
   }
@@ -1037,30 +985,30 @@ class CJson {
 }
 
 class cJSON extends ffi.Struct {
-  ffi.Pointer<cJSON>? next;
+  external ffi.Pointer<cJSON> next;
 
-  ffi.Pointer<cJSON>? prev;
+  external ffi.Pointer<cJSON> prev;
 
-  ffi.Pointer<cJSON>? child;
-
-  @ffi.Int32()
-  int? type;
-
-  ffi.Pointer<ffi.Int8>? valuestring;
+  external ffi.Pointer<cJSON> child;
 
   @ffi.Int32()
-  int? valueint;
+  external int type;
+
+  external ffi.Pointer<ffi.Int8> valuestring;
+
+  @ffi.Int32()
+  external int valueint;
 
   @ffi.Double()
-  double? valuedouble;
+  external double valuedouble;
 
-  ffi.Pointer<ffi.Int8>? string;
+  external ffi.Pointer<ffi.Int8> string;
 }
 
 class cJSON_Hooks extends ffi.Struct {
-  ffi.Pointer<ffi.NativeFunction<_typedefC_1>>? malloc_fn;
+  external ffi.Pointer<ffi.NativeFunction<_typedefC_1>> malloc_fn;
 
-  ffi.Pointer<ffi.NativeFunction<_typedefC_2>>? free_fn;
+  external ffi.Pointer<ffi.NativeFunction<_typedefC_2>> free_fn;
 }
 
 const int CJSON_VERSION_MAJOR = 1;

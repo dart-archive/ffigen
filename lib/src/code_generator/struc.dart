@@ -123,7 +123,7 @@ class Struc extends NoLookUpBinding {
         if (m.type.isPrimitive) {
           s.write('$depth@${m.type.getCType(w)}()\n');
         }
-        s.write('$depth${m.type.getDartType(w)} ${memberName};\n\n');
+        s.write('${depth}external ${m.type.getDartType(w)} ${memberName};\n\n');
       }
     }
     s.write('}\n\n');
@@ -206,7 +206,7 @@ class ArrayHelper {
       if (elementType.isPrimitive) {
         s.write('  @${arrayCType}()\n');
       }
-      s.write('  ${arrayDartType} ${elementNamePrefix}$i;\n');
+      s.write('  external ${arrayDartType} ${elementNamePrefix}$i;\n');
     }
 
     s.write('/// Helper for array `$name`.\n');

@@ -94,35 +94,32 @@ Bindings(ffi.DynamicLibrary dynamicLibrary): _dylib = dynamicLibrary;
 /// heres another line
 int noParam(
 ) {
-_noParam ??= _dylib.lookupFunction<_c_noParam,_dart_noParam>('noParam');
-  return _noParam(
+return (_noParam ??= _dylib.lookupFunction<_c_noParam,_dart_noParam>('noParam'))(
   );
 }
-_dart_noParam _noParam;
+_dart_noParam? _noParam;
 
 int withPrimitiveParam(
   int a,
   int b,
 ) {
-_withPrimitiveParam ??= _dylib.lookupFunction<_c_withPrimitiveParam,_dart_withPrimitiveParam>('withPrimitiveParam');
-  return _withPrimitiveParam(
+return (_withPrimitiveParam ??= _dylib.lookupFunction<_c_withPrimitiveParam,_dart_withPrimitiveParam>('withPrimitiveParam'))(
     a,
     b,
   );
 }
-_dart_withPrimitiveParam _withPrimitiveParam;
+_dart_withPrimitiveParam? _withPrimitiveParam;
 
 ffi.Pointer<ffi.Double> withPointerParam(
   ffi.Pointer<ffi.Int32> a,
   ffi.Pointer<ffi.Pointer<ffi.Uint8>> b,
 ) {
-_withPointerParam ??= _dylib.lookupFunction<_c_withPointerParam,_dart_withPointerParam>('withPointerParam');
-  return _withPointerParam(
+return (_withPointerParam ??= _dylib.lookupFunction<_c_withPointerParam,_dart_withPointerParam>('withPointerParam'))(
     a,
     b,
   );
 }
-_dart_withPointerParam _withPointerParam;
+_dart_withPointerParam? _withPointerParam;
 
 }
 
@@ -244,23 +241,23 @@ class NoMember extends ffi.Struct{
 
 class WithPrimitiveMember extends ffi.Struct{
   @ffi.Int32()
-  int a;
+  external int a;
 
   @ffi.Double()
-  double b;
+  external double b;
 
   @ffi.Uint8()
-  int c;
+  external int c;
 
 }
 
 class WithPointerMember extends ffi.Struct{
-  ffi.Pointer<ffi.Int32> a;
+  external ffi.Pointer<ffi.Int32> a;
 
-  ffi.Pointer<ffi.Pointer<ffi.Double>> b;
+  external ffi.Pointer<ffi.Pointer<ffi.Double>> b;
 
   @ffi.Uint8()
-  int c;
+  external int c;
 
 }
 
@@ -348,24 +345,23 @@ Bindings(ffi.DynamicLibrary dynamicLibrary): _dylib = dynamicLibrary;
 ffi.Pointer<SomeStruc> someFunc(
   ffi.Pointer<ffi.Pointer<SomeStruc>> some,
 ) {
-_someFunc ??= _dylib.lookupFunction<_c_someFunc,_dart_someFunc>('someFunc');
-  return _someFunc(
+return (_someFunc ??= _dylib.lookupFunction<_c_someFunc,_dart_someFunc>('someFunc'))(
     some,
   );
 }
-_dart_someFunc _someFunc;
+_dart_someFunc? _someFunc;
 
 }
 
 class SomeStruc extends ffi.Struct{
   @ffi.Int32()
-  int a;
+  external int a;
 
   @ffi.Double()
-  double b;
+  external double b;
 
   @ffi.Uint8()
-  int c;
+  external int c;
 
 }
 
@@ -622,51 +618,46 @@ init_dylib_1(ffi.DynamicLibrary dynamicLibrary): _dylib = dynamicLibrary;
 
 void test(
 ) {
-_test_1 ??= _dylib.lookupFunction<_c_test1,_dart_test1>('test');
-  return _test_1(
+return (_test_1 ??= _dylib.lookupFunction<_c_test1,_dart_test1>('test'))(
   );
 }
-_dart_test1 _test_1;
+_dart_test1? _test_1;
 
 void _test(
 ) {
-__test ??= _dylib.lookupFunction<_c__test,_dart__test>('_test');
-  return __test(
+return (__test ??= _dylib.lookupFunction<_c__test,_dart__test>('_test'))(
   );
 }
-_dart__test __test;
+_dart__test? __test;
 
 void _c_test(
 ) {
-__c_test ??= _dylib.lookupFunction<_c__c_test,_dart__c_test>('_c_test');
-  return __c_test(
+return (__c_test ??= _dylib.lookupFunction<_c__c_test,_dart__c_test>('_c_test'))(
   );
 }
-_dart__c_test __c_test;
+_dart__c_test? __c_test;
 
 void _dart_test(
 ) {
-__dart_test ??= _dylib.lookupFunction<_c__dart_test,_dart__dart_test>('_dart_test');
-  return __dart_test(
+return (__dart_test ??= _dylib.lookupFunction<_c__dart_test,_dart__dart_test>('_dart_test'))(
   );
 }
-_dart__dart_test __dart_test;
+_dart__dart_test? __dart_test;
 
 void Test(
 ) {
-_Test ??= _dylib.lookupFunction<_c_Test1,_dart_Test>('Test');
-  return _Test(
+return (_Test ??= _dylib.lookupFunction<_c_Test1,_dart_Test>('Test'))(
   );
 }
-_dart_Test _Test;
+_dart_Test? _Test;
 
 }
 
 class _Test extends ffi.Struct{
   @ffi.Int8()
-  int _unique_array_item_0;
+  external int _unique_array_item_0;
   @ffi.Int8()
-  int _unique_array_item_1;
+  external int _unique_array_item_1;
 /// Helper for array `array`.
 ArrayHelper1__Test_array_level0 get array => ArrayHelper1__Test_array_level0(this, [2], 0, 0);
 }
@@ -803,19 +794,18 @@ bool test1(
   bool a,
   ffi.Pointer<ffi.Uint8> b,
 ) {
-_test1 ??= _dylib.lookupFunction<_c_test1,_dart_test1>('test1');
-  return _test1(
+return (_test1 ??= _dylib.lookupFunction<_c_test1,_dart_test1>('test1'))(
     a?1:0,
     b,
   )!=0;
 }
-_dart_test1 _test1;
+_dart_test1? _test1;
 
 }
 
 class test2 extends ffi.Struct{
   @ffi.Uint8()
-  int a;
+  external int a;
 
 }
 
@@ -884,19 +874,18 @@ int test1(
   int a,
   ffi.Pointer<ffi.Uint8> b,
 ) {
-_test1 ??= _dylib.lookupFunction<_c_test1,_dart_test1>('test1');
-  return _test1(
+return (_test1 ??= _dylib.lookupFunction<_c_test1,_dart_test1>('test1'))(
     a,
     b,
   );
 }
-_dart_test1 _test1;
+_dart_test1? _test1;
 
 }
 
 class test2 extends ffi.Struct{
   @ffi.Uint8()
-  int a;
+  external int a;
 
 }
 
