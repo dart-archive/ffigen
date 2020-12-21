@@ -7,13 +7,10 @@
 # Fast fail the script on failures.
 set -e
 
-# Gather coverage and upload to Coveralls.
+# Gather coverage.
 pub global activate remove_from_coverage
 pub global activate dart_coveralls
 # Generate coverage report.
 pub global run dart_coveralls calc test/test_coverage.dart > lcov.info
 # Remove extra files from coverage report.
 pub global run remove_from_coverage -f lcov.info -r ".pub-cache"
-# Upload to coveralls.
-gem install coveralls-lcov
-coveralls-lcov lcov.info
