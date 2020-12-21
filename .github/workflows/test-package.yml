@@ -46,7 +46,9 @@ jobs:
         with:
           channel: stable
       - name: Install dependencies
-        run: dart pub get
+        run: dart pub get  
+      - name: Install libclang-10-dev
+        run: sudo apt-get install libclang-10-dev
       - name: Setup ffigen
         run: dart pub run ffigen:setup
       - name: Build test dylib
