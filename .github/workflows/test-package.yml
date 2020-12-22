@@ -56,7 +56,7 @@ jobs:
       - name: Run VM tests
         run: dart --no-sound-null-safety test --platform vm
       - name: Collect coverage
-        run: ./tool/travis.sh
+        run: ./tool/coverage.sh
       - name: Upload coverage
         uses: coverallsapp/github-action@v1.1.2
         with:
