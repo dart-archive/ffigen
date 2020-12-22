@@ -33,7 +33,7 @@ jobs:
         run: dart format --output=none --set-exit-if-changed .
         if: always() && steps.install.outcome == 'success'
       - name: Analyze code
-        run: dart analyze --fatal-infos
+        run: dart analyze # --fatal-infos # Removed till we use legacy libraries.
         if: always() && steps.install.outcome == 'success'
 
   test:
@@ -50,7 +50,7 @@ jobs:
       - name: Install libclang-10-dev
         run: sudo apt-get install libclang-10-dev
       - name: Setup ffigen
-        run: dart pub run ffigen:setup
+        run: dart --no-sound-null-safety run ffigen:setup
       - name: Build test dylib
         run: cd test/native_test && dart build_test_dylib.dart && cd ../..
       - name: Run VM tests
