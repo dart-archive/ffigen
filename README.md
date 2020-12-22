@@ -1,5 +1,5 @@
 [![pub package](https://img.shields.io/pub/v/ffigen.svg)](https://pub.dev/packages/ffigen)
-[![Build Status](https://travis-ci.org/dart-lang/ffigen.svg?branch=master)](https://travis-ci.org/dart-lang/ffigen)
+[![Build Status](https://github.com/dart-lang/ffigen/workflows/Dart%20CI/badge.svg)](https://github.com/dart-lang/ffigen/actions?query=workflow%3A"Dart+CI")
 [![Coverage Status](https://coveralls.io/repos/github/dart-lang/ffigen/badge.svg?branch=master)](https://coveralls.io/github/dart-lang/ffigen?branch=master)
 
 Experimental binding generator for [FFI](https://dart.dev/guides/libraries/c-interop)
