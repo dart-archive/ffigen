@@ -13,7 +13,7 @@ name: Clang
 description: Holds bindings to LibClang.
 output: 'lib/src/header_parser/clang_bindings/clang_bindings.dart'
 sort: true
-compiler-opts: '-I/usr/lib/llvm-9/include/ -I/usr/lib/llvm-10/include/ -I/usr/local/opt/llvm/include/ -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/ -Wno-nullability-completeness'
+compiler-opts: '-I/usr/lib/llvm-9/include/ -I/usr/lib/llvm-10/include/ -I/usr/lib/llvm-11/include/ -I/usr/local/opt/llvm/include/ -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/ -Wno-nullability-completeness'
 headers:
   entry-points:
     - 'lib/src/clang_library/wrapper.c'

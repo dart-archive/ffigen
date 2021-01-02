@@ -10,7 +10,7 @@
 ///
 /// Linux:
 /// ```
-/// clang -I/usr/lib/llvm-9/include/ -I/usr/lib/llvm-10/include/ -lclang -shared -fpic path/to/wrapper.c -o path/to/libwrapped_clang.so
+/// clang -I/usr/lib/llvm-9/include/ -I/usr/lib/llvm-10/include/ -I/usr/lib/llvm-11/include/ -lclang -shared -fpic path/to/wrapper.c -o path/to/libwrapped_clang.so
 /// ```
 /// MacOS:
 /// ```
@@ -39,6 +39,7 @@ final _linuxOpts = _Options(
   headerIncludes: [
     '-I/usr/lib/llvm-9/include/',
     '-I/usr/lib/llvm-10/include/',
+    '-I/usr/lib/llvm-11/include/',
   ],
 );
 final _windowsOpts = _Options(
