@@ -4,7 +4,6 @@
 
 import 'dart:io';
 
-import 'package:collection/collection.dart' show IterableExtension;
 import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
@@ -15,21 +14,21 @@ import 'package:test/test.dart';
 extension LibraryTestExt on Library {
   /// Get a [Binding]'s generated string with a given name.
   String getBindingAsString(String name) {
-    final b = bindings.firstWhereOrNull((element) => element.name == name);
-    if (b == null) {
-      throw NotFoundException("Binding '$name' not found.");
-    } else {
+    try {
+      final b = bindings.firstWhere((element) => element.name == name);
       return b.toBindingString(writer).string;
+    } catch (e) {
+      throw NotFoundException("Binding '$name' not found.");
     }
   }
 
   /// Get a [Binding] with a given name.
   Binding getBinding(String name) {
-    final b = bindings.firstWhereOrNull((element) => element.name == name);
-    if (b == null) {
-      throw NotFoundException("Binding '$name' not found.");
-    } else {
+    try {
+      final b = bindings.firstWhere((element) => element.name == name);
       return b;
+    } catch (e) {
+      throw NotFoundException("Binding '$name' not found.");
     }
   }
 }
