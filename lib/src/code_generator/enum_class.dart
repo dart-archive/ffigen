@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:meta/meta.dart';
-
 import 'binding.dart';
 import 'binding_string.dart';
 import 'utils.dart';
@@ -27,11 +25,11 @@ class EnumClass extends NoLookUpBinding {
   final List<EnumConstant> enumConstants;
 
   EnumClass({
-    String usr,
-    String originalName,
-    @required String name,
-    String dartDoc,
-    List<EnumConstant> enumConstants,
+    String? usr,
+    String? originalName,
+    required String name,
+    String? dartDoc,
+    List<EnumConstant>? enumConstants,
   })  : enumConstants = enumConstants ?? [],
         super(
           usr: usr,
@@ -46,7 +44,7 @@ class EnumClass extends NoLookUpBinding {
     final enclosingClassName = name;
 
     if (dartDoc != null) {
-      s.write(makeDartDoc(dartDoc));
+      s.write(makeDartDoc(dartDoc!));
     }
 
     /// Adding [enclosingClassName] because dart doesn't allow class member
@@ -60,7 +58,7 @@ class EnumClass extends NoLookUpBinding {
       final enum_value_name = localUniqueNamer.makeUnique(ec.name);
       if (ec.dartDoc != null) {
         s.write(depth + '/// ');
-        s.writeAll(ec.dartDoc.split('\n'), '\n' + depth + '/// ');
+        s.writeAll(ec.dartDoc!.split('\n'), '\n' + depth + '/// ');
         s.write('\n');
       }
       s.write(depth + 'static const int ${enum_value_name} = ${ec.value};\n');
@@ -74,14 +72,14 @@ class EnumClass extends NoLookUpBinding {
 
 /// Represents a single value in an enum.
 class EnumConstant {
-  final String originalName;
-  final String dartDoc;
+  final String? originalName;
+  final String? dartDoc;
   final String name;
   final int value;
   const EnumConstant({
-    String originalName,
-    @required this.name,
-    @required this.value,
+    String? originalName,
+    required this.name,
+    required this.value,
     this.dartDoc,
   }) : originalName = originalName ?? name;
 }

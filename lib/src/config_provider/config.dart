@@ -22,79 +22,80 @@ final _logger = Logger('ffigen.config_provider.config');
 class Config {
   /// output file name.
   String get output => _output;
-  String _output;
+  late String _output;
   // Holds headers and filters for header.
   Headers get headers => _headers;
-  Headers _headers;
+  late Headers _headers;
 
   /// CommandLine Arguments to pass to clang_compiler.
   List<String> get compilerOpts => _compilerOpts;
-  List<String> _compilerOpts;
+  late List<String> _compilerOpts;
 
   /// Declaration config for Functions.
   Declaration get functionDecl => _functionDecl;
-  Declaration _functionDecl;
+  late Declaration _functionDecl;
 
   /// Declaration config for Structs.
   Declaration get structDecl => _structDecl;
-  Declaration _structDecl;
+  late Declaration _structDecl;
 
   /// Declaration config for Enums.
   Declaration get enumClassDecl => _enumClassDecl;
-  Declaration _enumClassDecl;
+  late Declaration _enumClassDecl;
 
   /// Declaration config for Unnamed enum constants.
   Declaration get unnamedEnumConstants => _unnamedEnumConstants;
-  Declaration _unnamedEnumConstants;
+  late Declaration _unnamedEnumConstants;
 
   /// Declaration config for Macro constants.
   Declaration get macroDecl => _macroDecl;
-  Declaration _macroDecl;
+  late Declaration _macroDecl;
 
   /// If generated bindings should be sorted alphabetically.
   bool get sort => _sort;
-  bool _sort;
+  late bool _sort;
 
   /// If typedef of supported types(int8_t) should be directly used.
   bool get useSupportedTypedefs => _useSupportedTypedefs;
-  bool _useSupportedTypedefs;
+  late bool _useSupportedTypedefs;
 
   /// Stores typedef name to NativeType mappings specified by user.
   Map<String, SupportedNativeType> get typedefNativeTypeMappings =>
       _typedefNativeTypeMappings;
-  Map<String, SupportedNativeType> _typedefNativeTypeMappings;
+  late Map<String, SupportedNativeType> _typedefNativeTypeMappings;
 
   /// Extracted Doc comment type.
   CommentType get commentType => _commentType;
-  CommentType _commentType;
+  late CommentType _commentType;
 
   /// If tool should generate array workarounds.
   ///
   /// If false(default), structs with inline array members will have all its
   /// members removed.
   bool get arrayWorkaround => _arrayWorkaround;
-  bool _arrayWorkaround;
+  late bool _arrayWorkaround;
 
   /// If dart bool should be generated for C booleans.
   bool get dartBool => _dartBool;
-  bool _dartBool;
+  late bool _dartBool;
 
   /// Name of the wrapper class.
   String get wrapperName => _wrapperName;
-  String _wrapperName;
+  late String _wrapperName;
 
   /// Doc comment for the wrapper class.
   String get wrapperDocComment => _wrapperDocComment;
-  String _wrapperDocComment;
+  late String _wrapperDocComment;
 
   /// Header of the generated bindings.
   String get preamble => _preamble;
-  String _preamble;
-  Config._();
+  late String _preamble;
 
   /// If `Dart_Handle` should be mapped with Handle/Object.
   bool get useDartHandle => _useDartHandle;
-  bool _useDartHandle;
+  late bool _useDartHandle;
+
+  Config._();
 
   /// Create config from Yaml map.
   factory Config.fromYaml(YamlMap map) {
@@ -118,8 +119,8 @@ class Config {
     for (final key in specs.keys) {
       final spec = specs[key];
       if (map.containsKey(key)) {
-        _result = _result && spec.validator(key, map[key]);
-      } else if (spec.requirement == Requirement.yes) {
+        _result = _result && spec!.validator(key, map[key]);
+      } else if (spec!.requirement == Requirement.yes) {
         _logger.severe("Key '${key}' is required.");
         _result = false;
       } else if (spec.requirement == Requirement.prefer) {
@@ -143,9 +144,9 @@ class Config {
     for (final key in specs.keys) {
       final spec = specs[key];
       if (map.containsKey(key)) {
-        spec.extractedResult(spec.extractor(map[key]));
+        spec!.extractedResult(spec.extractor(map[key]));
       } else {
-        spec.extractedResult(spec.defaultValue?.call());
+        spec!.extractedResult(spec.defaultValue?.call());
       }
     }
   }
@@ -227,7 +228,7 @@ class Config {
           final map = result as Map<int, SupportedNativeType>;
           for (final key in map.keys) {
             if (cxTypeKindToSupportedNativeTypes.containsKey(key)) {
-              cxTypeKindToSupportedNativeTypes[key] = map[key];
+              cxTypeKindToSupportedNativeTypes[key] = map[key]!;
             }
           }
         },
@@ -283,7 +284,7 @@ class Config {
         defaultValue: () => 'NativeLibrary',
         extractedResult: (dynamic result) => _wrapperName = result as String,
       ),
-      strings.description: Specification<String>(
+      strings.description: Specification<String?>(
         requirement: Requirement.prefer,
         validator: nonEmptyStringValidator,
         extractor: stringExtractor,

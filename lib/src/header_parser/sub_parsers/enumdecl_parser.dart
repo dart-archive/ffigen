@@ -18,18 +18,18 @@ final _logger = Logger('ffigen.header_parser.enumdecl_parser');
 
 /// Holds temporary information regarding [EnumClass] while parsing.
 class _ParsedEnum {
-  EnumClass enumClass;
+  EnumClass? enumClass;
   _ParsedEnum();
 }
 
 final _stack = Stack<_ParsedEnum>();
 
 /// Parses a function declaration.
-EnumClass parseEnumDeclaration(
+EnumClass? parseEnumDeclaration(
   Pointer<clang_types.CXCursor> cursor, {
 
   /// Optionally provide name to use (useful in case enum is inside a typedef).
-  String name,
+  String? name,
 }) {
   _stack.push(_ParsedEnum());
   final enumUsr = cursor.usr();
@@ -50,14 +50,14 @@ EnumClass parseEnumDeclaration(
       originalName: enumName,
       name: config.enumClassDecl.renameUsingConfig(enumName),
     );
-    bindingsIndex.addEnumClassToSeen(enumUsr, _stack.top.enumClass);
+    bindingsIndex.addEnumClassToSeen(enumUsr, _stack.top.enumClass!);
     _addEnumConstant(cursor);
   }
   if (bindingsIndex.isSeenEnumClass(enumUsr)) {
     _stack.top.enumClass = bindingsIndex.getSeenEnumClass(enumUsr);
 
     // If enum is seen, update it's name.
-    _stack.top.enumClass.name =
+    _stack.top.enumClass!.name =
         config.enumClassDecl.renameUsingConfig(enumName);
   }
 
@@ -102,7 +102,7 @@ int _enumCursorVisitor(Pointer<clang_types.CXCursor> cursor,
 
 /// Adds the parameter to func in [functiondecl_parser.dart].
 void _addEnumConstantToEnumClass(Pointer<clang_types.CXCursor> cursor) {
-  _stack.top.enumClass.enumConstants.add(
+  _stack.top.enumClass!.enumConstants.add(
     EnumConstant(
         dartDoc: getCursorDocComment(
           cursor,
@@ -110,7 +110,7 @@ void _addEnumConstantToEnumClass(Pointer<clang_types.CXCursor> cursor) {
         ),
         originalName: cursor.spelling(),
         name: config.enumClassDecl.renameMemberUsingConfig(
-          _stack.top.enumClass.originalName,
+          _stack.top.enumClass!.originalName,
           cursor.spelling(),
         ),
         value: clang.clang_getEnumConstantDeclValue_wrap(cursor)),

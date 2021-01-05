@@ -11,7 +11,7 @@ import 'package:ffigen/src/strings.dart' as strings;
 
 import '../test_utils.dart';
 
-Library actual, expected;
+late Library actual, expected;
 final functionPrefix = 'fff';
 final structPrefix = 'sss';
 final enumPrefix = 'eee';

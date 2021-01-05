@@ -2,15 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:meta/meta.dart';
-
 /// A Binding's String representation.
 class BindingString {
   // Meta data, (not used for generation).
   final BindingStringType type;
   final String string;
 
-  const BindingString({@required this.type, @required this.string});
+  const BindingString({required this.type, required this.string});
 
   @override
   String toString() => string;

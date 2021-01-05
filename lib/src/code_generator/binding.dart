@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:meta/meta.dart';
-
 import 'binding_string.dart';
 import 'typedef.dart';
 import 'writer.dart';
@@ -21,12 +19,12 @@ abstract class Binding {
   /// Binding name to generate, may get changed to resolve name conflicts.
   String name;
 
-  final String dartDoc;
+  final String? dartDoc;
 
   Binding({
-    @required this.usr,
-    @required this.originalName,
-    @required this.name,
+    required this.usr,
+    required this.originalName,
+    required this.name,
     this.dartDoc,
   });
 
@@ -43,10 +41,10 @@ abstract class Binding {
 /// Base class for bindings which look up symbols in dynamic library.
 abstract class LookUpBinding extends Binding {
   LookUpBinding({
-    String usr,
-    String originalName,
-    @required String name,
-    String dartDoc,
+    String? usr,
+    String? originalName,
+    required String name,
+    String? dartDoc,
   }) : super(
           usr: usr ?? name,
           originalName: originalName ?? name,
@@ -58,10 +56,10 @@ abstract class LookUpBinding extends Binding {
 /// Base class for bindings which don't look up symbols in dynamic library.
 abstract class NoLookUpBinding extends Binding {
   NoLookUpBinding({
-    String usr,
-    String originalName,
-    @required String name,
-    String dartDoc,
+    String? usr,
+    String? originalName,
+    required String name,
+    String? dartDoc,
   }) : super(
           usr: usr ?? name,
           originalName: originalName ?? name,

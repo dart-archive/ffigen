@@ -26,53 +26,46 @@
 
 import 'dart:io';
 import 'package:args/args.dart';
-import 'package:meta/meta.dart';
 import 'package:ffigen/src/find_resource.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:path/path.dart' as path;
 
-const _macOS = 'macos';
-const _windows = 'windows';
-const _linux = 'linux';
-
 /// Default platform options.
-Map<String, _Options> _platformOptions = {
-  _linux: _Options(
-    sharedFlag: '-shared',
-    inputHeader: _getWrapperPath('wrapper.c'),
-    fPIC: '-fpic',
-    ldLibFlag: '-lclang',
-    headerIncludes: [
-      '-I/usr/lib/llvm-9/include/',
-      '-I/usr/lib/llvm-10/include/',
-    ],
-  ),
-  _windows: _Options(
-    sharedFlag: '-shared',
-    inputHeader: _getWrapperPath('wrapper.c'),
-    moduleDefPath: '-Wl,/DEF:${_getWrapperPath("wrapper.def")}',
-    ldLibFlag: '-llibclang',
-    headerIncludes: [
-      r'-IC:\Progra~1\LLVM\include',
-    ],
-    libIncludes: [
-      r'-LC:\Progra~1\LLVM\lib',
-    ],
-  ),
-  _macOS: _Options(
-    sharedFlag: '-shared',
-    inputHeader: _getWrapperPath('wrapper.c'),
-    fPIC: '-fpic',
-    ldLibFlag: '-lclang',
-    headerIncludes: [
-      '-I/usr/local/opt/llvm/include/',
-      '-I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/',
-    ],
-    libIncludes: [
-      '-L/usr/local/opt/llvm/lib/',
-    ],
-  ),
-};
+final _linuxOpts = _Options(
+  sharedFlag: '-shared',
+  inputHeader: _getWrapperPath('wrapper.c'),
+  fPIC: '-fpic',
+  ldLibFlag: '-lclang',
+  headerIncludes: [
+    '-I/usr/lib/llvm-9/include/',
+    '-I/usr/lib/llvm-10/include/',
+  ],
+);
+final _windowsOpts = _Options(
+  sharedFlag: '-shared',
+  inputHeader: _getWrapperPath('wrapper.c'),
+  moduleDefPath: '-Wl,/DEF:${_getWrapperPath("wrapper.def")}',
+  ldLibFlag: '-llibclang',
+  headerIncludes: [
+    r'-IC:\Progra~1\LLVM\include',
+  ],
+  libIncludes: [
+    r'-LC:\Progra~1\LLVM\lib',
+  ],
+);
+final _macOSOpts = _Options(
+  sharedFlag: '-shared',
+  inputHeader: _getWrapperPath('wrapper.c'),
+  fPIC: '-fpic',
+  ldLibFlag: '-lclang',
+  headerIncludes: [
+    '-I/usr/local/opt/llvm/include/',
+    '-I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/',
+  ],
+  libIncludes: [
+    '-L/usr/local/opt/llvm/lib/',
+  ],
+);
 
 /// If main is called directly we always re-create the dynamic library.
 void main(List<String> arguments) {
@@ -140,7 +133,7 @@ String _dylibPath() {
 ///
 /// Throws error if not found.
 String _getWrapperPath(String wrapperName) {
-  final file = File.fromUri(findWrapper(wrapperName));
+  final file = File.fromUri(findWrapper(wrapperName)!);
   if (file.existsSync()) {
     return file.absolute.path;
   } else {
@@ -237,11 +230,11 @@ void _changeIncludesUsingCmdArgs(ArgResults argResult, _Options options) {
 /// Get options based on current platform.
 _Options _getPlatformOptions() {
   if (Platform.isMacOS) {
-    return _platformOptions[_macOS];
+    return _macOSOpts;
   } else if (Platform.isWindows) {
-    return _platformOptions[_windows];
+    return _windowsOpts;
   } else if (Platform.isLinux) {
-    return _platformOptions[_linux];
+    return _linuxOpts;
   } else {
     throw Exception('Unknown Platform.');
   }
@@ -271,9 +264,9 @@ class _Options {
   final String ldLibFlag;
 
   _Options({
-    @required this.sharedFlag,
-    @required this.inputHeader,
-    @required this.ldLibFlag,
+    required this.sharedFlag,
+    required this.inputHeader,
+    required this.ldLibFlag,
     this.headerIncludes = const [],
     this.libIncludes = const [],
     this.fPIC = '',

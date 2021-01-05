@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:meta/meta.dart';
 
 import 'binding.dart';
 import 'binding_string.dart';
@@ -36,12 +35,12 @@ class Func extends LookUpBinding {
   /// [originalName] is looked up in dynamic library, if not
   /// provided, takes the value of [name].
   Func({
-    String usr,
-    @required String name,
-    String originalName,
-    String dartDoc,
-    @required this.returnType,
-    List<Parameter> parameters,
+    String? usr,
+    required String name,
+    String? originalName,
+    String? dartDoc,
+    required this.returnType,
+    List<Parameter>? parameters,
   })  : parameters = parameters ?? [],
         super(
           usr: usr,
@@ -50,14 +49,13 @@ class Func extends LookUpBinding {
           dartDoc: dartDoc,
         ) {
     for (var i = 0; i < this.parameters.length; i++) {
-      if (this.parameters[i].name == null ||
-          this.parameters[i].name.trim() == '') {
+      if (this.parameters[i].name.trim() == '') {
         this.parameters[i].name = 'arg$i';
       }
     }
   }
 
-  List<Typedef> _typedefDependencies;
+  List<Typedef>? _typedefDependencies;
   @override
   List<Typedef> getTypedefDependencies(Writer w) {
     if (_typedefDependencies == null) {
@@ -66,26 +64,26 @@ class Func extends LookUpBinding {
       // Add typedef's required by return type.
       final returnTypeBase = returnType.getBaseType();
       if (returnTypeBase.broadType == BroadType.NativeFunction) {
-        _typedefDependencies
-            .addAll(returnTypeBase.nativeFunc.getDependencies());
+        _typedefDependencies!
+            .addAll(returnTypeBase.nativeFunc!.getDependencies());
       }
 
       // Add typedef's required by parameters.
       for (final p in parameters) {
         final base = p.type.getBaseType();
         if (base.broadType == BroadType.NativeFunction) {
-          _typedefDependencies.addAll(base.nativeFunc.getDependencies());
+          _typedefDependencies!.addAll(base.nativeFunc!.getDependencies());
         }
       }
       // Add C function typedef.
-      _typedefDependencies.add(cType);
+      _typedefDependencies!.add(cType);
       // Add Dart function typedef.
-      _typedefDependencies.add(dartType);
+      _typedefDependencies!.add(dartType);
     }
-    return _typedefDependencies;
+    return _typedefDependencies!;
   }
 
-  Typedef _cType, _dartType;
+  Typedef? _cType, _dartType;
   Typedef get cType => _cType ??= Typedef(
         name: '_c_$name',
         returnType: returnType,
@@ -106,7 +104,7 @@ class Func extends LookUpBinding {
     final funcVarName = w.wrapperLevelUniqueNamer.makeUnique('_$name');
 
     if (dartDoc != null) {
-      s.write(makeDartDoc(dartDoc));
+      s.write(makeDartDoc(dartDoc!));
     }
     // Resolve name conflicts in function parameter names.
     final paramNamer = UniqueNamer({});
@@ -130,9 +128,9 @@ class Func extends LookUpBinding {
     }
     s.write(') {\n');
     s.write(
-        "$funcVarName ??= ${w.dylibIdentifier}.lookupFunction<${cType.name},${dartType.name}>('$originalName');\n");
+        "return ($funcVarName ??= ${w.dylibIdentifier}.lookupFunction<${cType.name},${dartType.name}>('$originalName'))");
 
-    s.write('  return $funcVarName(\n');
+    s.write('(\n');
     for (final p in parameters) {
       if (w.dartBool && p.type.broadType == BroadType.Boolean) {
         // Convert bool parameter to int before calling.
@@ -150,7 +148,7 @@ class Func extends LookUpBinding {
     s.write('}\n');
 
     // Write function variable.
-    s.write('${dartType.name} $funcVarName;\n\n');
+    s.write('${dartType.name}? $funcVarName;\n\n');
 
     return BindingString(type: BindingStringType.func, string: s.toString());
   }
@@ -158,11 +156,11 @@ class Func extends LookUpBinding {
 
 /// Represents a Parameter, used in [Func] and [Typedef].
 class Parameter {
-  final String originalName;
+  final String? originalName;
   String name;
   final Type type;
 
-  Parameter({String originalName, this.name = '', @required Type type})
+  Parameter({String? originalName, this.name = '', required Type type})
       : originalName = originalName ?? name,
         // A type with broadtype [BroadType.NativeFunction] is wrapped with a
         // pointer because this is a shorthand used in C for Pointer to function.

@@ -43,12 +43,12 @@ void _saveMacro(String name, String usr, String originalName) {
   savedMacros[name] = Macro(usr, originalName);
 }
 
-List<Constant> _bindings;
+List<Constant>? _bindings;
 
 /// Macros cannot be parsed directly, so we create a new `.hpp` file in which
 /// they are assigned to a variable after which their value can be determined
 /// by evaluating the value of the variable.
-List<Constant> parseSavedMacros() {
+List<Constant>? parseSavedMacros() {
   _bindings = [];
 
   if (savedMacros.keys.isEmpty) {
@@ -102,7 +102,7 @@ List<Constant> parseSavedMacros() {
 /// Child visitor invoked on translationUnitCursor for parsing macroVariables.
 int _macroVariablevisitor(Pointer<clang_types.CXCursor> cursor,
     Pointer<clang_types.CXCursor> parent, Pointer<Void> clientData) {
-  Constant constant;
+  Constant? constant;
   try {
     if (isFromGeneratedFile(cursor) &&
         _macroVarNames.contains(cursor.spelling()) &&
@@ -116,8 +116,8 @@ int _macroVariablevisitor(Pointer<clang_types.CXCursor> cursor,
       switch (k) {
         case clang_types.CXEvalResultKind.CXEval_Int:
           constant = Constant(
-            usr: savedMacros[macroName].usr,
-            originalName: savedMacros[macroName].originalName,
+            usr: savedMacros[macroName]!.usr,
+            originalName: savedMacros[macroName]!.originalName,
             name: macroName,
             rawType: 'int',
             rawValue: clang.clang_EvalResult_getAsLongLong(e).toString(),
@@ -125,8 +125,8 @@ int _macroVariablevisitor(Pointer<clang_types.CXCursor> cursor,
           break;
         case clang_types.CXEvalResultKind.CXEval_Float:
           constant = Constant(
-            usr: savedMacros[macroName].usr,
-            originalName: savedMacros[macroName].originalName,
+            usr: savedMacros[macroName]!.usr,
+            originalName: savedMacros[macroName]!.originalName,
             name: macroName,
             rawType: 'double',
             rawValue:
@@ -139,8 +139,8 @@ int _macroVariablevisitor(Pointer<clang_types.CXCursor> cursor,
             clang.clang_EvalResult_getAsStr(e),
           );
           constant = Constant(
-            usr: savedMacros[macroName].usr,
-            originalName: savedMacros[macroName].originalName,
+            usr: savedMacros[macroName]!.usr,
+            originalName: savedMacros[macroName]!.originalName,
             name: macroName,
             rawType: 'String',
             rawValue: "'${rawValue}'",
@@ -150,7 +150,7 @@ int _macroVariablevisitor(Pointer<clang_types.CXCursor> cursor,
       clang.clang_EvalResult_dispose(e);
 
       if (constant != null) {
-        _bindings.add(constant);
+        _bindings!.add(constant);
       }
     }
     cursor.dispose();
@@ -174,12 +174,12 @@ bool isFromGeneratedFile(Pointer<clang_types.CXCursor> cursor) {
 }
 
 /// Base name of generated file.
-String _generatedFileBaseName;
+String? _generatedFileBaseName;
 
 /// Generated macro variable names.
 ///
 /// Used to determine if macro should be included in bindings or not.
-Set<String> _macroVarNames;
+late Set<String> _macroVarNames;
 
 /// Creates a temporary file for parsing macros in current directory.
 File createFileForMacros() {
@@ -210,7 +210,7 @@ File createFileForMacros() {
     // Write macro.
     final macroVarName = MacroVariableString.encode(prefixedMacroName);
     sb.writeln(
-        'auto ${macroVarName} = ${savedMacros[prefixedMacroName].originalName};');
+        'auto ${macroVarName} = ${savedMacros[prefixedMacroName]!.originalName};');
     // Add to _macroVarNames.
     _macroVarNames.add(macroVarName);
   }
@@ -235,7 +235,7 @@ class MacroVariableString {
     // Remove underscore.
     s = s.substring(1);
     final intReg = RegExp('[0-9]+');
-    final lengthEnd = intReg.matchAsPrefix(s).end;
+    final lengthEnd = intReg.matchAsPrefix(s)!.end;
     final len = int.parse(s.substring(0, lengthEnd));
 
     // Name starts after an unerscore.

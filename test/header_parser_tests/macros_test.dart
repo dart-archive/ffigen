@@ -12,7 +12,7 @@ import 'package:ffigen/src/strings.dart' as strings;
 
 import '../test_utils.dart';
 
-Library actual, expected;
+late Library actual, expected;
 
 void main() {
   group('macros_test', () {

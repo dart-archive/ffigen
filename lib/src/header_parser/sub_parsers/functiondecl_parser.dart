@@ -17,7 +17,7 @@ final _logger = Logger('ffigen.header_parser.functiondecl_parser');
 
 /// Holds temporary information regarding [Func] while parsing.
 class _ParserFunc {
-  Func func;
+  Func? func;
   bool structByValueParameter = false;
   bool unimplementedParameterType = false;
   _ParserFunc();
@@ -26,7 +26,7 @@ class _ParserFunc {
 final _stack = Stack<_ParserFunc>();
 
 /// Parses a function declaration.
-Func parseFunctionDeclaration(Pointer<clang_types.CXCursor> cursor) {
+Func? parseFunctionDeclaration(Pointer<clang_types.CXCursor> cursor) {
   _stack.push(_ParserFunc());
   _stack.top.structByValueParameter = false;
   _stack.top.unimplementedParameterType = false;
@@ -72,7 +72,7 @@ Func parseFunctionDeclaration(Pointer<clang_types.CXCursor> cursor) {
       returnType: rt,
       parameters: parameters,
     );
-    bindingsIndex.addFuncToSeen(funcUsr, _stack.top.func);
+    bindingsIndex.addFuncToSeen(funcUsr, _stack.top.func!);
   } else if (bindingsIndex.isSeenFunc(funcUsr)) {
     _stack.top.func = bindingsIndex.getSeenFunc(funcUsr);
   }

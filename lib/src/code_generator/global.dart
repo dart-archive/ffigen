@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:meta/meta.dart';
-
 import 'binding.dart';
 import 'binding_string.dart';
 import 'type.dart';
@@ -24,11 +22,11 @@ class Global extends LookUpBinding {
   final Type type;
 
   Global({
-    String usr,
-    String originalName,
-    @required String name,
-    @required this.type,
-    String dartDoc,
+    String? usr,
+    String? originalName,
+    required String name,
+    required this.type,
+    String? dartDoc,
   }) : super(
           usr: usr,
           originalName: originalName,
@@ -41,7 +39,7 @@ class Global extends LookUpBinding {
     final s = StringBuffer();
     final globalVarName = name;
     if (dartDoc != null) {
-      s.write(makeDartDoc(dartDoc));
+      s.write(makeDartDoc(dartDoc!));
     }
 
     final holderVarName =

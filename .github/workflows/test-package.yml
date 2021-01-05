@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sdk: [stable]
+        sdk: [beta] # TODO(127):Revert to stable when null safety reaches stable branch.
     steps:
       - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v0.1
@@ -33,30 +33,30 @@ jobs:
         run: dart format --output=none --set-exit-if-changed .
         if: always() && steps.install.outcome == 'success'
       - name: Analyze code
-        run: dart analyze --fatal-infos
+        run: dart analyze # --fatal-infos # Removed till we stop using legacy libraries.
         if: always() && steps.install.outcome == 'success'
 
   test:
     needs: analyze
     # This job requires clang-10 which is the default on 20.04
-    runs-on: ubuntu-20.04 
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v0.1
         with:
-          channel: stable
+          channel: beta # TODO(127):Revert to stable when null safety reaches stable branch.
       - name: Install dependencies
-        run: dart pub get  
+        run: dart pub get
       - name: Install libclang-10-dev
         run: sudo apt-get install libclang-10-dev
       - name: Setup ffigen
-        run: dart pub run ffigen:setup
+        run: dart --no-sound-null-safety run ffigen:setup
       - name: Build test dylib
         run: cd test/native_test && dart build_test_dylib.dart && cd ../..
       - name: Run VM tests
-        run: dart test --platform vm
+        run: dart --no-sound-null-safety test --platform vm
       - name: Collect coverage
-        run: ./tool/travis.sh
+        run: ./tool/coverage.sh
       - name: Upload coverage
         uses: coverallsapp/github-action@v1.1.2
         with:

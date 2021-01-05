@@ -44,11 +44,11 @@ bool booleanValidator(String name, dynamic value) =>
 
 Map<int, SupportedNativeType> sizemapExtractor(dynamic yamlConfig) {
   final resultMap = <int, SupportedNativeType>{};
-  final sizemap = yamlConfig as YamlMap;
+  final sizemap = yamlConfig as YamlMap?;
   if (sizemap != null) {
     for (final typeName in strings.sizemap_native_mapping.keys) {
       if (sizemap.containsKey(typeName)) {
-        final cxTypeInt = strings.sizemap_native_mapping[typeName];
+        final cxTypeInt = strings.sizemap_native_mapping[typeName] as int;
         final byteSize = sizemap[typeName] as int;
         resultMap[cxTypeInt] = nativeSupportedType(byteSize,
             signed: typeName.contains('unsigned') ? false : true);
@@ -73,7 +73,7 @@ bool sizemapValidator(String name, dynamic yamlConfig) {
 
 Map<String, SupportedNativeType> typedefmapExtractor(dynamic yamlConfig) {
   final resultMap = <String, SupportedNativeType>{};
-  final typedefmap = yamlConfig as YamlMap;
+  final typedefmap = yamlConfig as YamlMap?;
   if (typedefmap != null) {
     for (final typeName in typedefmap.keys) {
       if (typedefmap[typeName] is String &&
@@ -81,7 +81,7 @@ Map<String, SupportedNativeType> typedefmapExtractor(dynamic yamlConfig) {
               .containsKey(typedefmap[typeName])) {
         // Map this typename to specified supportedNativeType.
         resultMap[typeName as String] =
-            strings.supportedNativeType_mappings[typedefmap[typeName]];
+            strings.supportedNativeType_mappings[typedefmap[typeName]]!;
       }
     }
   }
@@ -103,7 +103,7 @@ bool typedefmapValidator(String name, dynamic yamlConfig) {
 }
 
 List<String> compilerOptsExtractor(dynamic value) =>
-    (value as String)?.split(' ');
+    (value as String).split(' ');
 
 bool compilerOptsValidator(String name, dynamic value) =>
     checkType<String>([name], value);
@@ -153,7 +153,7 @@ bool headersValidator(String name, dynamic value) {
     _logger.severe("Expected '$name -> ${strings.entryPoints}' to be a Map.");
     return false;
   } else {
-    for (final key in (value as YamlMap).keys) {
+    for (final key in value.keys) {
       if (key == strings.entryPoints || key == strings.includeDirectives) {
         if (!checkType<YamlList>([name, key as String], value[key])) {
           return false;
@@ -218,7 +218,7 @@ Declaration declarationConfigExtractor(dynamic yamlMap) {
   final memberRenamePatterns = <RegExpMemberRenamer>[];
   final memberRenamerFull = <String, Renamer>{};
 
-  final include = (yamlMap[strings.include] as YamlList)?.cast<String>();
+  final include = (yamlMap[strings.include] as YamlList?)?.cast<String>();
   if (include != null) {
     for (final str in include) {
       if (isFullDeclarationName(str)) {
@@ -229,7 +229,7 @@ Declaration declarationConfigExtractor(dynamic yamlMap) {
     }
   }
 
-  final exclude = (yamlMap[strings.exclude] as YamlList)?.cast<String>();
+  final exclude = (yamlMap[strings.exclude] as YamlList?)?.cast<String>();
   if (exclude != null) {
     for (final str in exclude) {
       if (isFullDeclarationName(str)) {
@@ -240,34 +240,34 @@ Declaration declarationConfigExtractor(dynamic yamlMap) {
     }
   }
 
-  final rename = (yamlMap[strings.rename] as YamlMap)?.cast<String, String>();
+  final rename = (yamlMap[strings.rename] as YamlMap?)?.cast<String, String>();
 
   if (rename != null) {
     for (final str in rename.keys) {
       if (isFullDeclarationName(str)) {
-        renameFull[str] = rename[str];
+        renameFull[str] = rename[str]!;
       } else {
         renamePatterns
-            .add(RegExpRenamer(RegExp(str, dotAll: true), rename[str]));
+            .add(RegExpRenamer(RegExp(str, dotAll: true), rename[str]!));
       }
     }
   }
 
   final memberRename =
-      (yamlMap[strings.memberRename] as YamlMap)?.cast<String, YamlMap>();
+      (yamlMap[strings.memberRename] as YamlMap?)?.cast<String, YamlMap>();
 
   if (memberRename != null) {
     for (final decl in memberRename.keys) {
       final renamePatterns = <RegExpRenamer>[];
       final renameFull = <String, String>{};
 
-      final memberRenameMap = memberRename[decl].cast<String, String>();
+      final memberRenameMap = memberRename[decl]!.cast<String, String>();
       for (final member in memberRenameMap.keys) {
         if (isFullDeclarationName(member)) {
-          renameFull[member] = memberRenameMap[member];
+          renameFull[member] = memberRenameMap[member]!;
         } else {
           renamePatterns.add(RegExpRenamer(
-              RegExp(member, dotAll: true), memberRenameMap[member]));
+              RegExp(member, dotAll: true), memberRenameMap[member]!));
         }
       }
       if (isFullDeclarationName(decl)) {
@@ -321,7 +321,7 @@ bool declarationConfigValidator(String name, dynamic value) {
         } else {
           for (final subkey in value[key].keys) {
             if (!checkType<String>(
-                [name, key as String, subkey as String], value[key][subkey])) {
+                [name, key, subkey as String], value[key][subkey])) {
               _result = false;
             }
           }
@@ -332,15 +332,14 @@ bool declarationConfigValidator(String name, dynamic value) {
         } else {
           for (final declNameKey in value[key].keys) {
             if (!checkType<YamlMap>(
-                [name, key as String, declNameKey as String],
-                value[key][declNameKey])) {
+                [name, key, declNameKey as String], value[key][declNameKey])) {
               _result = false;
             } else {
               for (final memberNameKey in value[key][declNameKey].keys) {
                 if (!checkType<String>([
                   name,
-                  key as String,
-                  declNameKey as String,
+                  key,
+                  declNameKey,
                   memberNameKey as String,
                 ], value[key][declNameKey][memberNameKey])) {
                   _result = false;

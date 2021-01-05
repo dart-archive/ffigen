@@ -20,7 +20,7 @@ final _logger = Logger('ffigen.header_parser.extractor');
 const _padding = '  ';
 
 /// Converts cxtype to a typestring code_generator can accept.
-Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String parentName}) {
+Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String? parentName}) {
   _logger.fine('${_padding}getCodeGenType ${cxtype.completeStringRepr()}');
   final kind = cxtype.kind();
 
@@ -33,7 +33,7 @@ Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String parentName}) {
       // Replace Pointer<_Dart_Handle> with Handle.
       if (config.useDartHandle &&
           s.broadType == BroadType.Struct &&
-          s.struc.usr == strings.dartHandleUsr) {
+          s.struc!.usr == strings.dartHandleUsr) {
         return Type.handle();
       }
       return Type.pointer(s);
@@ -41,13 +41,14 @@ Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String parentName}) {
       final spelling = cxtype.spelling();
       if (config.typedefNativeTypeMappings.containsKey(spelling)) {
         _logger.fine('  Type Mapped from typedef-map');
-        return Type.nativeType(config.typedefNativeTypeMappings[spelling]);
+        return Type.nativeType(config.typedefNativeTypeMappings[spelling!]);
       }
       // Get name from supported typedef name if config allows.
       if (config.useSupportedTypedefs) {
         if (suportedTypedefToSuportedNativeType.containsKey(spelling)) {
           _logger.fine('  Type Mapped from supported typedef');
-          return Type.nativeType(suportedTypedefToSuportedNativeType[spelling]);
+          return Type.nativeType(
+              suportedTypedefToSuportedNativeType[spelling!]);
         }
       }
 
@@ -91,7 +92,7 @@ Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String parentName}) {
     default:
       if (cxTypeKindToSupportedNativeTypes.containsKey(kind)) {
         return Type.nativeType(
-          cxTypeKindToSupportedNativeTypes[kind],
+          cxTypeKindToSupportedNativeTypes[kind!],
         );
       } else {
         _logger.fine(
@@ -102,7 +103,8 @@ Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String parentName}) {
   }
 }
 
-Type _extractfromRecord(Pointer<clang_types.CXType> cxtype, String parentName) {
+Type _extractfromRecord(
+    Pointer<clang_types.CXType> cxtype, String? parentName) {
   Type type;
 
   final cursor = clang.clang_getTypeDeclaration_wrap(cxtype);
@@ -145,7 +147,7 @@ Type _extractfromRecord(Pointer<clang_types.CXType> cxtype, String parentName) {
 
 // Used for function pointer arguments.
 Type _extractFromFunctionProto(
-    Pointer<clang_types.CXType> cxtype, String parentName) {
+    Pointer<clang_types.CXType> cxtype, String? parentName) {
   var name = parentName;
 
   // An empty name means the function prototype was declared in-place, instead
@@ -168,7 +170,7 @@ Type _extractFromFunctionProto(
     );
   }
 
-  Typedef typedefC;
+  Typedef? typedefC;
   if (bindingsIndex.isSeenFunctionTypedef(name)) {
     typedefC = bindingsIndex.getSeenFunctionTypedef(name);
   } else {

@@ -5,6 +5,9 @@
 Experimental binding generator for [FFI](https://dart.dev/guides/libraries/c-interop)
 bindings.
 
+<!-- TODO: Remove this when package can run with sound null safety -->
+> Due to a few unmigrated dependencies, ffigen currently runs in unsound null safety, run using `dart --no-sound-null-safety run ffigen`.
+
 ## Example
 
 For some header file _example.h_:
@@ -27,19 +30,19 @@ class NativeLibrary {
   NativeLibrary(DynamicLibrary dynamicLibrary) : _dylib = dynamicLibrary;
 
   int sum(int a, int b) {
-    _sum ??= _dylib.lookupFunction<_c_sum, _dart_sum>('sum');
-    return _sum(a, b);
+    return (_sum ??= _dylib.lookupFunction<_c_sum, _dart_sum>('sum'))(a, b);
   }
-  _dart_sum _sum;;
+
+  _dart_sum? _sum;
 }
-typedef _c_sum = ffi.Int32 Function(Int32 a, Int32 b);
-typedef _dart_sum = int Function(int a,int b);
+typedef _c_sum = Int32 Function(Int32 a, Int32 b);
+typedef _dart_sum = int Function(int a, int b);
 ```
 ## Using this package
 - Add `ffigen` under `dev_dependencies` in your `pubspec.yaml`.
 - Setup for use (see [Setup](#Setup)).
 - Configurations must be provided in `pubspec.yaml` or in a custom YAML file (see [configurations](#configurations)).
-- Run the tool- `pub run ffigen`.
+- Run the tool- `dart run ffigen`.
 
 Jump to [FAQ](#faq).
 
@@ -312,11 +315,11 @@ The generated code is -
 ```dart
 class CXFileUniqueID extends ffi.Struct {
   @ffi.Uint64()
-  int _unique_data_item_0;
+  external int _unique_data_item_0;
   @ffi.Uint64()
-  int _unique_data_item_1;
+  external int _unique_data_item_1;
   @ffi.Uint64()
-  int _unique_data_item_2;
+  external int _unique_data_item_2;
 
   /// Helper for array `data`.
   ArrayHelper_CXFileUniqueID_data_level0 get data =>

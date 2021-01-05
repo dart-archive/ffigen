@@ -11,7 +11,7 @@ import 'package:yaml/yaml.dart';
 final _logger = Logger('ffigen.find_resource');
 
 /// Find the `.dart_tool/` folder, returns `null` if unable to find it.
-Uri findDotDartTool() {
+Uri? findDotDartTool() {
   // HACK: Because 'dart:isolate' is unavailable in Flutter we have no means
   //       by which we can find the location of the package_config.json file.
   //       Which we need, because the binary library created by:
@@ -32,7 +32,7 @@ Uri findDotDartTool() {
 }
 
 /// Get [Uri] for [posixPath] inside ffigen's rootUri.
-Uri _findInPackageRoot(String posixPath) {
+Uri? _findInPackageRoot(String posixPath) {
   var root = Directory.current.uri;
   // Traverse up until we see a `.dart_tool/package_config.json` file.
   do {
@@ -67,22 +67,22 @@ Uri _findInPackageRoot(String posixPath) {
   return null;
 }
 
-Uri findWrapper(String wrapperName) {
+Uri? findWrapper(String wrapperName) {
   return _findInPackageRoot('lib/src/clang_library/$wrapperName');
 }
 
-Uri _findFfigenPubspecYaml() {
+Uri? _findFfigenPubspecYaml() {
   return _findInPackageRoot('pubspec.yaml');
 }
 
-String _ffigenVersion;
+String? _ffigenVersion;
 
 /// Gets ffigen version from ffigen's pubspec.yaml
-String get ffigenVersion {
+String? get ffigenVersion {
   if (_ffigenVersion == null) {
     try {
       final yaml =
-          loadYaml(File.fromUri(_findFfigenPubspecYaml()).readAsStringSync())
+          loadYaml(File.fromUri(_findFfigenPubspecYaml()!).readAsStringSync())
               as YamlMap;
       final rawVersion = yaml['version'] as String;
       // Sanitize name to be used as a file name.

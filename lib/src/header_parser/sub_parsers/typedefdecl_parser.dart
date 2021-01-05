@@ -18,15 +18,15 @@ final _logger = Logger('ffigen.header_parser.typedefdecl_parser');
 /// Holds temporary information regarding a typedef referenced [Binding]
 /// while parsing.
 class _ParsedTypedef {
-  Binding binding;
-  String typedefName;
+  Binding? binding;
+  String? typedefName;
   _ParsedTypedef();
 }
 
 final _stack = Stack<_ParsedTypedef>();
 
 /// Parses a typedef declaration.
-Binding parseTypedefDeclaration(Pointer<clang_types.CXCursor> cursor) {
+Binding? parseTypedefDeclaration(Pointer<clang_types.CXCursor> cursor) {
   _stack.push(_ParsedTypedef());
   // Name of typedef.
   _stack.top.typedefName = cursor.spelling();

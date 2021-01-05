@@ -45,7 +45,7 @@ void logTuDiagnostics(
           clang_types
               .CXDiagnosticDisplayOptions.CXDiagnostic_DisplayCategoryName,
     );
-    logger.severe('    ' + cxstring.toStringAndDispose());
+    logger.severe('    ' + cxstring.toStringAndDispose()!);
     clang.clang_disposeDiagnostic(diag);
   }
 }
@@ -58,7 +58,7 @@ extension CXSourceRangeExt on Pointer<clang_types.CXSourceRange> {
 
 extension CXCursorExt on Pointer<clang_types.CXCursor> {
   String usr() {
-    return clang.clang_getCursorUSR_wrap(this).toStringAndDispose();
+    return clang.clang_getCursorUSR_wrap(this).toStringAndDispose()!;
   }
 
   /// Returns the kind int from [clang_types.CXCursorKind].
@@ -68,14 +68,14 @@ extension CXCursorExt on Pointer<clang_types.CXCursor> {
 
   /// Name of the cursor (E.g function name, Struct name, Parameter name).
   String spelling() {
-    return clang.clang_getCursorSpelling_wrap(this).toStringAndDispose();
+    return clang.clang_getCursorSpelling_wrap(this).toStringAndDispose()!;
   }
 
   /// Spelling for a [clang_types.CXCursorKind], useful for debug purposes.
   String kindSpelling() {
     return clang
         .clang_getCursorKindSpelling_wrap(clang.clang_getCursorKind_wrap(this))
-        .toStringAndDispose();
+        .toStringAndDispose()!;
   }
 
   /// for debug: returns [spelling] [kind] [kindSpelling] [type] [typeSpelling].
@@ -102,7 +102,7 @@ extension CXCursorExt on Pointer<clang_types.CXCursor> {
     return r;
   }
 
-  String sourceFileName() {
+  String? sourceFileName() {
     final cxsource = clang.clang_getCursorLocation_wrap(this);
     final cxfilePtr = allocate<Pointer<Void>>();
     final line = allocate<Uint32>();
@@ -137,9 +137,9 @@ Pointer<clang_types.CXSourceRange> lastCommentRange = nullptr;
 /// The given string is wrapped at line width = 80 - [indent]. The [indent] is
 /// [commentPrefix.dimensions] by default because a comment starts with
 /// [commentPrefix].
-String getCursorDocComment(Pointer<clang_types.CXCursor> cursor,
+String? getCursorDocComment(Pointer<clang_types.CXCursor> cursor,
     [int indent = commentPrefix.length]) {
-  String formattedDocComment;
+  String? formattedDocComment;
   final currentCommentRange = clang.clang_Cursor_getCommentRange_wrap(cursor);
 
   // See if this comment and the last comment both point to the same source
@@ -176,7 +176,7 @@ String getCursorDocComment(Pointer<clang_types.CXCursor> cursor,
 ///
 /// Wrapping will work properly only when String has no new lines
 /// characters(\n).
-String _wrapNoNewLineString(String string, int lineWidth) {
+String? _wrapNoNewLineString(String? string, int lineWidth) {
   if (string == null || string.isEmpty) {
     return null;
   }
@@ -202,7 +202,7 @@ String _wrapNoNewLineString(String string, int lineWidth) {
 }
 
 /// Removes /*, */ and any *'s in the beginning of a line.
-String removeRawCommentMarkups(String string) {
+String? removeRawCommentMarkups(String? string) {
   if (string == null || string.isEmpty) {
     return null;
   }
@@ -234,16 +234,16 @@ extension CXTypeExt on Pointer<clang_types.CXType> {
   }
 
   /// Spelling for a [clang_types.CXTypeKind], useful for debug purposes.
-  String spelling() {
+  String? spelling() {
     return clang.clang_getTypeSpelling_wrap(this).toStringAndDispose();
   }
 
   /// Returns the typeKind int from [clang_types.CXTypeKind].
-  int kind() {
+  int? kind() {
     return ref.kind;
   }
 
-  String kindSpelling() {
+  String? kindSpelling() {
     return clang.clang_getTypeKindSpelling_wrap(kind()).toStringAndDispose();
   }
 
@@ -264,8 +264,8 @@ extension CXStringExt on Pointer<clang_types.CXString> {
   ///
   /// Make sure to dispose CXstring using dispose method, or use the
   /// [toStringAndDispose] method.
-  String string() {
-    String s;
+  String? string() {
+    String? s;
     final cstring = clang.clang_getCString_wrap(this);
     if (cstring != nullptr) {
       s = Utf8.fromUtf8(cstring.cast());
@@ -274,7 +274,7 @@ extension CXStringExt on Pointer<clang_types.CXString> {
   }
 
   /// Converts CXString to dart string and disposes CXString.
-  String toStringAndDispose() {
+  String? toStringAndDispose() {
     // Note: clang_getCString_wrap returns a const char *, calling free will result in error.
     final s = string();
     clang.clang_disposeString_wrap(this);
@@ -329,7 +329,7 @@ class IncrementalNamer {
 
 class Macro {
   final String usr;
-  final String originalName;
+  final String? originalName;
 
   Macro(this.usr, this.originalName);
 }
@@ -353,7 +353,7 @@ class BindingsIndex {
     _structs[usr] = struc;
   }
 
-  Struc getSeenStruct(String usr) {
+  Struc? getSeenStruct(String usr) {
     return _structs[usr];
   }
 
@@ -365,7 +365,7 @@ class BindingsIndex {
     _functions[usr] = func;
   }
 
-  Func getSeenFunc(String usr) {
+  Func? getSeenFunc(String usr) {
     return _functions[usr];
   }
 
@@ -377,7 +377,7 @@ class BindingsIndex {
     _enumClass[usr] = enumClass;
   }
 
-  EnumClass getSeenEnumClass(String usr) {
+  EnumClass? getSeenEnumClass(String usr) {
     return _enumClass[usr];
   }
 
@@ -389,7 +389,7 @@ class BindingsIndex {
     _unnamedEnumConstants[usr] = enumConstant;
   }
 
-  Constant getSeenUnnamedEnumConstant(String usr) {
+  Constant? getSeenUnnamedEnumConstant(String usr) {
     return _unnamedEnumConstants[usr];
   }
 
@@ -401,7 +401,7 @@ class BindingsIndex {
     _macros[usr] = macro;
   }
 
-  String getSeenMacro(String usr) {
+  String? getSeenMacro(String usr) {
     return _macros[usr];
   }
 
@@ -413,7 +413,7 @@ class BindingsIndex {
     _functionTypedefs[originalName] = t;
   }
 
-  Typedef getSeenFunctionTypedef(String originalName) {
+  Typedef? getSeenFunctionTypedef(String originalName) {
     return _functionTypedefs[originalName];
   }
 }

@@ -56,8 +56,8 @@ void main(List<String> args) {
   // Generate file for the parsed bindings.
   final gen = File(config.output);
   library.generateFile(gen);
-  _logger.info(
-      successPen('Finished, Bindings generated in ${gen?.absolute?.path}'));
+  _logger
+      .info(successPen('Finished, Bindings generated in ${gen.absolute.path}'));
 }
 
 Config getConfig(ArgResults result) {
@@ -87,7 +87,7 @@ Config getConfigFromPubspec() {
 
   // Throws a [YamlException] if it's unable to parse the Yaml.
   final bindingsConfigMap =
-      yaml.loadYaml(pubspecFile.readAsStringSync())[configKey] as yaml.YamlMap;
+      yaml.loadYaml(pubspecFile.readAsStringSync())[configKey] as yaml.YamlMap?;
 
   if (bindingsConfigMap == null) {
     _logger.severe("Couldn't find an entry for '$configKey' in $pubspecName.");
@@ -161,7 +161,7 @@ ArgResults getArgResults(List<String> args) {
 /// Sets up the logging level and printing.
 void setupLogger(ArgResults result) {
   if (result.wasParsed('verbose')) {
-    switch (result['verbose'] as String) {
+    switch (result['verbose'] as String?) {
       case 'all':
         // Logs everything, the entire AST touched by our parser.
         Logger.root.level = Level.ALL;

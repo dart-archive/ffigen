@@ -16,74 +16,70 @@ class NativeLibrary {
     int a,
     int b,
   ) {
-    _sum ??= _dylib.lookupFunction<_c_sum, _dart_sum>('sum');
-    return _sum(
+    return (_sum ??= _dylib.lookupFunction<_c_sum, _dart_sum>('sum'))(
       a,
       b,
     );
   }
 
-  _dart_sum _sum;
+  _dart_sum? _sum;
 
   /// Subtracts 2 integers.
   int subtract(
     ffi.Pointer<ffi.Int32> a,
     int b,
   ) {
-    _subtract ??=
-        _dylib.lookupFunction<_c_subtract, _dart_subtract>('subtract');
-    return _subtract(
+    return (_subtract ??=
+        _dylib.lookupFunction<_c_subtract, _dart_subtract>('subtract'))(
       a,
       b,
     );
   }
 
-  _dart_subtract _subtract;
+  _dart_subtract? _subtract;
 
   /// Multiplies 2 integers, returns pointer to an integer,.
   ffi.Pointer<ffi.Int32> multiply(
     int a,
     int b,
   ) {
-    _multiply ??=
-        _dylib.lookupFunction<_c_multiply, _dart_multiply>('multiply');
-    return _multiply(
+    return (_multiply ??=
+        _dylib.lookupFunction<_c_multiply, _dart_multiply>('multiply'))(
       a,
       b,
     );
   }
 
-  _dart_multiply _multiply;
+  _dart_multiply? _multiply;
 
   /// Divides 2 integers, returns pointer to a float.
   ffi.Pointer<ffi.Float> divide(
     int a,
     int b,
   ) {
-    _divide ??= _dylib.lookupFunction<_c_divide, _dart_divide>('divide');
-    return _divide(
+    return (_divide ??=
+        _dylib.lookupFunction<_c_divide, _dart_divide>('divide'))(
       a,
       b,
     );
   }
 
-  _dart_divide _divide;
+  _dart_divide? _divide;
 
   /// Divides 2 floats, returns a pointer to double.
   ffi.Pointer<ffi.Double> dividePercision(
     ffi.Pointer<ffi.Float> a,
     ffi.Pointer<ffi.Float> b,
   ) {
-    _dividePercision ??=
+    return (_dividePercision ??=
         _dylib.lookupFunction<_c_dividePercision, _dart_dividePercision>(
-            'dividePercision');
-    return _dividePercision(
+            'dividePercision'))(
       a,
       b,
     );
   }
 
-  _dart_dividePercision _dividePercision;
+  _dart_dividePercision? _dividePercision;
 }
 
 typedef _c_sum = ffi.Int32 Function(

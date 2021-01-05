@@ -48,11 +48,12 @@ final _logger = Logger('ffigen.header_parser.parser');
 /// Initializes parser, clears any previous values.
 void initParser(Config c) {
   // Find full path of dynamic library and initialize bindings.
-  if (findDotDartTool() == null) {
+  final ddt = findDotDartTool();
+  if (ddt == null) {
     throw Exception('Unable to find .dart_tool.');
   } else {
     final fullDylibPath = path.join(
-      findDotDartTool().toFilePath(),
+      ddt.toFilePath(),
       strings.ffigenFolderName,
       strings.dylibFileName,
     );
@@ -78,10 +79,8 @@ List<Binding> parseToBindings() {
     config.compilerOpts.add(strings.fparseAllComments);
   }
 
-  if (config.compilerOpts != null) {
-    clangCmdArgs = createDynamicStringArray(config.compilerOpts);
-    cmdLen = config.compilerOpts.length;
-  }
+  clangCmdArgs = createDynamicStringArray(config.compilerOpts);
+  cmdLen = config.compilerOpts.length;
 
   // Contains all bindings. A set ensures we never have duplicates.
   final bindings = <Binding>{};
@@ -114,7 +113,7 @@ List<Binding> parseToBindings() {
     logTuDiagnostics(tu, _logger, headerLocation);
     final rootCursor = clang.clang_getTranslationUnitCursor_wrap(tu);
 
-    bindings.addAll(parseTranslationUnit(rootCursor));
+    bindings.addAll(parseTranslationUnit(rootCursor)!);
 
     // Cleanup.
     rootCursor.dispose();
@@ -125,11 +124,9 @@ List<Binding> parseToBindings() {
   bindings.addAll(unnamedEnumConstants);
 
   // Parse all saved macros.
-  bindings.addAll(parseSavedMacros());
+  bindings.addAll(parseSavedMacros()!);
 
-  if (config.compilerOpts != null) {
-    clangCmdArgs.dispose(config.compilerOpts.length);
-  }
+  clangCmdArgs.dispose(config.compilerOpts.length);
   clang.clang_disposeIndex(index);
   return bindings.toList();
 }

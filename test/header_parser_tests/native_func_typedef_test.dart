@@ -14,7 +14,7 @@ import 'package:ffigen/src/strings.dart' as strings;
 
 import '../test_utils.dart';
 
-Library actual;
+late Library actual;
 void main() {
   group('unnamed_enums_test', () {
     setUpAll(() {
@@ -59,27 +59,25 @@ NativeLibrary(ffi.DynamicLibrary dynamicLibrary): _dylib = dynamicLibrary;
 void func(
   ffi.Pointer<ffi.NativeFunction<_typedefC_4>> unnamed1,
 ) {
-_func ??= _dylib.lookupFunction<_c_func,_dart_func>('func');
-  return _func(
+return (_func ??= _dylib.lookupFunction<_c_func,_dart_func>('func'))(
     unnamed1,
   );
 }
-_dart_func _func;
+_dart_func? _func;
 
 void funcWithNativeFunc(
   ffi.Pointer<ffi.NativeFunction<withTypedefReturnType>> named,
 ) {
-_funcWithNativeFunc ??= _dylib.lookupFunction<_c_funcWithNativeFunc,_dart_funcWithNativeFunc>('funcWithNativeFunc');
-  return _funcWithNativeFunc(
+return (_funcWithNativeFunc ??= _dylib.lookupFunction<_c_funcWithNativeFunc,_dart_funcWithNativeFunc>('funcWithNativeFunc'))(
     named,
   );
 }
-_dart_funcWithNativeFunc _funcWithNativeFunc;
+_dart_funcWithNativeFunc? _funcWithNativeFunc;
 
 }
 
 class struc extends ffi.Struct{
-  ffi.Pointer<ffi.NativeFunction<_typedefC_2>> unnamed1;
+  external ffi.Pointer<ffi.NativeFunction<_typedefC_2>> unnamed1;
 
 }
 
@@ -125,7 +123,7 @@ typedef _typedefC_2 = ffi.Void Function(
         }
       } catch (e) {
         file.writeAsStringSync(gen);
-        print('Failed test, Debug output: ${file.absolute?.path}');
+        print('Failed test, Debug output: ${file.absolute.path}');
         rethrow;
       }
     });

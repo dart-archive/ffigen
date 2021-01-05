@@ -60,20 +60,20 @@ dynamic convertCJsonToDartObj(Pointer<cj.cJSON> parsedcjson) {
   if (cjson.cJSON_IsObject(parsedcjson.cast()) == 1) {
     obj = <String, dynamic>{};
 
-    Pointer<cj.cJSON> ptr;
+    Pointer<cj.cJSON>? ptr;
     ptr = parsedcjson.ref.child;
     while (ptr != nullptr) {
-      final dynamic o = convertCJsonToDartObj(ptr);
+      final dynamic o = convertCJsonToDartObj(ptr!);
       _addToObj(obj, o, ptr.ref.string.cast());
       ptr = ptr.ref.next;
     }
   } else if (cjson.cJSON_IsArray(parsedcjson.cast()) == 1) {
     obj = <dynamic>[];
 
-    Pointer<cj.cJSON> ptr;
+    Pointer<cj.cJSON>? ptr;
     ptr = parsedcjson.ref.child;
     while (ptr != nullptr) {
-      final dynamic o = convertCJsonToDartObj(ptr);
+      final dynamic o = convertCJsonToDartObj(ptr!);
       _addToObj(obj, o);
       ptr = ptr.ref.next;
     }
@@ -88,9 +88,9 @@ dynamic convertCJsonToDartObj(Pointer<cj.cJSON> parsedcjson) {
   return obj;
 }
 
-void _addToObj(dynamic obj, dynamic o, [Pointer<Utf8> name]) {
+void _addToObj(dynamic obj, dynamic o, [Pointer<Utf8>? name]) {
   if (obj is Map<String, dynamic>) {
-    obj[Utf8.fromUtf8(name)] = o;
+    obj[Utf8.fromUtf8(name!)] = o;
   } else if (obj is List<dynamic>) {
     obj.add(o);
   }

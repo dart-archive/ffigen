@@ -3,14 +3,13 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator/utils.dart';
-import 'package:meta/meta.dart';
 
 import 'binding.dart';
 import 'typedef.dart';
 
 /// To store generated String bindings.
 class Writer {
-  final String header;
+  final String? header;
 
   /// Holds bindings, which lookup symbols.
   final List<Binding> lookUpBindings;
@@ -18,42 +17,41 @@ class Writer {
   /// Holds bindings which don't lookup symbols.
   final List<Binding> noLookUpBindings;
 
-  String _className;
-  final String classDocComment;
+  String? _className;
+  final String? classDocComment;
 
-  String _ffiLibraryPrefix;
-  String get ffiLibraryPrefix => _ffiLibraryPrefix;
+  String? _ffiLibraryPrefix;
+  String? get ffiLibraryPrefix => _ffiLibraryPrefix;
 
-  String _dylibIdentifier;
-  String get dylibIdentifier => _dylibIdentifier;
+  String? _dylibIdentifier;
+  String? get dylibIdentifier => _dylibIdentifier;
 
   final bool dartBool;
 
   /// Initial namers set after running constructor. Namers are reset to this
   /// initial state everytime [generate] is called.
-  UniqueNamer _initialTopLevelUniqueNamer, _initialWrapperLevelUniqueNamer;
+  late UniqueNamer _initialTopLevelUniqueNamer, _initialWrapperLevelUniqueNamer;
 
   /// Used by [Binding]s for generating required code.
-  UniqueNamer _topLevelUniqueNamer, _wrapperLevelUniqueNamer;
+  late UniqueNamer _topLevelUniqueNamer, _wrapperLevelUniqueNamer;
   UniqueNamer get topLevelUniqueNamer => _topLevelUniqueNamer;
   UniqueNamer get wrapperLevelUniqueNamer => _wrapperLevelUniqueNamer;
 
-  String _arrayHelperClassPrefix;
+  String? _arrayHelperClassPrefix;
 
   /// Guaranteed to be a unique prefix.
-  String get arrayHelperClassPrefix => _arrayHelperClassPrefix;
+  String? get arrayHelperClassPrefix => _arrayHelperClassPrefix;
 
   /// [_usedUpNames] should contain names of all the declarations which are
   /// already used. This is used to avoid name collisions.
   Writer({
-    @required this.lookUpBindings,
-    @required this.noLookUpBindings,
-    @required String className,
-    @required this.dartBool,
+    required this.lookUpBindings,
+    required this.noLookUpBindings,
+    required String className,
+    required this.dartBool,
     this.classDocComment,
     this.header,
-  })  : assert(className != null),
-        assert(dartBool != null) {
+  }) {
     final globalLevelNameSet = noLookUpBindings.map((e) => e.name).toSet();
     final wrapperLevelNameSet = lookUpBindings.map((e) => e.name).toSet();
     final allNameSet = <String>{}
@@ -66,8 +64,8 @@ class Writer {
 
     /// Wrapper class name must be unique among all names.
     _className = allLevelsUniqueNamer.makeUnique(className);
-    _initialWrapperLevelUniqueNamer.markUsed(_className);
-    _initialTopLevelUniqueNamer.markUsed(_className);
+    _initialWrapperLevelUniqueNamer.markUsed(_className!);
+    _initialTopLevelUniqueNamer.markUsed(_className!);
 
     /// [_ffiLibraryPrefix] should be unique in top level.
     _ffiLibraryPrefix = _initialTopLevelUniqueNamer.makeUnique('ffi');
@@ -81,7 +79,7 @@ class Writer {
     _arrayHelperClassPrefix = base;
     var suffixInt = 0;
     for (var i = 0; i < allNameSet.length; i++) {
-      if (allNameSet.elementAt(i).startsWith(_arrayHelperClassPrefix)) {
+      if (allNameSet.elementAt(i).startsWith(_arrayHelperClassPrefix!)) {
         // Not a unique prefix, start over with a new suffix.
         i = -1;
         suffixInt++;
@@ -137,7 +135,7 @@ class Writer {
     if (lookUpBindings.isNotEmpty) {
       // Write doc comment for wrapper class.
       if (classDocComment != null) {
-        s.write(makeDartDoc(classDocComment));
+        s.write(makeDartDoc(classDocComment!));
       }
       // Write wrapper classs.
       s.write('class $_className{\n');

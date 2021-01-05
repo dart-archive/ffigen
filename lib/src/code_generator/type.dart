@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:meta/meta.dart';
-
 import 'struc.dart';
 import 'typedef.dart';
 import 'writer.dart';
@@ -12,7 +10,7 @@ class _SubType {
   final String c;
   final String dart;
 
-  const _SubType({this.c, this.dart});
+  const _SubType({required this.c, required this.dart});
 }
 
 enum SupportedNativeType {
@@ -69,28 +67,28 @@ class Type {
   };
 
   /// Reference to the [Struc] binding this type refers to.
-  Struc struc;
+  Struc? struc;
 
   /// Reference to the [Typedef] this type refers to.
-  Typedef nativeFunc;
+  Typedef? nativeFunc;
 
   /// For providing [SupportedNativeType] only.
-  final SupportedNativeType nativeType;
+  final SupportedNativeType? nativeType;
 
   /// The BroadType of this Type.
   final BroadType broadType;
 
   /// Child Type, e.g Pointer(Parent) to Int(Child), or Child Type of an Array.
-  final Type child;
+  final Type? child;
 
   /// For ConstantArray and IncompleteArray type.
-  final int length;
+  final int? length;
 
   /// For storing cursor type info for an unimplemented type.
-  String unimplementedReason;
+  String? unimplementedReason;
 
   Type._({
-    @required this.broadType,
+    required this.broadType,
     this.child,
     this.struc,
     this.nativeType,
@@ -102,13 +100,13 @@ class Type {
   factory Type.pointer(Type child) {
     return Type._(broadType: BroadType.Pointer, child: child);
   }
-  factory Type.struct(Struc struc) {
+  factory Type.struct(Struc? struc) {
     return Type._(broadType: BroadType.Struct, struc: struc);
   }
-  factory Type.nativeFunc(Typedef nativeFunc) {
+  factory Type.nativeFunc(Typedef? nativeFunc) {
     return Type._(broadType: BroadType.NativeFunction, nativeFunc: nativeFunc);
   }
-  factory Type.nativeType(SupportedNativeType nativeType) {
+  factory Type.nativeType(SupportedNativeType? nativeType) {
     return Type._(broadType: BroadType.NativeType, nativeType: nativeType);
   }
   factory Type.constantArray(int length, Type elementType) {
@@ -143,7 +141,7 @@ class Type {
   /// double[2][3] has base [Type] of double.
   Type getBaseType() {
     if (child != null) {
-      return child.getBaseType();
+      return child!.getBaseType();
     } else {
       return this;
     }
@@ -155,7 +153,7 @@ class Type {
   Type getBaseArrayType() {
     if (broadType == BroadType.ConstantArray ||
         broadType == BroadType.IncompleteArray) {
-      return child.getBaseArrayType();
+      return child!.getBaseArrayType();
     } else {
       return this;
     }
@@ -167,21 +165,21 @@ class Type {
   String getCType(Writer w) {
     switch (broadType) {
       case BroadType.NativeType:
-        return '${w.ffiLibraryPrefix}.${_primitives[nativeType].c}';
+        return '${w.ffiLibraryPrefix}.${_primitives[nativeType!]!.c}';
       case BroadType.Pointer:
-        return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
+        return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
       case BroadType.Struct:
-        return '${struc.name}';
+        return '${struc!.name}';
       case BroadType.NativeFunction:
-        return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc.name}>';
+        return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc!.name}>';
       case BroadType
           .IncompleteArray: // Array parameters are treated as Pointers in C.
-        return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
+        return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
       case BroadType
           .ConstantArray: // Array parameters are treated as Pointers in C.
-        return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
+        return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
       case BroadType.Boolean: // Booleans are treated as uint8.
-        return '${w.ffiLibraryPrefix}.${_primitives[SupportedNativeType.Uint8].c}';
+        return '${w.ffiLibraryPrefix}.${_primitives[SupportedNativeType.Uint8]!.c}';
       case BroadType.Handle:
         return '${w.ffiLibraryPrefix}.Handle';
       default:
@@ -189,24 +187,24 @@ class Type {
     }
   }
 
-  String getDartType(Writer w) {
+  String? getDartType(Writer w) {
     switch (broadType) {
       case BroadType.NativeType:
-        return _primitives[nativeType].dart;
+        return _primitives[nativeType!]!.dart;
       case BroadType.Pointer:
-        return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
+        return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
       case BroadType.Struct:
-        return '${struc.name}';
+        return '${struc!.name}';
       case BroadType.NativeFunction:
-        return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc.name}>';
+        return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc!.name}>';
       case BroadType
           .IncompleteArray: // Array parameters are treated as Pointers in C.
-        return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
+        return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
       case BroadType
           .ConstantArray: // Array parameters are treated as Pointers in C.
-        return '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
+        return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
       case BroadType.Boolean: // Booleans are treated as uint8.
-        return _primitives[SupportedNativeType.Uint8].dart;
+        return _primitives[SupportedNativeType.Uint8]!.dart;
       case BroadType.Handle:
         return 'Object';
       default:

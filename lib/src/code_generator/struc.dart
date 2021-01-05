@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator/typedef.dart';
-import 'package:meta/meta.dart';
 
 import 'binding.dart';
 import 'binding_string.dart';
@@ -39,11 +38,11 @@ class Struc extends NoLookUpBinding {
   List<Member> members;
 
   Struc({
-    String usr,
-    String originalName,
-    @required String name,
-    String dartDoc,
-    List<Member> members,
+    String? usr,
+    String? originalName,
+    required String name,
+    String? dartDoc,
+    List<Member>? members,
   })  : members = members ?? [],
         super(
           usr: usr,
@@ -56,13 +55,13 @@ class Struc extends NoLookUpBinding {
     final array = <int>[];
     var startType = type;
     while (startType.broadType == BroadType.ConstantArray) {
-      array.add(startType.length);
-      startType = startType.child;
+      array.add(startType.length!);
+      startType = startType.child!;
     }
     return array;
   }
 
-  List<Typedef> _typedefDependencies;
+  List<Typedef>? _typedefDependencies;
   @override
   List<Typedef> getTypedefDependencies(Writer w) {
     if (_typedefDependencies == null) {
@@ -72,20 +71,19 @@ class Struc extends NoLookUpBinding {
       for (final m in members) {
         final base = m.type.getBaseType();
         if (base.broadType == BroadType.NativeFunction) {
-          _typedefDependencies.addAll(base.nativeFunc.getDependencies());
+          _typedefDependencies!.addAll(base.nativeFunc!.getDependencies());
         }
       }
     }
-    return _typedefDependencies;
+    return _typedefDependencies ?? [];
   }
 
   @override
   BindingString toBindingString(Writer w) {
-    members = members ?? [];
     final s = StringBuffer();
     final enclosingClassName = name;
     if (dartDoc != null) {
-      s.write(makeDartDoc(dartDoc));
+      s.write(makeDartDoc(dartDoc!));
     }
 
     final helpers = <ArrayHelper>[];
@@ -118,13 +116,13 @@ class Struc extends NoLookUpBinding {
         const depth = '  ';
         if (m.dartDoc != null) {
           s.write(depth + '/// ');
-          s.writeAll(m.dartDoc.split('\n'), '\n' + depth + '/// ');
+          s.writeAll(m.dartDoc!.split('\n'), '\n' + depth + '/// ');
           s.write('\n');
         }
         if (m.type.isPrimitive) {
           s.write('$depth@${m.type.getCType(w)}()\n');
         }
-        s.write('$depth${m.type.getDartType(w)} ${memberName};\n\n');
+        s.write('${depth}external ${m.type.getDartType(w)} ${memberName};\n\n');
       }
     }
     s.write('}\n\n');
@@ -154,15 +152,15 @@ class Struc extends NoLookUpBinding {
 }
 
 class Member {
-  final String dartDoc;
+  final String? dartDoc;
   final String originalName;
   final String name;
   final Type type;
 
   const Member({
-    String originalName,
-    @required this.name,
-    @required this.type,
+    String? originalName,
+    required this.name,
+    required this.type,
     this.dartDoc,
   }) : originalName = originalName ?? name;
 }
@@ -171,15 +169,15 @@ class Member {
 class ArrayHelper {
   final Type elementType;
   final List<int> dimensions;
-  final String structName;
+  final String? structName;
 
-  final String name;
+  final String? name;
   final String helperClassGroupName;
   final String elementNamePrefix;
 
-  int _expandedArrayLength;
+  int? _expandedArrayLength;
   int get expandedArrayLength {
-    if (_expandedArrayLength != null) return _expandedArrayLength;
+    if (_expandedArrayLength != null) return _expandedArrayLength!;
 
     var arrayLength = 1;
     for (final i in dimensions) {
@@ -189,12 +187,12 @@ class ArrayHelper {
   }
 
   ArrayHelper({
-    @required this.elementType,
-    @required this.dimensions,
-    @required this.structName,
-    @required this.name,
-    @required this.helperClassGroupName,
-    @required this.elementNamePrefix,
+    required this.elementType,
+    required this.dimensions,
+    required this.structName,
+    required this.name,
+    required this.helperClassGroupName,
+    required this.elementNamePrefix,
   });
 
   /// Create declaration binding, added inside the struct binding.
@@ -207,7 +205,7 @@ class ArrayHelper {
       if (elementType.isPrimitive) {
         s.write('  @${arrayCType}()\n');
       }
-      s.write('  ${arrayDartType} ${elementNamePrefix}$i;\n');
+      s.write('  external ${arrayDartType} ${elementNamePrefix}$i;\n');
     }
 
     s.write('/// Helper for array `$name`.\n');

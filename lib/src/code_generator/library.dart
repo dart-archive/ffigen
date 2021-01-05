@@ -6,7 +6,6 @@ import 'dart:io';
 
 import 'package:cli_util/cli_util.dart';
 import 'package:logging/logging.dart';
-import 'package:meta/meta.dart';
 import 'package:path/path.dart' as p;
 import 'package:pub_semver/pub_semver.dart';
 import 'binding.dart';
@@ -20,14 +19,14 @@ class Library {
   /// List of bindings in this library.
   final List<Binding> bindings;
 
-  Writer _writer;
+  late Writer _writer;
   Writer get writer => _writer;
 
   Library({
-    @required String name,
-    String description,
-    @required this.bindings,
-    String header,
+    required String name,
+    String? description,
+    required this.bindings,
+    String? header,
     bool dartBool = true,
   }) {
     // Seperate bindings which require lookup.
@@ -116,8 +115,7 @@ class Library {
 
   /// Generates the bindings.
   String generate() {
-    final w = writer;
-    return w.generate();
+    return writer.generate();
   }
 
   @override

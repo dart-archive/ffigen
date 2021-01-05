@@ -14,183 +14,172 @@ class NativeLibrary {
   bool Function1Bool(
     bool x,
   ) {
-    _Function1Bool ??= _dylib
-        .lookupFunction<_c_Function1Bool, _dart_Function1Bool>('Function1Bool');
-    return _Function1Bool(
+    return (_Function1Bool ??=
+            _dylib.lookupFunction<_c_Function1Bool, _dart_Function1Bool>(
+                'Function1Bool'))(
           x ? 1 : 0,
         ) !=
         0;
   }
 
-  _dart_Function1Bool _Function1Bool;
+  _dart_Function1Bool? _Function1Bool;
 
   int Function1Uint8(
     int x,
   ) {
-    _Function1Uint8 ??=
+    return (_Function1Uint8 ??=
         _dylib.lookupFunction<_c_Function1Uint8, _dart_Function1Uint8>(
-            'Function1Uint8');
-    return _Function1Uint8(
+            'Function1Uint8'))(
       x,
     );
   }
 
-  _dart_Function1Uint8 _Function1Uint8;
+  _dart_Function1Uint8? _Function1Uint8;
 
   int Function1Uint16(
     int x,
   ) {
-    _Function1Uint16 ??=
+    return (_Function1Uint16 ??=
         _dylib.lookupFunction<_c_Function1Uint16, _dart_Function1Uint16>(
-            'Function1Uint16');
-    return _Function1Uint16(
+            'Function1Uint16'))(
       x,
     );
   }
 
-  _dart_Function1Uint16 _Function1Uint16;
+  _dart_Function1Uint16? _Function1Uint16;
 
   int Function1Uint32(
     int x,
   ) {
-    _Function1Uint32 ??=
+    return (_Function1Uint32 ??=
         _dylib.lookupFunction<_c_Function1Uint32, _dart_Function1Uint32>(
-            'Function1Uint32');
-    return _Function1Uint32(
+            'Function1Uint32'))(
       x,
     );
   }
 
-  _dart_Function1Uint32 _Function1Uint32;
+  _dart_Function1Uint32? _Function1Uint32;
 
   int Function1Uint64(
     int x,
   ) {
-    _Function1Uint64 ??=
+    return (_Function1Uint64 ??=
         _dylib.lookupFunction<_c_Function1Uint64, _dart_Function1Uint64>(
-            'Function1Uint64');
-    return _Function1Uint64(
+            'Function1Uint64'))(
       x,
     );
   }
 
-  _dart_Function1Uint64 _Function1Uint64;
+  _dart_Function1Uint64? _Function1Uint64;
 
   int Function1Int8(
     int x,
   ) {
-    _Function1Int8 ??= _dylib
-        .lookupFunction<_c_Function1Int8, _dart_Function1Int8>('Function1Int8');
-    return _Function1Int8(
+    return (_Function1Int8 ??=
+        _dylib.lookupFunction<_c_Function1Int8, _dart_Function1Int8>(
+            'Function1Int8'))(
       x,
     );
   }
 
-  _dart_Function1Int8 _Function1Int8;
+  _dart_Function1Int8? _Function1Int8;
 
   int Function1Int16(
     int x,
   ) {
-    _Function1Int16 ??=
+    return (_Function1Int16 ??=
         _dylib.lookupFunction<_c_Function1Int16, _dart_Function1Int16>(
-            'Function1Int16');
-    return _Function1Int16(
+            'Function1Int16'))(
       x,
     );
   }
 
-  _dart_Function1Int16 _Function1Int16;
+  _dart_Function1Int16? _Function1Int16;
 
   int Function1Int32(
     int x,
   ) {
-    _Function1Int32 ??=
+    return (_Function1Int32 ??=
         _dylib.lookupFunction<_c_Function1Int32, _dart_Function1Int32>(
-            'Function1Int32');
-    return _Function1Int32(
+            'Function1Int32'))(
       x,
     );
   }
 
-  _dart_Function1Int32 _Function1Int32;
+  _dart_Function1Int32? _Function1Int32;
 
   int Function1Int64(
     int x,
   ) {
-    _Function1Int64 ??=
+    return (_Function1Int64 ??=
         _dylib.lookupFunction<_c_Function1Int64, _dart_Function1Int64>(
-            'Function1Int64');
-    return _Function1Int64(
+            'Function1Int64'))(
       x,
     );
   }
 
-  _dart_Function1Int64 _Function1Int64;
+  _dart_Function1Int64? _Function1Int64;
 
   int Function1IntPtr(
     int x,
   ) {
-    _Function1IntPtr ??=
+    return (_Function1IntPtr ??=
         _dylib.lookupFunction<_c_Function1IntPtr, _dart_Function1IntPtr>(
-            'Function1IntPtr');
-    return _Function1IntPtr(
+            'Function1IntPtr'))(
       x,
     );
   }
 
-  _dart_Function1IntPtr _Function1IntPtr;
+  _dart_Function1IntPtr? _Function1IntPtr;
 
   double Function1Float(
     double x,
   ) {
-    _Function1Float ??=
+    return (_Function1Float ??=
         _dylib.lookupFunction<_c_Function1Float, _dart_Function1Float>(
-            'Function1Float');
-    return _Function1Float(
+            'Function1Float'))(
       x,
     );
   }
 
-  _dart_Function1Float _Function1Float;
+  _dart_Function1Float? _Function1Float;
 
   double Function1Double(
     double x,
   ) {
-    _Function1Double ??=
+    return (_Function1Double ??=
         _dylib.lookupFunction<_c_Function1Double, _dart_Function1Double>(
-            'Function1Double');
-    return _Function1Double(
+            'Function1Double'))(
       x,
     );
   }
 
-  _dart_Function1Double _Function1Double;
+  _dart_Function1Double? _Function1Double;
 
   ffi.Pointer<Struct1> getStruct1() {
-    _getStruct1 ??=
-        _dylib.lookupFunction<_c_getStruct1, _dart_getStruct1>('getStruct1');
-    return _getStruct1();
+    return (_getStruct1 ??=
+        _dylib.lookupFunction<_c_getStruct1, _dart_getStruct1>('getStruct1'))();
   }
 
-  _dart_getStruct1 _getStruct1;
+  _dart_getStruct1? _getStruct1;
 }
 
 class Struct1 extends ffi.Struct {
   @ffi.Int8()
-  int a;
+  external int a;
 
   @ffi.Int32()
-  int _unique_data_item_0;
+  external int _unique_data_item_0;
   @ffi.Int32()
-  int _unique_data_item_1;
+  external int _unique_data_item_1;
   @ffi.Int32()
-  int _unique_data_item_2;
+  external int _unique_data_item_2;
   @ffi.Int32()
-  int _unique_data_item_3;
+  external int _unique_data_item_3;
   @ffi.Int32()
-  int _unique_data_item_4;
+  external int _unique_data_item_4;
   @ffi.Int32()
-  int _unique_data_item_5;
+  external int _unique_data_item_5;
 
   /// Helper for array `data`.
   ArrayHelper_Struct1_data_level0 get data =>

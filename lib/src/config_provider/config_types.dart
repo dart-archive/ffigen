@@ -4,7 +4,6 @@
 
 /// Contains all the neccesary classes required by config.
 
-import 'package:meta/meta.dart';
 import 'package:quiver/pattern.dart' as quiver;
 
 class CommentType {
@@ -33,15 +32,15 @@ enum CommentLength { none, brief, full }
 class Specification<E> {
   final bool Function(String name, dynamic value) validator;
   final E Function(dynamic map) extractor;
-  final E Function() defaultValue;
+  final E Function()? defaultValue;
 
   final Requirement requirement;
   final void Function(dynamic result) extractedResult;
 
   Specification({
-    @required this.extractedResult,
-    @required this.validator,
-    @required this.extractor,
+    required this.extractedResult,
+    required this.validator,
+    required this.extractor,
     this.defaultValue,
     this.requirement = Requirement.no,
   });
@@ -59,7 +58,7 @@ class Headers {
   /// Include filter for headers.
   final HeaderIncludeFilter includeFilter;
 
-  Headers({List<String> entryPoints, HeaderIncludeFilter includeFilter})
+  Headers({List<String>? entryPoints, HeaderIncludeFilter? includeFilter})
       : entryPoints = entryPoints ?? [],
         includeFilter = includeFilter ?? GlobHeaderFilter();
 }
@@ -69,7 +68,7 @@ abstract class HeaderIncludeFilter {
 }
 
 class GlobHeaderFilter extends HeaderIncludeFilter {
-  List<quiver.Glob> includeGlobs = [];
+  List<quiver.Glob>? includeGlobs = [];
 
   GlobHeaderFilter({
     this.includeGlobs,
@@ -78,14 +77,14 @@ class GlobHeaderFilter extends HeaderIncludeFilter {
   @override
   bool shouldInclude(String header) {
     // Return true if header was included.
-    for (final globPattern in includeGlobs) {
+    for (final globPattern in includeGlobs!) {
       if (quiver.matchesFull(globPattern, header)) {
         return true;
       }
     }
 
     // If any includedInclusionHeaders is provided, return false.
-    if (includeGlobs.isNotEmpty) {
+    if (includeGlobs!.isNotEmpty) {
       return false;
     } else {
       return true;
@@ -100,9 +99,9 @@ class Declaration {
   final MemberRenamer _memberRenamer;
 
   Declaration({
-    Includer includer,
-    Renamer renamer,
-    MemberRenamer memberRenamer,
+    Includer? includer,
+    Renamer? renamer,
+    MemberRenamer? memberRenamer,
   })  : _includer = includer ?? Includer(),
         _renamer = renamer ?? Renamer(),
         _memberRenamer = memberRenamer ?? MemberRenamer();
@@ -137,7 +136,7 @@ class RegExpRenamer {
   String rename(String str) {
     if (matches(str)) {
       // Get match.
-      final regExpMatch = regExp.firstMatch(str);
+      final regExpMatch = regExp.firstMatch(str)!;
 
       /// Get group values.
       /// E.g for `str`: `clang_dispose` and `regExp`: `clang_(.*)`
@@ -149,8 +148,8 @@ class RegExpRenamer {
       /// Replace all `$<int>` symbols with respective groups (if any).
       final result =
           replacementPattern.replaceAllMapped(replaceGroupRegexp, (match) {
-        final groupInt = int.parse(match.group(1));
-        return groups[groupInt];
+        final groupInt = int.parse(match.group(1)!);
+        return groups[groupInt]!;
       });
       return result;
     } else {
@@ -172,10 +171,10 @@ class Includer {
   final Set<String> _excludeFull;
 
   Includer({
-    List<RegExp> includeMatchers,
-    Set<String> includeFull,
-    List<RegExp> excludeMatchers,
-    Set<String> excludeFull,
+    List<RegExp>? includeMatchers,
+    Set<String>? includeFull,
+    List<RegExp>? excludeMatchers,
+    Set<String>? excludeFull,
   })  : _includeMatchers = includeMatchers ?? [],
         _includeFull = includeFull ?? {},
         _excludeMatchers = excludeMatchers ?? [],
@@ -221,8 +220,8 @@ class Renamer {
   final List<RegExpRenamer> _renameMatchers;
 
   Renamer({
-    List<RegExpRenamer> renamePatterns,
-    Map<String, String> renameFull,
+    List<RegExpRenamer>? renamePatterns,
+    Map<String, String>? renameFull,
   })  : _renameMatchers = renamePatterns ?? [],
         _renameFull = renameFull ?? {};
 
@@ -233,7 +232,7 @@ class Renamer {
   String rename(String name) {
     // Apply full rename (if any).
     if (_renameFull.containsKey(name)) {
-      return _renameFull[name];
+      return _renameFull[name]!;
     }
 
     // Apply rename regexp (if matches).
@@ -273,21 +272,21 @@ class MemberRenamer {
   final Map<String, Renamer> _cache = {};
 
   MemberRenamer({
-    Map<String, Renamer> memberRenameFull,
-    List<RegExpMemberRenamer> memberRenamePattern,
+    Map<String, Renamer>? memberRenameFull,
+    List<RegExpMemberRenamer>? memberRenamePattern,
   })  : _memberRenameFull = memberRenameFull ?? {},
         _memberRenameMatchers = memberRenamePattern ?? [];
 
   String rename(String declaration, String member) {
     if (_cache.containsKey(declaration)) {
-      return _cache[declaration].rename(member);
+      return _cache[declaration]!.rename(member);
     }
 
     // Apply full rename (if any).
     if (_memberRenameFull.containsKey(declaration)) {
       // Add to cache.
-      _cache[declaration] = _memberRenameFull[declaration];
-      return _cache[declaration].rename(member);
+      _cache[declaration] = _memberRenameFull[declaration]!;
+      return _cache[declaration]!.rename(member);
     }
 
     // Apply rename regexp (if matches).
@@ -295,7 +294,7 @@ class MemberRenamer {
       if (renamer.matchesDeclarationName(declaration)) {
         // Add to cache.
         _cache[declaration] = renamer.memberRenamer;
-        return _cache[declaration].rename(member);
+        return _cache[declaration]!.rename(member);
       }
     }
 

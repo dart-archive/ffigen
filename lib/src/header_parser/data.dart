@@ -7,7 +7,6 @@ import 'dart:isolate';
 
 import 'package:ffigen/src/code_generator.dart' show Constant;
 import 'package:ffigen/src/config_provider.dart' show Config;
-import 'package:meta/meta.dart';
 import 'clang_bindings/clang_bindings.dart' show Clang;
 
 import 'utils.dart';
@@ -16,19 +15,19 @@ import 'utils.dart';
 
 /// Holds configurations.
 Config get config => _config;
-Config _config;
+late Config _config;
 
 /// Holds clang functions.
 Clang get clang => _clang;
-Clang _clang;
+late Clang _clang;
 
 // Tracks seen status for bindings
 BindingsIndex get bindingsIndex => _bindingsIndex;
-BindingsIndex _bindingsIndex;
+BindingsIndex _bindingsIndex = BindingsIndex();
 
 /// Used for naming typedefs.
 IncrementalNamer get incrementalNamer => _incrementalNamer;
-IncrementalNamer _incrementalNamer;
+IncrementalNamer _incrementalNamer = IncrementalNamer();
 
 /// Holds the unique id refering to this isolate.
 ///
@@ -38,13 +37,13 @@ final uid = Isolate.current.controlPort.nativePort;
 
 /// Saved macros, Key: prefixedName, Value originalName.
 Map<String, Macro> get savedMacros => _savedMacros;
-Map<String, Macro> _savedMacros;
+Map<String, Macro> _savedMacros = {};
 
 /// Saved unnamed EnumConstants.
 List<Constant> get unnamedEnumConstants => _unnamedEnumConstants;
-List<Constant> _unnamedEnumConstants;
+List<Constant> _unnamedEnumConstants = [];
 
-void initializeGlobals({@required Config config, @required Clang clang}) {
+void initializeGlobals({required Config config, required Clang clang}) {
   _config = config;
   _clang = clang;
   _incrementalNamer = IncrementalNamer();

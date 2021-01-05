@@ -27,7 +27,7 @@ var cxTypeKindToSupportedNativeTypes = <int, SupportedNativeType>{
   clang.CXTypeKind.CXType_Enum: SupportedNativeType.Int32,
 };
 
-SupportedNativeType get enumNativeType =>
+SupportedNativeType? get enumNativeType =>
     cxTypeKindToSupportedNativeTypes[clang.CXTypeKind.CXType_Enum];
 
 var suportedTypedefToSuportedNativeType = <String, SupportedNativeType>{
