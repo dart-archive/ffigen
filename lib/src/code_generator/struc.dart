@@ -80,7 +80,6 @@ class Struc extends NoLookUpBinding {
 
   @override
   BindingString toBindingString(Writer w) {
-    members = members;
     final s = StringBuffer();
     final enclosingClassName = name;
     if (dartDoc != null) {
