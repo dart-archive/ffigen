@@ -1,4 +1,4 @@
-# 2.0.0-nullsafety
+# 2.0.0-nullsafety.0
 - Migrated to (unsound) null safety.
 
 # 1.2.0
