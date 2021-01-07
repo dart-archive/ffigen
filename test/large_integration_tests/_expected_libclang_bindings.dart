@@ -3328,7 +3328,30 @@ abstract class CXVisibilityKind {
 
 /// Describes the availability of a given entity on a particular platform, e.g.,
 /// a particular class might only be available on Mac OS 10.7 or newer.
-class CXPlatformAvailability extends ffi.Struct {}
+class CXPlatformAvailability extends ffi.Struct {
+  /// A string that describes the platform for which this structure provides
+  /// availability information.
+  external CXString Platform;
+
+  /// The version number in which this entity was introduced.
+  external CXVersion Introduced;
+
+  /// The version number in which this entity was deprecated (but is still
+  /// available).
+  external CXVersion Deprecated;
+
+  /// The version number in which this entity was obsoleted, and therefore is no
+  /// longer available.
+  external CXVersion Obsoleted;
+
+  /// Whether the entity is unconditionally unavailable on this platform.
+  @ffi.Int32()
+  external int Unavailable;
+
+  /// An optional message to provide to a user of this API, e.g., to suggest
+  /// replacement APIs.
+  external CXString Message;
+}
 
 /// Describe the "language" of the entity referred to by a cursor.
 abstract class CXLanguageKind {
@@ -4112,10 +4135,43 @@ class ArrayHelper_CXIdxLoc_ptr_data_level0 {
 }
 
 /// Data for ppIncludedFile callback.
-class CXIdxIncludedFileInfo extends ffi.Struct {}
+class CXIdxIncludedFileInfo extends ffi.Struct {
+  /// Location of '#' in the #include/#import directive.
+  external CXIdxLoc hashLoc;
+
+  /// Filename as written in the #include/#import directive.
+  external ffi.Pointer<ffi.Int8> filename;
+
+  /// The actual file that the #include/#import directive resolved to.
+  external ffi.Pointer<ffi.Void> file;
+
+  @ffi.Int32()
+  external int isImport;
+
+  @ffi.Int32()
+  external int isAngled;
+
+  /// Non-zero if the directive was automatically turned into a module import.
+  @ffi.Int32()
+  external int isModuleImport;
+}
 
 /// Data for IndexerCallbacks#importedASTFile.
-class CXIdxImportedASTFileInfo extends ffi.Struct {}
+class CXIdxImportedASTFileInfo extends ffi.Struct {
+  /// Top level AST file containing the imported PCH, module or submodule.
+  external ffi.Pointer<ffi.Void> file;
+
+  /// The imported module or NULL if the AST file is a PCH.
+  external ffi.Pointer<ffi.Void> module;
+
+  /// Location where the file is imported. Applicable only for modules.
+  external CXIdxLoc loc;
+
+  /// Non-zero if an inclusion directive was automatically turned into a module
+  /// import. Applicable only for modules.
+  @ffi.Int32()
+  external int isImplicit;
+}
 
 abstract class CXIdxEntityKind {
   static const int CXIdxEntity_Unexposed = 0;
@@ -4173,19 +4229,92 @@ abstract class CXIdxAttrKind {
   static const int CXIdxAttr_IBOutletCollection = 3;
 }
 
-class CXIdxAttrInfo extends ffi.Struct {}
+class CXIdxAttrInfo extends ffi.Struct {
+  @ffi.Int32()
+  external int kind;
 
-class CXIdxEntityInfo extends ffi.Struct {}
+  external CXCursor cursor;
 
-class CXIdxContainerInfo extends ffi.Struct {}
+  external CXIdxLoc loc;
+}
 
-class CXIdxIBOutletCollectionAttrInfo extends ffi.Struct {}
+class CXIdxEntityInfo extends ffi.Struct {
+  @ffi.Int32()
+  external int kind;
+
+  @ffi.Int32()
+  external int templateKind;
+
+  @ffi.Int32()
+  external int lang;
+
+  external ffi.Pointer<ffi.Int8> name;
+
+  external ffi.Pointer<ffi.Int8> USR;
+
+  external CXCursor cursor;
+
+  external ffi.Pointer<ffi.Pointer<CXIdxAttrInfo>> attributes;
+
+  @ffi.Uint32()
+  external int numAttributes;
+}
+
+class CXIdxContainerInfo extends ffi.Struct {
+  external CXCursor cursor;
+}
+
+class CXIdxIBOutletCollectionAttrInfo extends ffi.Struct {
+  external ffi.Pointer<CXIdxAttrInfo> attrInfo;
+
+  external ffi.Pointer<CXIdxEntityInfo> objcClass;
+
+  external CXCursor classCursor;
+
+  external CXIdxLoc classLoc;
+}
 
 abstract class CXIdxDeclInfoFlags {
   static const int CXIdxDeclFlag_Skipped = 1;
 }
 
-class CXIdxDeclInfo extends ffi.Struct {}
+class CXIdxDeclInfo extends ffi.Struct {
+  external ffi.Pointer<CXIdxEntityInfo> entityInfo;
+
+  external CXCursor cursor;
+
+  external CXIdxLoc loc;
+
+  external ffi.Pointer<CXIdxContainerInfo> semanticContainer;
+
+  /// Generally same as #semanticContainer but can be different in cases like
+  /// out-of-line C++ member functions.
+  external ffi.Pointer<CXIdxContainerInfo> lexicalContainer;
+
+  @ffi.Int32()
+  external int isRedeclaration;
+
+  @ffi.Int32()
+  external int isDefinition;
+
+  @ffi.Int32()
+  external int isContainer;
+
+  external ffi.Pointer<CXIdxContainerInfo> declAsContainer;
+
+  /// Whether the declaration exists in code or was created implicitly by the
+  /// compiler, e.g. implicit Objective-C methods for properties.
+  @ffi.Int32()
+  external int isImplicit;
+
+  external ffi.Pointer<ffi.Pointer<CXIdxAttrInfo>> attributes;
+
+  @ffi.Uint32()
+  external int numAttributes;
+
+  @ffi.Uint32()
+  external int flags;
+}
 
 abstract class CXIdxObjCContainerKind {
   static const int CXIdxObjCContainer_ForwardRef = 0;
@@ -4200,9 +4329,21 @@ class CXIdxObjCContainerDeclInfo extends ffi.Struct {
   external int kind;
 }
 
-class CXIdxBaseClassInfo extends ffi.Struct {}
+class CXIdxBaseClassInfo extends ffi.Struct {
+  external ffi.Pointer<CXIdxEntityInfo> base;
 
-class CXIdxObjCProtocolRefInfo extends ffi.Struct {}
+  external CXCursor cursor;
+
+  external CXIdxLoc loc;
+}
+
+class CXIdxObjCProtocolRefInfo extends ffi.Struct {
+  external ffi.Pointer<CXIdxEntityInfo> protocol;
+
+  external CXCursor cursor;
+
+  external CXIdxLoc loc;
+}
 
 class CXIdxObjCProtocolRefListInfo extends ffi.Struct {
   external ffi.Pointer<ffi.Pointer<CXIdxObjCProtocolRefInfo>> protocols;
@@ -4219,7 +4360,17 @@ class CXIdxObjCInterfaceDeclInfo extends ffi.Struct {
   external ffi.Pointer<CXIdxObjCProtocolRefListInfo> protocols;
 }
 
-class CXIdxObjCCategoryDeclInfo extends ffi.Struct {}
+class CXIdxObjCCategoryDeclInfo extends ffi.Struct {
+  external ffi.Pointer<CXIdxObjCContainerDeclInfo> containerInfo;
+
+  external ffi.Pointer<CXIdxEntityInfo> objcClass;
+
+  external CXCursor classCursor;
+
+  external CXIdxLoc classLoc;
+
+  external ffi.Pointer<CXIdxObjCProtocolRefListInfo> protocols;
+}
 
 class CXIdxObjCPropertyDeclInfo extends ffi.Struct {
   external ffi.Pointer<CXIdxDeclInfo> declInfo;
@@ -4263,7 +4414,28 @@ abstract class CXSymbolRole {
 }
 
 /// Data for IndexerCallbacks#indexEntityReference.
-class CXIdxEntityRefInfo extends ffi.Struct {}
+class CXIdxEntityRefInfo extends ffi.Struct {
+  @ffi.Int32()
+  external int kind;
+
+  /// Reference cursor.
+  external CXCursor cursor;
+
+  external CXIdxLoc loc;
+
+  /// The entity that gets referenced.
+  external ffi.Pointer<CXIdxEntityInfo> referencedEntity;
+
+  /// Immediate "parent" of the reference. For example:
+  external ffi.Pointer<CXIdxEntityInfo> parentEntity;
+
+  /// Lexical container context of the reference.
+  external ffi.Pointer<CXIdxContainerInfo> container;
+
+  /// Sets of symbol roles of the reference.
+  @ffi.Int32()
+  external int role;
+}
 
 /// A group of callbacks used by #clang_indexSourceFile and
 /// #clang_indexTranslationUnit.

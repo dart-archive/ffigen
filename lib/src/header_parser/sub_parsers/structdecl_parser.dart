@@ -17,7 +17,6 @@ final _logger = Logger('ffigen.header_parser.structdecl_parser');
 /// Holds temporary information regarding [struc] while parsing.
 class _ParsedStruc {
   Struc? struc;
-  bool nestedStructMember = false;
   bool unimplementedMemberType = false;
   bool flexibleArrayMember = false;
   bool arrayMember = false;
@@ -63,7 +62,7 @@ Struc? parseStructDeclaration(
   }
 
   if (bindingsIndex.isSeenStruct(structUsr)) {
-    _stack.top.struc = bindingsIndex.getSeenStruct(structUsr);
+    _stack.top.struc = bindingsIndex.getSeenStruct(structUsr)!;
 
     // If struct is seen, update it's name.
     _stack.top.struc!.name = config.structDecl.renameUsingConfig(structName);
@@ -73,7 +72,6 @@ Struc? parseStructDeclaration(
 
 void _setStructMembers(Pointer<clang_types.CXCursor> cursor) {
   _stack.top.arrayMember = false;
-  _stack.top.nestedStructMember = false;
   _stack.top.unimplementedMemberType = false;
 
   final resultCode = clang.clang_visitChildren_wrap(
@@ -91,12 +89,6 @@ void _setStructMembers(Pointer<clang_types.CXCursor> cursor) {
         '---- Removed Struct members, reason: struct has array members ${cursor.completeStringRepr()}');
     _logger.warning(
         'Removed All Struct Members from: ${_stack.top.struc!.name}(${_stack.top.struc!.originalName}), Array members not supported');
-    return _stack.top.struc!.members.clear();
-  } else if (_stack.top.nestedStructMember) {
-    _logger.fine(
-        '---- Removed Struct members, reason: struct has struct members ${cursor.completeStringRepr()}');
-    _logger.warning(
-        'Removed All Struct Members from ${_stack.top.struc!.name}(${_stack.top.struc!.originalName}), Nested Structures not supported.');
     return _stack.top.struc!.members.clear();
   } else if (_stack.top.unimplementedMemberType) {
     _logger.fine(
@@ -135,18 +127,8 @@ int _structMembersVisitor(Pointer<clang_types.CXCursor> cursor,
       _logger.finer('===== member: ${cursor.completeStringRepr()}');
 
       final mt = cursor.type().toCodeGenTypeAndDispose();
-      //TODO(4): Remove these when support for Structs by value arrives.
-      if (mt.broadType == BroadType.Struct) {
-        // Setting this flag will exclude adding members for this struct's
-        // bindings.
-        _stack.top.nestedStructMember = true;
-      } else if (mt.broadType == BroadType.ConstantArray) {
+      if (mt.broadType == BroadType.ConstantArray) {
         _stack.top.arrayMember = true;
-        if (mt.child!.broadType == BroadType.Struct) {
-          // Setting this flag will exclude adding members for this struct's
-          // bindings.
-          _stack.top.nestedStructMember = true;
-        }
       } else if (mt.broadType == BroadType.IncompleteArray) {
         // TODO(68): Structs with flexible Array Members are not supported.
         _stack.top.flexibleArrayMember = true;
