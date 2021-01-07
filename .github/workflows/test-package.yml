@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sdk: [dev]
+        sdk: [dev] # TODO(127): Revert to stable.
     steps:
       - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v0.1
@@ -44,7 +44,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v0.1
         with:
-          channel: dev
+          channel: dev # TODO(127): Revert to stable.
       - name: Install dependencies
         run: dart pub get
       - name: Install libclang-10-dev
