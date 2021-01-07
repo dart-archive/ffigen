@@ -41,14 +41,13 @@ Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String? parentName}) {
       final spelling = cxtype.spelling();
       if (config.typedefNativeTypeMappings.containsKey(spelling)) {
         _logger.fine('  Type Mapped from typedef-map');
-        return Type.nativeType(config.typedefNativeTypeMappings[spelling!]);
+        return Type.nativeType(config.typedefNativeTypeMappings[spelling]);
       }
       // Get name from supported typedef name if config allows.
       if (config.useSupportedTypedefs) {
         if (suportedTypedefToSuportedNativeType.containsKey(spelling)) {
           _logger.fine('  Type Mapped from supported typedef');
-          return Type.nativeType(
-              suportedTypedefToSuportedNativeType[spelling!]);
+          return Type.nativeType(suportedTypedefToSuportedNativeType[spelling]);
         }
       }
 
