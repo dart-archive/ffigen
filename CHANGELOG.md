@@ -1,3 +1,6 @@
+# 2.0.0-dev.0
+- Added support for Nested structs.
+
 # 2.0.0-nullsafety.0
 - Migrated to (unsound) null safety.
 

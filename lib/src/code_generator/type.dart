@@ -187,7 +187,7 @@ class Type {
     }
   }
 
-  String? getDartType(Writer w) {
+  String getDartType(Writer w) {
     switch (broadType) {
       case BroadType.NativeType:
         return _primitives[nativeType!]!.dart;
