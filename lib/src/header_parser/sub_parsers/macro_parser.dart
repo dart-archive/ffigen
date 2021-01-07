@@ -164,11 +164,7 @@ int _macroVariablevisitor(Pointer<clang_types.CXCursor> cursor,
 /// Returns true if cursor is from generated file.
 bool isFromGeneratedFile(Pointer<clang_types.CXCursor> cursor) {
   final s = cursor.sourceFileName();
-  if (s == null || s.isEmpty) {
-    return false;
-  } else {
-    return p.basename(s) == _generatedFileBaseName;
-  }
+  return p.basename(s) == _generatedFileBaseName;
 }
 
 /// Base name of generated file.
