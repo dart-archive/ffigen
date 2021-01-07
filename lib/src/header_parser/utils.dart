@@ -244,7 +244,7 @@ extension CXTypeExt on Pointer<clang_types.CXType> {
   }
 
   String? kindSpelling() {
-    return clang.clang_getTypeKindSpelling_wrap(kind()).toStringAndDispose();
+    return clang.clang_getTypeKindSpelling_wrap(kind()!).toStringAndDispose();
   }
 
   /// For debugging: returns [spelling] [kind] [kindSpelling].

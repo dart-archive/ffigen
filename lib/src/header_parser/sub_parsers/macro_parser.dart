@@ -61,10 +61,8 @@ List<Constant>? parseSavedMacros() {
   final index = clang.clang_createIndex(0, 0);
   Pointer<Pointer<Utf8>> clangCmdArgs = nullptr;
   var cmdLen = 0;
-  if (config.compilerOpts != null) {
-    clangCmdArgs = createDynamicStringArray(config.compilerOpts);
-    cmdLen = config.compilerOpts.length;
-  }
+  clangCmdArgs = createDynamicStringArray(config.compilerOpts);
+  cmdLen = config.compilerOpts.length;
   final tu = clang.clang_parseTranslationUnit(
     index,
     Utf8.toUtf8(file.path).cast(),

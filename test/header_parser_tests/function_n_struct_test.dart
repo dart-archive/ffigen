@@ -10,7 +10,6 @@ import 'package:test/test.dart';
 import 'package:yaml/yaml.dart' as yaml;
 import 'package:ffigen/src/strings.dart' as strings;
 
-import '../native_test/native_test_bindings.dart';
 import '../test_utils.dart';
 
 late Library actual, expected;
