@@ -3,9 +3,9 @@ name: Dart CI
 on:
   # Run on PRs and pushes to the default branch.
   push:
-    branches: [ dart-master ]
+    branches: [ dart-dev ]
   pull_request:
-    branches: [ dart-master ]
+    branches: [ dart-dev, master ]
   schedule:
     - cron: "0 0 * * 0"
 
