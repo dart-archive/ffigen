@@ -26,7 +26,7 @@ final _stack = Stack<_ParsedEnum>();
 
 /// Parses a function declaration.
 EnumClass? parseEnumDeclaration(
-  Pointer<clang_types.CXCursor> cursor, {
+  clang_types.CXCursor cursor, {
 
   /// Optionally provide name to use (useful in case enum is inside a typedef).
   String? name,
@@ -36,7 +36,7 @@ EnumClass? parseEnumDeclaration(
   final enumName = name ?? cursor.spelling();
   if (enumName == '') {
     // Save this unnamed enum if it is anonymous (therefore not in a typedef).
-    if (clang.clang_Cursor_isAnonymous_wrap(cursor) != 0) {
+    if (clang.clang_Cursor_isAnonymous(cursor) != 0) {
       _logger.fine('Saving anonymous enum.');
       saveUnNamedEnum(cursor);
     } else {
@@ -64,12 +64,12 @@ EnumClass? parseEnumDeclaration(
   return _stack.pop().enumClass;
 }
 
-void _addEnumConstant(Pointer<clang_types.CXCursor> cursor) {
-  final resultCode = clang.clang_visitChildren_wrap(
+void _addEnumConstant(clang_types.CXCursor cursor) {
+  final resultCode = clang.clang_visitChildren(
     cursor,
     Pointer.fromFunction(
         _enumCursorVisitor, clang_types.CXChildVisitResult.CXChildVisit_Break),
-    uid,
+    nullptr,
   );
 
   visitChildrenResultChecker(resultCode);
@@ -79,19 +79,17 @@ void _addEnumConstant(Pointer<clang_types.CXCursor> cursor) {
 ///
 /// Invoked on every enum directly under rootCursor.
 /// Used for for extracting enum values.
-int _enumCursorVisitor(Pointer<clang_types.CXCursor> cursor,
-    Pointer<clang_types.CXCursor> parent, Pointer<Void> clientData) {
+int _enumCursorVisitor(clang_types.CXCursor cursor, clang_types.CXCursor parent,
+    Pointer<Void> clientData) {
   try {
     _logger.finest('  enumCursorVisitor: ${cursor.completeStringRepr()}');
-    switch (clang.clang_getCursorKind_wrap(cursor)) {
+    switch (clang.clang_getCursorKind(cursor)) {
       case clang_types.CXCursorKind.CXCursor_EnumConstantDecl:
         _addEnumConstantToEnumClass(cursor);
         break;
       default:
         _logger.fine('invalid enum constant');
     }
-    cursor.dispose();
-    parent.dispose();
   } catch (e, s) {
     _logger.severe(e);
     _logger.severe(s);
@@ -101,7 +99,7 @@ int _enumCursorVisitor(Pointer<clang_types.CXCursor> cursor,
 }
 
 /// Adds the parameter to func in [functiondecl_parser.dart].
-void _addEnumConstantToEnumClass(Pointer<clang_types.CXCursor> cursor) {
+void _addEnumConstantToEnumClass(clang_types.CXCursor cursor) {
   _stack.top.enumClass!.enumConstants.add(
     EnumConstant(
         dartDoc: getCursorDocComment(
@@ -113,6 +111,6 @@ void _addEnumConstantToEnumClass(Pointer<clang_types.CXCursor> cursor) {
           _stack.top.enumClass!.originalName,
           cursor.spelling(),
         ),
-        value: clang.clang_getEnumConstantDeclValue_wrap(cursor)),
+        value: clang.clang_getEnumConstantDeclValue(cursor)),
   );
 }

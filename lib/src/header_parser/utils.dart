@@ -37,7 +37,7 @@ void logTuDiagnostics(
   logger.severe('Header $header: Total errors/warnings: $total.');
   for (var i = 0; i < total; i++) {
     final diag = clang.clang_getDiagnostic(tu, i);
-    final cxstring = clang.clang_formatDiagnostic_wrap(
+    final cxstring = clang.clang_formatDiagnostic(
       diag,
       clang_types
               .CXDiagnosticDisplayOptions.CXDiagnostic_DisplaySourceLocation |
@@ -56,25 +56,25 @@ extension CXSourceRangeExt on Pointer<clang_types.CXSourceRange> {
   }
 }
 
-extension CXCursorExt on Pointer<clang_types.CXCursor> {
+extension CXCursorExt on clang_types.CXCursor {
   String usr() {
-    return clang.clang_getCursorUSR_wrap(this).toStringAndDispose();
+    return clang.clang_getCursorUSR(this).toStringAndDispose();
   }
 
   /// Returns the kind int from [clang_types.CXCursorKind].
   int kind() {
-    return clang.clang_getCursorKind_wrap(this);
+    return clang.clang_getCursorKind(this);
   }
 
   /// Name of the cursor (E.g function name, Struct name, Parameter name).
   String spelling() {
-    return clang.clang_getCursorSpelling_wrap(this).toStringAndDispose();
+    return clang.clang_getCursorSpelling(this).toStringAndDispose();
   }
 
   /// Spelling for a [clang_types.CXCursorKind], useful for debug purposes.
   String kindSpelling() {
     return clang
-        .clang_getCursorKindSpelling_wrap(clang.clang_getCursorKind_wrap(this))
+        .clang_getCursorKindSpelling(clang.clang_getCursorKind(this))
         .toStringAndDispose();
   }
 
@@ -82,47 +82,38 @@ extension CXCursorExt on Pointer<clang_types.CXCursor> {
   String completeStringRepr() {
     final cxtype = type();
     final s =
-        '(Cursor) spelling: ${spelling()}, kind: ${kind()}, kindSpelling: ${kindSpelling()}, type: ${cxtype.kind()}, typeSpelling: ${cxtype.spelling()}, usr: ${usr()}';
-    cxtype.dispose();
+        '(Cursor) spelling: ${spelling()}, kind: ${kind()}, kindSpelling: ${kindSpelling()}, type: ${cxtype.kind}, typeSpelling: ${cxtype.spelling()}, usr: ${usr()}';
     return s;
   }
 
   /// Dispose type using [type.dispose].
-  Pointer<clang_types.CXType> type() {
-    return clang.clang_getCursorType_wrap(this);
+  clang_types.CXType type() {
+    return clang.clang_getCursorType(this);
   }
 
   /// Only valid for [clang.CXCursorKind.CXCursor_FunctionDecl].
   ///
   /// Dispose type using [type.dispose].
-  Pointer<clang_types.CXType> returnType() {
-    final t = type();
-    final r = clang.clang_getResultType_wrap(t);
-    t.dispose();
-    return r;
+  clang_types.CXType returnType() {
+    return clang.clang_getResultType(type());
   }
 
   String sourceFileName() {
-    final cxsource = clang.clang_getCursorLocation_wrap(this);
+    final cxsource = clang.clang_getCursorLocation(this);
     final cxfilePtr = allocate<Pointer<Void>>();
     final line = allocate<Uint32>();
     final column = allocate<Uint32>();
     final offset = allocate<Uint32>();
 
     // Puts the values in these pointers.
-    clang.clang_getFileLocation_wrap(cxsource, cxfilePtr, line, column, offset);
-    final s =
-        clang.clang_getFileName_wrap(cxfilePtr.value).toStringAndDispose();
-    free(cxsource);
+    clang.clang_getFileLocation(cxsource, cxfilePtr, line, column, offset);
+    final s = clang.clang_getFileName(cxfilePtr.value).toStringAndDispose();
+
     free(cxfilePtr);
     free(line);
     free(column);
     free(offset);
     return s;
-  }
-
-  void dispose() {
-    free(this);
   }
 }
 
@@ -130,44 +121,38 @@ const commentPrefix = '/// ';
 const nesting = '  ';
 
 /// Stores the [clang_types.CXSourceRange] of the last comment.
-Pointer<clang_types.CXSourceRange> lastCommentRange = nullptr;
+clang_types.CXSourceRange? lastCommentRange;
 
 /// Returns a cursor's associated comment.
 ///
 /// The given string is wrapped at line width = 80 - [indent]. The [indent] is
 /// [commentPrefix.dimensions] by default because a comment starts with
 /// [commentPrefix].
-String? getCursorDocComment(Pointer<clang_types.CXCursor> cursor,
+String? getCursorDocComment(clang_types.CXCursor cursor,
     [int indent = commentPrefix.length]) {
   String? formattedDocComment;
-  final currentCommentRange = clang.clang_Cursor_getCommentRange_wrap(cursor);
+  final currentCommentRange = clang.clang_Cursor_getCommentRange(cursor);
 
   // See if this comment and the last comment both point to the same source
   // range.
-  if (lastCommentRange != nullptr &&
-      currentCommentRange != nullptr &&
-      clang.clang_equalRanges_wrap(lastCommentRange, currentCommentRange) !=
-          0) {
+  if (lastCommentRange != null &&
+      clang.clang_equalRanges(lastCommentRange!, currentCommentRange) != 0) {
     formattedDocComment = null;
   } else {
     switch (config.commentType.length) {
       case CommentLength.full:
-        formattedDocComment = removeRawCommentMarkups(clang
-            .clang_Cursor_getRawCommentText_wrap(cursor)
-            .toStringAndDispose());
+        formattedDocComment = removeRawCommentMarkups(
+            clang.clang_Cursor_getRawCommentText(cursor).toStringAndDispose());
         break;
       case CommentLength.brief:
         formattedDocComment = _wrapNoNewLineString(
-            clang
-                .clang_Cursor_getBriefCommentText_wrap(cursor)
-                .toStringAndDispose(),
+            clang.clang_Cursor_getBriefCommentText(cursor).toStringAndDispose(),
             80 - indent);
         break;
       default:
         formattedDocComment = null;
     }
   }
-  lastCommentRange.dispose();
   lastCommentRange = currentCommentRange;
   return formattedDocComment;
 }
@@ -220,31 +205,24 @@ String? removeRawCommentMarkups(String? string) {
   return sb.toString().trim();
 }
 
-extension CXTypeExt on Pointer<clang_types.CXType> {
+extension CXTypeExt on clang_types.CXType {
   /// Get code_gen [Type] representation of [clang_types.CXType].
   Type toCodeGenType() {
     return getCodeGenType(this);
   }
 
-  /// Get code_gen [Type] representation of [clang_types.CXType] and dispose the type.
-  Type toCodeGenTypeAndDispose() {
-    final t = getCodeGenType(this);
-    dispose();
-    return t;
-  }
-
   /// Spelling for a [clang_types.CXTypeKind], useful for debug purposes.
   String spelling() {
-    return clang.clang_getTypeSpelling_wrap(this).toStringAndDispose();
+    return clang.clang_getTypeSpelling(this).toStringAndDispose();
   }
 
   /// Returns the typeKind int from [clang_types.CXTypeKind].
-  int? kind() {
-    return ref.kind;
+  int kind() {
+    return this.kind;
   }
 
   String kindSpelling() {
-    return clang.clang_getTypeKindSpelling_wrap(kind()!).toStringAndDispose();
+    return clang.clang_getTypeKindSpelling(kind()).toStringAndDispose();
   }
 
   /// For debugging: returns [spelling] [kind] [kindSpelling].
@@ -253,19 +231,15 @@ extension CXTypeExt on Pointer<clang_types.CXType> {
         '(Type) spelling: ${spelling()}, kind: ${kind()}, kindSpelling: ${kindSpelling()}';
     return s;
   }
-
-  void dispose() {
-    free(this);
-  }
 }
 
-extension CXStringExt on Pointer<clang_types.CXString> {
+extension CXStringExt on clang_types.CXString {
   /// Convert CXString to a Dart string
   ///
   /// Make sure to dispose CXstring using dispose method, or use the
   /// [toStringAndDispose] method.
   String string() {
-    final cstring = clang.clang_getCString_wrap(this);
+    final cstring = clang.clang_getCString(this);
     if (cstring != nullptr) {
       return Utf8.fromUtf8(cstring.cast());
     } else {
@@ -277,12 +251,12 @@ extension CXStringExt on Pointer<clang_types.CXString> {
   String toStringAndDispose() {
     // Note: clang_getCString_wrap returns a const char *, calling free will result in error.
     final s = string();
-    clang.clang_disposeString_wrap(this);
+    clang.clang_disposeString(this);
     return s;
   }
 
   void dispose() {
-    clang.clang_disposeString_wrap(this);
+    clang.clang_disposeString(this);
   }
 }
 

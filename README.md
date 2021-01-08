@@ -36,13 +36,13 @@ typedef _dart_sum = int Function(int a, int b);
 ```
 ## Using this package
 - Add `ffigen` under `dev_dependencies` in your `pubspec.yaml`.
-- Setup for use (see [Setup](#Setup)).
+- Install LLVM (see [Installing LLVM](#installing-llvm)).
 - Configurations must be provided in `pubspec.yaml` or in a custom YAML file (see [configurations](#configurations)).
 - Run the tool- `dart run ffigen`.
 
 Jump to [FAQ](#faq).
 
-## Setup
+## Installing LLVM
 `package:ffigen` uses LLVM. Install LLVM (9+) in the following way.
 
 #### ubuntu/linux
@@ -83,6 +83,16 @@ The following configuration options are available-
 
 ```yaml
 output: 'generated_bindings.dart'
+```
+  </td>
+  </tr>
+  <tr>
+    <td>llvm-lib</td>
+    <td>Path to <i>llvm/lib</i> folder. Required if ffigen is unable to find this at default locations.</td>
+    <td>
+
+```yaml
+llvm-lib: '/usr/local/opt/llvm/lib'
 ```
   </td>
   </tr>
@@ -379,13 +389,12 @@ class ArrayHelper_CXFileUniqueID_data_level0 {
 2. Run `pub run ffigen`.
 
 ## Running Tests
-1. Run setup to build the LLVM wrapper - `pub run ffigen:setup`.
-2. Dynamic library for some tests also need to be built before running the examples.
+1. Dynamic library for some tests need to be built before running the examples.
   1. `cd test/native_test`.
   2. Run `dart build_test_dylib.dart`.
 
 Run tests from the root of the package with `pub run test`.
-
+> Note: If llvm is not installed in one of the default locations, tests may fail.
 ## FAQ
 ### Can ffigen be used for removing underscores or renaming declarations?
 Ffigen supports **regexp based renaming**, the regexp must be a
