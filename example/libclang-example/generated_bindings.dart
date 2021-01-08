@@ -3590,6 +3590,42 @@ class LibClang {
 
   _dart_clang_getIBOutletCollectionType? _clang_getIBOutletCollectionType;
 
+  /// Visit the children of a particular cursor.
+  ///
+  /// This function visits all the direct children of the given cursor,
+  /// invoking the given \p visitor function with the cursors of each
+  /// visited child. The traversal may be recursive, if the visitor returns
+  /// \c CXChildVisit_Recurse. The traversal may also be ended prematurely, if
+  /// the visitor returns \c CXChildVisit_Break.
+  ///
+  /// \param parent the cursor whose child may be visited. All kinds of
+  /// cursors can be visited, including invalid cursors (which, by
+  /// definition, have no children).
+  ///
+  /// \param visitor the visitor function that will be invoked for each
+  /// child of \p parent.
+  ///
+  /// \param client_data pointer data supplied by the client, which will
+  /// be passed to the visitor each time it is invoked.
+  ///
+  /// \returns a non-zero value if the traversal was terminated
+  /// prematurely by the visitor returning \c CXChildVisit_Break.
+  int clang_visitChildren(
+    CXCursor parent,
+    ffi.Pointer<ffi.NativeFunction<CXCursorVisitor>> visitor,
+    ffi.Pointer<ffi.Void> client_data,
+  ) {
+    return (_clang_visitChildren ??= _dylib.lookupFunction<
+        _c_clang_visitChildren,
+        _dart_clang_visitChildren>('clang_visitChildren'))(
+      parent,
+      visitor,
+      client_data,
+    );
+  }
+
+  _dart_clang_visitChildren? _clang_visitChildren;
+
   /// Retrieve a Unified Symbol Resolution (USR) for the entity referenced
   /// by the given cursor.
   ///
@@ -5728,6 +5764,60 @@ class LibClang {
 
   _dart_clang_remap_dispose? _clang_remap_dispose;
 
+  /// Find references of a declaration in a specific file.
+  ///
+  /// \param cursor pointing to a declaration or a reference of one.
+  ///
+  /// \param file to search for references.
+  ///
+  /// \param visitor callback that will receive pairs of CXCursor/CXSourceRange for
+  /// each reference found.
+  /// The CXSourceRange will point inside the file; if the reference is inside
+  /// a macro (and not a macro argument) the CXSourceRange will be invalid.
+  ///
+  /// \returns one of the CXResult enumerators.
+  int clang_findReferencesInFile(
+    CXCursor cursor,
+    ffi.Pointer<ffi.Void> file,
+    CXCursorAndRangeVisitor visitor,
+  ) {
+    return (_clang_findReferencesInFile ??= _dylib.lookupFunction<
+        _c_clang_findReferencesInFile,
+        _dart_clang_findReferencesInFile>('clang_findReferencesInFile'))(
+      cursor,
+      file,
+      visitor,
+    );
+  }
+
+  _dart_clang_findReferencesInFile? _clang_findReferencesInFile;
+
+  /// Find #import/#include directives in a specific file.
+  ///
+  /// \param TU translation unit containing the file to query.
+  ///
+  /// \param file to search for #import/#include directives.
+  ///
+  /// \param visitor callback that will receive pairs of CXCursor/CXSourceRange for
+  /// each directive found.
+  ///
+  /// \returns one of the CXResult enumerators.
+  int clang_findIncludesInFile(
+    ffi.Pointer<CXTranslationUnitImpl> TU,
+    ffi.Pointer<ffi.Void> file,
+    CXCursorAndRangeVisitor visitor,
+  ) {
+    return (_clang_findIncludesInFile ??= _dylib.lookupFunction<
+        _c_clang_findIncludesInFile,
+        _dart_clang_findIncludesInFile>('clang_findIncludesInFile'))(
+      TU,
+      file,
+      visitor,
+    );
+  }
+
+  _dart_clang_findIncludesInFile? _clang_findIncludesInFile;
+
   int clang_index_isEntityObjCContainerKind(
     int arg0,
   ) {
@@ -6105,6 +6195,39 @@ class LibClang {
   }
 
   _dart_clang_indexLoc_getCXSourceLocation? _clang_indexLoc_getCXSourceLocation;
+
+  /// Visit the fields of a particular type.
+  ///
+  /// This function visits all the direct fields of the given cursor,
+  /// invoking the given \p visitor function with the cursors of each
+  /// visited field. The traversal may be ended prematurely, if
+  /// the visitor returns \c CXFieldVisit_Break.
+  ///
+  /// \param T the record type whose field may be visited.
+  ///
+  /// \param visitor the visitor function that will be invoked for each
+  /// field of \p T.
+  ///
+  /// \param client_data pointer data supplied by the client, which will
+  /// be passed to the visitor each time it is invoked.
+  ///
+  /// \returns a non-zero value if the traversal was terminated
+  /// prematurely by the visitor returning \c CXFieldVisit_Break.
+  int clang_Type_visitFields(
+    CXType T,
+    ffi.Pointer<ffi.NativeFunction<CXFieldVisitor>> visitor,
+    ffi.Pointer<ffi.Void> client_data,
+  ) {
+    return (_clang_Type_visitFields ??= _dylib.lookupFunction<
+        _c_clang_Type_visitFields,
+        _dart_clang_Type_visitFields>('clang_Type_visitFields'))(
+      T,
+      visitor,
+      client_data,
+    );
+  }
+
+  _dart_clang_Type_visitFields? _clang_Type_visitFields;
 }
 
 /// A character string.
@@ -6804,7 +6927,11 @@ class CXCodeCompleteResults extends ffi.Struct {
   external int NumResults;
 }
 
-class CXCursorAndRangeVisitor extends ffi.Struct {}
+class CXCursorAndRangeVisitor extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> context;
+
+  external ffi.Pointer<ffi.NativeFunction<_typedefC_2>> visit;
+}
 
 /// Source location passed to index callbacks.
 class CXIdxLoc extends ffi.Struct {
@@ -7088,15 +7215,15 @@ class CXIdxEntityRefInfo extends ffi.Struct {
 class IndexerCallbacks extends ffi.Struct {
   /// Called periodically to check whether indexing should be aborted.
   /// Should return 0 to continue, and non-zero to abort.
-  external ffi.Pointer<ffi.NativeFunction<_typedefC_2>> abortQuery;
+  external ffi.Pointer<ffi.NativeFunction<_typedefC_3>> abortQuery;
 
   /// Called at the end of indexing; passes the complete diagnostic set.
-  external ffi.Pointer<ffi.NativeFunction<_typedefC_3>> diagnostic;
+  external ffi.Pointer<ffi.NativeFunction<_typedefC_4>> diagnostic;
 
-  external ffi.Pointer<ffi.NativeFunction<_typedefC_4>> enteredMainFile;
+  external ffi.Pointer<ffi.NativeFunction<_typedefC_5>> enteredMainFile;
 
   /// Called when a file gets \#included/\#imported.
-  external ffi.Pointer<ffi.NativeFunction<_typedefC_5>> ppIncludedFile;
+  external ffi.Pointer<ffi.NativeFunction<_typedefC_6>> ppIncludedFile;
 
   /// Called when a AST file (PCH or module) gets imported.
   ///
@@ -7104,15 +7231,15 @@ class IndexerCallbacks extends ffi.Struct {
   /// the entities in an AST file). The recommended action is that, if the AST
   /// file is not already indexed, to initiate a new indexing job specific to
   /// the AST file.
-  external ffi.Pointer<ffi.NativeFunction<_typedefC_6>> importedASTFile;
+  external ffi.Pointer<ffi.NativeFunction<_typedefC_7>> importedASTFile;
 
   /// Called at the beginning of indexing a translation unit.
-  external ffi.Pointer<ffi.NativeFunction<_typedefC_7>> startedTranslationUnit;
+  external ffi.Pointer<ffi.NativeFunction<_typedefC_8>> startedTranslationUnit;
 
-  external ffi.Pointer<ffi.NativeFunction<_typedefC_8>> indexDeclaration;
+  external ffi.Pointer<ffi.NativeFunction<_typedefC_9>> indexDeclaration;
 
   /// Called to index a reference of an entity.
-  external ffi.Pointer<ffi.NativeFunction<_typedefC_9>> indexEntityReference;
+  external ffi.Pointer<ffi.NativeFunction<_typedefC_10>> indexEntityReference;
 }
 
 const int CINDEX_VERSION_MAJOR = 0;
@@ -8796,6 +8923,24 @@ typedef _dart_clang_getIBOutletCollectionType = CXType Function(
   CXCursor arg0,
 );
 
+typedef CXCursorVisitor = ffi.Int32 Function(
+  CXCursor,
+  CXCursor,
+  ffi.Pointer<ffi.Void>,
+);
+
+typedef _c_clang_visitChildren = ffi.Uint32 Function(
+  CXCursor parent,
+  ffi.Pointer<ffi.NativeFunction<CXCursorVisitor>> visitor,
+  ffi.Pointer<ffi.Void> client_data,
+);
+
+typedef _dart_clang_visitChildren = int Function(
+  CXCursor parent,
+  ffi.Pointer<ffi.NativeFunction<CXCursorVisitor>> visitor,
+  ffi.Pointer<ffi.Void> client_data,
+);
+
 typedef _c_clang_getCursorUSR = CXString Function(
   CXCursor arg0,
 );
@@ -9816,6 +9961,30 @@ typedef _dart_clang_remap_dispose = void Function(
   ffi.Pointer<ffi.Void> arg0,
 );
 
+typedef _c_clang_findReferencesInFile = ffi.Int32 Function(
+  CXCursor cursor,
+  ffi.Pointer<ffi.Void> file,
+  CXCursorAndRangeVisitor visitor,
+);
+
+typedef _dart_clang_findReferencesInFile = int Function(
+  CXCursor cursor,
+  ffi.Pointer<ffi.Void> file,
+  CXCursorAndRangeVisitor visitor,
+);
+
+typedef _c_clang_findIncludesInFile = ffi.Int32 Function(
+  ffi.Pointer<CXTranslationUnitImpl> TU,
+  ffi.Pointer<ffi.Void> file,
+  CXCursorAndRangeVisitor visitor,
+);
+
+typedef _dart_clang_findIncludesInFile = int Function(
+  ffi.Pointer<CXTranslationUnitImpl> TU,
+  ffi.Pointer<ffi.Void> file,
+  CXCursorAndRangeVisitor visitor,
+);
+
 typedef _c_clang_index_isEntityObjCContainerKind = ffi.Int32 Function(
   ffi.Int32 arg0,
 );
@@ -10050,18 +10219,35 @@ typedef _dart_clang_indexLoc_getCXSourceLocation = CXSourceLocation Function(
   CXIdxLoc loc,
 );
 
+typedef CXFieldVisitor = ffi.Int32 Function(
+  CXCursor,
+  ffi.Pointer<ffi.Void>,
+);
+
+typedef _c_clang_Type_visitFields = ffi.Uint32 Function(
+  CXType T,
+  ffi.Pointer<ffi.NativeFunction<CXFieldVisitor>> visitor,
+  ffi.Pointer<ffi.Void> client_data,
+);
+
+typedef _dart_clang_Type_visitFields = int Function(
+  CXType T,
+  ffi.Pointer<ffi.NativeFunction<CXFieldVisitor>> visitor,
+  ffi.Pointer<ffi.Void> client_data,
+);
+
 typedef _typedefC_2 = ffi.Int32 Function(
   ffi.Pointer<ffi.Void>,
+  CXCursor,
+  CXSourceRange,
+);
+
+typedef _typedefC_3 = ffi.Int32 Function(
+  ffi.Pointer<ffi.Void>,
   ffi.Pointer<ffi.Void>,
 );
 
-typedef _typedefC_3 = ffi.Void Function(
-  ffi.Pointer<ffi.Void>,
-  ffi.Pointer<ffi.Void>,
-  ffi.Pointer<ffi.Void>,
-);
-
-typedef _typedefC_4 = ffi.Pointer<ffi.Void> Function(
+typedef _typedefC_4 = ffi.Void Function(
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<ffi.Void>,
@@ -10069,25 +10255,31 @@ typedef _typedefC_4 = ffi.Pointer<ffi.Void> Function(
 
 typedef _typedefC_5 = ffi.Pointer<ffi.Void> Function(
   ffi.Pointer<ffi.Void>,
-  ffi.Pointer<CXIdxIncludedFileInfo>,
+  ffi.Pointer<ffi.Void>,
+  ffi.Pointer<ffi.Void>,
 );
 
 typedef _typedefC_6 = ffi.Pointer<ffi.Void> Function(
   ffi.Pointer<ffi.Void>,
-  ffi.Pointer<CXIdxImportedASTFileInfo>,
+  ffi.Pointer<CXIdxIncludedFileInfo>,
 );
 
 typedef _typedefC_7 = ffi.Pointer<ffi.Void> Function(
   ffi.Pointer<ffi.Void>,
+  ffi.Pointer<CXIdxImportedASTFileInfo>,
+);
+
+typedef _typedefC_8 = ffi.Pointer<ffi.Void> Function(
+  ffi.Pointer<ffi.Void>,
   ffi.Pointer<ffi.Void>,
 );
 
-typedef _typedefC_8 = ffi.Void Function(
+typedef _typedefC_9 = ffi.Void Function(
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<CXIdxDeclInfo>,
 );
 
-typedef _typedefC_9 = ffi.Void Function(
+typedef _typedefC_10 = ffi.Void Function(
   ffi.Pointer<ffi.Void>,
   ffi.Pointer<CXIdxEntityRefInfo>,
 );

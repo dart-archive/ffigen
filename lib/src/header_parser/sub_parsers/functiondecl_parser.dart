@@ -95,6 +95,8 @@ List<Parameter> _getParameters(
     if (pt.isIncompleteStruct) {
       _stack.top.incompleteStructParameter = true;
     } else if (pt.getBaseType().broadType == BroadType.Unimplemented) {
+      _logger
+          .finer('Unimplemented type: ${pt.getBaseType().unimplementedReason}');
       _stack.top.unimplementedParameterType = true;
     }
 
