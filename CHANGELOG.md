@@ -1,3 +1,6 @@
+# 2.0.0-dev.1
+- Added support for passing and returning struct by value in functions.
+
 # 2.0.0-dev.0
 - Added support for Nested structs.
 
