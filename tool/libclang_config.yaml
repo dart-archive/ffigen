@@ -16,7 +16,7 @@ sort: true
 compiler-opts: '-I/usr/lib/llvm-9/include/ -I/usr/lib/llvm-10/include/ -I/usr/local/opt/llvm/include/ -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/ -Wno-nullability-completeness'
 headers:
   entry-points:
-    - 'lib/src/clang_library/wrapper.c'
+    - 'third_party/libclang/include/clang-c/Index.h'
   include-directives:
     - '**wrapper.c'
     - '**Index.h'

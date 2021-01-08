@@ -21,7 +21,7 @@ This is the main entry point for the user-  `pub run ffigen`.
 - Command-line options:
     - `--verbose`: Sets log level.
     - `--config`: Specifies a config file.
-- `ffigen.dart` will first check if a dynamic library already exists and is up to date. If not, it tries to auto-create it. If that fails, user must excplicitly call [setup.dart](#setup.dart).
+- `ffigen.dart` will first try to find dynamic library in default locations. If not. If that fails, user must excplicitly specify location in config under the key `llvm-lib`.
 - The internal modules are called by `ffigen.dart` in the following way:
     - It first creates a `Config` object from an input Yaml file. This is used by other modules.
     - The `parse` method is then invoked to generate a `Library` object.

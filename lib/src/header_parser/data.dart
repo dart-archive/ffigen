@@ -29,12 +29,6 @@ BindingsIndex _bindingsIndex = BindingsIndex();
 IncrementalNamer get incrementalNamer => _incrementalNamer;
 IncrementalNamer _incrementalNamer = IncrementalNamer();
 
-/// Holds the unique id refering to this isolate.
-///
-/// Used by visitChildren_wrap to call the correct dart function from C.
-// int get uid => Isolate.current.controlPort.;
-final uid = Isolate.current.controlPort.nativePort;
-
 /// Saved macros, Key: prefixedName, Value originalName.
 Map<String, Macro> get savedMacros => _savedMacros;
 Map<String, Macro> _savedMacros = {};

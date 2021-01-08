@@ -4,11 +4,8 @@
 import 'dart:io';
 
 import 'package:ffigen/src/code_generator/type.dart';
-import 'package:ffigen/src/find_resource.dart';
 import 'package:ffigen/src/header_parser/clang_bindings/clang_bindings.dart'
     as clang;
-
-String? get dylibVersion => ffigenVersion;
 
 /// Name of the dynamic library file according to current platform.
 String get dylibFileName {
@@ -24,8 +21,6 @@ String get dylibFileName {
   }
   return name;
 }
-
-const ffigenFolderName = 'ffigen';
 
 const llvmLib = 'llvm-lib';
 
