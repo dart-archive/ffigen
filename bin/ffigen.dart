@@ -8,8 +8,6 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:cli_util/cli_logging.dart' show Ansi;
 import 'package:ffigen/ffigen.dart';
-import 'package:path/path.dart' as p;
-import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart' as yaml;
 
