@@ -63,6 +63,44 @@ functions:
     - clang_EvalResult_getAsDouble
     - clang_EvalResult_getAsStr
     - clang_EvalResult_dispose
+    - clang_getCString
+    - clang_disposeString
+    - clang_getCursorKind
+    - clang_getCursorKindSpelling
+    - clang_getCursorType
+    - clang_getTypeSpelling
+    - clang_getTypeKindSpelling
+    - clang_getResultType
+    - clang_getPointeeType
+    - clang_getCanonicalType
+    - clang_Type_getNamedType
+    - clang_getTypeDeclaration
+    - clang_getTypedefDeclUnderlyingType
+    - clang_getCursorSpelling
+    - clang_getTranslationUnitCursor
+    - clang_formatDiagnostic
+    - clang_visitChildren
+    - clang_Cursor_getNumArguments
+    - clang_Cursor_getArgument
+    - clang_getNumArgTypes
+    - clang_getArgType
+    - clang_getEnumConstantDeclValue
+    - clang_equalRanges
+    - clang_Cursor_getCommentRange
+    - clang_Cursor_getRawCommentText
+    - clang_Cursor_getBriefCommentText
+    - clang_getCursorLocation
+    - clang_getFileLocation
+    - clang_getFileName
+    - clang_getNumElements
+    - clang_getArrayElementType
+    - clang_Cursor_isMacroFunctionLike
+    - clang_Cursor_isMacroBuiltin
+    - clang_Cursor_Evaluate
+    - clang_Cursor_isAnonymous
+    - clang_Cursor_isAnonymousRecordDecl
+    - clang_getCursorUSR
+    - clang_getFieldDeclBitWidth
     - clang_getCString_wrap
     - clang_disposeString_wrap
     - clang_getCursorKind_wrap
