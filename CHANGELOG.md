@@ -1,3 +1,6 @@
+# 2.0.0-dev.2
+- Remove usage of wrapper.c. The setup phase has been removed.
+
 # 2.0.0-dev.1
 - Added support for passing and returning struct by value in functions.
 
