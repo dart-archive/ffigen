@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:ffi';
-
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser/data.dart';
 import 'package:logging/logging.dart';
@@ -26,7 +24,7 @@ class _ParserFunc {
 final _stack = Stack<_ParserFunc>();
 
 /// Parses a function declaration.
-Func? parseFunctionDeclaration(Pointer<clang_types.CXCursor> cursor) {
+Func? parseFunctionDeclaration(clang_types.CXCursor cursor) {
   _stack.push(_ParserFunc());
 
   final funcUsr = cursor.usr();
@@ -77,17 +75,16 @@ Func? parseFunctionDeclaration(Pointer<clang_types.CXCursor> cursor) {
   return _stack.pop().func;
 }
 
-Type _getFunctionReturnType(Pointer<clang_types.CXCursor> cursor) {
-  return cursor.returnType().toCodeGenTypeAndDispose();
+Type _getFunctionReturnType(clang_types.CXCursor cursor) {
+  return cursor.returnType().toCodeGenType();
 }
 
-List<Parameter> _getParameters(
-    Pointer<clang_types.CXCursor> cursor, String funcName) {
+List<Parameter> _getParameters(clang_types.CXCursor cursor, String funcName) {
   final parameters = <Parameter>[];
 
-  final totalArgs = clang.clang_Cursor_getNumArguments_wrap(cursor);
+  final totalArgs = clang.clang_Cursor_getNumArguments(cursor);
   for (var i = 0; i < totalArgs; i++) {
-    final paramCursor = clang.clang_Cursor_getArgument_wrap(cursor, i);
+    final paramCursor = clang.clang_Cursor_getArgument(cursor, i);
 
     _logger.finer('===== parameter: ${paramCursor.completeStringRepr()}');
 
@@ -110,12 +107,11 @@ List<Parameter> _getParameters(
         type: pt,
       ),
     );
-    paramCursor.dispose();
   }
 
   return parameters;
 }
 
-Type _getParameterType(Pointer<clang_types.CXCursor> cursor) {
-  return cursor.type().toCodeGenTypeAndDispose();
+Type _getParameterType(clang_types.CXCursor cursor) {
+  return cursor.type().toCodeGenType();
 }

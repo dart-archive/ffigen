@@ -26,15 +26,15 @@ class _ParsedTypedef {
 final _stack = Stack<_ParsedTypedef>();
 
 /// Parses a typedef declaration.
-Binding? parseTypedefDeclaration(Pointer<clang_types.CXCursor> cursor) {
+Binding? parseTypedefDeclaration(clang_types.CXCursor cursor) {
   _stack.push(_ParsedTypedef());
   // Name of typedef.
   _stack.top.typedefName = cursor.spelling();
-  final resultCode = clang.clang_visitChildren_wrap(
+  final resultCode = clang.clang_visitChildren(
     cursor,
     Pointer.fromFunction(_typedefdeclarationCursorVisitor,
         clang_types.CXChildVisitResult.CXChildVisit_Break),
-    uid,
+    nullptr,
   );
 
   visitChildrenResultChecker(resultCode);
@@ -46,13 +46,13 @@ Binding? parseTypedefDeclaration(Pointer<clang_types.CXCursor> cursor) {
 ///
 /// Visitor invoked on cursor of type declaration returned by
 /// [clang.clang_getTypeDeclaration_wrap].
-int _typedefdeclarationCursorVisitor(Pointer<clang_types.CXCursor> cursor,
-    Pointer<clang_types.CXCursor> parent, Pointer<Void> clientData) {
+int _typedefdeclarationCursorVisitor(clang_types.CXCursor cursor,
+    clang_types.CXCursor parent, Pointer<Void> clientData) {
   try {
     _logger.finest(
         'typedefdeclarationCursorVisitor: ${cursor.completeStringRepr()}');
 
-    switch (clang.clang_getCursorKind_wrap(cursor)) {
+    switch (clang.clang_getCursorKind(cursor)) {
       case clang_types.CXCursorKind.CXCursor_StructDecl:
         _stack.top.binding =
             parseStructDeclaration(cursor, name: _stack.top.typedefName);
@@ -64,9 +64,6 @@ int _typedefdeclarationCursorVisitor(Pointer<clang_types.CXCursor> cursor,
       default:
         _logger.finest('typedefdeclarationCursorVisitor: Ignored');
     }
-
-    cursor.dispose();
-    parent.dispose();
   } catch (e, s) {
     _logger.severe(e);
     _logger.severe(s);

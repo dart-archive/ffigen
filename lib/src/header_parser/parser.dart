@@ -111,12 +111,11 @@ List<Binding> parseToBindings() {
     }
 
     logTuDiagnostics(tu, _logger, headerLocation);
-    final rootCursor = clang.clang_getTranslationUnitCursor_wrap(tu);
+    final rootCursor = clang.clang_getTranslationUnitCursor(tu);
 
-    bindings.addAll(parseTranslationUnit(rootCursor)!);
+    bindings.addAll(parseTranslationUnit(rootCursor));
 
     // Cleanup.
-    rootCursor.dispose();
     clang.clang_disposeTranslationUnit(tu);
   }
 
