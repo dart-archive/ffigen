@@ -8,10 +8,10 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:cli_util/cli_logging.dart' show Ansi;
 import 'package:ffigen/ffigen.dart';
+import 'package:path/path.dart' as p;
+import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart' as yaml;
-
-import 'setup.dart';
 
 final _logger = Logger('ffigen.ffigen');
 final _ansi = Ansi(Ansi.terminalSupportsAnsi);
@@ -30,16 +30,6 @@ void main(List<String> args) {
 
   // Setup logging level and printing.
   setupLogger(argResult);
-
-  /// Prompt user if dylib doesn't exist and cannot be auto created to run
-  /// `pub run ffigen:setup -Ipath/to/llvm/include -Lpath/to/llvm/lib`.
-  if (!checkDylibExist() && !autoCreateDylib()) {
-    _logger.severe('Unable to create dynamic library automatically.');
-    _logger.severe('If LLVM (9+) is installed, try running:');
-    _logger.severe(
-        '  pub run ffigen:setup -Ipath/to/llvm/include -Lpath/to/llvm/lib');
-    exit(1);
-  }
 
   // Create a config object.
   Config config;

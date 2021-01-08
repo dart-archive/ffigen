@@ -43,9 +43,9 @@ Map<String, Macro> _savedMacros = {};
 List<Constant> get unnamedEnumConstants => _unnamedEnumConstants;
 List<Constant> _unnamedEnumConstants = [];
 
-void initializeGlobals({required Config config, required Clang clang}) {
+void initializeGlobals({required Config config}) {
   _config = config;
-  _clang = clang;
+  _clang = Clang(DynamicLibrary.open(config.libclangDylib));
   _incrementalNamer = IncrementalNamer();
   _savedMacros = {};
   _unnamedEnumConstants = [];
