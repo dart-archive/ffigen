@@ -223,7 +223,7 @@ String findDylibAtDefaultLocations() {
   _logger.severe("Couldn't find dynamic library in default locations.");
   _logger.severe(
       "Please supply the path/to/llvm/lib in ffigen's config under the key 'llvm-lib'.");
-  exit(1);
+  throw Exception("Couldn't find dynamic library in default locations.");
 }
 
 String? findLibclangDylib(String parentFolder) {

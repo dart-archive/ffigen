@@ -91,6 +91,16 @@ output: 'generated_bindings.dart'
   </td>
   </tr>
   <tr>
+    <td>llvm-lib</td>
+    <td>Path to <i>llvm/lib</i> folder. Required if ffigen is unable to find this at default locations.</td>
+    <td>
+
+```yaml
+llvm-lib: '/usr/local/opt/llvm/lib'
+```
+  </td>
+  </tr>
+  <tr>
     <td>headers<br><i>(Required)</i></td>
     <td>The header entry-points and include-directives. Glob syntax is allowed.</td>
     <td>
