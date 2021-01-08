@@ -373,8 +373,6 @@ class ArrayHelper_CXFileUniqueID_data_level0 {
 
 ## Limitations
 1. Multi OS support for types such as long. [Issue #7](https://github.com/dart-lang/ffigen/issues/7)
-2. Function's passing/returning structs by value are skipped. [Issue #3](https://github.com/dart-lang/ffigen/issues/3)
-3. Structs containing structs will have all their members removed. [Issue #4](https://github.com/dart-lang/ffigen/issues/4)
 
 ## Trying out examples
 1. `cd examples/<example_u_want_to_run>`, Run `pub get`.

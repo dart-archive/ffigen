@@ -162,6 +162,34 @@ class NativeLibrary {
   }
 
   _dart_getStruct1? _getStruct1;
+
+  Struct3 Function1StructReturnByValue(
+    int a,
+    int b,
+    int c,
+  ) {
+    return (_Function1StructReturnByValue ??= _dylib.lookupFunction<
+        _c_Function1StructReturnByValue,
+        _dart_Function1StructReturnByValue>('Function1StructReturnByValue'))(
+      a,
+      b,
+      c,
+    );
+  }
+
+  _dart_Function1StructReturnByValue? _Function1StructReturnByValue;
+
+  int Function1StructPassByValue(
+    Struct3 sum_a_b_c,
+  ) {
+    return (_Function1StructPassByValue ??= _dylib.lookupFunction<
+        _c_Function1StructPassByValue,
+        _dart_Function1StructPassByValue>('Function1StructPassByValue'))(
+      sum_a_b_c,
+    );
+  }
+
+  _dart_Function1StructPassByValue? _Function1StructPassByValue;
 }
 
 class Struct1 extends ffi.Struct {
@@ -303,6 +331,17 @@ class ArrayHelper_Struct1_data_level2 {
   }
 }
 
+class Struct3 extends ffi.Struct {
+  @ffi.Int32()
+  external int a;
+
+  @ffi.Int32()
+  external int b;
+
+  @ffi.Int32()
+  external int c;
+}
+
 typedef _c_Function1Bool = ffi.Uint8 Function(
   ffi.Uint8 x,
 );
@@ -402,3 +441,23 @@ typedef _dart_Function1Double = double Function(
 typedef _c_getStruct1 = ffi.Pointer<Struct1> Function();
 
 typedef _dart_getStruct1 = ffi.Pointer<Struct1> Function();
+
+typedef _c_Function1StructReturnByValue = Struct3 Function(
+  ffi.Int32 a,
+  ffi.Int32 b,
+  ffi.Int32 c,
+);
+
+typedef _dart_Function1StructReturnByValue = Struct3 Function(
+  int a,
+  int b,
+  int c,
+);
+
+typedef _c_Function1StructPassByValue = ffi.Int32 Function(
+  Struct3 sum_a_b_c,
+);
+
+typedef _dart_Function1StructPassByValue = int Function(
+  Struct3 sum_a_b_c,
+);

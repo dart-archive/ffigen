@@ -35,12 +35,18 @@ import 'writer.dart';
 /// }
 /// ```
 class Struc extends NoLookUpBinding {
+  /// Marker for if a struct definition is complete.
+  ///
+  /// A function can be safely pass this struct by value if it's complete.
+  bool isInComplete;
+
   List<Member> members;
 
   Struc({
     String? usr,
     String? originalName,
     required String name,
+    this.isInComplete = false,
     String? dartDoc,
     List<Member>? members,
   })  : members = members ?? [],
