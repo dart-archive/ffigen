@@ -3,8 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 /// Extracts code_gen Type from type.
-import 'dart:ffi';
-
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
@@ -20,15 +18,14 @@ final _logger = Logger('ffigen.header_parser.extractor');
 const _padding = '  ';
 
 /// Converts cxtype to a typestring code_generator can accept.
-Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String? parentName}) {
+Type getCodeGenType(clang_types.CXType cxtype, {String? parentName}) {
   _logger.fine('${_padding}getCodeGenType ${cxtype.completeStringRepr()}');
-  final kind = cxtype.kind();
+  final kind = cxtype.kind;
 
   switch (kind) {
     case clang_types.CXTypeKind.CXType_Pointer:
-      final pt = clang.clang_getPointeeType_wrap(cxtype);
+      final pt = clang.clang_getPointeeType(cxtype);
       final s = getCodeGenType(pt, parentName: parentName);
-      pt.dispose();
 
       // Replace Pointer<_Dart_Handle> with Handle.
       if (config.useDartHandle &&
@@ -52,16 +49,14 @@ Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String? parentName}) {
       }
 
       // This is important or we get stuck in infinite recursion.
-      final ct = clang.clang_getTypedefDeclUnderlyingType_wrap(
-          clang.clang_getTypeDeclaration_wrap(cxtype));
+      final ct = clang.clang_getTypedefDeclUnderlyingType(
+          clang.clang_getTypeDeclaration(cxtype));
 
       final s = getCodeGenType(ct, parentName: parentName ?? cxtype.spelling());
-      ct.dispose();
       return s;
     case clang_types.CXTypeKind.CXType_Elaborated:
-      final et = clang.clang_Type_getNamedType_wrap(cxtype);
+      final et = clang.clang_Type_getNamedType(cxtype);
       final s = getCodeGenType(et, parentName: parentName);
-      et.dispose();
       return s;
     case clang_types.CXTypeKind.CXType_Record:
       return _extractfromRecord(cxtype, parentName);
@@ -78,20 +73,20 @@ Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String? parentName}) {
     case clang_types.CXTypeKind
         .CXType_ConstantArray: // Primarily used for constant array in struct members.
       return Type.constantArray(
-        clang.clang_getNumElements_wrap(cxtype),
-        clang.clang_getArrayElementType_wrap(cxtype).toCodeGenTypeAndDispose(),
+        clang.clang_getNumElements(cxtype),
+        clang.clang_getArrayElementType(cxtype).toCodeGenType(),
       );
     case clang_types.CXTypeKind
         .CXType_IncompleteArray: // Primarily used for incomplete array in function parameters.
       return Type.incompleteArray(
-        clang.clang_getArrayElementType_wrap(cxtype).toCodeGenTypeAndDispose(),
+        clang.clang_getArrayElementType(cxtype).toCodeGenType(),
       );
     case clang_types.CXTypeKind.CXType_Bool:
       return Type.boolean();
     default:
       if (cxTypeKindToSupportedNativeTypes.containsKey(kind)) {
         return Type.nativeType(
-          cxTypeKindToSupportedNativeTypes[kind!],
+          cxTypeKindToSupportedNativeTypes[kind],
         );
       } else {
         _logger.fine(
@@ -102,16 +97,14 @@ Type getCodeGenType(Pointer<clang_types.CXType> cxtype, {String? parentName}) {
   }
 }
 
-Type _extractfromRecord(
-    Pointer<clang_types.CXType> cxtype, String? parentName) {
+Type _extractfromRecord(clang_types.CXType cxtype, String? parentName) {
   Type type;
 
-  final cursor = clang.clang_getTypeDeclaration_wrap(cxtype);
+  final cursor = clang.clang_getTypeDeclaration(cxtype);
   _logger.fine('${_padding}_extractfromRecord: ${cursor.completeStringRepr()}');
 
-  switch (clang.clang_getCursorKind_wrap(cursor)) {
+  switch (clang.clang_getCursorKind(cursor)) {
     case clang_types.CXCursorKind.CXCursor_StructDecl:
-      final cxtype = cursor.type();
       final structUsr = cursor.usr();
 
       // Name of typedef (parentName) is used if available.
@@ -132,7 +125,6 @@ Type _extractfromRecord(
         }
       }
 
-      cxtype.dispose();
       break;
     default:
       _logger.fine(
@@ -140,23 +132,21 @@ Type _extractfromRecord(
       return Type.unimplemented(
           'Type: ${cxtype.kindSpelling()} not implemented');
   }
-  cursor.dispose();
   return type;
 }
 
 // Used for function pointer arguments.
-Type _extractFromFunctionProto(
-    Pointer<clang_types.CXType> cxtype, String? parentName) {
+Type _extractFromFunctionProto(clang_types.CXType cxtype, String? parentName) {
   var name = parentName;
 
   // An empty name means the function prototype was declared in-place, instead
   // of using a typedef.
   name = name ?? '';
   final _parameters = <Parameter>[];
-  final totalArgs = clang.clang_getNumArgTypes_wrap(cxtype);
+  final totalArgs = clang.clang_getNumArgTypes(cxtype);
   for (var i = 0; i < totalArgs; i++) {
-    final t = clang.clang_getArgType_wrap(cxtype, i);
-    final pt = t.toCodeGenTypeAndDispose();
+    final t = clang.clang_getArgType(cxtype, i);
+    final pt = t.toCodeGenType();
 
     if (pt.isIncompleteStruct) {
       return Type.unimplemented(
@@ -178,8 +168,7 @@ Type _extractFromFunctionProto(
       name: name.isNotEmpty ? name : incrementalNamer.name('_typedefC'),
       typedefType: TypedefType.C,
       parameters: _parameters,
-      returnType:
-          clang.clang_getResultType_wrap(cxtype).toCodeGenTypeAndDispose(),
+      returnType: clang.clang_getResultType(cxtype).toCodeGenType(),
     );
     // Add to seen, if name isn't empty.
     if (name.isNotEmpty) {

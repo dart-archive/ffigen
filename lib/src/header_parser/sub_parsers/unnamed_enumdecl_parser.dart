@@ -16,12 +16,12 @@ import '../utils.dart';
 final _logger = Logger('ffigen.header_parser.unnamed_enumdecl_parser');
 
 /// Saves unnamed enums.
-void saveUnNamedEnum(Pointer<clang_types.CXCursor> cursor) {
-  final resultCode = clang.clang_visitChildren_wrap(
+void saveUnNamedEnum(clang_types.CXCursor cursor) {
+  final resultCode = clang.clang_visitChildren(
     cursor,
     Pointer.fromFunction(_unnamedenumCursorVisitor,
         clang_types.CXChildVisitResult.CXChildVisit_Break),
-    uid,
+    nullptr,
   );
 
   visitChildrenResultChecker(resultCode);
@@ -31,12 +31,12 @@ void saveUnNamedEnum(Pointer<clang_types.CXCursor> cursor) {
 ///
 /// Invoked on every enum directly under rootCursor.
 /// Used for for extracting enum values.
-int _unnamedenumCursorVisitor(Pointer<clang_types.CXCursor> cursor,
-    Pointer<clang_types.CXCursor> parent, Pointer<Void> clientData) {
+int _unnamedenumCursorVisitor(clang_types.CXCursor cursor,
+    clang_types.CXCursor parent, Pointer<Void> clientData) {
   try {
     _logger
         .finest('  unnamedenumCursorVisitor: ${cursor.completeStringRepr()}');
-    switch (clang.clang_getCursorKind_wrap(cursor)) {
+    switch (clang.clang_getCursorKind(cursor)) {
       case clang_types.CXCursorKind.CXCursor_EnumConstantDecl:
         if (shouldIncludeUnnamedEnumConstant(cursor.usr(), cursor.spelling())) {
           _addUnNamedEnumConstant(cursor);
@@ -45,8 +45,6 @@ int _unnamedenumCursorVisitor(Pointer<clang_types.CXCursor> cursor,
       default:
         _logger.severe('Invalid enum constant.');
     }
-    cursor.dispose();
-    parent.dispose();
   } catch (e, s) {
     _logger.severe(e);
     _logger.severe(s);
@@ -56,7 +54,7 @@ int _unnamedenumCursorVisitor(Pointer<clang_types.CXCursor> cursor,
 }
 
 /// Adds the parameter to func in [functiondecl_parser.dart].
-void _addUnNamedEnumConstant(Pointer<clang_types.CXCursor> cursor) {
+void _addUnNamedEnumConstant(clang_types.CXCursor cursor) {
   unnamedEnumConstants.add(
     Constant(
       usr: cursor.usr(),
@@ -65,7 +63,7 @@ void _addUnNamedEnumConstant(Pointer<clang_types.CXCursor> cursor) {
         cursor.spelling(),
       ),
       rawType: 'int',
-      rawValue: clang.clang_getEnumConstantDeclValue_wrap(cursor).toString(),
+      rawValue: clang.clang_getEnumConstantDeclValue(cursor).toString(),
     ),
   );
 }

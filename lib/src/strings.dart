@@ -4,11 +4,8 @@
 import 'dart:io';
 
 import 'package:ffigen/src/code_generator/type.dart';
-import 'package:ffigen/src/find_resource.dart';
 import 'package:ffigen/src/header_parser/clang_bindings/clang_bindings.dart'
     as clang;
-
-String? get dylibVersion => ffigenVersion;
 
 /// Name of the dynamic library file according to current platform.
 String get dylibFileName {
@@ -22,10 +19,10 @@ String get dylibFileName {
   } else {
     throw Exception('Unsupported Platform.');
   }
-  return '_${dylibVersion}_$name';
+  return name;
 }
 
-const ffigenFolderName = 'ffigen';
+const llvmLib = 'llvm-lib';
 
 const output = 'output';
 
@@ -123,9 +120,22 @@ const description = 'description';
 const preamble = 'preamble';
 
 // Dynamic library names.
-const libclang_dylib_linux = 'libwrapped_clang.so';
-const libclang_dylib_macos = 'libwrapped_clang.dylib';
-const libclang_dylib_windows = 'wrapped_clang.dll';
+const libclang_dylib_linux = 'libclang.so';
+const libclang_dylib_macos = 'libclang.dylib';
+const libclang_dylib_windows = 'libclang.dll';
+
+// Dynamic library default locations.
+const linuxDylibLocations = [
+  '/usr/lib/llvm-9/lib/',
+  '/usr/lib/llvm-10/lib/',
+  '/usr/lib/llvm-11/lib/'
+];
+const windowsDylibLocations = [
+  r'C:\Program Files\LLVM\lib',
+];
+const macOsDylibLocations = [
+  '/usr/local/opt/llvm/lib/',
+];
 
 // Writen doubles.
 const doubleInfinity = 'double.infinity';

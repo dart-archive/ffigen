@@ -197,6 +197,64 @@ String getDylibPath(String dylibParentFoler) {
   return dylibPath;
 }
 
+/// Returns location of dynamic library by searching default locations. Logs
+/// error and exits if not found.
+String findDylibAtDefaultLocations() {
+  String? k;
+  if (Platform.isLinux) {
+    for (final l in strings.linuxDylibLocations) {
+      k = findLibclangDylib(l);
+      if (k != null) return k;
+    }
+  } else if (Platform.isWindows) {
+    for (final l in strings.windowsDylibLocations) {
+      k = findLibclangDylib(l);
+      if (k != null) return k;
+    }
+  } else if (Platform.isMacOS) {
+    for (final l in strings.macOsDylibLocations) {
+      k = findLibclangDylib(l);
+      if (k != null) return k;
+    }
+  } else {
+    throw Exception('Unsupported Platform.');
+  }
+
+  _logger.severe("Couldn't find dynamic library in default locations.");
+  _logger.severe(
+      "Please supply the path/to/llvm/lib in ffigen's config under the key 'llvm-lib'.");
+  throw Exception("Couldn't find dynamic library in default locations.");
+}
+
+String? findLibclangDylib(String parentFolder) {
+  final location = p.join(parentFolder, strings.dylibFileName);
+  if (File(location).existsSync()) {
+    return location;
+  } else {
+    return null;
+  }
+}
+
+String llvmLibExtractor(dynamic value) {
+  // Extract libclang's dylib from this.
+  final p = findLibclangDylib(value as String);
+  if (p == null) {
+    _logger.severe("Couldn't find ${strings.dylibFileName} at $value.");
+    exit(1);
+  } else {
+    return p;
+  }
+}
+
+bool llvmLibValidator(String name, dynamic value) {
+  if (!checkType<String>([name], value) ||
+      !Directory(value as String).existsSync()) {
+    _logger.severe('Expected $name to be a valid folder Path.');
+    return false;
+  }
+  return true;
+}
+
 String outputExtractor(dynamic value) => _replaceSeparators(value as String);
 
 bool outputValidator(String name, dynamic value) =>

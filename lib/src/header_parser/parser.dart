@@ -9,11 +9,9 @@ import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/config_provider.dart';
 import 'package:ffigen/src/header_parser/sub_parsers/macro_parser.dart';
 import 'package:ffigen/src/config_provider/config_types.dart';
-import 'package:ffigen/src/find_resource.dart';
 import 'package:ffigen/src/header_parser/translation_unit_parser.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
-import 'package:path/path.dart' as path;
 
 import 'clang_bindings/clang_bindings.dart' as clang_types;
 import 'data.dart';
@@ -47,23 +45,10 @@ final _logger = Logger('ffigen.header_parser.parser');
 
 /// Initializes parser, clears any previous values.
 void initParser(Config c) {
-  // Find full path of dynamic library and initialize bindings.
-  final ddt = findDotDartTool();
-  if (ddt == null) {
-    throw Exception('Unable to find .dart_tool.');
-  } else {
-    final fullDylibPath = path.join(
-      ddt.toFilePath(),
-      strings.ffigenFolderName,
-      strings.dylibFileName,
-    );
-
-    // Initialize global variables.
-    initializeGlobals(
-      config: c,
-      clang: clang_types.Clang(DynamicLibrary.open(fullDylibPath)),
-    );
-  }
+  // Initialize global variables.
+  initializeGlobals(
+    config: c,
+  );
 }
 
 /// Parses source files and adds generated bindings to [bindings].
@@ -111,12 +96,11 @@ List<Binding> parseToBindings() {
     }
 
     logTuDiagnostics(tu, _logger, headerLocation);
-    final rootCursor = clang.clang_getTranslationUnitCursor_wrap(tu);
+    final rootCursor = clang.clang_getTranslationUnitCursor(tu);
 
-    bindings.addAll(parseTranslationUnit(rootCursor)!);
+    bindings.addAll(parseTranslationUnit(rootCursor));
 
     // Cleanup.
-    rootCursor.dispose();
     clang.clang_disposeTranslationUnit(tu);
   }
 

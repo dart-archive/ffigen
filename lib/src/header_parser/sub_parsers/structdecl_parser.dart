@@ -5,7 +5,6 @@
 import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/strings.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
@@ -40,7 +39,7 @@ final _stack = Stack<_ParsedStruc>();
 
 /// Parses a struct declaration.
 Struc? parseStructDeclaration(
-  Pointer<clang_types.CXCursor> cursor, {
+  clang_types.CXCursor cursor, {
 
   /// Optionally provide name (useful in case struct is inside a typedef).
   String? name,
@@ -81,15 +80,15 @@ Struc? parseStructDeclaration(
   return _stack.pop().struc;
 }
 
-void _setStructMembers(Pointer<clang_types.CXCursor> cursor) {
+void _setStructMembers(clang_types.CXCursor cursor) {
   _stack.top.arrayMember = false;
   _stack.top.unimplementedMemberType = false;
 
-  final resultCode = clang.clang_visitChildren_wrap(
+  final resultCode = clang.clang_visitChildren(
     cursor,
     Pointer.fromFunction(_structMembersVisitor,
         clang_types.CXChildVisitResult.CXChildVisit_Break),
-    uid,
+    nullptr,
   );
 
   visitChildrenResultChecker(resultCode);
@@ -137,19 +136,19 @@ void _setStructMembers(Pointer<clang_types.CXCursor> cursor) {
 /// Visitor for the struct cursor [CXCursorKind.CXCursor_StructDecl].
 ///
 /// Child visitor invoked on struct cursor.
-int _structMembersVisitor(Pointer<clang_types.CXCursor> cursor,
-    Pointer<clang_types.CXCursor> parent, Pointer<Void> clientData) {
+int _structMembersVisitor(clang_types.CXCursor cursor,
+    clang_types.CXCursor parent, Pointer<Void> clientData) {
   try {
-    if (cursor.kind() == clang_types.CXCursorKind.CXCursor_FieldDecl) {
+    if (cursor.kind == clang_types.CXCursorKind.CXCursor_FieldDecl) {
       _logger.finer('===== member: ${cursor.completeStringRepr()}');
 
-      final mt = cursor.type().toCodeGenTypeAndDispose();
+      final mt = cursor.type().toCodeGenType();
       if (mt.broadType == BroadType.ConstantArray) {
         _stack.top.arrayMember = true;
       } else if (mt.broadType == BroadType.IncompleteArray) {
         // TODO(68): Structs with flexible Array Members are not supported.
         _stack.top.flexibleArrayMember = true;
-      } else if (clang.clang_getFieldDeclBitWidth_wrap(cursor) != -1) {
+      } else if (clang.clang_getFieldDeclBitWidth(cursor) != -1) {
         // TODO(84): Struct with bitfields are not suppoorted.
         _stack.top.bitFieldMember = true;
       } else if (mt.broadType == BroadType.Handle) {
@@ -177,8 +176,6 @@ int _structMembersVisitor(Pointer<clang_types.CXCursor> cursor,
         ),
       );
     }
-    cursor.dispose();
-    parent.dispose();
   } catch (e, s) {
     _logger.severe(e);
     _logger.severe(s);
