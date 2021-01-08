@@ -12,6 +12,7 @@ struct Struct2
     struct Struct1 a;
 };
 
+// All members should be removed, Flexible array members are not supported.
 struct Struct3
 {
     int a;
@@ -21,8 +22,15 @@ struct Struct3
 // All members should be removed, Bit fields are not supported.
 struct Struct4
 {
-    int a:3;
-    int :2; // Unnamed bit field.
+    int a : 3;
+    int : 2; // Unnamed bit field.
+};
+
+// All members should be removed, Incomplete struct members are not supported.
+struct Struct5
+{
+    int a;
+    struct Struct3 s; // Incomplete nested struct.
 };
 
 void func1(struct Struct2 *s);

@@ -135,5 +135,11 @@ void main() {
       expect(() => struct1.ref.data[0][0][-1] = 0,
           throwsA(TypeMatcher<RangeError>()));
     });
+    test('Struct By Value', () {
+      final r = Random();
+      final a = r.nextInt(100), b = r.nextInt(100), c = r.nextInt(100);
+      final s = bindings.Function1StructReturnByValue(a, b, c);
+      expect(bindings.Function1StructPassByValue(s), a + b + c);
+    });
   });
 }

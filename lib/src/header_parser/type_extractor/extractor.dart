@@ -158,8 +158,9 @@ Type _extractFromFunctionProto(
     final t = clang.clang_getArgType_wrap(cxtype, i);
     final pt = t.toCodeGenTypeAndDispose();
 
-    if (pt.broadType == BroadType.Struct) {
-      return Type.unimplemented('Struct by value in function parameter.');
+    if (pt.isIncompleteStruct) {
+      return Type.unimplemented(
+          'Incomplete Struct by value in function parameter.');
     } else if (pt.getBaseType().broadType == BroadType.Unimplemented) {
       return Type.unimplemented('Function parameter has an unsupported type.');
     }
