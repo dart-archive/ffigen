@@ -6,6 +6,7 @@ import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:ffi/ffi.dart';
 import 'package:ffigen/ffigen.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
@@ -134,6 +135,18 @@ void main() {
           throwsA(TypeMatcher<RangeError>()));
       expect(() => struct1.ref.data[0][0][-1] = 0,
           throwsA(TypeMatcher<RangeError>()));
+    });
+    test('Struct By Valye', () {
+      final s = allocate<Struct3>().ref;
+      final r = Random();
+      final a = r.nextInt(100);
+      s.a = a;
+      final b = r.nextInt(100);
+      s.b = b;
+      final c = r.nextInt(100);
+      s.c = c;
+
+      expect(bindings.Function1StructByValue(s), a + b + c);
     });
   });
 }

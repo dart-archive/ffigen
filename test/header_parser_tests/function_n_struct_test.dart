@@ -32,6 +32,9 @@ ${strings.headers}:
       );
     });
 
+    test('Total bindings count', () {
+      expect(actual.bindings.length, expected.bindings.length);
+    });
     test('func1 struct pointer parameter', () {
       expect(actual.getBindingAsString('func1'),
           expected.getBindingAsString('func1'));
@@ -49,6 +52,9 @@ ${strings.headers}:
     });
     test('Struct4 bit field member', () {
       expect((actual.getBinding('Struct4') as Struc).members.isEmpty, true);
+    });
+    test('Struct5 incompleted struct member', () {
+      expect((actual.getBinding('Struct5') as Struc).members.isEmpty, true);
     });
   });
 }
@@ -97,6 +103,7 @@ Library expectedLibrary() {
           type: Type.struct(struc1),
         ),
       ]),
+      Struc(name: 'Struct5'),
     ],
   );
 }
