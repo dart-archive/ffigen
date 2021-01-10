@@ -54,7 +54,7 @@ jobs:
       - name: Build test dylib
         run: cd test/native_test && dart build_test_dylib.dart && cd ../..
       - name: Run VM tests
-        run: dart test --platform vm
+        run: dart --no-sound-null-safety test --platform vm
       - name: Collect coverage
         run: ./tool/coverage.sh
       - name: Upload coverage
