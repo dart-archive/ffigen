@@ -5,9 +5,6 @@
 Experimental binding generator for [FFI](https://dart.dev/guides/libraries/c-interop)
 bindings.
 
-<!-- TODO: Remove this when package can run with sound null safety -->
-> Due to a few unmigrated dependencies, ffigen currently runs in unsound null safety, run using `dart --no-sound-null-safety run ffigen`.
-
 ## Example
 
 For some header file _example.h_:

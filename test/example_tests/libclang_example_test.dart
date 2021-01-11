@@ -27,7 +27,7 @@ ${strings.headers}:
     - '**CXString.h'
     - '**Index.h'
 
-${strings.compilerOpts}: '-I/usr/lib/llvm-9/include/ -I/usr/lib/llvm-10/include/ -IC:\Progra~1\LLVM\include -I/usr/local/opt/llvm/include/ -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/ -Wno-nullability-completeness'
+${strings.compilerOpts}: '-I/usr/lib/llvm-9/include/ -I/usr/lib/llvm-10/include/ -I/usr/lib/llvm-11/include/ -IC:\Progra~1\LLVM\include -I/usr/local/opt/llvm/include/ -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/ -Wno-nullability-completeness'
 ${strings.functions}:
   ${strings.include}:
     - 'clang_.*'
