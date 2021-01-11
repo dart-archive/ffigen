@@ -50,7 +50,7 @@ jobs:
       - name: Install libclang-10-dev
         run: sudo apt-get install libclang-10-dev
       - name: Setup ffigen
-        run: dart --no-sound-null-safety run ffigen:setup
+        run: dart run ffigen:setup
       - name: Build test dylib
         run: cd test/native_test && dart build_test_dylib.dart && cd ../..
       - name: Run VM tests

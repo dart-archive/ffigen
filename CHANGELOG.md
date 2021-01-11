@@ -1,3 +1,6 @@
+# 2.0.0-nullsafety.1
+- Removed the need for `--no-sound-null-safety` flag.
+
 # 2.0.0-nullsafety.0
 - Migrated to (unsound) null safety.
 
