@@ -47,8 +47,6 @@ class Global extends LookUpBinding {
     final refOrValue = type.broadType == BroadType.Struct ? 'ref' : 'value';
     s.write(
         "late final ${type.getDartType(w)} $holderVarName = ${w.dylibIdentifier}.lookup<${type.getCType(w)}>('$originalName').$refOrValue;\n\n");
-    // s.write(
-    //     "${type.getDartType(w)} get $globalVarName => ($holderVarName ??= ${w.dylibIdentifier}.lookup<${type.getCType(w)}>('$originalName')).value;\n\n");
 
     return BindingString(type: BindingStringType.global, string: s.toString());
   }
