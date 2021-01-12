@@ -42,11 +42,10 @@ class Global extends LookUpBinding {
     if (_typedefDependencies == null) {
       _typedefDependencies = <Typedef>[];
 
-      // Add typedef's required by return type.
-      final returnTypeBase = type.getBaseType();
-      if (returnTypeBase.broadType == BroadType.NativeFunction) {
-        _typedefDependencies!
-            .addAll(returnTypeBase.nativeFunc!.getDependencies());
+      // Add typedef's required by the variable's type.
+      final valueType = type.getBaseType();
+      if (valueType.broadType == BroadType.NativeFunction) {
+        _typedefDependencies!.addAll(valueType.nativeFunc!.getDependencies());
       }
     }
     return _typedefDependencies!;
