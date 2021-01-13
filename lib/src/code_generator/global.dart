@@ -58,10 +58,18 @@ class Global extends LookUpBinding {
     if (dartDoc != null) {
       s.write(makeDartDoc(dartDoc!));
     }
-
+    final pointerName = w.wrapperLevelUniqueNamer.makeUnique('_$globalVarName');
+    final dartType = type.getDartType(w);
+    final cType = type.getCType(w);
     final refOrValue = type.broadType == BroadType.Struct ? 'ref' : 'value';
+
     s.write(
-        "late final ${type.getDartType(w)} $globalVarName = ${w.dylibIdentifier}.lookup<${type.getCType(w)}>('$originalName').$refOrValue;\n\n");
+        "late final ffi.Pointer<$dartType> $pointerName = ${w.dylibIdentifier}.lookup<$cType>('$originalName');\n\n");
+    s.write('$dartType get $globalVarName => $pointerName.$refOrValue;\n\n');
+    if (type.broadType != BroadType.Struct) {
+      s.write(
+          'set $globalVarName($dartType value) => $pointerName.value = value;\n\n');
+    }
 
     return BindingString(type: BindingStringType.global, string: s.toString());
   }

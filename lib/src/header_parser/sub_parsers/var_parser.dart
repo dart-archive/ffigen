@@ -4,6 +4,7 @@
 
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser/data.dart';
+import 'package:ffigen/src/header_parser/includer.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
@@ -13,11 +14,18 @@ import '../utils.dart';
 final _logger = Logger('ffigen.header_parser.var_parser');
 
 /// Parses a global variable
-Global? parseVarDefinition(clang_types.CXCursor cursor) {
+Global? parseVarDeclaration(clang_types.CXCursor cursor) {
   final type = cursor.type().toCodeGenType();
-  if (type.broadType == BroadType.Unimplemented) {
-    _logger
-        .warning('Global Type not supported $type ${cursor.type().spelling()}');
+  if (type.broadType == BroadType.Unimplemented ||
+      type.getBaseType().isIncompleteStruct ||
+      type.getBaseType().unimplementedReason != null) {
+    _logger.fine(
+        '---- Removed Global, reason: unsupported type: ${cursor.completeStringRepr()}');
+    _logger.warning(
+        "Skipped global variable '${cursor.spelling()}', type not supported.");
+    return null;
+  }
+  if (!shouldIncludeGlobalVar(cursor.usr(), cursor.spelling())) {
     return null;
   }
   final g = Global(
