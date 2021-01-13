@@ -6,6 +6,7 @@ import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser/sub_parsers/macro_parser.dart';
+import 'package:ffigen/src/header_parser/sub_parsers/var_parser.dart';
 import 'package:logging/logging.dart';
 
 import 'clang_bindings/clang_bindings.dart' as clang_types;
@@ -57,6 +58,9 @@ int _rootCursorVisitor(clang_types.CXCursor cursor, clang_types.CXCursor parent,
           break;
         case clang_types.CXCursorKind.CXCursor_MacroDefinition:
           saveMacroDefinition(cursor);
+          break;
+        case clang_types.CXCursorKind.CXCursor_VarDecl:
+          addToBindings(parseVarDeclaration(cursor));
           break;
         default:
           _logger.finer('rootCursorVisitor: CursorKind not implemented');

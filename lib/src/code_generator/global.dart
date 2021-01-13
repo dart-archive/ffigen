@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:ffigen/src/code_generator/typedef.dart';
+
 import 'binding.dart';
 import 'binding_string.dart';
 import 'type.dart';
@@ -34,6 +36,21 @@ class Global extends LookUpBinding {
           dartDoc: dartDoc,
         );
 
+  List<Typedef>? _typedefDependencies;
+  @override
+  List<Typedef> getTypedefDependencies(Writer w) {
+    if (_typedefDependencies == null) {
+      _typedefDependencies = <Typedef>[];
+
+      // Add typedef's required by the variable's type.
+      final valueType = type.getBaseType();
+      if (valueType.broadType == BroadType.NativeFunction) {
+        _typedefDependencies!.addAll(valueType.nativeFunc!.getDependencies());
+      }
+    }
+    return _typedefDependencies!;
+  }
+
   @override
   BindingString toBindingString(Writer w) {
     final s = StringBuffer();
@@ -41,13 +58,18 @@ class Global extends LookUpBinding {
     if (dartDoc != null) {
       s.write(makeDartDoc(dartDoc!));
     }
+    final pointerName = w.wrapperLevelUniqueNamer.makeUnique('_$globalVarName');
+    final dartType = type.getDartType(w);
+    final cType = type.getCType(w);
+    final refOrValue = type.broadType == BroadType.Struct ? 'ref' : 'value';
 
-    final holderVarName =
-        w.wrapperLevelUniqueNamer.makeUnique('_$globalVarName');
     s.write(
-        '${w.ffiLibraryPrefix}.Pointer<${type.getCType(w)}> $holderVarName;\n');
-    s.write(
-        "${type.getDartType(w)} get $globalVarName => ($holderVarName ??= ${w.dylibIdentifier}.lookup<${type.getCType(w)}>('$originalName')).value;\n\n");
+        "late final ${w.ffiLibraryPrefix}.Pointer<$dartType> $pointerName = ${w.dylibIdentifier}.lookup<$cType>('$originalName');\n\n");
+    s.write('$dartType get $globalVarName => $pointerName.$refOrValue;\n\n');
+    if (type.broadType != BroadType.Struct) {
+      s.write(
+          'set $globalVarName($dartType value) => $pointerName.value = value;\n\n');
+    }
 
     return BindingString(type: BindingStringType.global, string: s.toString());
   }
