@@ -360,16 +360,24 @@ class BindingsIndex {
     return _unnamedEnumConstants.containsKey(usr);
   }
 
-  bool isSeenGlobalVar(String usr) {
-    return _globals.containsKey(usr);
-  }
-
   void addUnnamedEnumConstantToSeen(String usr, Constant enumConstant) {
     _unnamedEnumConstants[usr] = enumConstant;
   }
 
   Constant? getSeenUnnamedEnumConstant(String usr) {
     return _unnamedEnumConstants[usr];
+  }
+
+  bool isSeenGlobalVar(String usr) {
+    return _globals.containsKey(usr);
+  }
+
+  void addGlobalVarToSeen(String usr, Global global) {
+    _globals[usr] = global;
+  }
+
+  Global? getSeenGlobalVar(String usr) {
+    return _globals[usr];
   }
 
   bool isSeenMacro(String usr) {

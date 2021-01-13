@@ -15,25 +15,31 @@ final _logger = Logger('ffigen.header_parser.var_parser');
 
 /// Parses a global variable
 Global? parseVarDeclaration(clang_types.CXCursor cursor) {
+  final name = cursor.spelling();
+  final usr = cursor.usr();
+  if (bindingsIndex.isSeenGlobalVar(usr)) {
+    return bindingsIndex.getSeenGlobalVar(usr);
+  }
+  if (!shouldIncludeGlobalVar(usr, name)) {
+    return null;
+  }
+
   final type = cursor.type().toCodeGenType();
-  if (type.broadType == BroadType.Unimplemented ||
-      type.getBaseType().isIncompleteStruct ||
-      type.getBaseType().unimplementedReason != null) {
+  if (type.getBaseType().broadType == BroadType.Unimplemented ||
+      type.getBaseType().isIncompleteStruct) {
     _logger.fine(
         '---- Removed Global, reason: unsupported type: ${cursor.completeStringRepr()}');
-    _logger.warning(
-        "Skipped global variable '${cursor.spelling()}', type not supported.");
+    _logger.warning("Skipped global variable '$name', type not supported.");
     return null;
   }
-  if (!shouldIncludeGlobalVar(cursor.usr(), cursor.spelling())) {
-    return null;
-  }
-  final g = Global(
-    originalName: cursor.spelling(),
-    name: config.globals.renameUsingConfig(cursor.spelling()),
-    usr: cursor.usr(),
-    type: cursor.type().toCodeGenType(),
+
+  final global = Global(
+    originalName: name,
+    name: config.globals.renameUsingConfig(name),
+    usr: usr,
+    type: type,
     dartDoc: getCursorDocComment(cursor),
   );
-  return g;
+  bindingsIndex.addGlobalVarToSeen(usr, global);
+  return global;
 }

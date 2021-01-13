@@ -63,8 +63,7 @@ Library expectedLibrary() {
   return Library(
     name: 'Bindings',
     bindings: [
-      Global(
-          type: Type.nativeType(SupportedNativeType.Int32), name: 'coolGlobal'),
+      Global(type: Type.boolean(), name: 'coolGlobal'),
       Global(type: Type.nativeType(SupportedNativeType.Int32), name: 'myInt'),
       Global(
           type: Type.pointer(Type.nativeType(SupportedNativeType.Int32)),

@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 #include <stdint.h>
+#include <stdbool.h>
 
 bool coolGlobal;
 int32_t myInt;
