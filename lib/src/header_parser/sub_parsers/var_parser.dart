@@ -24,6 +24,8 @@ Global? parseVarDeclaration(clang_types.CXCursor cursor) {
     return null;
   }
 
+  _logger.fine('++++ Adding Global: ${cursor.completeStringRepr()}');
+
   final type = cursor.type().toCodeGenType();
   if (type.getBaseType().broadType == BroadType.Unimplemented ||
       type.getBaseType().isIncompleteStruct) {
