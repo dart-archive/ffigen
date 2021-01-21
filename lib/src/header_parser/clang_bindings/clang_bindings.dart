@@ -920,7 +920,7 @@ class CXString extends ffi.Struct {
   external int private_flags;
 }
 
-class CXTranslationUnitImpl extends ffi.Struct {}
+class CXTranslationUnitImpl extends ffi.Opaque {}
 
 /// Provides the contents of a file that has not yet been saved to disk.
 ///

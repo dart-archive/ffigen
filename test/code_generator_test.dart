@@ -236,7 +236,7 @@ import 'dart:ffi' as ffi;
 
 /// Just a test struct
 /// heres another line
-class NoMember extends ffi.Struct{
+class NoMember extends ffi.Opaque{
 }
 
 class WithPrimitiveMember extends ffi.Struct{
@@ -388,6 +388,8 @@ typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
       final struc_some = Struc(
         name: 'Some',
       );
+      final emptyGlobalStruc = Struc(name: 'EmptyStruct');
+
       final library = Library(
         name: 'Bindings',
         bindings: [
@@ -414,6 +416,8 @@ typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
               ),
             ),
           ),
+          emptyGlobalStruc,
+          Global(name: 'globalStruct', type: Type.struct(emptyGlobalStruc)),
         ],
       );
 
@@ -436,7 +440,7 @@ final ffi.DynamicLibrary _dylib;
 /// The symbols are looked up in [dynamicLibrary].
 Bindings(ffi.DynamicLibrary dynamicLibrary): _dylib = dynamicLibrary;
 
-late final ffi.Pointer<int> _test1 = _dylib.lookup<ffi.Int32>('test1');
+late final ffi.Pointer<ffi.Int32> _test1 = _dylib.lookup<ffi.Int32>('test1');
 
 int get test1 => _test1.value;
 
@@ -454,9 +458,16 @@ ffi.Pointer<Some> get test5 => _test5.value;
 
 set test5(ffi.Pointer<Some> value) => _test5.value = value;
 
+late final ffi.Pointer<EmptyStruct> _globalStruct = _dylib.lookup<EmptyStruct>('globalStruct');
+
+ffi.Pointer<EmptyStruct> get globalStruct => _globalStruct;
+
 }
 
-class Some extends ffi.Struct{
+class Some extends ffi.Opaque{
+}
+
+class EmptyStruct extends ffi.Opaque{
 }
 
 ''');
@@ -708,7 +719,7 @@ default:
 }
 }
 }
-class ArrayHelperPrefixCollisionTest extends ffi.Struct{
+class ArrayHelperPrefixCollisionTest extends ffi.Opaque{
 }
 
 abstract class _c_Test {

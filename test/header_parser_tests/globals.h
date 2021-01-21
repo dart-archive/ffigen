@@ -13,3 +13,9 @@ long double *pointerToLongDouble;
 
 // This should be ignored
 int GlobalIgnore;
+
+struct EmptyStruct
+{
+};
+
+struct EmptyStruct globalStruct;

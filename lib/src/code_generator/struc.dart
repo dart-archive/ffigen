@@ -42,6 +42,8 @@ class Struc extends NoLookUpBinding {
 
   List<Member> members;
 
+  bool get isOpaque => members.isEmpty;
+
   Struc({
     String? usr,
     String? originalName,
@@ -102,7 +104,7 @@ class Struc extends NoLookUpBinding {
 
     // Write class declaration.
     s.write(
-        'class $enclosingClassName extends ${w.ffiLibraryPrefix}.Struct{\n');
+        'class $enclosingClassName extends ${w.ffiLibraryPrefix}.${isOpaque ? 'Opaque' : 'Struct'}{\n');
     for (final m in members) {
       final memberName = localUniqueNamer.makeUnique(m.name);
       if (m.type.broadType == BroadType.ConstantArray) {

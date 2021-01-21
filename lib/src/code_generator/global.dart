@@ -61,11 +61,20 @@ class Global extends LookUpBinding {
     final pointerName = w.wrapperLevelUniqueNamer.makeUnique('_$globalVarName');
     final dartType = type.getDartType(w);
     final cType = type.getCType(w);
-    final refOrValue = type.broadType == BroadType.Struct ? 'ref' : 'value';
 
     s.write(
-        "late final ${w.ffiLibraryPrefix}.Pointer<$dartType> $pointerName = ${w.dylibIdentifier}.lookup<$cType>('$originalName');\n\n");
-    s.write('$dartType get $globalVarName => $pointerName.$refOrValue;\n\n');
+        "late final ${w.ffiLibraryPrefix}.Pointer<$cType> $pointerName = ${w.dylibIdentifier}.lookup<$cType>('$originalName');\n\n");
+    if (type.broadType == BroadType.Struct) {
+      if (type.struc!.isOpaque) {
+        s.write(
+            '${w.ffiLibraryPrefix}.Pointer<$cType> get $globalVarName => $pointerName;\n\n');
+      } else {
+        s.write('$dartType get $globalVarName => $pointerName.ref;\n\n');
+      }
+    } else {
+      s.write('$dartType get $globalVarName => $pointerName.value;\n\n');
+    }
+
     if (type.broadType != BroadType.Struct) {
       s.write(
           'set $globalVarName($dartType value) => $pointerName.value = value;\n\n');
