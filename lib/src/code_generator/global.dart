@@ -73,9 +73,6 @@ class Global extends LookUpBinding {
       }
     } else {
       s.write('$dartType get $globalVarName => $pointerName.value;\n\n');
-    }
-
-    if (type.broadType != BroadType.Struct) {
       s.write(
           'set $globalVarName($dartType value) => $pointerName.value = value;\n\n');
     }
