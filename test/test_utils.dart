@@ -9,8 +9,6 @@ import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 
-/// Extracts a binding's string from a library.
-
 extension LibraryTestExt on Library {
   /// Get a [Binding]'s generated string with a given name.
   String getBindingAsString(String name) {
