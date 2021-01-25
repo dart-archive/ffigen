@@ -31,6 +31,8 @@ ${strings.headers}:
 ${strings.globals}:
   ${strings.exclude}:
     - GlobalIgnore
+# Needed for stdbool.h in MacOS
+${strings.compilerOpts}: '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/ -Wno-nullability-completeness'
         ''') as yaml.YamlMap),
       );
     });
@@ -60,6 +62,7 @@ ${strings.globals}:
 }
 
 Library expectedLibrary() {
+  final globalStruc = Struc(name: 'EmptyStruct');
   return Library(
     name: 'Bindings',
     bindings: [
@@ -68,6 +71,8 @@ Library expectedLibrary() {
       Global(
           type: Type.pointer(Type.nativeType(SupportedNativeType.Int32)),
           name: 'aGlobalPointer'),
+      globalStruc,
+      Global(name: 'globalStruct', type: Type.struct(globalStruc)),
     ],
   );
 }

@@ -6250,9 +6250,9 @@ class CXStringSet extends ffi.Struct {
   external int Count;
 }
 
-class CXTargetInfoImpl extends ffi.Struct {}
+class CXTargetInfoImpl extends ffi.Opaque {}
 
-class CXTranslationUnitImpl extends ffi.Struct {}
+class CXTranslationUnitImpl extends ffi.Opaque {}
 
 /// Provides the contents of a file that has not yet been saved to disk.
 ///
@@ -6636,7 +6636,7 @@ class CXPlatformAvailability extends ffi.Struct {
   external CXString Message;
 }
 
-class CXCursorSetImpl extends ffi.Struct {}
+class CXCursorSetImpl extends ffi.Opaque {}
 
 /// Describes the kind of type
 abstract class CXTypeKind {

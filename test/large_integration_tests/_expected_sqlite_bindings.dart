@@ -8984,9 +8984,9 @@ class SQLite {
   _dart_sqlite3_rtree_query_callback? _sqlite3_rtree_query_callback;
 }
 
-class sqlite3 extends ffi.Struct {}
+class sqlite3 extends ffi.Opaque {}
 
-class sqlite3_file extends ffi.Struct {}
+class sqlite3_file extends ffi.Opaque {}
 
 class sqlite3_io_methods extends ffi.Struct {
   @ffi.Int32()
@@ -9031,19 +9031,19 @@ class sqlite3_io_methods extends ffi.Struct {
   external ffi.Pointer<ffi.NativeFunction<_typedefC_19>> xUnfetch;
 }
 
-class sqlite3_mutex extends ffi.Struct {}
+class sqlite3_mutex extends ffi.Opaque {}
 
-class sqlite3_api_routines extends ffi.Struct {}
+class sqlite3_api_routines extends ffi.Opaque {}
 
-class sqlite3_vfs extends ffi.Struct {}
+class sqlite3_vfs extends ffi.Opaque {}
 
-class sqlite3_mem_methods extends ffi.Struct {}
+class sqlite3_mem_methods extends ffi.Opaque {}
 
-class sqlite3_stmt extends ffi.Struct {}
+class sqlite3_stmt extends ffi.Opaque {}
 
-class sqlite3_value extends ffi.Struct {}
+class sqlite3_value extends ffi.Opaque {}
 
-class sqlite3_context extends ffi.Struct {}
+class sqlite3_context extends ffi.Opaque {}
 
 /// CAPI3REF: Virtual Table Instance Object
 /// KEYWORDS: sqlite3_vtab
@@ -9061,7 +9061,7 @@ class sqlite3_context extends ffi.Struct {}
 /// prior to assigning a new string to zErrMsg.  ^After the error message
 /// is delivered up to the client application, the string will be automatically
 /// freed by sqlite3_free() and the zErrMsg field will be zeroed.
-class sqlite3_vtab extends ffi.Struct {}
+class sqlite3_vtab extends ffi.Opaque {}
 
 /// CAPI3REF: Virtual Table Indexing Information
 /// KEYWORDS: sqlite3_index_info
@@ -9163,7 +9163,7 @@ class sqlite3_vtab extends ffi.Struct {}
 /// It may therefore only be used if
 /// sqlite3_libversion_number() returns a value greater than or equal to
 /// 3009000.
-class sqlite3_index_info extends ffi.Struct {}
+class sqlite3_index_info extends ffi.Opaque {}
 
 /// CAPI3REF: Virtual Table Cursor Object
 /// KEYWORDS: sqlite3_vtab_cursor {virtual table cursor}
@@ -9180,7 +9180,7 @@ class sqlite3_index_info extends ffi.Struct {}
 ///
 /// This superclass exists in order to define fields of the cursor that
 /// are common to all implementations.
-class sqlite3_vtab_cursor extends ffi.Struct {}
+class sqlite3_vtab_cursor extends ffi.Opaque {}
 
 /// CAPI3REF: Virtual Table Object
 /// KEYWORDS: sqlite3_module {virtual table module}
@@ -9196,23 +9196,23 @@ class sqlite3_vtab_cursor extends ffi.Struct {}
 /// module or until the [database connection] closes.  The content
 /// of this structure must not change while it is registered with
 /// any database connection.
-class sqlite3_module extends ffi.Struct {}
+class sqlite3_module extends ffi.Opaque {}
 
-class sqlite3_blob extends ffi.Struct {}
+class sqlite3_blob extends ffi.Opaque {}
 
-class sqlite3_mutex_methods extends ffi.Struct {}
+class sqlite3_mutex_methods extends ffi.Opaque {}
 
-class sqlite3_str extends ffi.Struct {}
+class sqlite3_str extends ffi.Opaque {}
 
-class sqlite3_pcache extends ffi.Struct {}
+class sqlite3_pcache extends ffi.Opaque {}
 
-class sqlite3_pcache_page extends ffi.Struct {}
+class sqlite3_pcache_page extends ffi.Opaque {}
 
-class sqlite3_pcache_methods2 extends ffi.Struct {}
+class sqlite3_pcache_methods2 extends ffi.Opaque {}
 
-class sqlite3_pcache_methods extends ffi.Struct {}
+class sqlite3_pcache_methods extends ffi.Opaque {}
 
-class sqlite3_backup extends ffi.Struct {}
+class sqlite3_backup extends ffi.Opaque {}
 
 /// CAPI3REF: Database Snapshot
 /// KEYWORDS: {snapshot} {sqlite3_snapshot}
@@ -9610,7 +9610,7 @@ class ArrayHelper_sqlite3_snapshot_hidden_level0 {
 
 /// A pointer to a structure of the following type is passed as the first
 /// argument to callbacks registered using rtree_geometry_callback().
-class sqlite3_rtree_geometry extends ffi.Struct {}
+class sqlite3_rtree_geometry extends ffi.Opaque {}
 
 /// A pointer to a structure of the following type is passed as the
 /// argument to scored geometry callback registered using
@@ -9619,7 +9619,7 @@ class sqlite3_rtree_geometry extends ffi.Struct {}
 /// Note that the first 5 fields of this structure are identical to
 /// sqlite3_rtree_geometry.  This structure is a subclass of
 /// sqlite3_rtree_geometry.
-class sqlite3_rtree_query_info extends ffi.Struct {}
+class sqlite3_rtree_query_info extends ffi.Opaque {}
 
 /// EXTENSION API FUNCTIONS
 ///
@@ -9830,17 +9830,17 @@ class sqlite3_rtree_query_info extends ffi.Struct {}
 ///
 /// xPhraseNextColumn()
 /// See xPhraseFirstColumn above.
-class Fts5ExtensionApi extends ffi.Struct {}
+class Fts5ExtensionApi extends ffi.Opaque {}
 
-class Fts5Context extends ffi.Struct {}
+class Fts5Context extends ffi.Opaque {}
 
-class Fts5PhraseIter extends ffi.Struct {}
+class Fts5PhraseIter extends ffi.Opaque {}
 
-class Fts5Tokenizer extends ffi.Struct {}
+class Fts5Tokenizer extends ffi.Opaque {}
 
-class fts5_tokenizer extends ffi.Struct {}
+class fts5_tokenizer extends ffi.Opaque {}
 
-class fts5_api extends ffi.Struct {}
+class fts5_api extends ffi.Opaque {}
 
 const String SQLITE_VERSION = '3.32.3';
 
