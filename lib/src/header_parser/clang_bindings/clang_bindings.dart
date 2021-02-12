@@ -510,6 +510,21 @@ class Clang {
 
   _dart_clang_Cursor_isMacroBuiltin? _clang_Cursor_isMacroBuiltin;
 
+  /// Determine whether a  CXCursor that is a function declaration, is an
+  /// inline declaration.
+  int clang_Cursor_isFunctionInlined(
+    CXCursor C,
+  ) {
+    return (_clang_Cursor_isFunctionInlined ??= _dylib.lookupFunction<
+            _c_clang_Cursor_isFunctionInlined,
+            _dart_clang_Cursor_isFunctionInlined>(
+        'clang_Cursor_isFunctionInlined'))(
+      C,
+    );
+  }
+
+  _dart_clang_Cursor_isFunctionInlined? _clang_Cursor_isFunctionInlined;
+
   /// For pointer types, returns the type of the pointee.
   CXType clang_getPointeeType(
     CXType T,
@@ -2560,6 +2575,14 @@ typedef _c_clang_Cursor_isMacroBuiltin = ffi.Uint32 Function(
 );
 
 typedef _dart_clang_Cursor_isMacroBuiltin = int Function(
+  CXCursor C,
+);
+
+typedef _c_clang_Cursor_isFunctionInlined = ffi.Uint32 Function(
+  CXCursor C,
+);
+
+typedef _dart_clang_Cursor_isFunctionInlined = int Function(
   CXCursor C,
 );
 
