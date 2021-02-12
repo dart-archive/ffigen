@@ -20,7 +20,6 @@ dependencies:
   cli_util: ^0.3.0
   glob: ^2.0.0
   file: ^6.0.0
-  pub_semver: ^2.0.0
 
 dev_dependencies:
   pedantic: ^1.10.0
