@@ -35,6 +35,16 @@ Func? parseFunctionDeclaration(clang_types.CXCursor cursor) {
     final rt = _getFunctionReturnType(cursor);
     final parameters = _getParameters(cursor, funcName);
 
+    if (clang.clang_Cursor_isFunctionInlined(cursor) != 0) {
+      _logger.fine(
+          '---- Removed Function, reason: inline function: ${cursor.completeStringRepr()}');
+      _logger.warning(
+          "Skipped Function '$funcName', inline functions are not supported.");
+      return _stack
+          .pop()
+          .func; // Returning null so that [addToBindings] function excludes this.
+    }
+
     if (rt.isIncompleteStruct || _stack.top.incompleteStructParameter) {
       _logger.fine(
           '---- Removed Function, reason: Incomplete struct pass/return by value: ${cursor.completeStringRepr()}');

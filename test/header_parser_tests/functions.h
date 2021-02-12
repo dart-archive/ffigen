@@ -16,3 +16,6 @@ void *func4(int8_t **, double, int32_t ***);
 typedef void shortHand(void(b)());
 // Would be treated as `void func5(shortHand *a, void (*b)())`.
 void func5(shortHand a, void(b)());
+
+// Should be skipped as inline functions are not supported.
+static inline void inlineFunc();
