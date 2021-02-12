@@ -450,7 +450,7 @@ Note: exclude overrides include.
 ### How does ffigen handle C Strings?
 
 Ffigen treats `char*` just as any other pointer,(`Pointer<Int8>`).
-To convert these to/from `String`, you can use [package:ffi](https://pub.dev/packages/ffi) and use `Utf8.fromUtf8(ptr.cast())` to convert `char*` to dart `string`.
+To convert these to/from `String`, you can use [package:ffi](https://pub.dev/packages/ffi). Use `ptr.cast<Utf8>().toDartString()` to convert `char*` to dart `string` and `"str".toNativeUtf8()` to convert `string` to `char*`.
 ### How does ffigen handle C99 bool data type?
 
 Although `dart:ffi` doesn't have a NativeType for `bool`, they can be implemented as `Uint8`.
