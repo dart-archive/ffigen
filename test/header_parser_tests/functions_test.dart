@@ -58,6 +58,11 @@ ${strings.headers}:
       expect(actual.getBindingAsString('func5'),
           expected.getBindingAsString('func5'));
     });
+
+    test('Skip inline functions', () {
+      expect(() => actual.getBindingAsString('inlineFunc'),
+          throwsA(TypeMatcher<NotFoundException>()));
+    });
   });
 }
 
