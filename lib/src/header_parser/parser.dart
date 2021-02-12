@@ -78,7 +78,7 @@ List<Binding> parseToBindings() {
 
     final tu = clang.clang_parseTranslationUnit(
       index,
-      Utf8.toUtf8(headerLocation).cast(),
+      headerLocation.toNativeUtf8().cast(),
       clangCmdArgs.cast(),
       cmdLen,
       nullptr,
