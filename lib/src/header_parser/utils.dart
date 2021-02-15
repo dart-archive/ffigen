@@ -52,7 +52,7 @@ void logTuDiagnostics(
 
 extension CXSourceRangeExt on Pointer<clang_types.CXSourceRange> {
   void dispose() {
-    free(this);
+    calloc.free(this);
   }
 }
 
@@ -100,19 +100,19 @@ extension CXCursorExt on clang_types.CXCursor {
 
   String sourceFileName() {
     final cxsource = clang.clang_getCursorLocation(this);
-    final cxfilePtr = allocate<Pointer<Void>>();
-    final line = allocate<Uint32>();
-    final column = allocate<Uint32>();
-    final offset = allocate<Uint32>();
+    final cxfilePtr = calloc<Pointer<Void>>();
+    final line = calloc<Uint32>();
+    final column = calloc<Uint32>();
+    final offset = calloc<Uint32>();
 
     // Puts the values in these pointers.
     clang.clang_getFileLocation(cxsource, cxfilePtr, line, column, offset);
     final s = clang.clang_getFileName(cxfilePtr.value).toStringAndDispose();
 
-    free(cxfilePtr);
-    free(line);
-    free(column);
-    free(offset);
+    calloc.free(cxfilePtr);
+    calloc.free(line);
+    calloc.free(column);
+    calloc.free(offset);
     return s;
   }
 }
@@ -241,7 +241,7 @@ extension CXStringExt on clang_types.CXString {
   String string() {
     final cstring = clang.clang_getCString(this);
     if (cstring != nullptr) {
-      return Utf8.fromUtf8(cstring.cast());
+      return cstring.cast<Utf8>().toDartString();
     } else {
       return '';
     }
@@ -262,10 +262,10 @@ extension CXStringExt on clang_types.CXString {
 
 /// Converts a [List<String>] to [Pointer<Pointer<Utf8>>].
 Pointer<Pointer<Utf8>> createDynamicStringArray(List<String> list) {
-  final nativeCmdArgs = allocate<Pointer<Utf8>>(count: list.length);
+  final nativeCmdArgs = calloc<Pointer<Utf8>>(list.length);
 
   for (var i = 0; i < list.length; i++) {
-    nativeCmdArgs[i] = Utf8.toUtf8(list[i]);
+    nativeCmdArgs[i] = list[i].toNativeUtf8();
   }
 
   return nativeCmdArgs;
@@ -275,9 +275,9 @@ extension DynamicCStringArray on Pointer<Pointer<Utf8>> {
   // Properly disposes a Pointer<Pointer<Utf8>, ensure that sure length is correct.
   void dispose(int length) {
     for (var i = 0; i < length; i++) {
-      free(this[i]);
+      calloc.free(this[i]);
     }
-    free(this);
+    calloc.free(this);
   }
 }
 

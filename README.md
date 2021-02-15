@@ -60,7 +60,7 @@ Jump to [FAQ](#faq).
 Configurations can be provided in 2 ways-
 1. In the project's `pubspec.yaml` file under the key `ffigen`.
 2. Via a custom YAML file, then specify this file while running -
-`pub run ffigen --config config.yaml`
+`dart run ffigen --config config.yaml`
 
 The following configuration options are available-
 <table>
@@ -391,15 +391,15 @@ class ArrayHelper_CXFileUniqueID_data_level0 {
 1. Multi OS support for types such as long. [Issue #7](https://github.com/dart-lang/ffigen/issues/7)
 
 ## Trying out examples
-1. `cd examples/<example_u_want_to_run>`, Run `pub get`.
-2. Run `pub run ffigen`.
+1. `cd examples/<example_u_want_to_run>`, Run `dart pub get`.
+2. Run `dart run ffigen`.
 
 ## Running Tests
 1. Dynamic library for some tests need to be built before running the examples.
   1. `cd test/native_test`.
   2. Run `dart build_test_dylib.dart`.
 
-Run tests from the root of the package with `pub run test`.
+Run tests from the root of the package with `dart run test`.
 > Note: If llvm is not installed in one of the default locations, tests may fail.
 ## FAQ
 ### Can ffigen be used for removing underscores or renaming declarations?
@@ -449,7 +449,7 @@ Note: exclude overrides include.
 ### How does ffigen handle C Strings?
 
 Ffigen treats `char*` just as any other pointer,(`Pointer<Int8>`).
-To convert these to/from `String`, you can use [package:ffi](https://pub.dev/packages/ffi) and use `Utf8.fromUtf8(ptr.cast())` to convert `char*` to dart `string`.
+To convert these to/from `String`, you can use [package:ffi](https://pub.dev/packages/ffi). Use `ptr.cast<Utf8>().toDartString()` to convert `char*` to dart `string` and `"str".toNativeUtf8()` to convert `string` to `char*`.
 ### How does ffigen handle C99 bool data type?
 
 Although `dart:ffi` doesn't have a NativeType for `bool`, they can be implemented as `Uint8`.

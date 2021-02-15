@@ -17,7 +17,7 @@
 The config file for generating bindings is `tool/libclang_config.yaml`. The bindings are generated to `lib/src/header_parser/clang_bindings/clang_bindings.dart`. These are used by [Header Parser](#header-parser) for calling libclang functions.
 # Scripts
 ## ffigen.dart
-This is the main entry point for the user-  `pub run ffigen`.
+This is the main entry point for the user-  `dart run ffigen`.
 - Command-line options:
     - `--verbose`: Sets log level.
     - `--config`: Specifies a config file.

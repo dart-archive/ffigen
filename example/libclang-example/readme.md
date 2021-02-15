@@ -6,6 +6,6 @@ The C header source files for libclang are in [third_party/libclang](/third_part
 ## Generating bindings
 At the root of this example (`example/libclang-example`), run -
 ```
-pub run ffigen
+dart run ffigen
 ```
 This will generate bindings in a file: [generated_bindings.dart](./generated_bindings.dart).

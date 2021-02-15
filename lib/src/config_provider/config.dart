@@ -92,12 +92,12 @@ class Config {
   late String _wrapperName;
 
   /// Doc comment for the wrapper class.
-  String get wrapperDocComment => _wrapperDocComment;
-  late String _wrapperDocComment;
+  String? get wrapperDocComment => _wrapperDocComment;
+  String? _wrapperDocComment;
 
   /// Header of the generated bindings.
-  String get preamble => _preamble;
-  late String _preamble;
+  String? get preamble => _preamble;
+  String? _preamble;
 
   /// If `Dart_Handle` should be mapped with Handle/Object.
   bool get useDartHandle => _useDartHandle;
@@ -314,13 +314,13 @@ class Config {
         extractor: stringExtractor,
         defaultValue: () => null,
         extractedResult: (dynamic result) =>
-            _wrapperDocComment = result as String,
+            _wrapperDocComment = result as String?,
       ),
-      strings.preamble: Specification<String>(
+      strings.preamble: Specification<String?>(
         requirement: Requirement.no,
         validator: nonEmptyStringValidator,
         extractor: stringExtractor,
-        extractedResult: (dynamic result) => _preamble = result as String,
+        extractedResult: (dynamic result) => _preamble = result as String?,
       ),
       strings.useDartHandle: Specification<bool>(
         requirement: Requirement.no,
