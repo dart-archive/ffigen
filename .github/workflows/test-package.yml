@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sdk: [beta] # TODO(127): Revert to stable.
+        sdk: [beta] # TODO(127): Revert to the oldest stable version we support.
     steps:
       - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v0.1
@@ -44,7 +44,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v0.1
         with:
-          channel: beta # TODO(127): Revert to stable.
+          channel: beta # TODO(127): Revert to the oldest stable version we support.
       - name: Install dependencies
         run: dart pub get
       - name: Install libclang-10-dev
