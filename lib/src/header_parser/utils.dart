@@ -52,7 +52,7 @@ void logTuDiagnostics(
 
 extension CXSourceRangeExt on Pointer<clang_types.CXSourceRange> {
   void dispose() {
-    malloc.free(this);
+    calloc.free(this);
   }
 }
 
@@ -262,7 +262,7 @@ extension CXStringExt on clang_types.CXString {
 
 /// Converts a [List<String>] to [Pointer<Pointer<Utf8>>].
 Pointer<Pointer<Utf8>> createDynamicStringArray(List<String> list) {
-  final nativeCmdArgs = malloc<Pointer<Utf8>>(list.length);
+  final nativeCmdArgs = calloc<Pointer<Utf8>>(list.length);
 
   for (var i = 0; i < list.length; i++) {
     nativeCmdArgs[i] = list[i].toNativeUtf8();
@@ -275,9 +275,9 @@ extension DynamicCStringArray on Pointer<Pointer<Utf8>> {
   // Properly disposes a Pointer<Pointer<Utf8>, ensure that sure length is correct.
   void dispose(int length) {
     for (var i = 0; i < length; i++) {
-      malloc.free(this[i]);
+      calloc.free(this[i]);
     }
-    malloc.free(this);
+    calloc.free(this);
   }
 }
 
