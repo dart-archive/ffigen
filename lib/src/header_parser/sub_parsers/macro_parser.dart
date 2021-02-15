@@ -65,7 +65,7 @@ List<Constant>? parseSavedMacros() {
   cmdLen = config.compilerOpts.length;
   final tu = clang.clang_parseTranslationUnit(
     index,
-    Utf8.toUtf8(file.path).cast(),
+    file.path.toNativeUtf8().cast(),
     clangCmdArgs.cast(),
     cmdLen,
     nullptr,
@@ -247,7 +247,7 @@ String _getWrittenRepresentation(String macroName, Pointer<Int8> strPtr) {
     sb.clear();
     // This throws a Format Exception if string isn't Utf8 so that we handle it
     // in the catch block.
-    final result = Utf8.fromUtf8(strPtr.cast());
+    final result = strPtr.cast<Utf8>().toDartString();
     for (final s in result.runes) {
       sb.write(_getWritableChar(s));
     }
@@ -257,7 +257,7 @@ String _getWrittenRepresentation(String macroName, Pointer<Int8> strPtr) {
     _logger.warning(
         "Couldn't decode Macro string '$macroName' as Utf8, using ASCII instead.");
     sb.clear();
-    final length = Utf8.strlen(strPtr.cast());
+    final length = strPtr.cast<Utf8>().length;
     final charList = Uint8List.view(
         strPtr.cast<Uint8>().asTypedList(length).buffer, 0, length);
 

@@ -18,7 +18,7 @@ void main() {
   final jsonString = File('./example.json').readAsStringSync();
 
   // Parse this json string using our cJSON library.
-  final cjsonParsedJson = cjson.cJSON_Parse(Utf8.toUtf8(jsonString).cast());
+  final cjsonParsedJson = cjson.cJSON_Parse(jsonString.toNativeUtf8().cast());
   if (cjsonParsedJson == nullptr) {
     print('Error parsing cjson.');
     exit(1);
@@ -78,7 +78,7 @@ dynamic convertCJsonToDartObj(Pointer<cj.cJSON> parsedcjson) {
       ptr = ptr.ref.next;
     }
   } else if (cjson.cJSON_IsString(parsedcjson.cast()) == 1) {
-    obj = Utf8.fromUtf8(parsedcjson.ref.valuestring.cast());
+    obj = parsedcjson.ref.valuestring.cast<Utf8>().toDartString();
   } else if (cjson.cJSON_IsNumber(parsedcjson.cast()) == 1) {
     obj = parsedcjson.ref.valueint == parsedcjson.ref.valuedouble
         ? parsedcjson.ref.valueint
@@ -90,7 +90,7 @@ dynamic convertCJsonToDartObj(Pointer<cj.cJSON> parsedcjson) {
 
 void _addToObj(dynamic obj, dynamic o, [Pointer<Utf8>? name]) {
   if (obj is Map<String, dynamic>) {
-    obj[Utf8.fromUtf8(name!)] = o;
+    obj[name!.toDartString()] = o;
   } else if (obj is List<dynamic>) {
     obj.add(o);
   }

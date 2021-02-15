@@ -3,7 +3,7 @@
 # BSD-style license that can be found in the LICENSE file.
 
 # =================== GENERATING TEST BINDINGS ==================
-#    pub run ffigen --config test/native_test/config.yaml
+#    dart run ffigen --config test/native_test/config.yaml
 # ===============================================================
 
 name: NativeLibrary
