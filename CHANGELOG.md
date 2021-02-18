@@ -1,3 +1,6 @@
+# 2.0.1
+- Switch to preview release of `package:quiver`.
+
 # 2.0.0
 - Upgraded all dependencies. `package:ffigen` now runs with sound null safety.
 
