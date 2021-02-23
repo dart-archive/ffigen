@@ -54,7 +54,17 @@ Struc? parseStructDeclaration(
   final structName = name ?? cursor.spelling();
 
   if (structName.isEmpty) {
-    _logger.finest('unnamed structure or typedef structure declaration');
+    if (ignoreFilter) {
+      // This struct is defined inside some other struct and hence must be generated.
+      _stack.top.struc = Struc(
+        name: incrementalNamer.name('unnamedInternalStruct'),
+        usr: structUsr,
+        dartDoc: getCursorDocComment(cursor),
+      );
+      _setStructMembers(cursor);
+    } else {
+      _logger.finest('unnamed structure or typedef structure declaration');
+    }
   } else if ((ignoreFilter || shouldIncludeStruct(structUsr, structName)) &&
       (!bindingsIndex.isSeenStruct(structUsr))) {
     _logger.fine(
