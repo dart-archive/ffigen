@@ -14,3 +14,14 @@ struct Struct1
     int b;
     struct Struct2 *struct2;
 };
+
+struct Struct3
+{
+    int a;
+    // An unnamed struct.
+    struct
+    {
+        int a;
+        int b;
+    } b;
+};

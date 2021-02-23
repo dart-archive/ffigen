@@ -57,7 +57,7 @@ Struc? parseStructDeclaration(
     if (ignoreFilter) {
       // This struct is defined inside some other struct and hence must be generated.
       _stack.top.struc = Struc(
-        name: incrementalNamer.name('unnamedInternalStruct'),
+        name: incrementalNamer.name('unnamedStruct'),
         usr: structUsr,
         dartDoc: getCursorDocComment(cursor),
       );

@@ -23,13 +23,13 @@ void main() {
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Nested Parsing Test'
 ${strings.output}: 'unused'
-
+${strings.arrayWorkaround}: true
 ${strings.headers}:
   ${strings.entryPoints}:
     - 'test/header_parser_tests/nested_parsing.h'
 ${strings.structs}:
-  ${strings.include}:
-    - Struct1
+  ${strings.exclude}:
+    - Struct2
         ''') as yaml.YamlMap),
       );
     });
@@ -46,6 +46,10 @@ ${strings.structs}:
       expect(actual.getBindingAsString('Struct2'),
           expected.getBindingAsString('Struct2'));
     });
+    test('Struct3', () {
+      expect(actual.getBindingAsString('Struct3'),
+          expected.getBindingAsString('Struct3'));
+    });
   });
 }
 
@@ -60,9 +64,20 @@ Library expectedLibrary() {
       type: Type.nativeType(SupportedNativeType.Int32),
     ),
   ]);
+  final unnamedInternalStruc = Struc(name: 'unnamedStruct_1', members: [
+    Member(
+      name: 'a',
+      type: Type.nativeType(SupportedNativeType.Int32),
+    ),
+    Member(
+      name: 'b',
+      type: Type.nativeType(SupportedNativeType.Int32),
+    ),
+  ]);
   return Library(
     name: 'Bindings',
     bindings: [
+      unnamedInternalStruc,
       struc2,
       Struc(name: 'Struct1', members: [
         Member(
@@ -74,6 +89,16 @@ Library expectedLibrary() {
           type: Type.nativeType(SupportedNativeType.Int32),
         ),
         Member(name: 'struct2', type: Type.pointer(Type.struct(struc2))),
+      ]),
+      Struc(name: 'Struct3', members: [
+        Member(
+          name: 'a',
+          type: Type.nativeType(SupportedNativeType.Int32),
+        ),
+        Member(
+          name: 'b',
+          type: Type.struct(unnamedInternalStruc),
+        ),
       ]),
     ],
   );
