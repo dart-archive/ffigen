@@ -164,7 +164,8 @@ class Type {
 
   /// Returns true if the type is a [Struc] and is incomplete.
   bool get isIncompleteStruct =>
-      broadType == BroadType.Struct && struc!=null && struc!.isInComplete;
+      (broadType == BroadType.Struct && struc!=null && struc!.isInComplete) ||
+      (broadType == BroadType.ConstantArray && getBaseArrayType().isIncompleteStruct);
 
   String getCType(Writer w) {
     switch (broadType) {

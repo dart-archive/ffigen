@@ -25,3 +25,18 @@ struct Struct3
         int b;
     } b;
 };
+
+struct EmptyStruct{
+};
+
+struct Struct4{
+    int a;
+    // Incomplete struct inside a struct.
+    struct EmptyStruct b;
+};
+
+struct Struct5{
+    int a;
+    // Incomplete struct array.
+    struct EmptyStruct b[3];
+};

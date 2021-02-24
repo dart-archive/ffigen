@@ -50,6 +50,14 @@ ${strings.structs}:
       expect(actual.getBindingAsString('Struct3'),
           expected.getBindingAsString('Struct3'));
     });
+    test('Struct4', () {
+      expect(actual.getBindingAsString('Struct4'),
+          expected.getBindingAsString('Struct4'));
+    });
+    test('Struct5', () {
+      expect(actual.getBindingAsString('Struct5'),
+          expected.getBindingAsString('Struct5'));
+    });
   });
 }
 
@@ -100,6 +108,9 @@ Library expectedLibrary() {
           type: Type.struct(unnamedInternalStruc),
         ),
       ]),
+      Struc(name: 'EmptyStruct'),
+      Struc(name: 'Struct4'),
+      Struc(name: 'Struct5'),
     ],
   );
 }
