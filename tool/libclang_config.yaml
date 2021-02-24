@@ -71,6 +71,7 @@ functions:
     - clang_getTypeSpelling
     - clang_getTypeKindSpelling
     - clang_getResultType
+    - clang_getTypedefName
     - clang_getPointeeType
     - clang_getCanonicalType
     - clang_Type_getNamedType

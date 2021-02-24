@@ -15,3 +15,8 @@ void funcNestedUnimplemented(void (*unnamed1)(void (*unnamed2)(long double)));
 typedef void (*insideReturnType)();
 typedef insideReturnType (*withTypedefReturnType)();
 void funcWithNativeFunc(withTypedefReturnType named);
+
+typedef void (*VoidFuncPointer)();
+struct Struc2{
+    const VoidFuncPointer constFuncPointer;
+};

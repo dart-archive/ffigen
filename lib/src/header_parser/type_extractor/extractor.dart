@@ -35,7 +35,7 @@ Type getCodeGenType(clang_types.CXType cxtype, {String? parentName}) {
       }
       return Type.pointer(s);
     case clang_types.CXTypeKind.CXType_Typedef:
-      final spelling = cxtype.spelling();
+      final spelling = clang.clang_getTypedefName(cxtype).toStringAndDispose();
       if (config.typedefNativeTypeMappings.containsKey(spelling)) {
         _logger.fine('  Type Mapped from typedef-map');
         return Type.nativeType(config.typedefNativeTypeMappings[spelling]!);
@@ -44,7 +44,8 @@ Type getCodeGenType(clang_types.CXType cxtype, {String? parentName}) {
       if (config.useSupportedTypedefs) {
         if (suportedTypedefToSuportedNativeType.containsKey(spelling)) {
           _logger.fine('  Type Mapped from supported typedef');
-          return Type.nativeType(suportedTypedefToSuportedNativeType[spelling]!);
+          return Type.nativeType(
+              suportedTypedefToSuportedNativeType[spelling]!);
         }
       }
 
@@ -52,7 +53,7 @@ Type getCodeGenType(clang_types.CXType cxtype, {String? parentName}) {
       final ct = clang.clang_getTypedefDeclUnderlyingType(
           clang.clang_getTypeDeclaration(cxtype));
 
-      final s = getCodeGenType(ct, parentName: parentName ?? cxtype.spelling());
+      final s = getCodeGenType(ct, parentName: parentName ?? spelling);
       return s;
     case clang_types.CXTypeKind.CXType_Elaborated:
       final et = clang.clang_Type_getNamedType(cxtype);

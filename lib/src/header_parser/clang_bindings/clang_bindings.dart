@@ -525,6 +525,19 @@ class Clang {
 
   _dart_clang_Cursor_isFunctionInlined? _clang_Cursor_isFunctionInlined;
 
+  /// Returns the typedef name of the given type.
+  CXString clang_getTypedefName(
+    CXType CT,
+  ) {
+    return (_clang_getTypedefName ??= _dylib.lookupFunction<
+        _c_clang_getTypedefName,
+        _dart_clang_getTypedefName>('clang_getTypedefName'))(
+      CT,
+    );
+  }
+
+  _dart_clang_getTypedefName? _clang_getTypedefName;
+
   /// For pointer types, returns the type of the pointee.
   CXType clang_getPointeeType(
     CXType T,
@@ -2584,6 +2597,14 @@ typedef _c_clang_Cursor_isFunctionInlined = ffi.Uint32 Function(
 
 typedef _dart_clang_Cursor_isFunctionInlined = int Function(
   CXCursor C,
+);
+
+typedef _c_clang_getTypedefName = CXString Function(
+  CXType CT,
+);
+
+typedef _dart_clang_getTypedefName = CXString Function(
+  CXType CT,
 );
 
 typedef _c_clang_getPointeeType = CXType Function(
