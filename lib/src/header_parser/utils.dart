@@ -45,7 +45,7 @@ void logTuDiagnostics(
           clang_types
               .CXDiagnosticDisplayOptions.CXDiagnostic_DisplayCategoryName,
     );
-    logger.severe('    ' + cxstring.toStringAndDispose()!);
+    logger.severe('    ' + cxstring.toStringAndDispose());
     clang.clang_disposeDiagnostic(diag);
   }
 }
@@ -58,7 +58,7 @@ extension CXSourceRangeExt on Pointer<clang_types.CXSourceRange> {
 
 extension CXCursorExt on Pointer<clang_types.CXCursor> {
   String usr() {
-    return clang.clang_getCursorUSR_wrap(this).toStringAndDispose()!;
+    return clang.clang_getCursorUSR_wrap(this).toStringAndDispose();
   }
 
   /// Returns the kind int from [clang_types.CXCursorKind].
@@ -68,14 +68,14 @@ extension CXCursorExt on Pointer<clang_types.CXCursor> {
 
   /// Name of the cursor (E.g function name, Struct name, Parameter name).
   String spelling() {
-    return clang.clang_getCursorSpelling_wrap(this).toStringAndDispose()!;
+    return clang.clang_getCursorSpelling_wrap(this).toStringAndDispose();
   }
 
   /// Spelling for a [clang_types.CXCursorKind], useful for debug purposes.
   String kindSpelling() {
     return clang
         .clang_getCursorKindSpelling_wrap(clang.clang_getCursorKind_wrap(this))
-        .toStringAndDispose()!;
+        .toStringAndDispose();
   }
 
   /// for debug: returns [spelling] [kind] [kindSpelling] [type] [typeSpelling].
@@ -102,7 +102,7 @@ extension CXCursorExt on Pointer<clang_types.CXCursor> {
     return r;
   }
 
-  String? sourceFileName() {
+  String sourceFileName() {
     final cxsource = clang.clang_getCursorLocation_wrap(this);
     final cxfilePtr = allocate<Pointer<Void>>();
     final line = allocate<Uint32>();
@@ -234,7 +234,7 @@ extension CXTypeExt on Pointer<clang_types.CXType> {
   }
 
   /// Spelling for a [clang_types.CXTypeKind], useful for debug purposes.
-  String? spelling() {
+  String spelling() {
     return clang.clang_getTypeSpelling_wrap(this).toStringAndDispose();
   }
 
@@ -243,8 +243,8 @@ extension CXTypeExt on Pointer<clang_types.CXType> {
     return ref.kind;
   }
 
-  String? kindSpelling() {
-    return clang.clang_getTypeKindSpelling_wrap(kind()).toStringAndDispose();
+  String kindSpelling() {
+    return clang.clang_getTypeKindSpelling_wrap(kind()!).toStringAndDispose();
   }
 
   /// For debugging: returns [spelling] [kind] [kindSpelling].
@@ -264,17 +264,17 @@ extension CXStringExt on Pointer<clang_types.CXString> {
   ///
   /// Make sure to dispose CXstring using dispose method, or use the
   /// [toStringAndDispose] method.
-  String? string() {
-    String? s;
+  String string() {
     final cstring = clang.clang_getCString_wrap(this);
     if (cstring != nullptr) {
-      s = Utf8.fromUtf8(cstring.cast());
+      return Utf8.fromUtf8(cstring.cast());
+    } else {
+      return '';
     }
-    return s;
   }
 
   /// Converts CXString to dart string and disposes CXString.
-  String? toStringAndDispose() {
+  String toStringAndDispose() {
     // Note: clang_getCString_wrap returns a const char *, calling free will result in error.
     final s = string();
     clang.clang_disposeString_wrap(this);

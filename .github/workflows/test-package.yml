@@ -14,18 +14,18 @@ env:
 
 jobs:
   # Check code formatting and static analysis on a single OS (linux)
-  # against Dart stable.
+  # against Dart dev.
   analyze:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        sdk: [beta] # TODO(127):Revert to stable when null safety reaches stable branch.
+        sdk: [2.12.0-198.0.dev] # TODO(127): Revert to stable.
     steps:
       - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v0.1
+      - uses: dart-lang/setup-dart@v1.0
         with:
-          channel: ${{ matrix.sdk }}
+          sdk: ${{ matrix.sdk }}
       - id: install
         name: Install dependencies
         run: dart pub get
@@ -42,9 +42,9 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v0.1
+      - uses: dart-lang/setup-dart@v1.0
         with:
-          channel: beta # TODO(127):Revert to stable when null safety reaches stable branch.
+          sdk: 2.12.0-198.0.dev # TODO(127): Revert to stable.
       - name: Install dependencies
         run: dart pub get
       - name: Install libclang-10-dev
