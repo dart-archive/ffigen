@@ -23,7 +23,7 @@ jobs:
         sdk: [2.12.0-198.0.dev] # TODO(127): Revert to stable.
     steps:
       - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v0.1
+      - uses: dart-lang/setup-dart@v1.0
         with:
           sdk: ${{ matrix.sdk }}
       - id: install
@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v0.1
+      - uses: dart-lang/setup-dart@v1.0
         with:
           sdk: 2.12.0-198.0.dev # TODO(127): Revert to stable.
       - name: Install dependencies
