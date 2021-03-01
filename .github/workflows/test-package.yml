@@ -3,9 +3,9 @@ name: Dart CI
 on:
   # Run on PRs and pushes to the default branch.
   push:
-    branches: [ master ]
+    branches: [ dart-dev, master ]
   pull_request:
-    branches: [ master ]
+    branches: [ dart-dev, master ]
   schedule:
     - cron: "0 0 * * 0"
 
@@ -13,8 +13,7 @@ env:
   PUB_ENVIRONMENT: bot.github
 
 jobs:
-  # Check code formatting and static analysis on a single OS (linux)
-  # against Dart dev.
+  # Check code formatting and static analysis on a single OS (linux).
   analyze:
     runs-on: ubuntu-latest
     strategy:
