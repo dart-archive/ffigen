@@ -316,6 +316,7 @@ class BindingsIndex {
   final Map<String, EnumClass> _enumClass = {};
   final Map<String, Constant> _unnamedEnumConstants = {};
   final Map<String, String> _macros = {};
+  final Map<String, Global> _globals = {};
   // Stores only named typedefC used in NativeFunc.
   final Map<String, Typedef> _functionTypedefs = {};
 
@@ -365,6 +366,18 @@ class BindingsIndex {
 
   Constant? getSeenUnnamedEnumConstant(String usr) {
     return _unnamedEnumConstants[usr];
+  }
+
+  bool isSeenGlobalVar(String usr) {
+    return _globals.containsKey(usr);
+  }
+
+  void addGlobalVarToSeen(String usr, Global global) {
+    _globals[usr] = global;
+  }
+
+  Global? getSeenGlobalVar(String usr) {
+    return _globals[usr];
   }
 
   bool isSeenMacro(String usr) {

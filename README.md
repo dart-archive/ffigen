@@ -144,7 +144,7 @@ compiler-opts: '-I/usr/lib/llvm-9/include/'
   </td>
   </tr>
   <tr>
-    <td>functions<br>structs<br>enums<br>unnamed-enums<br>macros</td>
+    <td>functions<br>structs<br>enums<br>unnamed-enums<br>macros<br>globals</td>
     <td>Filters for declarations.<br><b>Default: all are included</b></td>
     <td>
 
@@ -170,6 +170,12 @@ enums:
     'CXTypeKind': # Full names have higher priority.
       # $1 keeps only the 1st group i.e '(.*)'.
       'CXType(.*)': '$1'
+globals:
+  exclude:
+    - aGlobal
+  rename:
+    # Removes '_' from beginning of a name.
+    - '_(.*)': '$1'
 ```
   </td>
   </tr>

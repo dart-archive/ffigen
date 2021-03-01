@@ -11,6 +11,44 @@ class SQLite {
   /// The symbols are looked up in [dynamicLibrary].
   SQLite(ffi.DynamicLibrary dynamicLibrary) : _dylib = dynamicLibrary;
 
+  /// CAPI3REF: Run-Time Library Version Numbers
+  /// KEYWORDS: sqlite3_version sqlite3_sourceid
+  ///
+  /// These interfaces provide the same information as the [SQLITE_VERSION],
+  /// [SQLITE_VERSION_NUMBER], and [SQLITE_SOURCE_ID] C preprocessor macros
+  /// but are associated with the library instead of the header file.  ^(Cautious
+  /// programmers might include assert() statements in their application to
+  /// verify that values returned by these interfaces match the macros in
+  /// the header, and thus ensure that the application is
+  /// compiled with matching library and header files.
+  ///
+  /// <blockquote><pre>
+  /// assert( sqlite3_libversion_number()==SQLITE_VERSION_NUMBER );
+  /// assert( strncmp(sqlite3_sourceid(),SQLITE_SOURCE_ID,80)==0 );
+  /// assert( strcmp(sqlite3_libversion(),SQLITE_VERSION)==0 );
+  /// </pre></blockquote>)^
+  ///
+  /// ^The sqlite3_version[] string constant contains the text of [SQLITE_VERSION]
+  /// macro.  ^The sqlite3_libversion() function returns a pointer to the
+  /// to the sqlite3_version[] string constant.  The sqlite3_libversion()
+  /// function is provided for use in DLLs since DLL users usually do not have
+  /// direct access to string constants within the DLL.  ^The
+  /// sqlite3_libversion_number() function returns an integer equal to
+  /// [SQLITE_VERSION_NUMBER].  ^(The sqlite3_sourceid() function returns
+  /// a pointer to a string constant whose value is the same as the
+  /// [SQLITE_SOURCE_ID] C preprocessor macro.  Except if SQLite is built
+  /// using an edited copy of [the amalgamation], then the last four characters
+  /// of the hash might be different from [SQLITE_SOURCE_ID].)^
+  ///
+  /// See also: [sqlite_version()] and [sqlite_source_id()].
+  late final ffi.Pointer<ffi.Pointer<ffi.Int8>> _sqlite3_version =
+      _dylib.lookup<ffi.Pointer<ffi.Int8>>('sqlite3_version');
+
+  ffi.Pointer<ffi.Int8> get sqlite3_version => _sqlite3_version.value;
+
+  set sqlite3_version(ffi.Pointer<ffi.Int8> value) =>
+      _sqlite3_version.value = value;
+
   ffi.Pointer<ffi.Int8> sqlite3_libversion() {
     return (_sqlite3_libversion ??=
         _dylib.lookupFunction<_c_sqlite3_libversion, _dart_sqlite3_libversion>(
@@ -5457,6 +5495,111 @@ class SQLite {
   }
 
   _dart_sqlite3_sleep? _sqlite3_sleep;
+
+  /// CAPI3REF: Name Of The Folder Holding Temporary Files
+  ///
+  /// ^(If this global variable is made to point to a string which is
+  /// the name of a folder (a.k.a. directory), then all temporary files
+  /// created by SQLite when using a built-in [sqlite3_vfs | VFS]
+  /// will be placed in that directory.)^  ^If this variable
+  /// is a NULL pointer, then SQLite performs a search for an appropriate
+  /// temporary file directory.
+  ///
+  /// Applications are strongly discouraged from using this global variable.
+  /// It is required to set a temporary folder on Windows Runtime (WinRT).
+  /// But for all other platforms, it is highly recommended that applications
+  /// neither read nor write this variable.  This global variable is a relic
+  /// that exists for backwards compatibility of legacy applications and should
+  /// be avoided in new projects.
+  ///
+  /// It is not safe to read or modify this variable in more than one
+  /// thread at a time.  It is not safe to read or modify this variable
+  /// if a [database connection] is being used at the same time in a separate
+  /// thread.
+  /// It is intended that this variable be set once
+  /// as part of process initialization and before any SQLite interface
+  /// routines have been called and that this variable remain unchanged
+  /// thereafter.
+  ///
+  /// ^The [temp_store_directory pragma] may modify this variable and cause
+  /// it to point to memory obtained from [sqlite3_malloc].  ^Furthermore,
+  /// the [temp_store_directory pragma] always assumes that any string
+  /// that this variable points to is held in memory obtained from
+  /// [sqlite3_malloc] and the pragma may attempt to free that memory
+  /// using [sqlite3_free].
+  /// Hence, if this variable is modified directly, either it should be
+  /// made NULL or made to point to memory obtained from [sqlite3_malloc]
+  /// or else the use of the [temp_store_directory pragma] should be avoided.
+  /// Except when requested by the [temp_store_directory pragma], SQLite
+  /// does not free the memory that sqlite3_temp_directory points to.  If
+  /// the application wants that memory to be freed, it must do
+  /// so itself, taking care to only do so after all [database connection]
+  /// objects have been destroyed.
+  ///
+  /// <b>Note to Windows Runtime users:</b>  The temporary directory must be set
+  /// prior to calling [sqlite3_open] or [sqlite3_open_v2].  Otherwise, various
+  /// features that require the use of temporary files may fail.  Here is an
+  /// example of how to do this using C++ with the Windows Runtime:
+  ///
+  /// <blockquote><pre>
+  /// LPCWSTR zPath = Windows::Storage::ApplicationData::Current->
+  /// &nbsp;     TemporaryFolder->Path->Data();
+  /// char zPathBuf&#91;MAX_PATH + 1&#93;;
+  /// memset(zPathBuf, 0, sizeof(zPathBuf));
+  /// WideCharToMultiByte(CP_UTF8, 0, zPath, -1, zPathBuf, sizeof(zPathBuf),
+  /// &nbsp;     NULL, NULL);
+  /// sqlite3_temp_directory = sqlite3_mprintf("%s", zPathBuf);
+  /// </pre></blockquote>
+  late final ffi.Pointer<ffi.Pointer<ffi.Int8>> _sqlite3_temp_directory =
+      _dylib.lookup<ffi.Pointer<ffi.Int8>>('sqlite3_temp_directory');
+
+  ffi.Pointer<ffi.Int8> get sqlite3_temp_directory =>
+      _sqlite3_temp_directory.value;
+
+  set sqlite3_temp_directory(ffi.Pointer<ffi.Int8> value) =>
+      _sqlite3_temp_directory.value = value;
+
+  /// CAPI3REF: Name Of The Folder Holding Database Files
+  ///
+  /// ^(If this global variable is made to point to a string which is
+  /// the name of a folder (a.k.a. directory), then all database files
+  /// specified with a relative pathname and created or accessed by
+  /// SQLite when using a built-in windows [sqlite3_vfs | VFS] will be assumed
+  /// to be relative to that directory.)^ ^If this variable is a NULL
+  /// pointer, then SQLite assumes that all database files specified
+  /// with a relative pathname are relative to the current directory
+  /// for the process.  Only the windows VFS makes use of this global
+  /// variable; it is ignored by the unix VFS.
+  ///
+  /// Changing the value of this variable while a database connection is
+  /// open can result in a corrupt database.
+  ///
+  /// It is not safe to read or modify this variable in more than one
+  /// thread at a time.  It is not safe to read or modify this variable
+  /// if a [database connection] is being used at the same time in a separate
+  /// thread.
+  /// It is intended that this variable be set once
+  /// as part of process initialization and before any SQLite interface
+  /// routines have been called and that this variable remain unchanged
+  /// thereafter.
+  ///
+  /// ^The [data_store_directory pragma] may modify this variable and cause
+  /// it to point to memory obtained from [sqlite3_malloc].  ^Furthermore,
+  /// the [data_store_directory pragma] always assumes that any string
+  /// that this variable points to is held in memory obtained from
+  /// [sqlite3_malloc] and the pragma may attempt to free that memory
+  /// using [sqlite3_free].
+  /// Hence, if this variable is modified directly, either it should be
+  /// made NULL or made to point to memory obtained from [sqlite3_malloc]
+  /// or else the use of the [data_store_directory pragma] should be avoided.
+  late final ffi.Pointer<ffi.Pointer<ffi.Int8>> _sqlite3_data_directory =
+      _dylib.lookup<ffi.Pointer<ffi.Int8>>('sqlite3_data_directory');
+
+  ffi.Pointer<ffi.Int8> get sqlite3_data_directory =>
+      _sqlite3_data_directory.value;
+
+  set sqlite3_data_directory(ffi.Pointer<ffi.Int8> value) =>
+      _sqlite3_data_directory.value = value;
 
   /// CAPI3REF: Win32 Specific Interface
   ///

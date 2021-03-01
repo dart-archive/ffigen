@@ -3,7 +3,7 @@
 # BSD-style license that can be found in the LICENSE file.
 
 name: ffigen
-version: 2.0.0-dev.3
+version: 2.0.0-dev.4
 homepage: https://github.com/dart-lang/ffigen
 description: Experimental generator for FFI bindings, using LibClang to parse C header files.
 

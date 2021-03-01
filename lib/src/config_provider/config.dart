@@ -51,6 +51,10 @@ class Config {
   Declaration get unnamedEnumConstants => _unnamedEnumConstants;
   late Declaration _unnamedEnumConstants;
 
+  /// Declaration config for Globals.
+  Declaration get globals => _globals;
+  late Declaration _globals;
+
   /// Declaration config for Macro constants.
   Declaration get macroDecl => _macroDecl;
   late Declaration _macroDecl;
@@ -221,6 +225,15 @@ class Config {
         defaultValue: () => Declaration(),
         extractedResult: (dynamic result) =>
             _unnamedEnumConstants = result as Declaration,
+      ),
+      strings.globals: Specification<Declaration>(
+        requirement: Requirement.no,
+        validator: declarationConfigValidator,
+        extractor: declarationConfigExtractor,
+        defaultValue: () => Declaration(),
+        extractedResult: (dynamic result) {
+          _globals = result as Declaration;
+        },
       ),
       strings.macros: Specification<Declaration>(
         requirement: Requirement.no,

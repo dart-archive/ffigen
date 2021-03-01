@@ -1,3 +1,6 @@
+# 2.0.0-dev.4
+- Add support for parsing and generating globals.
+
 # 2.0.0-dev.3
 - Removed the usage of `--no-sound-null-safety` flag.
 
