@@ -41,7 +41,8 @@ ${strings.headers}:
           expected.getBindingAsString('func2'));
     });
     test('Struct2 nested struct member', () {
-      expect((actual.getBinding('Struct2') as Struc).members.isEmpty, true);
+      expect(actual.getBindingAsString('Struct2'),
+          expected.getBindingAsString('Struct2'));
     });
     test('Struct3 flexible array member', () {
       expect((actual.getBinding('Struct3') as Struc).members.isEmpty, true);
@@ -53,7 +54,13 @@ ${strings.headers}:
 }
 
 Library expectedLibrary() {
-  final struc2 = Struc(name: 'Struct2', members: []);
+  final struc1 = Struc(name: 'Struct1', members: []);
+  final struc2 = Struc(name: 'Struct2', members: [
+    Member(
+      name: 'a',
+      type: Type.struct(struc1),
+    ),
+  ]);
   final struc3 = Struc(name: 'Struct3', members: []);
   return Library(
     name: 'Bindings',
@@ -84,7 +91,12 @@ Library expectedLibrary() {
           SupportedNativeType.Void,
         ),
       ),
-      Struc(name: 'Struct4'),
+      Struc(name: 'Struct4', members: [
+        Member(
+          name: 'a',
+          type: Type.struct(struc1),
+        ),
+      ]),
     ],
   );
 }
