@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'code_generator_test.dart' as code_generator_test;
+import 'code_generator_tests/code_generator_test.dart' as code_generator_test;
 import 'collision_tests/decl_decl_collision_test.dart'
     as collision_tests_decl_decl_collision_test;
 import 'collision_tests/reserved_keyword_collision_test.dart'
@@ -19,6 +19,8 @@ import 'header_parser_tests/function_n_struct_test.dart'
     as header_parser_tests_function_n_struct_test;
 import 'header_parser_tests/functions_test.dart'
     as header_parser_tests_functions_test;
+import 'header_parser_tests/globals_test.dart'
+    as header_parser_tests_globals_test;
 import 'header_parser_tests/macros_test.dart'
     as header_parser_tests_macros_test;
 import 'header_parser_tests/native_func_typedef_test.dart'
@@ -43,6 +45,7 @@ void main() {
   collision_tests_reserved_keyword_collision_test.main();
   header_parser_tests_dart_handle_test.main();
   header_parser_tests_functions_test.main();
+  header_parser_tests_globals_test.main();
   header_parser_tests_macros_test.main();
   header_parser_tests_function_n_struct_test.main();
   header_parser_tests_native_func_typedef_test.main();

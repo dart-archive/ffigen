@@ -62,6 +62,7 @@ ${strings.compilerOpts}: '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/
 }
 
 Library expectedLibrary() {
+  final globalStruc = Struc(name: 'EmptyStruct');
   return Library(
     name: 'Bindings',
     bindings: [
@@ -70,6 +71,8 @@ Library expectedLibrary() {
       Global(
           type: Type.pointer(Type.nativeType(SupportedNativeType.Int32)),
           name: 'aGlobalPointer'),
+      globalStruc,
+      Global(name: 'globalStruct', type: Type.struct(globalStruc)),
     ],
   );
 }

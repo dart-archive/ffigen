@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:ffi';
-import 'dart:isolate';
 
 import 'package:ffigen/src/code_generator.dart' show Constant;
 import 'package:ffigen/src/config_provider.dart' show Config;

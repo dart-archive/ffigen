@@ -1,3 +1,6 @@
+# 2.0.0-dev.5
+- Use `Opaque` for representing empty `Struct`s.
+
 # 2.0.0-dev.4
 - Add support for parsing and generating globals.
 

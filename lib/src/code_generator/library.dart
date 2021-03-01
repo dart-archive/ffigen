@@ -110,6 +110,7 @@ class Library {
             runInShell: Platform.isWindows);
     if (result.stderr.toString().isNotEmpty) {
       _logger.severe(result.stderr);
+      throw FormatException('Unable to format generated file: $path.');
     }
   }
 

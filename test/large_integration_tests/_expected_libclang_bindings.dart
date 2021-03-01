@@ -5045,13 +5045,13 @@ class CXStringSet extends ffi.Struct {
   external int Count;
 }
 
-class CXVirtualFileOverlayImpl extends ffi.Struct {}
+class CXVirtualFileOverlayImpl extends ffi.Opaque {}
 
-class CXModuleMapDescriptorImpl extends ffi.Struct {}
+class CXModuleMapDescriptorImpl extends ffi.Opaque {}
 
-class CXTargetInfoImpl extends ffi.Struct {}
+class CXTargetInfoImpl extends ffi.Opaque {}
 
-class CXTranslationUnitImpl extends ffi.Struct {}
+class CXTranslationUnitImpl extends ffi.Opaque {}
 
 /// Provides the contents of a file that has not yet been saved to disk.
 class CXUnsavedFile extends ffi.Struct {
@@ -6333,7 +6333,7 @@ abstract class CXTLSKind {
   static const int CXTLS_Static = 2;
 }
 
-class CXCursorSetImpl extends ffi.Struct {}
+class CXCursorSetImpl extends ffi.Opaque {}
 
 /// Describes the kind of type
 abstract class CXTypeKind {
