@@ -15,6 +15,9 @@ ffigen:
   output: 'generated_bindings.dart'
   sort: true
 
+  # This is required if LLVM can't be found in default locations by ffigen.
+  # llvm-lib: '/usr/local/opt/llvm/lib'
+
   # Bash style Glob matching is also supported.
   # TODO(11): Globs dont work on windows if they begin with '.' or '..'.
   headers:

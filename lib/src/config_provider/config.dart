@@ -20,6 +20,10 @@ final _logger = Logger('ffigen.config_provider.config');
 ///
 /// Handles validation, extraction of confiurations from yaml file.
 class Config {
+  /// Location for llvm/lib folder.
+  String get libclangDylib => _libclangDylib;
+  late String _libclangDylib;
+
   /// output file name.
   String get output => _output;
   late String _output;
@@ -156,6 +160,13 @@ class Config {
   /// Key: Name, Value: [Specification]
   Map<String, Specification> _getSpecs() {
     return <String, Specification>{
+      strings.llvmLib: Specification<String>(
+        requirement: Requirement.no,
+        validator: llvmLibValidator,
+        extractor: llvmLibExtractor,
+        defaultValue: () => findDylibAtDefaultLocations(),
+        extractedResult: (dynamic result) => _libclangDylib = result as String,
+      ),
       strings.output: Specification<String>(
         requirement: Requirement.yes,
         validator: outputValidator,

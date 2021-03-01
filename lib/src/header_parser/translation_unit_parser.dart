@@ -19,17 +19,16 @@ import 'utils.dart';
 
 final _logger = Logger('ffigen.header_parser.translation_unit_parser');
 
-Set<Binding>? _bindings;
+late Set<Binding> _bindings;
 
 /// Parses the translation unit and returns the generated bindings.
-Set<Binding>? parseTranslationUnit(
-    Pointer<clang_types.CXCursor> translationUnitCursor) {
+Set<Binding> parseTranslationUnit(clang_types.CXCursor translationUnitCursor) {
   _bindings = {};
-  final resultCode = clang.clang_visitChildren_wrap(
+  final resultCode = clang.clang_visitChildren(
     translationUnitCursor,
     Pointer.fromFunction(
         _rootCursorVisitor, clang_types.CXChildVisitResult.CXChildVisit_Break),
-    uid,
+    nullptr,
   );
 
   visitChildrenResultChecker(resultCode);
@@ -38,12 +37,12 @@ Set<Binding>? parseTranslationUnit(
 }
 
 /// Child visitor invoked on translationUnitCursor [CXCursorKind.CXCursor_TranslationUnit].
-int _rootCursorVisitor(Pointer<clang_types.CXCursor> cursor,
-    Pointer<clang_types.CXCursor> parent, Pointer<Void> clientData) {
+int _rootCursorVisitor(clang_types.CXCursor cursor, clang_types.CXCursor parent,
+    Pointer<Void> clientData) {
   try {
     if (shouldIncludeRootCursor(cursor.sourceFileName())) {
       _logger.finest('rootCursorVisitor: ${cursor.completeStringRepr()}');
-      switch (clang.clang_getCursorKind_wrap(cursor)) {
+      switch (clang.clang_getCursorKind(cursor)) {
         case clang_types.CXCursorKind.CXCursor_FunctionDecl:
           addToBindings(parseFunctionDeclaration(cursor));
           break;
@@ -66,9 +65,6 @@ int _rootCursorVisitor(Pointer<clang_types.CXCursor> cursor,
       _logger.finest(
           'rootCursorVisitor:(not included) ${cursor.completeStringRepr()}');
     }
-
-    cursor.dispose();
-    parent.dispose();
   } catch (e, s) {
     _logger.severe(e);
     _logger.severe(s);
@@ -81,6 +77,6 @@ int _rootCursorVisitor(Pointer<clang_types.CXCursor> cursor,
 void addToBindings(Binding? b) {
   if (b != null) {
     // This is a set, and hence will not have duplicates.
-    _bindings!.add(b);
+    _bindings.add(b);
   }
 }

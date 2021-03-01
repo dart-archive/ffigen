@@ -21,11 +21,11 @@ import '../utils.dart';
 final _logger = Logger('ffigen.header_parser.macro_parser');
 
 /// Adds a macro definition to be parsed later.
-void saveMacroDefinition(Pointer<clang_types.CXCursor> cursor) {
+void saveMacroDefinition(clang_types.CXCursor cursor) {
   final macroUsr = cursor.usr();
   final originalMacroName = cursor.spelling();
-  if (clang.clang_Cursor_isMacroBuiltin_wrap(cursor) == 0 &&
-      clang.clang_Cursor_isMacroFunctionLike_wrap(cursor) == 0 &&
+  if (clang.clang_Cursor_isMacroBuiltin(cursor) == 0 &&
+      clang.clang_Cursor_isMacroFunctionLike(cursor) == 0 &&
       shouldIncludeMacro(macroUsr, originalMacroName)) {
     // Parse macro only if it's not builtin or function-like.
     _logger.fine(
@@ -76,17 +76,16 @@ List<Constant>? parseSavedMacros() {
   if (tu == nullptr) {
     _logger.severe('Unable to parse Macros.');
   } else {
-    final rootCursor = clang.clang_getTranslationUnitCursor_wrap(tu);
+    final rootCursor = clang.clang_getTranslationUnitCursor(tu);
 
-    final resultCode = clang.clang_visitChildren_wrap(
+    final resultCode = clang.clang_visitChildren(
       rootCursor,
       Pointer.fromFunction(_macroVariablevisitor,
           clang_types.CXChildVisitResult.CXChildVisit_Break),
-      uid,
+      nullptr,
     );
 
     visitChildrenResultChecker(resultCode);
-    rootCursor.dispose();
   }
 
   clang.clang_disposeTranslationUnit(tu);
@@ -98,14 +97,14 @@ List<Constant>? parseSavedMacros() {
 }
 
 /// Child visitor invoked on translationUnitCursor for parsing macroVariables.
-int _macroVariablevisitor(Pointer<clang_types.CXCursor> cursor,
-    Pointer<clang_types.CXCursor> parent, Pointer<Void> clientData) {
+int _macroVariablevisitor(clang_types.CXCursor cursor,
+    clang_types.CXCursor parent, Pointer<Void> clientData) {
   Constant? constant;
   try {
     if (isFromGeneratedFile(cursor) &&
         _macroVarNames.contains(cursor.spelling()) &&
-        cursor.kind() == clang_types.CXCursorKind.CXCursor_VarDecl) {
-      final e = clang.clang_Cursor_Evaluate_wrap(cursor);
+        cursor.kind == clang_types.CXCursorKind.CXCursor_VarDecl) {
+      final e = clang.clang_Cursor_Evaluate(cursor);
       final k = clang.clang_EvalResult_getKind(e);
       _logger.fine('macroVariablevisitor: ${cursor.completeStringRepr()}');
 
@@ -151,8 +150,6 @@ int _macroVariablevisitor(Pointer<clang_types.CXCursor> cursor,
         _bindings!.add(constant);
       }
     }
-    cursor.dispose();
-    parent.dispose();
   } catch (e, s) {
     _logger.severe(e);
     _logger.severe(s);
@@ -162,7 +159,7 @@ int _macroVariablevisitor(Pointer<clang_types.CXCursor> cursor,
 }
 
 /// Returns true if cursor is from generated file.
-bool isFromGeneratedFile(Pointer<clang_types.CXCursor> cursor) {
+bool isFromGeneratedFile(clang_types.CXCursor cursor) {
   final s = cursor.sourceFileName();
   return p.basename(s) == _generatedFileBaseName;
 }

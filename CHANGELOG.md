@@ -1,3 +1,10 @@
+# 2.0.0-dev.3
+- Removed the usage of `--no-sound-null-safety` flag.
+
+# 2.0.0-dev.2
+- Removed setup phase for ffigen. Added new optional config key `llvm-lib`
+to specify path to `llvm/lib` folder.
+
 # 2.0.0-dev.1
 - Added support for passing and returning struct by value in functions.
 
