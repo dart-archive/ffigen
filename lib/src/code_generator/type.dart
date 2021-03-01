@@ -162,6 +162,10 @@ class Type {
   bool get isPrimitive =>
       (broadType == BroadType.NativeType || broadType == BroadType.Boolean);
 
+  /// Returns true if the type is a [Struc] and is incomplete.
+  bool get isIncompleteStruct =>
+      broadType == BroadType.Struct && struc!.isInComplete;
+
   String getCType(Writer w) {
     switch (broadType) {
       case BroadType.NativeType:

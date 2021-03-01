@@ -5,6 +5,7 @@
 import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
+import 'package:ffigen/src/strings.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
@@ -22,6 +23,16 @@ class _ParsedStruc {
   bool arrayMember = false;
   bool bitFieldMember = false;
   bool dartHandleMember = false;
+  bool incompleteStructMember = false;
+
+  bool get isInComplete =>
+      unimplementedMemberType ||
+      flexibleArrayMember ||
+      (arrayMember && !config.arrayWorkaround) ||
+      bitFieldMember ||
+      (dartHandleMember && config.useDartHandle) ||
+      incompleteStructMember;
+
   _ParsedStruc();
 }
 
@@ -83,38 +94,44 @@ void _setStructMembers(Pointer<clang_types.CXCursor> cursor) {
 
   visitChildrenResultChecker(resultCode);
 
-  // Returning null to exclude the struct members as it has a struct by value field.
   if (_stack.top.arrayMember && !config.arrayWorkaround) {
     _logger.fine(
         '---- Removed Struct members, reason: struct has array members ${cursor.completeStringRepr()}');
     _logger.warning(
         'Removed All Struct Members from: ${_stack.top.struc!.name}(${_stack.top.struc!.originalName}), Array members not supported');
-    return _stack.top.struc!.members.clear();
   } else if (_stack.top.unimplementedMemberType) {
     _logger.fine(
         '---- Removed Struct members, reason: member with unimplementedtype ${cursor.completeStringRepr()}');
     _logger.warning(
         'Removed All Struct Members from ${_stack.top.struc!.name}(${_stack.top.struc!.originalName}), struct member has an unsupported type.');
-    return _stack.top.struc!.members.clear();
   } else if (_stack.top.flexibleArrayMember) {
     _logger.fine(
         '---- Removed Struct members, reason: incomplete array member ${cursor.completeStringRepr()}');
     _logger.warning(
         'Removed All Struct Members from ${_stack.top.struc!.name}(${_stack.top.struc!.originalName}), Flexible array members not supported.');
-    return _stack.top.struc!.members.clear();
   } else if (_stack.top.bitFieldMember) {
     _logger.fine(
         '---- Removed Struct members, reason: bitfield members ${cursor.completeStringRepr()}');
     _logger.warning(
         'Removed All Struct Members from ${_stack.top.struc!.name}(${_stack.top.struc!.originalName}), Bit Field members not supported.');
-    return _stack.top.struc!.members.clear();
-  } else if (_stack.top.dartHandleMember) {
+  } else if (_stack.top.dartHandleMember && config.useDartHandle) {
     _logger.fine(
         '---- Removed Struct members, reason: Dart_Handle member. ${cursor.completeStringRepr()}');
     _logger.warning(
         'Removed All Struct Members from ${_stack.top.struc!.name}(${_stack.top.struc!.originalName}), Dart_Handle member not supported.');
-    return _stack.top.struc!.members.clear();
+  } else if (_stack.top.incompleteStructMember) {
+    _logger.fine(
+        '---- Removed Struct members, reason: Incomplete Nested Struct member. ${cursor.completeStringRepr()}');
+    _logger.warning(
+        'Removed All Struct Members from ${_stack.top.struc!.name}(${_stack.top.struc!.originalName}), Incomplete Nested Struct member not supported.');
   }
+
+  // Clear all struct members if struct is incomplete.
+  if (_stack.top.isInComplete) {
+    _stack.top.struc!.members.clear();
+  }
+
+  _stack.top.struc!.isInComplete = _stack.top.isInComplete;
 }
 
 /// Visitor for the struct cursor [CXCursorKind.CXCursor_StructDecl].
@@ -137,6 +154,8 @@ int _structMembersVisitor(Pointer<clang_types.CXCursor> cursor,
         _stack.top.bitFieldMember = true;
       } else if (mt.broadType == BroadType.Handle) {
         _stack.top.dartHandleMember = true;
+      } else if (mt.isIncompleteStruct) {
+        _stack.top.incompleteStructMember = true;
       }
 
       if (mt.getBaseType().broadType == BroadType.Unimplemented) {

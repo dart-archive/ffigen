@@ -49,3 +49,24 @@ struct Struct1 *getStruct1()
     s->data[2][0][1] = 6;
     return s;
 }
+
+struct Struct3
+{
+    int a;
+    int b;
+    int c;
+};
+
+struct Struct3 Function1StructReturnByValue(int a, int b, int c)
+{
+    struct Struct3 s;
+    s.a = a;
+    s.b = b;
+    s.c = c;
+    return s;
+}
+
+int Function1StructPassByValue(struct Struct3 sum_a_b_c)
+{
+    return sum_a_b_c.a + sum_a_b_c.b + sum_a_b_c.c;
+}

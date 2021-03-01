@@ -18,7 +18,7 @@ final _logger = Logger('ffigen.header_parser.functiondecl_parser');
 /// Holds temporary information regarding [Func] while parsing.
 class _ParserFunc {
   Func? func;
-  bool structByValueParameter = false;
+  bool incompleteStructParameter = false;
   bool unimplementedParameterType = false;
   _ParserFunc();
 }
@@ -28,8 +28,6 @@ final _stack = Stack<_ParserFunc>();
 /// Parses a function declaration.
 Func? parseFunctionDeclaration(Pointer<clang_types.CXCursor> cursor) {
   _stack.push(_ParserFunc());
-  _stack.top.structByValueParameter = false;
-  _stack.top.unimplementedParameterType = false;
 
   final funcUsr = cursor.usr();
   final funcName = cursor.spelling();
@@ -39,12 +37,11 @@ Func? parseFunctionDeclaration(Pointer<clang_types.CXCursor> cursor) {
     final rt = _getFunctionReturnType(cursor);
     final parameters = _getParameters(cursor, funcName);
 
-    //TODO(3): Remove this when support for Structs by value arrives.
-    if (rt.broadType == BroadType.Struct || _stack.top.structByValueParameter) {
+    if (rt.isIncompleteStruct || _stack.top.incompleteStructParameter) {
       _logger.fine(
-          '---- Removed Function, reason: struct pass/return by value: ${cursor.completeStringRepr()}');
+          '---- Removed Function, reason: Incomplete struct pass/return by value: ${cursor.completeStringRepr()}');
       _logger.warning(
-          "Skipped Function '$funcName', struct pass/return by value not supported.");
+          "Skipped Function '$funcName', Incomplete struct pass/return by value not supported.");
       return _stack
           .pop()
           .func; // Returning null so that [addToBindings] function excludes this.
@@ -95,10 +92,11 @@ List<Parameter> _getParameters(
     _logger.finer('===== parameter: ${paramCursor.completeStringRepr()}');
 
     final pt = _getParameterType(paramCursor);
-    //TODO(3): Remove this when support for Structs by value arrives.
-    if (pt.broadType == BroadType.Struct) {
-      _stack.top.structByValueParameter = true;
+    if (pt.isIncompleteStruct) {
+      _stack.top.incompleteStructParameter = true;
     } else if (pt.getBaseType().broadType == BroadType.Unimplemented) {
+      _logger
+          .finer('Unimplemented type: ${pt.getBaseType().unimplementedReason}');
       _stack.top.unimplementedParameterType = true;
     }
 
