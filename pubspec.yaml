@@ -3,24 +3,24 @@
 # BSD-style license that can be found in the LICENSE file.
 
 name: ffigen
-version: 2.0.0-dev.6
+version: 2.0.1
 homepage: https://github.com/dart-lang/ffigen
-description: Experimental generator for FFI bindings, using LibClang to parse C header files.
+description: Generator for FFI bindings, using LibClang to parse C header files.
 
 environment:
-  sdk: '>=2.12.0-237.0.dev <3.0.0'
+  sdk: '>=2.12.0-259.9.beta <3.0.0'
 
 dependencies:
-  ffi: ^0.2.0-nullsafety.1
-  yaml: ^3.0.0-nullsafety.0
-  path: ^1.8.0-nullsafety.3
-  quiver: ^3.0.0-nullsafety.2
-  args: ^1.6.0        # Not available
-  logging: ^0.11.4    # test->coverage->logging
-  cli_util: ^0.2.0    # test->analyzer->cli_util
-  glob: ^1.0.3        # test->analyzer->glob
-  pub_semver: ^1.4.4  # test->analyzer->pub_semver
+  ffi: ^1.0.0
+  yaml: ^3.0.0
+  path: ^1.8.0
+  quiver: ^3.0.0
+  args: ^2.0.0
+  logging: ^1.0.0
+  cli_util: ^0.3.0
+  glob: ^2.0.0
+  file: ^6.0.0
 
 dev_dependencies:
-  pedantic: ^1.10.0-nullsafety.3
-  test: ^1.16.0-nullsafety.13
+  pedantic: ^1.10.0
+  test: ^1.16.2

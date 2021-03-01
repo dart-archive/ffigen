@@ -1,3 +1,9 @@
+# 2.0.1
+- Switch to preview release of `package:quiver`.
+
+# 2.0.0
+- Upgraded all dependencies. `package:ffigen` now runs with sound null safety.
+
 # 2.0.0-dev.6
 - Functions marked `inline` are now skipped.
 

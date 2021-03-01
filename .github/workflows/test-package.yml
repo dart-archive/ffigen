@@ -13,14 +13,13 @@ env:
   PUB_ENVIRONMENT: bot.github
 
 jobs:
-  # Check code formatting and static analysis on a single OS (linux)
-  # against Dart dev.
+  # Check code formatting and static analysis on a single OS (linux).
   analyze:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        sdk: [2.12.0-237.0.dev] # TODO(127): Revert to stable.
+        sdk: [2.12.0-259.9.beta] # TODO(127): Revert to stable.
     steps:
       - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v1.0
@@ -33,7 +32,7 @@ jobs:
         run: dart format --output=none --set-exit-if-changed .
         if: always() && steps.install.outcome == 'success'
       - name: Analyze code
-        run: dart analyze # --fatal-infos # Removed till we stop using legacy libraries.
+        run: dart analyze --fatal-infos
         if: always() && steps.install.outcome == 'success'
 
   test:
@@ -44,7 +43,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v1.0
         with:
-          sdk: 2.12.0-237.0.dev # TODO(127): Revert to stable.
+          sdk: 2.12.0-259.9.beta # TODO(127): Revert to stable.
       - name: Install dependencies
         run: dart pub get
       - name: Install libclang-10-dev
@@ -52,7 +51,7 @@ jobs:
       - name: Build test dylib
         run: cd test/native_test && dart build_test_dylib.dart && cd ../..
       - name: Run VM tests
-        run: dart --no-sound-null-safety test --platform vm
+        run: dart test --platform vm
       - name: Collect coverage
         run: ./tool/coverage.sh
       - name: Upload coverage

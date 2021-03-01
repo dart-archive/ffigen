@@ -5,6 +5,7 @@
 import 'dart:io';
 
 import 'package:ffigen/src/code_generator.dart';
+import 'package:file/local.dart';
 import 'package:glob/glob.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
@@ -122,7 +123,8 @@ Headers headersExtractor(dynamic yamlConfig) {
           _logger.fine('Adding header/file: $headerGlob');
         } else {
           final glob = Glob(headerGlob);
-          for (final file in glob.listSync(followLinks: true)) {
+          for (final file in glob.listFileSystemSync(const LocalFileSystem(),
+              followLinks: true)) {
             final fixedPath = _replaceSeparators(file.path);
             entryPoints.add(fixedPath);
             _logger.fine('Adding header/file: ${fixedPath}');
