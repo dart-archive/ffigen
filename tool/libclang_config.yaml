@@ -101,3 +101,4 @@ functions:
     - clang_Cursor_isAnonymousRecordDecl
     - clang_getCursorUSR
     - clang_getFieldDeclBitWidth
+    - clang_Cursor_isFunctionInlined
