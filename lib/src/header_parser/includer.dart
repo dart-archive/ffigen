@@ -47,6 +47,16 @@ bool shouldIncludeUnnamedEnumConstant(String usr, String name) {
   }
 }
 
+bool shouldIncludeGlobalVar(String usr, String name) {
+  if (bindingsIndex.isSeenGlobalVar(usr) || name == '') {
+    return false;
+  } else if (config.globals.shouldInclude(name)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 bool shouldIncludeMacro(String usr, String name) {
   if (bindingsIndex.isSeenMacro(usr) || name == '') {
     return false;

@@ -436,14 +436,23 @@ final ffi.DynamicLibrary _dylib;
 /// The symbols are looked up in [dynamicLibrary].
 Bindings(ffi.DynamicLibrary dynamicLibrary): _dylib = dynamicLibrary;
 
-ffi.Pointer<ffi.Int32> _test1;
-int get test1 => (_test1 ??= _dylib.lookup<ffi.Int32>('test1')).value;
+late final ffi.Pointer<int> _test1 = _dylib.lookup<ffi.Int32>('test1');
 
-ffi.Pointer<ffi.Pointer<ffi.Float>> _test2;
-ffi.Pointer<ffi.Float> get test2 => (_test2 ??= _dylib.lookup<ffi.Pointer<ffi.Float>>('test2')).value;
+int get test1 => _test1.value;
 
-ffi.Pointer<ffi.Pointer<Some>> _test5;
-ffi.Pointer<Some> get test5 => (_test5 ??= _dylib.lookup<ffi.Pointer<Some>>('test5')).value;
+set test1(int value) => _test1.value = value;
+
+late final ffi.Pointer<ffi.Pointer<ffi.Float>> _test2 = _dylib.lookup<ffi.Pointer<ffi.Float>>('test2');
+
+ffi.Pointer<ffi.Float> get test2 => _test2.value;
+
+set test2(ffi.Pointer<ffi.Float> value) => _test2.value = value;
+
+late final ffi.Pointer<ffi.Pointer<Some>> _test5 = _dylib.lookup<ffi.Pointer<Some>>('test5');
+
+ffi.Pointer<Some> get test5 => _test5.value;
+
+set test5(ffi.Pointer<Some> value) => _test5.value = value;
 
 }
 

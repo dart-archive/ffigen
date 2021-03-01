@@ -39,6 +39,7 @@ const functions = 'functions';
 const structs = 'structs';
 const enums = 'enums';
 const unnamedEnums = 'unnamed-enums';
+const globals = 'globals';
 const macros = 'macros';
 
 // Sub-fields of Declarations.
