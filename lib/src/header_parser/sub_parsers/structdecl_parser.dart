@@ -140,9 +140,10 @@ void _setStructMembers(clang_types.CXCursor cursor) {
     _stack.top.struc!.members.clear();
   }
 
-  // Since C can allow empty structs, We need to mark a struct incomplete if 
-  // it has no members.
-  _stack.top.struc!.isInComplete = _stack.top.isInComplete || _stack.top.struc!.members.isEmpty;
+  // C allow empty structs, but it's undefined behaviour at runtine. So we need
+  // to mark a struct incomplete if it has no members.
+  _stack.top.struc!.isInComplete =
+      _stack.top.isInComplete || _stack.top.struc!.members.isEmpty;
 }
 
 /// Visitor for the struct cursor [CXCursorKind.CXCursor_StructDecl].
@@ -158,25 +159,20 @@ int _structMembersVisitor(clang_types.CXCursor cursor,
       if (mt.broadType == BroadType.ConstantArray) {
         _stack.top.arrayMember = true;
       }
-      
       if (mt.broadType == BroadType.IncompleteArray) {
         // TODO(68): Structs with flexible Array Members are not supported.
         _stack.top.flexibleArrayMember = true;
       }
-      
       if (clang.clang_getFieldDeclBitWidth(cursor) != -1) {
         // TODO(84): Struct with bitfields are not suppoorted.
         _stack.top.bitFieldMember = true;
       }
-      
       if (mt.broadType == BroadType.Handle) {
         _stack.top.dartHandleMember = true;
       }
-      
       if (mt.isIncompleteStruct) {
         _stack.top.incompleteStructMember = true;
       }
-
       if (mt.getBaseType().broadType == BroadType.Unimplemented) {
         _stack.top.unimplementedMemberType = true;
       }
