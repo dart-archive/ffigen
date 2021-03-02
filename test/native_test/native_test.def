@@ -3,6 +3,7 @@
 ; BSD-style license that can be found in the LICENSE file.
 
 EXPORTS
+Function1Bool
 Function1Uint8
 Function1Uint16
 Function1Uint32
@@ -15,3 +16,5 @@ Function1IntPtr
 Function1Float
 Function1Double
 getStruct1
+Function1StructReturnByValue
+Function1StructPassByValue

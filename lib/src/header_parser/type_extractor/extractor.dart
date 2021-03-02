@@ -35,16 +35,17 @@ Type getCodeGenType(clang_types.CXType cxtype, {String? parentName}) {
       }
       return Type.pointer(s);
     case clang_types.CXTypeKind.CXType_Typedef:
-      final spelling = cxtype.spelling();
+      final spelling = clang.clang_getTypedefName(cxtype).toStringAndDispose();
       if (config.typedefNativeTypeMappings.containsKey(spelling)) {
         _logger.fine('  Type Mapped from typedef-map');
-        return Type.nativeType(config.typedefNativeTypeMappings[spelling]);
+        return Type.nativeType(config.typedefNativeTypeMappings[spelling]!);
       }
       // Get name from supported typedef name if config allows.
       if (config.useSupportedTypedefs) {
         if (suportedTypedefToSuportedNativeType.containsKey(spelling)) {
           _logger.fine('  Type Mapped from supported typedef');
-          return Type.nativeType(suportedTypedefToSuportedNativeType[spelling]);
+          return Type.nativeType(
+              suportedTypedefToSuportedNativeType[spelling]!);
         }
       }
 
@@ -52,7 +53,7 @@ Type getCodeGenType(clang_types.CXType cxtype, {String? parentName}) {
       final ct = clang.clang_getTypedefDeclUnderlyingType(
           clang.clang_getTypeDeclaration(cxtype));
 
-      final s = getCodeGenType(ct, parentName: parentName ?? cxtype.spelling());
+      final s = getCodeGenType(ct, parentName: parentName ?? spelling);
       return s;
     case clang_types.CXTypeKind.CXType_Elaborated:
       final et = clang.clang_Type_getNamedType(cxtype);
@@ -86,7 +87,7 @@ Type getCodeGenType(clang_types.CXType cxtype, {String? parentName}) {
     default:
       if (cxTypeKindToSupportedNativeTypes.containsKey(kind)) {
         return Type.nativeType(
-          cxTypeKindToSupportedNativeTypes[kind],
+          cxTypeKindToSupportedNativeTypes[kind]!,
         );
       } else {
         _logger.fine(
@@ -113,11 +114,11 @@ Type _extractfromRecord(clang_types.CXType cxtype, String? parentName) {
       // Also add a struct binding, if its unseen.
       // TODO(23): Check if we should auto add struct.
       if (bindingsIndex.isSeenStruct(structUsr)) {
-        type = Type.struct(bindingsIndex.getSeenStruct(structUsr));
+        type = Type.struct(bindingsIndex.getSeenStruct(structUsr)!);
       } else {
         final struc = parseStructDeclaration(cursor,
             name: structName, ignoreFilter: true);
-        type = Type.struct(struc);
+        type = Type.struct(struc!);
 
         // Add to bindings if it's not Dart_Handle.
         if (!(config.useDartHandle && structUsr == strings.dartHandleUsr)) {
@@ -176,5 +177,5 @@ Type _extractFromFunctionProto(clang_types.CXType cxtype, String? parentName) {
     }
   }
 
-  return Type.nativeFunc(typedefC);
+  return Type.nativeFunc(typedefC!);
 }

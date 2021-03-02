@@ -14,3 +14,29 @@ struct Struct1
     int b;
     struct Struct2 *struct2;
 };
+
+struct Struct3
+{
+    int a;
+    // An unnamed struct.
+    struct
+    {
+        int a;
+        int b;
+    } b;
+};
+
+struct EmptyStruct{
+};
+
+struct Struct4{
+    int a;
+    // Incomplete struct inside a struct.
+    struct EmptyStruct b;
+};
+
+struct Struct5{
+    int a;
+    // Incomplete struct array.
+    struct EmptyStruct b[3];
+};

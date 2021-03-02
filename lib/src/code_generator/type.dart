@@ -100,13 +100,13 @@ class Type {
   factory Type.pointer(Type child) {
     return Type._(broadType: BroadType.Pointer, child: child);
   }
-  factory Type.struct(Struc? struc) {
+  factory Type.struct(Struc struc) {
     return Type._(broadType: BroadType.Struct, struc: struc);
   }
-  factory Type.nativeFunc(Typedef? nativeFunc) {
+  factory Type.nativeFunc(Typedef nativeFunc) {
     return Type._(broadType: BroadType.NativeFunction, nativeFunc: nativeFunc);
   }
-  factory Type.nativeType(SupportedNativeType? nativeType) {
+  factory Type.nativeType(SupportedNativeType nativeType) {
     return Type._(broadType: BroadType.NativeType, nativeType: nativeType);
   }
   factory Type.constantArray(int length, Type elementType) {
@@ -164,7 +164,9 @@ class Type {
 
   /// Returns true if the type is a [Struc] and is incomplete.
   bool get isIncompleteStruct =>
-      broadType == BroadType.Struct && struc!.isInComplete;
+      (broadType == BroadType.Struct && struc != null && struc!.isInComplete) ||
+      (broadType == BroadType.ConstantArray &&
+          getBaseArrayType().isIncompleteStruct);
 
   String getCType(Writer w) {
     switch (broadType) {

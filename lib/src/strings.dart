@@ -132,7 +132,7 @@ const linuxDylibLocations = [
   '/usr/lib/llvm-11/lib/'
 ];
 const windowsDylibLocations = [
-  r'C:\Program Files\LLVM\lib',
+  r'C:\Program Files\LLVM\bin\',
 ];
 const macOsDylibLocations = [
   '/usr/local/opt/llvm/lib/',

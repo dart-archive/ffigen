@@ -54,7 +54,17 @@ Struc? parseStructDeclaration(
   final structName = name ?? cursor.spelling();
 
   if (structName.isEmpty) {
-    _logger.finest('unnamed structure or typedef structure declaration');
+    if (ignoreFilter) {
+      // This struct is defined inside some other struct and hence must be generated.
+      _stack.top.struc = Struc(
+        name: incrementalNamer.name('unnamedStruct'),
+        usr: structUsr,
+        dartDoc: getCursorDocComment(cursor),
+      );
+      _setStructMembers(cursor);
+    } else {
+      _logger.finest('unnamed structure or typedef structure declaration');
+    }
   } else if ((ignoreFilter || shouldIncludeStruct(structUsr, structName)) &&
       (!bindingsIndex.isSeenStruct(structUsr))) {
     _logger.fine(
@@ -130,7 +140,10 @@ void _setStructMembers(clang_types.CXCursor cursor) {
     _stack.top.struc!.members.clear();
   }
 
-  _stack.top.struc!.isInComplete = _stack.top.isInComplete;
+  // C allow empty structs, but it's undefined behaviour at runtine. So we need
+  // to mark a struct incomplete if it has no members.
+  _stack.top.struc!.isInComplete =
+      _stack.top.isInComplete || _stack.top.struc!.members.isEmpty;
 }
 
 /// Visitor for the struct cursor [CXCursorKind.CXCursor_StructDecl].
@@ -145,18 +158,21 @@ int _structMembersVisitor(clang_types.CXCursor cursor,
       final mt = cursor.type().toCodeGenType();
       if (mt.broadType == BroadType.ConstantArray) {
         _stack.top.arrayMember = true;
-      } else if (mt.broadType == BroadType.IncompleteArray) {
+      }
+      if (mt.broadType == BroadType.IncompleteArray) {
         // TODO(68): Structs with flexible Array Members are not supported.
         _stack.top.flexibleArrayMember = true;
-      } else if (clang.clang_getFieldDeclBitWidth(cursor) != -1) {
+      }
+      if (clang.clang_getFieldDeclBitWidth(cursor) != -1) {
         // TODO(84): Struct with bitfields are not suppoorted.
         _stack.top.bitFieldMember = true;
-      } else if (mt.broadType == BroadType.Handle) {
+      }
+      if (mt.broadType == BroadType.Handle) {
         _stack.top.dartHandleMember = true;
-      } else if (mt.isIncompleteStruct) {
+      }
+      if (mt.isIncompleteStruct) {
         _stack.top.incompleteStructMember = true;
       }
-
       if (mt.getBaseType().broadType == BroadType.Unimplemented) {
         _stack.top.unimplementedMemberType = true;
       }
