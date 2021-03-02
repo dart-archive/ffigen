@@ -1,3 +1,7 @@
+# 2.0.2
+- Fixed illegal use of `const` in name, crash due to unnamed inline structs and
+structs having `Opaque` members.
+
 # 2.0.1
 - Switch to preview release of `package:quiver`.
 
