@@ -18,7 +18,7 @@ final _logger = Logger('ffigen.header_parser.typedefdecl_parser');
 /// Holds temporary information regarding a typedef referenced [Binding]
 /// while parsing.
 ///
-/// Note:
+/// Notes:
 /// - Pointer to Typedefs structs are skipped if the struct is seen.
 /// - If there are multiple typedefs for a declaration (struct/enum), the last
 /// seen name is used.
