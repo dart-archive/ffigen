@@ -122,6 +122,7 @@ Library expectedLibrary() {
           ),
         ],
       ),
+      Struc(name: 'Struct3'),
     ],
   );
 }

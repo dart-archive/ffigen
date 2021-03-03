@@ -40,13 +40,13 @@ void func2(NTyperef1 *);
 
 typedef enum
 {
-    a=0
+    a = 0
 } AnonymousEnumInTypedef;
 
 // Name from global namespace is used.
 typedef enum _NamedEnumInTypedef
 {
-    b=0
+    b = 0
 } NamedEnumInTypedef;
 
 // Should be treated as IntPtr when used.
@@ -54,3 +54,8 @@ typedef char specified_type_as_IntPtr;
 typedef specified_type_as_IntPtr nesting_a_specified_type;
 
 void func3(specified_type_as_IntPtr, nesting_a_specified_type b);
+
+// Struct3 is used. `pStruct2` and `pStruct3` are ignored.
+typedef struct
+{
+} Struct2, Struct3, *pStruct2, *pStruct3;
