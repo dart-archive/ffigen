@@ -17,9 +17,25 @@ final _logger = Logger('ffigen.header_parser.typedefdecl_parser');
 
 /// Holds temporary information regarding a typedef referenced [Binding]
 /// while parsing.
+///
+/// Notes:
+/// - Pointer to Typedefs structs are skipped if the struct is seen.
+/// - If there are multiple typedefs for a declaration (struct/enum), the last
+/// seen name is used.
+/// - Typerefs are completely ignored.
+///
+/// Libclang marks them as following -
+/// ```C
+/// typedef struct A{
+///   int a
+/// } B, *pB; // Typedef(s).
+///
+/// typedef A D; // Typeref.
+/// ```
 class _ParsedTypedef {
   Binding? binding;
   String? typedefName;
+  bool typedefToPointer = false;
   _ParsedTypedef();
 }
 
@@ -28,6 +44,12 @@ final _stack = Stack<_ParsedTypedef>();
 /// Parses a typedef declaration.
 Binding? parseTypedefDeclaration(clang_types.CXCursor cursor) {
   _stack.push(_ParsedTypedef());
+
+  /// Check if typedef declaration is to a pointer.
+  _stack.top.typedefToPointer =
+      (clang.clang_getTypedefDeclUnderlyingType(cursor).kind ==
+          clang_types.CXTypeKind.CXType_Pointer);
+
   // Name of typedef.
   _stack.top.typedefName = cursor.spelling();
   final resultCode = clang.clang_visitChildren(
@@ -54,8 +76,15 @@ int _typedefdeclarationCursorVisitor(clang_types.CXCursor cursor,
 
     switch (clang.clang_getCursorKind(cursor)) {
       case clang_types.CXCursorKind.CXCursor_StructDecl:
-        _stack.top.binding =
-            parseStructDeclaration(cursor, name: _stack.top.typedefName);
+        if (_stack.top.typedefToPointer &&
+            bindingsIndex.isSeenStruct(cursor.usr())) {
+          // Skip a typedef pointer if struct is seen.
+          _stack.top.binding = bindingsIndex.getSeenStruct(cursor.usr());
+        } else {
+          // This will update the name of struct if already seen.
+          _stack.top.binding =
+              parseStructDeclaration(cursor, name: _stack.top.typedefName);
+        }
         break;
       case clang_types.CXCursorKind.CXCursor_EnumDecl:
         _stack.top.binding =
