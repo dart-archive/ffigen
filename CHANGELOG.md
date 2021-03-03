@@ -1,3 +1,6 @@
+# 2.0.3
+- Fixed issue where
+
 # 2.0.2
 - Fixed illegal use of `const` in name, crash due to unnamed inline structs and
 structs having `Opaque` members.
