@@ -1,5 +1,6 @@
 # 2.0.3
-- Fixed issue where
+- Ignore typedef to struct pointer when possible.
+- Recursively create directories for output file.
 
 # 2.0.2
 - Fixed illegal use of `const` in name, crash due to unnamed inline structs and
