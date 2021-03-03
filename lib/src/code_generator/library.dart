@@ -87,6 +87,7 @@ class Library {
   ///
   /// If format is true(default), 'dartfmt -w $PATH' will be called to format the generated file.
   void generateFile(File file, {bool format = true}) {
+    if (!file.existsSync()) file.createSync(recursive: true);
     file.writeAsStringSync(generate());
     if (format) {
       _dartFmt(file.path);
