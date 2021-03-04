@@ -47,6 +47,8 @@ const include = 'include';
 const exclude = 'exclude';
 const rename = 'rename';
 const memberRename = 'member-rename';
+const symbolAddress = 'symbol-address';
+
 const sizemap = 'size-map';
 const typedefmap = 'typedef-map';
 
