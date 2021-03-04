@@ -40,6 +40,7 @@ Global? parseVarDeclaration(clang_types.CXCursor cursor) {
     usr: usr,
     type: type,
     dartDoc: getCursorDocComment(cursor),
+    exposeSymbolAddress: config.functionDecl.shouldIncludeSymbolAddress(name),
   );
   bindingsIndex.addGlobalVarToSeen(usr, global);
   return global;

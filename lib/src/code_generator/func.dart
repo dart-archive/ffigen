@@ -31,6 +31,7 @@ import 'writer.dart';
 class Func extends LookUpBinding {
   final Type returnType;
   final List<Parameter> parameters;
+  final bool exposeSymbolAddress;
 
   /// [originalName] is looked up in dynamic library, if not
   /// provided, takes the value of [name].
@@ -41,6 +42,7 @@ class Func extends LookUpBinding {
     String? dartDoc,
     required this.returnType,
     List<Parameter>? parameters,
+    this.exposeSymbolAddress = false,
   })  : parameters = parameters ?? [],
         super(
           usr: usr,
@@ -85,7 +87,7 @@ class Func extends LookUpBinding {
 
   Typedef? _cType, _dartType;
   Typedef get cType => _cType ??= Typedef(
-        name: '_c_$name',
+        name: exposeSymbolAddress ? 'Native_$name' : '_c_$name',
         returnType: returnType,
         parameters: parameters,
         typedefType: TypedefType.C,
@@ -102,6 +104,8 @@ class Func extends LookUpBinding {
     final s = StringBuffer();
     final enclosingFuncName = name;
     final funcVarName = w.wrapperLevelUniqueNamer.makeUnique('_$name');
+    final funcPointerName =
+        w.wrapperLevelUniqueNamer.makeUnique('_${name}_ptr');
 
     if (dartDoc != null) {
       s.write(makeDartDoc(dartDoc!));
@@ -127,8 +131,7 @@ class Func extends LookUpBinding {
       }
     }
     s.write(') {\n');
-    s.write(
-        "return ($funcVarName ??= ${w.lookupFuncIdentifier}<${w.ffiLibraryPrefix}.NativeFunction<${cType.name}>>('$originalName').asFunction<${dartType.name}>())");
+    s.write('return $funcVarName');
 
     s.write('(\n');
     for (final p in parameters) {
@@ -147,9 +150,22 @@ class Func extends LookUpBinding {
     }
     s.write('}\n');
 
+    // Write function pointer.
+    s.write(
+        "late final $funcPointerName = ${w.lookupFuncIdentifier}<${w.ffiLibraryPrefix}.NativeFunction<${cType.name}>>('$originalName');\n");
     // Write function variable.
-    s.write('${dartType.name}? $funcVarName;\n\n');
+    s.write(
+        'late final ${dartType.name} $funcVarName = $funcPointerName.asFunction<${dartType.name}>();\n\n');
 
+    if (exposeSymbolAddress) {
+      // Add to SymbolAddress in writer.
+      w.symbolAddressWriter.addSymbol(
+        type:
+            '${w.ffiLibraryPrefix}.Pointer<${w.ffiLibraryPrefix}.NativeFunction<${cType.name}>>',
+        name: name,
+        ptrName: funcPointerName,
+      );
+    }
     return BindingString(type: BindingStringType.func, string: s.toString());
   }
 }

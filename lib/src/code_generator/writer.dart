@@ -17,6 +17,9 @@ class Writer {
   /// Holds bindings which don't lookup symbols.
   final List<Binding> noLookUpBindings;
 
+  /// Manages the `_SymbolAddress` class.
+  final symbolAddressWriter = SymbolAddressWriter();
+
   String? _className;
   final String? classDocComment;
 
@@ -25,6 +28,10 @@ class Writer {
 
   String? _lookupFuncIdentifier;
   String? get lookupFuncIdentifier => _lookupFuncIdentifier;
+
+  String? _symbolAddressClassName;
+  String? _symbolAddressVariableName;
+  String? _symbolAddressLibraryVarName;
 
   final bool dartBool;
 
@@ -72,6 +79,13 @@ class Writer {
 
     /// [_lookupFuncIdentifier] should be unique in top level.
     _lookupFuncIdentifier = _initialTopLevelUniqueNamer.makeUnique('_lookup');
+
+    _symbolAddressClassName =
+        _initialTopLevelUniqueNamer.makeUnique('_SymbolAddress');
+    _symbolAddressVariableName =
+        _initialWrapperLevelUniqueNamer.makeUnique('addresses');
+    _symbolAddressLibraryVarName =
+        _initialWrapperLevelUniqueNamer.makeUnique('_library');
 
     /// Finding a unique prefix for Array Helper Classes and store into
     /// [_arrayHelperClassPrefix].
@@ -157,7 +171,17 @@ class Writer {
       for (final b in lookUpBindings) {
         s.write(b.toBindingString(this).string);
       }
+      if (symbolAddressWriter.shouldGenerate) {
+        // Resolve name conflicts.
+
+        s.write(symbolAddressWriter.writeObject(this));
+      }
+
       s.write('}\n\n');
+    }
+
+    if (symbolAddressWriter.shouldGenerate) {
+      s.write(symbolAddressWriter.writeClass(this));
     }
 
     /// Write [noLookUpBindings].
@@ -197,4 +221,45 @@ class Writer {
     topLevelUniqueNamer.markUsed(uniqueName);
     return uniqueName;
   }
+}
+
+/// Manages the generated `_SymbolAddress` class.
+class SymbolAddressWriter {
+  final List<_SymbolAddress> _addresses = [];
+
+  bool get shouldGenerate => _addresses.isNotEmpty;
+
+  void addSymbol({
+    required String type,
+    required String name,
+    required String ptrName,
+  }) {
+    _addresses.add(_SymbolAddress(type, name, ptrName));
+  }
+
+  String writeObject(Writer w) {
+    return 'late final ${w._symbolAddressVariableName} = ${w._symbolAddressClassName}(this);';
+  }
+
+  String writeClass(Writer w) {
+    final sb = StringBuffer();
+    sb.write('class ${w._symbolAddressClassName} {\n');
+    // Write Library object.
+    sb.write('final ${w._className} ${w._symbolAddressLibraryVarName};\n');
+    // Write Constructor.
+    sb.write(
+        '${w._symbolAddressClassName}(this.${w._symbolAddressLibraryVarName});');
+    for (final address in _addresses) {
+      sb.write(
+          '${address.type} get ${address.name} => ${w._symbolAddressLibraryVarName}.${address.ptrName};\n');
+    }
+    sb.write('}\n');
+    return sb.toString();
+  }
+}
+
+class _SymbolAddress {
+  final String type, name, ptrName;
+
+  _SymbolAddress(this.type, this.name, this.ptrName);
 }

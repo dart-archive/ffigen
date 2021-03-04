@@ -31,6 +31,9 @@ ${strings.compilerOpts}: '-Ithird_party/libclang/include -I/Applications/Xcode.a
 ${strings.functions}:
   ${strings.include}:
     - 'clang_.*'
+  ${strings.symbolAddress}:
+      ${strings.include}:
+        - 'clang_.*'
 ${strings.structs}:
   ${strings.include}:
       - 'CX.*'
