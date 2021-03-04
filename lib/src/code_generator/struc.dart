@@ -254,7 +254,7 @@ class ArrayHelper {
       s.write('''
   void $checkBoundsFunctionIdentifier(int index) {
     if (index >= $legthIdentifier || index < 0) {
-      throw RangeError('Dimension \$$levelIdentifier: index not in range 0..\${$legthIdentifier} exclusive.');
+      throw RangeError('Dimension \$$levelIdentifier: index not in range 0..\$$legthIdentifier exclusive.');
     }
   }
   ''');

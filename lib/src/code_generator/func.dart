@@ -128,7 +128,7 @@ class Func extends LookUpBinding {
     }
     s.write(') {\n');
     s.write(
-        "return ($funcVarName ??= ${w.dylibIdentifier}.lookupFunction<${cType.name},${dartType.name}>('$originalName'))");
+        "return ($funcVarName ??= ${w.lookupFuncIdentifier}<${w.ffiLibraryPrefix}.NativeFunction<${cType.name}>>('$originalName').asFunction<${dartType.name}>())");
 
     s.write('(\n');
     for (final p in parameters) {

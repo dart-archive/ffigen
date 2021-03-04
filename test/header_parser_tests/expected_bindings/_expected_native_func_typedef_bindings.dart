@@ -5,16 +5,25 @@ import 'dart:ffi' as ffi;
 
 /// Unnamed Enums Test
 class NativeLibrary {
-  /// Holds the Dynamic library.
-  final ffi.DynamicLibrary _dylib;
+  /// Holds the symbol lookup function.
+  final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
+      _lookup;
 
   /// The symbols are looked up in [dynamicLibrary].
-  NativeLibrary(ffi.DynamicLibrary dynamicLibrary) : _dylib = dynamicLibrary;
+  NativeLibrary(ffi.DynamicLibrary dynamicLibrary)
+      : _lookup = dynamicLibrary.lookup;
+
+  /// The symbols are looked up with [lookup].
+  NativeLibrary.fromLookup(
+      ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
+          lookup)
+      : _lookup = lookup;
 
   void func(
     ffi.Pointer<ffi.NativeFunction<_typedefC_4>> unnamed1,
   ) {
-    return (_func ??= _dylib.lookupFunction<_c_func, _dart_func>('func'))(
+    return (_func ??=
+        _lookup<ffi.NativeFunction<_c_func>>('func').asFunction<_dart_func>())(
       unnamed1,
     );
   }
@@ -25,8 +34,8 @@ class NativeLibrary {
     ffi.Pointer<ffi.NativeFunction<withTypedefReturnType>> named,
   ) {
     return (_funcWithNativeFunc ??=
-        _dylib.lookupFunction<_c_funcWithNativeFunc, _dart_funcWithNativeFunc>(
-            'funcWithNativeFunc'))(
+        _lookup<ffi.NativeFunction<_c_funcWithNativeFunc>>('funcWithNativeFunc')
+            .asFunction<_dart_funcWithNativeFunc>())(
       named,
     );
   }

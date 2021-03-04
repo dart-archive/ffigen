@@ -63,7 +63,7 @@ class Global extends LookUpBinding {
     final cType = type.getCType(w);
 
     s.write(
-        "late final ${w.ffiLibraryPrefix}.Pointer<$cType> $pointerName = ${w.dylibIdentifier}.lookup<$cType>('$originalName');\n\n");
+        "late final ${w.ffiLibraryPrefix}.Pointer<$cType> $pointerName = ${w.lookupFuncIdentifier}<$cType>('$originalName');\n\n");
     if (type.broadType == BroadType.Struct) {
       if (type.struc!.isOpaque) {
         s.write(
