@@ -21,14 +21,14 @@ class Bindings {
     int a,
     ffi.Pointer<ffi.Uint8> b,
   ) {
-    return (_test1 ??= _lookup<ffi.NativeFunction<_c_test1>>('test1')
-        .asFunction<_dart_test1>())(
+    return _test1(
       a,
       b,
     );
   }
 
-  _dart_test1? _test1;
+  late final _test1_ptr = _lookup<ffi.NativeFunction<_c_test1>>('test1');
+  late final _dart_test1 _test1 = _test1_ptr.asFunction<_dart_test1>();
 }
 
 class test2 extends ffi.Struct {

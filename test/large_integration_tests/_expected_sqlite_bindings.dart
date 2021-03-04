@@ -57,55 +57,63 @@ class SQLite {
       _sqlite3_version.value = value;
 
   ffi.Pointer<ffi.Int8> sqlite3_libversion() {
-    return (_sqlite3_libversion ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_libversion>>('sqlite3_libversion')
-            .asFunction<_dart_sqlite3_libversion>())();
+    return _sqlite3_libversion();
   }
 
-  _dart_sqlite3_libversion? _sqlite3_libversion;
+  late final _sqlite3_libversion_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_libversion>>('sqlite3_libversion');
+  late final _dart_sqlite3_libversion _sqlite3_libversion =
+      _sqlite3_libversion_ptr.asFunction<_dart_sqlite3_libversion>();
 
   ffi.Pointer<ffi.Int8> sqlite3_sourceid() {
-    return (_sqlite3_sourceid ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_sourceid>>('sqlite3_sourceid')
-            .asFunction<_dart_sqlite3_sourceid>())();
+    return _sqlite3_sourceid();
   }
 
-  _dart_sqlite3_sourceid? _sqlite3_sourceid;
+  late final _sqlite3_sourceid_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_sourceid>>('sqlite3_sourceid');
+  late final _dart_sqlite3_sourceid _sqlite3_sourceid =
+      _sqlite3_sourceid_ptr.asFunction<_dart_sqlite3_sourceid>();
 
   int sqlite3_libversion_number() {
-    return (_sqlite3_libversion_number ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_libversion_number>>(
-                'sqlite3_libversion_number')
-            .asFunction<_dart_sqlite3_libversion_number>())();
+    return _sqlite3_libversion_number();
   }
 
-  _dart_sqlite3_libversion_number? _sqlite3_libversion_number;
+  late final _sqlite3_libversion_number_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_libversion_number>>(
+          'sqlite3_libversion_number');
+  late final _dart_sqlite3_libversion_number _sqlite3_libversion_number =
+      _sqlite3_libversion_number_ptr
+          .asFunction<_dart_sqlite3_libversion_number>();
 
   int sqlite3_compileoption_used(
     ffi.Pointer<ffi.Int8> zOptName,
   ) {
-    return (_sqlite3_compileoption_used ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_compileoption_used>>(
-                'sqlite3_compileoption_used')
-            .asFunction<_dart_sqlite3_compileoption_used>())(
+    return _sqlite3_compileoption_used(
       zOptName,
     );
   }
 
-  _dart_sqlite3_compileoption_used? _sqlite3_compileoption_used;
+  late final _sqlite3_compileoption_used_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_compileoption_used>>(
+          'sqlite3_compileoption_used');
+  late final _dart_sqlite3_compileoption_used _sqlite3_compileoption_used =
+      _sqlite3_compileoption_used_ptr
+          .asFunction<_dart_sqlite3_compileoption_used>();
 
   ffi.Pointer<ffi.Int8> sqlite3_compileoption_get(
     int N,
   ) {
-    return (_sqlite3_compileoption_get ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_compileoption_get>>(
-                'sqlite3_compileoption_get')
-            .asFunction<_dart_sqlite3_compileoption_get>())(
+    return _sqlite3_compileoption_get(
       N,
     );
   }
 
-  _dart_sqlite3_compileoption_get? _sqlite3_compileoption_get;
+  late final _sqlite3_compileoption_get_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_compileoption_get>>(
+          'sqlite3_compileoption_get');
+  late final _dart_sqlite3_compileoption_get _sqlite3_compileoption_get =
+      _sqlite3_compileoption_get_ptr
+          .asFunction<_dart_sqlite3_compileoption_get>();
 
   /// CAPI3REF: Test To See If The Library Is Threadsafe
   ///
@@ -142,12 +150,13 @@ class SQLite {
   ///
   /// See the [threading mode] documentation for additional information.
   int sqlite3_threadsafe() {
-    return (_sqlite3_threadsafe ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_threadsafe>>('sqlite3_threadsafe')
-            .asFunction<_dart_sqlite3_threadsafe>())();
+    return _sqlite3_threadsafe();
   }
 
-  _dart_sqlite3_threadsafe? _sqlite3_threadsafe;
+  late final _sqlite3_threadsafe_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_threadsafe>>('sqlite3_threadsafe');
+  late final _dart_sqlite3_threadsafe _sqlite3_threadsafe =
+      _sqlite3_threadsafe_ptr.asFunction<_dart_sqlite3_threadsafe>();
 
   /// CAPI3REF: Closing A Database Connection
   /// DESTRUCTOR: sqlite3
@@ -188,26 +197,28 @@ class SQLite {
   int sqlite3_close(
     ffi.Pointer<sqlite3> arg0,
   ) {
-    return (_sqlite3_close ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_close>>('sqlite3_close')
-            .asFunction<_dart_sqlite3_close>())(
+    return _sqlite3_close(
       arg0,
     );
   }
 
-  _dart_sqlite3_close? _sqlite3_close;
+  late final _sqlite3_close_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_close>>('sqlite3_close');
+  late final _dart_sqlite3_close _sqlite3_close =
+      _sqlite3_close_ptr.asFunction<_dart_sqlite3_close>();
 
   int sqlite3_close_v2(
     ffi.Pointer<sqlite3> arg0,
   ) {
-    return (_sqlite3_close_v2 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_close_v2>>('sqlite3_close_v2')
-            .asFunction<_dart_sqlite3_close_v2>())(
+    return _sqlite3_close_v2(
       arg0,
     );
   }
 
-  _dart_sqlite3_close_v2? _sqlite3_close_v2;
+  late final _sqlite3_close_v2_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_close_v2>>('sqlite3_close_v2');
+  late final _dart_sqlite3_close_v2 _sqlite3_close_v2 =
+      _sqlite3_close_v2_ptr.asFunction<_dart_sqlite3_close_v2>();
 
   /// CAPI3REF: One-Step Query Execution Interface
   /// METHOD: sqlite3
@@ -276,9 +287,7 @@ class SQLite {
     ffi.Pointer<ffi.Void> arg3,
     ffi.Pointer<ffi.Pointer<ffi.Int8>> errmsg,
   ) {
-    return (_sqlite3_exec ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_exec>>('sqlite3_exec')
-            .asFunction<_dart_sqlite3_exec>())(
+    return _sqlite3_exec(
       arg0,
       sql,
       callback,
@@ -287,7 +296,10 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_exec? _sqlite3_exec;
+  late final _sqlite3_exec_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_exec>>('sqlite3_exec');
+  late final _dart_sqlite3_exec _sqlite3_exec =
+      _sqlite3_exec_ptr.asFunction<_dart_sqlite3_exec>();
 
   /// CAPI3REF: Initialize The SQLite Library
   ///
@@ -363,36 +375,40 @@ class SQLite {
   /// must return [SQLITE_OK] on success and some other [error code] upon
   /// failure.
   int sqlite3_initialize() {
-    return (_sqlite3_initialize ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_initialize>>('sqlite3_initialize')
-            .asFunction<_dart_sqlite3_initialize>())();
+    return _sqlite3_initialize();
   }
 
-  _dart_sqlite3_initialize? _sqlite3_initialize;
+  late final _sqlite3_initialize_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_initialize>>('sqlite3_initialize');
+  late final _dart_sqlite3_initialize _sqlite3_initialize =
+      _sqlite3_initialize_ptr.asFunction<_dart_sqlite3_initialize>();
 
   int sqlite3_shutdown() {
-    return (_sqlite3_shutdown ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_shutdown>>('sqlite3_shutdown')
-            .asFunction<_dart_sqlite3_shutdown>())();
+    return _sqlite3_shutdown();
   }
 
-  _dart_sqlite3_shutdown? _sqlite3_shutdown;
+  late final _sqlite3_shutdown_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_shutdown>>('sqlite3_shutdown');
+  late final _dart_sqlite3_shutdown _sqlite3_shutdown =
+      _sqlite3_shutdown_ptr.asFunction<_dart_sqlite3_shutdown>();
 
   int sqlite3_os_init() {
-    return (_sqlite3_os_init ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_os_init>>('sqlite3_os_init')
-            .asFunction<_dart_sqlite3_os_init>())();
+    return _sqlite3_os_init();
   }
 
-  _dart_sqlite3_os_init? _sqlite3_os_init;
+  late final _sqlite3_os_init_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_os_init>>('sqlite3_os_init');
+  late final _dart_sqlite3_os_init _sqlite3_os_init =
+      _sqlite3_os_init_ptr.asFunction<_dart_sqlite3_os_init>();
 
   int sqlite3_os_end() {
-    return (_sqlite3_os_end ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_os_end>>('sqlite3_os_end')
-            .asFunction<_dart_sqlite3_os_end>())();
+    return _sqlite3_os_end();
   }
 
-  _dart_sqlite3_os_end? _sqlite3_os_end;
+  late final _sqlite3_os_end_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_os_end>>('sqlite3_os_end');
+  late final _dart_sqlite3_os_end _sqlite3_os_end =
+      _sqlite3_os_end_ptr.asFunction<_dart_sqlite3_os_end>();
 
   /// CAPI3REF: Configuring The SQLite Library
   ///
@@ -426,14 +442,15 @@ class SQLite {
   int sqlite3_config(
     int arg0,
   ) {
-    return (_sqlite3_config ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_config>>('sqlite3_config')
-            .asFunction<_dart_sqlite3_config>())(
+    return _sqlite3_config(
       arg0,
     );
   }
 
-  _dart_sqlite3_config? _sqlite3_config;
+  late final _sqlite3_config_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_config>>('sqlite3_config');
+  late final _dart_sqlite3_config _sqlite3_config =
+      _sqlite3_config_ptr.asFunction<_dart_sqlite3_config>();
 
   /// CAPI3REF: Configure database connections
   /// METHOD: sqlite3
@@ -454,15 +471,16 @@ class SQLite {
     ffi.Pointer<sqlite3> arg0,
     int op,
   ) {
-    return (_sqlite3_db_config ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_db_config>>('sqlite3_db_config')
-            .asFunction<_dart_sqlite3_db_config>())(
+    return _sqlite3_db_config(
       arg0,
       op,
     );
   }
 
-  _dart_sqlite3_db_config? _sqlite3_db_config;
+  late final _sqlite3_db_config_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_db_config>>('sqlite3_db_config');
+  late final _dart_sqlite3_db_config _sqlite3_db_config =
+      _sqlite3_db_config_ptr.asFunction<_dart_sqlite3_db_config>();
 
   /// CAPI3REF: Enable Or Disable Extended Result Codes
   /// METHOD: sqlite3
@@ -474,16 +492,18 @@ class SQLite {
     ffi.Pointer<sqlite3> arg0,
     int onoff,
   ) {
-    return (_sqlite3_extended_result_codes ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_extended_result_codes>>(
-                'sqlite3_extended_result_codes')
-            .asFunction<_dart_sqlite3_extended_result_codes>())(
+    return _sqlite3_extended_result_codes(
       arg0,
       onoff,
     );
   }
 
-  _dart_sqlite3_extended_result_codes? _sqlite3_extended_result_codes;
+  late final _sqlite3_extended_result_codes_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_extended_result_codes>>(
+          'sqlite3_extended_result_codes');
+  late final _dart_sqlite3_extended_result_codes
+      _sqlite3_extended_result_codes = _sqlite3_extended_result_codes_ptr
+          .asFunction<_dart_sqlite3_extended_result_codes>();
 
   /// CAPI3REF: Last Insert Rowid
   /// METHOD: sqlite3
@@ -546,15 +566,17 @@ class SQLite {
   int sqlite3_last_insert_rowid(
     ffi.Pointer<sqlite3> arg0,
   ) {
-    return (_sqlite3_last_insert_rowid ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_last_insert_rowid>>(
-                'sqlite3_last_insert_rowid')
-            .asFunction<_dart_sqlite3_last_insert_rowid>())(
+    return _sqlite3_last_insert_rowid(
       arg0,
     );
   }
 
-  _dart_sqlite3_last_insert_rowid? _sqlite3_last_insert_rowid;
+  late final _sqlite3_last_insert_rowid_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_last_insert_rowid>>(
+          'sqlite3_last_insert_rowid');
+  late final _dart_sqlite3_last_insert_rowid _sqlite3_last_insert_rowid =
+      _sqlite3_last_insert_rowid_ptr
+          .asFunction<_dart_sqlite3_last_insert_rowid>();
 
   /// CAPI3REF: Set the Last Insert Rowid value.
   /// METHOD: sqlite3
@@ -566,16 +588,18 @@ class SQLite {
     ffi.Pointer<sqlite3> arg0,
     int arg1,
   ) {
-    return (_sqlite3_set_last_insert_rowid ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_set_last_insert_rowid>>(
-                'sqlite3_set_last_insert_rowid')
-            .asFunction<_dart_sqlite3_set_last_insert_rowid>())(
+    return _sqlite3_set_last_insert_rowid(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_set_last_insert_rowid? _sqlite3_set_last_insert_rowid;
+  late final _sqlite3_set_last_insert_rowid_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_set_last_insert_rowid>>(
+          'sqlite3_set_last_insert_rowid');
+  late final _dart_sqlite3_set_last_insert_rowid
+      _sqlite3_set_last_insert_rowid = _sqlite3_set_last_insert_rowid_ptr
+          .asFunction<_dart_sqlite3_set_last_insert_rowid>();
 
   /// CAPI3REF: Count The Number Of Rows Modified
   /// METHOD: sqlite3
@@ -634,14 +658,15 @@ class SQLite {
   int sqlite3_changes(
     ffi.Pointer<sqlite3> arg0,
   ) {
-    return (_sqlite3_changes ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_changes>>('sqlite3_changes')
-            .asFunction<_dart_sqlite3_changes>())(
+    return _sqlite3_changes(
       arg0,
     );
   }
 
-  _dart_sqlite3_changes? _sqlite3_changes;
+  late final _sqlite3_changes_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_changes>>('sqlite3_changes');
+  late final _dart_sqlite3_changes _sqlite3_changes =
+      _sqlite3_changes_ptr.asFunction<_dart_sqlite3_changes>();
 
   /// CAPI3REF: Total Number Of Rows Modified
   /// METHOD: sqlite3
@@ -679,15 +704,16 @@ class SQLite {
   int sqlite3_total_changes(
     ffi.Pointer<sqlite3> arg0,
   ) {
-    return (_sqlite3_total_changes ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_total_changes>>(
-                'sqlite3_total_changes')
-            .asFunction<_dart_sqlite3_total_changes>())(
+    return _sqlite3_total_changes(
       arg0,
     );
   }
 
-  _dart_sqlite3_total_changes? _sqlite3_total_changes;
+  late final _sqlite3_total_changes_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_total_changes>>(
+          'sqlite3_total_changes');
+  late final _dart_sqlite3_total_changes _sqlite3_total_changes =
+      _sqlite3_total_changes_ptr.asFunction<_dart_sqlite3_total_changes>();
 
   /// CAPI3REF: Interrupt A Long-Running Query
   /// METHOD: sqlite3
@@ -725,14 +751,15 @@ class SQLite {
   void sqlite3_interrupt(
     ffi.Pointer<sqlite3> arg0,
   ) {
-    return (_sqlite3_interrupt ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_interrupt>>('sqlite3_interrupt')
-            .asFunction<_dart_sqlite3_interrupt>())(
+    return _sqlite3_interrupt(
       arg0,
     );
   }
 
-  _dart_sqlite3_interrupt? _sqlite3_interrupt;
+  late final _sqlite3_interrupt_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_interrupt>>('sqlite3_interrupt');
+  late final _dart_sqlite3_interrupt _sqlite3_interrupt =
+      _sqlite3_interrupt_ptr.asFunction<_dart_sqlite3_interrupt>();
 
   /// CAPI3REF: Determine If An SQL Statement Is Complete
   ///
@@ -768,26 +795,28 @@ class SQLite {
   int sqlite3_complete(
     ffi.Pointer<ffi.Int8> sql,
   ) {
-    return (_sqlite3_complete ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_complete>>('sqlite3_complete')
-            .asFunction<_dart_sqlite3_complete>())(
+    return _sqlite3_complete(
       sql,
     );
   }
 
-  _dart_sqlite3_complete? _sqlite3_complete;
+  late final _sqlite3_complete_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_complete>>('sqlite3_complete');
+  late final _dart_sqlite3_complete _sqlite3_complete =
+      _sqlite3_complete_ptr.asFunction<_dart_sqlite3_complete>();
 
   int sqlite3_complete16(
     ffi.Pointer<ffi.Void> sql,
   ) {
-    return (_sqlite3_complete16 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_complete16>>('sqlite3_complete16')
-            .asFunction<_dart_sqlite3_complete16>())(
+    return _sqlite3_complete16(
       sql,
     );
   }
 
-  _dart_sqlite3_complete16? _sqlite3_complete16;
+  late final _sqlite3_complete16_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_complete16>>('sqlite3_complete16');
+  late final _dart_sqlite3_complete16 _sqlite3_complete16 =
+      _sqlite3_complete16_ptr.asFunction<_dart_sqlite3_complete16>();
 
   /// CAPI3REF: Register A Callback To Handle SQLITE_BUSY Errors
   /// KEYWORDS: {busy-handler callback} {busy handler}
@@ -851,17 +880,18 @@ class SQLite {
     ffi.Pointer<ffi.NativeFunction<_typedefC_20>> arg1,
     ffi.Pointer<ffi.Void> arg2,
   ) {
-    return (_sqlite3_busy_handler ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_busy_handler>>(
-                'sqlite3_busy_handler')
-            .asFunction<_dart_sqlite3_busy_handler>())(
+    return _sqlite3_busy_handler(
       arg0,
       arg1,
       arg2,
     );
   }
 
-  _dart_sqlite3_busy_handler? _sqlite3_busy_handler;
+  late final _sqlite3_busy_handler_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_busy_handler>>(
+          'sqlite3_busy_handler');
+  late final _dart_sqlite3_busy_handler _sqlite3_busy_handler =
+      _sqlite3_busy_handler_ptr.asFunction<_dart_sqlite3_busy_handler>();
 
   /// CAPI3REF: Set A Busy Timeout
   /// METHOD: sqlite3
@@ -886,16 +916,17 @@ class SQLite {
     ffi.Pointer<sqlite3> arg0,
     int ms,
   ) {
-    return (_sqlite3_busy_timeout ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_busy_timeout>>(
-                'sqlite3_busy_timeout')
-            .asFunction<_dart_sqlite3_busy_timeout>())(
+    return _sqlite3_busy_timeout(
       arg0,
       ms,
     );
   }
 
-  _dart_sqlite3_busy_timeout? _sqlite3_busy_timeout;
+  late final _sqlite3_busy_timeout_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_busy_timeout>>(
+          'sqlite3_busy_timeout');
+  late final _dart_sqlite3_busy_timeout _sqlite3_busy_timeout =
+      _sqlite3_busy_timeout_ptr.asFunction<_dart_sqlite3_busy_timeout>();
 
   /// CAPI3REF: Convenience Routines For Running Queries
   /// METHOD: sqlite3
@@ -976,9 +1007,7 @@ class SQLite {
     ffi.Pointer<ffi.Int32> pnColumn,
     ffi.Pointer<ffi.Pointer<ffi.Int8>> pzErrmsg,
   ) {
-    return (_sqlite3_get_table ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_get_table>>('sqlite3_get_table')
-            .asFunction<_dart_sqlite3_get_table>())(
+    return _sqlite3_get_table(
       db,
       zSql,
       pazResult,
@@ -988,19 +1017,23 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_get_table? _sqlite3_get_table;
+  late final _sqlite3_get_table_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_get_table>>('sqlite3_get_table');
+  late final _dart_sqlite3_get_table _sqlite3_get_table =
+      _sqlite3_get_table_ptr.asFunction<_dart_sqlite3_get_table>();
 
   void sqlite3_free_table(
     ffi.Pointer<ffi.Pointer<ffi.Int8>> result,
   ) {
-    return (_sqlite3_free_table ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_free_table>>('sqlite3_free_table')
-            .asFunction<_dart_sqlite3_free_table>())(
+    return _sqlite3_free_table(
       result,
     );
   }
 
-  _dart_sqlite3_free_table? _sqlite3_free_table;
+  late final _sqlite3_free_table_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_free_table>>('sqlite3_free_table');
+  late final _dart_sqlite3_free_table _sqlite3_free_table =
+      _sqlite3_free_table_ptr.asFunction<_dart_sqlite3_free_table>();
 
   /// CAPI3REF: Formatted String Printing Functions
   ///
@@ -1043,30 +1076,32 @@ class SQLite {
   ffi.Pointer<ffi.Int8> sqlite3_mprintf(
     ffi.Pointer<ffi.Int8> arg0,
   ) {
-    return (_sqlite3_mprintf ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_mprintf>>('sqlite3_mprintf')
-            .asFunction<_dart_sqlite3_mprintf>())(
+    return _sqlite3_mprintf(
       arg0,
     );
   }
 
-  _dart_sqlite3_mprintf? _sqlite3_mprintf;
+  late final _sqlite3_mprintf_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_mprintf>>('sqlite3_mprintf');
+  late final _dart_sqlite3_mprintf _sqlite3_mprintf =
+      _sqlite3_mprintf_ptr.asFunction<_dart_sqlite3_mprintf>();
 
   ffi.Pointer<ffi.Int8> sqlite3_snprintf(
     int arg0,
     ffi.Pointer<ffi.Int8> arg1,
     ffi.Pointer<ffi.Int8> arg2,
   ) {
-    return (_sqlite3_snprintf ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_snprintf>>('sqlite3_snprintf')
-            .asFunction<_dart_sqlite3_snprintf>())(
+    return _sqlite3_snprintf(
       arg0,
       arg1,
       arg2,
     );
   }
 
-  _dart_sqlite3_snprintf? _sqlite3_snprintf;
+  late final _sqlite3_snprintf_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_snprintf>>('sqlite3_snprintf');
+  late final _dart_sqlite3_snprintf _sqlite3_snprintf =
+      _sqlite3_snprintf_ptr.asFunction<_dart_sqlite3_snprintf>();
 
   /// CAPI3REF: Memory Allocation Subsystem
   ///
@@ -1144,78 +1179,84 @@ class SQLite {
   ffi.Pointer<ffi.Void> sqlite3_malloc(
     int arg0,
   ) {
-    return (_sqlite3_malloc ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_malloc>>('sqlite3_malloc')
-            .asFunction<_dart_sqlite3_malloc>())(
+    return _sqlite3_malloc(
       arg0,
     );
   }
 
-  _dart_sqlite3_malloc? _sqlite3_malloc;
+  late final _sqlite3_malloc_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_malloc>>('sqlite3_malloc');
+  late final _dart_sqlite3_malloc _sqlite3_malloc =
+      _sqlite3_malloc_ptr.asFunction<_dart_sqlite3_malloc>();
 
   ffi.Pointer<ffi.Void> sqlite3_malloc64(
     int arg0,
   ) {
-    return (_sqlite3_malloc64 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_malloc64>>('sqlite3_malloc64')
-            .asFunction<_dart_sqlite3_malloc64>())(
+    return _sqlite3_malloc64(
       arg0,
     );
   }
 
-  _dart_sqlite3_malloc64? _sqlite3_malloc64;
+  late final _sqlite3_malloc64_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_malloc64>>('sqlite3_malloc64');
+  late final _dart_sqlite3_malloc64 _sqlite3_malloc64 =
+      _sqlite3_malloc64_ptr.asFunction<_dart_sqlite3_malloc64>();
 
   ffi.Pointer<ffi.Void> sqlite3_realloc(
     ffi.Pointer<ffi.Void> arg0,
     int arg1,
   ) {
-    return (_sqlite3_realloc ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_realloc>>('sqlite3_realloc')
-            .asFunction<_dart_sqlite3_realloc>())(
+    return _sqlite3_realloc(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_realloc? _sqlite3_realloc;
+  late final _sqlite3_realloc_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_realloc>>('sqlite3_realloc');
+  late final _dart_sqlite3_realloc _sqlite3_realloc =
+      _sqlite3_realloc_ptr.asFunction<_dart_sqlite3_realloc>();
 
   ffi.Pointer<ffi.Void> sqlite3_realloc64(
     ffi.Pointer<ffi.Void> arg0,
     int arg1,
   ) {
-    return (_sqlite3_realloc64 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_realloc64>>('sqlite3_realloc64')
-            .asFunction<_dart_sqlite3_realloc64>())(
+    return _sqlite3_realloc64(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_realloc64? _sqlite3_realloc64;
+  late final _sqlite3_realloc64_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_realloc64>>('sqlite3_realloc64');
+  late final _dart_sqlite3_realloc64 _sqlite3_realloc64 =
+      _sqlite3_realloc64_ptr.asFunction<_dart_sqlite3_realloc64>();
 
   void sqlite3_free(
     ffi.Pointer<ffi.Void> arg0,
   ) {
-    return (_sqlite3_free ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_free>>('sqlite3_free')
-            .asFunction<_dart_sqlite3_free>())(
+    return _sqlite3_free(
       arg0,
     );
   }
 
-  _dart_sqlite3_free? _sqlite3_free;
+  late final _sqlite3_free_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_free>>('sqlite3_free');
+  late final _dart_sqlite3_free _sqlite3_free =
+      _sqlite3_free_ptr.asFunction<_dart_sqlite3_free>();
 
   int sqlite3_msize(
     ffi.Pointer<ffi.Void> arg0,
   ) {
-    return (_sqlite3_msize ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_msize>>('sqlite3_msize')
-            .asFunction<_dart_sqlite3_msize>())(
+    return _sqlite3_msize(
       arg0,
     );
   }
 
-  _dart_sqlite3_msize? _sqlite3_msize;
+  late final _sqlite3_msize_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_msize>>('sqlite3_msize');
+  late final _dart_sqlite3_msize _sqlite3_msize =
+      _sqlite3_msize_ptr.asFunction<_dart_sqlite3_msize>();
 
   /// CAPI3REF: Memory Allocator Statistics
   ///
@@ -1239,26 +1280,29 @@ class SQLite {
   /// by [sqlite3_memory_highwater(1)] is the high-water mark
   /// prior to the reset.
   int sqlite3_memory_used() {
-    return (_sqlite3_memory_used ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_memory_used>>(
-                'sqlite3_memory_used')
-            .asFunction<_dart_sqlite3_memory_used>())();
+    return _sqlite3_memory_used();
   }
 
-  _dart_sqlite3_memory_used? _sqlite3_memory_used;
+  late final _sqlite3_memory_used_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_memory_used>>(
+          'sqlite3_memory_used');
+  late final _dart_sqlite3_memory_used _sqlite3_memory_used =
+      _sqlite3_memory_used_ptr.asFunction<_dart_sqlite3_memory_used>();
 
   int sqlite3_memory_highwater(
     int resetFlag,
   ) {
-    return (_sqlite3_memory_highwater ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_memory_highwater>>(
-                'sqlite3_memory_highwater')
-            .asFunction<_dart_sqlite3_memory_highwater>())(
+    return _sqlite3_memory_highwater(
       resetFlag,
     );
   }
 
-  _dart_sqlite3_memory_highwater? _sqlite3_memory_highwater;
+  late final _sqlite3_memory_highwater_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_memory_highwater>>(
+          'sqlite3_memory_highwater');
+  late final _dart_sqlite3_memory_highwater _sqlite3_memory_highwater =
+      _sqlite3_memory_highwater_ptr
+          .asFunction<_dart_sqlite3_memory_highwater>();
 
   /// CAPI3REF: Pseudo-Random Number Generator
   ///
@@ -1283,15 +1327,16 @@ class SQLite {
     int N,
     ffi.Pointer<ffi.Void> P,
   ) {
-    return (_sqlite3_randomness ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_randomness>>('sqlite3_randomness')
-            .asFunction<_dart_sqlite3_randomness>())(
+    return _sqlite3_randomness(
       N,
       P,
     );
   }
 
-  _dart_sqlite3_randomness? _sqlite3_randomness;
+  late final _sqlite3_randomness_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_randomness>>('sqlite3_randomness');
+  late final _dart_sqlite3_randomness _sqlite3_randomness =
+      _sqlite3_randomness_ptr.asFunction<_dart_sqlite3_randomness>();
 
   /// CAPI3REF: Compile-Time Authorization Callbacks
   /// METHOD: sqlite3
@@ -1385,17 +1430,18 @@ class SQLite {
     ffi.Pointer<ffi.NativeFunction<_typedefC_21>> xAuth,
     ffi.Pointer<ffi.Void> pUserData,
   ) {
-    return (_sqlite3_set_authorizer ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_set_authorizer>>(
-                'sqlite3_set_authorizer')
-            .asFunction<_dart_sqlite3_set_authorizer>())(
+    return _sqlite3_set_authorizer(
       arg0,
       xAuth,
       pUserData,
     );
   }
 
-  _dart_sqlite3_set_authorizer? _sqlite3_set_authorizer;
+  late final _sqlite3_set_authorizer_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_set_authorizer>>(
+          'sqlite3_set_authorizer');
+  late final _dart_sqlite3_set_authorizer _sqlite3_set_authorizer =
+      _sqlite3_set_authorizer_ptr.asFunction<_dart_sqlite3_set_authorizer>();
 
   /// CAPI3REF: Tracing And Profiling Functions
   /// METHOD: sqlite3
@@ -1432,32 +1478,34 @@ class SQLite {
     ffi.Pointer<ffi.NativeFunction<_typedefC_22>> xTrace,
     ffi.Pointer<ffi.Void> arg2,
   ) {
-    return (_sqlite3_trace ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_trace>>('sqlite3_trace')
-            .asFunction<_dart_sqlite3_trace>())(
+    return _sqlite3_trace(
       arg0,
       xTrace,
       arg2,
     );
   }
 
-  _dart_sqlite3_trace? _sqlite3_trace;
+  late final _sqlite3_trace_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_trace>>('sqlite3_trace');
+  late final _dart_sqlite3_trace _sqlite3_trace =
+      _sqlite3_trace_ptr.asFunction<_dart_sqlite3_trace>();
 
   ffi.Pointer<ffi.Void> sqlite3_profile(
     ffi.Pointer<sqlite3> arg0,
     ffi.Pointer<ffi.NativeFunction<_typedefC_23>> xProfile,
     ffi.Pointer<ffi.Void> arg2,
   ) {
-    return (_sqlite3_profile ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_profile>>('sqlite3_profile')
-            .asFunction<_dart_sqlite3_profile>())(
+    return _sqlite3_profile(
       arg0,
       xProfile,
       arg2,
     );
   }
 
-  _dart_sqlite3_profile? _sqlite3_profile;
+  late final _sqlite3_profile_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_profile>>('sqlite3_profile');
+  late final _dart_sqlite3_profile _sqlite3_profile =
+      _sqlite3_profile_ptr.asFunction<_dart_sqlite3_profile>();
 
   /// CAPI3REF: SQL Trace Hook
   /// METHOD: sqlite3
@@ -1492,9 +1540,7 @@ class SQLite {
     ffi.Pointer<ffi.NativeFunction<_typedefC_24>> xCallback,
     ffi.Pointer<ffi.Void> pCtx,
   ) {
-    return (_sqlite3_trace_v2 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_trace_v2>>('sqlite3_trace_v2')
-            .asFunction<_dart_sqlite3_trace_v2>())(
+    return _sqlite3_trace_v2(
       arg0,
       uMask,
       xCallback,
@@ -1502,7 +1548,10 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_trace_v2? _sqlite3_trace_v2;
+  late final _sqlite3_trace_v2_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_trace_v2>>('sqlite3_trace_v2');
+  late final _dart_sqlite3_trace_v2 _sqlite3_trace_v2 =
+      _sqlite3_trace_v2_ptr.asFunction<_dart_sqlite3_trace_v2>();
 
   /// CAPI3REF: Query Progress Callbacks
   /// METHOD: sqlite3
@@ -1539,10 +1588,7 @@ class SQLite {
     ffi.Pointer<ffi.NativeFunction<_typedefC_25>> arg2,
     ffi.Pointer<ffi.Void> arg3,
   ) {
-    return (_sqlite3_progress_handler ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_progress_handler>>(
-                'sqlite3_progress_handler')
-            .asFunction<_dart_sqlite3_progress_handler>())(
+    return _sqlite3_progress_handler(
       arg0,
       arg1,
       arg2,
@@ -1550,7 +1596,12 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_progress_handler? _sqlite3_progress_handler;
+  late final _sqlite3_progress_handler_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_progress_handler>>(
+          'sqlite3_progress_handler');
+  late final _dart_sqlite3_progress_handler _sqlite3_progress_handler =
+      _sqlite3_progress_handler_ptr
+          .asFunction<_dart_sqlite3_progress_handler>();
 
   /// CAPI3REF: Opening A New Database Connection
   /// CONSTRUCTOR: sqlite3
@@ -1807,29 +1858,31 @@ class SQLite {
     ffi.Pointer<ffi.Int8> filename,
     ffi.Pointer<ffi.Pointer<sqlite3>> ppDb,
   ) {
-    return (_sqlite3_open ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_open>>('sqlite3_open')
-            .asFunction<_dart_sqlite3_open>())(
+    return _sqlite3_open(
       filename,
       ppDb,
     );
   }
 
-  _dart_sqlite3_open? _sqlite3_open;
+  late final _sqlite3_open_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_open>>('sqlite3_open');
+  late final _dart_sqlite3_open _sqlite3_open =
+      _sqlite3_open_ptr.asFunction<_dart_sqlite3_open>();
 
   int sqlite3_open16(
     ffi.Pointer<ffi.Void> filename,
     ffi.Pointer<ffi.Pointer<sqlite3>> ppDb,
   ) {
-    return (_sqlite3_open16 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_open16>>('sqlite3_open16')
-            .asFunction<_dart_sqlite3_open16>())(
+    return _sqlite3_open16(
       filename,
       ppDb,
     );
   }
 
-  _dart_sqlite3_open16? _sqlite3_open16;
+  late final _sqlite3_open16_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_open16>>('sqlite3_open16');
+  late final _dart_sqlite3_open16 _sqlite3_open16 =
+      _sqlite3_open16_ptr.asFunction<_dart_sqlite3_open16>();
 
   int sqlite3_open_v2(
     ffi.Pointer<ffi.Int8> filename,
@@ -1837,9 +1890,7 @@ class SQLite {
     int flags,
     ffi.Pointer<ffi.Int8> zVfs,
   ) {
-    return (_sqlite3_open_v2 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_open_v2>>('sqlite3_open_v2')
-            .asFunction<_dart_sqlite3_open_v2>())(
+    return _sqlite3_open_v2(
       filename,
       ppDb,
       flags,
@@ -1847,7 +1898,10 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_open_v2? _sqlite3_open_v2;
+  late final _sqlite3_open_v2_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_open_v2>>('sqlite3_open_v2');
+  late final _dart_sqlite3_open_v2 _sqlite3_open_v2 =
+      _sqlite3_open_v2_ptr.asFunction<_dart_sqlite3_open_v2>();
 
   /// CAPI3REF: Obtain Values For URI Parameters
   ///
@@ -1917,63 +1971,67 @@ class SQLite {
     ffi.Pointer<ffi.Int8> zFilename,
     ffi.Pointer<ffi.Int8> zParam,
   ) {
-    return (_sqlite3_uri_parameter ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_uri_parameter>>(
-                'sqlite3_uri_parameter')
-            .asFunction<_dart_sqlite3_uri_parameter>())(
+    return _sqlite3_uri_parameter(
       zFilename,
       zParam,
     );
   }
 
-  _dart_sqlite3_uri_parameter? _sqlite3_uri_parameter;
+  late final _sqlite3_uri_parameter_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_uri_parameter>>(
+          'sqlite3_uri_parameter');
+  late final _dart_sqlite3_uri_parameter _sqlite3_uri_parameter =
+      _sqlite3_uri_parameter_ptr.asFunction<_dart_sqlite3_uri_parameter>();
 
   int sqlite3_uri_boolean(
     ffi.Pointer<ffi.Int8> zFile,
     ffi.Pointer<ffi.Int8> zParam,
     int bDefault,
   ) {
-    return (_sqlite3_uri_boolean ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_uri_boolean>>(
-                'sqlite3_uri_boolean')
-            .asFunction<_dart_sqlite3_uri_boolean>())(
+    return _sqlite3_uri_boolean(
       zFile,
       zParam,
       bDefault,
     );
   }
 
-  _dart_sqlite3_uri_boolean? _sqlite3_uri_boolean;
+  late final _sqlite3_uri_boolean_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_uri_boolean>>(
+          'sqlite3_uri_boolean');
+  late final _dart_sqlite3_uri_boolean _sqlite3_uri_boolean =
+      _sqlite3_uri_boolean_ptr.asFunction<_dart_sqlite3_uri_boolean>();
 
   int sqlite3_uri_int64(
     ffi.Pointer<ffi.Int8> arg0,
     ffi.Pointer<ffi.Int8> arg1,
     int arg2,
   ) {
-    return (_sqlite3_uri_int64 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_uri_int64>>('sqlite3_uri_int64')
-            .asFunction<_dart_sqlite3_uri_int64>())(
+    return _sqlite3_uri_int64(
       arg0,
       arg1,
       arg2,
     );
   }
 
-  _dart_sqlite3_uri_int64? _sqlite3_uri_int64;
+  late final _sqlite3_uri_int64_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_uri_int64>>('sqlite3_uri_int64');
+  late final _dart_sqlite3_uri_int64 _sqlite3_uri_int64 =
+      _sqlite3_uri_int64_ptr.asFunction<_dart_sqlite3_uri_int64>();
 
   ffi.Pointer<ffi.Int8> sqlite3_uri_key(
     ffi.Pointer<ffi.Int8> zFilename,
     int N,
   ) {
-    return (_sqlite3_uri_key ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_uri_key>>('sqlite3_uri_key')
-            .asFunction<_dart_sqlite3_uri_key>())(
+    return _sqlite3_uri_key(
       zFilename,
       N,
     );
   }
 
-  _dart_sqlite3_uri_key? _sqlite3_uri_key;
+  late final _sqlite3_uri_key_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_uri_key>>('sqlite3_uri_key');
+  late final _dart_sqlite3_uri_key _sqlite3_uri_key =
+      _sqlite3_uri_key_ptr.asFunction<_dart_sqlite3_uri_key>();
 
   /// CAPI3REF:  Translate filenames
   ///
@@ -2003,41 +2061,46 @@ class SQLite {
   ffi.Pointer<ffi.Int8> sqlite3_filename_database(
     ffi.Pointer<ffi.Int8> arg0,
   ) {
-    return (_sqlite3_filename_database ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_filename_database>>(
-                'sqlite3_filename_database')
-            .asFunction<_dart_sqlite3_filename_database>())(
+    return _sqlite3_filename_database(
       arg0,
     );
   }
 
-  _dart_sqlite3_filename_database? _sqlite3_filename_database;
+  late final _sqlite3_filename_database_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_filename_database>>(
+          'sqlite3_filename_database');
+  late final _dart_sqlite3_filename_database _sqlite3_filename_database =
+      _sqlite3_filename_database_ptr
+          .asFunction<_dart_sqlite3_filename_database>();
 
   ffi.Pointer<ffi.Int8> sqlite3_filename_journal(
     ffi.Pointer<ffi.Int8> arg0,
   ) {
-    return (_sqlite3_filename_journal ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_filename_journal>>(
-                'sqlite3_filename_journal')
-            .asFunction<_dart_sqlite3_filename_journal>())(
+    return _sqlite3_filename_journal(
       arg0,
     );
   }
 
-  _dart_sqlite3_filename_journal? _sqlite3_filename_journal;
+  late final _sqlite3_filename_journal_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_filename_journal>>(
+          'sqlite3_filename_journal');
+  late final _dart_sqlite3_filename_journal _sqlite3_filename_journal =
+      _sqlite3_filename_journal_ptr
+          .asFunction<_dart_sqlite3_filename_journal>();
 
   ffi.Pointer<ffi.Int8> sqlite3_filename_wal(
     ffi.Pointer<ffi.Int8> arg0,
   ) {
-    return (_sqlite3_filename_wal ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_filename_wal>>(
-                'sqlite3_filename_wal')
-            .asFunction<_dart_sqlite3_filename_wal>())(
+    return _sqlite3_filename_wal(
       arg0,
     );
   }
 
-  _dart_sqlite3_filename_wal? _sqlite3_filename_wal;
+  late final _sqlite3_filename_wal_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_filename_wal>>(
+          'sqlite3_filename_wal');
+  late final _dart_sqlite3_filename_wal _sqlite3_filename_wal =
+      _sqlite3_filename_wal_ptr.asFunction<_dart_sqlite3_filename_wal>();
 
   /// CAPI3REF:  Database File Corresponding To A Journal
   ///
@@ -2057,15 +2120,17 @@ class SQLite {
   ffi.Pointer<sqlite3_file> sqlite3_database_file_object(
     ffi.Pointer<ffi.Int8> arg0,
   ) {
-    return (_sqlite3_database_file_object ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_database_file_object>>(
-                'sqlite3_database_file_object')
-            .asFunction<_dart_sqlite3_database_file_object>())(
+    return _sqlite3_database_file_object(
       arg0,
     );
   }
 
-  _dart_sqlite3_database_file_object? _sqlite3_database_file_object;
+  late final _sqlite3_database_file_object_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_database_file_object>>(
+          'sqlite3_database_file_object');
+  late final _dart_sqlite3_database_file_object _sqlite3_database_file_object =
+      _sqlite3_database_file_object_ptr
+          .asFunction<_dart_sqlite3_database_file_object>();
 
   /// CAPI3REF: Create and Destroy VFS Filenames
   ///
@@ -2117,10 +2182,7 @@ class SQLite {
     int nParam,
     ffi.Pointer<ffi.Pointer<ffi.Int8>> azParam,
   ) {
-    return (_sqlite3_create_filename ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_create_filename>>(
-                'sqlite3_create_filename')
-            .asFunction<_dart_sqlite3_create_filename>())(
+    return _sqlite3_create_filename(
       zDatabase,
       zJournal,
       zWal,
@@ -2129,20 +2191,25 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_create_filename? _sqlite3_create_filename;
+  late final _sqlite3_create_filename_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_create_filename>>(
+          'sqlite3_create_filename');
+  late final _dart_sqlite3_create_filename _sqlite3_create_filename =
+      _sqlite3_create_filename_ptr.asFunction<_dart_sqlite3_create_filename>();
 
   void sqlite3_free_filename(
     ffi.Pointer<ffi.Int8> arg0,
   ) {
-    return (_sqlite3_free_filename ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_free_filename>>(
-                'sqlite3_free_filename')
-            .asFunction<_dart_sqlite3_free_filename>())(
+    return _sqlite3_free_filename(
       arg0,
     );
   }
 
-  _dart_sqlite3_free_filename? _sqlite3_free_filename;
+  late final _sqlite3_free_filename_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_free_filename>>(
+          'sqlite3_free_filename');
+  late final _dart_sqlite3_free_filename _sqlite3_free_filename =
+      _sqlite3_free_filename_ptr.asFunction<_dart_sqlite3_free_filename>();
 
   /// CAPI3REF: Error Codes And Messages
   /// METHOD: sqlite3
@@ -2197,63 +2264,69 @@ class SQLite {
   int sqlite3_errcode(
     ffi.Pointer<sqlite3> db,
   ) {
-    return (_sqlite3_errcode ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_errcode>>('sqlite3_errcode')
-            .asFunction<_dart_sqlite3_errcode>())(
+    return _sqlite3_errcode(
       db,
     );
   }
 
-  _dart_sqlite3_errcode? _sqlite3_errcode;
+  late final _sqlite3_errcode_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_errcode>>('sqlite3_errcode');
+  late final _dart_sqlite3_errcode _sqlite3_errcode =
+      _sqlite3_errcode_ptr.asFunction<_dart_sqlite3_errcode>();
 
   int sqlite3_extended_errcode(
     ffi.Pointer<sqlite3> db,
   ) {
-    return (_sqlite3_extended_errcode ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_extended_errcode>>(
-                'sqlite3_extended_errcode')
-            .asFunction<_dart_sqlite3_extended_errcode>())(
+    return _sqlite3_extended_errcode(
       db,
     );
   }
 
-  _dart_sqlite3_extended_errcode? _sqlite3_extended_errcode;
+  late final _sqlite3_extended_errcode_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_extended_errcode>>(
+          'sqlite3_extended_errcode');
+  late final _dart_sqlite3_extended_errcode _sqlite3_extended_errcode =
+      _sqlite3_extended_errcode_ptr
+          .asFunction<_dart_sqlite3_extended_errcode>();
 
   ffi.Pointer<ffi.Int8> sqlite3_errmsg(
     ffi.Pointer<sqlite3> arg0,
   ) {
-    return (_sqlite3_errmsg ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_errmsg>>('sqlite3_errmsg')
-            .asFunction<_dart_sqlite3_errmsg>())(
+    return _sqlite3_errmsg(
       arg0,
     );
   }
 
-  _dart_sqlite3_errmsg? _sqlite3_errmsg;
+  late final _sqlite3_errmsg_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_errmsg>>('sqlite3_errmsg');
+  late final _dart_sqlite3_errmsg _sqlite3_errmsg =
+      _sqlite3_errmsg_ptr.asFunction<_dart_sqlite3_errmsg>();
 
   ffi.Pointer<ffi.Void> sqlite3_errmsg16(
     ffi.Pointer<sqlite3> arg0,
   ) {
-    return (_sqlite3_errmsg16 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_errmsg16>>('sqlite3_errmsg16')
-            .asFunction<_dart_sqlite3_errmsg16>())(
+    return _sqlite3_errmsg16(
       arg0,
     );
   }
 
-  _dart_sqlite3_errmsg16? _sqlite3_errmsg16;
+  late final _sqlite3_errmsg16_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_errmsg16>>('sqlite3_errmsg16');
+  late final _dart_sqlite3_errmsg16 _sqlite3_errmsg16 =
+      _sqlite3_errmsg16_ptr.asFunction<_dart_sqlite3_errmsg16>();
 
   ffi.Pointer<ffi.Int8> sqlite3_errstr(
     int arg0,
   ) {
-    return (_sqlite3_errstr ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_errstr>>('sqlite3_errstr')
-            .asFunction<_dart_sqlite3_errstr>())(
+    return _sqlite3_errstr(
       arg0,
     );
   }
 
-  _dart_sqlite3_errstr? _sqlite3_errstr;
+  late final _sqlite3_errstr_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_errstr>>('sqlite3_errstr');
+  late final _dart_sqlite3_errstr _sqlite3_errstr =
+      _sqlite3_errstr_ptr.asFunction<_dart_sqlite3_errstr>();
 
   /// CAPI3REF: Run-time Limits
   /// METHOD: sqlite3
@@ -2298,16 +2371,17 @@ class SQLite {
     int id,
     int newVal,
   ) {
-    return (_sqlite3_limit ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_limit>>('sqlite3_limit')
-            .asFunction<_dart_sqlite3_limit>())(
+    return _sqlite3_limit(
       arg0,
       id,
       newVal,
     );
   }
 
-  _dart_sqlite3_limit? _sqlite3_limit;
+  late final _sqlite3_limit_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_limit>>('sqlite3_limit');
+  late final _dart_sqlite3_limit _sqlite3_limit =
+      _sqlite3_limit_ptr.asFunction<_dart_sqlite3_limit>();
 
   /// CAPI3REF: Compiling An SQL Statement
   /// KEYWORDS: {SQL statement compiler}
@@ -2414,9 +2488,7 @@ class SQLite {
     ffi.Pointer<ffi.Pointer<sqlite3_stmt>> ppStmt,
     ffi.Pointer<ffi.Pointer<ffi.Int8>> pzTail,
   ) {
-    return (_sqlite3_prepare ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_prepare>>('sqlite3_prepare')
-            .asFunction<_dart_sqlite3_prepare>())(
+    return _sqlite3_prepare(
       db,
       zSql,
       nByte,
@@ -2425,7 +2497,10 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_prepare? _sqlite3_prepare;
+  late final _sqlite3_prepare_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_prepare>>('sqlite3_prepare');
+  late final _dart_sqlite3_prepare _sqlite3_prepare =
+      _sqlite3_prepare_ptr.asFunction<_dart_sqlite3_prepare>();
 
   int sqlite3_prepare_v2(
     ffi.Pointer<sqlite3> db,
@@ -2434,9 +2509,7 @@ class SQLite {
     ffi.Pointer<ffi.Pointer<sqlite3_stmt>> ppStmt,
     ffi.Pointer<ffi.Pointer<ffi.Int8>> pzTail,
   ) {
-    return (_sqlite3_prepare_v2 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_prepare_v2>>('sqlite3_prepare_v2')
-            .asFunction<_dart_sqlite3_prepare_v2>())(
+    return _sqlite3_prepare_v2(
       db,
       zSql,
       nByte,
@@ -2445,7 +2518,10 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_prepare_v2? _sqlite3_prepare_v2;
+  late final _sqlite3_prepare_v2_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_prepare_v2>>('sqlite3_prepare_v2');
+  late final _dart_sqlite3_prepare_v2 _sqlite3_prepare_v2 =
+      _sqlite3_prepare_v2_ptr.asFunction<_dart_sqlite3_prepare_v2>();
 
   int sqlite3_prepare_v3(
     ffi.Pointer<sqlite3> db,
@@ -2455,9 +2531,7 @@ class SQLite {
     ffi.Pointer<ffi.Pointer<sqlite3_stmt>> ppStmt,
     ffi.Pointer<ffi.Pointer<ffi.Int8>> pzTail,
   ) {
-    return (_sqlite3_prepare_v3 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_prepare_v3>>('sqlite3_prepare_v3')
-            .asFunction<_dart_sqlite3_prepare_v3>())(
+    return _sqlite3_prepare_v3(
       db,
       zSql,
       nByte,
@@ -2467,7 +2541,10 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_prepare_v3? _sqlite3_prepare_v3;
+  late final _sqlite3_prepare_v3_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_prepare_v3>>('sqlite3_prepare_v3');
+  late final _dart_sqlite3_prepare_v3 _sqlite3_prepare_v3 =
+      _sqlite3_prepare_v3_ptr.asFunction<_dart_sqlite3_prepare_v3>();
 
   int sqlite3_prepare16(
     ffi.Pointer<sqlite3> db,
@@ -2476,9 +2553,7 @@ class SQLite {
     ffi.Pointer<ffi.Pointer<sqlite3_stmt>> ppStmt,
     ffi.Pointer<ffi.Pointer<ffi.Void>> pzTail,
   ) {
-    return (_sqlite3_prepare16 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_prepare16>>('sqlite3_prepare16')
-            .asFunction<_dart_sqlite3_prepare16>())(
+    return _sqlite3_prepare16(
       db,
       zSql,
       nByte,
@@ -2487,7 +2562,10 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_prepare16? _sqlite3_prepare16;
+  late final _sqlite3_prepare16_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_prepare16>>('sqlite3_prepare16');
+  late final _dart_sqlite3_prepare16 _sqlite3_prepare16 =
+      _sqlite3_prepare16_ptr.asFunction<_dart_sqlite3_prepare16>();
 
   int sqlite3_prepare16_v2(
     ffi.Pointer<sqlite3> db,
@@ -2496,10 +2574,7 @@ class SQLite {
     ffi.Pointer<ffi.Pointer<sqlite3_stmt>> ppStmt,
     ffi.Pointer<ffi.Pointer<ffi.Void>> pzTail,
   ) {
-    return (_sqlite3_prepare16_v2 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_prepare16_v2>>(
-                'sqlite3_prepare16_v2')
-            .asFunction<_dart_sqlite3_prepare16_v2>())(
+    return _sqlite3_prepare16_v2(
       db,
       zSql,
       nByte,
@@ -2508,7 +2583,11 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_prepare16_v2? _sqlite3_prepare16_v2;
+  late final _sqlite3_prepare16_v2_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_prepare16_v2>>(
+          'sqlite3_prepare16_v2');
+  late final _dart_sqlite3_prepare16_v2 _sqlite3_prepare16_v2 =
+      _sqlite3_prepare16_v2_ptr.asFunction<_dart_sqlite3_prepare16_v2>();
 
   int sqlite3_prepare16_v3(
     ffi.Pointer<sqlite3> db,
@@ -2518,10 +2597,7 @@ class SQLite {
     ffi.Pointer<ffi.Pointer<sqlite3_stmt>> ppStmt,
     ffi.Pointer<ffi.Pointer<ffi.Void>> pzTail,
   ) {
-    return (_sqlite3_prepare16_v3 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_prepare16_v3>>(
-                'sqlite3_prepare16_v3')
-            .asFunction<_dart_sqlite3_prepare16_v3>())(
+    return _sqlite3_prepare16_v3(
       db,
       zSql,
       nByte,
@@ -2531,7 +2607,11 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_prepare16_v3? _sqlite3_prepare16_v3;
+  late final _sqlite3_prepare16_v3_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_prepare16_v3>>(
+          'sqlite3_prepare16_v3');
+  late final _dart_sqlite3_prepare16_v3 _sqlite3_prepare16_v3 =
+      _sqlite3_prepare16_v3_ptr.asFunction<_dart_sqlite3_prepare16_v3>();
 
   /// CAPI3REF: Retrieving Statement SQL
   /// METHOD: sqlite3_stmt
@@ -2572,40 +2652,43 @@ class SQLite {
   ffi.Pointer<ffi.Int8> sqlite3_sql(
     ffi.Pointer<sqlite3_stmt> pStmt,
   ) {
-    return (_sqlite3_sql ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_sql>>('sqlite3_sql')
-            .asFunction<_dart_sqlite3_sql>())(
+    return _sqlite3_sql(
       pStmt,
     );
   }
 
-  _dart_sqlite3_sql? _sqlite3_sql;
+  late final _sqlite3_sql_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_sql>>('sqlite3_sql');
+  late final _dart_sqlite3_sql _sqlite3_sql =
+      _sqlite3_sql_ptr.asFunction<_dart_sqlite3_sql>();
 
   ffi.Pointer<ffi.Int8> sqlite3_expanded_sql(
     ffi.Pointer<sqlite3_stmt> pStmt,
   ) {
-    return (_sqlite3_expanded_sql ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_expanded_sql>>(
-                'sqlite3_expanded_sql')
-            .asFunction<_dart_sqlite3_expanded_sql>())(
+    return _sqlite3_expanded_sql(
       pStmt,
     );
   }
 
-  _dart_sqlite3_expanded_sql? _sqlite3_expanded_sql;
+  late final _sqlite3_expanded_sql_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_expanded_sql>>(
+          'sqlite3_expanded_sql');
+  late final _dart_sqlite3_expanded_sql _sqlite3_expanded_sql =
+      _sqlite3_expanded_sql_ptr.asFunction<_dart_sqlite3_expanded_sql>();
 
   ffi.Pointer<ffi.Int8> sqlite3_normalized_sql(
     ffi.Pointer<sqlite3_stmt> pStmt,
   ) {
-    return (_sqlite3_normalized_sql ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_normalized_sql>>(
-                'sqlite3_normalized_sql')
-            .asFunction<_dart_sqlite3_normalized_sql>())(
+    return _sqlite3_normalized_sql(
       pStmt,
     );
   }
 
-  _dart_sqlite3_normalized_sql? _sqlite3_normalized_sql;
+  late final _sqlite3_normalized_sql_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_normalized_sql>>(
+          'sqlite3_normalized_sql');
+  late final _dart_sqlite3_normalized_sql _sqlite3_normalized_sql =
+      _sqlite3_normalized_sql_ptr.asFunction<_dart_sqlite3_normalized_sql>();
 
   /// CAPI3REF: Determine If An SQL Statement Writes The Database
   /// METHOD: sqlite3_stmt
@@ -2642,15 +2725,16 @@ class SQLite {
   int sqlite3_stmt_readonly(
     ffi.Pointer<sqlite3_stmt> pStmt,
   ) {
-    return (_sqlite3_stmt_readonly ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_stmt_readonly>>(
-                'sqlite3_stmt_readonly')
-            .asFunction<_dart_sqlite3_stmt_readonly>())(
+    return _sqlite3_stmt_readonly(
       pStmt,
     );
   }
 
-  _dart_sqlite3_stmt_readonly? _sqlite3_stmt_readonly;
+  late final _sqlite3_stmt_readonly_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_stmt_readonly>>(
+          'sqlite3_stmt_readonly');
+  late final _dart_sqlite3_stmt_readonly _sqlite3_stmt_readonly =
+      _sqlite3_stmt_readonly_ptr.asFunction<_dart_sqlite3_stmt_readonly>();
 
   /// CAPI3REF: Query The EXPLAIN Setting For A Prepared Statement
   /// METHOD: sqlite3_stmt
@@ -2663,15 +2747,16 @@ class SQLite {
   int sqlite3_stmt_isexplain(
     ffi.Pointer<sqlite3_stmt> pStmt,
   ) {
-    return (_sqlite3_stmt_isexplain ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_stmt_isexplain>>(
-                'sqlite3_stmt_isexplain')
-            .asFunction<_dart_sqlite3_stmt_isexplain>())(
+    return _sqlite3_stmt_isexplain(
       pStmt,
     );
   }
 
-  _dart_sqlite3_stmt_isexplain? _sqlite3_stmt_isexplain;
+  late final _sqlite3_stmt_isexplain_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_stmt_isexplain>>(
+          'sqlite3_stmt_isexplain');
+  late final _dart_sqlite3_stmt_isexplain _sqlite3_stmt_isexplain =
+      _sqlite3_stmt_isexplain_ptr.asFunction<_dart_sqlite3_stmt_isexplain>();
 
   /// CAPI3REF: Determine If A Prepared Statement Has Been Reset
   /// METHOD: sqlite3_stmt
@@ -2693,14 +2778,15 @@ class SQLite {
   int sqlite3_stmt_busy(
     ffi.Pointer<sqlite3_stmt> arg0,
   ) {
-    return (_sqlite3_stmt_busy ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_stmt_busy>>('sqlite3_stmt_busy')
-            .asFunction<_dart_sqlite3_stmt_busy>())(
+    return _sqlite3_stmt_busy(
       arg0,
     );
   }
 
-  _dart_sqlite3_stmt_busy? _sqlite3_stmt_busy;
+  late final _sqlite3_stmt_busy_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_stmt_busy>>('sqlite3_stmt_busy');
+  late final _dart_sqlite3_stmt_busy _sqlite3_stmt_busy =
+      _sqlite3_stmt_busy_ptr.asFunction<_dart_sqlite3_stmt_busy>();
 
   /// CAPI3REF: Binding Values To Prepared Statements
   /// KEYWORDS: {host parameter} {host parameters} {host parameter name}
@@ -2843,9 +2929,7 @@ class SQLite {
     int n,
     ffi.Pointer<ffi.NativeFunction<_typedefC_26>> arg4,
   ) {
-    return (_sqlite3_bind_blob ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_bind_blob>>('sqlite3_bind_blob')
-            .asFunction<_dart_sqlite3_bind_blob>())(
+    return _sqlite3_bind_blob(
       arg0,
       arg1,
       arg2,
@@ -2854,7 +2938,10 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_bind_blob? _sqlite3_bind_blob;
+  late final _sqlite3_bind_blob_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_bind_blob>>('sqlite3_bind_blob');
+  late final _dart_sqlite3_bind_blob _sqlite3_bind_blob =
+      _sqlite3_bind_blob_ptr.asFunction<_dart_sqlite3_bind_blob>();
 
   int sqlite3_bind_blob64(
     ffi.Pointer<sqlite3_stmt> arg0,
@@ -2863,10 +2950,7 @@ class SQLite {
     int arg3,
     ffi.Pointer<ffi.NativeFunction<_typedefC_27>> arg4,
   ) {
-    return (_sqlite3_bind_blob64 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_bind_blob64>>(
-                'sqlite3_bind_blob64')
-            .asFunction<_dart_sqlite3_bind_blob64>())(
+    return _sqlite3_bind_blob64(
       arg0,
       arg1,
       arg2,
@@ -2875,70 +2959,78 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_bind_blob64? _sqlite3_bind_blob64;
+  late final _sqlite3_bind_blob64_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_bind_blob64>>(
+          'sqlite3_bind_blob64');
+  late final _dart_sqlite3_bind_blob64 _sqlite3_bind_blob64 =
+      _sqlite3_bind_blob64_ptr.asFunction<_dart_sqlite3_bind_blob64>();
 
   int sqlite3_bind_double(
     ffi.Pointer<sqlite3_stmt> arg0,
     int arg1,
     double arg2,
   ) {
-    return (_sqlite3_bind_double ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_bind_double>>(
-                'sqlite3_bind_double')
-            .asFunction<_dart_sqlite3_bind_double>())(
+    return _sqlite3_bind_double(
       arg0,
       arg1,
       arg2,
     );
   }
 
-  _dart_sqlite3_bind_double? _sqlite3_bind_double;
+  late final _sqlite3_bind_double_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_bind_double>>(
+          'sqlite3_bind_double');
+  late final _dart_sqlite3_bind_double _sqlite3_bind_double =
+      _sqlite3_bind_double_ptr.asFunction<_dart_sqlite3_bind_double>();
 
   int sqlite3_bind_int(
     ffi.Pointer<sqlite3_stmt> arg0,
     int arg1,
     int arg2,
   ) {
-    return (_sqlite3_bind_int ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_bind_int>>('sqlite3_bind_int')
-            .asFunction<_dart_sqlite3_bind_int>())(
+    return _sqlite3_bind_int(
       arg0,
       arg1,
       arg2,
     );
   }
 
-  _dart_sqlite3_bind_int? _sqlite3_bind_int;
+  late final _sqlite3_bind_int_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_bind_int>>('sqlite3_bind_int');
+  late final _dart_sqlite3_bind_int _sqlite3_bind_int =
+      _sqlite3_bind_int_ptr.asFunction<_dart_sqlite3_bind_int>();
 
   int sqlite3_bind_int64(
     ffi.Pointer<sqlite3_stmt> arg0,
     int arg1,
     int arg2,
   ) {
-    return (_sqlite3_bind_int64 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_bind_int64>>('sqlite3_bind_int64')
-            .asFunction<_dart_sqlite3_bind_int64>())(
+    return _sqlite3_bind_int64(
       arg0,
       arg1,
       arg2,
     );
   }
 
-  _dart_sqlite3_bind_int64? _sqlite3_bind_int64;
+  late final _sqlite3_bind_int64_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_bind_int64>>('sqlite3_bind_int64');
+  late final _dart_sqlite3_bind_int64 _sqlite3_bind_int64 =
+      _sqlite3_bind_int64_ptr.asFunction<_dart_sqlite3_bind_int64>();
 
   int sqlite3_bind_null(
     ffi.Pointer<sqlite3_stmt> arg0,
     int arg1,
   ) {
-    return (_sqlite3_bind_null ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_bind_null>>('sqlite3_bind_null')
-            .asFunction<_dart_sqlite3_bind_null>())(
+    return _sqlite3_bind_null(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_bind_null? _sqlite3_bind_null;
+  late final _sqlite3_bind_null_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_bind_null>>('sqlite3_bind_null');
+  late final _dart_sqlite3_bind_null _sqlite3_bind_null =
+      _sqlite3_bind_null_ptr.asFunction<_dart_sqlite3_bind_null>();
 
   int sqlite3_bind_text(
     ffi.Pointer<sqlite3_stmt> arg0,
@@ -2947,9 +3039,7 @@ class SQLite {
     int arg3,
     ffi.Pointer<ffi.NativeFunction<_typedefC_28>> arg4,
   ) {
-    return (_sqlite3_bind_text ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_bind_text>>('sqlite3_bind_text')
-            .asFunction<_dart_sqlite3_bind_text>())(
+    return _sqlite3_bind_text(
       arg0,
       arg1,
       arg2,
@@ -2958,7 +3048,10 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_bind_text? _sqlite3_bind_text;
+  late final _sqlite3_bind_text_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_bind_text>>('sqlite3_bind_text');
+  late final _dart_sqlite3_bind_text _sqlite3_bind_text =
+      _sqlite3_bind_text_ptr.asFunction<_dart_sqlite3_bind_text>();
 
   int sqlite3_bind_text16(
     ffi.Pointer<sqlite3_stmt> arg0,
@@ -2967,10 +3060,7 @@ class SQLite {
     int arg3,
     ffi.Pointer<ffi.NativeFunction<_typedefC_29>> arg4,
   ) {
-    return (_sqlite3_bind_text16 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_bind_text16>>(
-                'sqlite3_bind_text16')
-            .asFunction<_dart_sqlite3_bind_text16>())(
+    return _sqlite3_bind_text16(
       arg0,
       arg1,
       arg2,
@@ -2979,7 +3069,11 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_bind_text16? _sqlite3_bind_text16;
+  late final _sqlite3_bind_text16_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_bind_text16>>(
+          'sqlite3_bind_text16');
+  late final _dart_sqlite3_bind_text16 _sqlite3_bind_text16 =
+      _sqlite3_bind_text16_ptr.asFunction<_dart_sqlite3_bind_text16>();
 
   int sqlite3_bind_text64(
     ffi.Pointer<sqlite3_stmt> arg0,
@@ -2989,10 +3083,7 @@ class SQLite {
     ffi.Pointer<ffi.NativeFunction<_typedefC_30>> arg4,
     int encoding,
   ) {
-    return (_sqlite3_bind_text64 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_bind_text64>>(
-                'sqlite3_bind_text64')
-            .asFunction<_dart_sqlite3_bind_text64>())(
+    return _sqlite3_bind_text64(
       arg0,
       arg1,
       arg2,
@@ -3002,23 +3093,28 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_bind_text64? _sqlite3_bind_text64;
+  late final _sqlite3_bind_text64_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_bind_text64>>(
+          'sqlite3_bind_text64');
+  late final _dart_sqlite3_bind_text64 _sqlite3_bind_text64 =
+      _sqlite3_bind_text64_ptr.asFunction<_dart_sqlite3_bind_text64>();
 
   int sqlite3_bind_value(
     ffi.Pointer<sqlite3_stmt> arg0,
     int arg1,
     ffi.Pointer<sqlite3_value> arg2,
   ) {
-    return (_sqlite3_bind_value ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_bind_value>>('sqlite3_bind_value')
-            .asFunction<_dart_sqlite3_bind_value>())(
+    return _sqlite3_bind_value(
       arg0,
       arg1,
       arg2,
     );
   }
 
-  _dart_sqlite3_bind_value? _sqlite3_bind_value;
+  late final _sqlite3_bind_value_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_bind_value>>('sqlite3_bind_value');
+  late final _dart_sqlite3_bind_value _sqlite3_bind_value =
+      _sqlite3_bind_value_ptr.asFunction<_dart_sqlite3_bind_value>();
 
   int sqlite3_bind_pointer(
     ffi.Pointer<sqlite3_stmt> arg0,
@@ -3027,10 +3123,7 @@ class SQLite {
     ffi.Pointer<ffi.Int8> arg3,
     ffi.Pointer<ffi.NativeFunction<_typedefC_31>> arg4,
   ) {
-    return (_sqlite3_bind_pointer ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_bind_pointer>>(
-                'sqlite3_bind_pointer')
-            .asFunction<_dart_sqlite3_bind_pointer>())(
+    return _sqlite3_bind_pointer(
       arg0,
       arg1,
       arg2,
@@ -3039,41 +3132,47 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_bind_pointer? _sqlite3_bind_pointer;
+  late final _sqlite3_bind_pointer_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_bind_pointer>>(
+          'sqlite3_bind_pointer');
+  late final _dart_sqlite3_bind_pointer _sqlite3_bind_pointer =
+      _sqlite3_bind_pointer_ptr.asFunction<_dart_sqlite3_bind_pointer>();
 
   int sqlite3_bind_zeroblob(
     ffi.Pointer<sqlite3_stmt> arg0,
     int arg1,
     int n,
   ) {
-    return (_sqlite3_bind_zeroblob ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_bind_zeroblob>>(
-                'sqlite3_bind_zeroblob')
-            .asFunction<_dart_sqlite3_bind_zeroblob>())(
+    return _sqlite3_bind_zeroblob(
       arg0,
       arg1,
       n,
     );
   }
 
-  _dart_sqlite3_bind_zeroblob? _sqlite3_bind_zeroblob;
+  late final _sqlite3_bind_zeroblob_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_bind_zeroblob>>(
+          'sqlite3_bind_zeroblob');
+  late final _dart_sqlite3_bind_zeroblob _sqlite3_bind_zeroblob =
+      _sqlite3_bind_zeroblob_ptr.asFunction<_dart_sqlite3_bind_zeroblob>();
 
   int sqlite3_bind_zeroblob64(
     ffi.Pointer<sqlite3_stmt> arg0,
     int arg1,
     int arg2,
   ) {
-    return (_sqlite3_bind_zeroblob64 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_bind_zeroblob64>>(
-                'sqlite3_bind_zeroblob64')
-            .asFunction<_dart_sqlite3_bind_zeroblob64>())(
+    return _sqlite3_bind_zeroblob64(
       arg0,
       arg1,
       arg2,
     );
   }
 
-  _dart_sqlite3_bind_zeroblob64? _sqlite3_bind_zeroblob64;
+  late final _sqlite3_bind_zeroblob64_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_bind_zeroblob64>>(
+          'sqlite3_bind_zeroblob64');
+  late final _dart_sqlite3_bind_zeroblob64 _sqlite3_bind_zeroblob64 =
+      _sqlite3_bind_zeroblob64_ptr.asFunction<_dart_sqlite3_bind_zeroblob64>();
 
   /// CAPI3REF: Number Of SQL Parameters
   /// METHOD: sqlite3_stmt
@@ -3095,15 +3194,17 @@ class SQLite {
   int sqlite3_bind_parameter_count(
     ffi.Pointer<sqlite3_stmt> arg0,
   ) {
-    return (_sqlite3_bind_parameter_count ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_bind_parameter_count>>(
-                'sqlite3_bind_parameter_count')
-            .asFunction<_dart_sqlite3_bind_parameter_count>())(
+    return _sqlite3_bind_parameter_count(
       arg0,
     );
   }
 
-  _dart_sqlite3_bind_parameter_count? _sqlite3_bind_parameter_count;
+  late final _sqlite3_bind_parameter_count_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_bind_parameter_count>>(
+          'sqlite3_bind_parameter_count');
+  late final _dart_sqlite3_bind_parameter_count _sqlite3_bind_parameter_count =
+      _sqlite3_bind_parameter_count_ptr
+          .asFunction<_dart_sqlite3_bind_parameter_count>();
 
   /// CAPI3REF: Name Of A Host Parameter
   /// METHOD: sqlite3_stmt
@@ -3133,16 +3234,18 @@ class SQLite {
     ffi.Pointer<sqlite3_stmt> arg0,
     int arg1,
   ) {
-    return (_sqlite3_bind_parameter_name ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_bind_parameter_name>>(
-                'sqlite3_bind_parameter_name')
-            .asFunction<_dart_sqlite3_bind_parameter_name>())(
+    return _sqlite3_bind_parameter_name(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_bind_parameter_name? _sqlite3_bind_parameter_name;
+  late final _sqlite3_bind_parameter_name_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_bind_parameter_name>>(
+          'sqlite3_bind_parameter_name');
+  late final _dart_sqlite3_bind_parameter_name _sqlite3_bind_parameter_name =
+      _sqlite3_bind_parameter_name_ptr
+          .asFunction<_dart_sqlite3_bind_parameter_name>();
 
   /// CAPI3REF: Index Of A Parameter With A Given Name
   /// METHOD: sqlite3_stmt
@@ -3162,16 +3265,18 @@ class SQLite {
     ffi.Pointer<sqlite3_stmt> arg0,
     ffi.Pointer<ffi.Int8> zName,
   ) {
-    return (_sqlite3_bind_parameter_index ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_bind_parameter_index>>(
-                'sqlite3_bind_parameter_index')
-            .asFunction<_dart_sqlite3_bind_parameter_index>())(
+    return _sqlite3_bind_parameter_index(
       arg0,
       zName,
     );
   }
 
-  _dart_sqlite3_bind_parameter_index? _sqlite3_bind_parameter_index;
+  late final _sqlite3_bind_parameter_index_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_bind_parameter_index>>(
+          'sqlite3_bind_parameter_index');
+  late final _dart_sqlite3_bind_parameter_index _sqlite3_bind_parameter_index =
+      _sqlite3_bind_parameter_index_ptr
+          .asFunction<_dart_sqlite3_bind_parameter_index>();
 
   /// CAPI3REF: Reset All Bindings On A Prepared Statement
   /// METHOD: sqlite3_stmt
@@ -3182,15 +3287,16 @@ class SQLite {
   int sqlite3_clear_bindings(
     ffi.Pointer<sqlite3_stmt> arg0,
   ) {
-    return (_sqlite3_clear_bindings ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_clear_bindings>>(
-                'sqlite3_clear_bindings')
-            .asFunction<_dart_sqlite3_clear_bindings>())(
+    return _sqlite3_clear_bindings(
       arg0,
     );
   }
 
-  _dart_sqlite3_clear_bindings? _sqlite3_clear_bindings;
+  late final _sqlite3_clear_bindings_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_clear_bindings>>(
+          'sqlite3_clear_bindings');
+  late final _dart_sqlite3_clear_bindings _sqlite3_clear_bindings =
+      _sqlite3_clear_bindings_ptr.asFunction<_dart_sqlite3_clear_bindings>();
 
   /// CAPI3REF: Number Of Columns In A Result Set
   /// METHOD: sqlite3_stmt
@@ -3207,15 +3313,16 @@ class SQLite {
   int sqlite3_column_count(
     ffi.Pointer<sqlite3_stmt> pStmt,
   ) {
-    return (_sqlite3_column_count ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_column_count>>(
-                'sqlite3_column_count')
-            .asFunction<_dart_sqlite3_column_count>())(
+    return _sqlite3_column_count(
       pStmt,
     );
   }
 
-  _dart_sqlite3_column_count? _sqlite3_column_count;
+  late final _sqlite3_column_count_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_column_count>>(
+          'sqlite3_column_count');
+  late final _dart_sqlite3_column_count _sqlite3_column_count =
+      _sqlite3_column_count_ptr.asFunction<_dart_sqlite3_column_count>();
 
   /// CAPI3REF: Column Names In A Result Set
   /// METHOD: sqlite3_stmt
@@ -3246,31 +3353,33 @@ class SQLite {
     ffi.Pointer<sqlite3_stmt> arg0,
     int N,
   ) {
-    return (_sqlite3_column_name ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_column_name>>(
-                'sqlite3_column_name')
-            .asFunction<_dart_sqlite3_column_name>())(
+    return _sqlite3_column_name(
       arg0,
       N,
     );
   }
 
-  _dart_sqlite3_column_name? _sqlite3_column_name;
+  late final _sqlite3_column_name_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_column_name>>(
+          'sqlite3_column_name');
+  late final _dart_sqlite3_column_name _sqlite3_column_name =
+      _sqlite3_column_name_ptr.asFunction<_dart_sqlite3_column_name>();
 
   ffi.Pointer<ffi.Void> sqlite3_column_name16(
     ffi.Pointer<sqlite3_stmt> arg0,
     int N,
   ) {
-    return (_sqlite3_column_name16 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_column_name16>>(
-                'sqlite3_column_name16')
-            .asFunction<_dart_sqlite3_column_name16>())(
+    return _sqlite3_column_name16(
       arg0,
       N,
     );
   }
 
-  _dart_sqlite3_column_name16? _sqlite3_column_name16;
+  late final _sqlite3_column_name16_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_column_name16>>(
+          'sqlite3_column_name16');
+  late final _dart_sqlite3_column_name16 _sqlite3_column_name16 =
+      _sqlite3_column_name16_ptr.asFunction<_dart_sqlite3_column_name16>();
 
   /// CAPI3REF: Source Of Data In A Query Result
   /// METHOD: sqlite3_stmt
@@ -3316,91 +3425,103 @@ class SQLite {
     ffi.Pointer<sqlite3_stmt> arg0,
     int arg1,
   ) {
-    return (_sqlite3_column_database_name ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_column_database_name>>(
-                'sqlite3_column_database_name')
-            .asFunction<_dart_sqlite3_column_database_name>())(
+    return _sqlite3_column_database_name(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_column_database_name? _sqlite3_column_database_name;
+  late final _sqlite3_column_database_name_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_column_database_name>>(
+          'sqlite3_column_database_name');
+  late final _dart_sqlite3_column_database_name _sqlite3_column_database_name =
+      _sqlite3_column_database_name_ptr
+          .asFunction<_dart_sqlite3_column_database_name>();
 
   ffi.Pointer<ffi.Void> sqlite3_column_database_name16(
     ffi.Pointer<sqlite3_stmt> arg0,
     int arg1,
   ) {
-    return (_sqlite3_column_database_name16 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_column_database_name16>>(
-                'sqlite3_column_database_name16')
-            .asFunction<_dart_sqlite3_column_database_name16>())(
+    return _sqlite3_column_database_name16(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_column_database_name16? _sqlite3_column_database_name16;
+  late final _sqlite3_column_database_name16_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_column_database_name16>>(
+          'sqlite3_column_database_name16');
+  late final _dart_sqlite3_column_database_name16
+      _sqlite3_column_database_name16 = _sqlite3_column_database_name16_ptr
+          .asFunction<_dart_sqlite3_column_database_name16>();
 
   ffi.Pointer<ffi.Int8> sqlite3_column_table_name(
     ffi.Pointer<sqlite3_stmt> arg0,
     int arg1,
   ) {
-    return (_sqlite3_column_table_name ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_column_table_name>>(
-                'sqlite3_column_table_name')
-            .asFunction<_dart_sqlite3_column_table_name>())(
+    return _sqlite3_column_table_name(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_column_table_name? _sqlite3_column_table_name;
+  late final _sqlite3_column_table_name_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_column_table_name>>(
+          'sqlite3_column_table_name');
+  late final _dart_sqlite3_column_table_name _sqlite3_column_table_name =
+      _sqlite3_column_table_name_ptr
+          .asFunction<_dart_sqlite3_column_table_name>();
 
   ffi.Pointer<ffi.Void> sqlite3_column_table_name16(
     ffi.Pointer<sqlite3_stmt> arg0,
     int arg1,
   ) {
-    return (_sqlite3_column_table_name16 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_column_table_name16>>(
-                'sqlite3_column_table_name16')
-            .asFunction<_dart_sqlite3_column_table_name16>())(
+    return _sqlite3_column_table_name16(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_column_table_name16? _sqlite3_column_table_name16;
+  late final _sqlite3_column_table_name16_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_column_table_name16>>(
+          'sqlite3_column_table_name16');
+  late final _dart_sqlite3_column_table_name16 _sqlite3_column_table_name16 =
+      _sqlite3_column_table_name16_ptr
+          .asFunction<_dart_sqlite3_column_table_name16>();
 
   ffi.Pointer<ffi.Int8> sqlite3_column_origin_name(
     ffi.Pointer<sqlite3_stmt> arg0,
     int arg1,
   ) {
-    return (_sqlite3_column_origin_name ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_column_origin_name>>(
-                'sqlite3_column_origin_name')
-            .asFunction<_dart_sqlite3_column_origin_name>())(
+    return _sqlite3_column_origin_name(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_column_origin_name? _sqlite3_column_origin_name;
+  late final _sqlite3_column_origin_name_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_column_origin_name>>(
+          'sqlite3_column_origin_name');
+  late final _dart_sqlite3_column_origin_name _sqlite3_column_origin_name =
+      _sqlite3_column_origin_name_ptr
+          .asFunction<_dart_sqlite3_column_origin_name>();
 
   ffi.Pointer<ffi.Void> sqlite3_column_origin_name16(
     ffi.Pointer<sqlite3_stmt> arg0,
     int arg1,
   ) {
-    return (_sqlite3_column_origin_name16 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_column_origin_name16>>(
-                'sqlite3_column_origin_name16')
-            .asFunction<_dart_sqlite3_column_origin_name16>())(
+    return _sqlite3_column_origin_name16(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_column_origin_name16? _sqlite3_column_origin_name16;
+  late final _sqlite3_column_origin_name16_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_column_origin_name16>>(
+          'sqlite3_column_origin_name16');
+  late final _dart_sqlite3_column_origin_name16 _sqlite3_column_origin_name16 =
+      _sqlite3_column_origin_name16_ptr
+          .asFunction<_dart_sqlite3_column_origin_name16>();
 
   /// CAPI3REF: Declared Datatype Of A Query Result
   /// METHOD: sqlite3_stmt
@@ -3434,31 +3555,34 @@ class SQLite {
     ffi.Pointer<sqlite3_stmt> arg0,
     int arg1,
   ) {
-    return (_sqlite3_column_decltype ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_column_decltype>>(
-                'sqlite3_column_decltype')
-            .asFunction<_dart_sqlite3_column_decltype>())(
+    return _sqlite3_column_decltype(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_column_decltype? _sqlite3_column_decltype;
+  late final _sqlite3_column_decltype_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_column_decltype>>(
+          'sqlite3_column_decltype');
+  late final _dart_sqlite3_column_decltype _sqlite3_column_decltype =
+      _sqlite3_column_decltype_ptr.asFunction<_dart_sqlite3_column_decltype>();
 
   ffi.Pointer<ffi.Void> sqlite3_column_decltype16(
     ffi.Pointer<sqlite3_stmt> arg0,
     int arg1,
   ) {
-    return (_sqlite3_column_decltype16 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_column_decltype16>>(
-                'sqlite3_column_decltype16')
-            .asFunction<_dart_sqlite3_column_decltype16>())(
+    return _sqlite3_column_decltype16(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_column_decltype16? _sqlite3_column_decltype16;
+  late final _sqlite3_column_decltype16_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_column_decltype16>>(
+          'sqlite3_column_decltype16');
+  late final _dart_sqlite3_column_decltype16 _sqlite3_column_decltype16 =
+      _sqlite3_column_decltype16_ptr
+          .asFunction<_dart_sqlite3_column_decltype16>();
 
   /// CAPI3REF: Evaluate An SQL Statement
   /// METHOD: sqlite3_stmt
@@ -3543,14 +3667,15 @@ class SQLite {
   int sqlite3_step(
     ffi.Pointer<sqlite3_stmt> arg0,
   ) {
-    return (_sqlite3_step ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_step>>('sqlite3_step')
-            .asFunction<_dart_sqlite3_step>())(
+    return _sqlite3_step(
       arg0,
     );
   }
 
-  _dart_sqlite3_step? _sqlite3_step;
+  late final _sqlite3_step_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_step>>('sqlite3_step');
+  late final _dart_sqlite3_step _sqlite3_step =
+      _sqlite3_step_ptr.asFunction<_dart_sqlite3_step>();
 
   /// CAPI3REF: Number of columns in a result set
   /// METHOD: sqlite3_stmt
@@ -3572,14 +3697,15 @@ class SQLite {
   int sqlite3_data_count(
     ffi.Pointer<sqlite3_stmt> pStmt,
   ) {
-    return (_sqlite3_data_count ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_data_count>>('sqlite3_data_count')
-            .asFunction<_dart_sqlite3_data_count>())(
+    return _sqlite3_data_count(
       pStmt,
     );
   }
 
-  _dart_sqlite3_data_count? _sqlite3_data_count;
+  late final _sqlite3_data_count_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_data_count>>('sqlite3_data_count');
+  late final _dart_sqlite3_data_count _sqlite3_data_count =
+      _sqlite3_data_count_ptr.asFunction<_dart_sqlite3_data_count>();
 
   /// CAPI3REF: Result Values From A Query
   /// KEYWORDS: {column access functions}
@@ -3792,150 +3918,160 @@ class SQLite {
     ffi.Pointer<sqlite3_stmt> arg0,
     int iCol,
   ) {
-    return (_sqlite3_column_blob ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_column_blob>>(
-                'sqlite3_column_blob')
-            .asFunction<_dart_sqlite3_column_blob>())(
+    return _sqlite3_column_blob(
       arg0,
       iCol,
     );
   }
 
-  _dart_sqlite3_column_blob? _sqlite3_column_blob;
+  late final _sqlite3_column_blob_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_column_blob>>(
+          'sqlite3_column_blob');
+  late final _dart_sqlite3_column_blob _sqlite3_column_blob =
+      _sqlite3_column_blob_ptr.asFunction<_dart_sqlite3_column_blob>();
 
   double sqlite3_column_double(
     ffi.Pointer<sqlite3_stmt> arg0,
     int iCol,
   ) {
-    return (_sqlite3_column_double ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_column_double>>(
-                'sqlite3_column_double')
-            .asFunction<_dart_sqlite3_column_double>())(
+    return _sqlite3_column_double(
       arg0,
       iCol,
     );
   }
 
-  _dart_sqlite3_column_double? _sqlite3_column_double;
+  late final _sqlite3_column_double_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_column_double>>(
+          'sqlite3_column_double');
+  late final _dart_sqlite3_column_double _sqlite3_column_double =
+      _sqlite3_column_double_ptr.asFunction<_dart_sqlite3_column_double>();
 
   int sqlite3_column_int(
     ffi.Pointer<sqlite3_stmt> arg0,
     int iCol,
   ) {
-    return (_sqlite3_column_int ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_column_int>>('sqlite3_column_int')
-            .asFunction<_dart_sqlite3_column_int>())(
+    return _sqlite3_column_int(
       arg0,
       iCol,
     );
   }
 
-  _dart_sqlite3_column_int? _sqlite3_column_int;
+  late final _sqlite3_column_int_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_column_int>>('sqlite3_column_int');
+  late final _dart_sqlite3_column_int _sqlite3_column_int =
+      _sqlite3_column_int_ptr.asFunction<_dart_sqlite3_column_int>();
 
   int sqlite3_column_int64(
     ffi.Pointer<sqlite3_stmt> arg0,
     int iCol,
   ) {
-    return (_sqlite3_column_int64 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_column_int64>>(
-                'sqlite3_column_int64')
-            .asFunction<_dart_sqlite3_column_int64>())(
+    return _sqlite3_column_int64(
       arg0,
       iCol,
     );
   }
 
-  _dart_sqlite3_column_int64? _sqlite3_column_int64;
+  late final _sqlite3_column_int64_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_column_int64>>(
+          'sqlite3_column_int64');
+  late final _dart_sqlite3_column_int64 _sqlite3_column_int64 =
+      _sqlite3_column_int64_ptr.asFunction<_dart_sqlite3_column_int64>();
 
   ffi.Pointer<ffi.Uint8> sqlite3_column_text(
     ffi.Pointer<sqlite3_stmt> arg0,
     int iCol,
   ) {
-    return (_sqlite3_column_text ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_column_text>>(
-                'sqlite3_column_text')
-            .asFunction<_dart_sqlite3_column_text>())(
+    return _sqlite3_column_text(
       arg0,
       iCol,
     );
   }
 
-  _dart_sqlite3_column_text? _sqlite3_column_text;
+  late final _sqlite3_column_text_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_column_text>>(
+          'sqlite3_column_text');
+  late final _dart_sqlite3_column_text _sqlite3_column_text =
+      _sqlite3_column_text_ptr.asFunction<_dart_sqlite3_column_text>();
 
   ffi.Pointer<ffi.Void> sqlite3_column_text16(
     ffi.Pointer<sqlite3_stmt> arg0,
     int iCol,
   ) {
-    return (_sqlite3_column_text16 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_column_text16>>(
-                'sqlite3_column_text16')
-            .asFunction<_dart_sqlite3_column_text16>())(
+    return _sqlite3_column_text16(
       arg0,
       iCol,
     );
   }
 
-  _dart_sqlite3_column_text16? _sqlite3_column_text16;
+  late final _sqlite3_column_text16_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_column_text16>>(
+          'sqlite3_column_text16');
+  late final _dart_sqlite3_column_text16 _sqlite3_column_text16 =
+      _sqlite3_column_text16_ptr.asFunction<_dart_sqlite3_column_text16>();
 
   ffi.Pointer<sqlite3_value> sqlite3_column_value(
     ffi.Pointer<sqlite3_stmt> arg0,
     int iCol,
   ) {
-    return (_sqlite3_column_value ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_column_value>>(
-                'sqlite3_column_value')
-            .asFunction<_dart_sqlite3_column_value>())(
+    return _sqlite3_column_value(
       arg0,
       iCol,
     );
   }
 
-  _dart_sqlite3_column_value? _sqlite3_column_value;
+  late final _sqlite3_column_value_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_column_value>>(
+          'sqlite3_column_value');
+  late final _dart_sqlite3_column_value _sqlite3_column_value =
+      _sqlite3_column_value_ptr.asFunction<_dart_sqlite3_column_value>();
 
   int sqlite3_column_bytes(
     ffi.Pointer<sqlite3_stmt> arg0,
     int iCol,
   ) {
-    return (_sqlite3_column_bytes ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_column_bytes>>(
-                'sqlite3_column_bytes')
-            .asFunction<_dart_sqlite3_column_bytes>())(
+    return _sqlite3_column_bytes(
       arg0,
       iCol,
     );
   }
 
-  _dart_sqlite3_column_bytes? _sqlite3_column_bytes;
+  late final _sqlite3_column_bytes_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_column_bytes>>(
+          'sqlite3_column_bytes');
+  late final _dart_sqlite3_column_bytes _sqlite3_column_bytes =
+      _sqlite3_column_bytes_ptr.asFunction<_dart_sqlite3_column_bytes>();
 
   int sqlite3_column_bytes16(
     ffi.Pointer<sqlite3_stmt> arg0,
     int iCol,
   ) {
-    return (_sqlite3_column_bytes16 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_column_bytes16>>(
-                'sqlite3_column_bytes16')
-            .asFunction<_dart_sqlite3_column_bytes16>())(
+    return _sqlite3_column_bytes16(
       arg0,
       iCol,
     );
   }
 
-  _dart_sqlite3_column_bytes16? _sqlite3_column_bytes16;
+  late final _sqlite3_column_bytes16_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_column_bytes16>>(
+          'sqlite3_column_bytes16');
+  late final _dart_sqlite3_column_bytes16 _sqlite3_column_bytes16 =
+      _sqlite3_column_bytes16_ptr.asFunction<_dart_sqlite3_column_bytes16>();
 
   int sqlite3_column_type(
     ffi.Pointer<sqlite3_stmt> arg0,
     int iCol,
   ) {
-    return (_sqlite3_column_type ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_column_type>>(
-                'sqlite3_column_type')
-            .asFunction<_dart_sqlite3_column_type>())(
+    return _sqlite3_column_type(
       arg0,
       iCol,
     );
   }
 
-  _dart_sqlite3_column_type? _sqlite3_column_type;
+  late final _sqlite3_column_type_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_column_type>>(
+          'sqlite3_column_type');
+  late final _dart_sqlite3_column_type _sqlite3_column_type =
+      _sqlite3_column_type_ptr.asFunction<_dart_sqlite3_column_type>();
 
   /// CAPI3REF: Destroy A Prepared Statement Object
   /// DESTRUCTOR: sqlite3_stmt
@@ -3964,14 +4100,15 @@ class SQLite {
   int sqlite3_finalize(
     ffi.Pointer<sqlite3_stmt> pStmt,
   ) {
-    return (_sqlite3_finalize ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_finalize>>('sqlite3_finalize')
-            .asFunction<_dart_sqlite3_finalize>())(
+    return _sqlite3_finalize(
       pStmt,
     );
   }
 
-  _dart_sqlite3_finalize? _sqlite3_finalize;
+  late final _sqlite3_finalize_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_finalize>>('sqlite3_finalize');
+  late final _dart_sqlite3_finalize _sqlite3_finalize =
+      _sqlite3_finalize_ptr.asFunction<_dart_sqlite3_finalize>();
 
   /// CAPI3REF: Reset A Prepared Statement Object
   /// METHOD: sqlite3_stmt
@@ -3999,14 +4136,15 @@ class SQLite {
   int sqlite3_reset(
     ffi.Pointer<sqlite3_stmt> pStmt,
   ) {
-    return (_sqlite3_reset ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_reset>>('sqlite3_reset')
-            .asFunction<_dart_sqlite3_reset>())(
+    return _sqlite3_reset(
       pStmt,
     );
   }
 
-  _dart_sqlite3_reset? _sqlite3_reset;
+  late final _sqlite3_reset_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_reset>>('sqlite3_reset');
+  late final _dart_sqlite3_reset _sqlite3_reset =
+      _sqlite3_reset_ptr.asFunction<_dart_sqlite3_reset>();
 
   /// CAPI3REF: Create Or Redefine SQL Functions
   /// KEYWORDS: {function creation routines}
@@ -4141,10 +4279,7 @@ class SQLite {
     ffi.Pointer<ffi.NativeFunction<_typedefC_33>> xStep,
     ffi.Pointer<ffi.NativeFunction<_typedefC_34>> xFinal,
   ) {
-    return (_sqlite3_create_function ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_create_function>>(
-                'sqlite3_create_function')
-            .asFunction<_dart_sqlite3_create_function>())(
+    return _sqlite3_create_function(
       db,
       zFunctionName,
       nArg,
@@ -4156,7 +4291,11 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_create_function? _sqlite3_create_function;
+  late final _sqlite3_create_function_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_create_function>>(
+          'sqlite3_create_function');
+  late final _dart_sqlite3_create_function _sqlite3_create_function =
+      _sqlite3_create_function_ptr.asFunction<_dart_sqlite3_create_function>();
 
   int sqlite3_create_function16(
     ffi.Pointer<sqlite3> db,
@@ -4168,10 +4307,7 @@ class SQLite {
     ffi.Pointer<ffi.NativeFunction<_typedefC_36>> xStep,
     ffi.Pointer<ffi.NativeFunction<_typedefC_37>> xFinal,
   ) {
-    return (_sqlite3_create_function16 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_create_function16>>(
-                'sqlite3_create_function16')
-            .asFunction<_dart_sqlite3_create_function16>())(
+    return _sqlite3_create_function16(
       db,
       zFunctionName,
       nArg,
@@ -4183,7 +4319,12 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_create_function16? _sqlite3_create_function16;
+  late final _sqlite3_create_function16_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_create_function16>>(
+          'sqlite3_create_function16');
+  late final _dart_sqlite3_create_function16 _sqlite3_create_function16 =
+      _sqlite3_create_function16_ptr
+          .asFunction<_dart_sqlite3_create_function16>();
 
   int sqlite3_create_function_v2(
     ffi.Pointer<sqlite3> db,
@@ -4196,10 +4337,7 @@ class SQLite {
     ffi.Pointer<ffi.NativeFunction<_typedefC_40>> xFinal,
     ffi.Pointer<ffi.NativeFunction<_typedefC_41>> xDestroy,
   ) {
-    return (_sqlite3_create_function_v2 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_create_function_v2>>(
-                'sqlite3_create_function_v2')
-            .asFunction<_dart_sqlite3_create_function_v2>())(
+    return _sqlite3_create_function_v2(
       db,
       zFunctionName,
       nArg,
@@ -4212,7 +4350,12 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_create_function_v2? _sqlite3_create_function_v2;
+  late final _sqlite3_create_function_v2_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_create_function_v2>>(
+          'sqlite3_create_function_v2');
+  late final _dart_sqlite3_create_function_v2 _sqlite3_create_function_v2 =
+      _sqlite3_create_function_v2_ptr
+          .asFunction<_dart_sqlite3_create_function_v2>();
 
   int sqlite3_create_window_function(
     ffi.Pointer<sqlite3> db,
@@ -4226,10 +4369,7 @@ class SQLite {
     ffi.Pointer<ffi.NativeFunction<_typedefC_45>> xInverse,
     ffi.Pointer<ffi.NativeFunction<_typedefC_46>> xDestroy,
   ) {
-    return (_sqlite3_create_window_function ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_create_window_function>>(
-                'sqlite3_create_window_function')
-            .asFunction<_dart_sqlite3_create_window_function>())(
+    return _sqlite3_create_window_function(
       db,
       zFunctionName,
       nArg,
@@ -4243,82 +4383,94 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_create_window_function? _sqlite3_create_window_function;
+  late final _sqlite3_create_window_function_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_create_window_function>>(
+          'sqlite3_create_window_function');
+  late final _dart_sqlite3_create_window_function
+      _sqlite3_create_window_function = _sqlite3_create_window_function_ptr
+          .asFunction<_dart_sqlite3_create_window_function>();
 
   int sqlite3_aggregate_count(
     ffi.Pointer<sqlite3_context> arg0,
   ) {
-    return (_sqlite3_aggregate_count ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_aggregate_count>>(
-                'sqlite3_aggregate_count')
-            .asFunction<_dart_sqlite3_aggregate_count>())(
+    return _sqlite3_aggregate_count(
       arg0,
     );
   }
 
-  _dart_sqlite3_aggregate_count? _sqlite3_aggregate_count;
+  late final _sqlite3_aggregate_count_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_aggregate_count>>(
+          'sqlite3_aggregate_count');
+  late final _dart_sqlite3_aggregate_count _sqlite3_aggregate_count =
+      _sqlite3_aggregate_count_ptr.asFunction<_dart_sqlite3_aggregate_count>();
 
   int sqlite3_expired(
     ffi.Pointer<sqlite3_stmt> arg0,
   ) {
-    return (_sqlite3_expired ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_expired>>('sqlite3_expired')
-            .asFunction<_dart_sqlite3_expired>())(
+    return _sqlite3_expired(
       arg0,
     );
   }
 
-  _dart_sqlite3_expired? _sqlite3_expired;
+  late final _sqlite3_expired_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_expired>>('sqlite3_expired');
+  late final _dart_sqlite3_expired _sqlite3_expired =
+      _sqlite3_expired_ptr.asFunction<_dart_sqlite3_expired>();
 
   int sqlite3_transfer_bindings(
     ffi.Pointer<sqlite3_stmt> arg0,
     ffi.Pointer<sqlite3_stmt> arg1,
   ) {
-    return (_sqlite3_transfer_bindings ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_transfer_bindings>>(
-                'sqlite3_transfer_bindings')
-            .asFunction<_dart_sqlite3_transfer_bindings>())(
+    return _sqlite3_transfer_bindings(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_transfer_bindings? _sqlite3_transfer_bindings;
+  late final _sqlite3_transfer_bindings_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_transfer_bindings>>(
+          'sqlite3_transfer_bindings');
+  late final _dart_sqlite3_transfer_bindings _sqlite3_transfer_bindings =
+      _sqlite3_transfer_bindings_ptr
+          .asFunction<_dart_sqlite3_transfer_bindings>();
 
   int sqlite3_global_recover() {
-    return (_sqlite3_global_recover ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_global_recover>>(
-                'sqlite3_global_recover')
-            .asFunction<_dart_sqlite3_global_recover>())();
+    return _sqlite3_global_recover();
   }
 
-  _dart_sqlite3_global_recover? _sqlite3_global_recover;
+  late final _sqlite3_global_recover_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_global_recover>>(
+          'sqlite3_global_recover');
+  late final _dart_sqlite3_global_recover _sqlite3_global_recover =
+      _sqlite3_global_recover_ptr.asFunction<_dart_sqlite3_global_recover>();
 
   void sqlite3_thread_cleanup() {
-    return (_sqlite3_thread_cleanup ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_thread_cleanup>>(
-                'sqlite3_thread_cleanup')
-            .asFunction<_dart_sqlite3_thread_cleanup>())();
+    return _sqlite3_thread_cleanup();
   }
 
-  _dart_sqlite3_thread_cleanup? _sqlite3_thread_cleanup;
+  late final _sqlite3_thread_cleanup_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_thread_cleanup>>(
+          'sqlite3_thread_cleanup');
+  late final _dart_sqlite3_thread_cleanup _sqlite3_thread_cleanup =
+      _sqlite3_thread_cleanup_ptr.asFunction<_dart_sqlite3_thread_cleanup>();
 
   int sqlite3_memory_alarm(
     ffi.Pointer<ffi.NativeFunction<_typedefC_47>> arg0,
     ffi.Pointer<ffi.Void> arg1,
     int arg2,
   ) {
-    return (_sqlite3_memory_alarm ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_memory_alarm>>(
-                'sqlite3_memory_alarm')
-            .asFunction<_dart_sqlite3_memory_alarm>())(
+    return _sqlite3_memory_alarm(
       arg0,
       arg1,
       arg2,
     );
   }
 
-  _dart_sqlite3_memory_alarm? _sqlite3_memory_alarm;
+  late final _sqlite3_memory_alarm_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_memory_alarm>>(
+          'sqlite3_memory_alarm');
+  late final _dart_sqlite3_memory_alarm _sqlite3_memory_alarm =
+      _sqlite3_memory_alarm_ptr.asFunction<_dart_sqlite3_memory_alarm>();
 
   /// CAPI3REF: Obtaining SQL Values
   /// METHOD: sqlite3_value
@@ -4449,195 +4601,211 @@ class SQLite {
   ffi.Pointer<ffi.Void> sqlite3_value_blob(
     ffi.Pointer<sqlite3_value> arg0,
   ) {
-    return (_sqlite3_value_blob ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_value_blob>>('sqlite3_value_blob')
-            .asFunction<_dart_sqlite3_value_blob>())(
+    return _sqlite3_value_blob(
       arg0,
     );
   }
 
-  _dart_sqlite3_value_blob? _sqlite3_value_blob;
+  late final _sqlite3_value_blob_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_value_blob>>('sqlite3_value_blob');
+  late final _dart_sqlite3_value_blob _sqlite3_value_blob =
+      _sqlite3_value_blob_ptr.asFunction<_dart_sqlite3_value_blob>();
 
   double sqlite3_value_double(
     ffi.Pointer<sqlite3_value> arg0,
   ) {
-    return (_sqlite3_value_double ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_value_double>>(
-                'sqlite3_value_double')
-            .asFunction<_dart_sqlite3_value_double>())(
+    return _sqlite3_value_double(
       arg0,
     );
   }
 
-  _dart_sqlite3_value_double? _sqlite3_value_double;
+  late final _sqlite3_value_double_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_value_double>>(
+          'sqlite3_value_double');
+  late final _dart_sqlite3_value_double _sqlite3_value_double =
+      _sqlite3_value_double_ptr.asFunction<_dart_sqlite3_value_double>();
 
   int sqlite3_value_int(
     ffi.Pointer<sqlite3_value> arg0,
   ) {
-    return (_sqlite3_value_int ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_value_int>>('sqlite3_value_int')
-            .asFunction<_dart_sqlite3_value_int>())(
+    return _sqlite3_value_int(
       arg0,
     );
   }
 
-  _dart_sqlite3_value_int? _sqlite3_value_int;
+  late final _sqlite3_value_int_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_value_int>>('sqlite3_value_int');
+  late final _dart_sqlite3_value_int _sqlite3_value_int =
+      _sqlite3_value_int_ptr.asFunction<_dart_sqlite3_value_int>();
 
   int sqlite3_value_int64(
     ffi.Pointer<sqlite3_value> arg0,
   ) {
-    return (_sqlite3_value_int64 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_value_int64>>(
-                'sqlite3_value_int64')
-            .asFunction<_dart_sqlite3_value_int64>())(
+    return _sqlite3_value_int64(
       arg0,
     );
   }
 
-  _dart_sqlite3_value_int64? _sqlite3_value_int64;
+  late final _sqlite3_value_int64_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_value_int64>>(
+          'sqlite3_value_int64');
+  late final _dart_sqlite3_value_int64 _sqlite3_value_int64 =
+      _sqlite3_value_int64_ptr.asFunction<_dart_sqlite3_value_int64>();
 
   ffi.Pointer<ffi.Void> sqlite3_value_pointer(
     ffi.Pointer<sqlite3_value> arg0,
     ffi.Pointer<ffi.Int8> arg1,
   ) {
-    return (_sqlite3_value_pointer ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_value_pointer>>(
-                'sqlite3_value_pointer')
-            .asFunction<_dart_sqlite3_value_pointer>())(
+    return _sqlite3_value_pointer(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_value_pointer? _sqlite3_value_pointer;
+  late final _sqlite3_value_pointer_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_value_pointer>>(
+          'sqlite3_value_pointer');
+  late final _dart_sqlite3_value_pointer _sqlite3_value_pointer =
+      _sqlite3_value_pointer_ptr.asFunction<_dart_sqlite3_value_pointer>();
 
   ffi.Pointer<ffi.Uint8> sqlite3_value_text(
     ffi.Pointer<sqlite3_value> arg0,
   ) {
-    return (_sqlite3_value_text ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_value_text>>('sqlite3_value_text')
-            .asFunction<_dart_sqlite3_value_text>())(
+    return _sqlite3_value_text(
       arg0,
     );
   }
 
-  _dart_sqlite3_value_text? _sqlite3_value_text;
+  late final _sqlite3_value_text_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_value_text>>('sqlite3_value_text');
+  late final _dart_sqlite3_value_text _sqlite3_value_text =
+      _sqlite3_value_text_ptr.asFunction<_dart_sqlite3_value_text>();
 
   ffi.Pointer<ffi.Void> sqlite3_value_text16(
     ffi.Pointer<sqlite3_value> arg0,
   ) {
-    return (_sqlite3_value_text16 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_value_text16>>(
-                'sqlite3_value_text16')
-            .asFunction<_dart_sqlite3_value_text16>())(
+    return _sqlite3_value_text16(
       arg0,
     );
   }
 
-  _dart_sqlite3_value_text16? _sqlite3_value_text16;
+  late final _sqlite3_value_text16_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_value_text16>>(
+          'sqlite3_value_text16');
+  late final _dart_sqlite3_value_text16 _sqlite3_value_text16 =
+      _sqlite3_value_text16_ptr.asFunction<_dart_sqlite3_value_text16>();
 
   ffi.Pointer<ffi.Void> sqlite3_value_text16le(
     ffi.Pointer<sqlite3_value> arg0,
   ) {
-    return (_sqlite3_value_text16le ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_value_text16le>>(
-                'sqlite3_value_text16le')
-            .asFunction<_dart_sqlite3_value_text16le>())(
+    return _sqlite3_value_text16le(
       arg0,
     );
   }
 
-  _dart_sqlite3_value_text16le? _sqlite3_value_text16le;
+  late final _sqlite3_value_text16le_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_value_text16le>>(
+          'sqlite3_value_text16le');
+  late final _dart_sqlite3_value_text16le _sqlite3_value_text16le =
+      _sqlite3_value_text16le_ptr.asFunction<_dart_sqlite3_value_text16le>();
 
   ffi.Pointer<ffi.Void> sqlite3_value_text16be(
     ffi.Pointer<sqlite3_value> arg0,
   ) {
-    return (_sqlite3_value_text16be ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_value_text16be>>(
-                'sqlite3_value_text16be')
-            .asFunction<_dart_sqlite3_value_text16be>())(
+    return _sqlite3_value_text16be(
       arg0,
     );
   }
 
-  _dart_sqlite3_value_text16be? _sqlite3_value_text16be;
+  late final _sqlite3_value_text16be_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_value_text16be>>(
+          'sqlite3_value_text16be');
+  late final _dart_sqlite3_value_text16be _sqlite3_value_text16be =
+      _sqlite3_value_text16be_ptr.asFunction<_dart_sqlite3_value_text16be>();
 
   int sqlite3_value_bytes(
     ffi.Pointer<sqlite3_value> arg0,
   ) {
-    return (_sqlite3_value_bytes ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_value_bytes>>(
-                'sqlite3_value_bytes')
-            .asFunction<_dart_sqlite3_value_bytes>())(
+    return _sqlite3_value_bytes(
       arg0,
     );
   }
 
-  _dart_sqlite3_value_bytes? _sqlite3_value_bytes;
+  late final _sqlite3_value_bytes_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_value_bytes>>(
+          'sqlite3_value_bytes');
+  late final _dart_sqlite3_value_bytes _sqlite3_value_bytes =
+      _sqlite3_value_bytes_ptr.asFunction<_dart_sqlite3_value_bytes>();
 
   int sqlite3_value_bytes16(
     ffi.Pointer<sqlite3_value> arg0,
   ) {
-    return (_sqlite3_value_bytes16 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_value_bytes16>>(
-                'sqlite3_value_bytes16')
-            .asFunction<_dart_sqlite3_value_bytes16>())(
+    return _sqlite3_value_bytes16(
       arg0,
     );
   }
 
-  _dart_sqlite3_value_bytes16? _sqlite3_value_bytes16;
+  late final _sqlite3_value_bytes16_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_value_bytes16>>(
+          'sqlite3_value_bytes16');
+  late final _dart_sqlite3_value_bytes16 _sqlite3_value_bytes16 =
+      _sqlite3_value_bytes16_ptr.asFunction<_dart_sqlite3_value_bytes16>();
 
   int sqlite3_value_type(
     ffi.Pointer<sqlite3_value> arg0,
   ) {
-    return (_sqlite3_value_type ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_value_type>>('sqlite3_value_type')
-            .asFunction<_dart_sqlite3_value_type>())(
+    return _sqlite3_value_type(
       arg0,
     );
   }
 
-  _dart_sqlite3_value_type? _sqlite3_value_type;
+  late final _sqlite3_value_type_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_value_type>>('sqlite3_value_type');
+  late final _dart_sqlite3_value_type _sqlite3_value_type =
+      _sqlite3_value_type_ptr.asFunction<_dart_sqlite3_value_type>();
 
   int sqlite3_value_numeric_type(
     ffi.Pointer<sqlite3_value> arg0,
   ) {
-    return (_sqlite3_value_numeric_type ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_value_numeric_type>>(
-                'sqlite3_value_numeric_type')
-            .asFunction<_dart_sqlite3_value_numeric_type>())(
+    return _sqlite3_value_numeric_type(
       arg0,
     );
   }
 
-  _dart_sqlite3_value_numeric_type? _sqlite3_value_numeric_type;
+  late final _sqlite3_value_numeric_type_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_value_numeric_type>>(
+          'sqlite3_value_numeric_type');
+  late final _dart_sqlite3_value_numeric_type _sqlite3_value_numeric_type =
+      _sqlite3_value_numeric_type_ptr
+          .asFunction<_dart_sqlite3_value_numeric_type>();
 
   int sqlite3_value_nochange(
     ffi.Pointer<sqlite3_value> arg0,
   ) {
-    return (_sqlite3_value_nochange ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_value_nochange>>(
-                'sqlite3_value_nochange')
-            .asFunction<_dart_sqlite3_value_nochange>())(
+    return _sqlite3_value_nochange(
       arg0,
     );
   }
 
-  _dart_sqlite3_value_nochange? _sqlite3_value_nochange;
+  late final _sqlite3_value_nochange_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_value_nochange>>(
+          'sqlite3_value_nochange');
+  late final _dart_sqlite3_value_nochange _sqlite3_value_nochange =
+      _sqlite3_value_nochange_ptr.asFunction<_dart_sqlite3_value_nochange>();
 
   int sqlite3_value_frombind(
     ffi.Pointer<sqlite3_value> arg0,
   ) {
-    return (_sqlite3_value_frombind ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_value_frombind>>(
-                'sqlite3_value_frombind')
-            .asFunction<_dart_sqlite3_value_frombind>())(
+    return _sqlite3_value_frombind(
       arg0,
     );
   }
 
-  _dart_sqlite3_value_frombind? _sqlite3_value_frombind;
+  late final _sqlite3_value_frombind_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_value_frombind>>(
+          'sqlite3_value_frombind');
+  late final _dart_sqlite3_value_frombind _sqlite3_value_frombind =
+      _sqlite3_value_frombind_ptr.asFunction<_dart_sqlite3_value_frombind>();
 
   /// CAPI3REF: Finding The Subtype Of SQL Values
   /// METHOD: sqlite3_value
@@ -4650,15 +4818,16 @@ class SQLite {
   int sqlite3_value_subtype(
     ffi.Pointer<sqlite3_value> arg0,
   ) {
-    return (_sqlite3_value_subtype ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_value_subtype>>(
-                'sqlite3_value_subtype')
-            .asFunction<_dart_sqlite3_value_subtype>())(
+    return _sqlite3_value_subtype(
       arg0,
     );
   }
 
-  _dart_sqlite3_value_subtype? _sqlite3_value_subtype;
+  late final _sqlite3_value_subtype_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_value_subtype>>(
+          'sqlite3_value_subtype');
+  late final _dart_sqlite3_value_subtype _sqlite3_value_subtype =
+      _sqlite3_value_subtype_ptr.asFunction<_dart_sqlite3_value_subtype>();
 
   /// CAPI3REF: Copy And Free SQL Values
   /// METHOD: sqlite3_value
@@ -4675,26 +4844,28 @@ class SQLite {
   ffi.Pointer<sqlite3_value> sqlite3_value_dup(
     ffi.Pointer<sqlite3_value> arg0,
   ) {
-    return (_sqlite3_value_dup ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_value_dup>>('sqlite3_value_dup')
-            .asFunction<_dart_sqlite3_value_dup>())(
+    return _sqlite3_value_dup(
       arg0,
     );
   }
 
-  _dart_sqlite3_value_dup? _sqlite3_value_dup;
+  late final _sqlite3_value_dup_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_value_dup>>('sqlite3_value_dup');
+  late final _dart_sqlite3_value_dup _sqlite3_value_dup =
+      _sqlite3_value_dup_ptr.asFunction<_dart_sqlite3_value_dup>();
 
   void sqlite3_value_free(
     ffi.Pointer<sqlite3_value> arg0,
   ) {
-    return (_sqlite3_value_free ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_value_free>>('sqlite3_value_free')
-            .asFunction<_dart_sqlite3_value_free>())(
+    return _sqlite3_value_free(
       arg0,
     );
   }
 
-  _dart_sqlite3_value_free? _sqlite3_value_free;
+  late final _sqlite3_value_free_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_value_free>>('sqlite3_value_free');
+  late final _dart_sqlite3_value_free _sqlite3_value_free =
+      _sqlite3_value_free_ptr.asFunction<_dart_sqlite3_value_free>();
 
   /// CAPI3REF: Obtain Aggregate Function Context
   /// METHOD: sqlite3_context
@@ -4741,16 +4912,18 @@ class SQLite {
     ffi.Pointer<sqlite3_context> arg0,
     int nBytes,
   ) {
-    return (_sqlite3_aggregate_context ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_aggregate_context>>(
-                'sqlite3_aggregate_context')
-            .asFunction<_dart_sqlite3_aggregate_context>())(
+    return _sqlite3_aggregate_context(
       arg0,
       nBytes,
     );
   }
 
-  _dart_sqlite3_aggregate_context? _sqlite3_aggregate_context;
+  late final _sqlite3_aggregate_context_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_aggregate_context>>(
+          'sqlite3_aggregate_context');
+  late final _dart_sqlite3_aggregate_context _sqlite3_aggregate_context =
+      _sqlite3_aggregate_context_ptr
+          .asFunction<_dart_sqlite3_aggregate_context>();
 
   /// CAPI3REF: User Data For Functions
   /// METHOD: sqlite3_context
@@ -4766,14 +4939,15 @@ class SQLite {
   ffi.Pointer<ffi.Void> sqlite3_user_data(
     ffi.Pointer<sqlite3_context> arg0,
   ) {
-    return (_sqlite3_user_data ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_user_data>>('sqlite3_user_data')
-            .asFunction<_dart_sqlite3_user_data>())(
+    return _sqlite3_user_data(
       arg0,
     );
   }
 
-  _dart_sqlite3_user_data? _sqlite3_user_data;
+  late final _sqlite3_user_data_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_user_data>>('sqlite3_user_data');
+  late final _dart_sqlite3_user_data _sqlite3_user_data =
+      _sqlite3_user_data_ptr.asFunction<_dart_sqlite3_user_data>();
 
   /// CAPI3REF: Database Connection For Functions
   /// METHOD: sqlite3_context
@@ -4786,15 +4960,17 @@ class SQLite {
   ffi.Pointer<sqlite3> sqlite3_context_db_handle(
     ffi.Pointer<sqlite3_context> arg0,
   ) {
-    return (_sqlite3_context_db_handle ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_context_db_handle>>(
-                'sqlite3_context_db_handle')
-            .asFunction<_dart_sqlite3_context_db_handle>())(
+    return _sqlite3_context_db_handle(
       arg0,
     );
   }
 
-  _dart_sqlite3_context_db_handle? _sqlite3_context_db_handle;
+  late final _sqlite3_context_db_handle_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_context_db_handle>>(
+          'sqlite3_context_db_handle');
+  late final _dart_sqlite3_context_db_handle _sqlite3_context_db_handle =
+      _sqlite3_context_db_handle_ptr
+          .asFunction<_dart_sqlite3_context_db_handle>();
 
   /// CAPI3REF: Function Auxiliary Data
   /// METHOD: sqlite3_context
@@ -4855,16 +5031,17 @@ class SQLite {
     ffi.Pointer<sqlite3_context> arg0,
     int N,
   ) {
-    return (_sqlite3_get_auxdata ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_get_auxdata>>(
-                'sqlite3_get_auxdata')
-            .asFunction<_dart_sqlite3_get_auxdata>())(
+    return _sqlite3_get_auxdata(
       arg0,
       N,
     );
   }
 
-  _dart_sqlite3_get_auxdata? _sqlite3_get_auxdata;
+  late final _sqlite3_get_auxdata_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_get_auxdata>>(
+          'sqlite3_get_auxdata');
+  late final _dart_sqlite3_get_auxdata _sqlite3_get_auxdata =
+      _sqlite3_get_auxdata_ptr.asFunction<_dart_sqlite3_get_auxdata>();
 
   void sqlite3_set_auxdata(
     ffi.Pointer<sqlite3_context> arg0,
@@ -4872,10 +5049,7 @@ class SQLite {
     ffi.Pointer<ffi.Void> arg2,
     ffi.Pointer<ffi.NativeFunction<_typedefC_48>> arg3,
   ) {
-    return (_sqlite3_set_auxdata ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_set_auxdata>>(
-                'sqlite3_set_auxdata')
-            .asFunction<_dart_sqlite3_set_auxdata>())(
+    return _sqlite3_set_auxdata(
       arg0,
       N,
       arg2,
@@ -4883,7 +5057,11 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_set_auxdata? _sqlite3_set_auxdata;
+  late final _sqlite3_set_auxdata_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_set_auxdata>>(
+          'sqlite3_set_auxdata');
+  late final _dart_sqlite3_set_auxdata _sqlite3_set_auxdata =
+      _sqlite3_set_auxdata_ptr.asFunction<_dart_sqlite3_set_auxdata>();
 
   /// CAPI3REF: Setting The Result Of An SQL Function
   /// METHOD: sqlite3_context
@@ -5035,10 +5213,7 @@ class SQLite {
     int arg2,
     ffi.Pointer<ffi.NativeFunction<_typedefC_49>> arg3,
   ) {
-    return (_sqlite3_result_blob ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_result_blob>>(
-                'sqlite3_result_blob')
-            .asFunction<_dart_sqlite3_result_blob>())(
+    return _sqlite3_result_blob(
       arg0,
       arg1,
       arg2,
@@ -5046,7 +5221,11 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_result_blob? _sqlite3_result_blob;
+  late final _sqlite3_result_blob_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_result_blob>>(
+          'sqlite3_result_blob');
+  late final _dart_sqlite3_result_blob _sqlite3_result_blob =
+      _sqlite3_result_blob_ptr.asFunction<_dart_sqlite3_result_blob>();
 
   void sqlite3_result_blob64(
     ffi.Pointer<sqlite3_context> arg0,
@@ -5054,10 +5233,7 @@ class SQLite {
     int arg2,
     ffi.Pointer<ffi.NativeFunction<_typedefC_50>> arg3,
   ) {
-    return (_sqlite3_result_blob64 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_result_blob64>>(
-                'sqlite3_result_blob64')
-            .asFunction<_dart_sqlite3_result_blob64>())(
+    return _sqlite3_result_blob64(
       arg0,
       arg1,
       arg2,
@@ -5065,139 +5241,155 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_result_blob64? _sqlite3_result_blob64;
+  late final _sqlite3_result_blob64_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_result_blob64>>(
+          'sqlite3_result_blob64');
+  late final _dart_sqlite3_result_blob64 _sqlite3_result_blob64 =
+      _sqlite3_result_blob64_ptr.asFunction<_dart_sqlite3_result_blob64>();
 
   void sqlite3_result_double(
     ffi.Pointer<sqlite3_context> arg0,
     double arg1,
   ) {
-    return (_sqlite3_result_double ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_result_double>>(
-                'sqlite3_result_double')
-            .asFunction<_dart_sqlite3_result_double>())(
+    return _sqlite3_result_double(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_result_double? _sqlite3_result_double;
+  late final _sqlite3_result_double_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_result_double>>(
+          'sqlite3_result_double');
+  late final _dart_sqlite3_result_double _sqlite3_result_double =
+      _sqlite3_result_double_ptr.asFunction<_dart_sqlite3_result_double>();
 
   void sqlite3_result_error(
     ffi.Pointer<sqlite3_context> arg0,
     ffi.Pointer<ffi.Int8> arg1,
     int arg2,
   ) {
-    return (_sqlite3_result_error ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_result_error>>(
-                'sqlite3_result_error')
-            .asFunction<_dart_sqlite3_result_error>())(
+    return _sqlite3_result_error(
       arg0,
       arg1,
       arg2,
     );
   }
 
-  _dart_sqlite3_result_error? _sqlite3_result_error;
+  late final _sqlite3_result_error_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_result_error>>(
+          'sqlite3_result_error');
+  late final _dart_sqlite3_result_error _sqlite3_result_error =
+      _sqlite3_result_error_ptr.asFunction<_dart_sqlite3_result_error>();
 
   void sqlite3_result_error16(
     ffi.Pointer<sqlite3_context> arg0,
     ffi.Pointer<ffi.Void> arg1,
     int arg2,
   ) {
-    return (_sqlite3_result_error16 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_result_error16>>(
-                'sqlite3_result_error16')
-            .asFunction<_dart_sqlite3_result_error16>())(
+    return _sqlite3_result_error16(
       arg0,
       arg1,
       arg2,
     );
   }
 
-  _dart_sqlite3_result_error16? _sqlite3_result_error16;
+  late final _sqlite3_result_error16_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_result_error16>>(
+          'sqlite3_result_error16');
+  late final _dart_sqlite3_result_error16 _sqlite3_result_error16 =
+      _sqlite3_result_error16_ptr.asFunction<_dart_sqlite3_result_error16>();
 
   void sqlite3_result_error_toobig(
     ffi.Pointer<sqlite3_context> arg0,
   ) {
-    return (_sqlite3_result_error_toobig ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_result_error_toobig>>(
-                'sqlite3_result_error_toobig')
-            .asFunction<_dart_sqlite3_result_error_toobig>())(
+    return _sqlite3_result_error_toobig(
       arg0,
     );
   }
 
-  _dart_sqlite3_result_error_toobig? _sqlite3_result_error_toobig;
+  late final _sqlite3_result_error_toobig_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_result_error_toobig>>(
+          'sqlite3_result_error_toobig');
+  late final _dart_sqlite3_result_error_toobig _sqlite3_result_error_toobig =
+      _sqlite3_result_error_toobig_ptr
+          .asFunction<_dart_sqlite3_result_error_toobig>();
 
   void sqlite3_result_error_nomem(
     ffi.Pointer<sqlite3_context> arg0,
   ) {
-    return (_sqlite3_result_error_nomem ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_result_error_nomem>>(
-                'sqlite3_result_error_nomem')
-            .asFunction<_dart_sqlite3_result_error_nomem>())(
+    return _sqlite3_result_error_nomem(
       arg0,
     );
   }
 
-  _dart_sqlite3_result_error_nomem? _sqlite3_result_error_nomem;
+  late final _sqlite3_result_error_nomem_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_result_error_nomem>>(
+          'sqlite3_result_error_nomem');
+  late final _dart_sqlite3_result_error_nomem _sqlite3_result_error_nomem =
+      _sqlite3_result_error_nomem_ptr
+          .asFunction<_dart_sqlite3_result_error_nomem>();
 
   void sqlite3_result_error_code(
     ffi.Pointer<sqlite3_context> arg0,
     int arg1,
   ) {
-    return (_sqlite3_result_error_code ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_result_error_code>>(
-                'sqlite3_result_error_code')
-            .asFunction<_dart_sqlite3_result_error_code>())(
+    return _sqlite3_result_error_code(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_result_error_code? _sqlite3_result_error_code;
+  late final _sqlite3_result_error_code_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_result_error_code>>(
+          'sqlite3_result_error_code');
+  late final _dart_sqlite3_result_error_code _sqlite3_result_error_code =
+      _sqlite3_result_error_code_ptr
+          .asFunction<_dart_sqlite3_result_error_code>();
 
   void sqlite3_result_int(
     ffi.Pointer<sqlite3_context> arg0,
     int arg1,
   ) {
-    return (_sqlite3_result_int ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_result_int>>('sqlite3_result_int')
-            .asFunction<_dart_sqlite3_result_int>())(
+    return _sqlite3_result_int(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_result_int? _sqlite3_result_int;
+  late final _sqlite3_result_int_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_result_int>>('sqlite3_result_int');
+  late final _dart_sqlite3_result_int _sqlite3_result_int =
+      _sqlite3_result_int_ptr.asFunction<_dart_sqlite3_result_int>();
 
   void sqlite3_result_int64(
     ffi.Pointer<sqlite3_context> arg0,
     int arg1,
   ) {
-    return (_sqlite3_result_int64 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_result_int64>>(
-                'sqlite3_result_int64')
-            .asFunction<_dart_sqlite3_result_int64>())(
+    return _sqlite3_result_int64(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_result_int64? _sqlite3_result_int64;
+  late final _sqlite3_result_int64_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_result_int64>>(
+          'sqlite3_result_int64');
+  late final _dart_sqlite3_result_int64 _sqlite3_result_int64 =
+      _sqlite3_result_int64_ptr.asFunction<_dart_sqlite3_result_int64>();
 
   void sqlite3_result_null(
     ffi.Pointer<sqlite3_context> arg0,
   ) {
-    return (_sqlite3_result_null ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_result_null>>(
-                'sqlite3_result_null')
-            .asFunction<_dart_sqlite3_result_null>())(
+    return _sqlite3_result_null(
       arg0,
     );
   }
 
-  _dart_sqlite3_result_null? _sqlite3_result_null;
+  late final _sqlite3_result_null_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_result_null>>(
+          'sqlite3_result_null');
+  late final _dart_sqlite3_result_null _sqlite3_result_null =
+      _sqlite3_result_null_ptr.asFunction<_dart_sqlite3_result_null>();
 
   void sqlite3_result_text(
     ffi.Pointer<sqlite3_context> arg0,
@@ -5205,10 +5397,7 @@ class SQLite {
     int arg2,
     ffi.Pointer<ffi.NativeFunction<_typedefC_51>> arg3,
   ) {
-    return (_sqlite3_result_text ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_result_text>>(
-                'sqlite3_result_text')
-            .asFunction<_dart_sqlite3_result_text>())(
+    return _sqlite3_result_text(
       arg0,
       arg1,
       arg2,
@@ -5216,7 +5405,11 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_result_text? _sqlite3_result_text;
+  late final _sqlite3_result_text_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_result_text>>(
+          'sqlite3_result_text');
+  late final _dart_sqlite3_result_text _sqlite3_result_text =
+      _sqlite3_result_text_ptr.asFunction<_dart_sqlite3_result_text>();
 
   void sqlite3_result_text64(
     ffi.Pointer<sqlite3_context> arg0,
@@ -5225,10 +5418,7 @@ class SQLite {
     ffi.Pointer<ffi.NativeFunction<_typedefC_52>> arg3,
     int encoding,
   ) {
-    return (_sqlite3_result_text64 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_result_text64>>(
-                'sqlite3_result_text64')
-            .asFunction<_dart_sqlite3_result_text64>())(
+    return _sqlite3_result_text64(
       arg0,
       arg1,
       arg2,
@@ -5237,7 +5427,11 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_result_text64? _sqlite3_result_text64;
+  late final _sqlite3_result_text64_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_result_text64>>(
+          'sqlite3_result_text64');
+  late final _dart_sqlite3_result_text64 _sqlite3_result_text64 =
+      _sqlite3_result_text64_ptr.asFunction<_dart_sqlite3_result_text64>();
 
   void sqlite3_result_text16(
     ffi.Pointer<sqlite3_context> arg0,
@@ -5245,10 +5439,7 @@ class SQLite {
     int arg2,
     ffi.Pointer<ffi.NativeFunction<_typedefC_53>> arg3,
   ) {
-    return (_sqlite3_result_text16 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_result_text16>>(
-                'sqlite3_result_text16')
-            .asFunction<_dart_sqlite3_result_text16>())(
+    return _sqlite3_result_text16(
       arg0,
       arg1,
       arg2,
@@ -5256,7 +5447,11 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_result_text16? _sqlite3_result_text16;
+  late final _sqlite3_result_text16_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_result_text16>>(
+          'sqlite3_result_text16');
+  late final _dart_sqlite3_result_text16 _sqlite3_result_text16 =
+      _sqlite3_result_text16_ptr.asFunction<_dart_sqlite3_result_text16>();
 
   void sqlite3_result_text16le(
     ffi.Pointer<sqlite3_context> arg0,
@@ -5264,10 +5459,7 @@ class SQLite {
     int arg2,
     ffi.Pointer<ffi.NativeFunction<_typedefC_54>> arg3,
   ) {
-    return (_sqlite3_result_text16le ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_result_text16le>>(
-                'sqlite3_result_text16le')
-            .asFunction<_dart_sqlite3_result_text16le>())(
+    return _sqlite3_result_text16le(
       arg0,
       arg1,
       arg2,
@@ -5275,7 +5467,11 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_result_text16le? _sqlite3_result_text16le;
+  late final _sqlite3_result_text16le_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_result_text16le>>(
+          'sqlite3_result_text16le');
+  late final _dart_sqlite3_result_text16le _sqlite3_result_text16le =
+      _sqlite3_result_text16le_ptr.asFunction<_dart_sqlite3_result_text16le>();
 
   void sqlite3_result_text16be(
     ffi.Pointer<sqlite3_context> arg0,
@@ -5283,10 +5479,7 @@ class SQLite {
     int arg2,
     ffi.Pointer<ffi.NativeFunction<_typedefC_55>> arg3,
   ) {
-    return (_sqlite3_result_text16be ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_result_text16be>>(
-                'sqlite3_result_text16be')
-            .asFunction<_dart_sqlite3_result_text16be>())(
+    return _sqlite3_result_text16be(
       arg0,
       arg1,
       arg2,
@@ -5294,22 +5487,27 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_result_text16be? _sqlite3_result_text16be;
+  late final _sqlite3_result_text16be_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_result_text16be>>(
+          'sqlite3_result_text16be');
+  late final _dart_sqlite3_result_text16be _sqlite3_result_text16be =
+      _sqlite3_result_text16be_ptr.asFunction<_dart_sqlite3_result_text16be>();
 
   void sqlite3_result_value(
     ffi.Pointer<sqlite3_context> arg0,
     ffi.Pointer<sqlite3_value> arg1,
   ) {
-    return (_sqlite3_result_value ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_result_value>>(
-                'sqlite3_result_value')
-            .asFunction<_dart_sqlite3_result_value>())(
+    return _sqlite3_result_value(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_result_value? _sqlite3_result_value;
+  late final _sqlite3_result_value_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_result_value>>(
+          'sqlite3_result_value');
+  late final _dart_sqlite3_result_value _sqlite3_result_value =
+      _sqlite3_result_value_ptr.asFunction<_dart_sqlite3_result_value>();
 
   void sqlite3_result_pointer(
     ffi.Pointer<sqlite3_context> arg0,
@@ -5317,10 +5515,7 @@ class SQLite {
     ffi.Pointer<ffi.Int8> arg2,
     ffi.Pointer<ffi.NativeFunction<_typedefC_56>> arg3,
   ) {
-    return (_sqlite3_result_pointer ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_result_pointer>>(
-                'sqlite3_result_pointer')
-            .asFunction<_dart_sqlite3_result_pointer>())(
+    return _sqlite3_result_pointer(
       arg0,
       arg1,
       arg2,
@@ -5328,37 +5523,44 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_result_pointer? _sqlite3_result_pointer;
+  late final _sqlite3_result_pointer_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_result_pointer>>(
+          'sqlite3_result_pointer');
+  late final _dart_sqlite3_result_pointer _sqlite3_result_pointer =
+      _sqlite3_result_pointer_ptr.asFunction<_dart_sqlite3_result_pointer>();
 
   void sqlite3_result_zeroblob(
     ffi.Pointer<sqlite3_context> arg0,
     int n,
   ) {
-    return (_sqlite3_result_zeroblob ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_result_zeroblob>>(
-                'sqlite3_result_zeroblob')
-            .asFunction<_dart_sqlite3_result_zeroblob>())(
+    return _sqlite3_result_zeroblob(
       arg0,
       n,
     );
   }
 
-  _dart_sqlite3_result_zeroblob? _sqlite3_result_zeroblob;
+  late final _sqlite3_result_zeroblob_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_result_zeroblob>>(
+          'sqlite3_result_zeroblob');
+  late final _dart_sqlite3_result_zeroblob _sqlite3_result_zeroblob =
+      _sqlite3_result_zeroblob_ptr.asFunction<_dart_sqlite3_result_zeroblob>();
 
   int sqlite3_result_zeroblob64(
     ffi.Pointer<sqlite3_context> arg0,
     int n,
   ) {
-    return (_sqlite3_result_zeroblob64 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_result_zeroblob64>>(
-                'sqlite3_result_zeroblob64')
-            .asFunction<_dart_sqlite3_result_zeroblob64>())(
+    return _sqlite3_result_zeroblob64(
       arg0,
       n,
     );
   }
 
-  _dart_sqlite3_result_zeroblob64? _sqlite3_result_zeroblob64;
+  late final _sqlite3_result_zeroblob64_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_result_zeroblob64>>(
+          'sqlite3_result_zeroblob64');
+  late final _dart_sqlite3_result_zeroblob64 _sqlite3_result_zeroblob64 =
+      _sqlite3_result_zeroblob64_ptr
+          .asFunction<_dart_sqlite3_result_zeroblob64>();
 
   /// CAPI3REF: Setting The Subtype Of An SQL Function
   /// METHOD: sqlite3_context
@@ -5374,16 +5576,17 @@ class SQLite {
     ffi.Pointer<sqlite3_context> arg0,
     int arg1,
   ) {
-    return (_sqlite3_result_subtype ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_result_subtype>>(
-                'sqlite3_result_subtype')
-            .asFunction<_dart_sqlite3_result_subtype>())(
+    return _sqlite3_result_subtype(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_result_subtype? _sqlite3_result_subtype;
+  late final _sqlite3_result_subtype_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_result_subtype>>(
+          'sqlite3_result_subtype');
+  late final _dart_sqlite3_result_subtype _sqlite3_result_subtype =
+      _sqlite3_result_subtype_ptr.asFunction<_dart_sqlite3_result_subtype>();
 
   /// CAPI3REF: Define New Collating Sequences
   /// METHOD: sqlite3
@@ -5471,10 +5674,7 @@ class SQLite {
     ffi.Pointer<ffi.Void> pArg,
     ffi.Pointer<ffi.NativeFunction<_typedefC_57>> xCompare,
   ) {
-    return (_sqlite3_create_collation ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_create_collation>>(
-                'sqlite3_create_collation')
-            .asFunction<_dart_sqlite3_create_collation>())(
+    return _sqlite3_create_collation(
       arg0,
       zName,
       eTextRep,
@@ -5483,7 +5683,12 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_create_collation? _sqlite3_create_collation;
+  late final _sqlite3_create_collation_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_create_collation>>(
+          'sqlite3_create_collation');
+  late final _dart_sqlite3_create_collation _sqlite3_create_collation =
+      _sqlite3_create_collation_ptr
+          .asFunction<_dart_sqlite3_create_collation>();
 
   int sqlite3_create_collation_v2(
     ffi.Pointer<sqlite3> arg0,
@@ -5493,10 +5698,7 @@ class SQLite {
     ffi.Pointer<ffi.NativeFunction<_typedefC_58>> xCompare,
     ffi.Pointer<ffi.NativeFunction<_typedefC_59>> xDestroy,
   ) {
-    return (_sqlite3_create_collation_v2 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_create_collation_v2>>(
-                'sqlite3_create_collation_v2')
-            .asFunction<_dart_sqlite3_create_collation_v2>())(
+    return _sqlite3_create_collation_v2(
       arg0,
       zName,
       eTextRep,
@@ -5506,7 +5708,12 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_create_collation_v2? _sqlite3_create_collation_v2;
+  late final _sqlite3_create_collation_v2_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_create_collation_v2>>(
+          'sqlite3_create_collation_v2');
+  late final _dart_sqlite3_create_collation_v2 _sqlite3_create_collation_v2 =
+      _sqlite3_create_collation_v2_ptr
+          .asFunction<_dart_sqlite3_create_collation_v2>();
 
   int sqlite3_create_collation16(
     ffi.Pointer<sqlite3> arg0,
@@ -5515,10 +5722,7 @@ class SQLite {
     ffi.Pointer<ffi.Void> pArg,
     ffi.Pointer<ffi.NativeFunction<_typedefC_60>> xCompare,
   ) {
-    return (_sqlite3_create_collation16 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_create_collation16>>(
-                'sqlite3_create_collation16')
-            .asFunction<_dart_sqlite3_create_collation16>())(
+    return _sqlite3_create_collation16(
       arg0,
       zName,
       eTextRep,
@@ -5527,7 +5731,12 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_create_collation16? _sqlite3_create_collation16;
+  late final _sqlite3_create_collation16_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_create_collation16>>(
+          'sqlite3_create_collation16');
+  late final _dart_sqlite3_create_collation16 _sqlite3_create_collation16 =
+      _sqlite3_create_collation16_ptr
+          .asFunction<_dart_sqlite3_create_collation16>();
 
   /// CAPI3REF: Collation Needed Callbacks
   /// METHOD: sqlite3
@@ -5559,34 +5768,38 @@ class SQLite {
     ffi.Pointer<ffi.Void> arg1,
     ffi.Pointer<ffi.NativeFunction<_typedefC_61>> arg2,
   ) {
-    return (_sqlite3_collation_needed ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_collation_needed>>(
-                'sqlite3_collation_needed')
-            .asFunction<_dart_sqlite3_collation_needed>())(
+    return _sqlite3_collation_needed(
       arg0,
       arg1,
       arg2,
     );
   }
 
-  _dart_sqlite3_collation_needed? _sqlite3_collation_needed;
+  late final _sqlite3_collation_needed_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_collation_needed>>(
+          'sqlite3_collation_needed');
+  late final _dart_sqlite3_collation_needed _sqlite3_collation_needed =
+      _sqlite3_collation_needed_ptr
+          .asFunction<_dart_sqlite3_collation_needed>();
 
   int sqlite3_collation_needed16(
     ffi.Pointer<sqlite3> arg0,
     ffi.Pointer<ffi.Void> arg1,
     ffi.Pointer<ffi.NativeFunction<_typedefC_62>> arg2,
   ) {
-    return (_sqlite3_collation_needed16 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_collation_needed16>>(
-                'sqlite3_collation_needed16')
-            .asFunction<_dart_sqlite3_collation_needed16>())(
+    return _sqlite3_collation_needed16(
       arg0,
       arg1,
       arg2,
     );
   }
 
-  _dart_sqlite3_collation_needed16? _sqlite3_collation_needed16;
+  late final _sqlite3_collation_needed16_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_collation_needed16>>(
+          'sqlite3_collation_needed16');
+  late final _dart_sqlite3_collation_needed16 _sqlite3_collation_needed16 =
+      _sqlite3_collation_needed16_ptr
+          .asFunction<_dart_sqlite3_collation_needed16>();
 
   /// CAPI3REF: Suspend Execution For A Short Time
   ///
@@ -5606,14 +5819,15 @@ class SQLite {
   int sqlite3_sleep(
     int arg0,
   ) {
-    return (_sqlite3_sleep ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_sleep>>('sqlite3_sleep')
-            .asFunction<_dart_sqlite3_sleep>())(
+    return _sqlite3_sleep(
       arg0,
     );
   }
 
-  _dart_sqlite3_sleep? _sqlite3_sleep;
+  late final _sqlite3_sleep_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_sleep>>('sqlite3_sleep');
+  late final _dart_sqlite3_sleep _sqlite3_sleep =
+      _sqlite3_sleep_ptr.asFunction<_dart_sqlite3_sleep>();
 
   /// CAPI3REF: Name Of The Folder Holding Temporary Files
   ///
@@ -5741,46 +5955,52 @@ class SQLite {
     int type,
     ffi.Pointer<ffi.Void> zValue,
   ) {
-    return (_sqlite3_win32_set_directory ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_win32_set_directory>>(
-                'sqlite3_win32_set_directory')
-            .asFunction<_dart_sqlite3_win32_set_directory>())(
+    return _sqlite3_win32_set_directory(
       type,
       zValue,
     );
   }
 
-  _dart_sqlite3_win32_set_directory? _sqlite3_win32_set_directory;
+  late final _sqlite3_win32_set_directory_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_win32_set_directory>>(
+          'sqlite3_win32_set_directory');
+  late final _dart_sqlite3_win32_set_directory _sqlite3_win32_set_directory =
+      _sqlite3_win32_set_directory_ptr
+          .asFunction<_dart_sqlite3_win32_set_directory>();
 
   int sqlite3_win32_set_directory8(
     int type,
     ffi.Pointer<ffi.Int8> zValue,
   ) {
-    return (_sqlite3_win32_set_directory8 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_win32_set_directory8>>(
-                'sqlite3_win32_set_directory8')
-            .asFunction<_dart_sqlite3_win32_set_directory8>())(
+    return _sqlite3_win32_set_directory8(
       type,
       zValue,
     );
   }
 
-  _dart_sqlite3_win32_set_directory8? _sqlite3_win32_set_directory8;
+  late final _sqlite3_win32_set_directory8_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_win32_set_directory8>>(
+          'sqlite3_win32_set_directory8');
+  late final _dart_sqlite3_win32_set_directory8 _sqlite3_win32_set_directory8 =
+      _sqlite3_win32_set_directory8_ptr
+          .asFunction<_dart_sqlite3_win32_set_directory8>();
 
   int sqlite3_win32_set_directory16(
     int type,
     ffi.Pointer<ffi.Void> zValue,
   ) {
-    return (_sqlite3_win32_set_directory16 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_win32_set_directory16>>(
-                'sqlite3_win32_set_directory16')
-            .asFunction<_dart_sqlite3_win32_set_directory16>())(
+    return _sqlite3_win32_set_directory16(
       type,
       zValue,
     );
   }
 
-  _dart_sqlite3_win32_set_directory16? _sqlite3_win32_set_directory16;
+  late final _sqlite3_win32_set_directory16_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_win32_set_directory16>>(
+          'sqlite3_win32_set_directory16');
+  late final _dart_sqlite3_win32_set_directory16
+      _sqlite3_win32_set_directory16 = _sqlite3_win32_set_directory16_ptr
+          .asFunction<_dart_sqlite3_win32_set_directory16>();
 
   /// CAPI3REF: Test For Auto-Commit Mode
   /// KEYWORDS: {autocommit mode}
@@ -5805,15 +6025,16 @@ class SQLite {
   int sqlite3_get_autocommit(
     ffi.Pointer<sqlite3> arg0,
   ) {
-    return (_sqlite3_get_autocommit ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_get_autocommit>>(
-                'sqlite3_get_autocommit')
-            .asFunction<_dart_sqlite3_get_autocommit>())(
+    return _sqlite3_get_autocommit(
       arg0,
     );
   }
 
-  _dart_sqlite3_get_autocommit? _sqlite3_get_autocommit;
+  late final _sqlite3_get_autocommit_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_get_autocommit>>(
+          'sqlite3_get_autocommit');
+  late final _dart_sqlite3_get_autocommit _sqlite3_get_autocommit =
+      _sqlite3_get_autocommit_ptr.asFunction<_dart_sqlite3_get_autocommit>();
 
   /// CAPI3REF: Find The Database Handle Of A Prepared Statement
   /// METHOD: sqlite3_stmt
@@ -5827,14 +6048,15 @@ class SQLite {
   ffi.Pointer<sqlite3> sqlite3_db_handle(
     ffi.Pointer<sqlite3_stmt> arg0,
   ) {
-    return (_sqlite3_db_handle ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_db_handle>>('sqlite3_db_handle')
-            .asFunction<_dart_sqlite3_db_handle>())(
+    return _sqlite3_db_handle(
       arg0,
     );
   }
 
-  _dart_sqlite3_db_handle? _sqlite3_db_handle;
+  late final _sqlite3_db_handle_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_db_handle>>('sqlite3_db_handle');
+  late final _dart_sqlite3_db_handle _sqlite3_db_handle =
+      _sqlite3_db_handle_ptr.asFunction<_dart_sqlite3_db_handle>();
 
   /// CAPI3REF: Return The Filename For A Database Connection
   /// METHOD: sqlite3
@@ -5868,16 +6090,17 @@ class SQLite {
     ffi.Pointer<sqlite3> db,
     ffi.Pointer<ffi.Int8> zDbName,
   ) {
-    return (_sqlite3_db_filename ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_db_filename>>(
-                'sqlite3_db_filename')
-            .asFunction<_dart_sqlite3_db_filename>())(
+    return _sqlite3_db_filename(
       db,
       zDbName,
     );
   }
 
-  _dart_sqlite3_db_filename? _sqlite3_db_filename;
+  late final _sqlite3_db_filename_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_db_filename>>(
+          'sqlite3_db_filename');
+  late final _dart_sqlite3_db_filename _sqlite3_db_filename =
+      _sqlite3_db_filename_ptr.asFunction<_dart_sqlite3_db_filename>();
 
   /// CAPI3REF: Determine if a database is read-only
   /// METHOD: sqlite3
@@ -5889,16 +6112,17 @@ class SQLite {
     ffi.Pointer<sqlite3> db,
     ffi.Pointer<ffi.Int8> zDbName,
   ) {
-    return (_sqlite3_db_readonly ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_db_readonly>>(
-                'sqlite3_db_readonly')
-            .asFunction<_dart_sqlite3_db_readonly>())(
+    return _sqlite3_db_readonly(
       db,
       zDbName,
     );
   }
 
-  _dart_sqlite3_db_readonly? _sqlite3_db_readonly;
+  late final _sqlite3_db_readonly_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_db_readonly>>(
+          'sqlite3_db_readonly');
+  late final _dart_sqlite3_db_readonly _sqlite3_db_readonly =
+      _sqlite3_db_readonly_ptr.asFunction<_dart_sqlite3_db_readonly>();
 
   /// CAPI3REF: Find the next prepared statement
   /// METHOD: sqlite3
@@ -5916,15 +6140,16 @@ class SQLite {
     ffi.Pointer<sqlite3> pDb,
     ffi.Pointer<sqlite3_stmt> pStmt,
   ) {
-    return (_sqlite3_next_stmt ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_next_stmt>>('sqlite3_next_stmt')
-            .asFunction<_dart_sqlite3_next_stmt>())(
+    return _sqlite3_next_stmt(
       pDb,
       pStmt,
     );
   }
 
-  _dart_sqlite3_next_stmt? _sqlite3_next_stmt;
+  late final _sqlite3_next_stmt_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_next_stmt>>('sqlite3_next_stmt');
+  late final _dart_sqlite3_next_stmt _sqlite3_next_stmt =
+      _sqlite3_next_stmt_ptr.asFunction<_dart_sqlite3_next_stmt>();
 
   /// CAPI3REF: Commit And Rollback Notification Callbacks
   /// METHOD: sqlite3
@@ -5976,34 +6201,36 @@ class SQLite {
     ffi.Pointer<ffi.NativeFunction<_typedefC_63>> arg1,
     ffi.Pointer<ffi.Void> arg2,
   ) {
-    return (_sqlite3_commit_hook ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_commit_hook>>(
-                'sqlite3_commit_hook')
-            .asFunction<_dart_sqlite3_commit_hook>())(
+    return _sqlite3_commit_hook(
       arg0,
       arg1,
       arg2,
     );
   }
 
-  _dart_sqlite3_commit_hook? _sqlite3_commit_hook;
+  late final _sqlite3_commit_hook_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_commit_hook>>(
+          'sqlite3_commit_hook');
+  late final _dart_sqlite3_commit_hook _sqlite3_commit_hook =
+      _sqlite3_commit_hook_ptr.asFunction<_dart_sqlite3_commit_hook>();
 
   ffi.Pointer<ffi.Void> sqlite3_rollback_hook(
     ffi.Pointer<sqlite3> arg0,
     ffi.Pointer<ffi.NativeFunction<_typedefC_64>> arg1,
     ffi.Pointer<ffi.Void> arg2,
   ) {
-    return (_sqlite3_rollback_hook ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_rollback_hook>>(
-                'sqlite3_rollback_hook')
-            .asFunction<_dart_sqlite3_rollback_hook>())(
+    return _sqlite3_rollback_hook(
       arg0,
       arg1,
       arg2,
     );
   }
 
-  _dart_sqlite3_rollback_hook? _sqlite3_rollback_hook;
+  late final _sqlite3_rollback_hook_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_rollback_hook>>(
+          'sqlite3_rollback_hook');
+  late final _dart_sqlite3_rollback_hook _sqlite3_rollback_hook =
+      _sqlite3_rollback_hook_ptr.asFunction<_dart_sqlite3_rollback_hook>();
 
   /// CAPI3REF: Data Change Notification Callbacks
   /// METHOD: sqlite3
@@ -6057,17 +6284,18 @@ class SQLite {
     ffi.Pointer<ffi.NativeFunction<_typedefC_65>> arg1,
     ffi.Pointer<ffi.Void> arg2,
   ) {
-    return (_sqlite3_update_hook ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_update_hook>>(
-                'sqlite3_update_hook')
-            .asFunction<_dart_sqlite3_update_hook>())(
+    return _sqlite3_update_hook(
       arg0,
       arg1,
       arg2,
     );
   }
 
-  _dart_sqlite3_update_hook? _sqlite3_update_hook;
+  late final _sqlite3_update_hook_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_update_hook>>(
+          'sqlite3_update_hook');
+  late final _dart_sqlite3_update_hook _sqlite3_update_hook =
+      _sqlite3_update_hook_ptr.asFunction<_dart_sqlite3_update_hook>();
 
   /// CAPI3REF: Enable Or Disable Shared Pager Cache
   ///
@@ -6109,15 +6337,17 @@ class SQLite {
   int sqlite3_enable_shared_cache(
     int arg0,
   ) {
-    return (_sqlite3_enable_shared_cache ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_enable_shared_cache>>(
-                'sqlite3_enable_shared_cache')
-            .asFunction<_dart_sqlite3_enable_shared_cache>())(
+    return _sqlite3_enable_shared_cache(
       arg0,
     );
   }
 
-  _dart_sqlite3_enable_shared_cache? _sqlite3_enable_shared_cache;
+  late final _sqlite3_enable_shared_cache_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_enable_shared_cache>>(
+          'sqlite3_enable_shared_cache');
+  late final _dart_sqlite3_enable_shared_cache _sqlite3_enable_shared_cache =
+      _sqlite3_enable_shared_cache_ptr
+          .asFunction<_dart_sqlite3_enable_shared_cache>();
 
   /// CAPI3REF: Attempt To Free Heap Memory
   ///
@@ -6134,15 +6364,16 @@ class SQLite {
   int sqlite3_release_memory(
     int arg0,
   ) {
-    return (_sqlite3_release_memory ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_release_memory>>(
-                'sqlite3_release_memory')
-            .asFunction<_dart_sqlite3_release_memory>())(
+    return _sqlite3_release_memory(
       arg0,
     );
   }
 
-  _dart_sqlite3_release_memory? _sqlite3_release_memory;
+  late final _sqlite3_release_memory_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_release_memory>>(
+          'sqlite3_release_memory');
+  late final _dart_sqlite3_release_memory _sqlite3_release_memory =
+      _sqlite3_release_memory_ptr.asFunction<_dart_sqlite3_release_memory>();
 
   /// CAPI3REF: Free Memory Used By A Database Connection
   /// METHOD: sqlite3
@@ -6157,15 +6388,17 @@ class SQLite {
   int sqlite3_db_release_memory(
     ffi.Pointer<sqlite3> arg0,
   ) {
-    return (_sqlite3_db_release_memory ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_db_release_memory>>(
-                'sqlite3_db_release_memory')
-            .asFunction<_dart_sqlite3_db_release_memory>())(
+    return _sqlite3_db_release_memory(
       arg0,
     );
   }
 
-  _dart_sqlite3_db_release_memory? _sqlite3_db_release_memory;
+  late final _sqlite3_db_release_memory_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_db_release_memory>>(
+          'sqlite3_db_release_memory');
+  late final _dart_sqlite3_db_release_memory _sqlite3_db_release_memory =
+      _sqlite3_db_release_memory_ptr
+          .asFunction<_dart_sqlite3_db_release_memory>();
 
   /// CAPI3REF: Impose A Limit On Heap Size
   ///
@@ -6232,28 +6465,32 @@ class SQLite {
   int sqlite3_soft_heap_limit64(
     int N,
   ) {
-    return (_sqlite3_soft_heap_limit64 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_soft_heap_limit64>>(
-                'sqlite3_soft_heap_limit64')
-            .asFunction<_dart_sqlite3_soft_heap_limit64>())(
+    return _sqlite3_soft_heap_limit64(
       N,
     );
   }
 
-  _dart_sqlite3_soft_heap_limit64? _sqlite3_soft_heap_limit64;
+  late final _sqlite3_soft_heap_limit64_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_soft_heap_limit64>>(
+          'sqlite3_soft_heap_limit64');
+  late final _dart_sqlite3_soft_heap_limit64 _sqlite3_soft_heap_limit64 =
+      _sqlite3_soft_heap_limit64_ptr
+          .asFunction<_dart_sqlite3_soft_heap_limit64>();
 
   int sqlite3_hard_heap_limit64(
     int N,
   ) {
-    return (_sqlite3_hard_heap_limit64 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_hard_heap_limit64>>(
-                'sqlite3_hard_heap_limit64')
-            .asFunction<_dart_sqlite3_hard_heap_limit64>())(
+    return _sqlite3_hard_heap_limit64(
       N,
     );
   }
 
-  _dart_sqlite3_hard_heap_limit64? _sqlite3_hard_heap_limit64;
+  late final _sqlite3_hard_heap_limit64_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_hard_heap_limit64>>(
+          'sqlite3_hard_heap_limit64');
+  late final _dart_sqlite3_hard_heap_limit64 _sqlite3_hard_heap_limit64 =
+      _sqlite3_hard_heap_limit64_ptr
+          .asFunction<_dart_sqlite3_hard_heap_limit64>();
 
   /// CAPI3REF: Deprecated Soft Heap Limit Interface
   /// DEPRECATED
@@ -6265,15 +6502,16 @@ class SQLite {
   void sqlite3_soft_heap_limit(
     int N,
   ) {
-    return (_sqlite3_soft_heap_limit ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_soft_heap_limit>>(
-                'sqlite3_soft_heap_limit')
-            .asFunction<_dart_sqlite3_soft_heap_limit>())(
+    return _sqlite3_soft_heap_limit(
       N,
     );
   }
 
-  _dart_sqlite3_soft_heap_limit? _sqlite3_soft_heap_limit;
+  late final _sqlite3_soft_heap_limit_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_soft_heap_limit>>(
+          'sqlite3_soft_heap_limit');
+  late final _dart_sqlite3_soft_heap_limit _sqlite3_soft_heap_limit =
+      _sqlite3_soft_heap_limit_ptr.asFunction<_dart_sqlite3_soft_heap_limit>();
 
   /// CAPI3REF: Extract Metadata About A Column Of A Table
   /// METHOD: sqlite3
@@ -6353,10 +6591,7 @@ class SQLite {
     ffi.Pointer<ffi.Int32> pPrimaryKey,
     ffi.Pointer<ffi.Int32> pAutoinc,
   ) {
-    return (_sqlite3_table_column_metadata ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_table_column_metadata>>(
-                'sqlite3_table_column_metadata')
-            .asFunction<_dart_sqlite3_table_column_metadata>())(
+    return _sqlite3_table_column_metadata(
       db,
       zDbName,
       zTableName,
@@ -6369,7 +6604,12 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_table_column_metadata? _sqlite3_table_column_metadata;
+  late final _sqlite3_table_column_metadata_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_table_column_metadata>>(
+          'sqlite3_table_column_metadata');
+  late final _dart_sqlite3_table_column_metadata
+      _sqlite3_table_column_metadata = _sqlite3_table_column_metadata_ptr
+          .asFunction<_dart_sqlite3_table_column_metadata>();
 
   /// CAPI3REF: Load An Extension
   /// METHOD: sqlite3
@@ -6419,10 +6659,7 @@ class SQLite {
     ffi.Pointer<ffi.Int8> zProc,
     ffi.Pointer<ffi.Pointer<ffi.Int8>> pzErrMsg,
   ) {
-    return (_sqlite3_load_extension ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_load_extension>>(
-                'sqlite3_load_extension')
-            .asFunction<_dart_sqlite3_load_extension>())(
+    return _sqlite3_load_extension(
       db,
       zFile,
       zProc,
@@ -6430,7 +6667,11 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_load_extension? _sqlite3_load_extension;
+  late final _sqlite3_load_extension_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_load_extension>>(
+          'sqlite3_load_extension');
+  late final _dart_sqlite3_load_extension _sqlite3_load_extension =
+      _sqlite3_load_extension_ptr.asFunction<_dart_sqlite3_load_extension>();
 
   /// CAPI3REF: Enable Or Disable Extension Loading
   /// METHOD: sqlite3
@@ -6459,16 +6700,18 @@ class SQLite {
     ffi.Pointer<sqlite3> db,
     int onoff,
   ) {
-    return (_sqlite3_enable_load_extension ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_enable_load_extension>>(
-                'sqlite3_enable_load_extension')
-            .asFunction<_dart_sqlite3_enable_load_extension>())(
+    return _sqlite3_enable_load_extension(
       db,
       onoff,
     );
   }
 
-  _dart_sqlite3_enable_load_extension? _sqlite3_enable_load_extension;
+  late final _sqlite3_enable_load_extension_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_enable_load_extension>>(
+          'sqlite3_enable_load_extension');
+  late final _dart_sqlite3_enable_load_extension
+      _sqlite3_enable_load_extension = _sqlite3_enable_load_extension_ptr
+          .asFunction<_dart_sqlite3_enable_load_extension>();
 
   /// CAPI3REF: Automatically Load Statically Linked Extensions
   ///
@@ -6507,15 +6750,16 @@ class SQLite {
   int sqlite3_auto_extension(
     ffi.Pointer<ffi.NativeFunction<_typedefC_66>> xEntryPoint,
   ) {
-    return (_sqlite3_auto_extension ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_auto_extension>>(
-                'sqlite3_auto_extension')
-            .asFunction<_dart_sqlite3_auto_extension>())(
+    return _sqlite3_auto_extension(
       xEntryPoint,
     );
   }
 
-  _dart_sqlite3_auto_extension? _sqlite3_auto_extension;
+  late final _sqlite3_auto_extension_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_auto_extension>>(
+          'sqlite3_auto_extension');
+  late final _dart_sqlite3_auto_extension _sqlite3_auto_extension =
+      _sqlite3_auto_extension_ptr.asFunction<_dart_sqlite3_auto_extension>();
 
   /// CAPI3REF: Cancel Automatic Extension Loading
   ///
@@ -6528,28 +6772,32 @@ class SQLite {
   int sqlite3_cancel_auto_extension(
     ffi.Pointer<ffi.NativeFunction<_typedefC_67>> xEntryPoint,
   ) {
-    return (_sqlite3_cancel_auto_extension ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_cancel_auto_extension>>(
-                'sqlite3_cancel_auto_extension')
-            .asFunction<_dart_sqlite3_cancel_auto_extension>())(
+    return _sqlite3_cancel_auto_extension(
       xEntryPoint,
     );
   }
 
-  _dart_sqlite3_cancel_auto_extension? _sqlite3_cancel_auto_extension;
+  late final _sqlite3_cancel_auto_extension_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_cancel_auto_extension>>(
+          'sqlite3_cancel_auto_extension');
+  late final _dart_sqlite3_cancel_auto_extension
+      _sqlite3_cancel_auto_extension = _sqlite3_cancel_auto_extension_ptr
+          .asFunction<_dart_sqlite3_cancel_auto_extension>();
 
   /// CAPI3REF: Reset Automatic Extension Loading
   ///
   /// ^This interface disables all automatic extensions previously
   /// registered using [sqlite3_auto_extension()].
   void sqlite3_reset_auto_extension() {
-    return (_sqlite3_reset_auto_extension ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_reset_auto_extension>>(
-                'sqlite3_reset_auto_extension')
-            .asFunction<_dart_sqlite3_reset_auto_extension>())();
+    return _sqlite3_reset_auto_extension();
   }
 
-  _dart_sqlite3_reset_auto_extension? _sqlite3_reset_auto_extension;
+  late final _sqlite3_reset_auto_extension_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_reset_auto_extension>>(
+          'sqlite3_reset_auto_extension');
+  late final _dart_sqlite3_reset_auto_extension _sqlite3_reset_auto_extension =
+      _sqlite3_reset_auto_extension_ptr
+          .asFunction<_dart_sqlite3_reset_auto_extension>();
 
   /// CAPI3REF: Register A Virtual Table Implementation
   /// METHOD: sqlite3
@@ -6587,10 +6835,7 @@ class SQLite {
     ffi.Pointer<sqlite3_module> p,
     ffi.Pointer<ffi.Void> pClientData,
   ) {
-    return (_sqlite3_create_module ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_create_module>>(
-                'sqlite3_create_module')
-            .asFunction<_dart_sqlite3_create_module>())(
+    return _sqlite3_create_module(
       db,
       zName,
       p,
@@ -6598,7 +6843,11 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_create_module? _sqlite3_create_module;
+  late final _sqlite3_create_module_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_create_module>>(
+          'sqlite3_create_module');
+  late final _dart_sqlite3_create_module _sqlite3_create_module =
+      _sqlite3_create_module_ptr.asFunction<_dart_sqlite3_create_module>();
 
   int sqlite3_create_module_v2(
     ffi.Pointer<sqlite3> db,
@@ -6607,10 +6856,7 @@ class SQLite {
     ffi.Pointer<ffi.Void> pClientData,
     ffi.Pointer<ffi.NativeFunction<_typedefC_68>> xDestroy,
   ) {
-    return (_sqlite3_create_module_v2 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_create_module_v2>>(
-                'sqlite3_create_module_v2')
-            .asFunction<_dart_sqlite3_create_module_v2>())(
+    return _sqlite3_create_module_v2(
       db,
       zName,
       p,
@@ -6619,7 +6865,12 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_create_module_v2? _sqlite3_create_module_v2;
+  late final _sqlite3_create_module_v2_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_create_module_v2>>(
+          'sqlite3_create_module_v2');
+  late final _dart_sqlite3_create_module_v2 _sqlite3_create_module_v2 =
+      _sqlite3_create_module_v2_ptr
+          .asFunction<_dart_sqlite3_create_module_v2>();
 
   /// CAPI3REF: Remove Unnecessary Virtual Table Implementations
   /// METHOD: sqlite3
@@ -6635,16 +6886,17 @@ class SQLite {
     ffi.Pointer<sqlite3> db,
     ffi.Pointer<ffi.Pointer<ffi.Int8>> azKeep,
   ) {
-    return (_sqlite3_drop_modules ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_drop_modules>>(
-                'sqlite3_drop_modules')
-            .asFunction<_dart_sqlite3_drop_modules>())(
+    return _sqlite3_drop_modules(
       db,
       azKeep,
     );
   }
 
-  _dart_sqlite3_drop_modules? _sqlite3_drop_modules;
+  late final _sqlite3_drop_modules_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_drop_modules>>(
+          'sqlite3_drop_modules');
+  late final _dart_sqlite3_drop_modules _sqlite3_drop_modules =
+      _sqlite3_drop_modules_ptr.asFunction<_dart_sqlite3_drop_modules>();
 
   /// CAPI3REF: Declare The Schema Of A Virtual Table
   ///
@@ -6656,16 +6908,17 @@ class SQLite {
     ffi.Pointer<sqlite3> arg0,
     ffi.Pointer<ffi.Int8> zSQL,
   ) {
-    return (_sqlite3_declare_vtab ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_declare_vtab>>(
-                'sqlite3_declare_vtab')
-            .asFunction<_dart_sqlite3_declare_vtab>())(
+    return _sqlite3_declare_vtab(
       arg0,
       zSQL,
     );
   }
 
-  _dart_sqlite3_declare_vtab? _sqlite3_declare_vtab;
+  late final _sqlite3_declare_vtab_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_declare_vtab>>(
+          'sqlite3_declare_vtab');
+  late final _dart_sqlite3_declare_vtab _sqlite3_declare_vtab =
+      _sqlite3_declare_vtab_ptr.asFunction<_dart_sqlite3_declare_vtab>();
 
   /// CAPI3REF: Overload A Function For A Virtual Table
   /// METHOD: sqlite3
@@ -6687,17 +6940,19 @@ class SQLite {
     ffi.Pointer<ffi.Int8> zFuncName,
     int nArg,
   ) {
-    return (_sqlite3_overload_function ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_overload_function>>(
-                'sqlite3_overload_function')
-            .asFunction<_dart_sqlite3_overload_function>())(
+    return _sqlite3_overload_function(
       arg0,
       zFuncName,
       nArg,
     );
   }
 
-  _dart_sqlite3_overload_function? _sqlite3_overload_function;
+  late final _sqlite3_overload_function_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_overload_function>>(
+          'sqlite3_overload_function');
+  late final _dart_sqlite3_overload_function _sqlite3_overload_function =
+      _sqlite3_overload_function_ptr
+          .asFunction<_dart_sqlite3_overload_function>();
 
   /// CAPI3REF: Open A BLOB For Incremental I/O
   /// METHOD: sqlite3
@@ -6789,9 +7044,7 @@ class SQLite {
     int flags,
     ffi.Pointer<ffi.Pointer<sqlite3_blob>> ppBlob,
   ) {
-    return (_sqlite3_blob_open ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_blob_open>>('sqlite3_blob_open')
-            .asFunction<_dart_sqlite3_blob_open>())(
+    return _sqlite3_blob_open(
       arg0,
       zDb,
       zTable,
@@ -6802,7 +7055,10 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_blob_open? _sqlite3_blob_open;
+  late final _sqlite3_blob_open_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_blob_open>>('sqlite3_blob_open');
+  late final _dart_sqlite3_blob_open _sqlite3_blob_open =
+      _sqlite3_blob_open_ptr.asFunction<_dart_sqlite3_blob_open>();
 
   /// CAPI3REF: Move a BLOB Handle to a New Row
   /// METHOD: sqlite3_blob
@@ -6829,16 +7085,17 @@ class SQLite {
     ffi.Pointer<sqlite3_blob> arg0,
     int arg1,
   ) {
-    return (_sqlite3_blob_reopen ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_blob_reopen>>(
-                'sqlite3_blob_reopen')
-            .asFunction<_dart_sqlite3_blob_reopen>())(
+    return _sqlite3_blob_reopen(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_blob_reopen? _sqlite3_blob_reopen;
+  late final _sqlite3_blob_reopen_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_blob_reopen>>(
+          'sqlite3_blob_reopen');
+  late final _dart_sqlite3_blob_reopen _sqlite3_blob_reopen =
+      _sqlite3_blob_reopen_ptr.asFunction<_dart_sqlite3_blob_reopen>();
 
   /// CAPI3REF: Close A BLOB Handle
   /// DESTRUCTOR: sqlite3_blob
@@ -6862,14 +7119,15 @@ class SQLite {
   int sqlite3_blob_close(
     ffi.Pointer<sqlite3_blob> arg0,
   ) {
-    return (_sqlite3_blob_close ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_blob_close>>('sqlite3_blob_close')
-            .asFunction<_dart_sqlite3_blob_close>())(
+    return _sqlite3_blob_close(
       arg0,
     );
   }
 
-  _dart_sqlite3_blob_close? _sqlite3_blob_close;
+  late final _sqlite3_blob_close_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_blob_close>>('sqlite3_blob_close');
+  late final _dart_sqlite3_blob_close _sqlite3_blob_close =
+      _sqlite3_blob_close_ptr.asFunction<_dart_sqlite3_blob_close>();
 
   /// CAPI3REF: Return The Size Of An Open BLOB
   /// METHOD: sqlite3_blob
@@ -6886,14 +7144,15 @@ class SQLite {
   int sqlite3_blob_bytes(
     ffi.Pointer<sqlite3_blob> arg0,
   ) {
-    return (_sqlite3_blob_bytes ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_blob_bytes>>('sqlite3_blob_bytes')
-            .asFunction<_dart_sqlite3_blob_bytes>())(
+    return _sqlite3_blob_bytes(
       arg0,
     );
   }
 
-  _dart_sqlite3_blob_bytes? _sqlite3_blob_bytes;
+  late final _sqlite3_blob_bytes_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_blob_bytes>>('sqlite3_blob_bytes');
+  late final _dart_sqlite3_blob_bytes _sqlite3_blob_bytes =
+      _sqlite3_blob_bytes_ptr.asFunction<_dart_sqlite3_blob_bytes>();
 
   /// CAPI3REF: Read Data From A BLOB Incrementally
   /// METHOD: sqlite3_blob
@@ -6926,9 +7185,7 @@ class SQLite {
     int N,
     int iOffset,
   ) {
-    return (_sqlite3_blob_read ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_blob_read>>('sqlite3_blob_read')
-            .asFunction<_dart_sqlite3_blob_read>())(
+    return _sqlite3_blob_read(
       arg0,
       Z,
       N,
@@ -6936,7 +7193,10 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_blob_read? _sqlite3_blob_read;
+  late final _sqlite3_blob_read_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_blob_read>>('sqlite3_blob_read');
+  late final _dart_sqlite3_blob_read _sqlite3_blob_read =
+      _sqlite3_blob_read_ptr.asFunction<_dart_sqlite3_blob_read>();
 
   /// CAPI3REF: Write Data Into A BLOB Incrementally
   /// METHOD: sqlite3_blob
@@ -6982,9 +7242,7 @@ class SQLite {
     int n,
     int iOffset,
   ) {
-    return (_sqlite3_blob_write ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_blob_write>>('sqlite3_blob_write')
-            .asFunction<_dart_sqlite3_blob_write>())(
+    return _sqlite3_blob_write(
       arg0,
       z,
       n,
@@ -6992,7 +7250,10 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_blob_write? _sqlite3_blob_write;
+  late final _sqlite3_blob_write_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_blob_write>>('sqlite3_blob_write');
+  late final _dart_sqlite3_blob_write _sqlite3_blob_write =
+      _sqlite3_blob_write_ptr.asFunction<_dart_sqlite3_blob_write>();
 
   /// CAPI3REF: Virtual File System Objects
   ///
@@ -7024,42 +7285,45 @@ class SQLite {
   ffi.Pointer<sqlite3_vfs> sqlite3_vfs_find(
     ffi.Pointer<ffi.Int8> zVfsName,
   ) {
-    return (_sqlite3_vfs_find ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_vfs_find>>('sqlite3_vfs_find')
-            .asFunction<_dart_sqlite3_vfs_find>())(
+    return _sqlite3_vfs_find(
       zVfsName,
     );
   }
 
-  _dart_sqlite3_vfs_find? _sqlite3_vfs_find;
+  late final _sqlite3_vfs_find_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_vfs_find>>('sqlite3_vfs_find');
+  late final _dart_sqlite3_vfs_find _sqlite3_vfs_find =
+      _sqlite3_vfs_find_ptr.asFunction<_dart_sqlite3_vfs_find>();
 
   int sqlite3_vfs_register(
     ffi.Pointer<sqlite3_vfs> arg0,
     int makeDflt,
   ) {
-    return (_sqlite3_vfs_register ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_vfs_register>>(
-                'sqlite3_vfs_register')
-            .asFunction<_dart_sqlite3_vfs_register>())(
+    return _sqlite3_vfs_register(
       arg0,
       makeDflt,
     );
   }
 
-  _dart_sqlite3_vfs_register? _sqlite3_vfs_register;
+  late final _sqlite3_vfs_register_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_vfs_register>>(
+          'sqlite3_vfs_register');
+  late final _dart_sqlite3_vfs_register _sqlite3_vfs_register =
+      _sqlite3_vfs_register_ptr.asFunction<_dart_sqlite3_vfs_register>();
 
   int sqlite3_vfs_unregister(
     ffi.Pointer<sqlite3_vfs> arg0,
   ) {
-    return (_sqlite3_vfs_unregister ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_vfs_unregister>>(
-                'sqlite3_vfs_unregister')
-            .asFunction<_dart_sqlite3_vfs_unregister>())(
+    return _sqlite3_vfs_unregister(
       arg0,
     );
   }
 
-  _dart_sqlite3_vfs_unregister? _sqlite3_vfs_unregister;
+  late final _sqlite3_vfs_unregister_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_vfs_unregister>>(
+          'sqlite3_vfs_unregister');
+  late final _dart_sqlite3_vfs_unregister _sqlite3_vfs_unregister =
+      _sqlite3_vfs_unregister_ptr.asFunction<_dart_sqlite3_vfs_unregister>();
 
   /// CAPI3REF: Mutexes
   ///
@@ -7176,90 +7440,97 @@ class SQLite {
   ffi.Pointer<sqlite3_mutex> sqlite3_mutex_alloc(
     int arg0,
   ) {
-    return (_sqlite3_mutex_alloc ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_mutex_alloc>>(
-                'sqlite3_mutex_alloc')
-            .asFunction<_dart_sqlite3_mutex_alloc>())(
+    return _sqlite3_mutex_alloc(
       arg0,
     );
   }
 
-  _dart_sqlite3_mutex_alloc? _sqlite3_mutex_alloc;
+  late final _sqlite3_mutex_alloc_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_mutex_alloc>>(
+          'sqlite3_mutex_alloc');
+  late final _dart_sqlite3_mutex_alloc _sqlite3_mutex_alloc =
+      _sqlite3_mutex_alloc_ptr.asFunction<_dart_sqlite3_mutex_alloc>();
 
   void sqlite3_mutex_free(
     ffi.Pointer<sqlite3_mutex> arg0,
   ) {
-    return (_sqlite3_mutex_free ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_mutex_free>>('sqlite3_mutex_free')
-            .asFunction<_dart_sqlite3_mutex_free>())(
+    return _sqlite3_mutex_free(
       arg0,
     );
   }
 
-  _dart_sqlite3_mutex_free? _sqlite3_mutex_free;
+  late final _sqlite3_mutex_free_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_mutex_free>>('sqlite3_mutex_free');
+  late final _dart_sqlite3_mutex_free _sqlite3_mutex_free =
+      _sqlite3_mutex_free_ptr.asFunction<_dart_sqlite3_mutex_free>();
 
   void sqlite3_mutex_enter(
     ffi.Pointer<sqlite3_mutex> arg0,
   ) {
-    return (_sqlite3_mutex_enter ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_mutex_enter>>(
-                'sqlite3_mutex_enter')
-            .asFunction<_dart_sqlite3_mutex_enter>())(
+    return _sqlite3_mutex_enter(
       arg0,
     );
   }
 
-  _dart_sqlite3_mutex_enter? _sqlite3_mutex_enter;
+  late final _sqlite3_mutex_enter_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_mutex_enter>>(
+          'sqlite3_mutex_enter');
+  late final _dart_sqlite3_mutex_enter _sqlite3_mutex_enter =
+      _sqlite3_mutex_enter_ptr.asFunction<_dart_sqlite3_mutex_enter>();
 
   int sqlite3_mutex_try(
     ffi.Pointer<sqlite3_mutex> arg0,
   ) {
-    return (_sqlite3_mutex_try ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_mutex_try>>('sqlite3_mutex_try')
-            .asFunction<_dart_sqlite3_mutex_try>())(
+    return _sqlite3_mutex_try(
       arg0,
     );
   }
 
-  _dart_sqlite3_mutex_try? _sqlite3_mutex_try;
+  late final _sqlite3_mutex_try_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_mutex_try>>('sqlite3_mutex_try');
+  late final _dart_sqlite3_mutex_try _sqlite3_mutex_try =
+      _sqlite3_mutex_try_ptr.asFunction<_dart_sqlite3_mutex_try>();
 
   void sqlite3_mutex_leave(
     ffi.Pointer<sqlite3_mutex> arg0,
   ) {
-    return (_sqlite3_mutex_leave ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_mutex_leave>>(
-                'sqlite3_mutex_leave')
-            .asFunction<_dart_sqlite3_mutex_leave>())(
+    return _sqlite3_mutex_leave(
       arg0,
     );
   }
 
-  _dart_sqlite3_mutex_leave? _sqlite3_mutex_leave;
+  late final _sqlite3_mutex_leave_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_mutex_leave>>(
+          'sqlite3_mutex_leave');
+  late final _dart_sqlite3_mutex_leave _sqlite3_mutex_leave =
+      _sqlite3_mutex_leave_ptr.asFunction<_dart_sqlite3_mutex_leave>();
 
   int sqlite3_mutex_held(
     ffi.Pointer<sqlite3_mutex> arg0,
   ) {
-    return (_sqlite3_mutex_held ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_mutex_held>>('sqlite3_mutex_held')
-            .asFunction<_dart_sqlite3_mutex_held>())(
+    return _sqlite3_mutex_held(
       arg0,
     );
   }
 
-  _dart_sqlite3_mutex_held? _sqlite3_mutex_held;
+  late final _sqlite3_mutex_held_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_mutex_held>>('sqlite3_mutex_held');
+  late final _dart_sqlite3_mutex_held _sqlite3_mutex_held =
+      _sqlite3_mutex_held_ptr.asFunction<_dart_sqlite3_mutex_held>();
 
   int sqlite3_mutex_notheld(
     ffi.Pointer<sqlite3_mutex> arg0,
   ) {
-    return (_sqlite3_mutex_notheld ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_mutex_notheld>>(
-                'sqlite3_mutex_notheld')
-            .asFunction<_dart_sqlite3_mutex_notheld>())(
+    return _sqlite3_mutex_notheld(
       arg0,
     );
   }
 
-  _dart_sqlite3_mutex_notheld? _sqlite3_mutex_notheld;
+  late final _sqlite3_mutex_notheld_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_mutex_notheld>>(
+          'sqlite3_mutex_notheld');
+  late final _dart_sqlite3_mutex_notheld _sqlite3_mutex_notheld =
+      _sqlite3_mutex_notheld_ptr.asFunction<_dart_sqlite3_mutex_notheld>();
 
   /// CAPI3REF: Retrieve the mutex for a database connection
   /// METHOD: sqlite3
@@ -7272,14 +7543,15 @@ class SQLite {
   ffi.Pointer<sqlite3_mutex> sqlite3_db_mutex(
     ffi.Pointer<sqlite3> arg0,
   ) {
-    return (_sqlite3_db_mutex ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_db_mutex>>('sqlite3_db_mutex')
-            .asFunction<_dart_sqlite3_db_mutex>())(
+    return _sqlite3_db_mutex(
       arg0,
     );
   }
 
-  _dart_sqlite3_db_mutex? _sqlite3_db_mutex;
+  late final _sqlite3_db_mutex_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_db_mutex>>('sqlite3_db_mutex');
+  late final _dart_sqlite3_db_mutex _sqlite3_db_mutex =
+      _sqlite3_db_mutex_ptr.asFunction<_dart_sqlite3_db_mutex>();
 
   /// CAPI3REF: Low-Level Control Of Database Files
   /// METHOD: sqlite3
@@ -7326,10 +7598,7 @@ class SQLite {
     int op,
     ffi.Pointer<ffi.Void> arg3,
   ) {
-    return (_sqlite3_file_control ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_file_control>>(
-                'sqlite3_file_control')
-            .asFunction<_dart_sqlite3_file_control>())(
+    return _sqlite3_file_control(
       arg0,
       zDbName,
       op,
@@ -7337,7 +7606,11 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_file_control? _sqlite3_file_control;
+  late final _sqlite3_file_control_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_file_control>>(
+          'sqlite3_file_control');
+  late final _dart_sqlite3_file_control _sqlite3_file_control =
+      _sqlite3_file_control_ptr.asFunction<_dart_sqlite3_file_control>();
 
   /// CAPI3REF: Testing Interface
   ///
@@ -7357,15 +7630,16 @@ class SQLite {
   int sqlite3_test_control(
     int op,
   ) {
-    return (_sqlite3_test_control ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_test_control>>(
-                'sqlite3_test_control')
-            .asFunction<_dart_sqlite3_test_control>())(
+    return _sqlite3_test_control(
       op,
     );
   }
 
-  _dart_sqlite3_test_control? _sqlite3_test_control;
+  late final _sqlite3_test_control_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_test_control>>(
+          'sqlite3_test_control');
+  late final _dart_sqlite3_test_control _sqlite3_test_control =
+      _sqlite3_test_control_ptr.asFunction<_dart_sqlite3_test_control>();
 
   /// CAPI3REF: SQL Keyword Checking
   ///
@@ -7413,45 +7687,48 @@ class SQLite {
   /// SQLite is compiled with the [-DSQLITE_OMIT_VACUUM] option.  Also,
   /// new keywords may be added to future releases of SQLite.
   int sqlite3_keyword_count() {
-    return (_sqlite3_keyword_count ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_keyword_count>>(
-                'sqlite3_keyword_count')
-            .asFunction<_dart_sqlite3_keyword_count>())();
+    return _sqlite3_keyword_count();
   }
 
-  _dart_sqlite3_keyword_count? _sqlite3_keyword_count;
+  late final _sqlite3_keyword_count_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_keyword_count>>(
+          'sqlite3_keyword_count');
+  late final _dart_sqlite3_keyword_count _sqlite3_keyword_count =
+      _sqlite3_keyword_count_ptr.asFunction<_dart_sqlite3_keyword_count>();
 
   int sqlite3_keyword_name(
     int arg0,
     ffi.Pointer<ffi.Pointer<ffi.Int8>> arg1,
     ffi.Pointer<ffi.Int32> arg2,
   ) {
-    return (_sqlite3_keyword_name ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_keyword_name>>(
-                'sqlite3_keyword_name')
-            .asFunction<_dart_sqlite3_keyword_name>())(
+    return _sqlite3_keyword_name(
       arg0,
       arg1,
       arg2,
     );
   }
 
-  _dart_sqlite3_keyword_name? _sqlite3_keyword_name;
+  late final _sqlite3_keyword_name_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_keyword_name>>(
+          'sqlite3_keyword_name');
+  late final _dart_sqlite3_keyword_name _sqlite3_keyword_name =
+      _sqlite3_keyword_name_ptr.asFunction<_dart_sqlite3_keyword_name>();
 
   int sqlite3_keyword_check(
     ffi.Pointer<ffi.Int8> arg0,
     int arg1,
   ) {
-    return (_sqlite3_keyword_check ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_keyword_check>>(
-                'sqlite3_keyword_check')
-            .asFunction<_dart_sqlite3_keyword_check>())(
+    return _sqlite3_keyword_check(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_keyword_check? _sqlite3_keyword_check;
+  late final _sqlite3_keyword_check_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_keyword_check>>(
+          'sqlite3_keyword_check');
+  late final _dart_sqlite3_keyword_check _sqlite3_keyword_check =
+      _sqlite3_keyword_check_ptr.asFunction<_dart_sqlite3_keyword_check>();
 
   /// CAPI3REF: Create A New Dynamic String Object
   /// CONSTRUCTOR: sqlite3_str
@@ -7479,14 +7756,15 @@ class SQLite {
   ffi.Pointer<sqlite3_str> sqlite3_str_new(
     ffi.Pointer<sqlite3> arg0,
   ) {
-    return (_sqlite3_str_new ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_str_new>>('sqlite3_str_new')
-            .asFunction<_dart_sqlite3_str_new>())(
+    return _sqlite3_str_new(
       arg0,
     );
   }
 
-  _dart_sqlite3_str_new? _sqlite3_str_new;
+  late final _sqlite3_str_new_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_str_new>>('sqlite3_str_new');
+  late final _dart_sqlite3_str_new _sqlite3_str_new =
+      _sqlite3_str_new_ptr.asFunction<_dart_sqlite3_str_new>();
 
   /// CAPI3REF: Finalize A Dynamic String
   /// DESTRUCTOR: sqlite3_str
@@ -7502,14 +7780,15 @@ class SQLite {
   ffi.Pointer<ffi.Int8> sqlite3_str_finish(
     ffi.Pointer<sqlite3_str> arg0,
   ) {
-    return (_sqlite3_str_finish ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_str_finish>>('sqlite3_str_finish')
-            .asFunction<_dart_sqlite3_str_finish>())(
+    return _sqlite3_str_finish(
       arg0,
     );
   }
 
-  _dart_sqlite3_str_finish? _sqlite3_str_finish;
+  late final _sqlite3_str_finish_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_str_finish>>('sqlite3_str_finish');
+  late final _dart_sqlite3_str_finish _sqlite3_str_finish =
+      _sqlite3_str_finish_ptr.asFunction<_dart_sqlite3_str_finish>();
 
   /// CAPI3REF: Add Content To A Dynamic String
   /// METHOD: sqlite3_str
@@ -7545,76 +7824,81 @@ class SQLite {
     ffi.Pointer<sqlite3_str> arg0,
     ffi.Pointer<ffi.Int8> zFormat,
   ) {
-    return (_sqlite3_str_appendf ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_str_appendf>>(
-                'sqlite3_str_appendf')
-            .asFunction<_dart_sqlite3_str_appendf>())(
+    return _sqlite3_str_appendf(
       arg0,
       zFormat,
     );
   }
 
-  _dart_sqlite3_str_appendf? _sqlite3_str_appendf;
+  late final _sqlite3_str_appendf_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_str_appendf>>(
+          'sqlite3_str_appendf');
+  late final _dart_sqlite3_str_appendf _sqlite3_str_appendf =
+      _sqlite3_str_appendf_ptr.asFunction<_dart_sqlite3_str_appendf>();
 
   void sqlite3_str_append(
     ffi.Pointer<sqlite3_str> arg0,
     ffi.Pointer<ffi.Int8> zIn,
     int N,
   ) {
-    return (_sqlite3_str_append ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_str_append>>('sqlite3_str_append')
-            .asFunction<_dart_sqlite3_str_append>())(
+    return _sqlite3_str_append(
       arg0,
       zIn,
       N,
     );
   }
 
-  _dart_sqlite3_str_append? _sqlite3_str_append;
+  late final _sqlite3_str_append_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_str_append>>('sqlite3_str_append');
+  late final _dart_sqlite3_str_append _sqlite3_str_append =
+      _sqlite3_str_append_ptr.asFunction<_dart_sqlite3_str_append>();
 
   void sqlite3_str_appendall(
     ffi.Pointer<sqlite3_str> arg0,
     ffi.Pointer<ffi.Int8> zIn,
   ) {
-    return (_sqlite3_str_appendall ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_str_appendall>>(
-                'sqlite3_str_appendall')
-            .asFunction<_dart_sqlite3_str_appendall>())(
+    return _sqlite3_str_appendall(
       arg0,
       zIn,
     );
   }
 
-  _dart_sqlite3_str_appendall? _sqlite3_str_appendall;
+  late final _sqlite3_str_appendall_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_str_appendall>>(
+          'sqlite3_str_appendall');
+  late final _dart_sqlite3_str_appendall _sqlite3_str_appendall =
+      _sqlite3_str_appendall_ptr.asFunction<_dart_sqlite3_str_appendall>();
 
   void sqlite3_str_appendchar(
     ffi.Pointer<sqlite3_str> arg0,
     int N,
     int C,
   ) {
-    return (_sqlite3_str_appendchar ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_str_appendchar>>(
-                'sqlite3_str_appendchar')
-            .asFunction<_dart_sqlite3_str_appendchar>())(
+    return _sqlite3_str_appendchar(
       arg0,
       N,
       C,
     );
   }
 
-  _dart_sqlite3_str_appendchar? _sqlite3_str_appendchar;
+  late final _sqlite3_str_appendchar_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_str_appendchar>>(
+          'sqlite3_str_appendchar');
+  late final _dart_sqlite3_str_appendchar _sqlite3_str_appendchar =
+      _sqlite3_str_appendchar_ptr.asFunction<_dart_sqlite3_str_appendchar>();
 
   void sqlite3_str_reset(
     ffi.Pointer<sqlite3_str> arg0,
   ) {
-    return (_sqlite3_str_reset ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_str_reset>>('sqlite3_str_reset')
-            .asFunction<_dart_sqlite3_str_reset>())(
+    return _sqlite3_str_reset(
       arg0,
     );
   }
 
-  _dart_sqlite3_str_reset? _sqlite3_str_reset;
+  late final _sqlite3_str_reset_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_str_reset>>('sqlite3_str_reset');
+  late final _dart_sqlite3_str_reset _sqlite3_str_reset =
+      _sqlite3_str_reset_ptr.asFunction<_dart_sqlite3_str_reset>();
 
   /// CAPI3REF: Status Of A Dynamic String
   /// METHOD: sqlite3_str
@@ -7646,39 +7930,42 @@ class SQLite {
   int sqlite3_str_errcode(
     ffi.Pointer<sqlite3_str> arg0,
   ) {
-    return (_sqlite3_str_errcode ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_str_errcode>>(
-                'sqlite3_str_errcode')
-            .asFunction<_dart_sqlite3_str_errcode>())(
+    return _sqlite3_str_errcode(
       arg0,
     );
   }
 
-  _dart_sqlite3_str_errcode? _sqlite3_str_errcode;
+  late final _sqlite3_str_errcode_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_str_errcode>>(
+          'sqlite3_str_errcode');
+  late final _dart_sqlite3_str_errcode _sqlite3_str_errcode =
+      _sqlite3_str_errcode_ptr.asFunction<_dart_sqlite3_str_errcode>();
 
   int sqlite3_str_length(
     ffi.Pointer<sqlite3_str> arg0,
   ) {
-    return (_sqlite3_str_length ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_str_length>>('sqlite3_str_length')
-            .asFunction<_dart_sqlite3_str_length>())(
+    return _sqlite3_str_length(
       arg0,
     );
   }
 
-  _dart_sqlite3_str_length? _sqlite3_str_length;
+  late final _sqlite3_str_length_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_str_length>>('sqlite3_str_length');
+  late final _dart_sqlite3_str_length _sqlite3_str_length =
+      _sqlite3_str_length_ptr.asFunction<_dart_sqlite3_str_length>();
 
   ffi.Pointer<ffi.Int8> sqlite3_str_value(
     ffi.Pointer<sqlite3_str> arg0,
   ) {
-    return (_sqlite3_str_value ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_str_value>>('sqlite3_str_value')
-            .asFunction<_dart_sqlite3_str_value>())(
+    return _sqlite3_str_value(
       arg0,
     );
   }
 
-  _dart_sqlite3_str_value? _sqlite3_str_value;
+  late final _sqlite3_str_value_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_str_value>>('sqlite3_str_value');
+  late final _dart_sqlite3_str_value _sqlite3_str_value =
+      _sqlite3_str_value_ptr.asFunction<_dart_sqlite3_str_value>();
 
   /// CAPI3REF: SQLite Runtime Status
   ///
@@ -7710,9 +7997,7 @@ class SQLite {
     ffi.Pointer<ffi.Int32> pHighwater,
     int resetFlag,
   ) {
-    return (_sqlite3_status ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_status>>('sqlite3_status')
-            .asFunction<_dart_sqlite3_status>())(
+    return _sqlite3_status(
       op,
       pCurrent,
       pHighwater,
@@ -7720,7 +8005,10 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_status? _sqlite3_status;
+  late final _sqlite3_status_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_status>>('sqlite3_status');
+  late final _dart_sqlite3_status _sqlite3_status =
+      _sqlite3_status_ptr.asFunction<_dart_sqlite3_status>();
 
   int sqlite3_status64(
     int op,
@@ -7728,9 +8016,7 @@ class SQLite {
     ffi.Pointer<ffi.Int64> pHighwater,
     int resetFlag,
   ) {
-    return (_sqlite3_status64 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_status64>>('sqlite3_status64')
-            .asFunction<_dart_sqlite3_status64>())(
+    return _sqlite3_status64(
       op,
       pCurrent,
       pHighwater,
@@ -7738,7 +8024,10 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_status64? _sqlite3_status64;
+  late final _sqlite3_status64_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_status64>>('sqlite3_status64');
+  late final _dart_sqlite3_status64 _sqlite3_status64 =
+      _sqlite3_status64_ptr.asFunction<_dart_sqlite3_status64>();
 
   /// CAPI3REF: Database Connection Status
   /// METHOD: sqlite3
@@ -7768,9 +8057,7 @@ class SQLite {
     ffi.Pointer<ffi.Int32> pHiwtr,
     int resetFlg,
   ) {
-    return (_sqlite3_db_status ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_db_status>>('sqlite3_db_status')
-            .asFunction<_dart_sqlite3_db_status>())(
+    return _sqlite3_db_status(
       arg0,
       op,
       pCur,
@@ -7779,7 +8066,10 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_db_status? _sqlite3_db_status;
+  late final _sqlite3_db_status_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_db_status>>('sqlite3_db_status');
+  late final _dart_sqlite3_db_status _sqlite3_db_status =
+      _sqlite3_db_status_ptr.asFunction<_dart_sqlite3_db_status>();
 
   /// CAPI3REF: Prepared Statement Status
   /// METHOD: sqlite3_stmt
@@ -7808,17 +8098,18 @@ class SQLite {
     int op,
     int resetFlg,
   ) {
-    return (_sqlite3_stmt_status ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_stmt_status>>(
-                'sqlite3_stmt_status')
-            .asFunction<_dart_sqlite3_stmt_status>())(
+    return _sqlite3_stmt_status(
       arg0,
       op,
       resetFlg,
     );
   }
 
-  _dart_sqlite3_stmt_status? _sqlite3_stmt_status;
+  late final _sqlite3_stmt_status_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_stmt_status>>(
+          'sqlite3_stmt_status');
+  late final _dart_sqlite3_stmt_status _sqlite3_stmt_status =
+      _sqlite3_stmt_status_ptr.asFunction<_dart_sqlite3_stmt_status>();
 
   /// CAPI3REF: Online Backup API.
   ///
@@ -8010,10 +8301,7 @@ class SQLite {
     ffi.Pointer<sqlite3> pSource,
     ffi.Pointer<ffi.Int8> zSourceName,
   ) {
-    return (_sqlite3_backup_init ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_backup_init>>(
-                'sqlite3_backup_init')
-            .asFunction<_dart_sqlite3_backup_init>())(
+    return _sqlite3_backup_init(
       pDest,
       zDestName,
       pSource,
@@ -8021,61 +8309,71 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_backup_init? _sqlite3_backup_init;
+  late final _sqlite3_backup_init_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_backup_init>>(
+          'sqlite3_backup_init');
+  late final _dart_sqlite3_backup_init _sqlite3_backup_init =
+      _sqlite3_backup_init_ptr.asFunction<_dart_sqlite3_backup_init>();
 
   int sqlite3_backup_step(
     ffi.Pointer<sqlite3_backup> p,
     int nPage,
   ) {
-    return (_sqlite3_backup_step ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_backup_step>>(
-                'sqlite3_backup_step')
-            .asFunction<_dart_sqlite3_backup_step>())(
+    return _sqlite3_backup_step(
       p,
       nPage,
     );
   }
 
-  _dart_sqlite3_backup_step? _sqlite3_backup_step;
+  late final _sqlite3_backup_step_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_backup_step>>(
+          'sqlite3_backup_step');
+  late final _dart_sqlite3_backup_step _sqlite3_backup_step =
+      _sqlite3_backup_step_ptr.asFunction<_dart_sqlite3_backup_step>();
 
   int sqlite3_backup_finish(
     ffi.Pointer<sqlite3_backup> p,
   ) {
-    return (_sqlite3_backup_finish ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_backup_finish>>(
-                'sqlite3_backup_finish')
-            .asFunction<_dart_sqlite3_backup_finish>())(
+    return _sqlite3_backup_finish(
       p,
     );
   }
 
-  _dart_sqlite3_backup_finish? _sqlite3_backup_finish;
+  late final _sqlite3_backup_finish_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_backup_finish>>(
+          'sqlite3_backup_finish');
+  late final _dart_sqlite3_backup_finish _sqlite3_backup_finish =
+      _sqlite3_backup_finish_ptr.asFunction<_dart_sqlite3_backup_finish>();
 
   int sqlite3_backup_remaining(
     ffi.Pointer<sqlite3_backup> p,
   ) {
-    return (_sqlite3_backup_remaining ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_backup_remaining>>(
-                'sqlite3_backup_remaining')
-            .asFunction<_dart_sqlite3_backup_remaining>())(
+    return _sqlite3_backup_remaining(
       p,
     );
   }
 
-  _dart_sqlite3_backup_remaining? _sqlite3_backup_remaining;
+  late final _sqlite3_backup_remaining_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_backup_remaining>>(
+          'sqlite3_backup_remaining');
+  late final _dart_sqlite3_backup_remaining _sqlite3_backup_remaining =
+      _sqlite3_backup_remaining_ptr
+          .asFunction<_dart_sqlite3_backup_remaining>();
 
   int sqlite3_backup_pagecount(
     ffi.Pointer<sqlite3_backup> p,
   ) {
-    return (_sqlite3_backup_pagecount ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_backup_pagecount>>(
-                'sqlite3_backup_pagecount')
-            .asFunction<_dart_sqlite3_backup_pagecount>())(
+    return _sqlite3_backup_pagecount(
       p,
     );
   }
 
-  _dart_sqlite3_backup_pagecount? _sqlite3_backup_pagecount;
+  late final _sqlite3_backup_pagecount_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_backup_pagecount>>(
+          'sqlite3_backup_pagecount');
+  late final _dart_sqlite3_backup_pagecount _sqlite3_backup_pagecount =
+      _sqlite3_backup_pagecount_ptr
+          .asFunction<_dart_sqlite3_backup_pagecount>();
 
   /// CAPI3REF: Unlock Notification
   /// METHOD: sqlite3
@@ -8195,17 +8493,18 @@ class SQLite {
     ffi.Pointer<ffi.NativeFunction<_typedefC_69>> xNotify,
     ffi.Pointer<ffi.Void> pNotifyArg,
   ) {
-    return (_sqlite3_unlock_notify ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_unlock_notify>>(
-                'sqlite3_unlock_notify')
-            .asFunction<_dart_sqlite3_unlock_notify>())(
+    return _sqlite3_unlock_notify(
       pBlocked,
       xNotify,
       pNotifyArg,
     );
   }
 
-  _dart_sqlite3_unlock_notify? _sqlite3_unlock_notify;
+  late final _sqlite3_unlock_notify_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_unlock_notify>>(
+          'sqlite3_unlock_notify');
+  late final _dart_sqlite3_unlock_notify _sqlite3_unlock_notify =
+      _sqlite3_unlock_notify_ptr.asFunction<_dart_sqlite3_unlock_notify>();
 
   /// CAPI3REF: String Comparison
   ///
@@ -8217,31 +8516,33 @@ class SQLite {
     ffi.Pointer<ffi.Int8> arg0,
     ffi.Pointer<ffi.Int8> arg1,
   ) {
-    return (_sqlite3_stricmp ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_stricmp>>('sqlite3_stricmp')
-            .asFunction<_dart_sqlite3_stricmp>())(
+    return _sqlite3_stricmp(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_stricmp? _sqlite3_stricmp;
+  late final _sqlite3_stricmp_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_stricmp>>('sqlite3_stricmp');
+  late final _dart_sqlite3_stricmp _sqlite3_stricmp =
+      _sqlite3_stricmp_ptr.asFunction<_dart_sqlite3_stricmp>();
 
   int sqlite3_strnicmp(
     ffi.Pointer<ffi.Int8> arg0,
     ffi.Pointer<ffi.Int8> arg1,
     int arg2,
   ) {
-    return (_sqlite3_strnicmp ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_strnicmp>>('sqlite3_strnicmp')
-            .asFunction<_dart_sqlite3_strnicmp>())(
+    return _sqlite3_strnicmp(
       arg0,
       arg1,
       arg2,
     );
   }
 
-  _dart_sqlite3_strnicmp? _sqlite3_strnicmp;
+  late final _sqlite3_strnicmp_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_strnicmp>>('sqlite3_strnicmp');
+  late final _dart_sqlite3_strnicmp _sqlite3_strnicmp =
+      _sqlite3_strnicmp_ptr.asFunction<_dart_sqlite3_strnicmp>();
 
   /// CAPI3REF: String Globbing
   ///
@@ -8260,15 +8561,16 @@ class SQLite {
     ffi.Pointer<ffi.Int8> zGlob,
     ffi.Pointer<ffi.Int8> zStr,
   ) {
-    return (_sqlite3_strglob ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_strglob>>('sqlite3_strglob')
-            .asFunction<_dart_sqlite3_strglob>())(
+    return _sqlite3_strglob(
       zGlob,
       zStr,
     );
   }
 
-  _dart_sqlite3_strglob? _sqlite3_strglob;
+  late final _sqlite3_strglob_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_strglob>>('sqlite3_strglob');
+  late final _dart_sqlite3_strglob _sqlite3_strglob =
+      _sqlite3_strglob_ptr.asFunction<_dart_sqlite3_strglob>();
 
   /// CAPI3REF: String LIKE Matching
   ///
@@ -8294,16 +8596,17 @@ class SQLite {
     ffi.Pointer<ffi.Int8> zStr,
     int cEsc,
   ) {
-    return (_sqlite3_strlike ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_strlike>>('sqlite3_strlike')
-            .asFunction<_dart_sqlite3_strlike>())(
+    return _sqlite3_strlike(
       zGlob,
       zStr,
       cEsc,
     );
   }
 
-  _dart_sqlite3_strlike? _sqlite3_strlike;
+  late final _sqlite3_strlike_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_strlike>>('sqlite3_strlike');
+  late final _dart_sqlite3_strlike _sqlite3_strlike =
+      _sqlite3_strlike_ptr.asFunction<_dart_sqlite3_strlike>();
 
   /// CAPI3REF: Error Logging Interface
   ///
@@ -8328,15 +8631,16 @@ class SQLite {
     int iErrCode,
     ffi.Pointer<ffi.Int8> zFormat,
   ) {
-    return (_sqlite3_log ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_log>>('sqlite3_log')
-            .asFunction<_dart_sqlite3_log>())(
+    return _sqlite3_log(
       iErrCode,
       zFormat,
     );
   }
 
-  _dart_sqlite3_log? _sqlite3_log;
+  late final _sqlite3_log_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_log>>('sqlite3_log');
+  late final _dart_sqlite3_log _sqlite3_log =
+      _sqlite3_log_ptr.asFunction<_dart_sqlite3_log>();
 
   /// CAPI3REF: Write-Ahead Log Commit Hook
   /// METHOD: sqlite3
@@ -8375,16 +8679,17 @@ class SQLite {
     ffi.Pointer<ffi.NativeFunction<_typedefC_70>> arg1,
     ffi.Pointer<ffi.Void> arg2,
   ) {
-    return (_sqlite3_wal_hook ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_wal_hook>>('sqlite3_wal_hook')
-            .asFunction<_dart_sqlite3_wal_hook>())(
+    return _sqlite3_wal_hook(
       arg0,
       arg1,
       arg2,
     );
   }
 
-  _dart_sqlite3_wal_hook? _sqlite3_wal_hook;
+  late final _sqlite3_wal_hook_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_wal_hook>>('sqlite3_wal_hook');
+  late final _dart_sqlite3_wal_hook _sqlite3_wal_hook =
+      _sqlite3_wal_hook_ptr.asFunction<_dart_sqlite3_wal_hook>();
 
   /// CAPI3REF: Configure an auto-checkpoint
   /// METHOD: sqlite3
@@ -8417,16 +8722,18 @@ class SQLite {
     ffi.Pointer<sqlite3> db,
     int N,
   ) {
-    return (_sqlite3_wal_autocheckpoint ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_wal_autocheckpoint>>(
-                'sqlite3_wal_autocheckpoint')
-            .asFunction<_dart_sqlite3_wal_autocheckpoint>())(
+    return _sqlite3_wal_autocheckpoint(
       db,
       N,
     );
   }
 
-  _dart_sqlite3_wal_autocheckpoint? _sqlite3_wal_autocheckpoint;
+  late final _sqlite3_wal_autocheckpoint_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_wal_autocheckpoint>>(
+          'sqlite3_wal_autocheckpoint');
+  late final _dart_sqlite3_wal_autocheckpoint _sqlite3_wal_autocheckpoint =
+      _sqlite3_wal_autocheckpoint_ptr
+          .asFunction<_dart_sqlite3_wal_autocheckpoint>();
 
   /// CAPI3REF: Checkpoint a database
   /// METHOD: sqlite3
@@ -8450,16 +8757,17 @@ class SQLite {
     ffi.Pointer<sqlite3> db,
     ffi.Pointer<ffi.Int8> zDb,
   ) {
-    return (_sqlite3_wal_checkpoint ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_wal_checkpoint>>(
-                'sqlite3_wal_checkpoint')
-            .asFunction<_dart_sqlite3_wal_checkpoint>())(
+    return _sqlite3_wal_checkpoint(
       db,
       zDb,
     );
   }
 
-  _dart_sqlite3_wal_checkpoint? _sqlite3_wal_checkpoint;
+  late final _sqlite3_wal_checkpoint_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_wal_checkpoint>>(
+          'sqlite3_wal_checkpoint');
+  late final _dart_sqlite3_wal_checkpoint _sqlite3_wal_checkpoint =
+      _sqlite3_wal_checkpoint_ptr.asFunction<_dart_sqlite3_wal_checkpoint>();
 
   /// CAPI3REF: Checkpoint a database
   /// METHOD: sqlite3
@@ -8558,10 +8866,7 @@ class SQLite {
     ffi.Pointer<ffi.Int32> pnLog,
     ffi.Pointer<ffi.Int32> pnCkpt,
   ) {
-    return (_sqlite3_wal_checkpoint_v2 ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_wal_checkpoint_v2>>(
-                'sqlite3_wal_checkpoint_v2')
-            .asFunction<_dart_sqlite3_wal_checkpoint_v2>())(
+    return _sqlite3_wal_checkpoint_v2(
       db,
       zDb,
       eMode,
@@ -8570,7 +8875,12 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_wal_checkpoint_v2? _sqlite3_wal_checkpoint_v2;
+  late final _sqlite3_wal_checkpoint_v2_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_wal_checkpoint_v2>>(
+          'sqlite3_wal_checkpoint_v2');
+  late final _dart_sqlite3_wal_checkpoint_v2 _sqlite3_wal_checkpoint_v2 =
+      _sqlite3_wal_checkpoint_v2_ptr
+          .asFunction<_dart_sqlite3_wal_checkpoint_v2>();
 
   /// CAPI3REF: Virtual Table Interface Configuration
   ///
@@ -8592,16 +8902,17 @@ class SQLite {
     ffi.Pointer<sqlite3> arg0,
     int op,
   ) {
-    return (_sqlite3_vtab_config ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_vtab_config>>(
-                'sqlite3_vtab_config')
-            .asFunction<_dart_sqlite3_vtab_config>())(
+    return _sqlite3_vtab_config(
       arg0,
       op,
     );
   }
 
-  _dart_sqlite3_vtab_config? _sqlite3_vtab_config;
+  late final _sqlite3_vtab_config_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_vtab_config>>(
+          'sqlite3_vtab_config');
+  late final _dart_sqlite3_vtab_config _sqlite3_vtab_config =
+      _sqlite3_vtab_config_ptr.asFunction<_dart_sqlite3_vtab_config>();
 
   /// CAPI3REF: Determine The Virtual Table Conflict Policy
   ///
@@ -8614,15 +8925,17 @@ class SQLite {
   int sqlite3_vtab_on_conflict(
     ffi.Pointer<sqlite3> arg0,
   ) {
-    return (_sqlite3_vtab_on_conflict ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_vtab_on_conflict>>(
-                'sqlite3_vtab_on_conflict')
-            .asFunction<_dart_sqlite3_vtab_on_conflict>())(
+    return _sqlite3_vtab_on_conflict(
       arg0,
     );
   }
 
-  _dart_sqlite3_vtab_on_conflict? _sqlite3_vtab_on_conflict;
+  late final _sqlite3_vtab_on_conflict_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_vtab_on_conflict>>(
+          'sqlite3_vtab_on_conflict');
+  late final _dart_sqlite3_vtab_on_conflict _sqlite3_vtab_on_conflict =
+      _sqlite3_vtab_on_conflict_ptr
+          .asFunction<_dart_sqlite3_vtab_on_conflict>();
 
   /// CAPI3REF: Determine If Virtual Table Column Access Is For UPDATE
   ///
@@ -8642,15 +8955,16 @@ class SQLite {
   int sqlite3_vtab_nochange(
     ffi.Pointer<sqlite3_context> arg0,
   ) {
-    return (_sqlite3_vtab_nochange ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_vtab_nochange>>(
-                'sqlite3_vtab_nochange')
-            .asFunction<_dart_sqlite3_vtab_nochange>())(
+    return _sqlite3_vtab_nochange(
       arg0,
     );
   }
 
-  _dart_sqlite3_vtab_nochange? _sqlite3_vtab_nochange;
+  late final _sqlite3_vtab_nochange_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_vtab_nochange>>(
+          'sqlite3_vtab_nochange');
+  late final _dart_sqlite3_vtab_nochange _sqlite3_vtab_nochange =
+      _sqlite3_vtab_nochange_ptr.asFunction<_dart_sqlite3_vtab_nochange>();
 
   /// CAPI3REF: Determine The Collation For a Virtual Table Constraint
   ///
@@ -8667,16 +8981,17 @@ class SQLite {
     ffi.Pointer<sqlite3_index_info> arg0,
     int arg1,
   ) {
-    return (_sqlite3_vtab_collation ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_vtab_collation>>(
-                'sqlite3_vtab_collation')
-            .asFunction<_dart_sqlite3_vtab_collation>())(
+    return _sqlite3_vtab_collation(
       arg0,
       arg1,
     );
   }
 
-  _dart_sqlite3_vtab_collation? _sqlite3_vtab_collation;
+  late final _sqlite3_vtab_collation_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_vtab_collation>>(
+          'sqlite3_vtab_collation');
+  late final _dart_sqlite3_vtab_collation _sqlite3_vtab_collation =
+      _sqlite3_vtab_collation_ptr.asFunction<_dart_sqlite3_vtab_collation>();
 
   /// CAPI3REF: Prepared Statement Scan Status
   /// METHOD: sqlite3_stmt
@@ -8713,10 +9028,7 @@ class SQLite {
     int iScanStatusOp,
     ffi.Pointer<ffi.Void> pOut,
   ) {
-    return (_sqlite3_stmt_scanstatus ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_stmt_scanstatus>>(
-                'sqlite3_stmt_scanstatus')
-            .asFunction<_dart_sqlite3_stmt_scanstatus>())(
+    return _sqlite3_stmt_scanstatus(
       pStmt,
       idx,
       iScanStatusOp,
@@ -8724,7 +9036,11 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_stmt_scanstatus? _sqlite3_stmt_scanstatus;
+  late final _sqlite3_stmt_scanstatus_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_stmt_scanstatus>>(
+          'sqlite3_stmt_scanstatus');
+  late final _dart_sqlite3_stmt_scanstatus _sqlite3_stmt_scanstatus =
+      _sqlite3_stmt_scanstatus_ptr.asFunction<_dart_sqlite3_stmt_scanstatus>();
 
   /// CAPI3REF: Zero Scan-Status Counters
   /// METHOD: sqlite3_stmt
@@ -8736,15 +9052,17 @@ class SQLite {
   void sqlite3_stmt_scanstatus_reset(
     ffi.Pointer<sqlite3_stmt> arg0,
   ) {
-    return (_sqlite3_stmt_scanstatus_reset ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_stmt_scanstatus_reset>>(
-                'sqlite3_stmt_scanstatus_reset')
-            .asFunction<_dart_sqlite3_stmt_scanstatus_reset>())(
+    return _sqlite3_stmt_scanstatus_reset(
       arg0,
     );
   }
 
-  _dart_sqlite3_stmt_scanstatus_reset? _sqlite3_stmt_scanstatus_reset;
+  late final _sqlite3_stmt_scanstatus_reset_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_stmt_scanstatus_reset>>(
+          'sqlite3_stmt_scanstatus_reset');
+  late final _dart_sqlite3_stmt_scanstatus_reset
+      _sqlite3_stmt_scanstatus_reset = _sqlite3_stmt_scanstatus_reset_ptr
+          .asFunction<_dart_sqlite3_stmt_scanstatus_reset>();
 
   /// CAPI3REF: Flush caches to disk mid-transaction
   ///
@@ -8777,15 +9095,16 @@ class SQLite {
   int sqlite3_db_cacheflush(
     ffi.Pointer<sqlite3> arg0,
   ) {
-    return (_sqlite3_db_cacheflush ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_db_cacheflush>>(
-                'sqlite3_db_cacheflush')
-            .asFunction<_dart_sqlite3_db_cacheflush>())(
+    return _sqlite3_db_cacheflush(
       arg0,
     );
   }
 
-  _dart_sqlite3_db_cacheflush? _sqlite3_db_cacheflush;
+  late final _sqlite3_db_cacheflush_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_db_cacheflush>>(
+          'sqlite3_db_cacheflush');
+  late final _dart_sqlite3_db_cacheflush _sqlite3_db_cacheflush =
+      _sqlite3_db_cacheflush_ptr.asFunction<_dart_sqlite3_db_cacheflush>();
 
   /// CAPI3REF: Low-level system error code
   ///
@@ -8798,15 +9117,16 @@ class SQLite {
   int sqlite3_system_errno(
     ffi.Pointer<sqlite3> arg0,
   ) {
-    return (_sqlite3_system_errno ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_system_errno>>(
-                'sqlite3_system_errno')
-            .asFunction<_dart_sqlite3_system_errno>())(
+    return _sqlite3_system_errno(
       arg0,
     );
   }
 
-  _dart_sqlite3_system_errno? _sqlite3_system_errno;
+  late final _sqlite3_system_errno_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_system_errno>>(
+          'sqlite3_system_errno');
+  late final _dart_sqlite3_system_errno _sqlite3_system_errno =
+      _sqlite3_system_errno_ptr.asFunction<_dart_sqlite3_system_errno>();
 
   /// CAPI3REF: Record A Database Snapshot
   /// CONSTRUCTOR: sqlite3_snapshot
@@ -8854,17 +9174,18 @@ class SQLite {
     ffi.Pointer<ffi.Int8> zSchema,
     ffi.Pointer<ffi.Pointer<sqlite3_snapshot>> ppSnapshot,
   ) {
-    return (_sqlite3_snapshot_get ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_snapshot_get>>(
-                'sqlite3_snapshot_get')
-            .asFunction<_dart_sqlite3_snapshot_get>())(
+    return _sqlite3_snapshot_get(
       db,
       zSchema,
       ppSnapshot,
     );
   }
 
-  _dart_sqlite3_snapshot_get? _sqlite3_snapshot_get;
+  late final _sqlite3_snapshot_get_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_snapshot_get>>(
+          'sqlite3_snapshot_get');
+  late final _dart_sqlite3_snapshot_get _sqlite3_snapshot_get =
+      _sqlite3_snapshot_get_ptr.asFunction<_dart_sqlite3_snapshot_get>();
 
   /// CAPI3REF: Start a read transaction on an historical snapshot
   /// METHOD: sqlite3_snapshot
@@ -8912,17 +9233,18 @@ class SQLite {
     ffi.Pointer<ffi.Int8> zSchema,
     ffi.Pointer<sqlite3_snapshot> pSnapshot,
   ) {
-    return (_sqlite3_snapshot_open ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_snapshot_open>>(
-                'sqlite3_snapshot_open')
-            .asFunction<_dart_sqlite3_snapshot_open>())(
+    return _sqlite3_snapshot_open(
       db,
       zSchema,
       pSnapshot,
     );
   }
 
-  _dart_sqlite3_snapshot_open? _sqlite3_snapshot_open;
+  late final _sqlite3_snapshot_open_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_snapshot_open>>(
+          'sqlite3_snapshot_open');
+  late final _dart_sqlite3_snapshot_open _sqlite3_snapshot_open =
+      _sqlite3_snapshot_open_ptr.asFunction<_dart_sqlite3_snapshot_open>();
 
   /// CAPI3REF: Destroy a snapshot
   /// DESTRUCTOR: sqlite3_snapshot
@@ -8936,15 +9258,16 @@ class SQLite {
   void sqlite3_snapshot_free(
     ffi.Pointer<sqlite3_snapshot> arg0,
   ) {
-    return (_sqlite3_snapshot_free ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_snapshot_free>>(
-                'sqlite3_snapshot_free')
-            .asFunction<_dart_sqlite3_snapshot_free>())(
+    return _sqlite3_snapshot_free(
       arg0,
     );
   }
 
-  _dart_sqlite3_snapshot_free? _sqlite3_snapshot_free;
+  late final _sqlite3_snapshot_free_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_snapshot_free>>(
+          'sqlite3_snapshot_free');
+  late final _dart_sqlite3_snapshot_free _sqlite3_snapshot_free =
+      _sqlite3_snapshot_free_ptr.asFunction<_dart_sqlite3_snapshot_free>();
 
   /// CAPI3REF: Compare the ages of two snapshot handles.
   /// METHOD: sqlite3_snapshot
@@ -8973,16 +9296,17 @@ class SQLite {
     ffi.Pointer<sqlite3_snapshot> p1,
     ffi.Pointer<sqlite3_snapshot> p2,
   ) {
-    return (_sqlite3_snapshot_cmp ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_snapshot_cmp>>(
-                'sqlite3_snapshot_cmp')
-            .asFunction<_dart_sqlite3_snapshot_cmp>())(
+    return _sqlite3_snapshot_cmp(
       p1,
       p2,
     );
   }
 
-  _dart_sqlite3_snapshot_cmp? _sqlite3_snapshot_cmp;
+  late final _sqlite3_snapshot_cmp_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_snapshot_cmp>>(
+          'sqlite3_snapshot_cmp');
+  late final _dart_sqlite3_snapshot_cmp _sqlite3_snapshot_cmp =
+      _sqlite3_snapshot_cmp_ptr.asFunction<_dart_sqlite3_snapshot_cmp>();
 
   /// CAPI3REF: Recover snapshots from a wal file
   /// METHOD: sqlite3_snapshot
@@ -9009,16 +9333,18 @@ class SQLite {
     ffi.Pointer<sqlite3> db,
     ffi.Pointer<ffi.Int8> zDb,
   ) {
-    return (_sqlite3_snapshot_recover ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_snapshot_recover>>(
-                'sqlite3_snapshot_recover')
-            .asFunction<_dart_sqlite3_snapshot_recover>())(
+    return _sqlite3_snapshot_recover(
       db,
       zDb,
     );
   }
 
-  _dart_sqlite3_snapshot_recover? _sqlite3_snapshot_recover;
+  late final _sqlite3_snapshot_recover_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_snapshot_recover>>(
+          'sqlite3_snapshot_recover');
+  late final _dart_sqlite3_snapshot_recover _sqlite3_snapshot_recover =
+      _sqlite3_snapshot_recover_ptr
+          .asFunction<_dart_sqlite3_snapshot_recover>();
 
   /// CAPI3REF: Serialize a database
   ///
@@ -9060,9 +9386,7 @@ class SQLite {
     ffi.Pointer<ffi.Int64> piSize,
     int mFlags,
   ) {
-    return (_sqlite3_serialize ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_serialize>>('sqlite3_serialize')
-            .asFunction<_dart_sqlite3_serialize>())(
+    return _sqlite3_serialize(
       db,
       zSchema,
       piSize,
@@ -9070,7 +9394,10 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_serialize? _sqlite3_serialize;
+  late final _sqlite3_serialize_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_serialize>>('sqlite3_serialize');
+  late final _dart_sqlite3_serialize _sqlite3_serialize =
+      _sqlite3_serialize_ptr.asFunction<_dart_sqlite3_serialize>();
 
   /// CAPI3REF: Deserialize a database
   ///
@@ -9107,10 +9434,7 @@ class SQLite {
     int szBuf,
     int mFlags,
   ) {
-    return (_sqlite3_deserialize ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_deserialize>>(
-                'sqlite3_deserialize')
-            .asFunction<_dart_sqlite3_deserialize>())(
+    return _sqlite3_deserialize(
       db,
       zSchema,
       pData,
@@ -9120,7 +9444,11 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_deserialize? _sqlite3_deserialize;
+  late final _sqlite3_deserialize_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_deserialize>>(
+          'sqlite3_deserialize');
+  late final _dart_sqlite3_deserialize _sqlite3_deserialize =
+      _sqlite3_deserialize_ptr.asFunction<_dart_sqlite3_deserialize>();
 
   /// Register a geometry callback named zGeom that can be used as part of an
   /// R-Tree geometry query as follows:
@@ -9132,10 +9460,7 @@ class SQLite {
     ffi.Pointer<ffi.NativeFunction<_typedefC_71>> xGeom,
     ffi.Pointer<ffi.Void> pContext,
   ) {
-    return (_sqlite3_rtree_geometry_callback ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_rtree_geometry_callback>>(
-                'sqlite3_rtree_geometry_callback')
-            .asFunction<_dart_sqlite3_rtree_geometry_callback>())(
+    return _sqlite3_rtree_geometry_callback(
       db,
       zGeom,
       xGeom,
@@ -9143,7 +9468,12 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_rtree_geometry_callback? _sqlite3_rtree_geometry_callback;
+  late final _sqlite3_rtree_geometry_callback_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_rtree_geometry_callback>>(
+          'sqlite3_rtree_geometry_callback');
+  late final _dart_sqlite3_rtree_geometry_callback
+      _sqlite3_rtree_geometry_callback = _sqlite3_rtree_geometry_callback_ptr
+          .asFunction<_dart_sqlite3_rtree_geometry_callback>();
 
   /// Register a 2nd-generation geometry callback named zScore that can be
   /// used as part of an R-Tree geometry query as follows:
@@ -9156,10 +9486,7 @@ class SQLite {
     ffi.Pointer<ffi.Void> pContext,
     ffi.Pointer<ffi.NativeFunction<_typedefC_73>> xDestructor,
   ) {
-    return (_sqlite3_rtree_query_callback ??=
-        _lookup<ffi.NativeFunction<_c_sqlite3_rtree_query_callback>>(
-                'sqlite3_rtree_query_callback')
-            .asFunction<_dart_sqlite3_rtree_query_callback>())(
+    return _sqlite3_rtree_query_callback(
       db,
       zQueryFunc,
       xQueryFunc,
@@ -9168,7 +9495,12 @@ class SQLite {
     );
   }
 
-  _dart_sqlite3_rtree_query_callback? _sqlite3_rtree_query_callback;
+  late final _sqlite3_rtree_query_callback_ptr =
+      _lookup<ffi.NativeFunction<_c_sqlite3_rtree_query_callback>>(
+          'sqlite3_rtree_query_callback');
+  late final _dart_sqlite3_rtree_query_callback _sqlite3_rtree_query_callback =
+      _sqlite3_rtree_query_callback_ptr
+          .asFunction<_dart_sqlite3_rtree_query_callback>();
 }
 
 class sqlite3 extends ffi.Opaque {}

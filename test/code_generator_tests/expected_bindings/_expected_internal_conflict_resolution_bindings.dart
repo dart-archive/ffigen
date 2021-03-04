@@ -21,40 +21,41 @@ class init_dylib_1 {
       : _lookup = lookup;
 
   void test() {
-    return (_test_1 ??= _lookup<ffi.NativeFunction<_c_test1>>('test')
-        .asFunction<_dart_test1>())();
+    return _test_1();
   }
 
-  _dart_test1? _test_1;
+  late final _test_ptr = _lookup<ffi.NativeFunction<_c_test1>>('test');
+  late final _dart_test1 _test_1 = _test_ptr.asFunction<_dart_test1>();
 
   void _test() {
-    return (__test ??= _lookup<ffi.NativeFunction<_c__test>>('_test')
-        .asFunction<_dart__test>())();
+    return __test();
   }
 
-  _dart__test? __test;
+  late final __test_ptr = _lookup<ffi.NativeFunction<_c__test>>('_test');
+  late final _dart__test __test = __test_ptr.asFunction<_dart__test>();
 
   void _c_test() {
-    return (__c_test ??= _lookup<ffi.NativeFunction<_c__c_test>>('_c_test')
-        .asFunction<_dart__c_test>())();
+    return __c_test();
   }
 
-  _dart__c_test? __c_test;
+  late final __c_test_ptr = _lookup<ffi.NativeFunction<_c__c_test>>('_c_test');
+  late final _dart__c_test __c_test = __c_test_ptr.asFunction<_dart__c_test>();
 
   void _dart_test() {
-    return (__dart_test ??=
-        _lookup<ffi.NativeFunction<_c__dart_test>>('_dart_test')
-            .asFunction<_dart__dart_test>())();
+    return __dart_test();
   }
 
-  _dart__dart_test? __dart_test;
+  late final __dart_test_ptr =
+      _lookup<ffi.NativeFunction<_c__dart_test>>('_dart_test');
+  late final _dart__dart_test __dart_test =
+      __dart_test_ptr.asFunction<_dart__dart_test>();
 
   void Test() {
-    return (_Test ??= _lookup<ffi.NativeFunction<_c_Test1>>('Test')
-        .asFunction<_dart_Test>())();
+    return _Test();
   }
 
-  _dart_Test? _Test;
+  late final _Test_ptr = _lookup<ffi.NativeFunction<_c_Test1>>('Test');
+  late final _dart_Test _Test = _Test_ptr.asFunction<_dart_Test>();
 }
 
 class _Test extends ffi.Struct {

@@ -19,95 +19,102 @@ class CJson {
       : _lookup = lookup;
 
   ffi.Pointer<ffi.Int8> cJSON_Version() {
-    return (_cJSON_Version ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_Version>>('cJSON_Version')
-            .asFunction<_dart_cJSON_Version>())();
+    return _cJSON_Version();
   }
 
-  _dart_cJSON_Version? _cJSON_Version;
+  late final _cJSON_Version_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_Version>>('cJSON_Version');
+  late final _dart_cJSON_Version _cJSON_Version =
+      _cJSON_Version_ptr.asFunction<_dart_cJSON_Version>();
 
   void cJSON_InitHooks(
     ffi.Pointer<cJSON_Hooks> hooks,
   ) {
-    return (_cJSON_InitHooks ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_InitHooks>>('cJSON_InitHooks')
-            .asFunction<_dart_cJSON_InitHooks>())(
+    return _cJSON_InitHooks(
       hooks,
     );
   }
 
-  _dart_cJSON_InitHooks? _cJSON_InitHooks;
+  late final _cJSON_InitHooks_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_InitHooks>>('cJSON_InitHooks');
+  late final _dart_cJSON_InitHooks _cJSON_InitHooks =
+      _cJSON_InitHooks_ptr.asFunction<_dart_cJSON_InitHooks>();
 
   ffi.Pointer<cJSON> cJSON_Parse(
     ffi.Pointer<ffi.Int8> value,
   ) {
-    return (_cJSON_Parse ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_Parse>>('cJSON_Parse')
-            .asFunction<_dart_cJSON_Parse>())(
+    return _cJSON_Parse(
       value,
     );
   }
 
-  _dart_cJSON_Parse? _cJSON_Parse;
+  late final _cJSON_Parse_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_Parse>>('cJSON_Parse');
+  late final _dart_cJSON_Parse _cJSON_Parse =
+      _cJSON_Parse_ptr.asFunction<_dart_cJSON_Parse>();
 
   ffi.Pointer<cJSON> cJSON_ParseWithOpts(
     ffi.Pointer<ffi.Int8> value,
     ffi.Pointer<ffi.Pointer<ffi.Int8>> return_parse_end,
     int require_null_terminated,
   ) {
-    return (_cJSON_ParseWithOpts ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_ParseWithOpts>>(
-                'cJSON_ParseWithOpts')
-            .asFunction<_dart_cJSON_ParseWithOpts>())(
+    return _cJSON_ParseWithOpts(
       value,
       return_parse_end,
       require_null_terminated,
     );
   }
 
-  _dart_cJSON_ParseWithOpts? _cJSON_ParseWithOpts;
+  late final _cJSON_ParseWithOpts_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_ParseWithOpts>>(
+          'cJSON_ParseWithOpts');
+  late final _dart_cJSON_ParseWithOpts _cJSON_ParseWithOpts =
+      _cJSON_ParseWithOpts_ptr.asFunction<_dart_cJSON_ParseWithOpts>();
 
   ffi.Pointer<ffi.Int8> cJSON_Print(
     ffi.Pointer<cJSON> item,
   ) {
-    return (_cJSON_Print ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_Print>>('cJSON_Print')
-            .asFunction<_dart_cJSON_Print>())(
+    return _cJSON_Print(
       item,
     );
   }
 
-  _dart_cJSON_Print? _cJSON_Print;
+  late final _cJSON_Print_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_Print>>('cJSON_Print');
+  late final _dart_cJSON_Print _cJSON_Print =
+      _cJSON_Print_ptr.asFunction<_dart_cJSON_Print>();
 
   ffi.Pointer<ffi.Int8> cJSON_PrintUnformatted(
     ffi.Pointer<cJSON> item,
   ) {
-    return (_cJSON_PrintUnformatted ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_PrintUnformatted>>(
-                'cJSON_PrintUnformatted')
-            .asFunction<_dart_cJSON_PrintUnformatted>())(
+    return _cJSON_PrintUnformatted(
       item,
     );
   }
 
-  _dart_cJSON_PrintUnformatted? _cJSON_PrintUnformatted;
+  late final _cJSON_PrintUnformatted_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_PrintUnformatted>>(
+          'cJSON_PrintUnformatted');
+  late final _dart_cJSON_PrintUnformatted _cJSON_PrintUnformatted =
+      _cJSON_PrintUnformatted_ptr.asFunction<_dart_cJSON_PrintUnformatted>();
 
   ffi.Pointer<ffi.Int8> cJSON_PrintBuffered(
     ffi.Pointer<cJSON> item,
     int prebuffer,
     int fmt,
   ) {
-    return (_cJSON_PrintBuffered ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_PrintBuffered>>(
-                'cJSON_PrintBuffered')
-            .asFunction<_dart_cJSON_PrintBuffered>())(
+    return _cJSON_PrintBuffered(
       item,
       prebuffer,
       fmt,
     );
   }
 
-  _dart_cJSON_PrintBuffered? _cJSON_PrintBuffered;
+  late final _cJSON_PrintBuffered_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_PrintBuffered>>(
+          'cJSON_PrintBuffered');
+  late final _dart_cJSON_PrintBuffered _cJSON_PrintBuffered =
+      _cJSON_PrintBuffered_ptr.asFunction<_dart_cJSON_PrintBuffered>();
 
   int cJSON_PrintPreallocated(
     ffi.Pointer<cJSON> item,
@@ -115,10 +122,7 @@ class CJson {
     int length,
     int format,
   ) {
-    return (_cJSON_PrintPreallocated ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_PrintPreallocated>>(
-                'cJSON_PrintPreallocated')
-            .asFunction<_dart_cJSON_PrintPreallocated>())(
+    return _cJSON_PrintPreallocated(
       item,
       buffer,
       length,
@@ -126,916 +130,1003 @@ class CJson {
     );
   }
 
-  _dart_cJSON_PrintPreallocated? _cJSON_PrintPreallocated;
+  late final _cJSON_PrintPreallocated_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_PrintPreallocated>>(
+          'cJSON_PrintPreallocated');
+  late final _dart_cJSON_PrintPreallocated _cJSON_PrintPreallocated =
+      _cJSON_PrintPreallocated_ptr.asFunction<_dart_cJSON_PrintPreallocated>();
 
   void cJSON_Delete(
     ffi.Pointer<cJSON> item,
   ) {
-    return (_cJSON_Delete ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_Delete>>('cJSON_Delete')
-            .asFunction<_dart_cJSON_Delete>())(
+    return _cJSON_Delete(
       item,
     );
   }
 
-  _dart_cJSON_Delete? _cJSON_Delete;
+  late final _cJSON_Delete_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_Delete>>('cJSON_Delete');
+  late final _dart_cJSON_Delete _cJSON_Delete =
+      _cJSON_Delete_ptr.asFunction<_dart_cJSON_Delete>();
 
   int cJSON_GetArraySize(
     ffi.Pointer<cJSON> array,
   ) {
-    return (_cJSON_GetArraySize ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_GetArraySize>>('cJSON_GetArraySize')
-            .asFunction<_dart_cJSON_GetArraySize>())(
+    return _cJSON_GetArraySize(
       array,
     );
   }
 
-  _dart_cJSON_GetArraySize? _cJSON_GetArraySize;
+  late final _cJSON_GetArraySize_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_GetArraySize>>('cJSON_GetArraySize');
+  late final _dart_cJSON_GetArraySize _cJSON_GetArraySize =
+      _cJSON_GetArraySize_ptr.asFunction<_dart_cJSON_GetArraySize>();
 
   ffi.Pointer<cJSON> cJSON_GetArrayItem(
     ffi.Pointer<cJSON> array,
     int index,
   ) {
-    return (_cJSON_GetArrayItem ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_GetArrayItem>>('cJSON_GetArrayItem')
-            .asFunction<_dart_cJSON_GetArrayItem>())(
+    return _cJSON_GetArrayItem(
       array,
       index,
     );
   }
 
-  _dart_cJSON_GetArrayItem? _cJSON_GetArrayItem;
+  late final _cJSON_GetArrayItem_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_GetArrayItem>>('cJSON_GetArrayItem');
+  late final _dart_cJSON_GetArrayItem _cJSON_GetArrayItem =
+      _cJSON_GetArrayItem_ptr.asFunction<_dart_cJSON_GetArrayItem>();
 
   ffi.Pointer<cJSON> cJSON_GetObjectItem(
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> string,
   ) {
-    return (_cJSON_GetObjectItem ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_GetObjectItem>>(
-                'cJSON_GetObjectItem')
-            .asFunction<_dart_cJSON_GetObjectItem>())(
+    return _cJSON_GetObjectItem(
       object,
       string,
     );
   }
 
-  _dart_cJSON_GetObjectItem? _cJSON_GetObjectItem;
+  late final _cJSON_GetObjectItem_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_GetObjectItem>>(
+          'cJSON_GetObjectItem');
+  late final _dart_cJSON_GetObjectItem _cJSON_GetObjectItem =
+      _cJSON_GetObjectItem_ptr.asFunction<_dart_cJSON_GetObjectItem>();
 
   ffi.Pointer<cJSON> cJSON_GetObjectItemCaseSensitive(
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> string,
   ) {
-    return (_cJSON_GetObjectItemCaseSensitive ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_GetObjectItemCaseSensitive>>(
-                'cJSON_GetObjectItemCaseSensitive')
-            .asFunction<_dart_cJSON_GetObjectItemCaseSensitive>())(
+    return _cJSON_GetObjectItemCaseSensitive(
       object,
       string,
     );
   }
 
-  _dart_cJSON_GetObjectItemCaseSensitive? _cJSON_GetObjectItemCaseSensitive;
+  late final _cJSON_GetObjectItemCaseSensitive_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_GetObjectItemCaseSensitive>>(
+          'cJSON_GetObjectItemCaseSensitive');
+  late final _dart_cJSON_GetObjectItemCaseSensitive
+      _cJSON_GetObjectItemCaseSensitive = _cJSON_GetObjectItemCaseSensitive_ptr
+          .asFunction<_dart_cJSON_GetObjectItemCaseSensitive>();
 
   int cJSON_HasObjectItem(
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> string,
   ) {
-    return (_cJSON_HasObjectItem ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_HasObjectItem>>(
-                'cJSON_HasObjectItem')
-            .asFunction<_dart_cJSON_HasObjectItem>())(
+    return _cJSON_HasObjectItem(
       object,
       string,
     );
   }
 
-  _dart_cJSON_HasObjectItem? _cJSON_HasObjectItem;
+  late final _cJSON_HasObjectItem_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_HasObjectItem>>(
+          'cJSON_HasObjectItem');
+  late final _dart_cJSON_HasObjectItem _cJSON_HasObjectItem =
+      _cJSON_HasObjectItem_ptr.asFunction<_dart_cJSON_HasObjectItem>();
 
   ffi.Pointer<ffi.Int8> cJSON_GetErrorPtr() {
-    return (_cJSON_GetErrorPtr ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_GetErrorPtr>>('cJSON_GetErrorPtr')
-            .asFunction<_dart_cJSON_GetErrorPtr>())();
+    return _cJSON_GetErrorPtr();
   }
 
-  _dart_cJSON_GetErrorPtr? _cJSON_GetErrorPtr;
+  late final _cJSON_GetErrorPtr_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_GetErrorPtr>>('cJSON_GetErrorPtr');
+  late final _dart_cJSON_GetErrorPtr _cJSON_GetErrorPtr =
+      _cJSON_GetErrorPtr_ptr.asFunction<_dart_cJSON_GetErrorPtr>();
 
   ffi.Pointer<ffi.Int8> cJSON_GetStringValue(
     ffi.Pointer<cJSON> item,
   ) {
-    return (_cJSON_GetStringValue ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_GetStringValue>>(
-                'cJSON_GetStringValue')
-            .asFunction<_dart_cJSON_GetStringValue>())(
+    return _cJSON_GetStringValue(
       item,
     );
   }
 
-  _dart_cJSON_GetStringValue? _cJSON_GetStringValue;
+  late final _cJSON_GetStringValue_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_GetStringValue>>(
+          'cJSON_GetStringValue');
+  late final _dart_cJSON_GetStringValue _cJSON_GetStringValue =
+      _cJSON_GetStringValue_ptr.asFunction<_dart_cJSON_GetStringValue>();
 
   int cJSON_IsInvalid(
     ffi.Pointer<cJSON> item,
   ) {
-    return (_cJSON_IsInvalid ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_IsInvalid>>('cJSON_IsInvalid')
-            .asFunction<_dart_cJSON_IsInvalid>())(
+    return _cJSON_IsInvalid(
       item,
     );
   }
 
-  _dart_cJSON_IsInvalid? _cJSON_IsInvalid;
+  late final _cJSON_IsInvalid_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_IsInvalid>>('cJSON_IsInvalid');
+  late final _dart_cJSON_IsInvalid _cJSON_IsInvalid =
+      _cJSON_IsInvalid_ptr.asFunction<_dart_cJSON_IsInvalid>();
 
   int cJSON_IsFalse(
     ffi.Pointer<cJSON> item,
   ) {
-    return (_cJSON_IsFalse ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_IsFalse>>('cJSON_IsFalse')
-            .asFunction<_dart_cJSON_IsFalse>())(
+    return _cJSON_IsFalse(
       item,
     );
   }
 
-  _dart_cJSON_IsFalse? _cJSON_IsFalse;
+  late final _cJSON_IsFalse_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_IsFalse>>('cJSON_IsFalse');
+  late final _dart_cJSON_IsFalse _cJSON_IsFalse =
+      _cJSON_IsFalse_ptr.asFunction<_dart_cJSON_IsFalse>();
 
   int cJSON_IsTrue(
     ffi.Pointer<cJSON> item,
   ) {
-    return (_cJSON_IsTrue ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_IsTrue>>('cJSON_IsTrue')
-            .asFunction<_dart_cJSON_IsTrue>())(
+    return _cJSON_IsTrue(
       item,
     );
   }
 
-  _dart_cJSON_IsTrue? _cJSON_IsTrue;
+  late final _cJSON_IsTrue_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_IsTrue>>('cJSON_IsTrue');
+  late final _dart_cJSON_IsTrue _cJSON_IsTrue =
+      _cJSON_IsTrue_ptr.asFunction<_dart_cJSON_IsTrue>();
 
   int cJSON_IsBool(
     ffi.Pointer<cJSON> item,
   ) {
-    return (_cJSON_IsBool ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_IsBool>>('cJSON_IsBool')
-            .asFunction<_dart_cJSON_IsBool>())(
+    return _cJSON_IsBool(
       item,
     );
   }
 
-  _dart_cJSON_IsBool? _cJSON_IsBool;
+  late final _cJSON_IsBool_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_IsBool>>('cJSON_IsBool');
+  late final _dart_cJSON_IsBool _cJSON_IsBool =
+      _cJSON_IsBool_ptr.asFunction<_dart_cJSON_IsBool>();
 
   int cJSON_IsNull(
     ffi.Pointer<cJSON> item,
   ) {
-    return (_cJSON_IsNull ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_IsNull>>('cJSON_IsNull')
-            .asFunction<_dart_cJSON_IsNull>())(
+    return _cJSON_IsNull(
       item,
     );
   }
 
-  _dart_cJSON_IsNull? _cJSON_IsNull;
+  late final _cJSON_IsNull_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_IsNull>>('cJSON_IsNull');
+  late final _dart_cJSON_IsNull _cJSON_IsNull =
+      _cJSON_IsNull_ptr.asFunction<_dart_cJSON_IsNull>();
 
   int cJSON_IsNumber(
     ffi.Pointer<cJSON> item,
   ) {
-    return (_cJSON_IsNumber ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_IsNumber>>('cJSON_IsNumber')
-            .asFunction<_dart_cJSON_IsNumber>())(
+    return _cJSON_IsNumber(
       item,
     );
   }
 
-  _dart_cJSON_IsNumber? _cJSON_IsNumber;
+  late final _cJSON_IsNumber_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_IsNumber>>('cJSON_IsNumber');
+  late final _dart_cJSON_IsNumber _cJSON_IsNumber =
+      _cJSON_IsNumber_ptr.asFunction<_dart_cJSON_IsNumber>();
 
   int cJSON_IsString(
     ffi.Pointer<cJSON> item,
   ) {
-    return (_cJSON_IsString ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_IsString>>('cJSON_IsString')
-            .asFunction<_dart_cJSON_IsString>())(
+    return _cJSON_IsString(
       item,
     );
   }
 
-  _dart_cJSON_IsString? _cJSON_IsString;
+  late final _cJSON_IsString_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_IsString>>('cJSON_IsString');
+  late final _dart_cJSON_IsString _cJSON_IsString =
+      _cJSON_IsString_ptr.asFunction<_dart_cJSON_IsString>();
 
   int cJSON_IsArray(
     ffi.Pointer<cJSON> item,
   ) {
-    return (_cJSON_IsArray ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_IsArray>>('cJSON_IsArray')
-            .asFunction<_dart_cJSON_IsArray>())(
+    return _cJSON_IsArray(
       item,
     );
   }
 
-  _dart_cJSON_IsArray? _cJSON_IsArray;
+  late final _cJSON_IsArray_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_IsArray>>('cJSON_IsArray');
+  late final _dart_cJSON_IsArray _cJSON_IsArray =
+      _cJSON_IsArray_ptr.asFunction<_dart_cJSON_IsArray>();
 
   int cJSON_IsObject(
     ffi.Pointer<cJSON> item,
   ) {
-    return (_cJSON_IsObject ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_IsObject>>('cJSON_IsObject')
-            .asFunction<_dart_cJSON_IsObject>())(
+    return _cJSON_IsObject(
       item,
     );
   }
 
-  _dart_cJSON_IsObject? _cJSON_IsObject;
+  late final _cJSON_IsObject_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_IsObject>>('cJSON_IsObject');
+  late final _dart_cJSON_IsObject _cJSON_IsObject =
+      _cJSON_IsObject_ptr.asFunction<_dart_cJSON_IsObject>();
 
   int cJSON_IsRaw(
     ffi.Pointer<cJSON> item,
   ) {
-    return (_cJSON_IsRaw ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_IsRaw>>('cJSON_IsRaw')
-            .asFunction<_dart_cJSON_IsRaw>())(
+    return _cJSON_IsRaw(
       item,
     );
   }
 
-  _dart_cJSON_IsRaw? _cJSON_IsRaw;
+  late final _cJSON_IsRaw_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_IsRaw>>('cJSON_IsRaw');
+  late final _dart_cJSON_IsRaw _cJSON_IsRaw =
+      _cJSON_IsRaw_ptr.asFunction<_dart_cJSON_IsRaw>();
 
   ffi.Pointer<cJSON> cJSON_CreateNull() {
-    return (_cJSON_CreateNull ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_CreateNull>>('cJSON_CreateNull')
-            .asFunction<_dart_cJSON_CreateNull>())();
+    return _cJSON_CreateNull();
   }
 
-  _dart_cJSON_CreateNull? _cJSON_CreateNull;
+  late final _cJSON_CreateNull_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_CreateNull>>('cJSON_CreateNull');
+  late final _dart_cJSON_CreateNull _cJSON_CreateNull =
+      _cJSON_CreateNull_ptr.asFunction<_dart_cJSON_CreateNull>();
 
   ffi.Pointer<cJSON> cJSON_CreateTrue() {
-    return (_cJSON_CreateTrue ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_CreateTrue>>('cJSON_CreateTrue')
-            .asFunction<_dart_cJSON_CreateTrue>())();
+    return _cJSON_CreateTrue();
   }
 
-  _dart_cJSON_CreateTrue? _cJSON_CreateTrue;
+  late final _cJSON_CreateTrue_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_CreateTrue>>('cJSON_CreateTrue');
+  late final _dart_cJSON_CreateTrue _cJSON_CreateTrue =
+      _cJSON_CreateTrue_ptr.asFunction<_dart_cJSON_CreateTrue>();
 
   ffi.Pointer<cJSON> cJSON_CreateFalse() {
-    return (_cJSON_CreateFalse ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_CreateFalse>>('cJSON_CreateFalse')
-            .asFunction<_dart_cJSON_CreateFalse>())();
+    return _cJSON_CreateFalse();
   }
 
-  _dart_cJSON_CreateFalse? _cJSON_CreateFalse;
+  late final _cJSON_CreateFalse_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_CreateFalse>>('cJSON_CreateFalse');
+  late final _dart_cJSON_CreateFalse _cJSON_CreateFalse =
+      _cJSON_CreateFalse_ptr.asFunction<_dart_cJSON_CreateFalse>();
 
   ffi.Pointer<cJSON> cJSON_CreateBool(
     int boolean,
   ) {
-    return (_cJSON_CreateBool ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_CreateBool>>('cJSON_CreateBool')
-            .asFunction<_dart_cJSON_CreateBool>())(
+    return _cJSON_CreateBool(
       boolean,
     );
   }
 
-  _dart_cJSON_CreateBool? _cJSON_CreateBool;
+  late final _cJSON_CreateBool_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_CreateBool>>('cJSON_CreateBool');
+  late final _dart_cJSON_CreateBool _cJSON_CreateBool =
+      _cJSON_CreateBool_ptr.asFunction<_dart_cJSON_CreateBool>();
 
   ffi.Pointer<cJSON> cJSON_CreateNumber(
     double num,
   ) {
-    return (_cJSON_CreateNumber ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_CreateNumber>>('cJSON_CreateNumber')
-            .asFunction<_dart_cJSON_CreateNumber>())(
+    return _cJSON_CreateNumber(
       num,
     );
   }
 
-  _dart_cJSON_CreateNumber? _cJSON_CreateNumber;
+  late final _cJSON_CreateNumber_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_CreateNumber>>('cJSON_CreateNumber');
+  late final _dart_cJSON_CreateNumber _cJSON_CreateNumber =
+      _cJSON_CreateNumber_ptr.asFunction<_dart_cJSON_CreateNumber>();
 
   ffi.Pointer<cJSON> cJSON_CreateString(
     ffi.Pointer<ffi.Int8> string,
   ) {
-    return (_cJSON_CreateString ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_CreateString>>('cJSON_CreateString')
-            .asFunction<_dart_cJSON_CreateString>())(
+    return _cJSON_CreateString(
       string,
     );
   }
 
-  _dart_cJSON_CreateString? _cJSON_CreateString;
+  late final _cJSON_CreateString_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_CreateString>>('cJSON_CreateString');
+  late final _dart_cJSON_CreateString _cJSON_CreateString =
+      _cJSON_CreateString_ptr.asFunction<_dart_cJSON_CreateString>();
 
   ffi.Pointer<cJSON> cJSON_CreateRaw(
     ffi.Pointer<ffi.Int8> raw,
   ) {
-    return (_cJSON_CreateRaw ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_CreateRaw>>('cJSON_CreateRaw')
-            .asFunction<_dart_cJSON_CreateRaw>())(
+    return _cJSON_CreateRaw(
       raw,
     );
   }
 
-  _dart_cJSON_CreateRaw? _cJSON_CreateRaw;
+  late final _cJSON_CreateRaw_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_CreateRaw>>('cJSON_CreateRaw');
+  late final _dart_cJSON_CreateRaw _cJSON_CreateRaw =
+      _cJSON_CreateRaw_ptr.asFunction<_dart_cJSON_CreateRaw>();
 
   ffi.Pointer<cJSON> cJSON_CreateArray() {
-    return (_cJSON_CreateArray ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_CreateArray>>('cJSON_CreateArray')
-            .asFunction<_dart_cJSON_CreateArray>())();
+    return _cJSON_CreateArray();
   }
 
-  _dart_cJSON_CreateArray? _cJSON_CreateArray;
+  late final _cJSON_CreateArray_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_CreateArray>>('cJSON_CreateArray');
+  late final _dart_cJSON_CreateArray _cJSON_CreateArray =
+      _cJSON_CreateArray_ptr.asFunction<_dart_cJSON_CreateArray>();
 
   ffi.Pointer<cJSON> cJSON_CreateObject() {
-    return (_cJSON_CreateObject ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_CreateObject>>('cJSON_CreateObject')
-            .asFunction<_dart_cJSON_CreateObject>())();
+    return _cJSON_CreateObject();
   }
 
-  _dart_cJSON_CreateObject? _cJSON_CreateObject;
+  late final _cJSON_CreateObject_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_CreateObject>>('cJSON_CreateObject');
+  late final _dart_cJSON_CreateObject _cJSON_CreateObject =
+      _cJSON_CreateObject_ptr.asFunction<_dart_cJSON_CreateObject>();
 
   ffi.Pointer<cJSON> cJSON_CreateStringReference(
     ffi.Pointer<ffi.Int8> string,
   ) {
-    return (_cJSON_CreateStringReference ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_CreateStringReference>>(
-                'cJSON_CreateStringReference')
-            .asFunction<_dart_cJSON_CreateStringReference>())(
+    return _cJSON_CreateStringReference(
       string,
     );
   }
 
-  _dart_cJSON_CreateStringReference? _cJSON_CreateStringReference;
+  late final _cJSON_CreateStringReference_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_CreateStringReference>>(
+          'cJSON_CreateStringReference');
+  late final _dart_cJSON_CreateStringReference _cJSON_CreateStringReference =
+      _cJSON_CreateStringReference_ptr
+          .asFunction<_dart_cJSON_CreateStringReference>();
 
   ffi.Pointer<cJSON> cJSON_CreateObjectReference(
     ffi.Pointer<cJSON> child,
   ) {
-    return (_cJSON_CreateObjectReference ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_CreateObjectReference>>(
-                'cJSON_CreateObjectReference')
-            .asFunction<_dart_cJSON_CreateObjectReference>())(
+    return _cJSON_CreateObjectReference(
       child,
     );
   }
 
-  _dart_cJSON_CreateObjectReference? _cJSON_CreateObjectReference;
+  late final _cJSON_CreateObjectReference_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_CreateObjectReference>>(
+          'cJSON_CreateObjectReference');
+  late final _dart_cJSON_CreateObjectReference _cJSON_CreateObjectReference =
+      _cJSON_CreateObjectReference_ptr
+          .asFunction<_dart_cJSON_CreateObjectReference>();
 
   ffi.Pointer<cJSON> cJSON_CreateArrayReference(
     ffi.Pointer<cJSON> child,
   ) {
-    return (_cJSON_CreateArrayReference ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_CreateArrayReference>>(
-                'cJSON_CreateArrayReference')
-            .asFunction<_dart_cJSON_CreateArrayReference>())(
+    return _cJSON_CreateArrayReference(
       child,
     );
   }
 
-  _dart_cJSON_CreateArrayReference? _cJSON_CreateArrayReference;
+  late final _cJSON_CreateArrayReference_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_CreateArrayReference>>(
+          'cJSON_CreateArrayReference');
+  late final _dart_cJSON_CreateArrayReference _cJSON_CreateArrayReference =
+      _cJSON_CreateArrayReference_ptr
+          .asFunction<_dart_cJSON_CreateArrayReference>();
 
   ffi.Pointer<cJSON> cJSON_CreateIntArray(
     ffi.Pointer<ffi.Int32> numbers,
     int count,
   ) {
-    return (_cJSON_CreateIntArray ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_CreateIntArray>>(
-                'cJSON_CreateIntArray')
-            .asFunction<_dart_cJSON_CreateIntArray>())(
+    return _cJSON_CreateIntArray(
       numbers,
       count,
     );
   }
 
-  _dart_cJSON_CreateIntArray? _cJSON_CreateIntArray;
+  late final _cJSON_CreateIntArray_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_CreateIntArray>>(
+          'cJSON_CreateIntArray');
+  late final _dart_cJSON_CreateIntArray _cJSON_CreateIntArray =
+      _cJSON_CreateIntArray_ptr.asFunction<_dart_cJSON_CreateIntArray>();
 
   ffi.Pointer<cJSON> cJSON_CreateFloatArray(
     ffi.Pointer<ffi.Float> numbers,
     int count,
   ) {
-    return (_cJSON_CreateFloatArray ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_CreateFloatArray>>(
-                'cJSON_CreateFloatArray')
-            .asFunction<_dart_cJSON_CreateFloatArray>())(
+    return _cJSON_CreateFloatArray(
       numbers,
       count,
     );
   }
 
-  _dart_cJSON_CreateFloatArray? _cJSON_CreateFloatArray;
+  late final _cJSON_CreateFloatArray_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_CreateFloatArray>>(
+          'cJSON_CreateFloatArray');
+  late final _dart_cJSON_CreateFloatArray _cJSON_CreateFloatArray =
+      _cJSON_CreateFloatArray_ptr.asFunction<_dart_cJSON_CreateFloatArray>();
 
   ffi.Pointer<cJSON> cJSON_CreateDoubleArray(
     ffi.Pointer<ffi.Double> numbers,
     int count,
   ) {
-    return (_cJSON_CreateDoubleArray ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_CreateDoubleArray>>(
-                'cJSON_CreateDoubleArray')
-            .asFunction<_dart_cJSON_CreateDoubleArray>())(
+    return _cJSON_CreateDoubleArray(
       numbers,
       count,
     );
   }
 
-  _dart_cJSON_CreateDoubleArray? _cJSON_CreateDoubleArray;
+  late final _cJSON_CreateDoubleArray_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_CreateDoubleArray>>(
+          'cJSON_CreateDoubleArray');
+  late final _dart_cJSON_CreateDoubleArray _cJSON_CreateDoubleArray =
+      _cJSON_CreateDoubleArray_ptr.asFunction<_dart_cJSON_CreateDoubleArray>();
 
   ffi.Pointer<cJSON> cJSON_CreateStringArray(
     ffi.Pointer<ffi.Pointer<ffi.Int8>> strings,
     int count,
   ) {
-    return (_cJSON_CreateStringArray ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_CreateStringArray>>(
-                'cJSON_CreateStringArray')
-            .asFunction<_dart_cJSON_CreateStringArray>())(
+    return _cJSON_CreateStringArray(
       strings,
       count,
     );
   }
 
-  _dart_cJSON_CreateStringArray? _cJSON_CreateStringArray;
+  late final _cJSON_CreateStringArray_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_CreateStringArray>>(
+          'cJSON_CreateStringArray');
+  late final _dart_cJSON_CreateStringArray _cJSON_CreateStringArray =
+      _cJSON_CreateStringArray_ptr.asFunction<_dart_cJSON_CreateStringArray>();
 
   void cJSON_AddItemToArray(
     ffi.Pointer<cJSON> array,
     ffi.Pointer<cJSON> item,
   ) {
-    return (_cJSON_AddItemToArray ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_AddItemToArray>>(
-                'cJSON_AddItemToArray')
-            .asFunction<_dart_cJSON_AddItemToArray>())(
+    return _cJSON_AddItemToArray(
       array,
       item,
     );
   }
 
-  _dart_cJSON_AddItemToArray? _cJSON_AddItemToArray;
+  late final _cJSON_AddItemToArray_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_AddItemToArray>>(
+          'cJSON_AddItemToArray');
+  late final _dart_cJSON_AddItemToArray _cJSON_AddItemToArray =
+      _cJSON_AddItemToArray_ptr.asFunction<_dart_cJSON_AddItemToArray>();
 
   void cJSON_AddItemToObject(
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> string,
     ffi.Pointer<cJSON> item,
   ) {
-    return (_cJSON_AddItemToObject ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_AddItemToObject>>(
-                'cJSON_AddItemToObject')
-            .asFunction<_dart_cJSON_AddItemToObject>())(
+    return _cJSON_AddItemToObject(
       object,
       string,
       item,
     );
   }
 
-  _dart_cJSON_AddItemToObject? _cJSON_AddItemToObject;
+  late final _cJSON_AddItemToObject_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_AddItemToObject>>(
+          'cJSON_AddItemToObject');
+  late final _dart_cJSON_AddItemToObject _cJSON_AddItemToObject =
+      _cJSON_AddItemToObject_ptr.asFunction<_dart_cJSON_AddItemToObject>();
 
   void cJSON_AddItemToObjectCS(
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> string,
     ffi.Pointer<cJSON> item,
   ) {
-    return (_cJSON_AddItemToObjectCS ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_AddItemToObjectCS>>(
-                'cJSON_AddItemToObjectCS')
-            .asFunction<_dart_cJSON_AddItemToObjectCS>())(
+    return _cJSON_AddItemToObjectCS(
       object,
       string,
       item,
     );
   }
 
-  _dart_cJSON_AddItemToObjectCS? _cJSON_AddItemToObjectCS;
+  late final _cJSON_AddItemToObjectCS_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_AddItemToObjectCS>>(
+          'cJSON_AddItemToObjectCS');
+  late final _dart_cJSON_AddItemToObjectCS _cJSON_AddItemToObjectCS =
+      _cJSON_AddItemToObjectCS_ptr.asFunction<_dart_cJSON_AddItemToObjectCS>();
 
   void cJSON_AddItemReferenceToArray(
     ffi.Pointer<cJSON> array,
     ffi.Pointer<cJSON> item,
   ) {
-    return (_cJSON_AddItemReferenceToArray ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_AddItemReferenceToArray>>(
-                'cJSON_AddItemReferenceToArray')
-            .asFunction<_dart_cJSON_AddItemReferenceToArray>())(
+    return _cJSON_AddItemReferenceToArray(
       array,
       item,
     );
   }
 
-  _dart_cJSON_AddItemReferenceToArray? _cJSON_AddItemReferenceToArray;
+  late final _cJSON_AddItemReferenceToArray_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_AddItemReferenceToArray>>(
+          'cJSON_AddItemReferenceToArray');
+  late final _dart_cJSON_AddItemReferenceToArray
+      _cJSON_AddItemReferenceToArray = _cJSON_AddItemReferenceToArray_ptr
+          .asFunction<_dart_cJSON_AddItemReferenceToArray>();
 
   void cJSON_AddItemReferenceToObject(
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> string,
     ffi.Pointer<cJSON> item,
   ) {
-    return (_cJSON_AddItemReferenceToObject ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_AddItemReferenceToObject>>(
-                'cJSON_AddItemReferenceToObject')
-            .asFunction<_dart_cJSON_AddItemReferenceToObject>())(
+    return _cJSON_AddItemReferenceToObject(
       object,
       string,
       item,
     );
   }
 
-  _dart_cJSON_AddItemReferenceToObject? _cJSON_AddItemReferenceToObject;
+  late final _cJSON_AddItemReferenceToObject_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_AddItemReferenceToObject>>(
+          'cJSON_AddItemReferenceToObject');
+  late final _dart_cJSON_AddItemReferenceToObject
+      _cJSON_AddItemReferenceToObject = _cJSON_AddItemReferenceToObject_ptr
+          .asFunction<_dart_cJSON_AddItemReferenceToObject>();
 
   ffi.Pointer<cJSON> cJSON_DetachItemViaPointer(
     ffi.Pointer<cJSON> parent,
     ffi.Pointer<cJSON> item,
   ) {
-    return (_cJSON_DetachItemViaPointer ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_DetachItemViaPointer>>(
-                'cJSON_DetachItemViaPointer')
-            .asFunction<_dart_cJSON_DetachItemViaPointer>())(
+    return _cJSON_DetachItemViaPointer(
       parent,
       item,
     );
   }
 
-  _dart_cJSON_DetachItemViaPointer? _cJSON_DetachItemViaPointer;
+  late final _cJSON_DetachItemViaPointer_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_DetachItemViaPointer>>(
+          'cJSON_DetachItemViaPointer');
+  late final _dart_cJSON_DetachItemViaPointer _cJSON_DetachItemViaPointer =
+      _cJSON_DetachItemViaPointer_ptr
+          .asFunction<_dart_cJSON_DetachItemViaPointer>();
 
   ffi.Pointer<cJSON> cJSON_DetachItemFromArray(
     ffi.Pointer<cJSON> array,
     int which,
   ) {
-    return (_cJSON_DetachItemFromArray ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_DetachItemFromArray>>(
-                'cJSON_DetachItemFromArray')
-            .asFunction<_dart_cJSON_DetachItemFromArray>())(
+    return _cJSON_DetachItemFromArray(
       array,
       which,
     );
   }
 
-  _dart_cJSON_DetachItemFromArray? _cJSON_DetachItemFromArray;
+  late final _cJSON_DetachItemFromArray_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_DetachItemFromArray>>(
+          'cJSON_DetachItemFromArray');
+  late final _dart_cJSON_DetachItemFromArray _cJSON_DetachItemFromArray =
+      _cJSON_DetachItemFromArray_ptr
+          .asFunction<_dart_cJSON_DetachItemFromArray>();
 
   void cJSON_DeleteItemFromArray(
     ffi.Pointer<cJSON> array,
     int which,
   ) {
-    return (_cJSON_DeleteItemFromArray ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_DeleteItemFromArray>>(
-                'cJSON_DeleteItemFromArray')
-            .asFunction<_dart_cJSON_DeleteItemFromArray>())(
+    return _cJSON_DeleteItemFromArray(
       array,
       which,
     );
   }
 
-  _dart_cJSON_DeleteItemFromArray? _cJSON_DeleteItemFromArray;
+  late final _cJSON_DeleteItemFromArray_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_DeleteItemFromArray>>(
+          'cJSON_DeleteItemFromArray');
+  late final _dart_cJSON_DeleteItemFromArray _cJSON_DeleteItemFromArray =
+      _cJSON_DeleteItemFromArray_ptr
+          .asFunction<_dart_cJSON_DeleteItemFromArray>();
 
   ffi.Pointer<cJSON> cJSON_DetachItemFromObject(
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> string,
   ) {
-    return (_cJSON_DetachItemFromObject ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_DetachItemFromObject>>(
-                'cJSON_DetachItemFromObject')
-            .asFunction<_dart_cJSON_DetachItemFromObject>())(
+    return _cJSON_DetachItemFromObject(
       object,
       string,
     );
   }
 
-  _dart_cJSON_DetachItemFromObject? _cJSON_DetachItemFromObject;
+  late final _cJSON_DetachItemFromObject_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_DetachItemFromObject>>(
+          'cJSON_DetachItemFromObject');
+  late final _dart_cJSON_DetachItemFromObject _cJSON_DetachItemFromObject =
+      _cJSON_DetachItemFromObject_ptr
+          .asFunction<_dart_cJSON_DetachItemFromObject>();
 
   ffi.Pointer<cJSON> cJSON_DetachItemFromObjectCaseSensitive(
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> string,
   ) {
-    return (_cJSON_DetachItemFromObjectCaseSensitive ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_DetachItemFromObjectCaseSensitive>>(
-                'cJSON_DetachItemFromObjectCaseSensitive')
-            .asFunction<_dart_cJSON_DetachItemFromObjectCaseSensitive>())(
+    return _cJSON_DetachItemFromObjectCaseSensitive(
       object,
       string,
     );
   }
 
-  _dart_cJSON_DetachItemFromObjectCaseSensitive?
-      _cJSON_DetachItemFromObjectCaseSensitive;
+  late final _cJSON_DetachItemFromObjectCaseSensitive_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_DetachItemFromObjectCaseSensitive>>(
+          'cJSON_DetachItemFromObjectCaseSensitive');
+  late final _dart_cJSON_DetachItemFromObjectCaseSensitive
+      _cJSON_DetachItemFromObjectCaseSensitive =
+      _cJSON_DetachItemFromObjectCaseSensitive_ptr
+          .asFunction<_dart_cJSON_DetachItemFromObjectCaseSensitive>();
 
   void cJSON_DeleteItemFromObject(
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> string,
   ) {
-    return (_cJSON_DeleteItemFromObject ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_DeleteItemFromObject>>(
-                'cJSON_DeleteItemFromObject')
-            .asFunction<_dart_cJSON_DeleteItemFromObject>())(
+    return _cJSON_DeleteItemFromObject(
       object,
       string,
     );
   }
 
-  _dart_cJSON_DeleteItemFromObject? _cJSON_DeleteItemFromObject;
+  late final _cJSON_DeleteItemFromObject_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_DeleteItemFromObject>>(
+          'cJSON_DeleteItemFromObject');
+  late final _dart_cJSON_DeleteItemFromObject _cJSON_DeleteItemFromObject =
+      _cJSON_DeleteItemFromObject_ptr
+          .asFunction<_dart_cJSON_DeleteItemFromObject>();
 
   void cJSON_DeleteItemFromObjectCaseSensitive(
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> string,
   ) {
-    return (_cJSON_DeleteItemFromObjectCaseSensitive ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_DeleteItemFromObjectCaseSensitive>>(
-                'cJSON_DeleteItemFromObjectCaseSensitive')
-            .asFunction<_dart_cJSON_DeleteItemFromObjectCaseSensitive>())(
+    return _cJSON_DeleteItemFromObjectCaseSensitive(
       object,
       string,
     );
   }
 
-  _dart_cJSON_DeleteItemFromObjectCaseSensitive?
-      _cJSON_DeleteItemFromObjectCaseSensitive;
+  late final _cJSON_DeleteItemFromObjectCaseSensitive_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_DeleteItemFromObjectCaseSensitive>>(
+          'cJSON_DeleteItemFromObjectCaseSensitive');
+  late final _dart_cJSON_DeleteItemFromObjectCaseSensitive
+      _cJSON_DeleteItemFromObjectCaseSensitive =
+      _cJSON_DeleteItemFromObjectCaseSensitive_ptr
+          .asFunction<_dart_cJSON_DeleteItemFromObjectCaseSensitive>();
 
   void cJSON_InsertItemInArray(
     ffi.Pointer<cJSON> array,
     int which,
     ffi.Pointer<cJSON> newitem,
   ) {
-    return (_cJSON_InsertItemInArray ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_InsertItemInArray>>(
-                'cJSON_InsertItemInArray')
-            .asFunction<_dart_cJSON_InsertItemInArray>())(
+    return _cJSON_InsertItemInArray(
       array,
       which,
       newitem,
     );
   }
 
-  _dart_cJSON_InsertItemInArray? _cJSON_InsertItemInArray;
+  late final _cJSON_InsertItemInArray_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_InsertItemInArray>>(
+          'cJSON_InsertItemInArray');
+  late final _dart_cJSON_InsertItemInArray _cJSON_InsertItemInArray =
+      _cJSON_InsertItemInArray_ptr.asFunction<_dart_cJSON_InsertItemInArray>();
 
   int cJSON_ReplaceItemViaPointer(
     ffi.Pointer<cJSON> parent,
     ffi.Pointer<cJSON> item,
     ffi.Pointer<cJSON> replacement,
   ) {
-    return (_cJSON_ReplaceItemViaPointer ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_ReplaceItemViaPointer>>(
-                'cJSON_ReplaceItemViaPointer')
-            .asFunction<_dart_cJSON_ReplaceItemViaPointer>())(
+    return _cJSON_ReplaceItemViaPointer(
       parent,
       item,
       replacement,
     );
   }
 
-  _dart_cJSON_ReplaceItemViaPointer? _cJSON_ReplaceItemViaPointer;
+  late final _cJSON_ReplaceItemViaPointer_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_ReplaceItemViaPointer>>(
+          'cJSON_ReplaceItemViaPointer');
+  late final _dart_cJSON_ReplaceItemViaPointer _cJSON_ReplaceItemViaPointer =
+      _cJSON_ReplaceItemViaPointer_ptr
+          .asFunction<_dart_cJSON_ReplaceItemViaPointer>();
 
   void cJSON_ReplaceItemInArray(
     ffi.Pointer<cJSON> array,
     int which,
     ffi.Pointer<cJSON> newitem,
   ) {
-    return (_cJSON_ReplaceItemInArray ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_ReplaceItemInArray>>(
-                'cJSON_ReplaceItemInArray')
-            .asFunction<_dart_cJSON_ReplaceItemInArray>())(
+    return _cJSON_ReplaceItemInArray(
       array,
       which,
       newitem,
     );
   }
 
-  _dart_cJSON_ReplaceItemInArray? _cJSON_ReplaceItemInArray;
+  late final _cJSON_ReplaceItemInArray_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_ReplaceItemInArray>>(
+          'cJSON_ReplaceItemInArray');
+  late final _dart_cJSON_ReplaceItemInArray _cJSON_ReplaceItemInArray =
+      _cJSON_ReplaceItemInArray_ptr
+          .asFunction<_dart_cJSON_ReplaceItemInArray>();
 
   void cJSON_ReplaceItemInObject(
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> string,
     ffi.Pointer<cJSON> newitem,
   ) {
-    return (_cJSON_ReplaceItemInObject ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_ReplaceItemInObject>>(
-                'cJSON_ReplaceItemInObject')
-            .asFunction<_dart_cJSON_ReplaceItemInObject>())(
+    return _cJSON_ReplaceItemInObject(
       object,
       string,
       newitem,
     );
   }
 
-  _dart_cJSON_ReplaceItemInObject? _cJSON_ReplaceItemInObject;
+  late final _cJSON_ReplaceItemInObject_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_ReplaceItemInObject>>(
+          'cJSON_ReplaceItemInObject');
+  late final _dart_cJSON_ReplaceItemInObject _cJSON_ReplaceItemInObject =
+      _cJSON_ReplaceItemInObject_ptr
+          .asFunction<_dart_cJSON_ReplaceItemInObject>();
 
   void cJSON_ReplaceItemInObjectCaseSensitive(
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> string,
     ffi.Pointer<cJSON> newitem,
   ) {
-    return (_cJSON_ReplaceItemInObjectCaseSensitive ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_ReplaceItemInObjectCaseSensitive>>(
-                'cJSON_ReplaceItemInObjectCaseSensitive')
-            .asFunction<_dart_cJSON_ReplaceItemInObjectCaseSensitive>())(
+    return _cJSON_ReplaceItemInObjectCaseSensitive(
       object,
       string,
       newitem,
     );
   }
 
-  _dart_cJSON_ReplaceItemInObjectCaseSensitive?
-      _cJSON_ReplaceItemInObjectCaseSensitive;
+  late final _cJSON_ReplaceItemInObjectCaseSensitive_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_ReplaceItemInObjectCaseSensitive>>(
+          'cJSON_ReplaceItemInObjectCaseSensitive');
+  late final _dart_cJSON_ReplaceItemInObjectCaseSensitive
+      _cJSON_ReplaceItemInObjectCaseSensitive =
+      _cJSON_ReplaceItemInObjectCaseSensitive_ptr
+          .asFunction<_dart_cJSON_ReplaceItemInObjectCaseSensitive>();
 
   ffi.Pointer<cJSON> cJSON_Duplicate(
     ffi.Pointer<cJSON> item,
     int recurse,
   ) {
-    return (_cJSON_Duplicate ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_Duplicate>>('cJSON_Duplicate')
-            .asFunction<_dart_cJSON_Duplicate>())(
+    return _cJSON_Duplicate(
       item,
       recurse,
     );
   }
 
-  _dart_cJSON_Duplicate? _cJSON_Duplicate;
+  late final _cJSON_Duplicate_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_Duplicate>>('cJSON_Duplicate');
+  late final _dart_cJSON_Duplicate _cJSON_Duplicate =
+      _cJSON_Duplicate_ptr.asFunction<_dart_cJSON_Duplicate>();
 
   int cJSON_Compare(
     ffi.Pointer<cJSON> a,
     ffi.Pointer<cJSON> b,
     int case_sensitive,
   ) {
-    return (_cJSON_Compare ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_Compare>>('cJSON_Compare')
-            .asFunction<_dart_cJSON_Compare>())(
+    return _cJSON_Compare(
       a,
       b,
       case_sensitive,
     );
   }
 
-  _dart_cJSON_Compare? _cJSON_Compare;
+  late final _cJSON_Compare_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_Compare>>('cJSON_Compare');
+  late final _dart_cJSON_Compare _cJSON_Compare =
+      _cJSON_Compare_ptr.asFunction<_dart_cJSON_Compare>();
 
   void cJSON_Minify(
     ffi.Pointer<ffi.Int8> json,
   ) {
-    return (_cJSON_Minify ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_Minify>>('cJSON_Minify')
-            .asFunction<_dart_cJSON_Minify>())(
+    return _cJSON_Minify(
       json,
     );
   }
 
-  _dart_cJSON_Minify? _cJSON_Minify;
+  late final _cJSON_Minify_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_Minify>>('cJSON_Minify');
+  late final _dart_cJSON_Minify _cJSON_Minify =
+      _cJSON_Minify_ptr.asFunction<_dart_cJSON_Minify>();
 
   ffi.Pointer<cJSON> cJSON_AddNullToObject(
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> name,
   ) {
-    return (_cJSON_AddNullToObject ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_AddNullToObject>>(
-                'cJSON_AddNullToObject')
-            .asFunction<_dart_cJSON_AddNullToObject>())(
+    return _cJSON_AddNullToObject(
       object,
       name,
     );
   }
 
-  _dart_cJSON_AddNullToObject? _cJSON_AddNullToObject;
+  late final _cJSON_AddNullToObject_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_AddNullToObject>>(
+          'cJSON_AddNullToObject');
+  late final _dart_cJSON_AddNullToObject _cJSON_AddNullToObject =
+      _cJSON_AddNullToObject_ptr.asFunction<_dart_cJSON_AddNullToObject>();
 
   ffi.Pointer<cJSON> cJSON_AddTrueToObject(
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> name,
   ) {
-    return (_cJSON_AddTrueToObject ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_AddTrueToObject>>(
-                'cJSON_AddTrueToObject')
-            .asFunction<_dart_cJSON_AddTrueToObject>())(
+    return _cJSON_AddTrueToObject(
       object,
       name,
     );
   }
 
-  _dart_cJSON_AddTrueToObject? _cJSON_AddTrueToObject;
+  late final _cJSON_AddTrueToObject_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_AddTrueToObject>>(
+          'cJSON_AddTrueToObject');
+  late final _dart_cJSON_AddTrueToObject _cJSON_AddTrueToObject =
+      _cJSON_AddTrueToObject_ptr.asFunction<_dart_cJSON_AddTrueToObject>();
 
   ffi.Pointer<cJSON> cJSON_AddFalseToObject(
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> name,
   ) {
-    return (_cJSON_AddFalseToObject ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_AddFalseToObject>>(
-                'cJSON_AddFalseToObject')
-            .asFunction<_dart_cJSON_AddFalseToObject>())(
+    return _cJSON_AddFalseToObject(
       object,
       name,
     );
   }
 
-  _dart_cJSON_AddFalseToObject? _cJSON_AddFalseToObject;
+  late final _cJSON_AddFalseToObject_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_AddFalseToObject>>(
+          'cJSON_AddFalseToObject');
+  late final _dart_cJSON_AddFalseToObject _cJSON_AddFalseToObject =
+      _cJSON_AddFalseToObject_ptr.asFunction<_dart_cJSON_AddFalseToObject>();
 
   ffi.Pointer<cJSON> cJSON_AddBoolToObject(
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> name,
     int boolean,
   ) {
-    return (_cJSON_AddBoolToObject ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_AddBoolToObject>>(
-                'cJSON_AddBoolToObject')
-            .asFunction<_dart_cJSON_AddBoolToObject>())(
+    return _cJSON_AddBoolToObject(
       object,
       name,
       boolean,
     );
   }
 
-  _dart_cJSON_AddBoolToObject? _cJSON_AddBoolToObject;
+  late final _cJSON_AddBoolToObject_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_AddBoolToObject>>(
+          'cJSON_AddBoolToObject');
+  late final _dart_cJSON_AddBoolToObject _cJSON_AddBoolToObject =
+      _cJSON_AddBoolToObject_ptr.asFunction<_dart_cJSON_AddBoolToObject>();
 
   ffi.Pointer<cJSON> cJSON_AddNumberToObject(
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> name,
     double number,
   ) {
-    return (_cJSON_AddNumberToObject ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_AddNumberToObject>>(
-                'cJSON_AddNumberToObject')
-            .asFunction<_dart_cJSON_AddNumberToObject>())(
+    return _cJSON_AddNumberToObject(
       object,
       name,
       number,
     );
   }
 
-  _dart_cJSON_AddNumberToObject? _cJSON_AddNumberToObject;
+  late final _cJSON_AddNumberToObject_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_AddNumberToObject>>(
+          'cJSON_AddNumberToObject');
+  late final _dart_cJSON_AddNumberToObject _cJSON_AddNumberToObject =
+      _cJSON_AddNumberToObject_ptr.asFunction<_dart_cJSON_AddNumberToObject>();
 
   ffi.Pointer<cJSON> cJSON_AddStringToObject(
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> name,
     ffi.Pointer<ffi.Int8> string,
   ) {
-    return (_cJSON_AddStringToObject ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_AddStringToObject>>(
-                'cJSON_AddStringToObject')
-            .asFunction<_dart_cJSON_AddStringToObject>())(
+    return _cJSON_AddStringToObject(
       object,
       name,
       string,
     );
   }
 
-  _dart_cJSON_AddStringToObject? _cJSON_AddStringToObject;
+  late final _cJSON_AddStringToObject_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_AddStringToObject>>(
+          'cJSON_AddStringToObject');
+  late final _dart_cJSON_AddStringToObject _cJSON_AddStringToObject =
+      _cJSON_AddStringToObject_ptr.asFunction<_dart_cJSON_AddStringToObject>();
 
   ffi.Pointer<cJSON> cJSON_AddRawToObject(
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> name,
     ffi.Pointer<ffi.Int8> raw,
   ) {
-    return (_cJSON_AddRawToObject ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_AddRawToObject>>(
-                'cJSON_AddRawToObject')
-            .asFunction<_dart_cJSON_AddRawToObject>())(
+    return _cJSON_AddRawToObject(
       object,
       name,
       raw,
     );
   }
 
-  _dart_cJSON_AddRawToObject? _cJSON_AddRawToObject;
+  late final _cJSON_AddRawToObject_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_AddRawToObject>>(
+          'cJSON_AddRawToObject');
+  late final _dart_cJSON_AddRawToObject _cJSON_AddRawToObject =
+      _cJSON_AddRawToObject_ptr.asFunction<_dart_cJSON_AddRawToObject>();
 
   ffi.Pointer<cJSON> cJSON_AddObjectToObject(
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> name,
   ) {
-    return (_cJSON_AddObjectToObject ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_AddObjectToObject>>(
-                'cJSON_AddObjectToObject')
-            .asFunction<_dart_cJSON_AddObjectToObject>())(
+    return _cJSON_AddObjectToObject(
       object,
       name,
     );
   }
 
-  _dart_cJSON_AddObjectToObject? _cJSON_AddObjectToObject;
+  late final _cJSON_AddObjectToObject_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_AddObjectToObject>>(
+          'cJSON_AddObjectToObject');
+  late final _dart_cJSON_AddObjectToObject _cJSON_AddObjectToObject =
+      _cJSON_AddObjectToObject_ptr.asFunction<_dart_cJSON_AddObjectToObject>();
 
   ffi.Pointer<cJSON> cJSON_AddArrayToObject(
     ffi.Pointer<cJSON> object,
     ffi.Pointer<ffi.Int8> name,
   ) {
-    return (_cJSON_AddArrayToObject ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_AddArrayToObject>>(
-                'cJSON_AddArrayToObject')
-            .asFunction<_dart_cJSON_AddArrayToObject>())(
+    return _cJSON_AddArrayToObject(
       object,
       name,
     );
   }
 
-  _dart_cJSON_AddArrayToObject? _cJSON_AddArrayToObject;
+  late final _cJSON_AddArrayToObject_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_AddArrayToObject>>(
+          'cJSON_AddArrayToObject');
+  late final _dart_cJSON_AddArrayToObject _cJSON_AddArrayToObject =
+      _cJSON_AddArrayToObject_ptr.asFunction<_dart_cJSON_AddArrayToObject>();
 
   double cJSON_SetNumberHelper(
     ffi.Pointer<cJSON> object,
     double number,
   ) {
-    return (_cJSON_SetNumberHelper ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_SetNumberHelper>>(
-                'cJSON_SetNumberHelper')
-            .asFunction<_dart_cJSON_SetNumberHelper>())(
+    return _cJSON_SetNumberHelper(
       object,
       number,
     );
   }
 
-  _dart_cJSON_SetNumberHelper? _cJSON_SetNumberHelper;
+  late final _cJSON_SetNumberHelper_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_SetNumberHelper>>(
+          'cJSON_SetNumberHelper');
+  late final _dart_cJSON_SetNumberHelper _cJSON_SetNumberHelper =
+      _cJSON_SetNumberHelper_ptr.asFunction<_dart_cJSON_SetNumberHelper>();
 
   ffi.Pointer<ffi.Void> cJSON_malloc(
     int size,
   ) {
-    return (_cJSON_malloc ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_malloc>>('cJSON_malloc')
-            .asFunction<_dart_cJSON_malloc>())(
+    return _cJSON_malloc(
       size,
     );
   }
 
-  _dart_cJSON_malloc? _cJSON_malloc;
+  late final _cJSON_malloc_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_malloc>>('cJSON_malloc');
+  late final _dart_cJSON_malloc _cJSON_malloc =
+      _cJSON_malloc_ptr.asFunction<_dart_cJSON_malloc>();
 
   void cJSON_free(
     ffi.Pointer<ffi.Void> object,
   ) {
-    return (_cJSON_free ??=
-        _lookup<ffi.NativeFunction<_c_cJSON_free>>('cJSON_free')
-            .asFunction<_dart_cJSON_free>())(
+    return _cJSON_free(
       object,
     );
   }
 
-  _dart_cJSON_free? _cJSON_free;
+  late final _cJSON_free_ptr =
+      _lookup<ffi.NativeFunction<_c_cJSON_free>>('cJSON_free');
+  late final _dart_cJSON_free _cJSON_free =
+      _cJSON_free_ptr.asFunction<_dart_cJSON_free>();
 }
 
 class cJSON extends ffi.Struct {

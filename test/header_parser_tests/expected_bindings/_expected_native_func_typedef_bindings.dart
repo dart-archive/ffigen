@@ -22,25 +22,26 @@ class NativeLibrary {
   void func(
     ffi.Pointer<ffi.NativeFunction<_typedefC_4>> unnamed1,
   ) {
-    return (_func ??=
-        _lookup<ffi.NativeFunction<_c_func>>('func').asFunction<_dart_func>())(
+    return _func(
       unnamed1,
     );
   }
 
-  _dart_func? _func;
+  late final _func_ptr = _lookup<ffi.NativeFunction<_c_func>>('func');
+  late final _dart_func _func = _func_ptr.asFunction<_dart_func>();
 
   void funcWithNativeFunc(
     ffi.Pointer<ffi.NativeFunction<withTypedefReturnType>> named,
   ) {
-    return (_funcWithNativeFunc ??=
-        _lookup<ffi.NativeFunction<_c_funcWithNativeFunc>>('funcWithNativeFunc')
-            .asFunction<_dart_funcWithNativeFunc>())(
+    return _funcWithNativeFunc(
       named,
     );
   }
 
-  _dart_funcWithNativeFunc? _funcWithNativeFunc;
+  late final _funcWithNativeFunc_ptr =
+      _lookup<ffi.NativeFunction<_c_funcWithNativeFunc>>('funcWithNativeFunc');
+  late final _dart_funcWithNativeFunc _funcWithNativeFunc =
+      _funcWithNativeFunc_ptr.asFunction<_dart_funcWithNativeFunc>();
 }
 
 class struc extends ffi.Struct {
