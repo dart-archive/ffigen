@@ -1,3 +1,6 @@
+# 2.0.4
+- Support for dynamic linking, use `NativeLibrary.fromLookup()` constructor.
+
 # 2.0.3
 - Ignore typedef to struct pointer when possible.
 - Recursively create directories for output file.

@@ -129,7 +129,7 @@ class Config {
       if (map.containsKey(key)) {
         _result = _result && spec!.validator(key, map[key]);
       } else if (spec!.requirement == Requirement.yes) {
-        _logger.severe("Key '${key}' is required.");
+        _logger.severe("Key '$key' is required.");
         _result = false;
       } else if (spec.requirement == Requirement.prefer) {
         _logger.warning("Prefer adding Key '$key' to your config.");

@@ -220,6 +220,6 @@ class Type {
 
   @override
   String toString() {
-    return 'Type: ${broadType}';
+    return 'Type: $broadType';
   }
 }

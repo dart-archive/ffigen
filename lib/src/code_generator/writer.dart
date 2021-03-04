@@ -83,7 +83,7 @@ class Writer {
         // Not a unique prefix, start over with a new suffix.
         i = -1;
         suffixInt++;
-        _arrayHelperClassPrefix = '${base}${suffixInt}';
+        _arrayHelperClassPrefix = '$base$suffixInt';
       }
     }
 
@@ -141,13 +141,13 @@ class Writer {
       s.write('class $_className{\n');
       // Write dylib.
       s.write('/// Holds the Dynamic library.\n');
-      s.write('final $ffiLibraryPrefix.DynamicLibrary ${dylibIdentifier};\n');
+      s.write('final $ffiLibraryPrefix.DynamicLibrary $dylibIdentifier;\n');
       s.write('\n');
       //Write doc comment for wrapper class constructor.
       s.write(makeDartDoc('The symbols are looked up in [dynamicLibrary].'));
       // Write wrapper class constructor.
       s.write(
-          '${_className}($ffiLibraryPrefix.DynamicLibrary dynamicLibrary): $dylibIdentifier = dynamicLibrary;\n\n');
+          '$_className($ffiLibraryPrefix.DynamicLibrary dynamicLibrary): $dylibIdentifier = dynamicLibrary;\n\n');
       for (final b in lookUpBindings) {
         s.write(b.toBindingString(this).string);
       }

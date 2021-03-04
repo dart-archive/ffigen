@@ -140,7 +140,7 @@ int _macroVariablevisitor(clang_types.CXCursor cursor,
             originalName: savedMacros[macroName]!.originalName,
             name: macroName,
             rawType: 'String',
-            rawValue: "'${rawValue}'",
+            rawValue: "'$rawValue'",
           );
           break;
       }
@@ -201,7 +201,7 @@ File createFileForMacros() {
     // Write macro.
     final macroVarName = MacroVariableString.encode(prefixedMacroName);
     sb.writeln(
-        'auto ${macroVarName} = ${savedMacros[prefixedMacroName]!.originalName};');
+        'auto $macroVarName = ${savedMacros[prefixedMacroName]!.originalName};');
     // Add to _macroVarNames.
     _macroVarNames.add(macroVarName);
   }
@@ -291,7 +291,7 @@ String _getWritableChar(int char, {bool utf8 = true}) {
         return r'\r';
       default:
         final h = char.toRadixString(16).toUpperCase().padLeft(2, '0');
-        return '\\x${h}';
+        return '\\x$h';
     }
   }
 
@@ -309,7 +309,7 @@ String _getWritableChar(int char, {bool utf8 = true}) {
   /// Print range [128..255] as `\xHH`.
   if (!utf8) {
     final h = char.toRadixString(16).toUpperCase().padLeft(2, '0');
-    return '\\x${h}';
+    return '\\x$h';
   }
 
   /// In all other cases, simply convert to string.

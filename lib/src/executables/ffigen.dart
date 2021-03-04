@@ -174,14 +174,14 @@ void setupLogger(ArgResults result) {
     // Setup logger for printing (if verbosity was set by user).
     Logger.root.onRecord.listen((record) {
       final level = '[${record.level.name}]'.padRight(9);
-      printLog('${level}: ${record.message}', record.level);
+      printLog('$level: ${record.message}', record.level);
     });
   } else {
     // Setup logger for printing (if verbosity was not set by user).
     Logger.root.onRecord.listen((record) {
       if (record.level.value > Level.INFO.value) {
         final level = '[${record.level.name}]'.padRight(9);
-        printLog('${level}: ${record.message}', record.level);
+        printLog('$level: ${record.message}', record.level);
       } else {
         printLog(record.message, record.level);
       }

@@ -65,7 +65,7 @@ class Typedef {
       s.write('typedef $typedefName = ${returnType.getCType(w)} Function(\n');
       for (final p in parameters) {
         final name = p.name.isNotEmpty ? paramNamer.makeUnique(p.name) : p.name;
-        s.write('  ${p.type.getCType(w)} ${name},\n');
+        s.write('  ${p.type.getCType(w)} $name,\n');
       }
       s.write(');\n\n');
     } else {
@@ -74,7 +74,7 @@ class Typedef {
       for (final p in parameters) {
         final name = p.name.isNotEmpty ? paramNamer.makeUnique(p.name) : p.name;
 
-        s.write('  ${p.type.getDartType(w)} ${name},\n');
+        s.write('  ${p.type.getDartType(w)} $name,\n');
       }
       s.write(');\n\n');
     }
