@@ -111,12 +111,12 @@ class Struc extends NoLookUpBinding {
         // TODO(5): Remove array helpers when inline array support arives.
         final arrayHelper = ArrayHelper(
           helperClassGroupName:
-              '${w.arrayHelperClassPrefix}_${enclosingClassName}_${memberName}',
+              '${w.arrayHelperClassPrefix}_${enclosingClassName}_$memberName',
           elementType: m.type.getBaseArrayType(),
           dimensions: _getArrayDimensionLengths(m.type),
           name: memberName,
           structName: enclosingClassName,
-          elementNamePrefix: '${expandedArrayItemPrefix}${memberName}_item_',
+          elementNamePrefix: '$expandedArrayItemPrefix${memberName}_item_',
         );
         s.write(arrayHelper.declarationString(w));
         helpers.add(arrayHelper);
@@ -130,7 +130,7 @@ class Struc extends NoLookUpBinding {
         if (m.type.isPrimitive) {
           s.write('$depth@${m.type.getCType(w)}()\n');
         }
-        s.write('${depth}external ${m.type.getDartType(w)} ${memberName};\n\n');
+        s.write('${depth}external ${m.type.getDartType(w)} $memberName;\n\n');
       }
     }
     s.write('}\n\n');
@@ -152,7 +152,7 @@ class Struc extends NoLookUpBinding {
         // Not a unique prefix, start over with a new suffix.
         i = -1;
         suffixInt++;
-        expandedArrayItemPrefix = '${base}${suffixInt}';
+        expandedArrayItemPrefix = '$base$suffixInt';
       }
     }
     return expandedArrayItemPrefix + '_';
@@ -211,9 +211,9 @@ class ArrayHelper {
 
     for (var i = 0; i < expandedArrayLength; i++) {
       if (elementType.isPrimitive) {
-        s.write('  @${arrayCType}()\n');
+        s.write('  @$arrayCType()\n');
       }
-      s.write('  external ${arrayDartType} ${elementNamePrefix}$i;\n');
+      s.write('  external $arrayDartType $elementNamePrefix$i;\n');
     }
 
     s.write('/// Helper for array `$name`.\n');
@@ -227,7 +227,7 @@ class ArrayHelper {
     final s = StringBuffer();
     final arrayType = elementType.getDartType(w);
     for (var dim = 0; dim < dimensions.length; dim++) {
-      final helperClassName = '${helperClassGroupName}_level${dim}';
+      final helperClassName = '${helperClassGroupName}_level$dim';
       final structIdentifier = '_struct';
       final dimensionsIdentifier = 'dimensions';
       final levelIdentifier = 'level';
@@ -238,7 +238,7 @@ class ArrayHelper {
       s.write('/// Helper for array `$name` in struct `$structName`.\n');
 
       // Write class declaration.
-      s.write('class ${helperClassName}{\n');
+      s.write('class $helperClassName{\n');
       s.write('final $structName $structIdentifier;\n');
       s.write('final List<int> $dimensionsIdentifier;\n');
       s.write('final int $levelIdentifier;\n');
@@ -254,7 +254,7 @@ class ArrayHelper {
       s.write('''
   void $checkBoundsFunctionIdentifier(int index) {
     if (index >= $legthIdentifier || index < 0) {
-      throw RangeError('Dimension \$$levelIdentifier: index not in range 0..\${$legthIdentifier} exclusive.');
+      throw RangeError('Dimension \$$levelIdentifier: index not in range 0..\$$legthIdentifier exclusive.');
     }
   }
   ''');
@@ -280,7 +280,7 @@ class ArrayHelper {
         s.write('switch($absoluteIndexIdentifier+index){\n');
         for (var i = 0; i < expandedArrayLength; i++) {
           s.write('case $i:\n');
-          s.write('  return $structIdentifier.${elementNamePrefix}$i;\n');
+          s.write('  return $structIdentifier.$elementNamePrefix$i;\n');
         }
         s.write('default:\n');
         s.write("  throw Exception('Invalid Array Helper generated.');");
@@ -293,7 +293,7 @@ class ArrayHelper {
         s.write('switch($absoluteIndexIdentifier+index){\n');
         for (var i = 0; i < expandedArrayLength; i++) {
           s.write('case $i:\n');
-          s.write('  $structIdentifier.${elementNamePrefix}$i = value;\n');
+          s.write('  $structIdentifier.$elementNamePrefix$i = value;\n');
           s.write('  break;\n');
         }
         s.write('default:\n');

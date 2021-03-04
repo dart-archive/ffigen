@@ -6,40 +6,52 @@
 import 'dart:ffi' as ffi;
 
 class init_dylib_1 {
-  /// Holds the Dynamic library.
-  final ffi.DynamicLibrary _dylib;
+  /// Holds the symbol lookup function.
+  final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
+      _lookup;
 
   /// The symbols are looked up in [dynamicLibrary].
-  init_dylib_1(ffi.DynamicLibrary dynamicLibrary) : _dylib = dynamicLibrary;
+  init_dylib_1(ffi.DynamicLibrary dynamicLibrary)
+      : _lookup = dynamicLibrary.lookup;
+
+  /// The symbols are looked up with [lookup].
+  init_dylib_1.fromLookup(
+      ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
+          lookup)
+      : _lookup = lookup;
 
   void test() {
-    return (_test_1 ??= _dylib.lookupFunction<_c_test1, _dart_test1>('test'))();
+    return (_test_1 ??= _lookup<ffi.NativeFunction<_c_test1>>('test')
+        .asFunction<_dart_test1>())();
   }
 
   _dart_test1? _test_1;
 
   void _test() {
-    return (__test ??= _dylib.lookupFunction<_c__test, _dart__test>('_test'))();
+    return (__test ??= _lookup<ffi.NativeFunction<_c__test>>('_test')
+        .asFunction<_dart__test>())();
   }
 
   _dart__test? __test;
 
   void _c_test() {
-    return (__c_test ??=
-        _dylib.lookupFunction<_c__c_test, _dart__c_test>('_c_test'))();
+    return (__c_test ??= _lookup<ffi.NativeFunction<_c__c_test>>('_c_test')
+        .asFunction<_dart__c_test>())();
   }
 
   _dart__c_test? __c_test;
 
   void _dart_test() {
     return (__dart_test ??=
-        _dylib.lookupFunction<_c__dart_test, _dart__dart_test>('_dart_test'))();
+        _lookup<ffi.NativeFunction<_c__dart_test>>('_dart_test')
+            .asFunction<_dart__dart_test>())();
   }
 
   _dart__dart_test? __dart_test;
 
   void Test() {
-    return (_Test ??= _dylib.lookupFunction<_c_Test1, _dart_Test>('Test'))();
+    return (_Test ??= _lookup<ffi.NativeFunction<_c_Test1>>('Test')
+        .asFunction<_dart_Test>())();
   }
 
   _dart_Test? _Test;
@@ -68,7 +80,7 @@ class ArrayHelper1__Test_array_level0 {
   void _checkBounds(int index) {
     if (index >= length || index < 0) {
       throw RangeError(
-          'Dimension $level: index not in range 0..${length} exclusive.');
+          'Dimension $level: index not in range 0..$length exclusive.');
     }
   }
 

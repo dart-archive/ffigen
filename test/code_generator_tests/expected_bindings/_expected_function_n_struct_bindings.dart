@@ -4,17 +4,24 @@
 import 'dart:ffi' as ffi;
 
 class Bindings {
-  /// Holds the Dynamic library.
-  final ffi.DynamicLibrary _dylib;
+  /// Holds the symbol lookup function.
+  final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
+      _lookup;
 
   /// The symbols are looked up in [dynamicLibrary].
-  Bindings(ffi.DynamicLibrary dynamicLibrary) : _dylib = dynamicLibrary;
+  Bindings(ffi.DynamicLibrary dynamicLibrary) : _lookup = dynamicLibrary.lookup;
+
+  /// The symbols are looked up with [lookup].
+  Bindings.fromLookup(
+      ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
+          lookup)
+      : _lookup = lookup;
 
   ffi.Pointer<SomeStruc> someFunc(
     ffi.Pointer<ffi.Pointer<SomeStruc>> some,
   ) {
-    return (_someFunc ??=
-        _dylib.lookupFunction<_c_someFunc, _dart_someFunc>('someFunc'))(
+    return (_someFunc ??= _lookup<ffi.NativeFunction<_c_someFunc>>('someFunc')
+        .asFunction<_dart_someFunc>())(
       some,
     );
   }

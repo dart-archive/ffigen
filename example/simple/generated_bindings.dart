@@ -5,18 +5,27 @@ import 'dart:ffi' as ffi;
 
 /// Bindings to `headers/example.h`.
 class NativeLibrary {
-  /// Holds the Dynamic library.
-  final ffi.DynamicLibrary _dylib;
+  /// Holds the symbol lookup function.
+  final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
+      _lookup;
 
   /// The symbols are looked up in [dynamicLibrary].
-  NativeLibrary(ffi.DynamicLibrary dynamicLibrary) : _dylib = dynamicLibrary;
+  NativeLibrary(ffi.DynamicLibrary dynamicLibrary)
+      : _lookup = dynamicLibrary.lookup;
+
+  /// The symbols are looked up with [lookup].
+  NativeLibrary.fromLookup(
+      ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
+          lookup)
+      : _lookup = lookup;
 
   /// Adds 2 integers.
   int sum(
     int a,
     int b,
   ) {
-    return (_sum ??= _dylib.lookupFunction<_c_sum, _dart_sum>('sum'))(
+    return (_sum ??=
+        _lookup<ffi.NativeFunction<_c_sum>>('sum').asFunction<_dart_sum>())(
       a,
       b,
     );
@@ -29,8 +38,8 @@ class NativeLibrary {
     ffi.Pointer<ffi.Int32> a,
     int b,
   ) {
-    return (_subtract ??=
-        _dylib.lookupFunction<_c_subtract, _dart_subtract>('subtract'))(
+    return (_subtract ??= _lookup<ffi.NativeFunction<_c_subtract>>('subtract')
+        .asFunction<_dart_subtract>())(
       a,
       b,
     );
@@ -43,8 +52,8 @@ class NativeLibrary {
     int a,
     int b,
   ) {
-    return (_multiply ??=
-        _dylib.lookupFunction<_c_multiply, _dart_multiply>('multiply'))(
+    return (_multiply ??= _lookup<ffi.NativeFunction<_c_multiply>>('multiply')
+        .asFunction<_dart_multiply>())(
       a,
       b,
     );
@@ -57,8 +66,8 @@ class NativeLibrary {
     int a,
     int b,
   ) {
-    return (_divide ??=
-        _dylib.lookupFunction<_c_divide, _dart_divide>('divide'))(
+    return (_divide ??= _lookup<ffi.NativeFunction<_c_divide>>('divide')
+        .asFunction<_dart_divide>())(
       a,
       b,
     );
@@ -72,8 +81,8 @@ class NativeLibrary {
     ffi.Pointer<ffi.Float> b,
   ) {
     return (_dividePercision ??=
-        _dylib.lookupFunction<_c_dividePercision, _dart_dividePercision>(
-            'dividePercision'))(
+        _lookup<ffi.NativeFunction<_c_dividePercision>>('dividePercision')
+            .asFunction<_dart_dividePercision>())(
       a,
       b,
     );

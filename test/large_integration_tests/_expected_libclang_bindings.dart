@@ -5,19 +5,26 @@ import 'dart:ffi' as ffi;
 
 /// Bindings to LibClang.
 class LibClang {
-  /// Holds the Dynamic library.
-  final ffi.DynamicLibrary _dylib;
+  /// Holds the symbol lookup function.
+  final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
+      _lookup;
 
   /// The symbols are looked up in [dynamicLibrary].
-  LibClang(ffi.DynamicLibrary dynamicLibrary) : _dylib = dynamicLibrary;
+  LibClang(ffi.DynamicLibrary dynamicLibrary) : _lookup = dynamicLibrary.lookup;
+
+  /// The symbols are looked up with [lookup].
+  LibClang.fromLookup(
+      ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
+          lookup)
+      : _lookup = lookup;
 
   /// Retrieve the character data associated with the given string.
   ffi.Pointer<ffi.Int8> clang_getCString(
     CXString string,
   ) {
     return (_clang_getCString ??=
-        _dylib.lookupFunction<_c_clang_getCString, _dart_clang_getCString>(
-            'clang_getCString'))(
+        _lookup<ffi.NativeFunction<_c_clang_getCString>>('clang_getCString')
+            .asFunction<_dart_clang_getCString>())(
       string,
     );
   }
@@ -28,9 +35,10 @@ class LibClang {
   void clang_disposeString(
     CXString string,
   ) {
-    return (_clang_disposeString ??= _dylib.lookupFunction<
-        _c_clang_disposeString,
-        _dart_clang_disposeString>('clang_disposeString'))(
+    return (_clang_disposeString ??=
+        _lookup<ffi.NativeFunction<_c_clang_disposeString>>(
+                'clang_disposeString')
+            .asFunction<_dart_clang_disposeString>())(
       string,
     );
   }
@@ -41,9 +49,10 @@ class LibClang {
   void clang_disposeStringSet(
     ffi.Pointer<CXStringSet> set_1,
   ) {
-    return (_clang_disposeStringSet ??= _dylib.lookupFunction<
-        _c_clang_disposeStringSet,
-        _dart_clang_disposeStringSet>('clang_disposeStringSet'))(
+    return (_clang_disposeStringSet ??=
+        _lookup<ffi.NativeFunction<_c_clang_disposeStringSet>>(
+                'clang_disposeStringSet')
+            .asFunction<_dart_clang_disposeStringSet>())(
       set_1,
     );
   }
@@ -53,10 +62,10 @@ class LibClang {
   /// Return the timestamp for use with Clang's -fbuild-session-timestamp=
   /// option.
   int clang_getBuildSessionTimestamp() {
-    return (_clang_getBuildSessionTimestamp ??= _dylib.lookupFunction<
-            _c_clang_getBuildSessionTimestamp,
-            _dart_clang_getBuildSessionTimestamp>(
-        'clang_getBuildSessionTimestamp'))();
+    return (_clang_getBuildSessionTimestamp ??=
+        _lookup<ffi.NativeFunction<_c_clang_getBuildSessionTimestamp>>(
+                'clang_getBuildSessionTimestamp')
+            .asFunction<_dart_clang_getBuildSessionTimestamp>())();
   }
 
   _dart_clang_getBuildSessionTimestamp? _clang_getBuildSessionTimestamp;
@@ -66,10 +75,10 @@ class LibClang {
   ffi.Pointer<CXVirtualFileOverlayImpl> clang_VirtualFileOverlay_create(
     int options,
   ) {
-    return (_clang_VirtualFileOverlay_create ??= _dylib.lookupFunction<
-            _c_clang_VirtualFileOverlay_create,
-            _dart_clang_VirtualFileOverlay_create>(
-        'clang_VirtualFileOverlay_create'))(
+    return (_clang_VirtualFileOverlay_create ??=
+        _lookup<ffi.NativeFunction<_c_clang_VirtualFileOverlay_create>>(
+                'clang_VirtualFileOverlay_create')
+            .asFunction<_dart_clang_VirtualFileOverlay_create>())(
       options,
     );
   }
@@ -83,10 +92,10 @@ class LibClang {
     ffi.Pointer<ffi.Int8> virtualPath,
     ffi.Pointer<ffi.Int8> realPath,
   ) {
-    return (_clang_VirtualFileOverlay_addFileMapping ??= _dylib.lookupFunction<
-            _c_clang_VirtualFileOverlay_addFileMapping,
-            _dart_clang_VirtualFileOverlay_addFileMapping>(
-        'clang_VirtualFileOverlay_addFileMapping'))(
+    return (_clang_VirtualFileOverlay_addFileMapping ??=
+        _lookup<ffi.NativeFunction<_c_clang_VirtualFileOverlay_addFileMapping>>(
+                'clang_VirtualFileOverlay_addFileMapping')
+            .asFunction<_dart_clang_VirtualFileOverlay_addFileMapping>())(
       arg0,
       virtualPath,
       realPath,
@@ -103,10 +112,11 @@ class LibClang {
     ffi.Pointer<CXVirtualFileOverlayImpl> arg0,
     int caseSensitive,
   ) {
-    return (_clang_VirtualFileOverlay_setCaseSensitivity ??=
-        _dylib.lookupFunction<_c_clang_VirtualFileOverlay_setCaseSensitivity,
-                _dart_clang_VirtualFileOverlay_setCaseSensitivity>(
-            'clang_VirtualFileOverlay_setCaseSensitivity'))(
+    return (_clang_VirtualFileOverlay_setCaseSensitivity ??= _lookup<
+                ffi.NativeFunction<
+                    _c_clang_VirtualFileOverlay_setCaseSensitivity>>(
+            'clang_VirtualFileOverlay_setCaseSensitivity')
+        .asFunction<_dart_clang_VirtualFileOverlay_setCaseSensitivity>())(
       arg0,
       caseSensitive,
     );
@@ -122,10 +132,10 @@ class LibClang {
     ffi.Pointer<ffi.Pointer<ffi.Int8>> out_buffer_ptr,
     ffi.Pointer<ffi.Uint32> out_buffer_size,
   ) {
-    return (_clang_VirtualFileOverlay_writeToBuffer ??= _dylib.lookupFunction<
-            _c_clang_VirtualFileOverlay_writeToBuffer,
-            _dart_clang_VirtualFileOverlay_writeToBuffer>(
-        'clang_VirtualFileOverlay_writeToBuffer'))(
+    return (_clang_VirtualFileOverlay_writeToBuffer ??=
+        _lookup<ffi.NativeFunction<_c_clang_VirtualFileOverlay_writeToBuffer>>(
+                'clang_VirtualFileOverlay_writeToBuffer')
+            .asFunction<_dart_clang_VirtualFileOverlay_writeToBuffer>())(
       arg0,
       options,
       out_buffer_ptr,
@@ -142,7 +152,8 @@ class LibClang {
     ffi.Pointer<ffi.Void> buffer,
   ) {
     return (_clang_free ??=
-        _dylib.lookupFunction<_c_clang_free, _dart_clang_free>('clang_free'))(
+        _lookup<ffi.NativeFunction<_c_clang_free>>('clang_free')
+            .asFunction<_dart_clang_free>())(
       buffer,
     );
   }
@@ -153,10 +164,10 @@ class LibClang {
   void clang_VirtualFileOverlay_dispose(
     ffi.Pointer<CXVirtualFileOverlayImpl> arg0,
   ) {
-    return (_clang_VirtualFileOverlay_dispose ??= _dylib.lookupFunction<
-            _c_clang_VirtualFileOverlay_dispose,
-            _dart_clang_VirtualFileOverlay_dispose>(
-        'clang_VirtualFileOverlay_dispose'))(
+    return (_clang_VirtualFileOverlay_dispose ??=
+        _lookup<ffi.NativeFunction<_c_clang_VirtualFileOverlay_dispose>>(
+                'clang_VirtualFileOverlay_dispose')
+            .asFunction<_dart_clang_VirtualFileOverlay_dispose>())(
       arg0,
     );
   }
@@ -168,10 +179,10 @@ class LibClang {
   ffi.Pointer<CXModuleMapDescriptorImpl> clang_ModuleMapDescriptor_create(
     int options,
   ) {
-    return (_clang_ModuleMapDescriptor_create ??= _dylib.lookupFunction<
-            _c_clang_ModuleMapDescriptor_create,
-            _dart_clang_ModuleMapDescriptor_create>(
-        'clang_ModuleMapDescriptor_create'))(
+    return (_clang_ModuleMapDescriptor_create ??=
+        _lookup<ffi.NativeFunction<_c_clang_ModuleMapDescriptor_create>>(
+                'clang_ModuleMapDescriptor_create')
+            .asFunction<_dart_clang_ModuleMapDescriptor_create>())(
       options,
     );
   }
@@ -183,11 +194,11 @@ class LibClang {
     ffi.Pointer<CXModuleMapDescriptorImpl> arg0,
     ffi.Pointer<ffi.Int8> name,
   ) {
-    return (_clang_ModuleMapDescriptor_setFrameworkModuleName ??=
-        _dylib.lookupFunction<
-                _c_clang_ModuleMapDescriptor_setFrameworkModuleName,
-                _dart_clang_ModuleMapDescriptor_setFrameworkModuleName>(
-            'clang_ModuleMapDescriptor_setFrameworkModuleName'))(
+    return (_clang_ModuleMapDescriptor_setFrameworkModuleName ??= _lookup<
+                ffi.NativeFunction<
+                    _c_clang_ModuleMapDescriptor_setFrameworkModuleName>>(
+            'clang_ModuleMapDescriptor_setFrameworkModuleName')
+        .asFunction<_dart_clang_ModuleMapDescriptor_setFrameworkModuleName>())(
       arg0,
       name,
     );
@@ -201,10 +212,11 @@ class LibClang {
     ffi.Pointer<CXModuleMapDescriptorImpl> arg0,
     ffi.Pointer<ffi.Int8> name,
   ) {
-    return (_clang_ModuleMapDescriptor_setUmbrellaHeader ??=
-        _dylib.lookupFunction<_c_clang_ModuleMapDescriptor_setUmbrellaHeader,
-                _dart_clang_ModuleMapDescriptor_setUmbrellaHeader>(
-            'clang_ModuleMapDescriptor_setUmbrellaHeader'))(
+    return (_clang_ModuleMapDescriptor_setUmbrellaHeader ??= _lookup<
+                ffi.NativeFunction<
+                    _c_clang_ModuleMapDescriptor_setUmbrellaHeader>>(
+            'clang_ModuleMapDescriptor_setUmbrellaHeader')
+        .asFunction<_dart_clang_ModuleMapDescriptor_setUmbrellaHeader>())(
       arg0,
       name,
     );
@@ -220,10 +232,10 @@ class LibClang {
     ffi.Pointer<ffi.Pointer<ffi.Int8>> out_buffer_ptr,
     ffi.Pointer<ffi.Uint32> out_buffer_size,
   ) {
-    return (_clang_ModuleMapDescriptor_writeToBuffer ??= _dylib.lookupFunction<
-            _c_clang_ModuleMapDescriptor_writeToBuffer,
-            _dart_clang_ModuleMapDescriptor_writeToBuffer>(
-        'clang_ModuleMapDescriptor_writeToBuffer'))(
+    return (_clang_ModuleMapDescriptor_writeToBuffer ??=
+        _lookup<ffi.NativeFunction<_c_clang_ModuleMapDescriptor_writeToBuffer>>(
+                'clang_ModuleMapDescriptor_writeToBuffer')
+            .asFunction<_dart_clang_ModuleMapDescriptor_writeToBuffer>())(
       arg0,
       options,
       out_buffer_ptr,
@@ -238,10 +250,10 @@ class LibClang {
   void clang_ModuleMapDescriptor_dispose(
     ffi.Pointer<CXModuleMapDescriptorImpl> arg0,
   ) {
-    return (_clang_ModuleMapDescriptor_dispose ??= _dylib.lookupFunction<
-            _c_clang_ModuleMapDescriptor_dispose,
-            _dart_clang_ModuleMapDescriptor_dispose>(
-        'clang_ModuleMapDescriptor_dispose'))(
+    return (_clang_ModuleMapDescriptor_dispose ??=
+        _lookup<ffi.NativeFunction<_c_clang_ModuleMapDescriptor_dispose>>(
+                'clang_ModuleMapDescriptor_dispose')
+            .asFunction<_dart_clang_ModuleMapDescriptor_dispose>())(
       arg0,
     );
   }
@@ -254,8 +266,8 @@ class LibClang {
     int displayDiagnostics,
   ) {
     return (_clang_createIndex ??=
-        _dylib.lookupFunction<_c_clang_createIndex, _dart_clang_createIndex>(
-            'clang_createIndex'))(
+        _lookup<ffi.NativeFunction<_c_clang_createIndex>>('clang_createIndex')
+            .asFunction<_dart_clang_createIndex>())(
       excludeDeclarationsFromPCH,
       displayDiagnostics,
     );
@@ -268,8 +280,8 @@ class LibClang {
     ffi.Pointer<ffi.Void> index,
   ) {
     return (_clang_disposeIndex ??=
-        _dylib.lookupFunction<_c_clang_disposeIndex, _dart_clang_disposeIndex>(
-            'clang_disposeIndex'))(
+        _lookup<ffi.NativeFunction<_c_clang_disposeIndex>>('clang_disposeIndex')
+            .asFunction<_dart_clang_disposeIndex>())(
       index,
     );
   }
@@ -281,10 +293,10 @@ class LibClang {
     ffi.Pointer<ffi.Void> arg0,
     int options,
   ) {
-    return (_clang_CXIndex_setGlobalOptions ??= _dylib.lookupFunction<
-            _c_clang_CXIndex_setGlobalOptions,
-            _dart_clang_CXIndex_setGlobalOptions>(
-        'clang_CXIndex_setGlobalOptions'))(
+    return (_clang_CXIndex_setGlobalOptions ??=
+        _lookup<ffi.NativeFunction<_c_clang_CXIndex_setGlobalOptions>>(
+                'clang_CXIndex_setGlobalOptions')
+            .asFunction<_dart_clang_CXIndex_setGlobalOptions>())(
       arg0,
       options,
     );
@@ -296,10 +308,10 @@ class LibClang {
   int clang_CXIndex_getGlobalOptions(
     ffi.Pointer<ffi.Void> arg0,
   ) {
-    return (_clang_CXIndex_getGlobalOptions ??= _dylib.lookupFunction<
-            _c_clang_CXIndex_getGlobalOptions,
-            _dart_clang_CXIndex_getGlobalOptions>(
-        'clang_CXIndex_getGlobalOptions'))(
+    return (_clang_CXIndex_getGlobalOptions ??=
+        _lookup<ffi.NativeFunction<_c_clang_CXIndex_getGlobalOptions>>(
+                'clang_CXIndex_getGlobalOptions')
+            .asFunction<_dart_clang_CXIndex_getGlobalOptions>())(
       arg0,
     );
   }
@@ -311,10 +323,11 @@ class LibClang {
     ffi.Pointer<ffi.Void> arg0,
     ffi.Pointer<ffi.Int8> Path,
   ) {
-    return (_clang_CXIndex_setInvocationEmissionPathOption ??=
-        _dylib.lookupFunction<_c_clang_CXIndex_setInvocationEmissionPathOption,
-                _dart_clang_CXIndex_setInvocationEmissionPathOption>(
-            'clang_CXIndex_setInvocationEmissionPathOption'))(
+    return (_clang_CXIndex_setInvocationEmissionPathOption ??= _lookup<
+                ffi.NativeFunction<
+                    _c_clang_CXIndex_setInvocationEmissionPathOption>>(
+            'clang_CXIndex_setInvocationEmissionPathOption')
+        .asFunction<_dart_clang_CXIndex_setInvocationEmissionPathOption>())(
       arg0,
       Path,
     );
@@ -328,8 +341,8 @@ class LibClang {
     ffi.Pointer<ffi.Void> SFile,
   ) {
     return (_clang_getFileName ??=
-        _dylib.lookupFunction<_c_clang_getFileName, _dart_clang_getFileName>(
-            'clang_getFileName'))(
+        _lookup<ffi.NativeFunction<_c_clang_getFileName>>('clang_getFileName')
+            .asFunction<_dart_clang_getFileName>())(
       SFile,
     );
   }
@@ -341,8 +354,8 @@ class LibClang {
     ffi.Pointer<ffi.Void> SFile,
   ) {
     return (_clang_getFileTime ??=
-        _dylib.lookupFunction<_c_clang_getFileTime, _dart_clang_getFileTime>(
-            'clang_getFileTime'))(
+        _lookup<ffi.NativeFunction<_c_clang_getFileTime>>('clang_getFileTime')
+            .asFunction<_dart_clang_getFileTime>())(
       SFile,
     );
   }
@@ -354,9 +367,10 @@ class LibClang {
     ffi.Pointer<ffi.Void> file,
     ffi.Pointer<CXFileUniqueID> outID,
   ) {
-    return (_clang_getFileUniqueID ??= _dylib.lookupFunction<
-        _c_clang_getFileUniqueID,
-        _dart_clang_getFileUniqueID>('clang_getFileUniqueID'))(
+    return (_clang_getFileUniqueID ??=
+        _lookup<ffi.NativeFunction<_c_clang_getFileUniqueID>>(
+                'clang_getFileUniqueID')
+            .asFunction<_dart_clang_getFileUniqueID>())(
       file,
       outID,
     );
@@ -371,10 +385,10 @@ class LibClang {
     ffi.Pointer<CXTranslationUnitImpl> tu,
     ffi.Pointer<ffi.Void> file,
   ) {
-    return (_clang_isFileMultipleIncludeGuarded ??= _dylib.lookupFunction<
-            _c_clang_isFileMultipleIncludeGuarded,
-            _dart_clang_isFileMultipleIncludeGuarded>(
-        'clang_isFileMultipleIncludeGuarded'))(
+    return (_clang_isFileMultipleIncludeGuarded ??=
+        _lookup<ffi.NativeFunction<_c_clang_isFileMultipleIncludeGuarded>>(
+                'clang_isFileMultipleIncludeGuarded')
+            .asFunction<_dart_clang_isFileMultipleIncludeGuarded>())(
       tu,
       file,
     );
@@ -388,8 +402,8 @@ class LibClang {
     ffi.Pointer<ffi.Int8> file_name,
   ) {
     return (_clang_getFile ??=
-        _dylib.lookupFunction<_c_clang_getFile, _dart_clang_getFile>(
-            'clang_getFile'))(
+        _lookup<ffi.NativeFunction<_c_clang_getFile>>('clang_getFile')
+            .asFunction<_dart_clang_getFile>())(
       tu,
       file_name,
     );
@@ -403,9 +417,10 @@ class LibClang {
     ffi.Pointer<ffi.Void> file,
     ffi.Pointer<ffi.Uint64> size,
   ) {
-    return (_clang_getFileContents ??= _dylib.lookupFunction<
-        _c_clang_getFileContents,
-        _dart_clang_getFileContents>('clang_getFileContents'))(
+    return (_clang_getFileContents ??=
+        _lookup<ffi.NativeFunction<_c_clang_getFileContents>>(
+                'clang_getFileContents')
+            .asFunction<_dart_clang_getFileContents>())(
       tu,
       file,
       size,
@@ -421,8 +436,8 @@ class LibClang {
     ffi.Pointer<ffi.Void> file2,
   ) {
     return (_clang_File_isEqual ??=
-        _dylib.lookupFunction<_c_clang_File_isEqual, _dart_clang_File_isEqual>(
-            'clang_File_isEqual'))(
+        _lookup<ffi.NativeFunction<_c_clang_File_isEqual>>('clang_File_isEqual')
+            .asFunction<_dart_clang_File_isEqual>())(
       file1,
       file2,
     );
@@ -434,9 +449,10 @@ class LibClang {
   CXString clang_File_tryGetRealPathName(
     ffi.Pointer<ffi.Void> file,
   ) {
-    return (_clang_File_tryGetRealPathName ??= _dylib.lookupFunction<
-        _c_clang_File_tryGetRealPathName,
-        _dart_clang_File_tryGetRealPathName>('clang_File_tryGetRealPathName'))(
+    return (_clang_File_tryGetRealPathName ??=
+        _lookup<ffi.NativeFunction<_c_clang_File_tryGetRealPathName>>(
+                'clang_File_tryGetRealPathName')
+            .asFunction<_dart_clang_File_tryGetRealPathName>())(
       file,
     );
   }
@@ -445,9 +461,10 @@ class LibClang {
 
   /// Retrieve a NULL (invalid) source location.
   CXSourceLocation clang_getNullLocation() {
-    return (_clang_getNullLocation ??= _dylib.lookupFunction<
-        _c_clang_getNullLocation,
-        _dart_clang_getNullLocation>('clang_getNullLocation'))();
+    return (_clang_getNullLocation ??=
+        _lookup<ffi.NativeFunction<_c_clang_getNullLocation>>(
+                'clang_getNullLocation')
+            .asFunction<_dart_clang_getNullLocation>())();
   }
 
   _dart_clang_getNullLocation? _clang_getNullLocation;
@@ -458,9 +475,10 @@ class LibClang {
     CXSourceLocation loc1,
     CXSourceLocation loc2,
   ) {
-    return (_clang_equalLocations ??= _dylib.lookupFunction<
-        _c_clang_equalLocations,
-        _dart_clang_equalLocations>('clang_equalLocations'))(
+    return (_clang_equalLocations ??=
+        _lookup<ffi.NativeFunction<_c_clang_equalLocations>>(
+                'clang_equalLocations')
+            .asFunction<_dart_clang_equalLocations>())(
       loc1,
       loc2,
     );
@@ -477,8 +495,8 @@ class LibClang {
     int column,
   ) {
     return (_clang_getLocation ??=
-        _dylib.lookupFunction<_c_clang_getLocation, _dart_clang_getLocation>(
-            'clang_getLocation'))(
+        _lookup<ffi.NativeFunction<_c_clang_getLocation>>('clang_getLocation')
+            .asFunction<_dart_clang_getLocation>())(
       tu,
       file,
       line,
@@ -495,9 +513,10 @@ class LibClang {
     ffi.Pointer<ffi.Void> file,
     int offset,
   ) {
-    return (_clang_getLocationForOffset ??= _dylib.lookupFunction<
-        _c_clang_getLocationForOffset,
-        _dart_clang_getLocationForOffset>('clang_getLocationForOffset'))(
+    return (_clang_getLocationForOffset ??=
+        _lookup<ffi.NativeFunction<_c_clang_getLocationForOffset>>(
+                'clang_getLocationForOffset')
+            .asFunction<_dart_clang_getLocationForOffset>())(
       tu,
       file,
       offset,
@@ -510,10 +529,10 @@ class LibClang {
   int clang_Location_isInSystemHeader(
     CXSourceLocation location,
   ) {
-    return (_clang_Location_isInSystemHeader ??= _dylib.lookupFunction<
-            _c_clang_Location_isInSystemHeader,
-            _dart_clang_Location_isInSystemHeader>(
-        'clang_Location_isInSystemHeader'))(
+    return (_clang_Location_isInSystemHeader ??=
+        _lookup<ffi.NativeFunction<_c_clang_Location_isInSystemHeader>>(
+                'clang_Location_isInSystemHeader')
+            .asFunction<_dart_clang_Location_isInSystemHeader>())(
       location,
     );
   }
@@ -525,9 +544,10 @@ class LibClang {
   int clang_Location_isFromMainFile(
     CXSourceLocation location,
   ) {
-    return (_clang_Location_isFromMainFile ??= _dylib.lookupFunction<
-        _c_clang_Location_isFromMainFile,
-        _dart_clang_Location_isFromMainFile>('clang_Location_isFromMainFile'))(
+    return (_clang_Location_isFromMainFile ??=
+        _lookup<ffi.NativeFunction<_c_clang_Location_isFromMainFile>>(
+                'clang_Location_isFromMainFile')
+            .asFunction<_dart_clang_Location_isFromMainFile>())(
       location,
     );
   }
@@ -537,8 +557,8 @@ class LibClang {
   /// Retrieve a NULL (invalid) source range.
   CXSourceRange clang_getNullRange() {
     return (_clang_getNullRange ??=
-        _dylib.lookupFunction<_c_clang_getNullRange, _dart_clang_getNullRange>(
-            'clang_getNullRange'))();
+        _lookup<ffi.NativeFunction<_c_clang_getNullRange>>('clang_getNullRange')
+            .asFunction<_dart_clang_getNullRange>())();
   }
 
   _dart_clang_getNullRange? _clang_getNullRange;
@@ -549,8 +569,8 @@ class LibClang {
     CXSourceLocation end,
   ) {
     return (_clang_getRange ??=
-        _dylib.lookupFunction<_c_clang_getRange, _dart_clang_getRange>(
-            'clang_getRange'))(
+        _lookup<ffi.NativeFunction<_c_clang_getRange>>('clang_getRange')
+            .asFunction<_dart_clang_getRange>())(
       begin,
       end,
     );
@@ -564,8 +584,8 @@ class LibClang {
     CXSourceRange range2,
   ) {
     return (_clang_equalRanges ??=
-        _dylib.lookupFunction<_c_clang_equalRanges, _dart_clang_equalRanges>(
-            'clang_equalRanges'))(
+        _lookup<ffi.NativeFunction<_c_clang_equalRanges>>('clang_equalRanges')
+            .asFunction<_dart_clang_equalRanges>())(
       range1,
       range2,
     );
@@ -578,8 +598,8 @@ class LibClang {
     CXSourceRange range,
   ) {
     return (_clang_Range_isNull ??=
-        _dylib.lookupFunction<_c_clang_Range_isNull, _dart_clang_Range_isNull>(
-            'clang_Range_isNull'))(
+        _lookup<ffi.NativeFunction<_c_clang_Range_isNull>>('clang_Range_isNull')
+            .asFunction<_dart_clang_Range_isNull>())(
       range,
     );
   }
@@ -595,9 +615,10 @@ class LibClang {
     ffi.Pointer<ffi.Uint32> column,
     ffi.Pointer<ffi.Uint32> offset,
   ) {
-    return (_clang_getExpansionLocation ??= _dylib.lookupFunction<
-        _c_clang_getExpansionLocation,
-        _dart_clang_getExpansionLocation>('clang_getExpansionLocation'))(
+    return (_clang_getExpansionLocation ??=
+        _lookup<ffi.NativeFunction<_c_clang_getExpansionLocation>>(
+                'clang_getExpansionLocation')
+            .asFunction<_dart_clang_getExpansionLocation>())(
       location,
       file,
       line,
@@ -616,9 +637,10 @@ class LibClang {
     ffi.Pointer<ffi.Uint32> line,
     ffi.Pointer<ffi.Uint32> column,
   ) {
-    return (_clang_getPresumedLocation ??= _dylib.lookupFunction<
-        _c_clang_getPresumedLocation,
-        _dart_clang_getPresumedLocation>('clang_getPresumedLocation'))(
+    return (_clang_getPresumedLocation ??=
+        _lookup<ffi.NativeFunction<_c_clang_getPresumedLocation>>(
+                'clang_getPresumedLocation')
+            .asFunction<_dart_clang_getPresumedLocation>())(
       location,
       filename,
       line,
@@ -637,10 +659,10 @@ class LibClang {
     ffi.Pointer<ffi.Uint32> column,
     ffi.Pointer<ffi.Uint32> offset,
   ) {
-    return (_clang_getInstantiationLocation ??= _dylib.lookupFunction<
-            _c_clang_getInstantiationLocation,
-            _dart_clang_getInstantiationLocation>(
-        'clang_getInstantiationLocation'))(
+    return (_clang_getInstantiationLocation ??=
+        _lookup<ffi.NativeFunction<_c_clang_getInstantiationLocation>>(
+                'clang_getInstantiationLocation')
+            .asFunction<_dart_clang_getInstantiationLocation>())(
       location,
       file,
       line,
@@ -660,9 +682,10 @@ class LibClang {
     ffi.Pointer<ffi.Uint32> column,
     ffi.Pointer<ffi.Uint32> offset,
   ) {
-    return (_clang_getSpellingLocation ??= _dylib.lookupFunction<
-        _c_clang_getSpellingLocation,
-        _dart_clang_getSpellingLocation>('clang_getSpellingLocation'))(
+    return (_clang_getSpellingLocation ??=
+        _lookup<ffi.NativeFunction<_c_clang_getSpellingLocation>>(
+                'clang_getSpellingLocation')
+            .asFunction<_dart_clang_getSpellingLocation>())(
       location,
       file,
       line,
@@ -682,9 +705,10 @@ class LibClang {
     ffi.Pointer<ffi.Uint32> column,
     ffi.Pointer<ffi.Uint32> offset,
   ) {
-    return (_clang_getFileLocation ??= _dylib.lookupFunction<
-        _c_clang_getFileLocation,
-        _dart_clang_getFileLocation>('clang_getFileLocation'))(
+    return (_clang_getFileLocation ??=
+        _lookup<ffi.NativeFunction<_c_clang_getFileLocation>>(
+                'clang_getFileLocation')
+            .asFunction<_dart_clang_getFileLocation>())(
       location,
       file,
       line,
@@ -700,9 +724,10 @@ class LibClang {
   CXSourceLocation clang_getRangeStart(
     CXSourceRange range,
   ) {
-    return (_clang_getRangeStart ??= _dylib.lookupFunction<
-        _c_clang_getRangeStart,
-        _dart_clang_getRangeStart>('clang_getRangeStart'))(
+    return (_clang_getRangeStart ??=
+        _lookup<ffi.NativeFunction<_c_clang_getRangeStart>>(
+                'clang_getRangeStart')
+            .asFunction<_dart_clang_getRangeStart>())(
       range,
     );
   }
@@ -715,8 +740,8 @@ class LibClang {
     CXSourceRange range,
   ) {
     return (_clang_getRangeEnd ??=
-        _dylib.lookupFunction<_c_clang_getRangeEnd, _dart_clang_getRangeEnd>(
-            'clang_getRangeEnd'))(
+        _lookup<ffi.NativeFunction<_c_clang_getRangeEnd>>('clang_getRangeEnd')
+            .asFunction<_dart_clang_getRangeEnd>())(
       range,
     );
   }
@@ -728,9 +753,10 @@ class LibClang {
     ffi.Pointer<CXTranslationUnitImpl> tu,
     ffi.Pointer<ffi.Void> file,
   ) {
-    return (_clang_getSkippedRanges ??= _dylib.lookupFunction<
-        _c_clang_getSkippedRanges,
-        _dart_clang_getSkippedRanges>('clang_getSkippedRanges'))(
+    return (_clang_getSkippedRanges ??=
+        _lookup<ffi.NativeFunction<_c_clang_getSkippedRanges>>(
+                'clang_getSkippedRanges')
+            .asFunction<_dart_clang_getSkippedRanges>())(
       tu,
       file,
     );
@@ -742,9 +768,10 @@ class LibClang {
   ffi.Pointer<CXSourceRangeList> clang_getAllSkippedRanges(
     ffi.Pointer<CXTranslationUnitImpl> tu,
   ) {
-    return (_clang_getAllSkippedRanges ??= _dylib.lookupFunction<
-        _c_clang_getAllSkippedRanges,
-        _dart_clang_getAllSkippedRanges>('clang_getAllSkippedRanges'))(
+    return (_clang_getAllSkippedRanges ??=
+        _lookup<ffi.NativeFunction<_c_clang_getAllSkippedRanges>>(
+                'clang_getAllSkippedRanges')
+            .asFunction<_dart_clang_getAllSkippedRanges>())(
       tu,
     );
   }
@@ -755,9 +782,10 @@ class LibClang {
   void clang_disposeSourceRangeList(
     ffi.Pointer<CXSourceRangeList> ranges,
   ) {
-    return (_clang_disposeSourceRangeList ??= _dylib.lookupFunction<
-        _c_clang_disposeSourceRangeList,
-        _dart_clang_disposeSourceRangeList>('clang_disposeSourceRangeList'))(
+    return (_clang_disposeSourceRangeList ??=
+        _lookup<ffi.NativeFunction<_c_clang_disposeSourceRangeList>>(
+                'clang_disposeSourceRangeList')
+            .asFunction<_dart_clang_disposeSourceRangeList>())(
       ranges,
     );
   }
@@ -768,9 +796,10 @@ class LibClang {
   int clang_getNumDiagnosticsInSet(
     ffi.Pointer<ffi.Void> Diags,
   ) {
-    return (_clang_getNumDiagnosticsInSet ??= _dylib.lookupFunction<
-        _c_clang_getNumDiagnosticsInSet,
-        _dart_clang_getNumDiagnosticsInSet>('clang_getNumDiagnosticsInSet'))(
+    return (_clang_getNumDiagnosticsInSet ??=
+        _lookup<ffi.NativeFunction<_c_clang_getNumDiagnosticsInSet>>(
+                'clang_getNumDiagnosticsInSet')
+            .asFunction<_dart_clang_getNumDiagnosticsInSet>())(
       Diags,
     );
   }
@@ -782,9 +811,10 @@ class LibClang {
     ffi.Pointer<ffi.Void> Diags,
     int Index,
   ) {
-    return (_clang_getDiagnosticInSet ??= _dylib.lookupFunction<
-        _c_clang_getDiagnosticInSet,
-        _dart_clang_getDiagnosticInSet>('clang_getDiagnosticInSet'))(
+    return (_clang_getDiagnosticInSet ??=
+        _lookup<ffi.NativeFunction<_c_clang_getDiagnosticInSet>>(
+                'clang_getDiagnosticInSet')
+            .asFunction<_dart_clang_getDiagnosticInSet>())(
       Diags,
       Index,
     );
@@ -798,9 +828,10 @@ class LibClang {
     ffi.Pointer<ffi.Int32> error,
     ffi.Pointer<CXString> errorString,
   ) {
-    return (_clang_loadDiagnostics ??= _dylib.lookupFunction<
-        _c_clang_loadDiagnostics,
-        _dart_clang_loadDiagnostics>('clang_loadDiagnostics'))(
+    return (_clang_loadDiagnostics ??=
+        _lookup<ffi.NativeFunction<_c_clang_loadDiagnostics>>(
+                'clang_loadDiagnostics')
+            .asFunction<_dart_clang_loadDiagnostics>())(
       file,
       error,
       errorString,
@@ -813,9 +844,10 @@ class LibClang {
   void clang_disposeDiagnosticSet(
     ffi.Pointer<ffi.Void> Diags,
   ) {
-    return (_clang_disposeDiagnosticSet ??= _dylib.lookupFunction<
-        _c_clang_disposeDiagnosticSet,
-        _dart_clang_disposeDiagnosticSet>('clang_disposeDiagnosticSet'))(
+    return (_clang_disposeDiagnosticSet ??=
+        _lookup<ffi.NativeFunction<_c_clang_disposeDiagnosticSet>>(
+                'clang_disposeDiagnosticSet')
+            .asFunction<_dart_clang_disposeDiagnosticSet>())(
       Diags,
     );
   }
@@ -826,9 +858,10 @@ class LibClang {
   ffi.Pointer<ffi.Void> clang_getChildDiagnostics(
     ffi.Pointer<ffi.Void> D,
   ) {
-    return (_clang_getChildDiagnostics ??= _dylib.lookupFunction<
-        _c_clang_getChildDiagnostics,
-        _dart_clang_getChildDiagnostics>('clang_getChildDiagnostics'))(
+    return (_clang_getChildDiagnostics ??=
+        _lookup<ffi.NativeFunction<_c_clang_getChildDiagnostics>>(
+                'clang_getChildDiagnostics')
+            .asFunction<_dart_clang_getChildDiagnostics>())(
       D,
     );
   }
@@ -840,9 +873,10 @@ class LibClang {
   int clang_getNumDiagnostics(
     ffi.Pointer<CXTranslationUnitImpl> Unit,
   ) {
-    return (_clang_getNumDiagnostics ??= _dylib.lookupFunction<
-        _c_clang_getNumDiagnostics,
-        _dart_clang_getNumDiagnostics>('clang_getNumDiagnostics'))(
+    return (_clang_getNumDiagnostics ??=
+        _lookup<ffi.NativeFunction<_c_clang_getNumDiagnostics>>(
+                'clang_getNumDiagnostics')
+            .asFunction<_dart_clang_getNumDiagnostics>())(
       Unit,
     );
   }
@@ -854,9 +888,10 @@ class LibClang {
     ffi.Pointer<CXTranslationUnitImpl> Unit,
     int Index,
   ) {
-    return (_clang_getDiagnostic ??= _dylib.lookupFunction<
-        _c_clang_getDiagnostic,
-        _dart_clang_getDiagnostic>('clang_getDiagnostic'))(
+    return (_clang_getDiagnostic ??=
+        _lookup<ffi.NativeFunction<_c_clang_getDiagnostic>>(
+                'clang_getDiagnostic')
+            .asFunction<_dart_clang_getDiagnostic>())(
       Unit,
       Index,
     );
@@ -869,9 +904,10 @@ class LibClang {
   ffi.Pointer<ffi.Void> clang_getDiagnosticSetFromTU(
     ffi.Pointer<CXTranslationUnitImpl> Unit,
   ) {
-    return (_clang_getDiagnosticSetFromTU ??= _dylib.lookupFunction<
-        _c_clang_getDiagnosticSetFromTU,
-        _dart_clang_getDiagnosticSetFromTU>('clang_getDiagnosticSetFromTU'))(
+    return (_clang_getDiagnosticSetFromTU ??=
+        _lookup<ffi.NativeFunction<_c_clang_getDiagnosticSetFromTU>>(
+                'clang_getDiagnosticSetFromTU')
+            .asFunction<_dart_clang_getDiagnosticSetFromTU>())(
       Unit,
     );
   }
@@ -882,9 +918,10 @@ class LibClang {
   void clang_disposeDiagnostic(
     ffi.Pointer<ffi.Void> Diagnostic,
   ) {
-    return (_clang_disposeDiagnostic ??= _dylib.lookupFunction<
-        _c_clang_disposeDiagnostic,
-        _dart_clang_disposeDiagnostic>('clang_disposeDiagnostic'))(
+    return (_clang_disposeDiagnostic ??=
+        _lookup<ffi.NativeFunction<_c_clang_disposeDiagnostic>>(
+                'clang_disposeDiagnostic')
+            .asFunction<_dart_clang_disposeDiagnostic>())(
       Diagnostic,
     );
   }
@@ -896,9 +933,10 @@ class LibClang {
     ffi.Pointer<ffi.Void> Diagnostic,
     int Options,
   ) {
-    return (_clang_formatDiagnostic ??= _dylib.lookupFunction<
-        _c_clang_formatDiagnostic,
-        _dart_clang_formatDiagnostic>('clang_formatDiagnostic'))(
+    return (_clang_formatDiagnostic ??=
+        _lookup<ffi.NativeFunction<_c_clang_formatDiagnostic>>(
+                'clang_formatDiagnostic')
+            .asFunction<_dart_clang_formatDiagnostic>())(
       Diagnostic,
       Options,
     );
@@ -909,10 +947,10 @@ class LibClang {
   /// Retrieve the set of display options most similar to the default behavior
   /// of the clang compiler.
   int clang_defaultDiagnosticDisplayOptions() {
-    return (_clang_defaultDiagnosticDisplayOptions ??= _dylib.lookupFunction<
-            _c_clang_defaultDiagnosticDisplayOptions,
-            _dart_clang_defaultDiagnosticDisplayOptions>(
-        'clang_defaultDiagnosticDisplayOptions'))();
+    return (_clang_defaultDiagnosticDisplayOptions ??=
+        _lookup<ffi.NativeFunction<_c_clang_defaultDiagnosticDisplayOptions>>(
+                'clang_defaultDiagnosticDisplayOptions')
+            .asFunction<_dart_clang_defaultDiagnosticDisplayOptions>())();
   }
 
   _dart_clang_defaultDiagnosticDisplayOptions?
@@ -922,9 +960,10 @@ class LibClang {
   int clang_getDiagnosticSeverity(
     ffi.Pointer<ffi.Void> arg0,
   ) {
-    return (_clang_getDiagnosticSeverity ??= _dylib.lookupFunction<
-        _c_clang_getDiagnosticSeverity,
-        _dart_clang_getDiagnosticSeverity>('clang_getDiagnosticSeverity'))(
+    return (_clang_getDiagnosticSeverity ??=
+        _lookup<ffi.NativeFunction<_c_clang_getDiagnosticSeverity>>(
+                'clang_getDiagnosticSeverity')
+            .asFunction<_dart_clang_getDiagnosticSeverity>())(
       arg0,
     );
   }
@@ -935,9 +974,10 @@ class LibClang {
   CXSourceLocation clang_getDiagnosticLocation(
     ffi.Pointer<ffi.Void> arg0,
   ) {
-    return (_clang_getDiagnosticLocation ??= _dylib.lookupFunction<
-        _c_clang_getDiagnosticLocation,
-        _dart_clang_getDiagnosticLocation>('clang_getDiagnosticLocation'))(
+    return (_clang_getDiagnosticLocation ??=
+        _lookup<ffi.NativeFunction<_c_clang_getDiagnosticLocation>>(
+                'clang_getDiagnosticLocation')
+            .asFunction<_dart_clang_getDiagnosticLocation>())(
       arg0,
     );
   }
@@ -948,9 +988,10 @@ class LibClang {
   CXString clang_getDiagnosticSpelling(
     ffi.Pointer<ffi.Void> arg0,
   ) {
-    return (_clang_getDiagnosticSpelling ??= _dylib.lookupFunction<
-        _c_clang_getDiagnosticSpelling,
-        _dart_clang_getDiagnosticSpelling>('clang_getDiagnosticSpelling'))(
+    return (_clang_getDiagnosticSpelling ??=
+        _lookup<ffi.NativeFunction<_c_clang_getDiagnosticSpelling>>(
+                'clang_getDiagnosticSpelling')
+            .asFunction<_dart_clang_getDiagnosticSpelling>())(
       arg0,
     );
   }
@@ -962,9 +1003,10 @@ class LibClang {
     ffi.Pointer<ffi.Void> Diag,
     ffi.Pointer<CXString> Disable,
   ) {
-    return (_clang_getDiagnosticOption ??= _dylib.lookupFunction<
-        _c_clang_getDiagnosticOption,
-        _dart_clang_getDiagnosticOption>('clang_getDiagnosticOption'))(
+    return (_clang_getDiagnosticOption ??=
+        _lookup<ffi.NativeFunction<_c_clang_getDiagnosticOption>>(
+                'clang_getDiagnosticOption')
+            .asFunction<_dart_clang_getDiagnosticOption>())(
       Diag,
       Disable,
     );
@@ -976,9 +1018,10 @@ class LibClang {
   int clang_getDiagnosticCategory(
     ffi.Pointer<ffi.Void> arg0,
   ) {
-    return (_clang_getDiagnosticCategory ??= _dylib.lookupFunction<
-        _c_clang_getDiagnosticCategory,
-        _dart_clang_getDiagnosticCategory>('clang_getDiagnosticCategory'))(
+    return (_clang_getDiagnosticCategory ??=
+        _lookup<ffi.NativeFunction<_c_clang_getDiagnosticCategory>>(
+                'clang_getDiagnosticCategory')
+            .asFunction<_dart_clang_getDiagnosticCategory>())(
       arg0,
     );
   }
@@ -990,10 +1033,10 @@ class LibClang {
   CXString clang_getDiagnosticCategoryName(
     int Category,
   ) {
-    return (_clang_getDiagnosticCategoryName ??= _dylib.lookupFunction<
-            _c_clang_getDiagnosticCategoryName,
-            _dart_clang_getDiagnosticCategoryName>(
-        'clang_getDiagnosticCategoryName'))(
+    return (_clang_getDiagnosticCategoryName ??=
+        _lookup<ffi.NativeFunction<_c_clang_getDiagnosticCategoryName>>(
+                'clang_getDiagnosticCategoryName')
+            .asFunction<_dart_clang_getDiagnosticCategoryName>())(
       Category,
     );
   }
@@ -1004,10 +1047,10 @@ class LibClang {
   CXString clang_getDiagnosticCategoryText(
     ffi.Pointer<ffi.Void> arg0,
   ) {
-    return (_clang_getDiagnosticCategoryText ??= _dylib.lookupFunction<
-            _c_clang_getDiagnosticCategoryText,
-            _dart_clang_getDiagnosticCategoryText>(
-        'clang_getDiagnosticCategoryText'))(
+    return (_clang_getDiagnosticCategoryText ??=
+        _lookup<ffi.NativeFunction<_c_clang_getDiagnosticCategoryText>>(
+                'clang_getDiagnosticCategoryText')
+            .asFunction<_dart_clang_getDiagnosticCategoryText>())(
       arg0,
     );
   }
@@ -1019,9 +1062,10 @@ class LibClang {
   int clang_getDiagnosticNumRanges(
     ffi.Pointer<ffi.Void> arg0,
   ) {
-    return (_clang_getDiagnosticNumRanges ??= _dylib.lookupFunction<
-        _c_clang_getDiagnosticNumRanges,
-        _dart_clang_getDiagnosticNumRanges>('clang_getDiagnosticNumRanges'))(
+    return (_clang_getDiagnosticNumRanges ??=
+        _lookup<ffi.NativeFunction<_c_clang_getDiagnosticNumRanges>>(
+                'clang_getDiagnosticNumRanges')
+            .asFunction<_dart_clang_getDiagnosticNumRanges>())(
       arg0,
     );
   }
@@ -1033,9 +1077,10 @@ class LibClang {
     ffi.Pointer<ffi.Void> Diagnostic,
     int Range,
   ) {
-    return (_clang_getDiagnosticRange ??= _dylib.lookupFunction<
-        _c_clang_getDiagnosticRange,
-        _dart_clang_getDiagnosticRange>('clang_getDiagnosticRange'))(
+    return (_clang_getDiagnosticRange ??=
+        _lookup<ffi.NativeFunction<_c_clang_getDiagnosticRange>>(
+                'clang_getDiagnosticRange')
+            .asFunction<_dart_clang_getDiagnosticRange>())(
       Diagnostic,
       Range,
     );
@@ -1047,9 +1092,10 @@ class LibClang {
   int clang_getDiagnosticNumFixIts(
     ffi.Pointer<ffi.Void> Diagnostic,
   ) {
-    return (_clang_getDiagnosticNumFixIts ??= _dylib.lookupFunction<
-        _c_clang_getDiagnosticNumFixIts,
-        _dart_clang_getDiagnosticNumFixIts>('clang_getDiagnosticNumFixIts'))(
+    return (_clang_getDiagnosticNumFixIts ??=
+        _lookup<ffi.NativeFunction<_c_clang_getDiagnosticNumFixIts>>(
+                'clang_getDiagnosticNumFixIts')
+            .asFunction<_dart_clang_getDiagnosticNumFixIts>())(
       Diagnostic,
     );
   }
@@ -1062,9 +1108,10 @@ class LibClang {
     int FixIt,
     ffi.Pointer<CXSourceRange> ReplacementRange,
   ) {
-    return (_clang_getDiagnosticFixIt ??= _dylib.lookupFunction<
-        _c_clang_getDiagnosticFixIt,
-        _dart_clang_getDiagnosticFixIt>('clang_getDiagnosticFixIt'))(
+    return (_clang_getDiagnosticFixIt ??=
+        _lookup<ffi.NativeFunction<_c_clang_getDiagnosticFixIt>>(
+                'clang_getDiagnosticFixIt')
+            .asFunction<_dart_clang_getDiagnosticFixIt>())(
       Diagnostic,
       FixIt,
       ReplacementRange,
@@ -1077,10 +1124,10 @@ class LibClang {
   CXString clang_getTranslationUnitSpelling(
     ffi.Pointer<CXTranslationUnitImpl> CTUnit,
   ) {
-    return (_clang_getTranslationUnitSpelling ??= _dylib.lookupFunction<
-            _c_clang_getTranslationUnitSpelling,
-            _dart_clang_getTranslationUnitSpelling>(
-        'clang_getTranslationUnitSpelling'))(
+    return (_clang_getTranslationUnitSpelling ??=
+        _lookup<ffi.NativeFunction<_c_clang_getTranslationUnitSpelling>>(
+                'clang_getTranslationUnitSpelling')
+            .asFunction<_dart_clang_getTranslationUnitSpelling>())(
       CTUnit,
     );
   }
@@ -1097,10 +1144,11 @@ class LibClang {
     int num_unsaved_files,
     ffi.Pointer<CXUnsavedFile> unsaved_files,
   ) {
-    return (_clang_createTranslationUnitFromSourceFile ??=
-        _dylib.lookupFunction<_c_clang_createTranslationUnitFromSourceFile,
-                _dart_clang_createTranslationUnitFromSourceFile>(
-            'clang_createTranslationUnitFromSourceFile'))(
+    return (_clang_createTranslationUnitFromSourceFile ??= _lookup<
+                ffi.NativeFunction<
+                    _c_clang_createTranslationUnitFromSourceFile>>(
+            'clang_createTranslationUnitFromSourceFile')
+        .asFunction<_dart_clang_createTranslationUnitFromSourceFile>())(
       CIdx,
       source_filename,
       num_clang_command_line_args,
@@ -1120,9 +1168,10 @@ class LibClang {
     ffi.Pointer<ffi.Void> CIdx,
     ffi.Pointer<ffi.Int8> ast_filename,
   ) {
-    return (_clang_createTranslationUnit ??= _dylib.lookupFunction<
-        _c_clang_createTranslationUnit,
-        _dart_clang_createTranslationUnit>('clang_createTranslationUnit'))(
+    return (_clang_createTranslationUnit ??=
+        _lookup<ffi.NativeFunction<_c_clang_createTranslationUnit>>(
+                'clang_createTranslationUnit')
+            .asFunction<_dart_clang_createTranslationUnit>())(
       CIdx,
       ast_filename,
     );
@@ -1136,9 +1185,10 @@ class LibClang {
     ffi.Pointer<ffi.Int8> ast_filename,
     ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
   ) {
-    return (_clang_createTranslationUnit2 ??= _dylib.lookupFunction<
-        _c_clang_createTranslationUnit2,
-        _dart_clang_createTranslationUnit2>('clang_createTranslationUnit2'))(
+    return (_clang_createTranslationUnit2 ??=
+        _lookup<ffi.NativeFunction<_c_clang_createTranslationUnit2>>(
+                'clang_createTranslationUnit2')
+            .asFunction<_dart_clang_createTranslationUnit2>())(
       CIdx,
       ast_filename,
       out_TU,
@@ -1150,10 +1200,11 @@ class LibClang {
   /// Returns the set of flags that is suitable for parsing a translation unit
   /// that is being edited.
   int clang_defaultEditingTranslationUnitOptions() {
-    return (_clang_defaultEditingTranslationUnitOptions ??=
-        _dylib.lookupFunction<_c_clang_defaultEditingTranslationUnitOptions,
-                _dart_clang_defaultEditingTranslationUnitOptions>(
-            'clang_defaultEditingTranslationUnitOptions'))();
+    return (_clang_defaultEditingTranslationUnitOptions ??= _lookup<
+                ffi.NativeFunction<
+                    _c_clang_defaultEditingTranslationUnitOptions>>(
+            'clang_defaultEditingTranslationUnitOptions')
+        .asFunction<_dart_clang_defaultEditingTranslationUnitOptions>())();
   }
 
   _dart_clang_defaultEditingTranslationUnitOptions?
@@ -1171,9 +1222,10 @@ class LibClang {
     int num_unsaved_files,
     int options,
   ) {
-    return (_clang_parseTranslationUnit ??= _dylib.lookupFunction<
-        _c_clang_parseTranslationUnit,
-        _dart_clang_parseTranslationUnit>('clang_parseTranslationUnit'))(
+    return (_clang_parseTranslationUnit ??=
+        _lookup<ffi.NativeFunction<_c_clang_parseTranslationUnit>>(
+                'clang_parseTranslationUnit')
+            .asFunction<_dart_clang_parseTranslationUnit>())(
       CIdx,
       source_filename,
       command_line_args,
@@ -1198,9 +1250,10 @@ class LibClang {
     int options,
     ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
   ) {
-    return (_clang_parseTranslationUnit2 ??= _dylib.lookupFunction<
-        _c_clang_parseTranslationUnit2,
-        _dart_clang_parseTranslationUnit2>('clang_parseTranslationUnit2'))(
+    return (_clang_parseTranslationUnit2 ??=
+        _lookup<ffi.NativeFunction<_c_clang_parseTranslationUnit2>>(
+                'clang_parseTranslationUnit2')
+            .asFunction<_dart_clang_parseTranslationUnit2>())(
       CIdx,
       source_filename,
       command_line_args,
@@ -1227,10 +1280,10 @@ class LibClang {
     int options,
     ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
   ) {
-    return (_clang_parseTranslationUnit2FullArgv ??= _dylib.lookupFunction<
-            _c_clang_parseTranslationUnit2FullArgv,
-            _dart_clang_parseTranslationUnit2FullArgv>(
-        'clang_parseTranslationUnit2FullArgv'))(
+    return (_clang_parseTranslationUnit2FullArgv ??=
+        _lookup<ffi.NativeFunction<_c_clang_parseTranslationUnit2FullArgv>>(
+                'clang_parseTranslationUnit2FullArgv')
+            .asFunction<_dart_clang_parseTranslationUnit2FullArgv>())(
       CIdx,
       source_filename,
       command_line_args,
@@ -1249,9 +1302,10 @@ class LibClang {
   int clang_defaultSaveOptions(
     ffi.Pointer<CXTranslationUnitImpl> TU,
   ) {
-    return (_clang_defaultSaveOptions ??= _dylib.lookupFunction<
-        _c_clang_defaultSaveOptions,
-        _dart_clang_defaultSaveOptions>('clang_defaultSaveOptions'))(
+    return (_clang_defaultSaveOptions ??=
+        _lookup<ffi.NativeFunction<_c_clang_defaultSaveOptions>>(
+                'clang_defaultSaveOptions')
+            .asFunction<_dart_clang_defaultSaveOptions>())(
       TU,
     );
   }
@@ -1265,9 +1319,10 @@ class LibClang {
     ffi.Pointer<ffi.Int8> FileName,
     int options,
   ) {
-    return (_clang_saveTranslationUnit ??= _dylib.lookupFunction<
-        _c_clang_saveTranslationUnit,
-        _dart_clang_saveTranslationUnit>('clang_saveTranslationUnit'))(
+    return (_clang_saveTranslationUnit ??=
+        _lookup<ffi.NativeFunction<_c_clang_saveTranslationUnit>>(
+                'clang_saveTranslationUnit')
+            .asFunction<_dart_clang_saveTranslationUnit>())(
       TU,
       FileName,
       options,
@@ -1280,9 +1335,10 @@ class LibClang {
   int clang_suspendTranslationUnit(
     ffi.Pointer<CXTranslationUnitImpl> arg0,
   ) {
-    return (_clang_suspendTranslationUnit ??= _dylib.lookupFunction<
-        _c_clang_suspendTranslationUnit,
-        _dart_clang_suspendTranslationUnit>('clang_suspendTranslationUnit'))(
+    return (_clang_suspendTranslationUnit ??=
+        _lookup<ffi.NativeFunction<_c_clang_suspendTranslationUnit>>(
+                'clang_suspendTranslationUnit')
+            .asFunction<_dart_clang_suspendTranslationUnit>())(
       arg0,
     );
   }
@@ -1293,9 +1349,10 @@ class LibClang {
   void clang_disposeTranslationUnit(
     ffi.Pointer<CXTranslationUnitImpl> arg0,
   ) {
-    return (_clang_disposeTranslationUnit ??= _dylib.lookupFunction<
-        _c_clang_disposeTranslationUnit,
-        _dart_clang_disposeTranslationUnit>('clang_disposeTranslationUnit'))(
+    return (_clang_disposeTranslationUnit ??=
+        _lookup<ffi.NativeFunction<_c_clang_disposeTranslationUnit>>(
+                'clang_disposeTranslationUnit')
+            .asFunction<_dart_clang_disposeTranslationUnit>())(
       arg0,
     );
   }
@@ -1307,9 +1364,10 @@ class LibClang {
   int clang_defaultReparseOptions(
     ffi.Pointer<CXTranslationUnitImpl> TU,
   ) {
-    return (_clang_defaultReparseOptions ??= _dylib.lookupFunction<
-        _c_clang_defaultReparseOptions,
-        _dart_clang_defaultReparseOptions>('clang_defaultReparseOptions'))(
+    return (_clang_defaultReparseOptions ??=
+        _lookup<ffi.NativeFunction<_c_clang_defaultReparseOptions>>(
+                'clang_defaultReparseOptions')
+            .asFunction<_dart_clang_defaultReparseOptions>())(
       TU,
     );
   }
@@ -1323,9 +1381,10 @@ class LibClang {
     ffi.Pointer<CXUnsavedFile> unsaved_files,
     int options,
   ) {
-    return (_clang_reparseTranslationUnit ??= _dylib.lookupFunction<
-        _c_clang_reparseTranslationUnit,
-        _dart_clang_reparseTranslationUnit>('clang_reparseTranslationUnit'))(
+    return (_clang_reparseTranslationUnit ??=
+        _lookup<ffi.NativeFunction<_c_clang_reparseTranslationUnit>>(
+                'clang_reparseTranslationUnit')
+            .asFunction<_dart_clang_reparseTranslationUnit>())(
       TU,
       num_unsaved_files,
       unsaved_files,
@@ -1340,9 +1399,10 @@ class LibClang {
   ffi.Pointer<ffi.Int8> clang_getTUResourceUsageName(
     int kind,
   ) {
-    return (_clang_getTUResourceUsageName ??= _dylib.lookupFunction<
-        _c_clang_getTUResourceUsageName,
-        _dart_clang_getTUResourceUsageName>('clang_getTUResourceUsageName'))(
+    return (_clang_getTUResourceUsageName ??=
+        _lookup<ffi.NativeFunction<_c_clang_getTUResourceUsageName>>(
+                'clang_getTUResourceUsageName')
+            .asFunction<_dart_clang_getTUResourceUsageName>())(
       kind,
     );
   }
@@ -1354,9 +1414,10 @@ class LibClang {
   CXTUResourceUsage clang_getCXTUResourceUsage(
     ffi.Pointer<CXTranslationUnitImpl> TU,
   ) {
-    return (_clang_getCXTUResourceUsage ??= _dylib.lookupFunction<
-        _c_clang_getCXTUResourceUsage,
-        _dart_clang_getCXTUResourceUsage>('clang_getCXTUResourceUsage'))(
+    return (_clang_getCXTUResourceUsage ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCXTUResourceUsage>>(
+                'clang_getCXTUResourceUsage')
+            .asFunction<_dart_clang_getCXTUResourceUsage>())(
       TU,
     );
   }
@@ -1366,10 +1427,10 @@ class LibClang {
   void clang_disposeCXTUResourceUsage(
     CXTUResourceUsage usage,
   ) {
-    return (_clang_disposeCXTUResourceUsage ??= _dylib.lookupFunction<
-            _c_clang_disposeCXTUResourceUsage,
-            _dart_clang_disposeCXTUResourceUsage>(
-        'clang_disposeCXTUResourceUsage'))(
+    return (_clang_disposeCXTUResourceUsage ??=
+        _lookup<ffi.NativeFunction<_c_clang_disposeCXTUResourceUsage>>(
+                'clang_disposeCXTUResourceUsage')
+            .asFunction<_dart_clang_disposeCXTUResourceUsage>())(
       usage,
     );
   }
@@ -1380,10 +1441,10 @@ class LibClang {
   ffi.Pointer<CXTargetInfoImpl> clang_getTranslationUnitTargetInfo(
     ffi.Pointer<CXTranslationUnitImpl> CTUnit,
   ) {
-    return (_clang_getTranslationUnitTargetInfo ??= _dylib.lookupFunction<
-            _c_clang_getTranslationUnitTargetInfo,
-            _dart_clang_getTranslationUnitTargetInfo>(
-        'clang_getTranslationUnitTargetInfo'))(
+    return (_clang_getTranslationUnitTargetInfo ??=
+        _lookup<ffi.NativeFunction<_c_clang_getTranslationUnitTargetInfo>>(
+                'clang_getTranslationUnitTargetInfo')
+            .asFunction<_dart_clang_getTranslationUnitTargetInfo>())(
       CTUnit,
     );
   }
@@ -1394,9 +1455,10 @@ class LibClang {
   void clang_TargetInfo_dispose(
     ffi.Pointer<CXTargetInfoImpl> Info,
   ) {
-    return (_clang_TargetInfo_dispose ??= _dylib.lookupFunction<
-        _c_clang_TargetInfo_dispose,
-        _dart_clang_TargetInfo_dispose>('clang_TargetInfo_dispose'))(
+    return (_clang_TargetInfo_dispose ??=
+        _lookup<ffi.NativeFunction<_c_clang_TargetInfo_dispose>>(
+                'clang_TargetInfo_dispose')
+            .asFunction<_dart_clang_TargetInfo_dispose>())(
       Info,
     );
   }
@@ -1407,9 +1469,10 @@ class LibClang {
   CXString clang_TargetInfo_getTriple(
     ffi.Pointer<CXTargetInfoImpl> Info,
   ) {
-    return (_clang_TargetInfo_getTriple ??= _dylib.lookupFunction<
-        _c_clang_TargetInfo_getTriple,
-        _dart_clang_TargetInfo_getTriple>('clang_TargetInfo_getTriple'))(
+    return (_clang_TargetInfo_getTriple ??=
+        _lookup<ffi.NativeFunction<_c_clang_TargetInfo_getTriple>>(
+                'clang_TargetInfo_getTriple')
+            .asFunction<_dart_clang_TargetInfo_getTriple>())(
       Info,
     );
   }
@@ -1420,10 +1483,10 @@ class LibClang {
   int clang_TargetInfo_getPointerWidth(
     ffi.Pointer<CXTargetInfoImpl> Info,
   ) {
-    return (_clang_TargetInfo_getPointerWidth ??= _dylib.lookupFunction<
-            _c_clang_TargetInfo_getPointerWidth,
-            _dart_clang_TargetInfo_getPointerWidth>(
-        'clang_TargetInfo_getPointerWidth'))(
+    return (_clang_TargetInfo_getPointerWidth ??=
+        _lookup<ffi.NativeFunction<_c_clang_TargetInfo_getPointerWidth>>(
+                'clang_TargetInfo_getPointerWidth')
+            .asFunction<_dart_clang_TargetInfo_getPointerWidth>())(
       Info,
     );
   }
@@ -1432,9 +1495,10 @@ class LibClang {
 
   /// Retrieve the NULL cursor, which represents no entity.
   CXCursor clang_getNullCursor() {
-    return (_clang_getNullCursor ??= _dylib.lookupFunction<
-        _c_clang_getNullCursor,
-        _dart_clang_getNullCursor>('clang_getNullCursor'))();
+    return (_clang_getNullCursor ??=
+        _lookup<ffi.NativeFunction<_c_clang_getNullCursor>>(
+                'clang_getNullCursor')
+            .asFunction<_dart_clang_getNullCursor>())();
   }
 
   _dart_clang_getNullCursor? _clang_getNullCursor;
@@ -1443,10 +1507,10 @@ class LibClang {
   CXCursor clang_getTranslationUnitCursor(
     ffi.Pointer<CXTranslationUnitImpl> arg0,
   ) {
-    return (_clang_getTranslationUnitCursor ??= _dylib.lookupFunction<
-            _c_clang_getTranslationUnitCursor,
-            _dart_clang_getTranslationUnitCursor>(
-        'clang_getTranslationUnitCursor'))(
+    return (_clang_getTranslationUnitCursor ??=
+        _lookup<ffi.NativeFunction<_c_clang_getTranslationUnitCursor>>(
+                'clang_getTranslationUnitCursor')
+            .asFunction<_dart_clang_getTranslationUnitCursor>())(
       arg0,
     );
   }
@@ -1459,8 +1523,8 @@ class LibClang {
     CXCursor arg1,
   ) {
     return (_clang_equalCursors ??=
-        _dylib.lookupFunction<_c_clang_equalCursors, _dart_clang_equalCursors>(
-            'clang_equalCursors'))(
+        _lookup<ffi.NativeFunction<_c_clang_equalCursors>>('clang_equalCursors')
+            .asFunction<_dart_clang_equalCursors>())(
       arg0,
       arg1,
     );
@@ -1472,9 +1536,10 @@ class LibClang {
   int clang_Cursor_isNull(
     CXCursor cursor,
   ) {
-    return (_clang_Cursor_isNull ??= _dylib.lookupFunction<
-        _c_clang_Cursor_isNull,
-        _dart_clang_Cursor_isNull>('clang_Cursor_isNull'))(
+    return (_clang_Cursor_isNull ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_isNull>>(
+                'clang_Cursor_isNull')
+            .asFunction<_dart_clang_Cursor_isNull>())(
       cursor,
     );
   }
@@ -1486,8 +1551,8 @@ class LibClang {
     CXCursor arg0,
   ) {
     return (_clang_hashCursor ??=
-        _dylib.lookupFunction<_c_clang_hashCursor, _dart_clang_hashCursor>(
-            'clang_hashCursor'))(
+        _lookup<ffi.NativeFunction<_c_clang_hashCursor>>('clang_hashCursor')
+            .asFunction<_dart_clang_hashCursor>())(
       arg0,
     );
   }
@@ -1498,9 +1563,10 @@ class LibClang {
   int clang_getCursorKind(
     CXCursor arg0,
   ) {
-    return (_clang_getCursorKind ??= _dylib.lookupFunction<
-        _c_clang_getCursorKind,
-        _dart_clang_getCursorKind>('clang_getCursorKind'))(
+    return (_clang_getCursorKind ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCursorKind>>(
+                'clang_getCursorKind')
+            .asFunction<_dart_clang_getCursorKind>())(
       arg0,
     );
   }
@@ -1511,9 +1577,10 @@ class LibClang {
   int clang_isDeclaration(
     int arg0,
   ) {
-    return (_clang_isDeclaration ??= _dylib.lookupFunction<
-        _c_clang_isDeclaration,
-        _dart_clang_isDeclaration>('clang_isDeclaration'))(
+    return (_clang_isDeclaration ??=
+        _lookup<ffi.NativeFunction<_c_clang_isDeclaration>>(
+                'clang_isDeclaration')
+            .asFunction<_dart_clang_isDeclaration>())(
       arg0,
     );
   }
@@ -1524,9 +1591,10 @@ class LibClang {
   int clang_isInvalidDeclaration(
     CXCursor arg0,
   ) {
-    return (_clang_isInvalidDeclaration ??= _dylib.lookupFunction<
-        _c_clang_isInvalidDeclaration,
-        _dart_clang_isInvalidDeclaration>('clang_isInvalidDeclaration'))(
+    return (_clang_isInvalidDeclaration ??=
+        _lookup<ffi.NativeFunction<_c_clang_isInvalidDeclaration>>(
+                'clang_isInvalidDeclaration')
+            .asFunction<_dart_clang_isInvalidDeclaration>())(
       arg0,
     );
   }
@@ -1538,8 +1606,8 @@ class LibClang {
     int arg0,
   ) {
     return (_clang_isReference ??=
-        _dylib.lookupFunction<_c_clang_isReference, _dart_clang_isReference>(
-            'clang_isReference'))(
+        _lookup<ffi.NativeFunction<_c_clang_isReference>>('clang_isReference')
+            .asFunction<_dart_clang_isReference>())(
       arg0,
     );
   }
@@ -1551,8 +1619,8 @@ class LibClang {
     int arg0,
   ) {
     return (_clang_isExpression ??=
-        _dylib.lookupFunction<_c_clang_isExpression, _dart_clang_isExpression>(
-            'clang_isExpression'))(
+        _lookup<ffi.NativeFunction<_c_clang_isExpression>>('clang_isExpression')
+            .asFunction<_dart_clang_isExpression>())(
       arg0,
     );
   }
@@ -1564,8 +1632,8 @@ class LibClang {
     int arg0,
   ) {
     return (_clang_isStatement ??=
-        _dylib.lookupFunction<_c_clang_isStatement, _dart_clang_isStatement>(
-            'clang_isStatement'))(
+        _lookup<ffi.NativeFunction<_c_clang_isStatement>>('clang_isStatement')
+            .asFunction<_dart_clang_isStatement>())(
       arg0,
     );
   }
@@ -1577,8 +1645,8 @@ class LibClang {
     int arg0,
   ) {
     return (_clang_isAttribute ??=
-        _dylib.lookupFunction<_c_clang_isAttribute, _dart_clang_isAttribute>(
-            'clang_isAttribute'))(
+        _lookup<ffi.NativeFunction<_c_clang_isAttribute>>('clang_isAttribute')
+            .asFunction<_dart_clang_isAttribute>())(
       arg0,
     );
   }
@@ -1589,9 +1657,10 @@ class LibClang {
   int clang_Cursor_hasAttrs(
     CXCursor C,
   ) {
-    return (_clang_Cursor_hasAttrs ??= _dylib.lookupFunction<
-        _c_clang_Cursor_hasAttrs,
-        _dart_clang_Cursor_hasAttrs>('clang_Cursor_hasAttrs'))(
+    return (_clang_Cursor_hasAttrs ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_hasAttrs>>(
+                'clang_Cursor_hasAttrs')
+            .asFunction<_dart_clang_Cursor_hasAttrs>())(
       C,
     );
   }
@@ -1603,8 +1672,8 @@ class LibClang {
     int arg0,
   ) {
     return (_clang_isInvalid ??=
-        _dylib.lookupFunction<_c_clang_isInvalid, _dart_clang_isInvalid>(
-            'clang_isInvalid'))(
+        _lookup<ffi.NativeFunction<_c_clang_isInvalid>>('clang_isInvalid')
+            .asFunction<_dart_clang_isInvalid>())(
       arg0,
     );
   }
@@ -1615,9 +1684,10 @@ class LibClang {
   int clang_isTranslationUnit(
     int arg0,
   ) {
-    return (_clang_isTranslationUnit ??= _dylib.lookupFunction<
-        _c_clang_isTranslationUnit,
-        _dart_clang_isTranslationUnit>('clang_isTranslationUnit'))(
+    return (_clang_isTranslationUnit ??=
+        _lookup<ffi.NativeFunction<_c_clang_isTranslationUnit>>(
+                'clang_isTranslationUnit')
+            .asFunction<_dart_clang_isTranslationUnit>())(
       arg0,
     );
   }
@@ -1629,9 +1699,10 @@ class LibClang {
   int clang_isPreprocessing(
     int arg0,
   ) {
-    return (_clang_isPreprocessing ??= _dylib.lookupFunction<
-        _c_clang_isPreprocessing,
-        _dart_clang_isPreprocessing>('clang_isPreprocessing'))(
+    return (_clang_isPreprocessing ??=
+        _lookup<ffi.NativeFunction<_c_clang_isPreprocessing>>(
+                'clang_isPreprocessing')
+            .asFunction<_dart_clang_isPreprocessing>())(
       arg0,
     );
   }
@@ -1644,8 +1715,8 @@ class LibClang {
     int arg0,
   ) {
     return (_clang_isUnexposed ??=
-        _dylib.lookupFunction<_c_clang_isUnexposed, _dart_clang_isUnexposed>(
-            'clang_isUnexposed'))(
+        _lookup<ffi.NativeFunction<_c_clang_isUnexposed>>('clang_isUnexposed')
+            .asFunction<_dart_clang_isUnexposed>())(
       arg0,
     );
   }
@@ -1656,9 +1727,10 @@ class LibClang {
   int clang_getCursorLinkage(
     CXCursor cursor,
   ) {
-    return (_clang_getCursorLinkage ??= _dylib.lookupFunction<
-        _c_clang_getCursorLinkage,
-        _dart_clang_getCursorLinkage>('clang_getCursorLinkage'))(
+    return (_clang_getCursorLinkage ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCursorLinkage>>(
+                'clang_getCursorLinkage')
+            .asFunction<_dart_clang_getCursorLinkage>())(
       cursor,
     );
   }
@@ -1669,9 +1741,10 @@ class LibClang {
   int clang_getCursorVisibility(
     CXCursor cursor,
   ) {
-    return (_clang_getCursorVisibility ??= _dylib.lookupFunction<
-        _c_clang_getCursorVisibility,
-        _dart_clang_getCursorVisibility>('clang_getCursorVisibility'))(
+    return (_clang_getCursorVisibility ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCursorVisibility>>(
+                'clang_getCursorVisibility')
+            .asFunction<_dart_clang_getCursorVisibility>())(
       cursor,
     );
   }
@@ -1683,9 +1756,10 @@ class LibClang {
   int clang_getCursorAvailability(
     CXCursor cursor,
   ) {
-    return (_clang_getCursorAvailability ??= _dylib.lookupFunction<
-        _c_clang_getCursorAvailability,
-        _dart_clang_getCursorAvailability>('clang_getCursorAvailability'))(
+    return (_clang_getCursorAvailability ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCursorAvailability>>(
+                'clang_getCursorAvailability')
+            .asFunction<_dart_clang_getCursorAvailability>())(
       cursor,
     );
   }
@@ -1703,10 +1777,10 @@ class LibClang {
     ffi.Pointer<CXPlatformAvailability> availability,
     int availability_size,
   ) {
-    return (_clang_getCursorPlatformAvailability ??= _dylib.lookupFunction<
-            _c_clang_getCursorPlatformAvailability,
-            _dart_clang_getCursorPlatformAvailability>(
-        'clang_getCursorPlatformAvailability'))(
+    return (_clang_getCursorPlatformAvailability ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCursorPlatformAvailability>>(
+                'clang_getCursorPlatformAvailability')
+            .asFunction<_dart_clang_getCursorPlatformAvailability>())(
       cursor,
       always_deprecated,
       deprecated_message,
@@ -1724,10 +1798,10 @@ class LibClang {
   void clang_disposeCXPlatformAvailability(
     ffi.Pointer<CXPlatformAvailability> availability,
   ) {
-    return (_clang_disposeCXPlatformAvailability ??= _dylib.lookupFunction<
-            _c_clang_disposeCXPlatformAvailability,
-            _dart_clang_disposeCXPlatformAvailability>(
-        'clang_disposeCXPlatformAvailability'))(
+    return (_clang_disposeCXPlatformAvailability ??=
+        _lookup<ffi.NativeFunction<_c_clang_disposeCXPlatformAvailability>>(
+                'clang_disposeCXPlatformAvailability')
+            .asFunction<_dart_clang_disposeCXPlatformAvailability>())(
       availability,
     );
   }
@@ -1739,9 +1813,10 @@ class LibClang {
   int clang_getCursorLanguage(
     CXCursor cursor,
   ) {
-    return (_clang_getCursorLanguage ??= _dylib.lookupFunction<
-        _c_clang_getCursorLanguage,
-        _dart_clang_getCursorLanguage>('clang_getCursorLanguage'))(
+    return (_clang_getCursorLanguage ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCursorLanguage>>(
+                'clang_getCursorLanguage')
+            .asFunction<_dart_clang_getCursorLanguage>())(
       cursor,
     );
   }
@@ -1753,9 +1828,10 @@ class LibClang {
   int clang_getCursorTLSKind(
     CXCursor cursor,
   ) {
-    return (_clang_getCursorTLSKind ??= _dylib.lookupFunction<
-        _c_clang_getCursorTLSKind,
-        _dart_clang_getCursorTLSKind>('clang_getCursorTLSKind'))(
+    return (_clang_getCursorTLSKind ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCursorTLSKind>>(
+                'clang_getCursorTLSKind')
+            .asFunction<_dart_clang_getCursorTLSKind>())(
       cursor,
     );
   }
@@ -1766,10 +1842,10 @@ class LibClang {
   ffi.Pointer<CXTranslationUnitImpl> clang_Cursor_getTranslationUnit(
     CXCursor arg0,
   ) {
-    return (_clang_Cursor_getTranslationUnit ??= _dylib.lookupFunction<
-            _c_clang_Cursor_getTranslationUnit,
-            _dart_clang_Cursor_getTranslationUnit>(
-        'clang_Cursor_getTranslationUnit'))(
+    return (_clang_Cursor_getTranslationUnit ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_getTranslationUnit>>(
+                'clang_Cursor_getTranslationUnit')
+            .asFunction<_dart_clang_Cursor_getTranslationUnit>())(
       arg0,
     );
   }
@@ -1778,9 +1854,10 @@ class LibClang {
 
   /// Creates an empty CXCursorSet.
   ffi.Pointer<CXCursorSetImpl> clang_createCXCursorSet() {
-    return (_clang_createCXCursorSet ??= _dylib.lookupFunction<
-        _c_clang_createCXCursorSet,
-        _dart_clang_createCXCursorSet>('clang_createCXCursorSet'))();
+    return (_clang_createCXCursorSet ??=
+        _lookup<ffi.NativeFunction<_c_clang_createCXCursorSet>>(
+                'clang_createCXCursorSet')
+            .asFunction<_dart_clang_createCXCursorSet>())();
   }
 
   _dart_clang_createCXCursorSet? _clang_createCXCursorSet;
@@ -1789,9 +1866,10 @@ class LibClang {
   void clang_disposeCXCursorSet(
     ffi.Pointer<CXCursorSetImpl> cset,
   ) {
-    return (_clang_disposeCXCursorSet ??= _dylib.lookupFunction<
-        _c_clang_disposeCXCursorSet,
-        _dart_clang_disposeCXCursorSet>('clang_disposeCXCursorSet'))(
+    return (_clang_disposeCXCursorSet ??=
+        _lookup<ffi.NativeFunction<_c_clang_disposeCXCursorSet>>(
+                'clang_disposeCXCursorSet')
+            .asFunction<_dart_clang_disposeCXCursorSet>())(
       cset,
     );
   }
@@ -1803,9 +1881,10 @@ class LibClang {
     ffi.Pointer<CXCursorSetImpl> cset,
     CXCursor cursor,
   ) {
-    return (_clang_CXCursorSet_contains ??= _dylib.lookupFunction<
-        _c_clang_CXCursorSet_contains,
-        _dart_clang_CXCursorSet_contains>('clang_CXCursorSet_contains'))(
+    return (_clang_CXCursorSet_contains ??=
+        _lookup<ffi.NativeFunction<_c_clang_CXCursorSet_contains>>(
+                'clang_CXCursorSet_contains')
+            .asFunction<_dart_clang_CXCursorSet_contains>())(
       cset,
       cursor,
     );
@@ -1818,9 +1897,10 @@ class LibClang {
     ffi.Pointer<CXCursorSetImpl> cset,
     CXCursor cursor,
   ) {
-    return (_clang_CXCursorSet_insert ??= _dylib.lookupFunction<
-        _c_clang_CXCursorSet_insert,
-        _dart_clang_CXCursorSet_insert>('clang_CXCursorSet_insert'))(
+    return (_clang_CXCursorSet_insert ??=
+        _lookup<ffi.NativeFunction<_c_clang_CXCursorSet_insert>>(
+                'clang_CXCursorSet_insert')
+            .asFunction<_dart_clang_CXCursorSet_insert>())(
       cset,
       cursor,
     );
@@ -1832,9 +1912,10 @@ class LibClang {
   CXCursor clang_getCursorSemanticParent(
     CXCursor cursor,
   ) {
-    return (_clang_getCursorSemanticParent ??= _dylib.lookupFunction<
-        _c_clang_getCursorSemanticParent,
-        _dart_clang_getCursorSemanticParent>('clang_getCursorSemanticParent'))(
+    return (_clang_getCursorSemanticParent ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCursorSemanticParent>>(
+                'clang_getCursorSemanticParent')
+            .asFunction<_dart_clang_getCursorSemanticParent>())(
       cursor,
     );
   }
@@ -1845,9 +1926,10 @@ class LibClang {
   CXCursor clang_getCursorLexicalParent(
     CXCursor cursor,
   ) {
-    return (_clang_getCursorLexicalParent ??= _dylib.lookupFunction<
-        _c_clang_getCursorLexicalParent,
-        _dart_clang_getCursorLexicalParent>('clang_getCursorLexicalParent'))(
+    return (_clang_getCursorLexicalParent ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCursorLexicalParent>>(
+                'clang_getCursorLexicalParent')
+            .asFunction<_dart_clang_getCursorLexicalParent>())(
       cursor,
     );
   }
@@ -1860,9 +1942,10 @@ class LibClang {
     ffi.Pointer<ffi.Pointer<CXCursor>> overridden,
     ffi.Pointer<ffi.Uint32> num_overridden,
   ) {
-    return (_clang_getOverriddenCursors ??= _dylib.lookupFunction<
-        _c_clang_getOverriddenCursors,
-        _dart_clang_getOverriddenCursors>('clang_getOverriddenCursors'))(
+    return (_clang_getOverriddenCursors ??=
+        _lookup<ffi.NativeFunction<_c_clang_getOverriddenCursors>>(
+                'clang_getOverriddenCursors')
+            .asFunction<_dart_clang_getOverriddenCursors>())(
       cursor,
       overridden,
       num_overridden,
@@ -1876,10 +1959,10 @@ class LibClang {
   void clang_disposeOverriddenCursors(
     ffi.Pointer<CXCursor> overridden,
   ) {
-    return (_clang_disposeOverriddenCursors ??= _dylib.lookupFunction<
-            _c_clang_disposeOverriddenCursors,
-            _dart_clang_disposeOverriddenCursors>(
-        'clang_disposeOverriddenCursors'))(
+    return (_clang_disposeOverriddenCursors ??=
+        _lookup<ffi.NativeFunction<_c_clang_disposeOverriddenCursors>>(
+                'clang_disposeOverriddenCursors')
+            .asFunction<_dart_clang_disposeOverriddenCursors>())(
       overridden,
     );
   }
@@ -1891,9 +1974,10 @@ class LibClang {
   ffi.Pointer<ffi.Void> clang_getIncludedFile(
     CXCursor cursor,
   ) {
-    return (_clang_getIncludedFile ??= _dylib.lookupFunction<
-        _c_clang_getIncludedFile,
-        _dart_clang_getIncludedFile>('clang_getIncludedFile'))(
+    return (_clang_getIncludedFile ??=
+        _lookup<ffi.NativeFunction<_c_clang_getIncludedFile>>(
+                'clang_getIncludedFile')
+            .asFunction<_dart_clang_getIncludedFile>())(
       cursor,
     );
   }
@@ -1907,8 +1991,8 @@ class LibClang {
     CXSourceLocation arg1,
   ) {
     return (_clang_getCursor ??=
-        _dylib.lookupFunction<_c_clang_getCursor, _dart_clang_getCursor>(
-            'clang_getCursor'))(
+        _lookup<ffi.NativeFunction<_c_clang_getCursor>>('clang_getCursor')
+            .asFunction<_dart_clang_getCursor>())(
       arg0,
       arg1,
     );
@@ -1921,9 +2005,10 @@ class LibClang {
   CXSourceLocation clang_getCursorLocation(
     CXCursor arg0,
   ) {
-    return (_clang_getCursorLocation ??= _dylib.lookupFunction<
-        _c_clang_getCursorLocation,
-        _dart_clang_getCursorLocation>('clang_getCursorLocation'))(
+    return (_clang_getCursorLocation ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCursorLocation>>(
+                'clang_getCursorLocation')
+            .asFunction<_dart_clang_getCursorLocation>())(
       arg0,
     );
   }
@@ -1935,9 +2020,10 @@ class LibClang {
   CXSourceRange clang_getCursorExtent(
     CXCursor arg0,
   ) {
-    return (_clang_getCursorExtent ??= _dylib.lookupFunction<
-        _c_clang_getCursorExtent,
-        _dart_clang_getCursorExtent>('clang_getCursorExtent'))(
+    return (_clang_getCursorExtent ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCursorExtent>>(
+                'clang_getCursorExtent')
+            .asFunction<_dart_clang_getCursorExtent>())(
       arg0,
     );
   }
@@ -1948,9 +2034,10 @@ class LibClang {
   CXType clang_getCursorType(
     CXCursor C,
   ) {
-    return (_clang_getCursorType ??= _dylib.lookupFunction<
-        _c_clang_getCursorType,
-        _dart_clang_getCursorType>('clang_getCursorType'))(
+    return (_clang_getCursorType ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCursorType>>(
+                'clang_getCursorType')
+            .asFunction<_dart_clang_getCursorType>())(
       C,
     );
   }
@@ -1962,9 +2049,10 @@ class LibClang {
   CXString clang_getTypeSpelling(
     CXType CT,
   ) {
-    return (_clang_getTypeSpelling ??= _dylib.lookupFunction<
-        _c_clang_getTypeSpelling,
-        _dart_clang_getTypeSpelling>('clang_getTypeSpelling'))(
+    return (_clang_getTypeSpelling ??=
+        _lookup<ffi.NativeFunction<_c_clang_getTypeSpelling>>(
+                'clang_getTypeSpelling')
+            .asFunction<_dart_clang_getTypeSpelling>())(
       CT,
     );
   }
@@ -1975,10 +2063,10 @@ class LibClang {
   CXType clang_getTypedefDeclUnderlyingType(
     CXCursor C,
   ) {
-    return (_clang_getTypedefDeclUnderlyingType ??= _dylib.lookupFunction<
-            _c_clang_getTypedefDeclUnderlyingType,
-            _dart_clang_getTypedefDeclUnderlyingType>(
-        'clang_getTypedefDeclUnderlyingType'))(
+    return (_clang_getTypedefDeclUnderlyingType ??=
+        _lookup<ffi.NativeFunction<_c_clang_getTypedefDeclUnderlyingType>>(
+                'clang_getTypedefDeclUnderlyingType')
+            .asFunction<_dart_clang_getTypedefDeclUnderlyingType>())(
       C,
     );
   }
@@ -1989,9 +2077,10 @@ class LibClang {
   CXType clang_getEnumDeclIntegerType(
     CXCursor C,
   ) {
-    return (_clang_getEnumDeclIntegerType ??= _dylib.lookupFunction<
-        _c_clang_getEnumDeclIntegerType,
-        _dart_clang_getEnumDeclIntegerType>('clang_getEnumDeclIntegerType'))(
+    return (_clang_getEnumDeclIntegerType ??=
+        _lookup<ffi.NativeFunction<_c_clang_getEnumDeclIntegerType>>(
+                'clang_getEnumDeclIntegerType')
+            .asFunction<_dart_clang_getEnumDeclIntegerType>())(
       C,
     );
   }
@@ -2003,10 +2092,10 @@ class LibClang {
   int clang_getEnumConstantDeclValue(
     CXCursor C,
   ) {
-    return (_clang_getEnumConstantDeclValue ??= _dylib.lookupFunction<
-            _c_clang_getEnumConstantDeclValue,
-            _dart_clang_getEnumConstantDeclValue>(
-        'clang_getEnumConstantDeclValue'))(
+    return (_clang_getEnumConstantDeclValue ??=
+        _lookup<ffi.NativeFunction<_c_clang_getEnumConstantDeclValue>>(
+                'clang_getEnumConstantDeclValue')
+            .asFunction<_dart_clang_getEnumConstantDeclValue>())(
       C,
     );
   }
@@ -2018,10 +2107,10 @@ class LibClang {
   int clang_getEnumConstantDeclUnsignedValue(
     CXCursor C,
   ) {
-    return (_clang_getEnumConstantDeclUnsignedValue ??= _dylib.lookupFunction<
-            _c_clang_getEnumConstantDeclUnsignedValue,
-            _dart_clang_getEnumConstantDeclUnsignedValue>(
-        'clang_getEnumConstantDeclUnsignedValue'))(
+    return (_clang_getEnumConstantDeclUnsignedValue ??=
+        _lookup<ffi.NativeFunction<_c_clang_getEnumConstantDeclUnsignedValue>>(
+                'clang_getEnumConstantDeclUnsignedValue')
+            .asFunction<_dart_clang_getEnumConstantDeclUnsignedValue>())(
       C,
     );
   }
@@ -2033,9 +2122,10 @@ class LibClang {
   int clang_getFieldDeclBitWidth(
     CXCursor C,
   ) {
-    return (_clang_getFieldDeclBitWidth ??= _dylib.lookupFunction<
-        _c_clang_getFieldDeclBitWidth,
-        _dart_clang_getFieldDeclBitWidth>('clang_getFieldDeclBitWidth'))(
+    return (_clang_getFieldDeclBitWidth ??=
+        _lookup<ffi.NativeFunction<_c_clang_getFieldDeclBitWidth>>(
+                'clang_getFieldDeclBitWidth')
+            .asFunction<_dart_clang_getFieldDeclBitWidth>())(
       C,
     );
   }
@@ -2047,9 +2137,10 @@ class LibClang {
   int clang_Cursor_getNumArguments(
     CXCursor C,
   ) {
-    return (_clang_Cursor_getNumArguments ??= _dylib.lookupFunction<
-        _c_clang_Cursor_getNumArguments,
-        _dart_clang_Cursor_getNumArguments>('clang_Cursor_getNumArguments'))(
+    return (_clang_Cursor_getNumArguments ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_getNumArguments>>(
+                'clang_Cursor_getNumArguments')
+            .asFunction<_dart_clang_Cursor_getNumArguments>())(
       C,
     );
   }
@@ -2061,9 +2152,10 @@ class LibClang {
     CXCursor C,
     int i,
   ) {
-    return (_clang_Cursor_getArgument ??= _dylib.lookupFunction<
-        _c_clang_Cursor_getArgument,
-        _dart_clang_Cursor_getArgument>('clang_Cursor_getArgument'))(
+    return (_clang_Cursor_getArgument ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_getArgument>>(
+                'clang_Cursor_getArgument')
+            .asFunction<_dart_clang_Cursor_getArgument>())(
       C,
       i,
     );
@@ -2076,10 +2168,10 @@ class LibClang {
   int clang_Cursor_getNumTemplateArguments(
     CXCursor C,
   ) {
-    return (_clang_Cursor_getNumTemplateArguments ??= _dylib.lookupFunction<
-            _c_clang_Cursor_getNumTemplateArguments,
-            _dart_clang_Cursor_getNumTemplateArguments>(
-        'clang_Cursor_getNumTemplateArguments'))(
+    return (_clang_Cursor_getNumTemplateArguments ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_getNumTemplateArguments>>(
+                'clang_Cursor_getNumTemplateArguments')
+            .asFunction<_dart_clang_Cursor_getNumTemplateArguments>())(
       C,
     );
   }
@@ -2092,10 +2184,10 @@ class LibClang {
     CXCursor C,
     int I,
   ) {
-    return (_clang_Cursor_getTemplateArgumentKind ??= _dylib.lookupFunction<
-            _c_clang_Cursor_getTemplateArgumentKind,
-            _dart_clang_Cursor_getTemplateArgumentKind>(
-        'clang_Cursor_getTemplateArgumentKind'))(
+    return (_clang_Cursor_getTemplateArgumentKind ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_getTemplateArgumentKind>>(
+                'clang_Cursor_getTemplateArgumentKind')
+            .asFunction<_dart_clang_Cursor_getTemplateArgumentKind>())(
       C,
       I,
     );
@@ -2110,10 +2202,10 @@ class LibClang {
     CXCursor C,
     int I,
   ) {
-    return (_clang_Cursor_getTemplateArgumentType ??= _dylib.lookupFunction<
-            _c_clang_Cursor_getTemplateArgumentType,
-            _dart_clang_Cursor_getTemplateArgumentType>(
-        'clang_Cursor_getTemplateArgumentType'))(
+    return (_clang_Cursor_getTemplateArgumentType ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_getTemplateArgumentType>>(
+                'clang_Cursor_getTemplateArgumentType')
+            .asFunction<_dart_clang_Cursor_getTemplateArgumentType>())(
       C,
       I,
     );
@@ -2128,10 +2220,10 @@ class LibClang {
     CXCursor C,
     int I,
   ) {
-    return (_clang_Cursor_getTemplateArgumentValue ??= _dylib.lookupFunction<
-            _c_clang_Cursor_getTemplateArgumentValue,
-            _dart_clang_Cursor_getTemplateArgumentValue>(
-        'clang_Cursor_getTemplateArgumentValue'))(
+    return (_clang_Cursor_getTemplateArgumentValue ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_getTemplateArgumentValue>>(
+                'clang_Cursor_getTemplateArgumentValue')
+            .asFunction<_dart_clang_Cursor_getTemplateArgumentValue>())(
       C,
       I,
     );
@@ -2146,10 +2238,11 @@ class LibClang {
     CXCursor C,
     int I,
   ) {
-    return (_clang_Cursor_getTemplateArgumentUnsignedValue ??=
-        _dylib.lookupFunction<_c_clang_Cursor_getTemplateArgumentUnsignedValue,
-                _dart_clang_Cursor_getTemplateArgumentUnsignedValue>(
-            'clang_Cursor_getTemplateArgumentUnsignedValue'))(
+    return (_clang_Cursor_getTemplateArgumentUnsignedValue ??= _lookup<
+                ffi.NativeFunction<
+                    _c_clang_Cursor_getTemplateArgumentUnsignedValue>>(
+            'clang_Cursor_getTemplateArgumentUnsignedValue')
+        .asFunction<_dart_clang_Cursor_getTemplateArgumentUnsignedValue>())(
       C,
       I,
     );
@@ -2164,8 +2257,8 @@ class LibClang {
     CXType B,
   ) {
     return (_clang_equalTypes ??=
-        _dylib.lookupFunction<_c_clang_equalTypes, _dart_clang_equalTypes>(
-            'clang_equalTypes'))(
+        _lookup<ffi.NativeFunction<_c_clang_equalTypes>>('clang_equalTypes')
+            .asFunction<_dart_clang_equalTypes>())(
       A,
       B,
     );
@@ -2177,9 +2270,10 @@ class LibClang {
   CXType clang_getCanonicalType(
     CXType T,
   ) {
-    return (_clang_getCanonicalType ??= _dylib.lookupFunction<
-        _c_clang_getCanonicalType,
-        _dart_clang_getCanonicalType>('clang_getCanonicalType'))(
+    return (_clang_getCanonicalType ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCanonicalType>>(
+                'clang_getCanonicalType')
+            .asFunction<_dart_clang_getCanonicalType>())(
       T,
     );
   }
@@ -2191,9 +2285,10 @@ class LibClang {
   int clang_isConstQualifiedType(
     CXType T,
   ) {
-    return (_clang_isConstQualifiedType ??= _dylib.lookupFunction<
-        _c_clang_isConstQualifiedType,
-        _dart_clang_isConstQualifiedType>('clang_isConstQualifiedType'))(
+    return (_clang_isConstQualifiedType ??=
+        _lookup<ffi.NativeFunction<_c_clang_isConstQualifiedType>>(
+                'clang_isConstQualifiedType')
+            .asFunction<_dart_clang_isConstQualifiedType>())(
       T,
     );
   }
@@ -2204,10 +2299,10 @@ class LibClang {
   int clang_Cursor_isMacroFunctionLike(
     CXCursor C,
   ) {
-    return (_clang_Cursor_isMacroFunctionLike ??= _dylib.lookupFunction<
-            _c_clang_Cursor_isMacroFunctionLike,
-            _dart_clang_Cursor_isMacroFunctionLike>(
-        'clang_Cursor_isMacroFunctionLike'))(
+    return (_clang_Cursor_isMacroFunctionLike ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_isMacroFunctionLike>>(
+                'clang_Cursor_isMacroFunctionLike')
+            .asFunction<_dart_clang_Cursor_isMacroFunctionLike>())(
       C,
     );
   }
@@ -2218,9 +2313,10 @@ class LibClang {
   int clang_Cursor_isMacroBuiltin(
     CXCursor C,
   ) {
-    return (_clang_Cursor_isMacroBuiltin ??= _dylib.lookupFunction<
-        _c_clang_Cursor_isMacroBuiltin,
-        _dart_clang_Cursor_isMacroBuiltin>('clang_Cursor_isMacroBuiltin'))(
+    return (_clang_Cursor_isMacroBuiltin ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_isMacroBuiltin>>(
+                'clang_Cursor_isMacroBuiltin')
+            .asFunction<_dart_clang_Cursor_isMacroBuiltin>())(
       C,
     );
   }
@@ -2232,10 +2328,10 @@ class LibClang {
   int clang_Cursor_isFunctionInlined(
     CXCursor C,
   ) {
-    return (_clang_Cursor_isFunctionInlined ??= _dylib.lookupFunction<
-            _c_clang_Cursor_isFunctionInlined,
-            _dart_clang_Cursor_isFunctionInlined>(
-        'clang_Cursor_isFunctionInlined'))(
+    return (_clang_Cursor_isFunctionInlined ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_isFunctionInlined>>(
+                'clang_Cursor_isFunctionInlined')
+            .asFunction<_dart_clang_Cursor_isFunctionInlined>())(
       C,
     );
   }
@@ -2248,9 +2344,10 @@ class LibClang {
   int clang_isVolatileQualifiedType(
     CXType T,
   ) {
-    return (_clang_isVolatileQualifiedType ??= _dylib.lookupFunction<
-        _c_clang_isVolatileQualifiedType,
-        _dart_clang_isVolatileQualifiedType>('clang_isVolatileQualifiedType'))(
+    return (_clang_isVolatileQualifiedType ??=
+        _lookup<ffi.NativeFunction<_c_clang_isVolatileQualifiedType>>(
+                'clang_isVolatileQualifiedType')
+            .asFunction<_dart_clang_isVolatileQualifiedType>())(
       T,
     );
   }
@@ -2263,9 +2360,10 @@ class LibClang {
   int clang_isRestrictQualifiedType(
     CXType T,
   ) {
-    return (_clang_isRestrictQualifiedType ??= _dylib.lookupFunction<
-        _c_clang_isRestrictQualifiedType,
-        _dart_clang_isRestrictQualifiedType>('clang_isRestrictQualifiedType'))(
+    return (_clang_isRestrictQualifiedType ??=
+        _lookup<ffi.NativeFunction<_c_clang_isRestrictQualifiedType>>(
+                'clang_isRestrictQualifiedType')
+            .asFunction<_dart_clang_isRestrictQualifiedType>())(
       T,
     );
   }
@@ -2276,9 +2374,10 @@ class LibClang {
   int clang_getAddressSpace(
     CXType T,
   ) {
-    return (_clang_getAddressSpace ??= _dylib.lookupFunction<
-        _c_clang_getAddressSpace,
-        _dart_clang_getAddressSpace>('clang_getAddressSpace'))(
+    return (_clang_getAddressSpace ??=
+        _lookup<ffi.NativeFunction<_c_clang_getAddressSpace>>(
+                'clang_getAddressSpace')
+            .asFunction<_dart_clang_getAddressSpace>())(
       T,
     );
   }
@@ -2289,9 +2388,10 @@ class LibClang {
   CXString clang_getTypedefName(
     CXType CT,
   ) {
-    return (_clang_getTypedefName ??= _dylib.lookupFunction<
-        _c_clang_getTypedefName,
-        _dart_clang_getTypedefName>('clang_getTypedefName'))(
+    return (_clang_getTypedefName ??=
+        _lookup<ffi.NativeFunction<_c_clang_getTypedefName>>(
+                'clang_getTypedefName')
+            .asFunction<_dart_clang_getTypedefName>())(
       CT,
     );
   }
@@ -2302,9 +2402,10 @@ class LibClang {
   CXType clang_getPointeeType(
     CXType T,
   ) {
-    return (_clang_getPointeeType ??= _dylib.lookupFunction<
-        _c_clang_getPointeeType,
-        _dart_clang_getPointeeType>('clang_getPointeeType'))(
+    return (_clang_getPointeeType ??=
+        _lookup<ffi.NativeFunction<_c_clang_getPointeeType>>(
+                'clang_getPointeeType')
+            .asFunction<_dart_clang_getPointeeType>())(
       T,
     );
   }
@@ -2315,9 +2416,10 @@ class LibClang {
   CXCursor clang_getTypeDeclaration(
     CXType T,
   ) {
-    return (_clang_getTypeDeclaration ??= _dylib.lookupFunction<
-        _c_clang_getTypeDeclaration,
-        _dart_clang_getTypeDeclaration>('clang_getTypeDeclaration'))(
+    return (_clang_getTypeDeclaration ??=
+        _lookup<ffi.NativeFunction<_c_clang_getTypeDeclaration>>(
+                'clang_getTypeDeclaration')
+            .asFunction<_dart_clang_getTypeDeclaration>())(
       T,
     );
   }
@@ -2328,9 +2430,10 @@ class LibClang {
   CXString clang_getDeclObjCTypeEncoding(
     CXCursor C,
   ) {
-    return (_clang_getDeclObjCTypeEncoding ??= _dylib.lookupFunction<
-        _c_clang_getDeclObjCTypeEncoding,
-        _dart_clang_getDeclObjCTypeEncoding>('clang_getDeclObjCTypeEncoding'))(
+    return (_clang_getDeclObjCTypeEncoding ??=
+        _lookup<ffi.NativeFunction<_c_clang_getDeclObjCTypeEncoding>>(
+                'clang_getDeclObjCTypeEncoding')
+            .asFunction<_dart_clang_getDeclObjCTypeEncoding>())(
       C,
     );
   }
@@ -2341,9 +2444,10 @@ class LibClang {
   CXString clang_Type_getObjCEncoding(
     CXType type,
   ) {
-    return (_clang_Type_getObjCEncoding ??= _dylib.lookupFunction<
-        _c_clang_Type_getObjCEncoding,
-        _dart_clang_Type_getObjCEncoding>('clang_Type_getObjCEncoding'))(
+    return (_clang_Type_getObjCEncoding ??=
+        _lookup<ffi.NativeFunction<_c_clang_Type_getObjCEncoding>>(
+                'clang_Type_getObjCEncoding')
+            .asFunction<_dart_clang_Type_getObjCEncoding>())(
       type,
     );
   }
@@ -2354,9 +2458,10 @@ class LibClang {
   CXString clang_getTypeKindSpelling(
     int K,
   ) {
-    return (_clang_getTypeKindSpelling ??= _dylib.lookupFunction<
-        _c_clang_getTypeKindSpelling,
-        _dart_clang_getTypeKindSpelling>('clang_getTypeKindSpelling'))(
+    return (_clang_getTypeKindSpelling ??=
+        _lookup<ffi.NativeFunction<_c_clang_getTypeKindSpelling>>(
+                'clang_getTypeKindSpelling')
+            .asFunction<_dart_clang_getTypeKindSpelling>())(
       K,
     );
   }
@@ -2367,10 +2472,10 @@ class LibClang {
   int clang_getFunctionTypeCallingConv(
     CXType T,
   ) {
-    return (_clang_getFunctionTypeCallingConv ??= _dylib.lookupFunction<
-            _c_clang_getFunctionTypeCallingConv,
-            _dart_clang_getFunctionTypeCallingConv>(
-        'clang_getFunctionTypeCallingConv'))(
+    return (_clang_getFunctionTypeCallingConv ??=
+        _lookup<ffi.NativeFunction<_c_clang_getFunctionTypeCallingConv>>(
+                'clang_getFunctionTypeCallingConv')
+            .asFunction<_dart_clang_getFunctionTypeCallingConv>())(
       T,
     );
   }
@@ -2381,9 +2486,10 @@ class LibClang {
   CXType clang_getResultType(
     CXType T,
   ) {
-    return (_clang_getResultType ??= _dylib.lookupFunction<
-        _c_clang_getResultType,
-        _dart_clang_getResultType>('clang_getResultType'))(
+    return (_clang_getResultType ??=
+        _lookup<ffi.NativeFunction<_c_clang_getResultType>>(
+                'clang_getResultType')
+            .asFunction<_dart_clang_getResultType>())(
       T,
     );
   }
@@ -2395,10 +2501,10 @@ class LibClang {
   int clang_getExceptionSpecificationType(
     CXType T,
   ) {
-    return (_clang_getExceptionSpecificationType ??= _dylib.lookupFunction<
-            _c_clang_getExceptionSpecificationType,
-            _dart_clang_getExceptionSpecificationType>(
-        'clang_getExceptionSpecificationType'))(
+    return (_clang_getExceptionSpecificationType ??=
+        _lookup<ffi.NativeFunction<_c_clang_getExceptionSpecificationType>>(
+                'clang_getExceptionSpecificationType')
+            .asFunction<_dart_clang_getExceptionSpecificationType>())(
       T,
     );
   }
@@ -2411,9 +2517,10 @@ class LibClang {
   int clang_getNumArgTypes(
     CXType T,
   ) {
-    return (_clang_getNumArgTypes ??= _dylib.lookupFunction<
-        _c_clang_getNumArgTypes,
-        _dart_clang_getNumArgTypes>('clang_getNumArgTypes'))(
+    return (_clang_getNumArgTypes ??=
+        _lookup<ffi.NativeFunction<_c_clang_getNumArgTypes>>(
+                'clang_getNumArgTypes')
+            .asFunction<_dart_clang_getNumArgTypes>())(
       T,
     );
   }
@@ -2426,8 +2533,8 @@ class LibClang {
     int i,
   ) {
     return (_clang_getArgType ??=
-        _dylib.lookupFunction<_c_clang_getArgType, _dart_clang_getArgType>(
-            'clang_getArgType'))(
+        _lookup<ffi.NativeFunction<_c_clang_getArgType>>('clang_getArgType')
+            .asFunction<_dart_clang_getArgType>())(
       T,
       i,
     );
@@ -2439,10 +2546,10 @@ class LibClang {
   CXType clang_Type_getObjCObjectBaseType(
     CXType T,
   ) {
-    return (_clang_Type_getObjCObjectBaseType ??= _dylib.lookupFunction<
-            _c_clang_Type_getObjCObjectBaseType,
-            _dart_clang_Type_getObjCObjectBaseType>(
-        'clang_Type_getObjCObjectBaseType'))(
+    return (_clang_Type_getObjCObjectBaseType ??=
+        _lookup<ffi.NativeFunction<_c_clang_Type_getObjCObjectBaseType>>(
+                'clang_Type_getObjCObjectBaseType')
+            .asFunction<_dart_clang_Type_getObjCObjectBaseType>())(
       T,
     );
   }
@@ -2454,10 +2561,10 @@ class LibClang {
   int clang_Type_getNumObjCProtocolRefs(
     CXType T,
   ) {
-    return (_clang_Type_getNumObjCProtocolRefs ??= _dylib.lookupFunction<
-            _c_clang_Type_getNumObjCProtocolRefs,
-            _dart_clang_Type_getNumObjCProtocolRefs>(
-        'clang_Type_getNumObjCProtocolRefs'))(
+    return (_clang_Type_getNumObjCProtocolRefs ??=
+        _lookup<ffi.NativeFunction<_c_clang_Type_getNumObjCProtocolRefs>>(
+                'clang_Type_getNumObjCProtocolRefs')
+            .asFunction<_dart_clang_Type_getNumObjCProtocolRefs>())(
       T,
     );
   }
@@ -2469,10 +2576,10 @@ class LibClang {
     CXType T,
     int i,
   ) {
-    return (_clang_Type_getObjCProtocolDecl ??= _dylib.lookupFunction<
-            _c_clang_Type_getObjCProtocolDecl,
-            _dart_clang_Type_getObjCProtocolDecl>(
-        'clang_Type_getObjCProtocolDecl'))(
+    return (_clang_Type_getObjCProtocolDecl ??=
+        _lookup<ffi.NativeFunction<_c_clang_Type_getObjCProtocolDecl>>(
+                'clang_Type_getObjCProtocolDecl')
+            .asFunction<_dart_clang_Type_getObjCProtocolDecl>())(
       T,
       i,
     );
@@ -2484,9 +2591,10 @@ class LibClang {
   int clang_Type_getNumObjCTypeArgs(
     CXType T,
   ) {
-    return (_clang_Type_getNumObjCTypeArgs ??= _dylib.lookupFunction<
-        _c_clang_Type_getNumObjCTypeArgs,
-        _dart_clang_Type_getNumObjCTypeArgs>('clang_Type_getNumObjCTypeArgs'))(
+    return (_clang_Type_getNumObjCTypeArgs ??=
+        _lookup<ffi.NativeFunction<_c_clang_Type_getNumObjCTypeArgs>>(
+                'clang_Type_getNumObjCTypeArgs')
+            .asFunction<_dart_clang_Type_getNumObjCTypeArgs>())(
       T,
     );
   }
@@ -2498,9 +2606,10 @@ class LibClang {
     CXType T,
     int i,
   ) {
-    return (_clang_Type_getObjCTypeArg ??= _dylib.lookupFunction<
-        _c_clang_Type_getObjCTypeArg,
-        _dart_clang_Type_getObjCTypeArg>('clang_Type_getObjCTypeArg'))(
+    return (_clang_Type_getObjCTypeArg ??=
+        _lookup<ffi.NativeFunction<_c_clang_Type_getObjCTypeArg>>(
+                'clang_Type_getObjCTypeArg')
+            .asFunction<_dart_clang_Type_getObjCTypeArg>())(
       T,
       i,
     );
@@ -2512,9 +2621,10 @@ class LibClang {
   int clang_isFunctionTypeVariadic(
     CXType T,
   ) {
-    return (_clang_isFunctionTypeVariadic ??= _dylib.lookupFunction<
-        _c_clang_isFunctionTypeVariadic,
-        _dart_clang_isFunctionTypeVariadic>('clang_isFunctionTypeVariadic'))(
+    return (_clang_isFunctionTypeVariadic ??=
+        _lookup<ffi.NativeFunction<_c_clang_isFunctionTypeVariadic>>(
+                'clang_isFunctionTypeVariadic')
+            .asFunction<_dart_clang_isFunctionTypeVariadic>())(
       T,
     );
   }
@@ -2525,9 +2635,10 @@ class LibClang {
   CXType clang_getCursorResultType(
     CXCursor C,
   ) {
-    return (_clang_getCursorResultType ??= _dylib.lookupFunction<
-        _c_clang_getCursorResultType,
-        _dart_clang_getCursorResultType>('clang_getCursorResultType'))(
+    return (_clang_getCursorResultType ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCursorResultType>>(
+                'clang_getCursorResultType')
+            .asFunction<_dart_clang_getCursorResultType>())(
       C,
     );
   }
@@ -2539,10 +2650,11 @@ class LibClang {
   int clang_getCursorExceptionSpecificationType(
     CXCursor C,
   ) {
-    return (_clang_getCursorExceptionSpecificationType ??=
-        _dylib.lookupFunction<_c_clang_getCursorExceptionSpecificationType,
-                _dart_clang_getCursorExceptionSpecificationType>(
-            'clang_getCursorExceptionSpecificationType'))(
+    return (_clang_getCursorExceptionSpecificationType ??= _lookup<
+                ffi.NativeFunction<
+                    _c_clang_getCursorExceptionSpecificationType>>(
+            'clang_getCursorExceptionSpecificationType')
+        .asFunction<_dart_clang_getCursorExceptionSpecificationType>())(
       C,
     );
   }
@@ -2555,8 +2667,8 @@ class LibClang {
     CXType T,
   ) {
     return (_clang_isPODType ??=
-        _dylib.lookupFunction<_c_clang_isPODType, _dart_clang_isPODType>(
-            'clang_isPODType'))(
+        _lookup<ffi.NativeFunction<_c_clang_isPODType>>('clang_isPODType')
+            .asFunction<_dart_clang_isPODType>())(
       T,
     );
   }
@@ -2567,9 +2679,10 @@ class LibClang {
   CXType clang_getElementType(
     CXType T,
   ) {
-    return (_clang_getElementType ??= _dylib.lookupFunction<
-        _c_clang_getElementType,
-        _dart_clang_getElementType>('clang_getElementType'))(
+    return (_clang_getElementType ??=
+        _lookup<ffi.NativeFunction<_c_clang_getElementType>>(
+                'clang_getElementType')
+            .asFunction<_dart_clang_getElementType>())(
       T,
     );
   }
@@ -2580,9 +2693,10 @@ class LibClang {
   int clang_getNumElements(
     CXType T,
   ) {
-    return (_clang_getNumElements ??= _dylib.lookupFunction<
-        _c_clang_getNumElements,
-        _dart_clang_getNumElements>('clang_getNumElements'))(
+    return (_clang_getNumElements ??=
+        _lookup<ffi.NativeFunction<_c_clang_getNumElements>>(
+                'clang_getNumElements')
+            .asFunction<_dart_clang_getNumElements>())(
       T,
     );
   }
@@ -2593,9 +2707,10 @@ class LibClang {
   CXType clang_getArrayElementType(
     CXType T,
   ) {
-    return (_clang_getArrayElementType ??= _dylib.lookupFunction<
-        _c_clang_getArrayElementType,
-        _dart_clang_getArrayElementType>('clang_getArrayElementType'))(
+    return (_clang_getArrayElementType ??=
+        _lookup<ffi.NativeFunction<_c_clang_getArrayElementType>>(
+                'clang_getArrayElementType')
+            .asFunction<_dart_clang_getArrayElementType>())(
       T,
     );
   }
@@ -2607,8 +2722,8 @@ class LibClang {
     CXType T,
   ) {
     return (_clang_getArraySize ??=
-        _dylib.lookupFunction<_c_clang_getArraySize, _dart_clang_getArraySize>(
-            'clang_getArraySize'))(
+        _lookup<ffi.NativeFunction<_c_clang_getArraySize>>('clang_getArraySize')
+            .asFunction<_dart_clang_getArraySize>())(
       T,
     );
   }
@@ -2619,9 +2734,10 @@ class LibClang {
   CXType clang_Type_getNamedType(
     CXType T,
   ) {
-    return (_clang_Type_getNamedType ??= _dylib.lookupFunction<
-        _c_clang_Type_getNamedType,
-        _dart_clang_Type_getNamedType>('clang_Type_getNamedType'))(
+    return (_clang_Type_getNamedType ??=
+        _lookup<ffi.NativeFunction<_c_clang_Type_getNamedType>>(
+                'clang_Type_getNamedType')
+            .asFunction<_dart_clang_Type_getNamedType>())(
       T,
     );
   }
@@ -2632,10 +2748,10 @@ class LibClang {
   int clang_Type_isTransparentTagTypedef(
     CXType T,
   ) {
-    return (_clang_Type_isTransparentTagTypedef ??= _dylib.lookupFunction<
-            _c_clang_Type_isTransparentTagTypedef,
-            _dart_clang_Type_isTransparentTagTypedef>(
-        'clang_Type_isTransparentTagTypedef'))(
+    return (_clang_Type_isTransparentTagTypedef ??=
+        _lookup<ffi.NativeFunction<_c_clang_Type_isTransparentTagTypedef>>(
+                'clang_Type_isTransparentTagTypedef')
+            .asFunction<_dart_clang_Type_isTransparentTagTypedef>())(
       T,
     );
   }
@@ -2646,9 +2762,10 @@ class LibClang {
   int clang_Type_getNullability(
     CXType T,
   ) {
-    return (_clang_Type_getNullability ??= _dylib.lookupFunction<
-        _c_clang_Type_getNullability,
-        _dart_clang_Type_getNullability>('clang_Type_getNullability'))(
+    return (_clang_Type_getNullability ??=
+        _lookup<ffi.NativeFunction<_c_clang_Type_getNullability>>(
+                'clang_Type_getNullability')
+            .asFunction<_dart_clang_Type_getNullability>())(
       T,
     );
   }
@@ -2659,9 +2776,10 @@ class LibClang {
   int clang_Type_getAlignOf(
     CXType T,
   ) {
-    return (_clang_Type_getAlignOf ??= _dylib.lookupFunction<
-        _c_clang_Type_getAlignOf,
-        _dart_clang_Type_getAlignOf>('clang_Type_getAlignOf'))(
+    return (_clang_Type_getAlignOf ??=
+        _lookup<ffi.NativeFunction<_c_clang_Type_getAlignOf>>(
+                'clang_Type_getAlignOf')
+            .asFunction<_dart_clang_Type_getAlignOf>())(
       T,
     );
   }
@@ -2672,9 +2790,10 @@ class LibClang {
   CXType clang_Type_getClassType(
     CXType T,
   ) {
-    return (_clang_Type_getClassType ??= _dylib.lookupFunction<
-        _c_clang_Type_getClassType,
-        _dart_clang_Type_getClassType>('clang_Type_getClassType'))(
+    return (_clang_Type_getClassType ??=
+        _lookup<ffi.NativeFunction<_c_clang_Type_getClassType>>(
+                'clang_Type_getClassType')
+            .asFunction<_dart_clang_Type_getClassType>())(
       T,
     );
   }
@@ -2685,9 +2804,10 @@ class LibClang {
   int clang_Type_getSizeOf(
     CXType T,
   ) {
-    return (_clang_Type_getSizeOf ??= _dylib.lookupFunction<
-        _c_clang_Type_getSizeOf,
-        _dart_clang_Type_getSizeOf>('clang_Type_getSizeOf'))(
+    return (_clang_Type_getSizeOf ??=
+        _lookup<ffi.NativeFunction<_c_clang_Type_getSizeOf>>(
+                'clang_Type_getSizeOf')
+            .asFunction<_dart_clang_Type_getSizeOf>())(
       T,
     );
   }
@@ -2700,9 +2820,10 @@ class LibClang {
     CXType T,
     ffi.Pointer<ffi.Int8> S,
   ) {
-    return (_clang_Type_getOffsetOf ??= _dylib.lookupFunction<
-        _c_clang_Type_getOffsetOf,
-        _dart_clang_Type_getOffsetOf>('clang_Type_getOffsetOf'))(
+    return (_clang_Type_getOffsetOf ??=
+        _lookup<ffi.NativeFunction<_c_clang_Type_getOffsetOf>>(
+                'clang_Type_getOffsetOf')
+            .asFunction<_dart_clang_Type_getOffsetOf>())(
       T,
       S,
     );
@@ -2714,9 +2835,10 @@ class LibClang {
   CXType clang_Type_getModifiedType(
     CXType T,
   ) {
-    return (_clang_Type_getModifiedType ??= _dylib.lookupFunction<
-        _c_clang_Type_getModifiedType,
-        _dart_clang_Type_getModifiedType>('clang_Type_getModifiedType'))(
+    return (_clang_Type_getModifiedType ??=
+        _lookup<ffi.NativeFunction<_c_clang_Type_getModifiedType>>(
+                'clang_Type_getModifiedType')
+            .asFunction<_dart_clang_Type_getModifiedType>())(
       T,
     );
   }
@@ -2727,9 +2849,10 @@ class LibClang {
   int clang_Cursor_getOffsetOfField(
     CXCursor C,
   ) {
-    return (_clang_Cursor_getOffsetOfField ??= _dylib.lookupFunction<
-        _c_clang_Cursor_getOffsetOfField,
-        _dart_clang_Cursor_getOffsetOfField>('clang_Cursor_getOffsetOfField'))(
+    return (_clang_Cursor_getOffsetOfField ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_getOffsetOfField>>(
+                'clang_Cursor_getOffsetOfField')
+            .asFunction<_dart_clang_Cursor_getOffsetOfField>())(
       C,
     );
   }
@@ -2741,9 +2864,10 @@ class LibClang {
   int clang_Cursor_isAnonymous(
     CXCursor C,
   ) {
-    return (_clang_Cursor_isAnonymous ??= _dylib.lookupFunction<
-        _c_clang_Cursor_isAnonymous,
-        _dart_clang_Cursor_isAnonymous>('clang_Cursor_isAnonymous'))(
+    return (_clang_Cursor_isAnonymous ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_isAnonymous>>(
+                'clang_Cursor_isAnonymous')
+            .asFunction<_dart_clang_Cursor_isAnonymous>())(
       C,
     );
   }
@@ -2755,10 +2879,10 @@ class LibClang {
   int clang_Cursor_isAnonymousRecordDecl(
     CXCursor C,
   ) {
-    return (_clang_Cursor_isAnonymousRecordDecl ??= _dylib.lookupFunction<
-            _c_clang_Cursor_isAnonymousRecordDecl,
-            _dart_clang_Cursor_isAnonymousRecordDecl>(
-        'clang_Cursor_isAnonymousRecordDecl'))(
+    return (_clang_Cursor_isAnonymousRecordDecl ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_isAnonymousRecordDecl>>(
+                'clang_Cursor_isAnonymousRecordDecl')
+            .asFunction<_dart_clang_Cursor_isAnonymousRecordDecl>())(
       C,
     );
   }
@@ -2770,10 +2894,10 @@ class LibClang {
   int clang_Cursor_isInlineNamespace(
     CXCursor C,
   ) {
-    return (_clang_Cursor_isInlineNamespace ??= _dylib.lookupFunction<
-            _c_clang_Cursor_isInlineNamespace,
-            _dart_clang_Cursor_isInlineNamespace>(
-        'clang_Cursor_isInlineNamespace'))(
+    return (_clang_Cursor_isInlineNamespace ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_isInlineNamespace>>(
+                'clang_Cursor_isInlineNamespace')
+            .asFunction<_dart_clang_Cursor_isInlineNamespace>())(
       C,
     );
   }
@@ -2785,10 +2909,10 @@ class LibClang {
   int clang_Type_getNumTemplateArguments(
     CXType T,
   ) {
-    return (_clang_Type_getNumTemplateArguments ??= _dylib.lookupFunction<
-            _c_clang_Type_getNumTemplateArguments,
-            _dart_clang_Type_getNumTemplateArguments>(
-        'clang_Type_getNumTemplateArguments'))(
+    return (_clang_Type_getNumTemplateArguments ??=
+        _lookup<ffi.NativeFunction<_c_clang_Type_getNumTemplateArguments>>(
+                'clang_Type_getNumTemplateArguments')
+            .asFunction<_dart_clang_Type_getNumTemplateArguments>())(
       T,
     );
   }
@@ -2801,10 +2925,10 @@ class LibClang {
     CXType T,
     int i,
   ) {
-    return (_clang_Type_getTemplateArgumentAsType ??= _dylib.lookupFunction<
-            _c_clang_Type_getTemplateArgumentAsType,
-            _dart_clang_Type_getTemplateArgumentAsType>(
-        'clang_Type_getTemplateArgumentAsType'))(
+    return (_clang_Type_getTemplateArgumentAsType ??=
+        _lookup<ffi.NativeFunction<_c_clang_Type_getTemplateArgumentAsType>>(
+                'clang_Type_getTemplateArgumentAsType')
+            .asFunction<_dart_clang_Type_getTemplateArgumentAsType>())(
       T,
       i,
     );
@@ -2817,9 +2941,10 @@ class LibClang {
   int clang_Type_getCXXRefQualifier(
     CXType T,
   ) {
-    return (_clang_Type_getCXXRefQualifier ??= _dylib.lookupFunction<
-        _c_clang_Type_getCXXRefQualifier,
-        _dart_clang_Type_getCXXRefQualifier>('clang_Type_getCXXRefQualifier'))(
+    return (_clang_Type_getCXXRefQualifier ??=
+        _lookup<ffi.NativeFunction<_c_clang_Type_getCXXRefQualifier>>(
+                'clang_Type_getCXXRefQualifier')
+            .asFunction<_dart_clang_Type_getCXXRefQualifier>())(
       T,
     );
   }
@@ -2831,9 +2956,10 @@ class LibClang {
   int clang_Cursor_isBitField(
     CXCursor C,
   ) {
-    return (_clang_Cursor_isBitField ??= _dylib.lookupFunction<
-        _c_clang_Cursor_isBitField,
-        _dart_clang_Cursor_isBitField>('clang_Cursor_isBitField'))(
+    return (_clang_Cursor_isBitField ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_isBitField>>(
+                'clang_Cursor_isBitField')
+            .asFunction<_dart_clang_Cursor_isBitField>())(
       C,
     );
   }
@@ -2845,9 +2971,10 @@ class LibClang {
   int clang_isVirtualBase(
     CXCursor arg0,
   ) {
-    return (_clang_isVirtualBase ??= _dylib.lookupFunction<
-        _c_clang_isVirtualBase,
-        _dart_clang_isVirtualBase>('clang_isVirtualBase'))(
+    return (_clang_isVirtualBase ??=
+        _lookup<ffi.NativeFunction<_c_clang_isVirtualBase>>(
+                'clang_isVirtualBase')
+            .asFunction<_dart_clang_isVirtualBase>())(
       arg0,
     );
   }
@@ -2858,9 +2985,10 @@ class LibClang {
   int clang_getCXXAccessSpecifier(
     CXCursor arg0,
   ) {
-    return (_clang_getCXXAccessSpecifier ??= _dylib.lookupFunction<
-        _c_clang_getCXXAccessSpecifier,
-        _dart_clang_getCXXAccessSpecifier>('clang_getCXXAccessSpecifier'))(
+    return (_clang_getCXXAccessSpecifier ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCXXAccessSpecifier>>(
+                'clang_getCXXAccessSpecifier')
+            .asFunction<_dart_clang_getCXXAccessSpecifier>())(
       arg0,
     );
   }
@@ -2871,9 +2999,10 @@ class LibClang {
   int clang_Cursor_getStorageClass(
     CXCursor arg0,
   ) {
-    return (_clang_Cursor_getStorageClass ??= _dylib.lookupFunction<
-        _c_clang_Cursor_getStorageClass,
-        _dart_clang_Cursor_getStorageClass>('clang_Cursor_getStorageClass'))(
+    return (_clang_Cursor_getStorageClass ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_getStorageClass>>(
+                'clang_Cursor_getStorageClass')
+            .asFunction<_dart_clang_Cursor_getStorageClass>())(
       arg0,
     );
   }
@@ -2885,9 +3014,10 @@ class LibClang {
   int clang_getNumOverloadedDecls(
     CXCursor cursor,
   ) {
-    return (_clang_getNumOverloadedDecls ??= _dylib.lookupFunction<
-        _c_clang_getNumOverloadedDecls,
-        _dart_clang_getNumOverloadedDecls>('clang_getNumOverloadedDecls'))(
+    return (_clang_getNumOverloadedDecls ??=
+        _lookup<ffi.NativeFunction<_c_clang_getNumOverloadedDecls>>(
+                'clang_getNumOverloadedDecls')
+            .asFunction<_dart_clang_getNumOverloadedDecls>())(
       cursor,
     );
   }
@@ -2900,9 +3030,10 @@ class LibClang {
     CXCursor cursor,
     int index,
   ) {
-    return (_clang_getOverloadedDecl ??= _dylib.lookupFunction<
-        _c_clang_getOverloadedDecl,
-        _dart_clang_getOverloadedDecl>('clang_getOverloadedDecl'))(
+    return (_clang_getOverloadedDecl ??=
+        _lookup<ffi.NativeFunction<_c_clang_getOverloadedDecl>>(
+                'clang_getOverloadedDecl')
+            .asFunction<_dart_clang_getOverloadedDecl>())(
       cursor,
       index,
     );
@@ -2915,10 +3046,10 @@ class LibClang {
   CXType clang_getIBOutletCollectionType(
     CXCursor arg0,
   ) {
-    return (_clang_getIBOutletCollectionType ??= _dylib.lookupFunction<
-            _c_clang_getIBOutletCollectionType,
-            _dart_clang_getIBOutletCollectionType>(
-        'clang_getIBOutletCollectionType'))(
+    return (_clang_getIBOutletCollectionType ??=
+        _lookup<ffi.NativeFunction<_c_clang_getIBOutletCollectionType>>(
+                'clang_getIBOutletCollectionType')
+            .asFunction<_dart_clang_getIBOutletCollectionType>())(
       arg0,
     );
   }
@@ -2931,9 +3062,10 @@ class LibClang {
     ffi.Pointer<ffi.NativeFunction<CXCursorVisitor>> visitor,
     ffi.Pointer<ffi.Void> client_data,
   ) {
-    return (_clang_visitChildren ??= _dylib.lookupFunction<
-        _c_clang_visitChildren,
-        _dart_clang_visitChildren>('clang_visitChildren'))(
+    return (_clang_visitChildren ??=
+        _lookup<ffi.NativeFunction<_c_clang_visitChildren>>(
+                'clang_visitChildren')
+            .asFunction<_dart_clang_visitChildren>())(
       parent,
       visitor,
       client_data,
@@ -2948,8 +3080,8 @@ class LibClang {
     CXCursor arg0,
   ) {
     return (_clang_getCursorUSR ??=
-        _dylib.lookupFunction<_c_clang_getCursorUSR, _dart_clang_getCursorUSR>(
-            'clang_getCursorUSR'))(
+        _lookup<ffi.NativeFunction<_c_clang_getCursorUSR>>('clang_getCursorUSR')
+            .asFunction<_dart_clang_getCursorUSR>())(
       arg0,
     );
   }
@@ -2960,9 +3092,10 @@ class LibClang {
   CXString clang_constructUSR_ObjCClass(
     ffi.Pointer<ffi.Int8> class_name,
   ) {
-    return (_clang_constructUSR_ObjCClass ??= _dylib.lookupFunction<
-        _c_clang_constructUSR_ObjCClass,
-        _dart_clang_constructUSR_ObjCClass>('clang_constructUSR_ObjCClass'))(
+    return (_clang_constructUSR_ObjCClass ??=
+        _lookup<ffi.NativeFunction<_c_clang_constructUSR_ObjCClass>>(
+                'clang_constructUSR_ObjCClass')
+            .asFunction<_dart_clang_constructUSR_ObjCClass>())(
       class_name,
     );
   }
@@ -2974,10 +3107,10 @@ class LibClang {
     ffi.Pointer<ffi.Int8> class_name,
     ffi.Pointer<ffi.Int8> category_name,
   ) {
-    return (_clang_constructUSR_ObjCCategory ??= _dylib.lookupFunction<
-            _c_clang_constructUSR_ObjCCategory,
-            _dart_clang_constructUSR_ObjCCategory>(
-        'clang_constructUSR_ObjCCategory'))(
+    return (_clang_constructUSR_ObjCCategory ??=
+        _lookup<ffi.NativeFunction<_c_clang_constructUSR_ObjCCategory>>(
+                'clang_constructUSR_ObjCCategory')
+            .asFunction<_dart_clang_constructUSR_ObjCCategory>())(
       class_name,
       category_name,
     );
@@ -2989,10 +3122,10 @@ class LibClang {
   CXString clang_constructUSR_ObjCProtocol(
     ffi.Pointer<ffi.Int8> protocol_name,
   ) {
-    return (_clang_constructUSR_ObjCProtocol ??= _dylib.lookupFunction<
-            _c_clang_constructUSR_ObjCProtocol,
-            _dart_clang_constructUSR_ObjCProtocol>(
-        'clang_constructUSR_ObjCProtocol'))(
+    return (_clang_constructUSR_ObjCProtocol ??=
+        _lookup<ffi.NativeFunction<_c_clang_constructUSR_ObjCProtocol>>(
+                'clang_constructUSR_ObjCProtocol')
+            .asFunction<_dart_clang_constructUSR_ObjCProtocol>())(
       protocol_name,
     );
   }
@@ -3005,9 +3138,10 @@ class LibClang {
     ffi.Pointer<ffi.Int8> name,
     CXString classUSR,
   ) {
-    return (_clang_constructUSR_ObjCIvar ??= _dylib.lookupFunction<
-        _c_clang_constructUSR_ObjCIvar,
-        _dart_clang_constructUSR_ObjCIvar>('clang_constructUSR_ObjCIvar'))(
+    return (_clang_constructUSR_ObjCIvar ??=
+        _lookup<ffi.NativeFunction<_c_clang_constructUSR_ObjCIvar>>(
+                'clang_constructUSR_ObjCIvar')
+            .asFunction<_dart_clang_constructUSR_ObjCIvar>())(
       name,
       classUSR,
     );
@@ -3022,9 +3156,10 @@ class LibClang {
     int isInstanceMethod,
     CXString classUSR,
   ) {
-    return (_clang_constructUSR_ObjCMethod ??= _dylib.lookupFunction<
-        _c_clang_constructUSR_ObjCMethod,
-        _dart_clang_constructUSR_ObjCMethod>('clang_constructUSR_ObjCMethod'))(
+    return (_clang_constructUSR_ObjCMethod ??=
+        _lookup<ffi.NativeFunction<_c_clang_constructUSR_ObjCMethod>>(
+                'clang_constructUSR_ObjCMethod')
+            .asFunction<_dart_clang_constructUSR_ObjCMethod>())(
       name,
       isInstanceMethod,
       classUSR,
@@ -3039,10 +3174,10 @@ class LibClang {
     ffi.Pointer<ffi.Int8> property,
     CXString classUSR,
   ) {
-    return (_clang_constructUSR_ObjCProperty ??= _dylib.lookupFunction<
-            _c_clang_constructUSR_ObjCProperty,
-            _dart_clang_constructUSR_ObjCProperty>(
-        'clang_constructUSR_ObjCProperty'))(
+    return (_clang_constructUSR_ObjCProperty ??=
+        _lookup<ffi.NativeFunction<_c_clang_constructUSR_ObjCProperty>>(
+                'clang_constructUSR_ObjCProperty')
+            .asFunction<_dart_clang_constructUSR_ObjCProperty>())(
       property,
       classUSR,
     );
@@ -3054,9 +3189,10 @@ class LibClang {
   CXString clang_getCursorSpelling(
     CXCursor arg0,
   ) {
-    return (_clang_getCursorSpelling ??= _dylib.lookupFunction<
-        _c_clang_getCursorSpelling,
-        _dart_clang_getCursorSpelling>('clang_getCursorSpelling'))(
+    return (_clang_getCursorSpelling ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCursorSpelling>>(
+                'clang_getCursorSpelling')
+            .asFunction<_dart_clang_getCursorSpelling>())(
       arg0,
     );
   }
@@ -3072,10 +3208,10 @@ class LibClang {
     int pieceIndex,
     int options,
   ) {
-    return (_clang_Cursor_getSpellingNameRange ??= _dylib.lookupFunction<
-            _c_clang_Cursor_getSpellingNameRange,
-            _dart_clang_Cursor_getSpellingNameRange>(
-        'clang_Cursor_getSpellingNameRange'))(
+    return (_clang_Cursor_getSpellingNameRange ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_getSpellingNameRange>>(
+                'clang_Cursor_getSpellingNameRange')
+            .asFunction<_dart_clang_Cursor_getSpellingNameRange>())(
       arg0,
       pieceIndex,
       options,
@@ -3089,10 +3225,10 @@ class LibClang {
     ffi.Pointer<ffi.Void> Policy,
     int Property,
   ) {
-    return (_clang_PrintingPolicy_getProperty ??= _dylib.lookupFunction<
-            _c_clang_PrintingPolicy_getProperty,
-            _dart_clang_PrintingPolicy_getProperty>(
-        'clang_PrintingPolicy_getProperty'))(
+    return (_clang_PrintingPolicy_getProperty ??=
+        _lookup<ffi.NativeFunction<_c_clang_PrintingPolicy_getProperty>>(
+                'clang_PrintingPolicy_getProperty')
+            .asFunction<_dart_clang_PrintingPolicy_getProperty>())(
       Policy,
       Property,
     );
@@ -3106,10 +3242,10 @@ class LibClang {
     int Property,
     int Value,
   ) {
-    return (_clang_PrintingPolicy_setProperty ??= _dylib.lookupFunction<
-            _c_clang_PrintingPolicy_setProperty,
-            _dart_clang_PrintingPolicy_setProperty>(
-        'clang_PrintingPolicy_setProperty'))(
+    return (_clang_PrintingPolicy_setProperty ??=
+        _lookup<ffi.NativeFunction<_c_clang_PrintingPolicy_setProperty>>(
+                'clang_PrintingPolicy_setProperty')
+            .asFunction<_dart_clang_PrintingPolicy_setProperty>())(
       Policy,
       Property,
       Value,
@@ -3122,9 +3258,10 @@ class LibClang {
   ffi.Pointer<ffi.Void> clang_getCursorPrintingPolicy(
     CXCursor arg0,
   ) {
-    return (_clang_getCursorPrintingPolicy ??= _dylib.lookupFunction<
-        _c_clang_getCursorPrintingPolicy,
-        _dart_clang_getCursorPrintingPolicy>('clang_getCursorPrintingPolicy'))(
+    return (_clang_getCursorPrintingPolicy ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCursorPrintingPolicy>>(
+                'clang_getCursorPrintingPolicy')
+            .asFunction<_dart_clang_getCursorPrintingPolicy>())(
       arg0,
     );
   }
@@ -3135,9 +3272,10 @@ class LibClang {
   void clang_PrintingPolicy_dispose(
     ffi.Pointer<ffi.Void> Policy,
   ) {
-    return (_clang_PrintingPolicy_dispose ??= _dylib.lookupFunction<
-        _c_clang_PrintingPolicy_dispose,
-        _dart_clang_PrintingPolicy_dispose>('clang_PrintingPolicy_dispose'))(
+    return (_clang_PrintingPolicy_dispose ??=
+        _lookup<ffi.NativeFunction<_c_clang_PrintingPolicy_dispose>>(
+                'clang_PrintingPolicy_dispose')
+            .asFunction<_dart_clang_PrintingPolicy_dispose>())(
       Policy,
     );
   }
@@ -3149,9 +3287,10 @@ class LibClang {
     CXCursor Cursor,
     ffi.Pointer<ffi.Void> Policy,
   ) {
-    return (_clang_getCursorPrettyPrinted ??= _dylib.lookupFunction<
-        _c_clang_getCursorPrettyPrinted,
-        _dart_clang_getCursorPrettyPrinted>('clang_getCursorPrettyPrinted'))(
+    return (_clang_getCursorPrettyPrinted ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCursorPrettyPrinted>>(
+                'clang_getCursorPrettyPrinted')
+            .asFunction<_dart_clang_getCursorPrettyPrinted>())(
       Cursor,
       Policy,
     );
@@ -3163,9 +3302,10 @@ class LibClang {
   CXString clang_getCursorDisplayName(
     CXCursor arg0,
   ) {
-    return (_clang_getCursorDisplayName ??= _dylib.lookupFunction<
-        _c_clang_getCursorDisplayName,
-        _dart_clang_getCursorDisplayName>('clang_getCursorDisplayName'))(
+    return (_clang_getCursorDisplayName ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCursorDisplayName>>(
+                'clang_getCursorDisplayName')
+            .asFunction<_dart_clang_getCursorDisplayName>())(
       arg0,
     );
   }
@@ -3177,9 +3317,10 @@ class LibClang {
   CXCursor clang_getCursorReferenced(
     CXCursor arg0,
   ) {
-    return (_clang_getCursorReferenced ??= _dylib.lookupFunction<
-        _c_clang_getCursorReferenced,
-        _dart_clang_getCursorReferenced>('clang_getCursorReferenced'))(
+    return (_clang_getCursorReferenced ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCursorReferenced>>(
+                'clang_getCursorReferenced')
+            .asFunction<_dart_clang_getCursorReferenced>())(
       arg0,
     );
   }
@@ -3191,9 +3332,10 @@ class LibClang {
   CXCursor clang_getCursorDefinition(
     CXCursor arg0,
   ) {
-    return (_clang_getCursorDefinition ??= _dylib.lookupFunction<
-        _c_clang_getCursorDefinition,
-        _dart_clang_getCursorDefinition>('clang_getCursorDefinition'))(
+    return (_clang_getCursorDefinition ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCursorDefinition>>(
+                'clang_getCursorDefinition')
+            .asFunction<_dart_clang_getCursorDefinition>())(
       arg0,
     );
   }
@@ -3205,9 +3347,10 @@ class LibClang {
   int clang_isCursorDefinition(
     CXCursor arg0,
   ) {
-    return (_clang_isCursorDefinition ??= _dylib.lookupFunction<
-        _c_clang_isCursorDefinition,
-        _dart_clang_isCursorDefinition>('clang_isCursorDefinition'))(
+    return (_clang_isCursorDefinition ??=
+        _lookup<ffi.NativeFunction<_c_clang_isCursorDefinition>>(
+                'clang_isCursorDefinition')
+            .asFunction<_dart_clang_isCursorDefinition>())(
       arg0,
     );
   }
@@ -3218,9 +3361,10 @@ class LibClang {
   CXCursor clang_getCanonicalCursor(
     CXCursor arg0,
   ) {
-    return (_clang_getCanonicalCursor ??= _dylib.lookupFunction<
-        _c_clang_getCanonicalCursor,
-        _dart_clang_getCanonicalCursor>('clang_getCanonicalCursor'))(
+    return (_clang_getCanonicalCursor ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCanonicalCursor>>(
+                'clang_getCanonicalCursor')
+            .asFunction<_dart_clang_getCanonicalCursor>())(
       arg0,
     );
   }
@@ -3232,10 +3376,10 @@ class LibClang {
   int clang_Cursor_getObjCSelectorIndex(
     CXCursor arg0,
   ) {
-    return (_clang_Cursor_getObjCSelectorIndex ??= _dylib.lookupFunction<
-            _c_clang_Cursor_getObjCSelectorIndex,
-            _dart_clang_Cursor_getObjCSelectorIndex>(
-        'clang_Cursor_getObjCSelectorIndex'))(
+    return (_clang_Cursor_getObjCSelectorIndex ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_getObjCSelectorIndex>>(
+                'clang_Cursor_getObjCSelectorIndex')
+            .asFunction<_dart_clang_Cursor_getObjCSelectorIndex>())(
       arg0,
     );
   }
@@ -3247,9 +3391,10 @@ class LibClang {
   int clang_Cursor_isDynamicCall(
     CXCursor C,
   ) {
-    return (_clang_Cursor_isDynamicCall ??= _dylib.lookupFunction<
-        _c_clang_Cursor_isDynamicCall,
-        _dart_clang_Cursor_isDynamicCall>('clang_Cursor_isDynamicCall'))(
+    return (_clang_Cursor_isDynamicCall ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_isDynamicCall>>(
+                'clang_Cursor_isDynamicCall')
+            .asFunction<_dart_clang_Cursor_isDynamicCall>())(
       C,
     );
   }
@@ -3261,9 +3406,10 @@ class LibClang {
   CXType clang_Cursor_getReceiverType(
     CXCursor C,
   ) {
-    return (_clang_Cursor_getReceiverType ??= _dylib.lookupFunction<
-        _c_clang_Cursor_getReceiverType,
-        _dart_clang_Cursor_getReceiverType>('clang_Cursor_getReceiverType'))(
+    return (_clang_Cursor_getReceiverType ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_getReceiverType>>(
+                'clang_Cursor_getReceiverType')
+            .asFunction<_dart_clang_Cursor_getReceiverType>())(
       C,
     );
   }
@@ -3277,10 +3423,10 @@ class LibClang {
     CXCursor C,
     int reserved,
   ) {
-    return (_clang_Cursor_getObjCPropertyAttributes ??= _dylib.lookupFunction<
-            _c_clang_Cursor_getObjCPropertyAttributes,
-            _dart_clang_Cursor_getObjCPropertyAttributes>(
-        'clang_Cursor_getObjCPropertyAttributes'))(
+    return (_clang_Cursor_getObjCPropertyAttributes ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_getObjCPropertyAttributes>>(
+                'clang_Cursor_getObjCPropertyAttributes')
+            .asFunction<_dart_clang_Cursor_getObjCPropertyAttributes>())(
       C,
       reserved,
     );
@@ -3294,10 +3440,10 @@ class LibClang {
   CXString clang_Cursor_getObjCPropertyGetterName(
     CXCursor C,
   ) {
-    return (_clang_Cursor_getObjCPropertyGetterName ??= _dylib.lookupFunction<
-            _c_clang_Cursor_getObjCPropertyGetterName,
-            _dart_clang_Cursor_getObjCPropertyGetterName>(
-        'clang_Cursor_getObjCPropertyGetterName'))(
+    return (_clang_Cursor_getObjCPropertyGetterName ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_getObjCPropertyGetterName>>(
+                'clang_Cursor_getObjCPropertyGetterName')
+            .asFunction<_dart_clang_Cursor_getObjCPropertyGetterName>())(
       C,
     );
   }
@@ -3310,10 +3456,10 @@ class LibClang {
   CXString clang_Cursor_getObjCPropertySetterName(
     CXCursor C,
   ) {
-    return (_clang_Cursor_getObjCPropertySetterName ??= _dylib.lookupFunction<
-            _c_clang_Cursor_getObjCPropertySetterName,
-            _dart_clang_Cursor_getObjCPropertySetterName>(
-        'clang_Cursor_getObjCPropertySetterName'))(
+    return (_clang_Cursor_getObjCPropertySetterName ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_getObjCPropertySetterName>>(
+                'clang_Cursor_getObjCPropertySetterName')
+            .asFunction<_dart_clang_Cursor_getObjCPropertySetterName>())(
       C,
     );
   }
@@ -3328,10 +3474,10 @@ class LibClang {
   int clang_Cursor_getObjCDeclQualifiers(
     CXCursor C,
   ) {
-    return (_clang_Cursor_getObjCDeclQualifiers ??= _dylib.lookupFunction<
-            _c_clang_Cursor_getObjCDeclQualifiers,
-            _dart_clang_Cursor_getObjCDeclQualifiers>(
-        'clang_Cursor_getObjCDeclQualifiers'))(
+    return (_clang_Cursor_getObjCDeclQualifiers ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_getObjCDeclQualifiers>>(
+                'clang_Cursor_getObjCDeclQualifiers')
+            .asFunction<_dart_clang_Cursor_getObjCDeclQualifiers>())(
       C,
     );
   }
@@ -3345,9 +3491,10 @@ class LibClang {
   int clang_Cursor_isObjCOptional(
     CXCursor C,
   ) {
-    return (_clang_Cursor_isObjCOptional ??= _dylib.lookupFunction<
-        _c_clang_Cursor_isObjCOptional,
-        _dart_clang_Cursor_isObjCOptional>('clang_Cursor_isObjCOptional'))(
+    return (_clang_Cursor_isObjCOptional ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_isObjCOptional>>(
+                'clang_Cursor_isObjCOptional')
+            .asFunction<_dart_clang_Cursor_isObjCOptional>())(
       C,
     );
   }
@@ -3358,9 +3505,10 @@ class LibClang {
   int clang_Cursor_isVariadic(
     CXCursor C,
   ) {
-    return (_clang_Cursor_isVariadic ??= _dylib.lookupFunction<
-        _c_clang_Cursor_isVariadic,
-        _dart_clang_Cursor_isVariadic>('clang_Cursor_isVariadic'))(
+    return (_clang_Cursor_isVariadic ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_isVariadic>>(
+                'clang_Cursor_isVariadic')
+            .asFunction<_dart_clang_Cursor_isVariadic>())(
       C,
     );
   }
@@ -3375,9 +3523,10 @@ class LibClang {
     ffi.Pointer<CXString> definedIn,
     ffi.Pointer<ffi.Uint32> isGenerated,
   ) {
-    return (_clang_Cursor_isExternalSymbol ??= _dylib.lookupFunction<
-        _c_clang_Cursor_isExternalSymbol,
-        _dart_clang_Cursor_isExternalSymbol>('clang_Cursor_isExternalSymbol'))(
+    return (_clang_Cursor_isExternalSymbol ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_isExternalSymbol>>(
+                'clang_Cursor_isExternalSymbol')
+            .asFunction<_dart_clang_Cursor_isExternalSymbol>())(
       C,
       language,
       definedIn,
@@ -3393,9 +3542,10 @@ class LibClang {
   CXSourceRange clang_Cursor_getCommentRange(
     CXCursor C,
   ) {
-    return (_clang_Cursor_getCommentRange ??= _dylib.lookupFunction<
-        _c_clang_Cursor_getCommentRange,
-        _dart_clang_Cursor_getCommentRange>('clang_Cursor_getCommentRange'))(
+    return (_clang_Cursor_getCommentRange ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_getCommentRange>>(
+                'clang_Cursor_getCommentRange')
+            .asFunction<_dart_clang_Cursor_getCommentRange>())(
       C,
     );
   }
@@ -3407,10 +3557,10 @@ class LibClang {
   CXString clang_Cursor_getRawCommentText(
     CXCursor C,
   ) {
-    return (_clang_Cursor_getRawCommentText ??= _dylib.lookupFunction<
-            _c_clang_Cursor_getRawCommentText,
-            _dart_clang_Cursor_getRawCommentText>(
-        'clang_Cursor_getRawCommentText'))(
+    return (_clang_Cursor_getRawCommentText ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_getRawCommentText>>(
+                'clang_Cursor_getRawCommentText')
+            .asFunction<_dart_clang_Cursor_getRawCommentText>())(
       C,
     );
   }
@@ -3422,10 +3572,10 @@ class LibClang {
   CXString clang_Cursor_getBriefCommentText(
     CXCursor C,
   ) {
-    return (_clang_Cursor_getBriefCommentText ??= _dylib.lookupFunction<
-            _c_clang_Cursor_getBriefCommentText,
-            _dart_clang_Cursor_getBriefCommentText>(
-        'clang_Cursor_getBriefCommentText'))(
+    return (_clang_Cursor_getBriefCommentText ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_getBriefCommentText>>(
+                'clang_Cursor_getBriefCommentText')
+            .asFunction<_dart_clang_Cursor_getBriefCommentText>())(
       C,
     );
   }
@@ -3436,9 +3586,10 @@ class LibClang {
   CXString clang_Cursor_getMangling(
     CXCursor arg0,
   ) {
-    return (_clang_Cursor_getMangling ??= _dylib.lookupFunction<
-        _c_clang_Cursor_getMangling,
-        _dart_clang_Cursor_getMangling>('clang_Cursor_getMangling'))(
+    return (_clang_Cursor_getMangling ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_getMangling>>(
+                'clang_Cursor_getMangling')
+            .asFunction<_dart_clang_Cursor_getMangling>())(
       arg0,
     );
   }
@@ -3450,9 +3601,10 @@ class LibClang {
   ffi.Pointer<CXStringSet> clang_Cursor_getCXXManglings(
     CXCursor arg0,
   ) {
-    return (_clang_Cursor_getCXXManglings ??= _dylib.lookupFunction<
-        _c_clang_Cursor_getCXXManglings,
-        _dart_clang_Cursor_getCXXManglings>('clang_Cursor_getCXXManglings'))(
+    return (_clang_Cursor_getCXXManglings ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_getCXXManglings>>(
+                'clang_Cursor_getCXXManglings')
+            .asFunction<_dart_clang_Cursor_getCXXManglings>())(
       arg0,
     );
   }
@@ -3464,9 +3616,10 @@ class LibClang {
   ffi.Pointer<CXStringSet> clang_Cursor_getObjCManglings(
     CXCursor arg0,
   ) {
-    return (_clang_Cursor_getObjCManglings ??= _dylib.lookupFunction<
-        _c_clang_Cursor_getObjCManglings,
-        _dart_clang_Cursor_getObjCManglings>('clang_Cursor_getObjCManglings'))(
+    return (_clang_Cursor_getObjCManglings ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_getObjCManglings>>(
+                'clang_Cursor_getObjCManglings')
+            .asFunction<_dart_clang_Cursor_getObjCManglings>())(
       arg0,
     );
   }
@@ -3477,9 +3630,10 @@ class LibClang {
   ffi.Pointer<ffi.Void> clang_Cursor_getModule(
     CXCursor C,
   ) {
-    return (_clang_Cursor_getModule ??= _dylib.lookupFunction<
-        _c_clang_Cursor_getModule,
-        _dart_clang_Cursor_getModule>('clang_Cursor_getModule'))(
+    return (_clang_Cursor_getModule ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_getModule>>(
+                'clang_Cursor_getModule')
+            .asFunction<_dart_clang_Cursor_getModule>())(
       C,
     );
   }
@@ -3492,9 +3646,10 @@ class LibClang {
     ffi.Pointer<CXTranslationUnitImpl> arg0,
     ffi.Pointer<ffi.Void> arg1,
   ) {
-    return (_clang_getModuleForFile ??= _dylib.lookupFunction<
-        _c_clang_getModuleForFile,
-        _dart_clang_getModuleForFile>('clang_getModuleForFile'))(
+    return (_clang_getModuleForFile ??=
+        _lookup<ffi.NativeFunction<_c_clang_getModuleForFile>>(
+                'clang_getModuleForFile')
+            .asFunction<_dart_clang_getModuleForFile>())(
       arg0,
       arg1,
     );
@@ -3506,9 +3661,10 @@ class LibClang {
   ffi.Pointer<ffi.Void> clang_Module_getASTFile(
     ffi.Pointer<ffi.Void> Module,
   ) {
-    return (_clang_Module_getASTFile ??= _dylib.lookupFunction<
-        _c_clang_Module_getASTFile,
-        _dart_clang_Module_getASTFile>('clang_Module_getASTFile'))(
+    return (_clang_Module_getASTFile ??=
+        _lookup<ffi.NativeFunction<_c_clang_Module_getASTFile>>(
+                'clang_Module_getASTFile')
+            .asFunction<_dart_clang_Module_getASTFile>())(
       Module,
     );
   }
@@ -3520,9 +3676,10 @@ class LibClang {
   ffi.Pointer<ffi.Void> clang_Module_getParent(
     ffi.Pointer<ffi.Void> Module,
   ) {
-    return (_clang_Module_getParent ??= _dylib.lookupFunction<
-        _c_clang_Module_getParent,
-        _dart_clang_Module_getParent>('clang_Module_getParent'))(
+    return (_clang_Module_getParent ??=
+        _lookup<ffi.NativeFunction<_c_clang_Module_getParent>>(
+                'clang_Module_getParent')
+            .asFunction<_dart_clang_Module_getParent>())(
       Module,
     );
   }
@@ -3534,9 +3691,10 @@ class LibClang {
   CXString clang_Module_getName(
     ffi.Pointer<ffi.Void> Module,
   ) {
-    return (_clang_Module_getName ??= _dylib.lookupFunction<
-        _c_clang_Module_getName,
-        _dart_clang_Module_getName>('clang_Module_getName'))(
+    return (_clang_Module_getName ??=
+        _lookup<ffi.NativeFunction<_c_clang_Module_getName>>(
+                'clang_Module_getName')
+            .asFunction<_dart_clang_Module_getName>())(
       Module,
     );
   }
@@ -3547,9 +3705,10 @@ class LibClang {
   CXString clang_Module_getFullName(
     ffi.Pointer<ffi.Void> Module,
   ) {
-    return (_clang_Module_getFullName ??= _dylib.lookupFunction<
-        _c_clang_Module_getFullName,
-        _dart_clang_Module_getFullName>('clang_Module_getFullName'))(
+    return (_clang_Module_getFullName ??=
+        _lookup<ffi.NativeFunction<_c_clang_Module_getFullName>>(
+                'clang_Module_getFullName')
+            .asFunction<_dart_clang_Module_getFullName>())(
       Module,
     );
   }
@@ -3560,9 +3719,10 @@ class LibClang {
   int clang_Module_isSystem(
     ffi.Pointer<ffi.Void> Module,
   ) {
-    return (_clang_Module_isSystem ??= _dylib.lookupFunction<
-        _c_clang_Module_isSystem,
-        _dart_clang_Module_isSystem>('clang_Module_isSystem'))(
+    return (_clang_Module_isSystem ??=
+        _lookup<ffi.NativeFunction<_c_clang_Module_isSystem>>(
+                'clang_Module_isSystem')
+            .asFunction<_dart_clang_Module_isSystem>())(
       Module,
     );
   }
@@ -3574,10 +3734,10 @@ class LibClang {
     ffi.Pointer<CXTranslationUnitImpl> arg0,
     ffi.Pointer<ffi.Void> Module,
   ) {
-    return (_clang_Module_getNumTopLevelHeaders ??= _dylib.lookupFunction<
-            _c_clang_Module_getNumTopLevelHeaders,
-            _dart_clang_Module_getNumTopLevelHeaders>(
-        'clang_Module_getNumTopLevelHeaders'))(
+    return (_clang_Module_getNumTopLevelHeaders ??=
+        _lookup<ffi.NativeFunction<_c_clang_Module_getNumTopLevelHeaders>>(
+                'clang_Module_getNumTopLevelHeaders')
+            .asFunction<_dart_clang_Module_getNumTopLevelHeaders>())(
       arg0,
       Module,
     );
@@ -3591,10 +3751,10 @@ class LibClang {
     ffi.Pointer<ffi.Void> Module,
     int Index,
   ) {
-    return (_clang_Module_getTopLevelHeader ??= _dylib.lookupFunction<
-            _c_clang_Module_getTopLevelHeader,
-            _dart_clang_Module_getTopLevelHeader>(
-        'clang_Module_getTopLevelHeader'))(
+    return (_clang_Module_getTopLevelHeader ??=
+        _lookup<ffi.NativeFunction<_c_clang_Module_getTopLevelHeader>>(
+                'clang_Module_getTopLevelHeader')
+            .asFunction<_dart_clang_Module_getTopLevelHeader>())(
       arg0,
       Module,
       Index,
@@ -3607,10 +3767,11 @@ class LibClang {
   int clang_CXXConstructor_isConvertingConstructor(
     CXCursor C,
   ) {
-    return (_clang_CXXConstructor_isConvertingConstructor ??=
-        _dylib.lookupFunction<_c_clang_CXXConstructor_isConvertingConstructor,
-                _dart_clang_CXXConstructor_isConvertingConstructor>(
-            'clang_CXXConstructor_isConvertingConstructor'))(
+    return (_clang_CXXConstructor_isConvertingConstructor ??= _lookup<
+                ffi.NativeFunction<
+                    _c_clang_CXXConstructor_isConvertingConstructor>>(
+            'clang_CXXConstructor_isConvertingConstructor')
+        .asFunction<_dart_clang_CXXConstructor_isConvertingConstructor>())(
       C,
     );
   }
@@ -3622,10 +3783,10 @@ class LibClang {
   int clang_CXXConstructor_isCopyConstructor(
     CXCursor C,
   ) {
-    return (_clang_CXXConstructor_isCopyConstructor ??= _dylib.lookupFunction<
-            _c_clang_CXXConstructor_isCopyConstructor,
-            _dart_clang_CXXConstructor_isCopyConstructor>(
-        'clang_CXXConstructor_isCopyConstructor'))(
+    return (_clang_CXXConstructor_isCopyConstructor ??=
+        _lookup<ffi.NativeFunction<_c_clang_CXXConstructor_isCopyConstructor>>(
+                'clang_CXXConstructor_isCopyConstructor')
+            .asFunction<_dart_clang_CXXConstructor_isCopyConstructor>())(
       C,
     );
   }
@@ -3637,10 +3798,11 @@ class LibClang {
   int clang_CXXConstructor_isDefaultConstructor(
     CXCursor C,
   ) {
-    return (_clang_CXXConstructor_isDefaultConstructor ??=
-        _dylib.lookupFunction<_c_clang_CXXConstructor_isDefaultConstructor,
-                _dart_clang_CXXConstructor_isDefaultConstructor>(
-            'clang_CXXConstructor_isDefaultConstructor'))(
+    return (_clang_CXXConstructor_isDefaultConstructor ??= _lookup<
+                ffi.NativeFunction<
+                    _c_clang_CXXConstructor_isDefaultConstructor>>(
+            'clang_CXXConstructor_isDefaultConstructor')
+        .asFunction<_dart_clang_CXXConstructor_isDefaultConstructor>())(
       C,
     );
   }
@@ -3652,10 +3814,10 @@ class LibClang {
   int clang_CXXConstructor_isMoveConstructor(
     CXCursor C,
   ) {
-    return (_clang_CXXConstructor_isMoveConstructor ??= _dylib.lookupFunction<
-            _c_clang_CXXConstructor_isMoveConstructor,
-            _dart_clang_CXXConstructor_isMoveConstructor>(
-        'clang_CXXConstructor_isMoveConstructor'))(
+    return (_clang_CXXConstructor_isMoveConstructor ??=
+        _lookup<ffi.NativeFunction<_c_clang_CXXConstructor_isMoveConstructor>>(
+                'clang_CXXConstructor_isMoveConstructor')
+            .asFunction<_dart_clang_CXXConstructor_isMoveConstructor>())(
       C,
     );
   }
@@ -3667,9 +3829,10 @@ class LibClang {
   int clang_CXXField_isMutable(
     CXCursor C,
   ) {
-    return (_clang_CXXField_isMutable ??= _dylib.lookupFunction<
-        _c_clang_CXXField_isMutable,
-        _dart_clang_CXXField_isMutable>('clang_CXXField_isMutable'))(
+    return (_clang_CXXField_isMutable ??=
+        _lookup<ffi.NativeFunction<_c_clang_CXXField_isMutable>>(
+                'clang_CXXField_isMutable')
+            .asFunction<_dart_clang_CXXField_isMutable>())(
       C,
     );
   }
@@ -3680,9 +3843,10 @@ class LibClang {
   int clang_CXXMethod_isDefaulted(
     CXCursor C,
   ) {
-    return (_clang_CXXMethod_isDefaulted ??= _dylib.lookupFunction<
-        _c_clang_CXXMethod_isDefaulted,
-        _dart_clang_CXXMethod_isDefaulted>('clang_CXXMethod_isDefaulted'))(
+    return (_clang_CXXMethod_isDefaulted ??=
+        _lookup<ffi.NativeFunction<_c_clang_CXXMethod_isDefaulted>>(
+                'clang_CXXMethod_isDefaulted')
+            .asFunction<_dart_clang_CXXMethod_isDefaulted>())(
       C,
     );
   }
@@ -3694,9 +3858,10 @@ class LibClang {
   int clang_CXXMethod_isPureVirtual(
     CXCursor C,
   ) {
-    return (_clang_CXXMethod_isPureVirtual ??= _dylib.lookupFunction<
-        _c_clang_CXXMethod_isPureVirtual,
-        _dart_clang_CXXMethod_isPureVirtual>('clang_CXXMethod_isPureVirtual'))(
+    return (_clang_CXXMethod_isPureVirtual ??=
+        _lookup<ffi.NativeFunction<_c_clang_CXXMethod_isPureVirtual>>(
+                'clang_CXXMethod_isPureVirtual')
+            .asFunction<_dart_clang_CXXMethod_isPureVirtual>())(
       C,
     );
   }
@@ -3708,9 +3873,10 @@ class LibClang {
   int clang_CXXMethod_isStatic(
     CXCursor C,
   ) {
-    return (_clang_CXXMethod_isStatic ??= _dylib.lookupFunction<
-        _c_clang_CXXMethod_isStatic,
-        _dart_clang_CXXMethod_isStatic>('clang_CXXMethod_isStatic'))(
+    return (_clang_CXXMethod_isStatic ??=
+        _lookup<ffi.NativeFunction<_c_clang_CXXMethod_isStatic>>(
+                'clang_CXXMethod_isStatic')
+            .asFunction<_dart_clang_CXXMethod_isStatic>())(
       C,
     );
   }
@@ -3723,9 +3889,10 @@ class LibClang {
   int clang_CXXMethod_isVirtual(
     CXCursor C,
   ) {
-    return (_clang_CXXMethod_isVirtual ??= _dylib.lookupFunction<
-        _c_clang_CXXMethod_isVirtual,
-        _dart_clang_CXXMethod_isVirtual>('clang_CXXMethod_isVirtual'))(
+    return (_clang_CXXMethod_isVirtual ??=
+        _lookup<ffi.NativeFunction<_c_clang_CXXMethod_isVirtual>>(
+                'clang_CXXMethod_isVirtual')
+            .asFunction<_dart_clang_CXXMethod_isVirtual>())(
       C,
     );
   }
@@ -3737,9 +3904,10 @@ class LibClang {
   int clang_CXXRecord_isAbstract(
     CXCursor C,
   ) {
-    return (_clang_CXXRecord_isAbstract ??= _dylib.lookupFunction<
-        _c_clang_CXXRecord_isAbstract,
-        _dart_clang_CXXRecord_isAbstract>('clang_CXXRecord_isAbstract'))(
+    return (_clang_CXXRecord_isAbstract ??=
+        _lookup<ffi.NativeFunction<_c_clang_CXXRecord_isAbstract>>(
+                'clang_CXXRecord_isAbstract')
+            .asFunction<_dart_clang_CXXRecord_isAbstract>())(
       C,
     );
   }
@@ -3750,9 +3918,10 @@ class LibClang {
   int clang_EnumDecl_isScoped(
     CXCursor C,
   ) {
-    return (_clang_EnumDecl_isScoped ??= _dylib.lookupFunction<
-        _c_clang_EnumDecl_isScoped,
-        _dart_clang_EnumDecl_isScoped>('clang_EnumDecl_isScoped'))(
+    return (_clang_EnumDecl_isScoped ??=
+        _lookup<ffi.NativeFunction<_c_clang_EnumDecl_isScoped>>(
+                'clang_EnumDecl_isScoped')
+            .asFunction<_dart_clang_EnumDecl_isScoped>())(
       C,
     );
   }
@@ -3764,9 +3933,10 @@ class LibClang {
   int clang_CXXMethod_isConst(
     CXCursor C,
   ) {
-    return (_clang_CXXMethod_isConst ??= _dylib.lookupFunction<
-        _c_clang_CXXMethod_isConst,
-        _dart_clang_CXXMethod_isConst>('clang_CXXMethod_isConst'))(
+    return (_clang_CXXMethod_isConst ??=
+        _lookup<ffi.NativeFunction<_c_clang_CXXMethod_isConst>>(
+                'clang_CXXMethod_isConst')
+            .asFunction<_dart_clang_CXXMethod_isConst>())(
       C,
     );
   }
@@ -3778,9 +3948,10 @@ class LibClang {
   int clang_getTemplateCursorKind(
     CXCursor C,
   ) {
-    return (_clang_getTemplateCursorKind ??= _dylib.lookupFunction<
-        _c_clang_getTemplateCursorKind,
-        _dart_clang_getTemplateCursorKind>('clang_getTemplateCursorKind'))(
+    return (_clang_getTemplateCursorKind ??=
+        _lookup<ffi.NativeFunction<_c_clang_getTemplateCursorKind>>(
+                'clang_getTemplateCursorKind')
+            .asFunction<_dart_clang_getTemplateCursorKind>())(
       C,
     );
   }
@@ -3793,10 +3964,10 @@ class LibClang {
   CXCursor clang_getSpecializedCursorTemplate(
     CXCursor C,
   ) {
-    return (_clang_getSpecializedCursorTemplate ??= _dylib.lookupFunction<
-            _c_clang_getSpecializedCursorTemplate,
-            _dart_clang_getSpecializedCursorTemplate>(
-        'clang_getSpecializedCursorTemplate'))(
+    return (_clang_getSpecializedCursorTemplate ??=
+        _lookup<ffi.NativeFunction<_c_clang_getSpecializedCursorTemplate>>(
+                'clang_getSpecializedCursorTemplate')
+            .asFunction<_dart_clang_getSpecializedCursorTemplate>())(
       C,
     );
   }
@@ -3810,10 +3981,10 @@ class LibClang {
     int NameFlags,
     int PieceIndex,
   ) {
-    return (_clang_getCursorReferenceNameRange ??= _dylib.lookupFunction<
-            _c_clang_getCursorReferenceNameRange,
-            _dart_clang_getCursorReferenceNameRange>(
-        'clang_getCursorReferenceNameRange'))(
+    return (_clang_getCursorReferenceNameRange ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCursorReferenceNameRange>>(
+                'clang_getCursorReferenceNameRange')
+            .asFunction<_dart_clang_getCursorReferenceNameRange>())(
       C,
       NameFlags,
       PieceIndex,
@@ -3828,8 +3999,8 @@ class LibClang {
     CXSourceLocation Location,
   ) {
     return (_clang_getToken ??=
-        _dylib.lookupFunction<_c_clang_getToken, _dart_clang_getToken>(
-            'clang_getToken'))(
+        _lookup<ffi.NativeFunction<_c_clang_getToken>>('clang_getToken')
+            .asFunction<_dart_clang_getToken>())(
       TU,
       Location,
     );
@@ -3842,8 +4013,8 @@ class LibClang {
     CXToken arg0,
   ) {
     return (_clang_getTokenKind ??=
-        _dylib.lookupFunction<_c_clang_getTokenKind, _dart_clang_getTokenKind>(
-            'clang_getTokenKind'))(
+        _lookup<ffi.NativeFunction<_c_clang_getTokenKind>>('clang_getTokenKind')
+            .asFunction<_dart_clang_getTokenKind>())(
       arg0,
     );
   }
@@ -3855,9 +4026,10 @@ class LibClang {
     ffi.Pointer<CXTranslationUnitImpl> arg0,
     CXToken arg1,
   ) {
-    return (_clang_getTokenSpelling ??= _dylib.lookupFunction<
-        _c_clang_getTokenSpelling,
-        _dart_clang_getTokenSpelling>('clang_getTokenSpelling'))(
+    return (_clang_getTokenSpelling ??=
+        _lookup<ffi.NativeFunction<_c_clang_getTokenSpelling>>(
+                'clang_getTokenSpelling')
+            .asFunction<_dart_clang_getTokenSpelling>())(
       arg0,
       arg1,
     );
@@ -3870,9 +4042,10 @@ class LibClang {
     ffi.Pointer<CXTranslationUnitImpl> arg0,
     CXToken arg1,
   ) {
-    return (_clang_getTokenLocation ??= _dylib.lookupFunction<
-        _c_clang_getTokenLocation,
-        _dart_clang_getTokenLocation>('clang_getTokenLocation'))(
+    return (_clang_getTokenLocation ??=
+        _lookup<ffi.NativeFunction<_c_clang_getTokenLocation>>(
+                'clang_getTokenLocation')
+            .asFunction<_dart_clang_getTokenLocation>())(
       arg0,
       arg1,
     );
@@ -3885,9 +4058,10 @@ class LibClang {
     ffi.Pointer<CXTranslationUnitImpl> arg0,
     CXToken arg1,
   ) {
-    return (_clang_getTokenExtent ??= _dylib.lookupFunction<
-        _c_clang_getTokenExtent,
-        _dart_clang_getTokenExtent>('clang_getTokenExtent'))(
+    return (_clang_getTokenExtent ??=
+        _lookup<ffi.NativeFunction<_c_clang_getTokenExtent>>(
+                'clang_getTokenExtent')
+            .asFunction<_dart_clang_getTokenExtent>())(
       arg0,
       arg1,
     );
@@ -3904,8 +4078,8 @@ class LibClang {
     ffi.Pointer<ffi.Uint32> NumTokens,
   ) {
     return (_clang_tokenize ??=
-        _dylib.lookupFunction<_c_clang_tokenize, _dart_clang_tokenize>(
-            'clang_tokenize'))(
+        _lookup<ffi.NativeFunction<_c_clang_tokenize>>('clang_tokenize')
+            .asFunction<_dart_clang_tokenize>())(
       TU,
       Range,
       Tokens,
@@ -3923,9 +4097,10 @@ class LibClang {
     int NumTokens,
     ffi.Pointer<CXCursor> Cursors,
   ) {
-    return (_clang_annotateTokens ??= _dylib.lookupFunction<
-        _c_clang_annotateTokens,
-        _dart_clang_annotateTokens>('clang_annotateTokens'))(
+    return (_clang_annotateTokens ??=
+        _lookup<ffi.NativeFunction<_c_clang_annotateTokens>>(
+                'clang_annotateTokens')
+            .asFunction<_dart_clang_annotateTokens>())(
       TU,
       Tokens,
       NumTokens,
@@ -3941,9 +4116,10 @@ class LibClang {
     ffi.Pointer<CXToken> Tokens,
     int NumTokens,
   ) {
-    return (_clang_disposeTokens ??= _dylib.lookupFunction<
-        _c_clang_disposeTokens,
-        _dart_clang_disposeTokens>('clang_disposeTokens'))(
+    return (_clang_disposeTokens ??=
+        _lookup<ffi.NativeFunction<_c_clang_disposeTokens>>(
+                'clang_disposeTokens')
+            .asFunction<_dart_clang_disposeTokens>())(
       TU,
       Tokens,
       NumTokens,
@@ -3957,9 +4133,10 @@ class LibClang {
   CXString clang_getCursorKindSpelling(
     int Kind,
   ) {
-    return (_clang_getCursorKindSpelling ??= _dylib.lookupFunction<
-        _c_clang_getCursorKindSpelling,
-        _dart_clang_getCursorKindSpelling>('clang_getCursorKindSpelling'))(
+    return (_clang_getCursorKindSpelling ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCursorKindSpelling>>(
+                'clang_getCursorKindSpelling')
+            .asFunction<_dart_clang_getCursorKindSpelling>())(
       Kind,
     );
   }
@@ -3975,10 +4152,10 @@ class LibClang {
     ffi.Pointer<ffi.Uint32> endLine,
     ffi.Pointer<ffi.Uint32> endColumn,
   ) {
-    return (_clang_getDefinitionSpellingAndExtent ??= _dylib.lookupFunction<
-            _c_clang_getDefinitionSpellingAndExtent,
-            _dart_clang_getDefinitionSpellingAndExtent>(
-        'clang_getDefinitionSpellingAndExtent'))(
+    return (_clang_getDefinitionSpellingAndExtent ??=
+        _lookup<ffi.NativeFunction<_c_clang_getDefinitionSpellingAndExtent>>(
+                'clang_getDefinitionSpellingAndExtent')
+            .asFunction<_dart_clang_getDefinitionSpellingAndExtent>())(
       arg0,
       startBuf,
       endBuf,
@@ -3993,9 +4170,10 @@ class LibClang {
       _clang_getDefinitionSpellingAndExtent;
 
   void clang_enableStackTraces() {
-    return (_clang_enableStackTraces ??= _dylib.lookupFunction<
-        _c_clang_enableStackTraces,
-        _dart_clang_enableStackTraces>('clang_enableStackTraces'))();
+    return (_clang_enableStackTraces ??=
+        _lookup<ffi.NativeFunction<_c_clang_enableStackTraces>>(
+                'clang_enableStackTraces')
+            .asFunction<_dart_clang_enableStackTraces>())();
   }
 
   _dart_clang_enableStackTraces? _clang_enableStackTraces;
@@ -4005,9 +4183,10 @@ class LibClang {
     ffi.Pointer<ffi.Void> user_data,
     int stack_size,
   ) {
-    return (_clang_executeOnThread ??= _dylib.lookupFunction<
-        _c_clang_executeOnThread,
-        _dart_clang_executeOnThread>('clang_executeOnThread'))(
+    return (_clang_executeOnThread ??=
+        _lookup<ffi.NativeFunction<_c_clang_executeOnThread>>(
+                'clang_executeOnThread')
+            .asFunction<_dart_clang_executeOnThread>())(
       fn,
       user_data,
       stack_size,
@@ -4021,9 +4200,10 @@ class LibClang {
     ffi.Pointer<ffi.Void> completion_string,
     int chunk_number,
   ) {
-    return (_clang_getCompletionChunkKind ??= _dylib.lookupFunction<
-        _c_clang_getCompletionChunkKind,
-        _dart_clang_getCompletionChunkKind>('clang_getCompletionChunkKind'))(
+    return (_clang_getCompletionChunkKind ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCompletionChunkKind>>(
+                'clang_getCompletionChunkKind')
+            .asFunction<_dart_clang_getCompletionChunkKind>())(
       completion_string,
       chunk_number,
     );
@@ -4037,9 +4217,10 @@ class LibClang {
     ffi.Pointer<ffi.Void> completion_string,
     int chunk_number,
   ) {
-    return (_clang_getCompletionChunkText ??= _dylib.lookupFunction<
-        _c_clang_getCompletionChunkText,
-        _dart_clang_getCompletionChunkText>('clang_getCompletionChunkText'))(
+    return (_clang_getCompletionChunkText ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCompletionChunkText>>(
+                'clang_getCompletionChunkText')
+            .asFunction<_dart_clang_getCompletionChunkText>())(
       completion_string,
       chunk_number,
     );
@@ -4053,10 +4234,11 @@ class LibClang {
     ffi.Pointer<ffi.Void> completion_string,
     int chunk_number,
   ) {
-    return (_clang_getCompletionChunkCompletionString ??= _dylib.lookupFunction<
-            _c_clang_getCompletionChunkCompletionString,
-            _dart_clang_getCompletionChunkCompletionString>(
-        'clang_getCompletionChunkCompletionString'))(
+    return (_clang_getCompletionChunkCompletionString ??= _lookup<
+                ffi.NativeFunction<
+                    _c_clang_getCompletionChunkCompletionString>>(
+            'clang_getCompletionChunkCompletionString')
+        .asFunction<_dart_clang_getCompletionChunkCompletionString>())(
       completion_string,
       chunk_number,
     );
@@ -4069,9 +4251,10 @@ class LibClang {
   int clang_getNumCompletionChunks(
     ffi.Pointer<ffi.Void> completion_string,
   ) {
-    return (_clang_getNumCompletionChunks ??= _dylib.lookupFunction<
-        _c_clang_getNumCompletionChunks,
-        _dart_clang_getNumCompletionChunks>('clang_getNumCompletionChunks'))(
+    return (_clang_getNumCompletionChunks ??=
+        _lookup<ffi.NativeFunction<_c_clang_getNumCompletionChunks>>(
+                'clang_getNumCompletionChunks')
+            .asFunction<_dart_clang_getNumCompletionChunks>())(
       completion_string,
     );
   }
@@ -4082,9 +4265,10 @@ class LibClang {
   int clang_getCompletionPriority(
     ffi.Pointer<ffi.Void> completion_string,
   ) {
-    return (_clang_getCompletionPriority ??= _dylib.lookupFunction<
-        _c_clang_getCompletionPriority,
-        _dart_clang_getCompletionPriority>('clang_getCompletionPriority'))(
+    return (_clang_getCompletionPriority ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCompletionPriority>>(
+                'clang_getCompletionPriority')
+            .asFunction<_dart_clang_getCompletionPriority>())(
       completion_string,
     );
   }
@@ -4096,10 +4280,10 @@ class LibClang {
   int clang_getCompletionAvailability(
     ffi.Pointer<ffi.Void> completion_string,
   ) {
-    return (_clang_getCompletionAvailability ??= _dylib.lookupFunction<
-            _c_clang_getCompletionAvailability,
-            _dart_clang_getCompletionAvailability>(
-        'clang_getCompletionAvailability'))(
+    return (_clang_getCompletionAvailability ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCompletionAvailability>>(
+                'clang_getCompletionAvailability')
+            .asFunction<_dart_clang_getCompletionAvailability>())(
       completion_string,
     );
   }
@@ -4111,10 +4295,10 @@ class LibClang {
   int clang_getCompletionNumAnnotations(
     ffi.Pointer<ffi.Void> completion_string,
   ) {
-    return (_clang_getCompletionNumAnnotations ??= _dylib.lookupFunction<
-            _c_clang_getCompletionNumAnnotations,
-            _dart_clang_getCompletionNumAnnotations>(
-        'clang_getCompletionNumAnnotations'))(
+    return (_clang_getCompletionNumAnnotations ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCompletionNumAnnotations>>(
+                'clang_getCompletionNumAnnotations')
+            .asFunction<_dart_clang_getCompletionNumAnnotations>())(
       completion_string,
     );
   }
@@ -4126,9 +4310,10 @@ class LibClang {
     ffi.Pointer<ffi.Void> completion_string,
     int annotation_number,
   ) {
-    return (_clang_getCompletionAnnotation ??= _dylib.lookupFunction<
-        _c_clang_getCompletionAnnotation,
-        _dart_clang_getCompletionAnnotation>('clang_getCompletionAnnotation'))(
+    return (_clang_getCompletionAnnotation ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCompletionAnnotation>>(
+                'clang_getCompletionAnnotation')
+            .asFunction<_dart_clang_getCompletionAnnotation>())(
       completion_string,
       annotation_number,
     );
@@ -4141,9 +4326,10 @@ class LibClang {
     ffi.Pointer<ffi.Void> completion_string,
     ffi.Pointer<ffi.Int32> kind,
   ) {
-    return (_clang_getCompletionParent ??= _dylib.lookupFunction<
-        _c_clang_getCompletionParent,
-        _dart_clang_getCompletionParent>('clang_getCompletionParent'))(
+    return (_clang_getCompletionParent ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCompletionParent>>(
+                'clang_getCompletionParent')
+            .asFunction<_dart_clang_getCompletionParent>())(
       completion_string,
       kind,
     );
@@ -4156,10 +4342,10 @@ class LibClang {
   CXString clang_getCompletionBriefComment(
     ffi.Pointer<ffi.Void> completion_string,
   ) {
-    return (_clang_getCompletionBriefComment ??= _dylib.lookupFunction<
-            _c_clang_getCompletionBriefComment,
-            _dart_clang_getCompletionBriefComment>(
-        'clang_getCompletionBriefComment'))(
+    return (_clang_getCompletionBriefComment ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCompletionBriefComment>>(
+                'clang_getCompletionBriefComment')
+            .asFunction<_dart_clang_getCompletionBriefComment>())(
       completion_string,
     );
   }
@@ -4171,10 +4357,10 @@ class LibClang {
   ffi.Pointer<ffi.Void> clang_getCursorCompletionString(
     CXCursor cursor,
   ) {
-    return (_clang_getCursorCompletionString ??= _dylib.lookupFunction<
-            _c_clang_getCursorCompletionString,
-            _dart_clang_getCursorCompletionString>(
-        'clang_getCursorCompletionString'))(
+    return (_clang_getCursorCompletionString ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCursorCompletionString>>(
+                'clang_getCursorCompletionString')
+            .asFunction<_dart_clang_getCursorCompletionString>())(
       cursor,
     );
   }
@@ -4186,9 +4372,10 @@ class LibClang {
     ffi.Pointer<CXCodeCompleteResults> results,
     int completion_index,
   ) {
-    return (_clang_getCompletionNumFixIts ??= _dylib.lookupFunction<
-        _c_clang_getCompletionNumFixIts,
-        _dart_clang_getCompletionNumFixIts>('clang_getCompletionNumFixIts'))(
+    return (_clang_getCompletionNumFixIts ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCompletionNumFixIts>>(
+                'clang_getCompletionNumFixIts')
+            .asFunction<_dart_clang_getCompletionNumFixIts>())(
       results,
       completion_index,
     );
@@ -4204,9 +4391,10 @@ class LibClang {
     int fixit_index,
     ffi.Pointer<CXSourceRange> replacement_range,
   ) {
-    return (_clang_getCompletionFixIt ??= _dylib.lookupFunction<
-        _c_clang_getCompletionFixIt,
-        _dart_clang_getCompletionFixIt>('clang_getCompletionFixIt'))(
+    return (_clang_getCompletionFixIt ??=
+        _lookup<ffi.NativeFunction<_c_clang_getCompletionFixIt>>(
+                'clang_getCompletionFixIt')
+            .asFunction<_dart_clang_getCompletionFixIt>())(
       results,
       completion_index,
       fixit_index,
@@ -4219,10 +4407,10 @@ class LibClang {
   /// Returns a default set of code-completion options that can be passed to
   /// clang_codeCompleteAt().
   int clang_defaultCodeCompleteOptions() {
-    return (_clang_defaultCodeCompleteOptions ??= _dylib.lookupFunction<
-            _c_clang_defaultCodeCompleteOptions,
-            _dart_clang_defaultCodeCompleteOptions>(
-        'clang_defaultCodeCompleteOptions'))();
+    return (_clang_defaultCodeCompleteOptions ??=
+        _lookup<ffi.NativeFunction<_c_clang_defaultCodeCompleteOptions>>(
+                'clang_defaultCodeCompleteOptions')
+            .asFunction<_dart_clang_defaultCodeCompleteOptions>())();
   }
 
   _dart_clang_defaultCodeCompleteOptions? _clang_defaultCodeCompleteOptions;
@@ -4237,9 +4425,10 @@ class LibClang {
     int num_unsaved_files,
     int options,
   ) {
-    return (_clang_codeCompleteAt ??= _dylib.lookupFunction<
-        _c_clang_codeCompleteAt,
-        _dart_clang_codeCompleteAt>('clang_codeCompleteAt'))(
+    return (_clang_codeCompleteAt ??=
+        _lookup<ffi.NativeFunction<_c_clang_codeCompleteAt>>(
+                'clang_codeCompleteAt')
+            .asFunction<_dart_clang_codeCompleteAt>())(
       TU,
       complete_filename,
       complete_line,
@@ -4257,10 +4446,10 @@ class LibClang {
     ffi.Pointer<CXCompletionResult> Results,
     int NumResults,
   ) {
-    return (_clang_sortCodeCompletionResults ??= _dylib.lookupFunction<
-            _c_clang_sortCodeCompletionResults,
-            _dart_clang_sortCodeCompletionResults>(
-        'clang_sortCodeCompletionResults'))(
+    return (_clang_sortCodeCompletionResults ??=
+        _lookup<ffi.NativeFunction<_c_clang_sortCodeCompletionResults>>(
+                'clang_sortCodeCompletionResults')
+            .asFunction<_dart_clang_sortCodeCompletionResults>())(
       Results,
       NumResults,
     );
@@ -4272,10 +4461,10 @@ class LibClang {
   void clang_disposeCodeCompleteResults(
     ffi.Pointer<CXCodeCompleteResults> Results,
   ) {
-    return (_clang_disposeCodeCompleteResults ??= _dylib.lookupFunction<
-            _c_clang_disposeCodeCompleteResults,
-            _dart_clang_disposeCodeCompleteResults>(
-        'clang_disposeCodeCompleteResults'))(
+    return (_clang_disposeCodeCompleteResults ??=
+        _lookup<ffi.NativeFunction<_c_clang_disposeCodeCompleteResults>>(
+                'clang_disposeCodeCompleteResults')
+            .asFunction<_dart_clang_disposeCodeCompleteResults>())(
       Results,
     );
   }
@@ -4287,10 +4476,10 @@ class LibClang {
   int clang_codeCompleteGetNumDiagnostics(
     ffi.Pointer<CXCodeCompleteResults> Results,
   ) {
-    return (_clang_codeCompleteGetNumDiagnostics ??= _dylib.lookupFunction<
-            _c_clang_codeCompleteGetNumDiagnostics,
-            _dart_clang_codeCompleteGetNumDiagnostics>(
-        'clang_codeCompleteGetNumDiagnostics'))(
+    return (_clang_codeCompleteGetNumDiagnostics ??=
+        _lookup<ffi.NativeFunction<_c_clang_codeCompleteGetNumDiagnostics>>(
+                'clang_codeCompleteGetNumDiagnostics')
+            .asFunction<_dart_clang_codeCompleteGetNumDiagnostics>())(
       Results,
     );
   }
@@ -4303,10 +4492,10 @@ class LibClang {
     ffi.Pointer<CXCodeCompleteResults> Results,
     int Index,
   ) {
-    return (_clang_codeCompleteGetDiagnostic ??= _dylib.lookupFunction<
-            _c_clang_codeCompleteGetDiagnostic,
-            _dart_clang_codeCompleteGetDiagnostic>(
-        'clang_codeCompleteGetDiagnostic'))(
+    return (_clang_codeCompleteGetDiagnostic ??=
+        _lookup<ffi.NativeFunction<_c_clang_codeCompleteGetDiagnostic>>(
+                'clang_codeCompleteGetDiagnostic')
+            .asFunction<_dart_clang_codeCompleteGetDiagnostic>())(
       Results,
       Index,
     );
@@ -4319,9 +4508,10 @@ class LibClang {
   int clang_codeCompleteGetContexts(
     ffi.Pointer<CXCodeCompleteResults> Results,
   ) {
-    return (_clang_codeCompleteGetContexts ??= _dylib.lookupFunction<
-        _c_clang_codeCompleteGetContexts,
-        _dart_clang_codeCompleteGetContexts>('clang_codeCompleteGetContexts'))(
+    return (_clang_codeCompleteGetContexts ??=
+        _lookup<ffi.NativeFunction<_c_clang_codeCompleteGetContexts>>(
+                'clang_codeCompleteGetContexts')
+            .asFunction<_dart_clang_codeCompleteGetContexts>())(
       Results,
     );
   }
@@ -4336,10 +4526,10 @@ class LibClang {
     ffi.Pointer<CXCodeCompleteResults> Results,
     ffi.Pointer<ffi.Uint32> IsIncomplete,
   ) {
-    return (_clang_codeCompleteGetContainerKind ??= _dylib.lookupFunction<
-            _c_clang_codeCompleteGetContainerKind,
-            _dart_clang_codeCompleteGetContainerKind>(
-        'clang_codeCompleteGetContainerKind'))(
+    return (_clang_codeCompleteGetContainerKind ??=
+        _lookup<ffi.NativeFunction<_c_clang_codeCompleteGetContainerKind>>(
+                'clang_codeCompleteGetContainerKind')
+            .asFunction<_dart_clang_codeCompleteGetContainerKind>())(
       Results,
       IsIncomplete,
     );
@@ -4353,10 +4543,10 @@ class LibClang {
   CXString clang_codeCompleteGetContainerUSR(
     ffi.Pointer<CXCodeCompleteResults> Results,
   ) {
-    return (_clang_codeCompleteGetContainerUSR ??= _dylib.lookupFunction<
-            _c_clang_codeCompleteGetContainerUSR,
-            _dart_clang_codeCompleteGetContainerUSR>(
-        'clang_codeCompleteGetContainerUSR'))(
+    return (_clang_codeCompleteGetContainerUSR ??=
+        _lookup<ffi.NativeFunction<_c_clang_codeCompleteGetContainerUSR>>(
+                'clang_codeCompleteGetContainerUSR')
+            .asFunction<_dart_clang_codeCompleteGetContainerUSR>())(
       Results,
     );
   }
@@ -4370,10 +4560,10 @@ class LibClang {
   CXString clang_codeCompleteGetObjCSelector(
     ffi.Pointer<CXCodeCompleteResults> Results,
   ) {
-    return (_clang_codeCompleteGetObjCSelector ??= _dylib.lookupFunction<
-            _c_clang_codeCompleteGetObjCSelector,
-            _dart_clang_codeCompleteGetObjCSelector>(
-        'clang_codeCompleteGetObjCSelector'))(
+    return (_clang_codeCompleteGetObjCSelector ??=
+        _lookup<ffi.NativeFunction<_c_clang_codeCompleteGetObjCSelector>>(
+                'clang_codeCompleteGetObjCSelector')
+            .asFunction<_dart_clang_codeCompleteGetObjCSelector>())(
       Results,
     );
   }
@@ -4383,9 +4573,10 @@ class LibClang {
   /// Return a version string, suitable for showing to a user, but not intended
   /// to be parsed (the format is not guaranteed to be stable).
   CXString clang_getClangVersion() {
-    return (_clang_getClangVersion ??= _dylib.lookupFunction<
-        _c_clang_getClangVersion,
-        _dart_clang_getClangVersion>('clang_getClangVersion'))();
+    return (_clang_getClangVersion ??=
+        _lookup<ffi.NativeFunction<_c_clang_getClangVersion>>(
+                'clang_getClangVersion')
+            .asFunction<_dart_clang_getClangVersion>())();
   }
 
   _dart_clang_getClangVersion? _clang_getClangVersion;
@@ -4394,9 +4585,10 @@ class LibClang {
   void clang_toggleCrashRecovery(
     int isEnabled,
   ) {
-    return (_clang_toggleCrashRecovery ??= _dylib.lookupFunction<
-        _c_clang_toggleCrashRecovery,
-        _dart_clang_toggleCrashRecovery>('clang_toggleCrashRecovery'))(
+    return (_clang_toggleCrashRecovery ??=
+        _lookup<ffi.NativeFunction<_c_clang_toggleCrashRecovery>>(
+                'clang_toggleCrashRecovery')
+            .asFunction<_dart_clang_toggleCrashRecovery>())(
       isEnabled,
     );
   }
@@ -4412,9 +4604,10 @@ class LibClang {
     ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor>> visitor,
     ffi.Pointer<ffi.Void> client_data,
   ) {
-    return (_clang_getInclusions ??= _dylib.lookupFunction<
-        _c_clang_getInclusions,
-        _dart_clang_getInclusions>('clang_getInclusions'))(
+    return (_clang_getInclusions ??=
+        _lookup<ffi.NativeFunction<_c_clang_getInclusions>>(
+                'clang_getInclusions')
+            .asFunction<_dart_clang_getInclusions>())(
       tu,
       visitor,
       client_data,
@@ -4429,9 +4622,10 @@ class LibClang {
   ffi.Pointer<ffi.Void> clang_Cursor_Evaluate(
     CXCursor C,
   ) {
-    return (_clang_Cursor_Evaluate ??= _dylib.lookupFunction<
-        _c_clang_Cursor_Evaluate,
-        _dart_clang_Cursor_Evaluate>('clang_Cursor_Evaluate'))(
+    return (_clang_Cursor_Evaluate ??=
+        _lookup<ffi.NativeFunction<_c_clang_Cursor_Evaluate>>(
+                'clang_Cursor_Evaluate')
+            .asFunction<_dart_clang_Cursor_Evaluate>())(
       C,
     );
   }
@@ -4442,9 +4636,10 @@ class LibClang {
   int clang_EvalResult_getKind(
     ffi.Pointer<ffi.Void> E,
   ) {
-    return (_clang_EvalResult_getKind ??= _dylib.lookupFunction<
-        _c_clang_EvalResult_getKind,
-        _dart_clang_EvalResult_getKind>('clang_EvalResult_getKind'))(
+    return (_clang_EvalResult_getKind ??=
+        _lookup<ffi.NativeFunction<_c_clang_EvalResult_getKind>>(
+                'clang_EvalResult_getKind')
+            .asFunction<_dart_clang_EvalResult_getKind>())(
       E,
     );
   }
@@ -4455,9 +4650,10 @@ class LibClang {
   int clang_EvalResult_getAsInt(
     ffi.Pointer<ffi.Void> E,
   ) {
-    return (_clang_EvalResult_getAsInt ??= _dylib.lookupFunction<
-        _c_clang_EvalResult_getAsInt,
-        _dart_clang_EvalResult_getAsInt>('clang_EvalResult_getAsInt'))(
+    return (_clang_EvalResult_getAsInt ??=
+        _lookup<ffi.NativeFunction<_c_clang_EvalResult_getAsInt>>(
+                'clang_EvalResult_getAsInt')
+            .asFunction<_dart_clang_EvalResult_getAsInt>())(
       E,
     );
   }
@@ -4470,10 +4666,10 @@ class LibClang {
   int clang_EvalResult_getAsLongLong(
     ffi.Pointer<ffi.Void> E,
   ) {
-    return (_clang_EvalResult_getAsLongLong ??= _dylib.lookupFunction<
-            _c_clang_EvalResult_getAsLongLong,
-            _dart_clang_EvalResult_getAsLongLong>(
-        'clang_EvalResult_getAsLongLong'))(
+    return (_clang_EvalResult_getAsLongLong ??=
+        _lookup<ffi.NativeFunction<_c_clang_EvalResult_getAsLongLong>>(
+                'clang_EvalResult_getAsLongLong')
+            .asFunction<_dart_clang_EvalResult_getAsLongLong>())(
       E,
     );
   }
@@ -4485,10 +4681,10 @@ class LibClang {
   int clang_EvalResult_isUnsignedInt(
     ffi.Pointer<ffi.Void> E,
   ) {
-    return (_clang_EvalResult_isUnsignedInt ??= _dylib.lookupFunction<
-            _c_clang_EvalResult_isUnsignedInt,
-            _dart_clang_EvalResult_isUnsignedInt>(
-        'clang_EvalResult_isUnsignedInt'))(
+    return (_clang_EvalResult_isUnsignedInt ??=
+        _lookup<ffi.NativeFunction<_c_clang_EvalResult_isUnsignedInt>>(
+                'clang_EvalResult_isUnsignedInt')
+            .asFunction<_dart_clang_EvalResult_isUnsignedInt>())(
       E,
     );
   }
@@ -4500,10 +4696,10 @@ class LibClang {
   int clang_EvalResult_getAsUnsigned(
     ffi.Pointer<ffi.Void> E,
   ) {
-    return (_clang_EvalResult_getAsUnsigned ??= _dylib.lookupFunction<
-            _c_clang_EvalResult_getAsUnsigned,
-            _dart_clang_EvalResult_getAsUnsigned>(
-        'clang_EvalResult_getAsUnsigned'))(
+    return (_clang_EvalResult_getAsUnsigned ??=
+        _lookup<ffi.NativeFunction<_c_clang_EvalResult_getAsUnsigned>>(
+                'clang_EvalResult_getAsUnsigned')
+            .asFunction<_dart_clang_EvalResult_getAsUnsigned>())(
       E,
     );
   }
@@ -4514,9 +4710,10 @@ class LibClang {
   double clang_EvalResult_getAsDouble(
     ffi.Pointer<ffi.Void> E,
   ) {
-    return (_clang_EvalResult_getAsDouble ??= _dylib.lookupFunction<
-        _c_clang_EvalResult_getAsDouble,
-        _dart_clang_EvalResult_getAsDouble>('clang_EvalResult_getAsDouble'))(
+    return (_clang_EvalResult_getAsDouble ??=
+        _lookup<ffi.NativeFunction<_c_clang_EvalResult_getAsDouble>>(
+                'clang_EvalResult_getAsDouble')
+            .asFunction<_dart_clang_EvalResult_getAsDouble>())(
       E,
     );
   }
@@ -4530,9 +4727,10 @@ class LibClang {
   ffi.Pointer<ffi.Int8> clang_EvalResult_getAsStr(
     ffi.Pointer<ffi.Void> E,
   ) {
-    return (_clang_EvalResult_getAsStr ??= _dylib.lookupFunction<
-        _c_clang_EvalResult_getAsStr,
-        _dart_clang_EvalResult_getAsStr>('clang_EvalResult_getAsStr'))(
+    return (_clang_EvalResult_getAsStr ??=
+        _lookup<ffi.NativeFunction<_c_clang_EvalResult_getAsStr>>(
+                'clang_EvalResult_getAsStr')
+            .asFunction<_dart_clang_EvalResult_getAsStr>())(
       E,
     );
   }
@@ -4543,9 +4741,10 @@ class LibClang {
   void clang_EvalResult_dispose(
     ffi.Pointer<ffi.Void> E,
   ) {
-    return (_clang_EvalResult_dispose ??= _dylib.lookupFunction<
-        _c_clang_EvalResult_dispose,
-        _dart_clang_EvalResult_dispose>('clang_EvalResult_dispose'))(
+    return (_clang_EvalResult_dispose ??=
+        _lookup<ffi.NativeFunction<_c_clang_EvalResult_dispose>>(
+                'clang_EvalResult_dispose')
+            .asFunction<_dart_clang_EvalResult_dispose>())(
       E,
     );
   }
@@ -4556,9 +4755,10 @@ class LibClang {
   ffi.Pointer<ffi.Void> clang_getRemappings(
     ffi.Pointer<ffi.Int8> path,
   ) {
-    return (_clang_getRemappings ??= _dylib.lookupFunction<
-        _c_clang_getRemappings,
-        _dart_clang_getRemappings>('clang_getRemappings'))(
+    return (_clang_getRemappings ??=
+        _lookup<ffi.NativeFunction<_c_clang_getRemappings>>(
+                'clang_getRemappings')
+            .asFunction<_dart_clang_getRemappings>())(
       path,
     );
   }
@@ -4570,10 +4770,10 @@ class LibClang {
     ffi.Pointer<ffi.Pointer<ffi.Int8>> filePaths,
     int numFiles,
   ) {
-    return (_clang_getRemappingsFromFileList ??= _dylib.lookupFunction<
-            _c_clang_getRemappingsFromFileList,
-            _dart_clang_getRemappingsFromFileList>(
-        'clang_getRemappingsFromFileList'))(
+    return (_clang_getRemappingsFromFileList ??=
+        _lookup<ffi.NativeFunction<_c_clang_getRemappingsFromFileList>>(
+                'clang_getRemappingsFromFileList')
+            .asFunction<_dart_clang_getRemappingsFromFileList>())(
       filePaths,
       numFiles,
     );
@@ -4585,9 +4785,10 @@ class LibClang {
   int clang_remap_getNumFiles(
     ffi.Pointer<ffi.Void> arg0,
   ) {
-    return (_clang_remap_getNumFiles ??= _dylib.lookupFunction<
-        _c_clang_remap_getNumFiles,
-        _dart_clang_remap_getNumFiles>('clang_remap_getNumFiles'))(
+    return (_clang_remap_getNumFiles ??=
+        _lookup<ffi.NativeFunction<_c_clang_remap_getNumFiles>>(
+                'clang_remap_getNumFiles')
+            .asFunction<_dart_clang_remap_getNumFiles>())(
       arg0,
     );
   }
@@ -4601,9 +4802,10 @@ class LibClang {
     ffi.Pointer<CXString> original,
     ffi.Pointer<CXString> transformed,
   ) {
-    return (_clang_remap_getFilenames ??= _dylib.lookupFunction<
-        _c_clang_remap_getFilenames,
-        _dart_clang_remap_getFilenames>('clang_remap_getFilenames'))(
+    return (_clang_remap_getFilenames ??=
+        _lookup<ffi.NativeFunction<_c_clang_remap_getFilenames>>(
+                'clang_remap_getFilenames')
+            .asFunction<_dart_clang_remap_getFilenames>())(
       arg0,
       index,
       original,
@@ -4617,9 +4819,10 @@ class LibClang {
   void clang_remap_dispose(
     ffi.Pointer<ffi.Void> arg0,
   ) {
-    return (_clang_remap_dispose ??= _dylib.lookupFunction<
-        _c_clang_remap_dispose,
-        _dart_clang_remap_dispose>('clang_remap_dispose'))(
+    return (_clang_remap_dispose ??=
+        _lookup<ffi.NativeFunction<_c_clang_remap_dispose>>(
+                'clang_remap_dispose')
+            .asFunction<_dart_clang_remap_dispose>())(
       arg0,
     );
   }
@@ -4632,9 +4835,10 @@ class LibClang {
     ffi.Pointer<ffi.Void> file,
     CXCursorAndRangeVisitor visitor,
   ) {
-    return (_clang_findReferencesInFile ??= _dylib.lookupFunction<
-        _c_clang_findReferencesInFile,
-        _dart_clang_findReferencesInFile>('clang_findReferencesInFile'))(
+    return (_clang_findReferencesInFile ??=
+        _lookup<ffi.NativeFunction<_c_clang_findReferencesInFile>>(
+                'clang_findReferencesInFile')
+            .asFunction<_dart_clang_findReferencesInFile>())(
       cursor,
       file,
       visitor,
@@ -4649,9 +4853,10 @@ class LibClang {
     ffi.Pointer<ffi.Void> file,
     CXCursorAndRangeVisitor visitor,
   ) {
-    return (_clang_findIncludesInFile ??= _dylib.lookupFunction<
-        _c_clang_findIncludesInFile,
-        _dart_clang_findIncludesInFile>('clang_findIncludesInFile'))(
+    return (_clang_findIncludesInFile ??=
+        _lookup<ffi.NativeFunction<_c_clang_findIncludesInFile>>(
+                'clang_findIncludesInFile')
+            .asFunction<_dart_clang_findIncludesInFile>())(
       TU,
       file,
       visitor,
@@ -4663,10 +4868,10 @@ class LibClang {
   int clang_index_isEntityObjCContainerKind(
     int arg0,
   ) {
-    return (_clang_index_isEntityObjCContainerKind ??= _dylib.lookupFunction<
-            _c_clang_index_isEntityObjCContainerKind,
-            _dart_clang_index_isEntityObjCContainerKind>(
-        'clang_index_isEntityObjCContainerKind'))(
+    return (_clang_index_isEntityObjCContainerKind ??=
+        _lookup<ffi.NativeFunction<_c_clang_index_isEntityObjCContainerKind>>(
+                'clang_index_isEntityObjCContainerKind')
+            .asFunction<_dart_clang_index_isEntityObjCContainerKind>())(
       arg0,
     );
   }
@@ -4677,10 +4882,10 @@ class LibClang {
   ffi.Pointer<CXIdxObjCContainerDeclInfo> clang_index_getObjCContainerDeclInfo(
     ffi.Pointer<CXIdxDeclInfo> arg0,
   ) {
-    return (_clang_index_getObjCContainerDeclInfo ??= _dylib.lookupFunction<
-            _c_clang_index_getObjCContainerDeclInfo,
-            _dart_clang_index_getObjCContainerDeclInfo>(
-        'clang_index_getObjCContainerDeclInfo'))(
+    return (_clang_index_getObjCContainerDeclInfo ??=
+        _lookup<ffi.NativeFunction<_c_clang_index_getObjCContainerDeclInfo>>(
+                'clang_index_getObjCContainerDeclInfo')
+            .asFunction<_dart_clang_index_getObjCContainerDeclInfo>())(
       arg0,
     );
   }
@@ -4691,10 +4896,10 @@ class LibClang {
   ffi.Pointer<CXIdxObjCInterfaceDeclInfo> clang_index_getObjCInterfaceDeclInfo(
     ffi.Pointer<CXIdxDeclInfo> arg0,
   ) {
-    return (_clang_index_getObjCInterfaceDeclInfo ??= _dylib.lookupFunction<
-            _c_clang_index_getObjCInterfaceDeclInfo,
-            _dart_clang_index_getObjCInterfaceDeclInfo>(
-        'clang_index_getObjCInterfaceDeclInfo'))(
+    return (_clang_index_getObjCInterfaceDeclInfo ??=
+        _lookup<ffi.NativeFunction<_c_clang_index_getObjCInterfaceDeclInfo>>(
+                'clang_index_getObjCInterfaceDeclInfo')
+            .asFunction<_dart_clang_index_getObjCInterfaceDeclInfo>())(
       arg0,
     );
   }
@@ -4705,10 +4910,10 @@ class LibClang {
   ffi.Pointer<CXIdxObjCCategoryDeclInfo> clang_index_getObjCCategoryDeclInfo(
     ffi.Pointer<CXIdxDeclInfo> arg0,
   ) {
-    return (_clang_index_getObjCCategoryDeclInfo ??= _dylib.lookupFunction<
-            _c_clang_index_getObjCCategoryDeclInfo,
-            _dart_clang_index_getObjCCategoryDeclInfo>(
-        'clang_index_getObjCCategoryDeclInfo'))(
+    return (_clang_index_getObjCCategoryDeclInfo ??=
+        _lookup<ffi.NativeFunction<_c_clang_index_getObjCCategoryDeclInfo>>(
+                'clang_index_getObjCCategoryDeclInfo')
+            .asFunction<_dart_clang_index_getObjCCategoryDeclInfo>())(
       arg0,
     );
   }
@@ -4720,10 +4925,10 @@ class LibClang {
       clang_index_getObjCProtocolRefListInfo(
     ffi.Pointer<CXIdxDeclInfo> arg0,
   ) {
-    return (_clang_index_getObjCProtocolRefListInfo ??= _dylib.lookupFunction<
-            _c_clang_index_getObjCProtocolRefListInfo,
-            _dart_clang_index_getObjCProtocolRefListInfo>(
-        'clang_index_getObjCProtocolRefListInfo'))(
+    return (_clang_index_getObjCProtocolRefListInfo ??=
+        _lookup<ffi.NativeFunction<_c_clang_index_getObjCProtocolRefListInfo>>(
+                'clang_index_getObjCProtocolRefListInfo')
+            .asFunction<_dart_clang_index_getObjCProtocolRefListInfo>())(
       arg0,
     );
   }
@@ -4734,10 +4939,10 @@ class LibClang {
   ffi.Pointer<CXIdxObjCPropertyDeclInfo> clang_index_getObjCPropertyDeclInfo(
     ffi.Pointer<CXIdxDeclInfo> arg0,
   ) {
-    return (_clang_index_getObjCPropertyDeclInfo ??= _dylib.lookupFunction<
-            _c_clang_index_getObjCPropertyDeclInfo,
-            _dart_clang_index_getObjCPropertyDeclInfo>(
-        'clang_index_getObjCPropertyDeclInfo'))(
+    return (_clang_index_getObjCPropertyDeclInfo ??=
+        _lookup<ffi.NativeFunction<_c_clang_index_getObjCPropertyDeclInfo>>(
+                'clang_index_getObjCPropertyDeclInfo')
+            .asFunction<_dart_clang_index_getObjCPropertyDeclInfo>())(
       arg0,
     );
   }
@@ -4749,10 +4954,11 @@ class LibClang {
       clang_index_getIBOutletCollectionAttrInfo(
     ffi.Pointer<CXIdxAttrInfo> arg0,
   ) {
-    return (_clang_index_getIBOutletCollectionAttrInfo ??=
-        _dylib.lookupFunction<_c_clang_index_getIBOutletCollectionAttrInfo,
-                _dart_clang_index_getIBOutletCollectionAttrInfo>(
-            'clang_index_getIBOutletCollectionAttrInfo'))(
+    return (_clang_index_getIBOutletCollectionAttrInfo ??= _lookup<
+                ffi.NativeFunction<
+                    _c_clang_index_getIBOutletCollectionAttrInfo>>(
+            'clang_index_getIBOutletCollectionAttrInfo')
+        .asFunction<_dart_clang_index_getIBOutletCollectionAttrInfo>())(
       arg0,
     );
   }
@@ -4763,10 +4969,10 @@ class LibClang {
   ffi.Pointer<CXIdxCXXClassDeclInfo> clang_index_getCXXClassDeclInfo(
     ffi.Pointer<CXIdxDeclInfo> arg0,
   ) {
-    return (_clang_index_getCXXClassDeclInfo ??= _dylib.lookupFunction<
-            _c_clang_index_getCXXClassDeclInfo,
-            _dart_clang_index_getCXXClassDeclInfo>(
-        'clang_index_getCXXClassDeclInfo'))(
+    return (_clang_index_getCXXClassDeclInfo ??=
+        _lookup<ffi.NativeFunction<_c_clang_index_getCXXClassDeclInfo>>(
+                'clang_index_getCXXClassDeclInfo')
+            .asFunction<_dart_clang_index_getCXXClassDeclInfo>())(
       arg0,
     );
   }
@@ -4777,10 +4983,10 @@ class LibClang {
   ffi.Pointer<ffi.Void> clang_index_getClientContainer(
     ffi.Pointer<CXIdxContainerInfo> arg0,
   ) {
-    return (_clang_index_getClientContainer ??= _dylib.lookupFunction<
-            _c_clang_index_getClientContainer,
-            _dart_clang_index_getClientContainer>(
-        'clang_index_getClientContainer'))(
+    return (_clang_index_getClientContainer ??=
+        _lookup<ffi.NativeFunction<_c_clang_index_getClientContainer>>(
+                'clang_index_getClientContainer')
+            .asFunction<_dart_clang_index_getClientContainer>())(
       arg0,
     );
   }
@@ -4792,10 +4998,10 @@ class LibClang {
     ffi.Pointer<CXIdxContainerInfo> arg0,
     ffi.Pointer<ffi.Void> arg1,
   ) {
-    return (_clang_index_setClientContainer ??= _dylib.lookupFunction<
-            _c_clang_index_setClientContainer,
-            _dart_clang_index_setClientContainer>(
-        'clang_index_setClientContainer'))(
+    return (_clang_index_setClientContainer ??=
+        _lookup<ffi.NativeFunction<_c_clang_index_setClientContainer>>(
+                'clang_index_setClientContainer')
+            .asFunction<_dart_clang_index_setClientContainer>())(
       arg0,
       arg1,
     );
@@ -4807,9 +5013,10 @@ class LibClang {
   ffi.Pointer<ffi.Void> clang_index_getClientEntity(
     ffi.Pointer<CXIdxEntityInfo> arg0,
   ) {
-    return (_clang_index_getClientEntity ??= _dylib.lookupFunction<
-        _c_clang_index_getClientEntity,
-        _dart_clang_index_getClientEntity>('clang_index_getClientEntity'))(
+    return (_clang_index_getClientEntity ??=
+        _lookup<ffi.NativeFunction<_c_clang_index_getClientEntity>>(
+                'clang_index_getClientEntity')
+            .asFunction<_dart_clang_index_getClientEntity>())(
       arg0,
     );
   }
@@ -4821,9 +5028,10 @@ class LibClang {
     ffi.Pointer<CXIdxEntityInfo> arg0,
     ffi.Pointer<ffi.Void> arg1,
   ) {
-    return (_clang_index_setClientEntity ??= _dylib.lookupFunction<
-        _c_clang_index_setClientEntity,
-        _dart_clang_index_setClientEntity>('clang_index_setClientEntity'))(
+    return (_clang_index_setClientEntity ??=
+        _lookup<ffi.NativeFunction<_c_clang_index_setClientEntity>>(
+                'clang_index_setClientEntity')
+            .asFunction<_dart_clang_index_setClientEntity>())(
       arg0,
       arg1,
     );
@@ -4836,9 +5044,10 @@ class LibClang {
   ffi.Pointer<ffi.Void> clang_IndexAction_create(
     ffi.Pointer<ffi.Void> CIdx,
   ) {
-    return (_clang_IndexAction_create ??= _dylib.lookupFunction<
-        _c_clang_IndexAction_create,
-        _dart_clang_IndexAction_create>('clang_IndexAction_create'))(
+    return (_clang_IndexAction_create ??=
+        _lookup<ffi.NativeFunction<_c_clang_IndexAction_create>>(
+                'clang_IndexAction_create')
+            .asFunction<_dart_clang_IndexAction_create>())(
       CIdx,
     );
   }
@@ -4849,9 +5058,10 @@ class LibClang {
   void clang_IndexAction_dispose(
     ffi.Pointer<ffi.Void> arg0,
   ) {
-    return (_clang_IndexAction_dispose ??= _dylib.lookupFunction<
-        _c_clang_IndexAction_dispose,
-        _dart_clang_IndexAction_dispose>('clang_IndexAction_dispose'))(
+    return (_clang_IndexAction_dispose ??=
+        _lookup<ffi.NativeFunction<_c_clang_IndexAction_dispose>>(
+                'clang_IndexAction_dispose')
+            .asFunction<_dart_clang_IndexAction_dispose>())(
       arg0,
     );
   }
@@ -4874,9 +5084,10 @@ class LibClang {
     ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
     int TU_options,
   ) {
-    return (_clang_indexSourceFile ??= _dylib.lookupFunction<
-        _c_clang_indexSourceFile,
-        _dart_clang_indexSourceFile>('clang_indexSourceFile'))(
+    return (_clang_indexSourceFile ??=
+        _lookup<ffi.NativeFunction<_c_clang_indexSourceFile>>(
+                'clang_indexSourceFile')
+            .asFunction<_dart_clang_indexSourceFile>())(
       arg0,
       client_data,
       index_callbacks,
@@ -4911,9 +5122,10 @@ class LibClang {
     ffi.Pointer<ffi.Pointer<CXTranslationUnitImpl>> out_TU,
     int TU_options,
   ) {
-    return (_clang_indexSourceFileFullArgv ??= _dylib.lookupFunction<
-        _c_clang_indexSourceFileFullArgv,
-        _dart_clang_indexSourceFileFullArgv>('clang_indexSourceFileFullArgv'))(
+    return (_clang_indexSourceFileFullArgv ??=
+        _lookup<ffi.NativeFunction<_c_clang_indexSourceFileFullArgv>>(
+                'clang_indexSourceFileFullArgv')
+            .asFunction<_dart_clang_indexSourceFileFullArgv>())(
       arg0,
       client_data,
       index_callbacks,
@@ -4941,9 +5153,10 @@ class LibClang {
     int index_options,
     ffi.Pointer<CXTranslationUnitImpl> arg5,
   ) {
-    return (_clang_indexTranslationUnit ??= _dylib.lookupFunction<
-        _c_clang_indexTranslationUnit,
-        _dart_clang_indexTranslationUnit>('clang_indexTranslationUnit'))(
+    return (_clang_indexTranslationUnit ??=
+        _lookup<ffi.NativeFunction<_c_clang_indexTranslationUnit>>(
+                'clang_indexTranslationUnit')
+            .asFunction<_dart_clang_indexTranslationUnit>())(
       arg0,
       client_data,
       index_callbacks,
@@ -4965,10 +5178,10 @@ class LibClang {
     ffi.Pointer<ffi.Uint32> column,
     ffi.Pointer<ffi.Uint32> offset,
   ) {
-    return (_clang_indexLoc_getFileLocation ??= _dylib.lookupFunction<
-            _c_clang_indexLoc_getFileLocation,
-            _dart_clang_indexLoc_getFileLocation>(
-        'clang_indexLoc_getFileLocation'))(
+    return (_clang_indexLoc_getFileLocation ??=
+        _lookup<ffi.NativeFunction<_c_clang_indexLoc_getFileLocation>>(
+                'clang_indexLoc_getFileLocation')
+            .asFunction<_dart_clang_indexLoc_getFileLocation>())(
       loc,
       indexFile,
       file,
@@ -4984,10 +5197,10 @@ class LibClang {
   CXSourceLocation clang_indexLoc_getCXSourceLocation(
     CXIdxLoc loc,
   ) {
-    return (_clang_indexLoc_getCXSourceLocation ??= _dylib.lookupFunction<
-            _c_clang_indexLoc_getCXSourceLocation,
-            _dart_clang_indexLoc_getCXSourceLocation>(
-        'clang_indexLoc_getCXSourceLocation'))(
+    return (_clang_indexLoc_getCXSourceLocation ??=
+        _lookup<ffi.NativeFunction<_c_clang_indexLoc_getCXSourceLocation>>(
+                'clang_indexLoc_getCXSourceLocation')
+            .asFunction<_dart_clang_indexLoc_getCXSourceLocation>())(
       loc,
     );
   }
@@ -5000,9 +5213,10 @@ class LibClang {
     ffi.Pointer<ffi.NativeFunction<CXFieldVisitor>> visitor,
     ffi.Pointer<ffi.Void> client_data,
   ) {
-    return (_clang_Type_visitFields ??= _dylib.lookupFunction<
-        _c_clang_Type_visitFields,
-        _dart_clang_Type_visitFields>('clang_Type_visitFields'))(
+    return (_clang_Type_visitFields ??=
+        _lookup<ffi.NativeFunction<_c_clang_Type_visitFields>>(
+                'clang_Type_visitFields')
+            .asFunction<_dart_clang_Type_visitFields>())(
       T,
       visitor,
       client_data,
@@ -5181,7 +5395,7 @@ class ArrayHelper_CXFileUniqueID_data_level0 {
   void _checkBounds(int index) {
     if (index >= length || index < 0) {
       throw RangeError(
-          'Dimension $level: index not in range 0..${length} exclusive.');
+          'Dimension $level: index not in range 0..$length exclusive.');
     }
   }
 
@@ -5241,7 +5455,7 @@ class ArrayHelper_CXSourceLocation_ptr_data_level0 {
   void _checkBounds(int index) {
     if (index >= length || index < 0) {
       throw RangeError(
-          'Dimension $level: index not in range 0..${length} exclusive.');
+          'Dimension $level: index not in range 0..$length exclusive.');
     }
   }
 
@@ -5299,7 +5513,7 @@ class ArrayHelper_CXSourceRange_ptr_data_level0 {
   void _checkBounds(int index) {
     if (index >= length || index < 0) {
       throw RangeError(
-          'Dimension $level: index not in range 0..${length} exclusive.');
+          'Dimension $level: index not in range 0..$length exclusive.');
     }
   }
 
@@ -6218,7 +6432,7 @@ class ArrayHelper_CXCursor_data_level0 {
   void _checkBounds(int index) {
     if (index >= length || index < 0) {
       throw RangeError(
-          'Dimension $level: index not in range 0..${length} exclusive.');
+          'Dimension $level: index not in range 0..$length exclusive.');
     }
   }
 
@@ -6511,7 +6725,7 @@ class ArrayHelper_CXType_data_level0 {
   void _checkBounds(int index) {
     if (index >= length || index < 0) {
       throw RangeError(
-          'Dimension $level: index not in range 0..${length} exclusive.');
+          'Dimension $level: index not in range 0..$length exclusive.');
     }
   }
 
@@ -6762,7 +6976,7 @@ class ArrayHelper_CXToken_int_data_level0 {
   void _checkBounds(int index) {
     if (index >= length || index < 0) {
       throw RangeError(
-          'Dimension $level: index not in range 0..${length} exclusive.');
+          'Dimension $level: index not in range 0..$length exclusive.');
     }
   }
 
@@ -7071,7 +7285,7 @@ class ArrayHelper_CXIdxLoc_ptr_data_level0 {
   void _checkBounds(int index) {
     if (index >= length || index < 0) {
       throw RangeError(
-          'Dimension $level: index not in range 0..${length} exclusive.');
+          'Dimension $level: index not in range 0..$length exclusive.');
     }
   }
 

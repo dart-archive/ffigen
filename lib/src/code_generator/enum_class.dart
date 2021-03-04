@@ -61,7 +61,7 @@ class EnumClass extends NoLookUpBinding {
         s.writeAll(ec.dartDoc!.split('\n'), '\n' + depth + '/// ');
         s.write('\n');
       }
-      s.write(depth + 'static const int ${enum_value_name} = ${ec.value};\n');
+      s.write(depth + 'static const int $enum_value_name = ${ec.value};\n');
     }
     s.write('}\n\n');
 

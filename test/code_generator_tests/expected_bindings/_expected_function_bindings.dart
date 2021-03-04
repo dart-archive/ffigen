@@ -4,17 +4,24 @@
 import 'dart:ffi' as ffi;
 
 class Bindings {
-  /// Holds the Dynamic library.
-  final ffi.DynamicLibrary _dylib;
+  /// Holds the symbol lookup function.
+  final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
+      _lookup;
 
   /// The symbols are looked up in [dynamicLibrary].
-  Bindings(ffi.DynamicLibrary dynamicLibrary) : _dylib = dynamicLibrary;
+  Bindings(ffi.DynamicLibrary dynamicLibrary) : _lookup = dynamicLibrary.lookup;
+
+  /// The symbols are looked up with [lookup].
+  Bindings.fromLookup(
+      ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
+          lookup)
+      : _lookup = lookup;
 
   /// Just a test function
   /// heres another line
   int noParam() {
-    return (_noParam ??=
-        _dylib.lookupFunction<_c_noParam, _dart_noParam>('noParam'))();
+    return (_noParam ??= _lookup<ffi.NativeFunction<_c_noParam>>('noParam')
+        .asFunction<_dart_noParam>())();
   }
 
   _dart_noParam? _noParam;
@@ -24,8 +31,8 @@ class Bindings {
     int b,
   ) {
     return (_withPrimitiveParam ??=
-        _dylib.lookupFunction<_c_withPrimitiveParam, _dart_withPrimitiveParam>(
-            'withPrimitiveParam'))(
+        _lookup<ffi.NativeFunction<_c_withPrimitiveParam>>('withPrimitiveParam')
+            .asFunction<_dart_withPrimitiveParam>())(
       a,
       b,
     );
@@ -38,8 +45,8 @@ class Bindings {
     ffi.Pointer<ffi.Pointer<ffi.Uint8>> b,
   ) {
     return (_withPointerParam ??=
-        _dylib.lookupFunction<_c_withPointerParam, _dart_withPointerParam>(
-            'withPointerParam'))(
+        _lookup<ffi.NativeFunction<_c_withPointerParam>>('withPointerParam')
+            .asFunction<_dart_withPointerParam>())(
       a,
       b,
     );

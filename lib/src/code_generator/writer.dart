@@ -23,8 +23,8 @@ class Writer {
   String? _ffiLibraryPrefix;
   String? get ffiLibraryPrefix => _ffiLibraryPrefix;
 
-  String? _dylibIdentifier;
-  String? get dylibIdentifier => _dylibIdentifier;
+  String? _lookupFuncIdentifier;
+  String? get lookupFuncIdentifier => _lookupFuncIdentifier;
 
   final bool dartBool;
 
@@ -70,8 +70,8 @@ class Writer {
     /// [_ffiLibraryPrefix] should be unique in top level.
     _ffiLibraryPrefix = _initialTopLevelUniqueNamer.makeUnique('ffi');
 
-    /// [_dylibIdentifier] should be unique in top level.
-    _dylibIdentifier = _initialTopLevelUniqueNamer.makeUnique('_dylib');
+    /// [_lookupFuncIdentifier] should be unique in top level.
+    _lookupFuncIdentifier = _initialTopLevelUniqueNamer.makeUnique('_lookup');
 
     /// Finding a unique prefix for Array Helper Classes and store into
     /// [_arrayHelperClassPrefix].
@@ -83,7 +83,7 @@ class Writer {
         // Not a unique prefix, start over with a new suffix.
         i = -1;
         suffixInt++;
-        _arrayHelperClassPrefix = '${base}${suffixInt}';
+        _arrayHelperClassPrefix = '$base$suffixInt';
       }
     }
 
@@ -140,14 +140,20 @@ class Writer {
       // Write wrapper classs.
       s.write('class $_className{\n');
       // Write dylib.
-      s.write('/// Holds the Dynamic library.\n');
-      s.write('final $ffiLibraryPrefix.DynamicLibrary ${dylibIdentifier};\n');
+      s.write('/// Holds the symbol lookup function.\n');
+      s.write(
+          'final $ffiLibraryPrefix.Pointer<T> Function<T extends $ffiLibraryPrefix.NativeType>(String symbolName) $lookupFuncIdentifier;\n');
       s.write('\n');
       //Write doc comment for wrapper class constructor.
       s.write(makeDartDoc('The symbols are looked up in [dynamicLibrary].'));
       // Write wrapper class constructor.
       s.write(
-          '${_className}($ffiLibraryPrefix.DynamicLibrary dynamicLibrary): $dylibIdentifier = dynamicLibrary;\n\n');
+          '$_className($ffiLibraryPrefix.DynamicLibrary dynamicLibrary): $lookupFuncIdentifier = dynamicLibrary.lookup;\n\n');
+      //Write doc comment for wrapper class named constructor.
+      s.write(makeDartDoc('The symbols are looked up with [lookup].'));
+      // Write wrapper class named constructor.
+      s.write(
+          '$_className.fromLookup($ffiLibraryPrefix.Pointer<T> Function<T extends $ffiLibraryPrefix.NativeType>(String symbolName) lookup): $lookupFuncIdentifier = lookup;\n\n');
       for (final b in lookUpBindings) {
         s.write(b.toBindingString(this).string);
       }

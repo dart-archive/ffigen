@@ -997,7 +997,7 @@ class ArrayHelper_CXSourceLocation_ptr_data_level0 {
   void _checkBounds(int index) {
     if (index >= length || index < 0) {
       throw RangeError(
-          'Dimension $level: index not in range 0..${length} exclusive.');
+          'Dimension $level: index not in range 0..$length exclusive.');
     }
   }
 
@@ -1058,7 +1058,7 @@ class ArrayHelper_CXSourceRange_ptr_data_level0 {
   void _checkBounds(int index) {
     if (index >= length || index < 0) {
       throw RangeError(
-          'Dimension $level: index not in range 0..${length} exclusive.');
+          'Dimension $level: index not in range 0..$length exclusive.');
     }
   }
 
@@ -2093,7 +2093,7 @@ class ArrayHelper_CXCursor_data_level0 {
   void _checkBounds(int index) {
     if (index >= length || index < 0) {
       throw RangeError(
-          'Dimension $level: index not in range 0..${length} exclusive.');
+          'Dimension $level: index not in range 0..$length exclusive.');
     }
   }
 
@@ -2284,7 +2284,7 @@ class ArrayHelper_CXType_data_level0 {
   void _checkBounds(int index) {
     if (index >= length || index < 0) {
       throw RangeError(
-          'Dimension $level: index not in range 0..${length} exclusive.');
+          'Dimension $level: index not in range 0..$length exclusive.');
     }
   }
 

@@ -15,3 +15,4 @@ linter:
     - prefer_final_fields
     - prefer_final_locals
     - prefer_final_in_for_each
+    - unnecessary_brace_in_string_interps

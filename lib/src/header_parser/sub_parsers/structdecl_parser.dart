@@ -68,7 +68,7 @@ Struc? parseStructDeclaration(
   } else if ((ignoreFilter || shouldIncludeStruct(structUsr, structName)) &&
       (!bindingsIndex.isSeenStruct(structUsr))) {
     _logger.fine(
-        '++++ Adding Structure: structName: ${structName}, ${cursor.completeStringRepr()}');
+        '++++ Adding Structure: structName: $structName, ${cursor.completeStringRepr()}');
     _stack.top.struc = Struc(
       usr: structUsr,
       originalName: structName,

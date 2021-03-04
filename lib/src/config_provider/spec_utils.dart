@@ -32,7 +32,7 @@ String _replaceSeparators(String path) {
 bool checkType<T>(List<String> keys, dynamic value) {
   if (value is! T) {
     _logger.severe(
-        "Expected value of key '${keys.join(' -> ')}' to be of type '${T}'.");
+        "Expected value of key '${keys.join(' -> ')}' to be of type '$T'.");
     return false;
   }
   return true;
@@ -127,7 +127,7 @@ Headers headersExtractor(dynamic yamlConfig) {
               followLinks: true)) {
             final fixedPath = _replaceSeparators(file.path);
             entryPoints.add(fixedPath);
-            _logger.fine('Adding header/file: ${fixedPath}');
+            _logger.fine('Adding header/file: $fixedPath');
           }
         }
       }
