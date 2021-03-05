@@ -1,3 +1,6 @@
+# 2.2.2
+- Fixed generation of empty opaque structs due to forward declarations in header files.
+
 # 2.2.1
 - Fixed generation of duplicate constants suffixed with `_<int>` when using multiple entry points.
 

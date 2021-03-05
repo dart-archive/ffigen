@@ -205,6 +205,11 @@ String? removeRawCommentMarkups(String? string) {
   return sb.toString().trim();
 }
 
+bool isForwardDeclaration(clang_types.CXCursor cursor) {
+  return clang.clang_Cursor_isNull(clang.clang_getCursorDefinition(cursor)) ==
+      0;
+}
+
 extension CXTypeExt on clang_types.CXType {
   /// Get code_gen [Type] representation of [clang_types.CXType].
   Type toCodeGenType() {

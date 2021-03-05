@@ -10,37 +10,47 @@ import 'dart:ffi' as ffi;
 
 /// Holds bindings to LibClang.
 class Clang {
-  /// Holds the Dynamic library.
-  final ffi.DynamicLibrary _dylib;
+  /// Holds the symbol lookup function.
+  final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
+      _lookup;
 
   /// The symbols are looked up in [dynamicLibrary].
-  Clang(ffi.DynamicLibrary dynamicLibrary) : _dylib = dynamicLibrary;
+  Clang(ffi.DynamicLibrary dynamicLibrary) : _lookup = dynamicLibrary.lookup;
+
+  /// The symbols are looked up with [lookup].
+  Clang.fromLookup(
+      ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
+          lookup)
+      : _lookup = lookup;
 
   /// Retrieve the character data associated with the given string.
   ffi.Pointer<ffi.Int8> clang_getCString(
     CXString string,
   ) {
-    return (_clang_getCString ??=
-        _dylib.lookupFunction<_c_clang_getCString, _dart_clang_getCString>(
-            'clang_getCString'))(
+    return _clang_getCString(
       string,
     );
   }
 
-  _dart_clang_getCString? _clang_getCString;
+  late final _clang_getCString_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getCString>>('clang_getCString');
+  late final _dart_clang_getCString _clang_getCString =
+      _clang_getCString_ptr.asFunction<_dart_clang_getCString>();
 
   /// Free the given string.
   void clang_disposeString(
     CXString string,
   ) {
-    return (_clang_disposeString ??= _dylib.lookupFunction<
-        _c_clang_disposeString,
-        _dart_clang_disposeString>('clang_disposeString'))(
+    return _clang_disposeString(
       string,
     );
   }
 
-  _dart_clang_disposeString? _clang_disposeString;
+  late final _clang_disposeString_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_disposeString>>(
+          'clang_disposeString');
+  late final _dart_clang_disposeString _clang_disposeString =
+      _clang_disposeString_ptr.asFunction<_dart_clang_disposeString>();
 
   /// Provides a shared context for creating translation units.
   ///
@@ -84,15 +94,16 @@ class Clang {
     int excludeDeclarationsFromPCH,
     int displayDiagnostics,
   ) {
-    return (_clang_createIndex ??=
-        _dylib.lookupFunction<_c_clang_createIndex, _dart_clang_createIndex>(
-            'clang_createIndex'))(
+    return _clang_createIndex(
       excludeDeclarationsFromPCH,
       displayDiagnostics,
     );
   }
 
-  _dart_clang_createIndex? _clang_createIndex;
+  late final _clang_createIndex_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_createIndex>>('clang_createIndex');
+  late final _dart_clang_createIndex _clang_createIndex =
+      _clang_createIndex_ptr.asFunction<_dart_clang_createIndex>();
 
   /// Destroy the given index.
   ///
@@ -101,27 +112,29 @@ class Clang {
   void clang_disposeIndex(
     ffi.Pointer<ffi.Void> index,
   ) {
-    return (_clang_disposeIndex ??=
-        _dylib.lookupFunction<_c_clang_disposeIndex, _dart_clang_disposeIndex>(
-            'clang_disposeIndex'))(
+    return _clang_disposeIndex(
       index,
     );
   }
 
-  _dart_clang_disposeIndex? _clang_disposeIndex;
+  late final _clang_disposeIndex_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_disposeIndex>>('clang_disposeIndex');
+  late final _dart_clang_disposeIndex _clang_disposeIndex =
+      _clang_disposeIndex_ptr.asFunction<_dart_clang_disposeIndex>();
 
   /// Retrieve the complete file and path name of the given file.
   CXString clang_getFileName(
     ffi.Pointer<ffi.Void> SFile,
   ) {
-    return (_clang_getFileName ??=
-        _dylib.lookupFunction<_c_clang_getFileName, _dart_clang_getFileName>(
-            'clang_getFileName'))(
+    return _clang_getFileName(
       SFile,
     );
   }
 
-  _dart_clang_getFileName? _clang_getFileName;
+  late final _clang_getFileName_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getFileName>>('clang_getFileName');
+  late final _dart_clang_getFileName _clang_getFileName =
+      _clang_getFileName_ptr.asFunction<_dart_clang_getFileName>();
 
   /// Determine whether two ranges are equivalent.
   ///
@@ -130,15 +143,16 @@ class Clang {
     CXSourceRange range1,
     CXSourceRange range2,
   ) {
-    return (_clang_equalRanges ??=
-        _dylib.lookupFunction<_c_clang_equalRanges, _dart_clang_equalRanges>(
-            'clang_equalRanges'))(
+    return _clang_equalRanges(
       range1,
       range2,
     );
   }
 
-  _dart_clang_equalRanges? _clang_equalRanges;
+  late final _clang_equalRanges_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_equalRanges>>('clang_equalRanges');
+  late final _dart_clang_equalRanges _clang_equalRanges =
+      _clang_equalRanges_ptr.asFunction<_dart_clang_equalRanges>();
 
   /// Retrieve the file, line, column, and offset represented by
   /// the given source location.
@@ -168,9 +182,7 @@ class Clang {
     ffi.Pointer<ffi.Uint32> column,
     ffi.Pointer<ffi.Uint32> offset,
   ) {
-    return (_clang_getFileLocation ??= _dylib.lookupFunction<
-        _c_clang_getFileLocation,
-        _dart_clang_getFileLocation>('clang_getFileLocation'))(
+    return _clang_getFileLocation(
       location,
       file,
       line,
@@ -179,21 +191,27 @@ class Clang {
     );
   }
 
-  _dart_clang_getFileLocation? _clang_getFileLocation;
+  late final _clang_getFileLocation_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getFileLocation>>(
+          'clang_getFileLocation');
+  late final _dart_clang_getFileLocation _clang_getFileLocation =
+      _clang_getFileLocation_ptr.asFunction<_dart_clang_getFileLocation>();
 
   /// Determine the number of diagnostics produced for the given
   /// translation unit.
   int clang_getNumDiagnostics(
     ffi.Pointer<CXTranslationUnitImpl> Unit,
   ) {
-    return (_clang_getNumDiagnostics ??= _dylib.lookupFunction<
-        _c_clang_getNumDiagnostics,
-        _dart_clang_getNumDiagnostics>('clang_getNumDiagnostics'))(
+    return _clang_getNumDiagnostics(
       Unit,
     );
   }
 
-  _dart_clang_getNumDiagnostics? _clang_getNumDiagnostics;
+  late final _clang_getNumDiagnostics_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getNumDiagnostics>>(
+          'clang_getNumDiagnostics');
+  late final _dart_clang_getNumDiagnostics _clang_getNumDiagnostics =
+      _clang_getNumDiagnostics_ptr.asFunction<_dart_clang_getNumDiagnostics>();
 
   /// Retrieve a diagnostic associated with the given translation unit.
   ///
@@ -206,28 +224,32 @@ class Clang {
     ffi.Pointer<CXTranslationUnitImpl> Unit,
     int Index,
   ) {
-    return (_clang_getDiagnostic ??= _dylib.lookupFunction<
-        _c_clang_getDiagnostic,
-        _dart_clang_getDiagnostic>('clang_getDiagnostic'))(
+    return _clang_getDiagnostic(
       Unit,
       Index,
     );
   }
 
-  _dart_clang_getDiagnostic? _clang_getDiagnostic;
+  late final _clang_getDiagnostic_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getDiagnostic>>(
+          'clang_getDiagnostic');
+  late final _dart_clang_getDiagnostic _clang_getDiagnostic =
+      _clang_getDiagnostic_ptr.asFunction<_dart_clang_getDiagnostic>();
 
   /// Destroy a diagnostic.
   void clang_disposeDiagnostic(
     ffi.Pointer<ffi.Void> Diagnostic,
   ) {
-    return (_clang_disposeDiagnostic ??= _dylib.lookupFunction<
-        _c_clang_disposeDiagnostic,
-        _dart_clang_disposeDiagnostic>('clang_disposeDiagnostic'))(
+    return _clang_disposeDiagnostic(
       Diagnostic,
     );
   }
 
-  _dart_clang_disposeDiagnostic? _clang_disposeDiagnostic;
+  late final _clang_disposeDiagnostic_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_disposeDiagnostic>>(
+          'clang_disposeDiagnostic');
+  late final _dart_clang_disposeDiagnostic _clang_disposeDiagnostic =
+      _clang_disposeDiagnostic_ptr.asFunction<_dart_clang_disposeDiagnostic>();
 
   /// Format the given diagnostic in a manner that is suitable for display.
   ///
@@ -246,15 +268,17 @@ class Clang {
     ffi.Pointer<ffi.Void> Diagnostic,
     int Options,
   ) {
-    return (_clang_formatDiagnostic ??= _dylib.lookupFunction<
-        _c_clang_formatDiagnostic,
-        _dart_clang_formatDiagnostic>('clang_formatDiagnostic'))(
+    return _clang_formatDiagnostic(
       Diagnostic,
       Options,
     );
   }
 
-  _dart_clang_formatDiagnostic? _clang_formatDiagnostic;
+  late final _clang_formatDiagnostic_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_formatDiagnostic>>(
+          'clang_formatDiagnostic');
+  late final _dart_clang_formatDiagnostic _clang_formatDiagnostic =
+      _clang_formatDiagnostic_ptr.asFunction<_dart_clang_formatDiagnostic>();
 
   /// Same as \c clang_parseTranslationUnit2, but returns
   /// the \c CXTranslationUnit instead of an error code.  In case of an error this
@@ -269,9 +293,7 @@ class Clang {
     int num_unsaved_files,
     int options,
   ) {
-    return (_clang_parseTranslationUnit ??= _dylib.lookupFunction<
-        _c_clang_parseTranslationUnit,
-        _dart_clang_parseTranslationUnit>('clang_parseTranslationUnit'))(
+    return _clang_parseTranslationUnit(
       CIdx,
       source_filename,
       command_line_args,
@@ -282,20 +304,28 @@ class Clang {
     );
   }
 
-  _dart_clang_parseTranslationUnit? _clang_parseTranslationUnit;
+  late final _clang_parseTranslationUnit_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_parseTranslationUnit>>(
+          'clang_parseTranslationUnit');
+  late final _dart_clang_parseTranslationUnit _clang_parseTranslationUnit =
+      _clang_parseTranslationUnit_ptr
+          .asFunction<_dart_clang_parseTranslationUnit>();
 
   /// Destroy the specified CXTranslationUnit object.
   void clang_disposeTranslationUnit(
     ffi.Pointer<CXTranslationUnitImpl> arg0,
   ) {
-    return (_clang_disposeTranslationUnit ??= _dylib.lookupFunction<
-        _c_clang_disposeTranslationUnit,
-        _dart_clang_disposeTranslationUnit>('clang_disposeTranslationUnit'))(
+    return _clang_disposeTranslationUnit(
       arg0,
     );
   }
 
-  _dart_clang_disposeTranslationUnit? _clang_disposeTranslationUnit;
+  late final _clang_disposeTranslationUnit_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_disposeTranslationUnit>>(
+          'clang_disposeTranslationUnit');
+  late final _dart_clang_disposeTranslationUnit _clang_disposeTranslationUnit =
+      _clang_disposeTranslationUnit_ptr
+          .asFunction<_dart_clang_disposeTranslationUnit>();
 
   /// Retrieve the cursor that represents the given translation unit.
   ///
@@ -304,28 +334,47 @@ class Clang {
   CXCursor clang_getTranslationUnitCursor(
     ffi.Pointer<CXTranslationUnitImpl> arg0,
   ) {
-    return (_clang_getTranslationUnitCursor ??= _dylib.lookupFunction<
-            _c_clang_getTranslationUnitCursor,
-            _dart_clang_getTranslationUnitCursor>(
-        'clang_getTranslationUnitCursor'))(
+    return _clang_getTranslationUnitCursor(
       arg0,
     );
   }
 
-  _dart_clang_getTranslationUnitCursor? _clang_getTranslationUnitCursor;
+  late final _clang_getTranslationUnitCursor_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getTranslationUnitCursor>>(
+          'clang_getTranslationUnitCursor');
+  late final _dart_clang_getTranslationUnitCursor
+      _clang_getTranslationUnitCursor = _clang_getTranslationUnitCursor_ptr
+          .asFunction<_dart_clang_getTranslationUnitCursor>();
+
+  /// Returns non-zero if \p cursor is null.
+  int clang_Cursor_isNull(
+    CXCursor cursor,
+  ) {
+    return _clang_Cursor_isNull(
+      cursor,
+    );
+  }
+
+  late final _clang_Cursor_isNull_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_Cursor_isNull>>(
+          'clang_Cursor_isNull');
+  late final _dart_clang_Cursor_isNull _clang_Cursor_isNull =
+      _clang_Cursor_isNull_ptr.asFunction<_dart_clang_Cursor_isNull>();
 
   /// Retrieve the kind of the given cursor.
   int clang_getCursorKind(
     CXCursor arg0,
   ) {
-    return (_clang_getCursorKind ??= _dylib.lookupFunction<
-        _c_clang_getCursorKind,
-        _dart_clang_getCursorKind>('clang_getCursorKind'))(
+    return _clang_getCursorKind(
       arg0,
     );
   }
 
-  _dart_clang_getCursorKind? _clang_getCursorKind;
+  late final _clang_getCursorKind_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getCursorKind>>(
+          'clang_getCursorKind');
+  late final _dart_clang_getCursorKind _clang_getCursorKind =
+      _clang_getCursorKind_ptr.asFunction<_dart_clang_getCursorKind>();
 
   /// Retrieve the physical location of the source constructor referenced
   /// by the given cursor.
@@ -338,27 +387,31 @@ class Clang {
   CXSourceLocation clang_getCursorLocation(
     CXCursor arg0,
   ) {
-    return (_clang_getCursorLocation ??= _dylib.lookupFunction<
-        _c_clang_getCursorLocation,
-        _dart_clang_getCursorLocation>('clang_getCursorLocation'))(
+    return _clang_getCursorLocation(
       arg0,
     );
   }
 
-  _dart_clang_getCursorLocation? _clang_getCursorLocation;
+  late final _clang_getCursorLocation_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getCursorLocation>>(
+          'clang_getCursorLocation');
+  late final _dart_clang_getCursorLocation _clang_getCursorLocation =
+      _clang_getCursorLocation_ptr.asFunction<_dart_clang_getCursorLocation>();
 
   /// Retrieve the type of a CXCursor (if any).
   CXType clang_getCursorType(
     CXCursor C,
   ) {
-    return (_clang_getCursorType ??= _dylib.lookupFunction<
-        _c_clang_getCursorType,
-        _dart_clang_getCursorType>('clang_getCursorType'))(
+    return _clang_getCursorType(
       C,
     );
   }
 
-  _dart_clang_getCursorType? _clang_getCursorType;
+  late final _clang_getCursorType_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getCursorType>>(
+          'clang_getCursorType');
+  late final _dart_clang_getCursorType _clang_getCursorType =
+      _clang_getCursorType_ptr.asFunction<_dart_clang_getCursorType>();
 
   /// Pretty-print the underlying type using the rules of the
   /// language of the translation unit from which it came.
@@ -367,14 +420,16 @@ class Clang {
   CXString clang_getTypeSpelling(
     CXType CT,
   ) {
-    return (_clang_getTypeSpelling ??= _dylib.lookupFunction<
-        _c_clang_getTypeSpelling,
-        _dart_clang_getTypeSpelling>('clang_getTypeSpelling'))(
+    return _clang_getTypeSpelling(
       CT,
     );
   }
 
-  _dart_clang_getTypeSpelling? _clang_getTypeSpelling;
+  late final _clang_getTypeSpelling_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getTypeSpelling>>(
+          'clang_getTypeSpelling');
+  late final _dart_clang_getTypeSpelling _clang_getTypeSpelling =
+      _clang_getTypeSpelling_ptr.asFunction<_dart_clang_getTypeSpelling>();
 
   /// Retrieve the underlying type of a typedef declaration.
   ///
@@ -383,15 +438,18 @@ class Clang {
   CXType clang_getTypedefDeclUnderlyingType(
     CXCursor C,
   ) {
-    return (_clang_getTypedefDeclUnderlyingType ??= _dylib.lookupFunction<
-            _c_clang_getTypedefDeclUnderlyingType,
-            _dart_clang_getTypedefDeclUnderlyingType>(
-        'clang_getTypedefDeclUnderlyingType'))(
+    return _clang_getTypedefDeclUnderlyingType(
       C,
     );
   }
 
-  _dart_clang_getTypedefDeclUnderlyingType? _clang_getTypedefDeclUnderlyingType;
+  late final _clang_getTypedefDeclUnderlyingType_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getTypedefDeclUnderlyingType>>(
+          'clang_getTypedefDeclUnderlyingType');
+  late final _dart_clang_getTypedefDeclUnderlyingType
+      _clang_getTypedefDeclUnderlyingType =
+      _clang_getTypedefDeclUnderlyingType_ptr
+          .asFunction<_dart_clang_getTypedefDeclUnderlyingType>();
 
   /// Retrieve the integer value of an enum constant declaration as a signed
   /// long long.
@@ -402,15 +460,17 @@ class Clang {
   int clang_getEnumConstantDeclValue(
     CXCursor C,
   ) {
-    return (_clang_getEnumConstantDeclValue ??= _dylib.lookupFunction<
-            _c_clang_getEnumConstantDeclValue,
-            _dart_clang_getEnumConstantDeclValue>(
-        'clang_getEnumConstantDeclValue'))(
+    return _clang_getEnumConstantDeclValue(
       C,
     );
   }
 
-  _dart_clang_getEnumConstantDeclValue? _clang_getEnumConstantDeclValue;
+  late final _clang_getEnumConstantDeclValue_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getEnumConstantDeclValue>>(
+          'clang_getEnumConstantDeclValue');
+  late final _dart_clang_getEnumConstantDeclValue
+      _clang_getEnumConstantDeclValue = _clang_getEnumConstantDeclValue_ptr
+          .asFunction<_dart_clang_getEnumConstantDeclValue>();
 
   /// Retrieve the bit width of a bit field declaration as an integer.
   ///
@@ -418,14 +478,17 @@ class Clang {
   int clang_getFieldDeclBitWidth(
     CXCursor C,
   ) {
-    return (_clang_getFieldDeclBitWidth ??= _dylib.lookupFunction<
-        _c_clang_getFieldDeclBitWidth,
-        _dart_clang_getFieldDeclBitWidth>('clang_getFieldDeclBitWidth'))(
+    return _clang_getFieldDeclBitWidth(
       C,
     );
   }
 
-  _dart_clang_getFieldDeclBitWidth? _clang_getFieldDeclBitWidth;
+  late final _clang_getFieldDeclBitWidth_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getFieldDeclBitWidth>>(
+          'clang_getFieldDeclBitWidth');
+  late final _dart_clang_getFieldDeclBitWidth _clang_getFieldDeclBitWidth =
+      _clang_getFieldDeclBitWidth_ptr
+          .asFunction<_dart_clang_getFieldDeclBitWidth>();
 
   /// Retrieve the number of non-variadic arguments associated with a given
   /// cursor.
@@ -435,14 +498,17 @@ class Clang {
   int clang_Cursor_getNumArguments(
     CXCursor C,
   ) {
-    return (_clang_Cursor_getNumArguments ??= _dylib.lookupFunction<
-        _c_clang_Cursor_getNumArguments,
-        _dart_clang_Cursor_getNumArguments>('clang_Cursor_getNumArguments'))(
+    return _clang_Cursor_getNumArguments(
       C,
     );
   }
 
-  _dart_clang_Cursor_getNumArguments? _clang_Cursor_getNumArguments;
+  late final _clang_Cursor_getNumArguments_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_Cursor_getNumArguments>>(
+          'clang_Cursor_getNumArguments');
+  late final _dart_clang_Cursor_getNumArguments _clang_Cursor_getNumArguments =
+      _clang_Cursor_getNumArguments_ptr
+          .asFunction<_dart_clang_Cursor_getNumArguments>();
 
   /// Retrieve the argument cursor of a function or method.
   ///
@@ -453,15 +519,18 @@ class Clang {
     CXCursor C,
     int i,
   ) {
-    return (_clang_Cursor_getArgument ??= _dylib.lookupFunction<
-        _c_clang_Cursor_getArgument,
-        _dart_clang_Cursor_getArgument>('clang_Cursor_getArgument'))(
+    return _clang_Cursor_getArgument(
       C,
       i,
     );
   }
 
-  _dart_clang_Cursor_getArgument? _clang_Cursor_getArgument;
+  late final _clang_Cursor_getArgument_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_Cursor_getArgument>>(
+          'clang_Cursor_getArgument');
+  late final _dart_clang_Cursor_getArgument _clang_Cursor_getArgument =
+      _clang_Cursor_getArgument_ptr
+          .asFunction<_dart_clang_Cursor_getArgument>();
 
   /// Return the canonical type for a CXType.
   ///
@@ -472,110 +541,129 @@ class Clang {
   CXType clang_getCanonicalType(
     CXType T,
   ) {
-    return (_clang_getCanonicalType ??= _dylib.lookupFunction<
-        _c_clang_getCanonicalType,
-        _dart_clang_getCanonicalType>('clang_getCanonicalType'))(
+    return _clang_getCanonicalType(
       T,
     );
   }
 
-  _dart_clang_getCanonicalType? _clang_getCanonicalType;
+  late final _clang_getCanonicalType_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getCanonicalType>>(
+          'clang_getCanonicalType');
+  late final _dart_clang_getCanonicalType _clang_getCanonicalType =
+      _clang_getCanonicalType_ptr.asFunction<_dart_clang_getCanonicalType>();
 
   /// Determine whether a  CXCursor that is a macro, is
   /// function like.
   int clang_Cursor_isMacroFunctionLike(
     CXCursor C,
   ) {
-    return (_clang_Cursor_isMacroFunctionLike ??= _dylib.lookupFunction<
-            _c_clang_Cursor_isMacroFunctionLike,
-            _dart_clang_Cursor_isMacroFunctionLike>(
-        'clang_Cursor_isMacroFunctionLike'))(
+    return _clang_Cursor_isMacroFunctionLike(
       C,
     );
   }
 
-  _dart_clang_Cursor_isMacroFunctionLike? _clang_Cursor_isMacroFunctionLike;
+  late final _clang_Cursor_isMacroFunctionLike_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_Cursor_isMacroFunctionLike>>(
+          'clang_Cursor_isMacroFunctionLike');
+  late final _dart_clang_Cursor_isMacroFunctionLike
+      _clang_Cursor_isMacroFunctionLike = _clang_Cursor_isMacroFunctionLike_ptr
+          .asFunction<_dart_clang_Cursor_isMacroFunctionLike>();
 
   /// Determine whether a  CXCursor that is a macro, is a
   /// builtin one.
   int clang_Cursor_isMacroBuiltin(
     CXCursor C,
   ) {
-    return (_clang_Cursor_isMacroBuiltin ??= _dylib.lookupFunction<
-        _c_clang_Cursor_isMacroBuiltin,
-        _dart_clang_Cursor_isMacroBuiltin>('clang_Cursor_isMacroBuiltin'))(
+    return _clang_Cursor_isMacroBuiltin(
       C,
     );
   }
 
-  _dart_clang_Cursor_isMacroBuiltin? _clang_Cursor_isMacroBuiltin;
+  late final _clang_Cursor_isMacroBuiltin_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_Cursor_isMacroBuiltin>>(
+          'clang_Cursor_isMacroBuiltin');
+  late final _dart_clang_Cursor_isMacroBuiltin _clang_Cursor_isMacroBuiltin =
+      _clang_Cursor_isMacroBuiltin_ptr
+          .asFunction<_dart_clang_Cursor_isMacroBuiltin>();
 
   /// Determine whether a  CXCursor that is a function declaration, is an
   /// inline declaration.
   int clang_Cursor_isFunctionInlined(
     CXCursor C,
   ) {
-    return (_clang_Cursor_isFunctionInlined ??= _dylib.lookupFunction<
-            _c_clang_Cursor_isFunctionInlined,
-            _dart_clang_Cursor_isFunctionInlined>(
-        'clang_Cursor_isFunctionInlined'))(
+    return _clang_Cursor_isFunctionInlined(
       C,
     );
   }
 
-  _dart_clang_Cursor_isFunctionInlined? _clang_Cursor_isFunctionInlined;
+  late final _clang_Cursor_isFunctionInlined_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_Cursor_isFunctionInlined>>(
+          'clang_Cursor_isFunctionInlined');
+  late final _dart_clang_Cursor_isFunctionInlined
+      _clang_Cursor_isFunctionInlined = _clang_Cursor_isFunctionInlined_ptr
+          .asFunction<_dart_clang_Cursor_isFunctionInlined>();
 
   /// Returns the typedef name of the given type.
   CXString clang_getTypedefName(
     CXType CT,
   ) {
-    return (_clang_getTypedefName ??= _dylib.lookupFunction<
-        _c_clang_getTypedefName,
-        _dart_clang_getTypedefName>('clang_getTypedefName'))(
+    return _clang_getTypedefName(
       CT,
     );
   }
 
-  _dart_clang_getTypedefName? _clang_getTypedefName;
+  late final _clang_getTypedefName_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getTypedefName>>(
+          'clang_getTypedefName');
+  late final _dart_clang_getTypedefName _clang_getTypedefName =
+      _clang_getTypedefName_ptr.asFunction<_dart_clang_getTypedefName>();
 
   /// For pointer types, returns the type of the pointee.
   CXType clang_getPointeeType(
     CXType T,
   ) {
-    return (_clang_getPointeeType ??= _dylib.lookupFunction<
-        _c_clang_getPointeeType,
-        _dart_clang_getPointeeType>('clang_getPointeeType'))(
+    return _clang_getPointeeType(
       T,
     );
   }
 
-  _dart_clang_getPointeeType? _clang_getPointeeType;
+  late final _clang_getPointeeType_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getPointeeType>>(
+          'clang_getPointeeType');
+  late final _dart_clang_getPointeeType _clang_getPointeeType =
+      _clang_getPointeeType_ptr.asFunction<_dart_clang_getPointeeType>();
 
   /// Return the cursor for the declaration of the given type.
   CXCursor clang_getTypeDeclaration(
     CXType T,
   ) {
-    return (_clang_getTypeDeclaration ??= _dylib.lookupFunction<
-        _c_clang_getTypeDeclaration,
-        _dart_clang_getTypeDeclaration>('clang_getTypeDeclaration'))(
+    return _clang_getTypeDeclaration(
       T,
     );
   }
 
-  _dart_clang_getTypeDeclaration? _clang_getTypeDeclaration;
+  late final _clang_getTypeDeclaration_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getTypeDeclaration>>(
+          'clang_getTypeDeclaration');
+  late final _dart_clang_getTypeDeclaration _clang_getTypeDeclaration =
+      _clang_getTypeDeclaration_ptr
+          .asFunction<_dart_clang_getTypeDeclaration>();
 
   /// Retrieve the spelling of a given CXTypeKind.
   CXString clang_getTypeKindSpelling(
     int K,
   ) {
-    return (_clang_getTypeKindSpelling ??= _dylib.lookupFunction<
-        _c_clang_getTypeKindSpelling,
-        _dart_clang_getTypeKindSpelling>('clang_getTypeKindSpelling'))(
+    return _clang_getTypeKindSpelling(
       K,
     );
   }
 
-  _dart_clang_getTypeKindSpelling? _clang_getTypeKindSpelling;
+  late final _clang_getTypeKindSpelling_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getTypeKindSpelling>>(
+          'clang_getTypeKindSpelling');
+  late final _dart_clang_getTypeKindSpelling _clang_getTypeKindSpelling =
+      _clang_getTypeKindSpelling_ptr
+          .asFunction<_dart_clang_getTypeKindSpelling>();
 
   /// Retrieve the return type associated with a function type.
   ///
@@ -583,14 +671,16 @@ class Clang {
   CXType clang_getResultType(
     CXType T,
   ) {
-    return (_clang_getResultType ??= _dylib.lookupFunction<
-        _c_clang_getResultType,
-        _dart_clang_getResultType>('clang_getResultType'))(
+    return _clang_getResultType(
       T,
     );
   }
 
-  _dart_clang_getResultType? _clang_getResultType;
+  late final _clang_getResultType_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getResultType>>(
+          'clang_getResultType');
+  late final _dart_clang_getResultType _clang_getResultType =
+      _clang_getResultType_ptr.asFunction<_dart_clang_getResultType>();
 
   /// Retrieve the number of non-variadic parameters associated with a
   /// function type.
@@ -599,14 +689,16 @@ class Clang {
   int clang_getNumArgTypes(
     CXType T,
   ) {
-    return (_clang_getNumArgTypes ??= _dylib.lookupFunction<
-        _c_clang_getNumArgTypes,
-        _dart_clang_getNumArgTypes>('clang_getNumArgTypes'))(
+    return _clang_getNumArgTypes(
       T,
     );
   }
 
-  _dart_clang_getNumArgTypes? _clang_getNumArgTypes;
+  late final _clang_getNumArgTypes_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getNumArgTypes>>(
+          'clang_getNumArgTypes');
+  late final _dart_clang_getNumArgTypes _clang_getNumArgTypes =
+      _clang_getNumArgTypes_ptr.asFunction<_dart_clang_getNumArgTypes>();
 
   /// Retrieve the type of a parameter of a function type.
   ///
@@ -616,15 +708,16 @@ class Clang {
     CXType T,
     int i,
   ) {
-    return (_clang_getArgType ??=
-        _dylib.lookupFunction<_c_clang_getArgType, _dart_clang_getArgType>(
-            'clang_getArgType'))(
+    return _clang_getArgType(
       T,
       i,
     );
   }
 
-  _dart_clang_getArgType? _clang_getArgType;
+  late final _clang_getArgType_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getArgType>>('clang_getArgType');
+  late final _dart_clang_getArgType _clang_getArgType =
+      _clang_getArgType_ptr.asFunction<_dart_clang_getArgType>();
 
   /// Return the number of elements of an array or vector type.
   ///
@@ -633,14 +726,16 @@ class Clang {
   int clang_getNumElements(
     CXType T,
   ) {
-    return (_clang_getNumElements ??= _dylib.lookupFunction<
-        _c_clang_getNumElements,
-        _dart_clang_getNumElements>('clang_getNumElements'))(
+    return _clang_getNumElements(
       T,
     );
   }
 
-  _dart_clang_getNumElements? _clang_getNumElements;
+  late final _clang_getNumElements_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getNumElements>>(
+          'clang_getNumElements');
+  late final _dart_clang_getNumElements _clang_getNumElements =
+      _clang_getNumElements_ptr.asFunction<_dart_clang_getNumElements>();
 
   /// Return the element type of an array type.
   ///
@@ -648,14 +743,17 @@ class Clang {
   CXType clang_getArrayElementType(
     CXType T,
   ) {
-    return (_clang_getArrayElementType ??= _dylib.lookupFunction<
-        _c_clang_getArrayElementType,
-        _dart_clang_getArrayElementType>('clang_getArrayElementType'))(
+    return _clang_getArrayElementType(
       T,
     );
   }
 
-  _dart_clang_getArrayElementType? _clang_getArrayElementType;
+  late final _clang_getArrayElementType_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getArrayElementType>>(
+          'clang_getArrayElementType');
+  late final _dart_clang_getArrayElementType _clang_getArrayElementType =
+      _clang_getArrayElementType_ptr
+          .asFunction<_dart_clang_getArrayElementType>();
 
   /// Retrieve the type named by the qualified-id.
   ///
@@ -663,43 +761,51 @@ class Clang {
   CXType clang_Type_getNamedType(
     CXType T,
   ) {
-    return (_clang_Type_getNamedType ??= _dylib.lookupFunction<
-        _c_clang_Type_getNamedType,
-        _dart_clang_Type_getNamedType>('clang_Type_getNamedType'))(
+    return _clang_Type_getNamedType(
       T,
     );
   }
 
-  _dart_clang_Type_getNamedType? _clang_Type_getNamedType;
+  late final _clang_Type_getNamedType_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_Type_getNamedType>>(
+          'clang_Type_getNamedType');
+  late final _dart_clang_Type_getNamedType _clang_Type_getNamedType =
+      _clang_Type_getNamedType_ptr.asFunction<_dart_clang_Type_getNamedType>();
 
   /// Determine whether the given cursor represents an anonymous
   /// tag or namespace
   int clang_Cursor_isAnonymous(
     CXCursor C,
   ) {
-    return (_clang_Cursor_isAnonymous ??= _dylib.lookupFunction<
-        _c_clang_Cursor_isAnonymous,
-        _dart_clang_Cursor_isAnonymous>('clang_Cursor_isAnonymous'))(
+    return _clang_Cursor_isAnonymous(
       C,
     );
   }
 
-  _dart_clang_Cursor_isAnonymous? _clang_Cursor_isAnonymous;
+  late final _clang_Cursor_isAnonymous_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_Cursor_isAnonymous>>(
+          'clang_Cursor_isAnonymous');
+  late final _dart_clang_Cursor_isAnonymous _clang_Cursor_isAnonymous =
+      _clang_Cursor_isAnonymous_ptr
+          .asFunction<_dart_clang_Cursor_isAnonymous>();
 
   /// Determine whether the given cursor represents an anonymous record
   /// declaration.
   int clang_Cursor_isAnonymousRecordDecl(
     CXCursor C,
   ) {
-    return (_clang_Cursor_isAnonymousRecordDecl ??= _dylib.lookupFunction<
-            _c_clang_Cursor_isAnonymousRecordDecl,
-            _dart_clang_Cursor_isAnonymousRecordDecl>(
-        'clang_Cursor_isAnonymousRecordDecl'))(
+    return _clang_Cursor_isAnonymousRecordDecl(
       C,
     );
   }
 
-  _dart_clang_Cursor_isAnonymousRecordDecl? _clang_Cursor_isAnonymousRecordDecl;
+  late final _clang_Cursor_isAnonymousRecordDecl_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_Cursor_isAnonymousRecordDecl>>(
+          'clang_Cursor_isAnonymousRecordDecl');
+  late final _dart_clang_Cursor_isAnonymousRecordDecl
+      _clang_Cursor_isAnonymousRecordDecl =
+      _clang_Cursor_isAnonymousRecordDecl_ptr
+          .asFunction<_dart_clang_Cursor_isAnonymousRecordDecl>();
 
   /// Visit the children of a particular cursor.
   ///
@@ -726,16 +832,18 @@ class Clang {
     ffi.Pointer<ffi.NativeFunction<CXCursorVisitor>> visitor,
     ffi.Pointer<ffi.Void> client_data,
   ) {
-    return (_clang_visitChildren ??= _dylib.lookupFunction<
-        _c_clang_visitChildren,
-        _dart_clang_visitChildren>('clang_visitChildren'))(
+    return _clang_visitChildren(
       parent,
       visitor,
       client_data,
     );
   }
 
-  _dart_clang_visitChildren? _clang_visitChildren;
+  late final _clang_visitChildren_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_visitChildren>>(
+          'clang_visitChildren');
+  late final _dart_clang_visitChildren _clang_visitChildren =
+      _clang_visitChildren_ptr.asFunction<_dart_clang_visitChildren>();
 
   /// Retrieve a Unified Symbol Resolution (USR) for the entity referenced
   /// by the given cursor.
@@ -747,27 +855,71 @@ class Clang {
   CXString clang_getCursorUSR(
     CXCursor arg0,
   ) {
-    return (_clang_getCursorUSR ??=
-        _dylib.lookupFunction<_c_clang_getCursorUSR, _dart_clang_getCursorUSR>(
-            'clang_getCursorUSR'))(
+    return _clang_getCursorUSR(
       arg0,
     );
   }
 
-  _dart_clang_getCursorUSR? _clang_getCursorUSR;
+  late final _clang_getCursorUSR_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getCursorUSR>>('clang_getCursorUSR');
+  late final _dart_clang_getCursorUSR _clang_getCursorUSR =
+      _clang_getCursorUSR_ptr.asFunction<_dart_clang_getCursorUSR>();
 
   /// Retrieve a name for the entity referenced by this cursor.
   CXString clang_getCursorSpelling(
     CXCursor arg0,
   ) {
-    return (_clang_getCursorSpelling ??= _dylib.lookupFunction<
-        _c_clang_getCursorSpelling,
-        _dart_clang_getCursorSpelling>('clang_getCursorSpelling'))(
+    return _clang_getCursorSpelling(
       arg0,
     );
   }
 
-  _dart_clang_getCursorSpelling? _clang_getCursorSpelling;
+  late final _clang_getCursorSpelling_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getCursorSpelling>>(
+          'clang_getCursorSpelling');
+  late final _dart_clang_getCursorSpelling _clang_getCursorSpelling =
+      _clang_getCursorSpelling_ptr.asFunction<_dart_clang_getCursorSpelling>();
+
+  /// For a cursor that is either a reference to or a declaration
+  /// of some entity, retrieve a cursor that describes the definition of
+  /// that entity.
+  ///
+  /// Some entities can be declared multiple times within a translation
+  /// unit, but only one of those declarations can also be a
+  /// definition. For example, given:
+  ///
+  /// \code
+  /// int f(int, int);
+  /// int g(int x, int y) { return f(x, y); }
+  /// int f(int a, int b) { return a + b; }
+  /// int f(int, int);
+  /// \endcode
+  ///
+  /// there are three declarations of the function "f", but only the
+  /// second one is a definition. The clang_getCursorDefinition()
+  /// function will take any cursor pointing to a declaration of "f"
+  /// (the first or fourth lines of the example) or a cursor referenced
+  /// that uses "f" (the call to "f' inside "g") and will return a
+  /// declaration cursor pointing to the definition (the second "f"
+  /// declaration).
+  ///
+  /// If given a cursor for which there is no corresponding definition,
+  /// e.g., because there is no definition of that entity within this
+  /// translation unit, returns a NULL cursor.
+  CXCursor clang_getCursorDefinition(
+    CXCursor arg0,
+  ) {
+    return _clang_getCursorDefinition(
+      arg0,
+    );
+  }
+
+  late final _clang_getCursorDefinition_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getCursorDefinition>>(
+          'clang_getCursorDefinition');
+  late final _dart_clang_getCursorDefinition _clang_getCursorDefinition =
+      _clang_getCursorDefinition_ptr
+          .asFunction<_dart_clang_getCursorDefinition>();
 
   /// Given a cursor that represents a declaration, return the associated
   /// comment's source range.  The range may include multiple consecutive comments
@@ -775,29 +927,34 @@ class Clang {
   CXSourceRange clang_Cursor_getCommentRange(
     CXCursor C,
   ) {
-    return (_clang_Cursor_getCommentRange ??= _dylib.lookupFunction<
-        _c_clang_Cursor_getCommentRange,
-        _dart_clang_Cursor_getCommentRange>('clang_Cursor_getCommentRange'))(
+    return _clang_Cursor_getCommentRange(
       C,
     );
   }
 
-  _dart_clang_Cursor_getCommentRange? _clang_Cursor_getCommentRange;
+  late final _clang_Cursor_getCommentRange_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_Cursor_getCommentRange>>(
+          'clang_Cursor_getCommentRange');
+  late final _dart_clang_Cursor_getCommentRange _clang_Cursor_getCommentRange =
+      _clang_Cursor_getCommentRange_ptr
+          .asFunction<_dart_clang_Cursor_getCommentRange>();
 
   /// Given a cursor that represents a declaration, return the associated
   /// comment text, including comment markers.
   CXString clang_Cursor_getRawCommentText(
     CXCursor C,
   ) {
-    return (_clang_Cursor_getRawCommentText ??= _dylib.lookupFunction<
-            _c_clang_Cursor_getRawCommentText,
-            _dart_clang_Cursor_getRawCommentText>(
-        'clang_Cursor_getRawCommentText'))(
+    return _clang_Cursor_getRawCommentText(
       C,
     );
   }
 
-  _dart_clang_Cursor_getRawCommentText? _clang_Cursor_getRawCommentText;
+  late final _clang_Cursor_getRawCommentText_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_Cursor_getRawCommentText>>(
+          'clang_Cursor_getRawCommentText');
+  late final _dart_clang_Cursor_getRawCommentText
+      _clang_Cursor_getRawCommentText = _clang_Cursor_getRawCommentText_ptr
+          .asFunction<_dart_clang_Cursor_getRawCommentText>();
 
   /// Given a cursor that represents a documentable entity (e.g.,
   /// declaration), return the associated \paragraph; otherwise return the
@@ -805,15 +962,17 @@ class Clang {
   CXString clang_Cursor_getBriefCommentText(
     CXCursor C,
   ) {
-    return (_clang_Cursor_getBriefCommentText ??= _dylib.lookupFunction<
-            _c_clang_Cursor_getBriefCommentText,
-            _dart_clang_Cursor_getBriefCommentText>(
-        'clang_Cursor_getBriefCommentText'))(
+    return _clang_Cursor_getBriefCommentText(
       C,
     );
   }
 
-  _dart_clang_Cursor_getBriefCommentText? _clang_Cursor_getBriefCommentText;
+  late final _clang_Cursor_getBriefCommentText_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_Cursor_getBriefCommentText>>(
+          'clang_Cursor_getBriefCommentText');
+  late final _dart_clang_Cursor_getBriefCommentText
+      _clang_Cursor_getBriefCommentText = _clang_Cursor_getBriefCommentText_ptr
+          .asFunction<_dart_clang_Cursor_getBriefCommentText>();
 
   /// \defgroup CINDEX_DEBUG Debugging facilities
   ///
@@ -824,14 +983,17 @@ class Clang {
   CXString clang_getCursorKindSpelling(
     int Kind,
   ) {
-    return (_clang_getCursorKindSpelling ??= _dylib.lookupFunction<
-        _c_clang_getCursorKindSpelling,
-        _dart_clang_getCursorKindSpelling>('clang_getCursorKindSpelling'))(
+    return _clang_getCursorKindSpelling(
       Kind,
     );
   }
 
-  _dart_clang_getCursorKindSpelling? _clang_getCursorKindSpelling;
+  late final _clang_getCursorKindSpelling_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_getCursorKindSpelling>>(
+          'clang_getCursorKindSpelling');
+  late final _dart_clang_getCursorKindSpelling _clang_getCursorKindSpelling =
+      _clang_getCursorKindSpelling_ptr
+          .asFunction<_dart_clang_getCursorKindSpelling>();
 
   /// If cursor is a statement declaration tries to evaluate the
   /// statement and if its variable, tries to evaluate its initializer,
@@ -839,41 +1001,49 @@ class Clang {
   ffi.Pointer<ffi.Void> clang_Cursor_Evaluate(
     CXCursor C,
   ) {
-    return (_clang_Cursor_Evaluate ??= _dylib.lookupFunction<
-        _c_clang_Cursor_Evaluate,
-        _dart_clang_Cursor_Evaluate>('clang_Cursor_Evaluate'))(
+    return _clang_Cursor_Evaluate(
       C,
     );
   }
 
-  _dart_clang_Cursor_Evaluate? _clang_Cursor_Evaluate;
+  late final _clang_Cursor_Evaluate_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_Cursor_Evaluate>>(
+          'clang_Cursor_Evaluate');
+  late final _dart_clang_Cursor_Evaluate _clang_Cursor_Evaluate =
+      _clang_Cursor_Evaluate_ptr.asFunction<_dart_clang_Cursor_Evaluate>();
 
   /// Returns the kind of the evaluated result.
   int clang_EvalResult_getKind(
     ffi.Pointer<ffi.Void> E,
   ) {
-    return (_clang_EvalResult_getKind ??= _dylib.lookupFunction<
-        _c_clang_EvalResult_getKind,
-        _dart_clang_EvalResult_getKind>('clang_EvalResult_getKind'))(
+    return _clang_EvalResult_getKind(
       E,
     );
   }
 
-  _dart_clang_EvalResult_getKind? _clang_EvalResult_getKind;
+  late final _clang_EvalResult_getKind_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_EvalResult_getKind>>(
+          'clang_EvalResult_getKind');
+  late final _dart_clang_EvalResult_getKind _clang_EvalResult_getKind =
+      _clang_EvalResult_getKind_ptr
+          .asFunction<_dart_clang_EvalResult_getKind>();
 
   /// Returns the evaluation result as integer if the
   /// kind is Int.
   int clang_EvalResult_getAsInt(
     ffi.Pointer<ffi.Void> E,
   ) {
-    return (_clang_EvalResult_getAsInt ??= _dylib.lookupFunction<
-        _c_clang_EvalResult_getAsInt,
-        _dart_clang_EvalResult_getAsInt>('clang_EvalResult_getAsInt'))(
+    return _clang_EvalResult_getAsInt(
       E,
     );
   }
 
-  _dart_clang_EvalResult_getAsInt? _clang_EvalResult_getAsInt;
+  late final _clang_EvalResult_getAsInt_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_EvalResult_getAsInt>>(
+          'clang_EvalResult_getAsInt');
+  late final _dart_clang_EvalResult_getAsInt _clang_EvalResult_getAsInt =
+      _clang_EvalResult_getAsInt_ptr
+          .asFunction<_dart_clang_EvalResult_getAsInt>();
 
   /// Returns the evaluation result as a long long integer if the
   /// kind is Int. This prevents overflows that may happen if the result is
@@ -881,29 +1051,34 @@ class Clang {
   int clang_EvalResult_getAsLongLong(
     ffi.Pointer<ffi.Void> E,
   ) {
-    return (_clang_EvalResult_getAsLongLong ??= _dylib.lookupFunction<
-            _c_clang_EvalResult_getAsLongLong,
-            _dart_clang_EvalResult_getAsLongLong>(
-        'clang_EvalResult_getAsLongLong'))(
+    return _clang_EvalResult_getAsLongLong(
       E,
     );
   }
 
-  _dart_clang_EvalResult_getAsLongLong? _clang_EvalResult_getAsLongLong;
+  late final _clang_EvalResult_getAsLongLong_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_EvalResult_getAsLongLong>>(
+          'clang_EvalResult_getAsLongLong');
+  late final _dart_clang_EvalResult_getAsLongLong
+      _clang_EvalResult_getAsLongLong = _clang_EvalResult_getAsLongLong_ptr
+          .asFunction<_dart_clang_EvalResult_getAsLongLong>();
 
   /// Returns the evaluation result as double if the
   /// kind is double.
   double clang_EvalResult_getAsDouble(
     ffi.Pointer<ffi.Void> E,
   ) {
-    return (_clang_EvalResult_getAsDouble ??= _dylib.lookupFunction<
-        _c_clang_EvalResult_getAsDouble,
-        _dart_clang_EvalResult_getAsDouble>('clang_EvalResult_getAsDouble'))(
+    return _clang_EvalResult_getAsDouble(
       E,
     );
   }
 
-  _dart_clang_EvalResult_getAsDouble? _clang_EvalResult_getAsDouble;
+  late final _clang_EvalResult_getAsDouble_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_EvalResult_getAsDouble>>(
+          'clang_EvalResult_getAsDouble');
+  late final _dart_clang_EvalResult_getAsDouble _clang_EvalResult_getAsDouble =
+      _clang_EvalResult_getAsDouble_ptr
+          .asFunction<_dart_clang_EvalResult_getAsDouble>();
 
   /// Returns the evaluation result as a constant string if the
   /// kind is other than Int or float. User must not free this pointer,
@@ -912,27 +1087,33 @@ class Clang {
   ffi.Pointer<ffi.Int8> clang_EvalResult_getAsStr(
     ffi.Pointer<ffi.Void> E,
   ) {
-    return (_clang_EvalResult_getAsStr ??= _dylib.lookupFunction<
-        _c_clang_EvalResult_getAsStr,
-        _dart_clang_EvalResult_getAsStr>('clang_EvalResult_getAsStr'))(
+    return _clang_EvalResult_getAsStr(
       E,
     );
   }
 
-  _dart_clang_EvalResult_getAsStr? _clang_EvalResult_getAsStr;
+  late final _clang_EvalResult_getAsStr_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_EvalResult_getAsStr>>(
+          'clang_EvalResult_getAsStr');
+  late final _dart_clang_EvalResult_getAsStr _clang_EvalResult_getAsStr =
+      _clang_EvalResult_getAsStr_ptr
+          .asFunction<_dart_clang_EvalResult_getAsStr>();
 
   /// Disposes the created Eval memory.
   void clang_EvalResult_dispose(
     ffi.Pointer<ffi.Void> E,
   ) {
-    return (_clang_EvalResult_dispose ??= _dylib.lookupFunction<
-        _c_clang_EvalResult_dispose,
-        _dart_clang_EvalResult_dispose>('clang_EvalResult_dispose'))(
+    return _clang_EvalResult_dispose(
       E,
     );
   }
 
-  _dart_clang_EvalResult_dispose? _clang_EvalResult_dispose;
+  late final _clang_EvalResult_dispose_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_EvalResult_dispose>>(
+          'clang_EvalResult_dispose');
+  late final _dart_clang_EvalResult_dispose _clang_EvalResult_dispose =
+      _clang_EvalResult_dispose_ptr
+          .asFunction<_dart_clang_EvalResult_dispose>();
 }
 
 /// A character string.
@@ -2493,6 +2674,14 @@ typedef _dart_clang_getTranslationUnitCursor = CXCursor Function(
   ffi.Pointer<CXTranslationUnitImpl> arg0,
 );
 
+typedef _c_clang_Cursor_isNull = ffi.Int32 Function(
+  CXCursor cursor,
+);
+
+typedef _dart_clang_Cursor_isNull = int Function(
+  CXCursor cursor,
+);
+
 typedef _c_clang_getCursorKind = ffi.Int32 Function(
   CXCursor arg0,
 );
@@ -2728,6 +2917,14 @@ typedef _c_clang_getCursorSpelling = CXString Function(
 );
 
 typedef _dart_clang_getCursorSpelling = CXString Function(
+  CXCursor arg0,
+);
+
+typedef _c_clang_getCursorDefinition = CXCursor Function(
+  CXCursor arg0,
+);
+
+typedef _dart_clang_getCursorDefinition = CXCursor Function(
   CXCursor arg0,
 );
 
