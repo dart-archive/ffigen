@@ -20,18 +20,18 @@ class Writer {
   /// Manages the `_SymbolAddress` class.
   final symbolAddressWriter = SymbolAddressWriter();
 
-  String? _className;
+  late String _className;
   final String? classDocComment;
 
-  String? _ffiLibraryPrefix;
-  String? get ffiLibraryPrefix => _ffiLibraryPrefix;
+  late String _ffiLibraryPrefix;
+  String get ffiLibraryPrefix => _ffiLibraryPrefix;
 
-  String? _lookupFuncIdentifier;
-  String? get lookupFuncIdentifier => _lookupFuncIdentifier;
+  late String _lookupFuncIdentifier;
+  String get lookupFuncIdentifier => _lookupFuncIdentifier;
 
-  String? _symbolAddressClassName;
-  String? _symbolAddressVariableName;
-  String? _symbolAddressLibraryVarName;
+  late String _symbolAddressClassName;
+  late String _symbolAddressVariableName;
+  late String _symbolAddressLibraryVarName;
 
   final bool dartBool;
 
@@ -44,10 +44,10 @@ class Writer {
   UniqueNamer get topLevelUniqueNamer => _topLevelUniqueNamer;
   UniqueNamer get wrapperLevelUniqueNamer => _wrapperLevelUniqueNamer;
 
-  String? _arrayHelperClassPrefix;
+  late String _arrayHelperClassPrefix;
 
   /// Guaranteed to be a unique prefix.
-  String? get arrayHelperClassPrefix => _arrayHelperClassPrefix;
+  String get arrayHelperClassPrefix => _arrayHelperClassPrefix;
 
   /// [_usedUpNames] should contain names of all the declarations which are
   /// already used. This is used to avoid name collisions.
@@ -71,8 +71,8 @@ class Writer {
 
     /// Wrapper class name must be unique among all names.
     _className = allLevelsUniqueNamer.makeUnique(className);
-    _initialWrapperLevelUniqueNamer.markUsed(_className!);
-    _initialTopLevelUniqueNamer.markUsed(_className!);
+    _initialWrapperLevelUniqueNamer.markUsed(_className);
+    _initialTopLevelUniqueNamer.markUsed(_className);
 
     /// [_ffiLibraryPrefix] should be unique in top level.
     _ffiLibraryPrefix = _initialTopLevelUniqueNamer.makeUnique('ffi');
@@ -81,8 +81,7 @@ class Writer {
     _lookupFuncIdentifier = _initialTopLevelUniqueNamer.makeUnique('_lookup');
 
     /// Resolve name conflicts of identifiers used for SymbolAddress.
-    _symbolAddressClassName = _initialWrapperLevelUniqueNamer
-        .makeUnique(_initialTopLevelUniqueNamer.makeUnique('_SymbolAddress'));
+    _symbolAddressClassName = allLevelsUniqueNamer.makeUnique('_SymbolAddress');
     _symbolAddressVariableName =
         _initialWrapperLevelUniqueNamer.makeUnique('addresses');
     _symbolAddressLibraryVarName =
@@ -94,7 +93,7 @@ class Writer {
     _arrayHelperClassPrefix = base;
     var suffixInt = 0;
     for (var i = 0; i < allNameSet.length; i++) {
-      if (allNameSet.elementAt(i).startsWith(_arrayHelperClassPrefix!)) {
+      if (allNameSet.elementAt(i).startsWith(_arrayHelperClassPrefix)) {
         // Not a unique prefix, start over with a new suffix.
         i = -1;
         suffixInt++;

@@ -37,12 +37,12 @@ class Bindings_1 {
   late final _dart__SymbolAddress_1 __SymbolAddress_1 =
       __SymbolAddress_1_ptr.asFunction<_dart__SymbolAddress_1>();
 
-  late final addresses = _SymbolAddress_1_1(this);
+  late final addresses = _SymbolAddress_2(this);
 }
 
-class _SymbolAddress_1_1 {
+class _SymbolAddress_2 {
   final Bindings_1 _library_1;
-  _SymbolAddress_1_1(this._library_1);
+  _SymbolAddress_2(this._library_1);
   ffi.Pointer<ffi.NativeFunction<Native__library>> get _library =>
       _library_1.__library_ptr;
   ffi.Pointer<ffi.NativeFunction<Native__SymbolAddress_1>>
