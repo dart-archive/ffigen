@@ -50,10 +50,9 @@ Struc? parseStructDeclaration(
 }) {
   _stack.push(_ParsedStruc());
 
-  // Parse the cursor definition if available.
-  final definition = clang.clang_getCursorDefinition(cursor);
-  if (clang.clang_Cursor_isNull(definition) == 0) {
-    cursor = definition;
+  // Parse the cursor definition instead, if this is a forward declaration.
+  if (isForwardDeclaration(cursor)) {
+    cursor = clang.clang_getCursorDefinition(cursor);
   }
 
   final structUsr = cursor.usr();
