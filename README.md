@@ -495,6 +495,9 @@ unnamed-enums:
 This happens when an excluded struct is a dependency to some included declaration.
 (A dependency means a struct is being passed/returned by a function or is member of another struct in some way)
 
+Note: If you supply `struct-dependencies` as `opaque`, ffigen will generate these
+struct dependencies as `Opaque` if they were only passed by reference(pointer).
+
 ### How to expose the native pointers and typedefs?
 
 By default all native pointers and typedefs are hidden, but you can use the
