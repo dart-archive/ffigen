@@ -214,6 +214,21 @@ comments:
   </td>
   </tr>
   <tr>
+    <td>struct-dependencies</td>
+    <td>If `opaque`, generates empty `Opaque` structs if structs
+were not included in config (but were added since they are a dependency) and
+only passed by reference(pointer).<br>
+    Options -<br>
+    <i>struct-dependencies: full(default) | opaque </i><br>
+    </td>
+    <td>
+
+```yaml
+struct-dependencies: opaque
+```
+  </td>
+  </tr>
+  <tr>
     <td>sort</td>
     <td>Sort the bindings according to name.<br>
       <b>Default: false</b>, i.e keep the order as in the source files.

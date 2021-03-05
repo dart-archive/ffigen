@@ -61,12 +61,13 @@ Type getCodeGenType(
           clang.clang_getTypeDeclaration(cxtype));
 
       final s = getCodeGenType(ct,
-          parentName: parentName ?? spelling, pointerReference: true);
+          parentName: parentName ?? spelling,
+          pointerReference: pointerReference);
       return s;
     case clang_types.CXTypeKind.CXType_Elaborated:
       final et = clang.clang_Type_getNamedType(cxtype);
-      final s =
-          getCodeGenType(et, parentName: parentName, pointerReference: true);
+      final s = getCodeGenType(et,
+          parentName: parentName, pointerReference: pointerReference);
       return s;
     case clang_types.CXTypeKind.CXType_Record:
       return _extractfromRecord(cxtype, parentName, pointerReference);

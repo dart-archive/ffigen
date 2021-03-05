@@ -559,10 +559,10 @@ StructDependencies structDependenciesExtractor(dynamic value) {
 bool structDependenciesValidator(String name, dynamic value) {
   var result = true;
   if (value is! String ||
-      value != strings.fullStructDependencies ||
-      value != strings.opaqueStructDependencies) {
+      !(value == strings.fullStructDependencies ||
+          value == strings.opaqueStructDependencies)) {
     _logger.severe(
-        "'$name' must be one of the following - {${strings.doxygen}, ${strings.any}}");
+        "'$name' must be one of the following - {${strings.fullStructDependencies}, ${strings.opaqueStructDependencies}}");
     result = false;
   }
   return result;

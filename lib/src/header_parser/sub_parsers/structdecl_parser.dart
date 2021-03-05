@@ -98,12 +98,15 @@ Struc? parseStructDeclaration(
 
     final skipDependencies = _stack.top.struc!.parsedDependencies ||
         (config.structDependencies == StructDependencies.opaque &&
-            pointerReference);
+            pointerReference &&
+            ignoreFilter);
 
     if (!skipDependencies) {
       // Prevents infinite recursion if struct is member of itself.
       _stack.top.struc!.parsedDependencies = true;
       _setStructMembers(cursor);
+    } else if (!_stack.top.struc!.parsedDependencies) {
+      _logger.fine('Skipped dependencies.');
     }
 
     if (updateName) {
