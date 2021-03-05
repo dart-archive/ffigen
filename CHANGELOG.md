@@ -1,3 +1,6 @@
+# 2.2.1
+- Fixed generation of duplicate constants suffixed with `_<int>` when using multiple entry points.
+
 # 2.2.0
 - Added subkey `symbol-address` to expose native symbol pointers for `functions` and `globals`.
 
