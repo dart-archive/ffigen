@@ -80,8 +80,9 @@ class Writer {
     /// [_lookupFuncIdentifier] should be unique in top level.
     _lookupFuncIdentifier = _initialTopLevelUniqueNamer.makeUnique('_lookup');
 
-    _symbolAddressClassName =
-        _initialTopLevelUniqueNamer.makeUnique('_SymbolAddress');
+    /// Resolve name conflicts of identifiers used for SymbolAddress.
+    _symbolAddressClassName = _initialWrapperLevelUniqueNamer
+        .makeUnique(_initialTopLevelUniqueNamer.makeUnique('_SymbolAddress'));
     _symbolAddressVariableName =
         _initialWrapperLevelUniqueNamer.makeUnique('addresses');
     _symbolAddressLibraryVarName =
@@ -248,7 +249,7 @@ class SymbolAddressWriter {
     sb.write('final ${w._className} ${w._symbolAddressLibraryVarName};\n');
     // Write Constructor.
     sb.write(
-        '${w._symbolAddressClassName}(this.${w._symbolAddressLibraryVarName});');
+        '${w._symbolAddressClassName}(this.${w._symbolAddressLibraryVarName});\n');
     for (final address in _addresses) {
       sb.write(
           '${address.type} get ${address.name} => ${w._symbolAddressLibraryVarName}.${address.ptrName};\n');
