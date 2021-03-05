@@ -31,6 +31,9 @@ ffigen:
   functions:
     include:
       - 'clang_.*' # Can be a regexp, '.' matches any character.
+    symbol-address:
+      include:
+        - 'clang_.*' # Symbol Address and Typedefs for these functions will be exposed via addresses.
   structs:
     include:
         - 'CX.*'

@@ -20,13 +20,15 @@ class Bindings {
   ffi.Pointer<SomeStruc> someFunc(
     ffi.Pointer<ffi.Pointer<SomeStruc>> some,
   ) {
-    return (_someFunc ??= _lookup<ffi.NativeFunction<_c_someFunc>>('someFunc')
-        .asFunction<_dart_someFunc>())(
+    return _someFunc(
       some,
     );
   }
 
-  _dart_someFunc? _someFunc;
+  late final _someFunc_ptr =
+      _lookup<ffi.NativeFunction<_c_someFunc>>('someFunc');
+  late final _dart_someFunc _someFunc =
+      _someFunc_ptr.asFunction<_dart_someFunc>();
 }
 
 class SomeStruc extends ffi.Struct {

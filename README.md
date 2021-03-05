@@ -162,6 +162,10 @@ functions:
     'clang_dispose': 'dispose'
     # Removes '_' from beginning of a name.
     '_(.*)': '$1'
+  symbol-address:
+    # Used to expose symbol and typedef.
+    include:
+      - myFunc
 enums:
   member-rename:
     '(.*)': # Matches any enum.
@@ -475,3 +479,18 @@ unnamed-enums:
 
 This happens when an excluded struct is a dependency to some included declaration.
 (A dependency means a struct is being passed/returned by a function or is member of another struct in some way)
+
+### How to expose the native pointers and typedefs?
+
+By default all native pointers and typedefs are hidden, but you can use the
+`symbol-address` subkey for functions/globals and make them public by matching with its name. The pointers are then accesible via `nativeLibrary.addresses` and the native
+typedef are prefixed with `Native_`.
+
+Example -
+```yaml
+functions:
+  symbol-address:
+    include:
+      - 'myFunc'
+      - '.*' # Do this to expose all pointers.
+```

@@ -1,3 +1,6 @@
+# 2.2.0
+- Added subkey `symbol-address` to expose native symbol pointers for `functions` and `globals`.
+
 # 2.1.0
 - Added a new named constructor `NativeLibrary.fromLookup()` to support dynamic linking.
 - Updated dart SDK constraints to latest stable version `2.12.0`.

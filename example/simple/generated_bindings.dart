@@ -24,71 +24,76 @@ class NativeLibrary {
     int a,
     int b,
   ) {
-    return (_sum ??=
-        _lookup<ffi.NativeFunction<_c_sum>>('sum').asFunction<_dart_sum>())(
+    return _sum(
       a,
       b,
     );
   }
 
-  _dart_sum? _sum;
+  late final _sum_ptr = _lookup<ffi.NativeFunction<_c_sum>>('sum');
+  late final _dart_sum _sum = _sum_ptr.asFunction<_dart_sum>();
 
   /// Subtracts 2 integers.
   int subtract(
     ffi.Pointer<ffi.Int32> a,
     int b,
   ) {
-    return (_subtract ??= _lookup<ffi.NativeFunction<_c_subtract>>('subtract')
-        .asFunction<_dart_subtract>())(
+    return _subtract(
       a,
       b,
     );
   }
 
-  _dart_subtract? _subtract;
+  late final _subtract_ptr =
+      _lookup<ffi.NativeFunction<_c_subtract>>('subtract');
+  late final _dart_subtract _subtract =
+      _subtract_ptr.asFunction<_dart_subtract>();
 
   /// Multiplies 2 integers, returns pointer to an integer,.
   ffi.Pointer<ffi.Int32> multiply(
     int a,
     int b,
   ) {
-    return (_multiply ??= _lookup<ffi.NativeFunction<_c_multiply>>('multiply')
-        .asFunction<_dart_multiply>())(
+    return _multiply(
       a,
       b,
     );
   }
 
-  _dart_multiply? _multiply;
+  late final _multiply_ptr =
+      _lookup<ffi.NativeFunction<_c_multiply>>('multiply');
+  late final _dart_multiply _multiply =
+      _multiply_ptr.asFunction<_dart_multiply>();
 
   /// Divides 2 integers, returns pointer to a float.
   ffi.Pointer<ffi.Float> divide(
     int a,
     int b,
   ) {
-    return (_divide ??= _lookup<ffi.NativeFunction<_c_divide>>('divide')
-        .asFunction<_dart_divide>())(
+    return _divide(
       a,
       b,
     );
   }
 
-  _dart_divide? _divide;
+  late final _divide_ptr = _lookup<ffi.NativeFunction<_c_divide>>('divide');
+  late final _dart_divide _divide = _divide_ptr.asFunction<_dart_divide>();
 
   /// Divides 2 floats, returns a pointer to double.
   ffi.Pointer<ffi.Double> dividePercision(
     ffi.Pointer<ffi.Float> a,
     ffi.Pointer<ffi.Float> b,
   ) {
-    return (_dividePercision ??=
-        _lookup<ffi.NativeFunction<_c_dividePercision>>('dividePercision')
-            .asFunction<_dart_dividePercision>())(
+    return _dividePercision(
       a,
       b,
     );
   }
 
-  _dart_dividePercision? _dividePercision;
+  late final _dividePercision_ptr =
+      _lookup<ffi.NativeFunction<_c_dividePercision>>('dividePercision');
+  late final _dart_dividePercision _dividePercision =
+      _dividePercision_ptr.asFunction<_dart_dividePercision>();
 }
 
 typedef _c_sum = ffi.Int32 Function(

@@ -268,15 +268,11 @@ bool outputValidator(String name, dynamic value) =>
 bool isFullDeclarationName(String str) =>
     quiver.matchesFull(RegExp('[a-zA-Z_0-9]*'), str);
 
-Declaration declarationConfigExtractor(dynamic yamlMap) {
+Includer _extractIncluderFromYaml(dynamic yamlMap) {
   final includeMatchers = <RegExp>[],
       includeFull = <String>{},
       excludeMatchers = <RegExp>[],
       excludeFull = <String>{};
-  final renamePatterns = <RegExpRenamer>[];
-  final renameFull = <String, String>{};
-  final memberRenamePatterns = <RegExpMemberRenamer>[];
-  final memberRenamerFull = <String, Renamer>{};
 
   final include = (yamlMap[strings.include] as YamlList?)?.cast<String>();
   if (include != null) {
@@ -298,6 +294,27 @@ Declaration declarationConfigExtractor(dynamic yamlMap) {
         excludeMatchers.add(RegExp(str, dotAll: true));
       }
     }
+  }
+
+  return Includer(
+    includeMatchers: includeMatchers,
+    includeFull: includeFull,
+    excludeMatchers: excludeMatchers,
+    excludeFull: excludeFull,
+  );
+}
+
+Declaration declarationConfigExtractor(dynamic yamlMap) {
+  final renamePatterns = <RegExpRenamer>[];
+  final renameFull = <String, String>{};
+  final memberRenamePatterns = <RegExpMemberRenamer>[];
+  final memberRenamerFull = <String, Renamer>{};
+
+  final includer = _extractIncluderFromYaml(yamlMap);
+
+  Includer? symbolIncluder;
+  if (yamlMap[strings.symbolAddress] != null) {
+    symbolIncluder = _extractIncluderFromYaml(yamlMap[strings.symbolAddress]);
   }
 
   final rename = (yamlMap[strings.rename] as YamlMap?)?.cast<String, String>();
@@ -350,12 +367,7 @@ Declaration declarationConfigExtractor(dynamic yamlMap) {
   }
 
   return Declaration(
-    includer: Includer(
-      includeMatchers: includeMatchers,
-      includeFull: includeFull,
-      excludeMatchers: excludeMatchers,
-      excludeFull: excludeFull,
-    ),
+    includer: includer,
     renamer: Renamer(
       renameFull: renameFull,
       renamePatterns: renamePatterns,
@@ -364,6 +376,7 @@ Declaration declarationConfigExtractor(dynamic yamlMap) {
       memberRenameFull: memberRenamerFull,
       memberRenamePattern: memberRenamePatterns,
     ),
+    symbolAddressIncluder: symbolIncluder,
   );
 }
 
@@ -405,6 +418,22 @@ bool declarationConfigValidator(String name, dynamic value) {
                   _result = false;
                 }
               }
+            }
+          }
+        }
+      } else if (key == strings.symbolAddress) {
+        if (!checkType<YamlMap>([name, key as String], value[key])) {
+          _result = false;
+        } else {
+          for (final subkey in value[key].keys) {
+            if (subkey == strings.include || subkey == strings.exclude) {
+              if (!checkType<YamlList>(
+                  [name, key, subkey as String], value[key][subkey])) {
+                _result = false;
+              }
+            } else {
+              _logger.severe("Unknown key '$subkey' in '$name -> $key'.");
+              _result = false;
             }
           }
         }

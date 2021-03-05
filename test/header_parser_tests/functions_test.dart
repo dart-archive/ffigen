@@ -29,6 +29,12 @@ ${strings.headers}:
     - 'test/header_parser_tests/functions.h'
   ${strings.includeDirectives}:
     - '**functions.h'
+
+${strings.functions}:
+  ${strings.symbolAddress}:
+    ${strings.include}:
+      - func3
+      - func4
         ''') as yaml.YamlMap),
       );
     });
@@ -92,6 +98,7 @@ Library expectedLibrary() {
       ),
       Func(
         name: 'func3',
+        exposeSymbolAddress: true,
         returnType: Type.nativeType(
           SupportedNativeType.Double,
         ),
@@ -123,6 +130,7 @@ Library expectedLibrary() {
       ),
       Func(
           name: 'func4',
+          exposeSymbolAddress: true,
           returnType: Type.pointer(Type.nativeType(SupportedNativeType.Void)),
           parameters: [
             Parameter(

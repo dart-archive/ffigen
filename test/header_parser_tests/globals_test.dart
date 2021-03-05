@@ -31,6 +31,11 @@ ${strings.headers}:
 ${strings.globals}:
   ${strings.exclude}:
     - GlobalIgnore
+  ${strings.symbolAddress}:
+    ${strings.include}:
+      - myInt
+      - pointerToLongDouble
+      - globalStruct
 # Needed for stdbool.h in MacOS
 ${strings.compilerOpts}: '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/ -Wno-nullability-completeness'
         ''') as yaml.YamlMap),
@@ -67,12 +72,22 @@ Library expectedLibrary() {
     name: 'Bindings',
     bindings: [
       Global(type: Type.boolean(), name: 'coolGlobal'),
-      Global(type: Type.nativeType(SupportedNativeType.Int32), name: 'myInt'),
       Global(
-          type: Type.pointer(Type.nativeType(SupportedNativeType.Int32)),
-          name: 'aGlobalPointer'),
+        type: Type.nativeType(SupportedNativeType.Int32),
+        name: 'myInt',
+        exposeSymbolAddress: true,
+      ),
+      Global(
+        type: Type.pointer(Type.nativeType(SupportedNativeType.Int32)),
+        name: 'aGlobalPointer',
+        exposeSymbolAddress: true,
+      ),
       globalStruc,
-      Global(name: 'globalStruct', type: Type.struct(globalStruc)),
+      Global(
+        name: 'globalStruct',
+        type: Type.struct(globalStruc),
+        exposeSymbolAddress: true,
+      ),
     ],
   );
 }

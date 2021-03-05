@@ -20,39 +20,41 @@ class Bindings {
   /// Just a test function
   /// heres another line
   int noParam() {
-    return (_noParam ??= _lookup<ffi.NativeFunction<_c_noParam>>('noParam')
-        .asFunction<_dart_noParam>())();
+    return _noParam();
   }
 
-  _dart_noParam? _noParam;
+  late final _noParam_ptr = _lookup<ffi.NativeFunction<_c_noParam>>('noParam');
+  late final _dart_noParam _noParam = _noParam_ptr.asFunction<_dart_noParam>();
 
   int withPrimitiveParam(
     int a,
     int b,
   ) {
-    return (_withPrimitiveParam ??=
-        _lookup<ffi.NativeFunction<_c_withPrimitiveParam>>('withPrimitiveParam')
-            .asFunction<_dart_withPrimitiveParam>())(
+    return _withPrimitiveParam(
       a,
       b,
     );
   }
 
-  _dart_withPrimitiveParam? _withPrimitiveParam;
+  late final _withPrimitiveParam_ptr =
+      _lookup<ffi.NativeFunction<_c_withPrimitiveParam>>('withPrimitiveParam');
+  late final _dart_withPrimitiveParam _withPrimitiveParam =
+      _withPrimitiveParam_ptr.asFunction<_dart_withPrimitiveParam>();
 
   ffi.Pointer<ffi.Double> withPointerParam(
     ffi.Pointer<ffi.Int32> a,
     ffi.Pointer<ffi.Pointer<ffi.Uint8>> b,
   ) {
-    return (_withPointerParam ??=
-        _lookup<ffi.NativeFunction<_c_withPointerParam>>('withPointerParam')
-            .asFunction<_dart_withPointerParam>())(
+    return _withPointerParam(
       a,
       b,
     );
   }
 
-  _dart_withPointerParam? _withPointerParam;
+  late final _withPointerParam_ptr =
+      _lookup<ffi.NativeFunction<_c_withPointerParam>>('withPointerParam');
+  late final _dart_withPointerParam _withPointerParam =
+      _withPointerParam_ptr.asFunction<_dart_withPointerParam>();
 }
 
 typedef _c_noParam = ffi.Int32 Function();

@@ -92,19 +92,24 @@ class GlobHeaderFilter extends HeaderIncludeFilter {
   }
 }
 
-/// A generic declaration config, used for Functions, Structs and Enums.
+/// A generic declaration config, used for Functions, Structs, Enums, Macros,
+/// unnamed Enums and Globals.
 class Declaration {
   final Includer _includer;
   final Renamer _renamer;
   final MemberRenamer _memberRenamer;
+  final Includer _symbolAddressIncluder;
 
   Declaration({
     Includer? includer,
     Renamer? renamer,
     MemberRenamer? memberRenamer,
+    Includer? symbolAddressIncluder,
   })  : _includer = includer ?? Includer(),
         _renamer = renamer ?? Renamer(),
-        _memberRenamer = memberRenamer ?? MemberRenamer();
+        _memberRenamer = memberRenamer ?? MemberRenamer(),
+        _symbolAddressIncluder =
+            symbolAddressIncluder ?? Includer.excludeByDefault();
 
   /// Applies renaming and returns the result.
   String renameUsingConfig(String name) => _renamer.rename(name);
@@ -115,6 +120,10 @@ class Declaration {
 
   /// Checks if a name is allowed by a filter.
   bool shouldInclude(String name) => _includer.shouldInclude(name);
+
+  /// Checks if the symbol address should be included for this name.
+  bool shouldIncludeSymbolAddress(String name) =>
+      _symbolAddressIncluder.shouldInclude(name);
 }
 
 /// Matches `$<single_digit_int>`, value can be accessed in group 1 of match.
@@ -179,6 +188,12 @@ class Includer {
         _includeFull = includeFull ?? {},
         _excludeMatchers = excludeMatchers ?? [],
         _excludeFull = excludeFull ?? {};
+
+  Includer.excludeByDefault()
+      : _includeMatchers = [],
+        _includeFull = {},
+        _excludeMatchers = [RegExp('.*', dotAll: true)],
+        _excludeFull = {};
 
   /// Returns true if [name] is allowed.
   ///

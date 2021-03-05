@@ -22,6 +22,7 @@ import 'writer.dart';
 /// ```
 class Global extends LookUpBinding {
   final Type type;
+  final bool exposeSymbolAddress;
 
   Global({
     String? usr,
@@ -29,6 +30,7 @@ class Global extends LookUpBinding {
     required String name,
     required this.type,
     String? dartDoc,
+    this.exposeSymbolAddress = false,
   }) : super(
           usr: usr,
           originalName: originalName,
@@ -75,6 +77,15 @@ class Global extends LookUpBinding {
       s.write('$dartType get $globalVarName => $pointerName.value;\n\n');
       s.write(
           'set $globalVarName($dartType value) => $pointerName.value = value;\n\n');
+    }
+
+    if (exposeSymbolAddress) {
+      // Add to SymbolAddress in writer.
+      w.symbolAddressWriter.addSymbol(
+        type: '${w.ffiLibraryPrefix}.Pointer<$cType>',
+        name: name,
+        ptrName: pointerName,
+      );
     }
 
     return BindingString(type: BindingStringType.global, string: s.toString());

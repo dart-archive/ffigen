@@ -76,6 +76,8 @@ Func? parseFunctionDeclaration(clang_types.CXCursor cursor) {
       originalName: funcName,
       returnType: rt,
       parameters: parameters,
+      exposeSymbolAddress:
+          config.functionDecl.shouldIncludeSymbolAddress(funcName),
     );
     bindingsIndex.addFuncToSeen(funcUsr, _stack.top.func!);
   } else if (bindingsIndex.isSeenFunc(funcUsr)) {
