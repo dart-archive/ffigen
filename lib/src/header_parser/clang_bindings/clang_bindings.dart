@@ -346,6 +346,21 @@ class Clang {
       _clang_getTranslationUnitCursor = _clang_getTranslationUnitCursor_ptr
           .asFunction<_dart_clang_getTranslationUnitCursor>();
 
+  /// Returns non-zero if \p cursor is null.
+  int clang_Cursor_isNull(
+    CXCursor cursor,
+  ) {
+    return _clang_Cursor_isNull(
+      cursor,
+    );
+  }
+
+  late final _clang_Cursor_isNull_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_Cursor_isNull>>(
+          'clang_Cursor_isNull');
+  late final _dart_clang_Cursor_isNull _clang_Cursor_isNull =
+      _clang_Cursor_isNull_ptr.asFunction<_dart_clang_Cursor_isNull>();
+
   /// Retrieve the kind of the given cursor.
   int clang_getCursorKind(
     CXCursor arg0,
@@ -2657,6 +2672,14 @@ typedef _c_clang_getTranslationUnitCursor = CXCursor Function(
 
 typedef _dart_clang_getTranslationUnitCursor = CXCursor Function(
   ffi.Pointer<CXTranslationUnitImpl> arg0,
+);
+
+typedef _c_clang_Cursor_isNull = ffi.Int32 Function(
+  CXCursor cursor,
+);
+
+typedef _dart_clang_Cursor_isNull = int Function(
+  CXCursor cursor,
 );
 
 typedef _c_clang_getCursorKind = ffi.Int32 Function(

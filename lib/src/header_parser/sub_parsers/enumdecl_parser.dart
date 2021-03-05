@@ -32,6 +32,13 @@ EnumClass? parseEnumDeclaration(
   String? name,
 }) {
   _stack.push(_ParsedEnum());
+
+  // Parse the cursor definition if available.
+  final definition = clang.clang_getCursorDefinition(cursor);
+  if (clang.clang_Cursor_isNull(definition) == 0) {
+    cursor = definition;
+  }
+
   final enumUsr = cursor.usr();
   final enumName = name ?? cursor.spelling();
   if (enumName == '') {
