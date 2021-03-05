@@ -26,6 +26,8 @@ class CommentType {
 enum CommentStyle { doxygen, any }
 enum CommentLength { none, brief, full }
 
+enum StructDependencies { full, opaque }
+
 /// Represents a single specification in configurations.
 ///
 /// [E] is the return type of the extractedResult.

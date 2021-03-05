@@ -76,6 +76,10 @@ class Config {
   CommentType get commentType => _commentType;
   late CommentType _commentType;
 
+  /// Whether structs that are dependencies should be included.
+  StructDependencies get structDependencies => _structDependencies;
+  late StructDependencies _structDependencies;
+
   /// If tool should generate array workarounds.
   ///
   /// If false(default), structs with inline array members will have all its
@@ -286,6 +290,14 @@ class Config {
         defaultValue: () => CommentType.def(),
         extractedResult: (dynamic result) =>
             _commentType = result as CommentType,
+      ),
+      strings.structDependencies: Specification<StructDependencies>(
+        requirement: Requirement.no,
+        validator: structDependenciesValidator,
+        extractor: structDependenciesExtractor,
+        defaultValue: () => StructDependencies.full,
+        extractedResult: (dynamic result) =>
+            _structDependencies = result as StructDependencies,
       ),
       strings.arrayWorkaround: Specification<bool>(
         requirement: Requirement.no,

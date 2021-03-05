@@ -547,3 +547,23 @@ bool commentValidator(String name, dynamic value) {
     return false;
   }
 }
+
+StructDependencies structDependenciesExtractor(dynamic value) {
+  var result = StructDependencies.full;
+  if (value == strings.opaqueStructDependencies) {
+    result = StructDependencies.opaque;
+  }
+  return result;
+}
+
+bool structDependenciesValidator(String name, dynamic value) {
+  var result = true;
+  if (value is! String ||
+      value != strings.fullStructDependencies ||
+      value != strings.opaqueStructDependencies) {
+    _logger.severe(
+        "'$name' must be one of the following - {${strings.doxygen}, ${strings.any}}");
+    result = false;
+  }
+  return result;
+}
