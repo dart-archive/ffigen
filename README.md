@@ -163,7 +163,7 @@ functions:
     # Removes '_' from beginning of a name.
     '_(.*)': '$1'
   symbol-address:
-    # Used to expose native pointers and typedef.
+    # Used to expose symbol and typedef.
     include:
       - myFunc
 enums:

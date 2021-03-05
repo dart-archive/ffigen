@@ -80,8 +80,9 @@ class Writer {
     /// [_lookupFuncIdentifier] should be unique in top level.
     _lookupFuncIdentifier = _initialTopLevelUniqueNamer.makeUnique('_lookup');
 
-    /// Resolve name conflicts of identifiers used for SymbolAddress.
-    _symbolAddressClassName = allLevelsUniqueNamer.makeUnique('_SymbolAddress');
+    /// Resolve name conflicts of identifiers used for SymbolAddresses.
+    _symbolAddressClassName =
+        allLevelsUniqueNamer.makeUnique('_SymbolAddresses');
     _symbolAddressVariableName =
         _initialWrapperLevelUniqueNamer.makeUnique('addresses');
     _symbolAddressLibraryVarName =

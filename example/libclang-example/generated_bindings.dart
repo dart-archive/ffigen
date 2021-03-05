@@ -7007,12 +7007,12 @@ class LibClang {
   late final _dart_clang_Type_visitFields _clang_Type_visitFields =
       _clang_Type_visitFields_ptr.asFunction<_dart_clang_Type_visitFields>();
 
-  late final addresses = _SymbolAddress(this);
+  late final addresses = _SymbolAddresses(this);
 }
 
-class _SymbolAddress {
+class _SymbolAddresses {
   final LibClang _library;
-  _SymbolAddress(this._library);
+  _SymbolAddresses(this._library);
   ffi.Pointer<ffi.NativeFunction<Native_clang_getCString>>
       get clang_getCString => _library._clang_getCString_ptr;
   ffi.Pointer<ffi.NativeFunction<Native_clang_disposeString>>

@@ -17,7 +17,7 @@ void main() {
         header: '// ignore_for_file: unused_element',
         bindings: [
           Struc(name: 'addresses'),
-          Struc(name: '_SymbolAddress'),
+          Struc(name: '_SymbolAddresses'),
           EnumClass(name: 'Bindings'),
           Func(
             name: '_library',
@@ -25,7 +25,7 @@ void main() {
             exposeSymbolAddress: true,
           ),
           Func(
-            name: '_SymbolAddress_1',
+            name: '_SymbolAddresses_1',
             returnType: Type.nativeType(SupportedNativeType.Void),
             exposeSymbolAddress: true,
           ),
