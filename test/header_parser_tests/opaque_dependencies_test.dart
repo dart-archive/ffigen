@@ -16,7 +16,7 @@ late Library actual;
 void main() {
   group('opaque_dependencies_test', () {
     setUpAll(() {
-      logWarnings(Level.ALL);
+      logWarnings(Level.SEVERE);
       actual = parser.parse(
         Config.fromYaml(yaml.loadYaml('''
 ${strings.name}: 'NativeLibrary'
