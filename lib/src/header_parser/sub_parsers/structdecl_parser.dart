@@ -49,6 +49,8 @@ Struc? parseStructDeclaration(
   bool ignoreFilter = false,
 }) {
   _stack.push(_ParsedStruc());
+  // Go to complete declaration if this was a forward declaration.
+  // cursor = clang.clang_getCursorDefinition(cursor);
 
   final structUsr = cursor.usr();
   final structName = name ?? cursor.spelling();
