@@ -55,15 +55,17 @@ int _unnamedenumCursorVisitor(clang_types.CXCursor cursor,
 
 /// Adds the parameter to func in [functiondecl_parser.dart].
 void _addUnNamedEnumConstant(clang_types.CXCursor cursor) {
-  unnamedEnumConstants.add(
-    Constant(
-      usr: cursor.usr(),
-      originalName: cursor.spelling(),
-      name: config.unnamedEnumConstants.renameUsingConfig(
-        cursor.spelling(),
-      ),
-      rawType: 'int',
-      rawValue: clang.clang_getEnumConstantDeclValue(cursor).toString(),
+  _logger.fine(
+      '++++ Adding Constant from unnamed enum: ${cursor.completeStringRepr()}');
+  final constant = Constant(
+    usr: cursor.usr(),
+    originalName: cursor.spelling(),
+    name: config.unnamedEnumConstants.renameUsingConfig(
+      cursor.spelling(),
     ),
+    rawType: 'int',
+    rawValue: clang.clang_getEnumConstantDeclValue(cursor).toString(),
   );
+  bindingsIndex.addUnnamedEnumConstantToSeen(cursor.usr(), constant);
+  unnamedEnumConstants.add(constant);
 }
