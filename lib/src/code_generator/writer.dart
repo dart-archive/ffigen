@@ -172,8 +172,6 @@ class Writer {
         s.write(b.toBindingString(this).string);
       }
       if (symbolAddressWriter.shouldGenerate) {
-        // Resolve name conflicts.
-
         s.write(symbolAddressWriter.writeObject(this));
       }
 
@@ -225,8 +223,9 @@ class Writer {
 
 /// Manages the generated `_SymbolAddress` class.
 class SymbolAddressWriter {
-  final List<_SymbolAddress> _addresses = [];
+  final List<_SymbolAddressUnit> _addresses = [];
 
+  /// Used to check if we need to generate `_SymbolAddress` class.
   bool get shouldGenerate => _addresses.isNotEmpty;
 
   void addSymbol({
@@ -234,7 +233,7 @@ class SymbolAddressWriter {
     required String name,
     required String ptrName,
   }) {
-    _addresses.add(_SymbolAddress(type, name, ptrName));
+    _addresses.add(_SymbolAddressUnit(type, name, ptrName));
   }
 
   String writeObject(Writer w) {
@@ -258,8 +257,9 @@ class SymbolAddressWriter {
   }
 }
 
-class _SymbolAddress {
+/// Holds the data for a single symbol address.
+class _SymbolAddressUnit {
   final String type, name, ptrName;
 
-  _SymbolAddress(this.type, this.name, this.ptrName);
+  _SymbolAddressUnit(this.type, this.name, this.ptrName);
 }
