@@ -21,6 +21,6 @@ struct com4{
     // With multiple line and both // and ///.
     int a;
 
-    /* Single line field comment.*/
+    /* Single line field comment. */
     float b;
 };
