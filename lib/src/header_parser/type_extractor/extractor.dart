@@ -18,14 +18,21 @@ final _logger = Logger('ffigen.header_parser.extractor');
 const _padding = '  ';
 
 /// Converts cxtype to a typestring code_generator can accept.
-Type getCodeGenType(clang_types.CXType cxtype, {String? parentName}) {
+Type getCodeGenType(
+  clang_types.CXType cxtype, {
+  String? parentName,
+
+  /// Passed on if a value was marked as a pointer before this one.
+  bool pointerReference = false,
+}) {
   _logger.fine('${_padding}getCodeGenType ${cxtype.completeStringRepr()}');
   final kind = cxtype.kind;
 
   switch (kind) {
     case clang_types.CXTypeKind.CXType_Pointer:
       final pt = clang.clang_getPointeeType(cxtype);
-      final s = getCodeGenType(pt, parentName: parentName);
+      final s =
+          getCodeGenType(pt, parentName: parentName, pointerReference: true);
 
       // Replace Pointer<_Dart_Handle> with Handle.
       if (config.useDartHandle &&
@@ -53,14 +60,17 @@ Type getCodeGenType(clang_types.CXType cxtype, {String? parentName}) {
       final ct = clang.clang_getTypedefDeclUnderlyingType(
           clang.clang_getTypeDeclaration(cxtype));
 
-      final s = getCodeGenType(ct, parentName: parentName ?? spelling);
+      final s = getCodeGenType(ct,
+          parentName: parentName ?? spelling,
+          pointerReference: pointerReference);
       return s;
     case clang_types.CXTypeKind.CXType_Elaborated:
       final et = clang.clang_Type_getNamedType(cxtype);
-      final s = getCodeGenType(et, parentName: parentName);
+      final s = getCodeGenType(et,
+          parentName: parentName, pointerReference: pointerReference);
       return s;
     case clang_types.CXTypeKind.CXType_Record:
-      return _extractfromRecord(cxtype, parentName);
+      return _extractfromRecord(cxtype, parentName, pointerReference);
     case clang_types.CXTypeKind.CXType_Enum:
       return Type.nativeType(
         enumNativeType,
@@ -98,7 +108,8 @@ Type getCodeGenType(clang_types.CXType cxtype, {String? parentName}) {
   }
 }
 
-Type _extractfromRecord(clang_types.CXType cxtype, String? parentName) {
+Type _extractfromRecord(
+    clang_types.CXType cxtype, String? parentName, bool pointerReference) {
   Type type;
 
   final cursor = clang.clang_getTypeDeclaration(cxtype);
@@ -115,12 +126,25 @@ Type _extractfromRecord(clang_types.CXType cxtype, String? parentName) {
       // TODO(23): Check if we should auto add struct.
       if (bindingsIndex.isSeenStruct(structUsr)) {
         type = Type.struct(bindingsIndex.getSeenStruct(structUsr)!);
+
+        // This will parse the dependencies if needed.
+        parseStructDeclaration(
+          cursor,
+          name: structName,
+          ignoreFilter: true,
+          pointerReference: pointerReference,
+          updateName: false,
+        );
       } else {
-        final struc = parseStructDeclaration(cursor,
-            name: structName, ignoreFilter: true);
+        final struc = parseStructDeclaration(
+          cursor,
+          name: structName,
+          ignoreFilter: true,
+          pointerReference: pointerReference,
+        );
         type = Type.struct(struc!);
 
-        // Add to bindings if it's not Dart_Handle.
+        // Add to bindings if it's not Dart_Handle and is unseen.
         if (!(config.useDartHandle && structUsr == strings.dartHandleUsr)) {
           addToBindings(struc);
         }

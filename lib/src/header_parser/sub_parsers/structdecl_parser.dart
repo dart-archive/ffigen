@@ -5,6 +5,7 @@
 import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
+import 'package:ffigen/src/config_provider/config_types.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
@@ -47,6 +48,13 @@ Struc? parseStructDeclaration(
   /// Option to ignore struct filter (Useful in case of extracting structs
   /// when they are passed/returned by an included function.)
   bool ignoreFilter = false,
+
+  /// To track if the struct was used by reference(i.e struct*). (Used to only
+  /// generate these as opaque if `struct-dependencies` was set to opaque).
+  bool pointerReference = false,
+
+  /// If the struct name should be updated, if it was already seen.
+  bool updateName = true,
 }) {
   _stack.push(_ParsedStruc());
 
@@ -83,15 +91,30 @@ Struc? parseStructDeclaration(
     // Adding to seen here to stop recursion if a struct has itself as a
     // member, members are updated later.
     bindingsIndex.addStructToSeen(structUsr, _stack.top.struc!);
-    _setStructMembers(cursor);
   }
 
   if (bindingsIndex.isSeenStruct(structUsr)) {
-    _stack.top.struc = bindingsIndex.getSeenStruct(structUsr)!;
+    _stack.top.struc = bindingsIndex.getSeenStruct(structUsr);
 
-    // If struct is seen, update it's name.
-    _stack.top.struc!.name = config.structDecl.renameUsingConfig(structName);
+    final skipDependencies = _stack.top.struc!.parsedDependencies ||
+        (config.structDependencies == StructDependencies.opaque &&
+            pointerReference &&
+            ignoreFilter);
+
+    if (!skipDependencies) {
+      // Prevents infinite recursion if struct has a pointer to itself.
+      _stack.top.struc!.parsedDependencies = true;
+      _setStructMembers(cursor);
+    } else if (!_stack.top.struc!.parsedDependencies) {
+      _logger.fine('Skipped dependencies.');
+    }
+
+    if (updateName) {
+      // If struct is seen, update it's name.
+      _stack.top.struc!.name = config.structDecl.renameUsingConfig(structName);
+    }
   }
+
   return _stack.pop().struc;
 }
 

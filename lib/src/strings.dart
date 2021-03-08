@@ -49,6 +49,11 @@ const rename = 'rename';
 const memberRename = 'member-rename';
 const symbolAddress = 'symbol-address';
 
+const structDependencies = 'dependency-only';
+// Values for `structDependencies`.
+const fullStructDependencies = 'full';
+const opaqueStructDependencies = 'opaque';
+
 const sizemap = 'size-map';
 const typedefmap = 'typedef-map';
 

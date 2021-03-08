@@ -66,5 +66,6 @@ const keywords = {
   'show',
   'dynamic',
   'implements',
-  'static'
+  'static',
+  'late',
 };

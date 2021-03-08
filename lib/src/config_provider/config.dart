@@ -76,6 +76,10 @@ class Config {
   CommentType get commentType => _commentType;
   late CommentType _commentType;
 
+  /// Whether structs that are dependencies should be included.
+  StructDependencies get structDependencies => _structDependencies;
+  late StructDependencies _structDependencies;
+
   /// If tool should generate array workarounds.
   ///
   /// If false(default), structs with inline array members will have all its
@@ -121,13 +125,41 @@ class Config {
     return configspecs;
   }
 
+  /// Checks if there are nested [key] in [map].
+  bool _checkKeyInYaml(List<String> key, YamlMap map) {
+    dynamic last = map;
+    for (final k in key) {
+      if (last is YamlMap) {
+        if (!last.containsKey(k)) return false;
+        last = last[k];
+      } else {
+        return false;
+      }
+    }
+    return last != null;
+  }
+
+  /// Extracts value of nested [key] from [map].
+  dynamic _getKeyValueFromYaml(List<String> key, YamlMap map) {
+    if (_checkKeyInYaml(key, map)) {
+      dynamic last = map;
+      for (final k in key) {
+        last = last[k];
+      }
+      return last;
+    }
+
+    return null;
+  }
+
   /// Validates Yaml according to given specs.
-  bool _checkConfigs(YamlMap map, Map<String, Specification> specs) {
+  bool _checkConfigs(YamlMap map, Map<List<String>, Specification> specs) {
     var _result = true;
     for (final key in specs.keys) {
       final spec = specs[key];
-      if (map.containsKey(key)) {
-        _result = _result && spec!.validator(key, map[key]);
+      if (_checkKeyInYaml(key, map)) {
+        _result =
+            _result && spec!.validator(key, _getKeyValueFromYaml(key, map));
       } else if (spec!.requirement == Requirement.yes) {
         _logger.severe("Key '$key' is required.");
         _result = false;
@@ -137,7 +169,8 @@ class Config {
     }
     // Warn about unknown keys.
     for (final key in map.keys) {
-      if (!specs.containsKey(key)) {
+      final specString = specs.keys.map((e) => e.join(':')).toSet();
+      if (!specString.contains(key)) {
         _logger.warning("Unknown key '$key' found.");
       }
     }
@@ -148,11 +181,11 @@ class Config {
   /// Extracts variables from Yaml according to given specs.
   ///
   /// Validation must be done beforehand, using [_checkConfigs].
-  void _extract(YamlMap map, Map<String, Specification> specs) {
+  void _extract(YamlMap map, Map<List<String>, Specification> specs) {
     for (final key in specs.keys) {
       final spec = specs[key];
-      if (map.containsKey(key)) {
-        spec!.extractedResult(spec.extractor(map[key]));
+      if (_checkKeyInYaml(key, map)) {
+        spec!.extractedResult(spec.extractor(_getKeyValueFromYaml(key, map)));
       } else {
         spec!.extractedResult(spec.defaultValue?.call());
       }
@@ -162,28 +195,28 @@ class Config {
   /// Returns map of various specifications avaialble for our tool.
   ///
   /// Key: Name, Value: [Specification]
-  Map<String, Specification> _getSpecs() {
-    return <String, Specification>{
-      strings.llvmLib: Specification<String>(
+  Map<List<String>, Specification> _getSpecs() {
+    return <List<String>, Specification>{
+      [strings.llvmLib]: Specification<String>(
         requirement: Requirement.no,
         validator: llvmLibValidator,
         extractor: llvmLibExtractor,
         defaultValue: () => findDylibAtDefaultLocations(),
         extractedResult: (dynamic result) => _libclangDylib = result as String,
       ),
-      strings.output: Specification<String>(
+      [strings.output]: Specification<String>(
         requirement: Requirement.yes,
         validator: outputValidator,
         extractor: outputExtractor,
         extractedResult: (dynamic result) => _output = result as String,
       ),
-      strings.headers: Specification<Headers>(
+      [strings.headers]: Specification<Headers>(
         requirement: Requirement.yes,
         validator: headersValidator,
         extractor: headersExtractor,
         extractedResult: (dynamic result) => _headers = result as Headers,
       ),
-      strings.compilerOpts: Specification<List<String>>(
+      [strings.compilerOpts]: Specification<List<String>>(
         requirement: Requirement.no,
         validator: compilerOptsValidator,
         extractor: compilerOptsExtractor,
@@ -191,7 +224,7 @@ class Config {
         extractedResult: (dynamic result) =>
             _compilerOpts = result as List<String>,
       ),
-      strings.functions: Specification<Declaration>(
+      [strings.functions]: Specification<Declaration>(
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
@@ -200,7 +233,7 @@ class Config {
           _functionDecl = result as Declaration;
         },
       ),
-      strings.structs: Specification<Declaration>(
+      [strings.structs]: Specification<Declaration>(
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
@@ -209,7 +242,7 @@ class Config {
           _structDecl = result as Declaration;
         },
       ),
-      strings.enums: Specification<Declaration>(
+      [strings.enums]: Specification<Declaration>(
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
@@ -218,7 +251,7 @@ class Config {
           _enumClassDecl = result as Declaration;
         },
       ),
-      strings.unnamedEnums: Specification<Declaration>(
+      [strings.unnamedEnums]: Specification<Declaration>(
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
@@ -226,7 +259,7 @@ class Config {
         extractedResult: (dynamic result) =>
             _unnamedEnumConstants = result as Declaration,
       ),
-      strings.globals: Specification<Declaration>(
+      [strings.globals]: Specification<Declaration>(
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
@@ -235,7 +268,7 @@ class Config {
           _globals = result as Declaration;
         },
       ),
-      strings.macros: Specification<Declaration>(
+      [strings.macros]: Specification<Declaration>(
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
@@ -244,7 +277,7 @@ class Config {
           _macroDecl = result as Declaration;
         },
       ),
-      strings.sizemap: Specification<Map<int, SupportedNativeType>>(
+      [strings.sizemap]: Specification<Map<int, SupportedNativeType>>(
         validator: sizemapValidator,
         extractor: sizemapExtractor,
         defaultValue: () => <int, SupportedNativeType>{},
@@ -257,21 +290,21 @@ class Config {
           }
         },
       ),
-      strings.typedefmap: Specification<Map<String, SupportedNativeType>>(
+      [strings.typedefmap]: Specification<Map<String, SupportedNativeType>>(
         validator: typedefmapValidator,
         extractor: typedefmapExtractor,
         defaultValue: () => <String, SupportedNativeType>{},
         extractedResult: (dynamic result) => _typedefNativeTypeMappings =
             result as Map<String, SupportedNativeType>,
       ),
-      strings.sort: Specification<bool>(
+      [strings.sort]: Specification<bool>(
         requirement: Requirement.no,
         validator: booleanValidator,
         extractor: booleanExtractor,
         defaultValue: () => false,
         extractedResult: (dynamic result) => _sort = result as bool,
       ),
-      strings.useSupportedTypedefs: Specification<bool>(
+      [strings.useSupportedTypedefs]: Specification<bool>(
         requirement: Requirement.no,
         validator: booleanValidator,
         extractor: booleanExtractor,
@@ -279,7 +312,7 @@ class Config {
         extractedResult: (dynamic result) =>
             _useSupportedTypedefs = result as bool,
       ),
-      strings.comments: Specification<CommentType>(
+      [strings.comments]: Specification<CommentType>(
         requirement: Requirement.no,
         validator: commentValidator,
         extractor: commentExtractor,
@@ -287,28 +320,37 @@ class Config {
         extractedResult: (dynamic result) =>
             _commentType = result as CommentType,
       ),
-      strings.arrayWorkaround: Specification<bool>(
+      [strings.structs, strings.structDependencies]:
+          Specification<StructDependencies>(
+        requirement: Requirement.no,
+        validator: structDependenciesValidator,
+        extractor: structDependenciesExtractor,
+        defaultValue: () => StructDependencies.full,
+        extractedResult: (dynamic result) =>
+            _structDependencies = result as StructDependencies,
+      ),
+      [strings.arrayWorkaround]: Specification<bool>(
         requirement: Requirement.no,
         validator: booleanValidator,
         extractor: booleanExtractor,
         defaultValue: () => false,
         extractedResult: (dynamic result) => _arrayWorkaround = result as bool,
       ),
-      strings.dartBool: Specification<bool>(
+      [strings.dartBool]: Specification<bool>(
         requirement: Requirement.no,
         validator: booleanValidator,
         extractor: booleanExtractor,
         defaultValue: () => true,
         extractedResult: (dynamic result) => _dartBool = result as bool,
       ),
-      strings.name: Specification<String>(
+      [strings.name]: Specification<String>(
         requirement: Requirement.prefer,
         validator: dartClassNameValidator,
         extractor: stringExtractor,
         defaultValue: () => 'NativeLibrary',
         extractedResult: (dynamic result) => _wrapperName = result as String,
       ),
-      strings.description: Specification<String?>(
+      [strings.description]: Specification<String?>(
         requirement: Requirement.prefer,
         validator: nonEmptyStringValidator,
         extractor: stringExtractor,
@@ -316,13 +358,13 @@ class Config {
         extractedResult: (dynamic result) =>
             _wrapperDocComment = result as String?,
       ),
-      strings.preamble: Specification<String?>(
+      [strings.preamble]: Specification<String?>(
         requirement: Requirement.no,
         validator: nonEmptyStringValidator,
         extractor: stringExtractor,
         extractedResult: (dynamic result) => _preamble = result as String?,
       ),
-      strings.useDartHandle: Specification<bool>(
+      [strings.useDartHandle]: Specification<bool>(
         requirement: Requirement.no,
         validator: booleanValidator,
         extractor: booleanExtractor,

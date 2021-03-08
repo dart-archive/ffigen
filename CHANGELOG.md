@@ -1,3 +1,9 @@
+# 2.2.3
+- Added new subkey `dependency-only` (options - `full (default) | opaque`) under `structs`.
+When set to `opaque`, ffigen will generate empty `Opaque` structs if structs
+were excluded in config (i.e added because they were a dependency) and
+only passed by reference(pointer).
+
 # 2.2.2
 - Fixed generation of empty opaque structs due to forward declarations in header files.
 

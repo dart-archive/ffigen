@@ -44,6 +44,9 @@ class Struc extends NoLookUpBinding {
 
   bool get isOpaque => members.isEmpty;
 
+  /// Marker for checking if the dependencies are parsed.
+  bool parsedDependencies = false;
+
   Struc({
     String? usr,
     String? originalName,
