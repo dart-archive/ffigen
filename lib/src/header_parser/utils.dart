@@ -197,8 +197,9 @@ String? removeRawCommentMarkups(String? string) {
   string = string.replaceAll('/*', '');
   string = string.replaceAll('*/', '');
 
-  // Remove any *'s in the beginning of a every line.
+  // Remove any *'s or // in the beginning of a every line.
   string.split('\n').forEach((element) {
+    element = element.trim().replaceFirst(RegExp(r'^\/\/+'), '').trim();
     element = element.trim().replaceFirst(RegExp(r'\**'), '').trim();
     sb.writeln(element);
   });
