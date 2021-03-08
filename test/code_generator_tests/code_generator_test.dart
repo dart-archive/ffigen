@@ -365,6 +365,19 @@ void main() {
     );
     _matchLib(library, 'boolean_no_dartbool');
   });
+  test('sort bindings', () {
+    final library = Library(
+      name: 'Bindings',
+      sort: true,
+      bindings: [
+        Func(name: 'b', returnType: Type.nativeType(SupportedNativeType.Void)),
+        Func(name: 'a', returnType: Type.nativeType(SupportedNativeType.Void)),
+        Struc(name: 'd'),
+        Struc(name: 'c'),
+      ],
+    );
+    _matchLib(library, 'sort_bindings');
+  });
 }
 
 /// Utility to match expected bindings to the generated bindings.

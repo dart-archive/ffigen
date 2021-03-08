@@ -13,7 +13,9 @@ dev_dependencies:
 
 ffigen:
   output: 'generated_bindings.dart'
-  sort: true
+
+  # This will sort the bindings alphabetically.
+  # sort: true
 
   # This is required if LLVM can't be found in default locations by ffigen.
   # llvm-lib: '/usr/local/opt/llvm/lib'

@@ -19,7 +19,6 @@ void main() {
     test('libclang-example', () {
       final config = Config.fromYaml(loadYaml('''
 ${strings.output}: 'generated_bindings.dart'
-${strings.sort}: true
 ${strings.headers}:
   ${strings.entryPoints}:
     - third_party/libclang/include/clang-c/Index.h
