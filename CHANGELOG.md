@@ -1,3 +1,7 @@
+# 2.2.4
+- Fix `sort: true` not working.
+- Fix extra `//` or `///` in comments when using `comments -> style`: `full`.
+
 # 2.2.3
 - Added new subkey `dependency-only` (options - `full (default) | opaque`) under `structs`.
 When set to `opaque`, ffigen will generate empty `Opaque` structs if structs

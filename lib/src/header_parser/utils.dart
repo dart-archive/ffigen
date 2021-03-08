@@ -193,15 +193,21 @@ String? removeRawCommentMarkups(String? string) {
   }
   final sb = StringBuffer();
 
-  // Remove comment identifiers.
-  string = string.replaceAll('/*', '');
-  string = string.replaceAll('*/', '');
+  // Remove comment identifiers (`/** * */`, `///`, `//`) from lines.
+  if (string.contains(RegExp(r'^\s*\/\*+'))) {
+    string = string.replaceFirst(RegExp(r'^\s*\/\*+\s*'), '');
+    string = string.replaceFirst(RegExp(r'\s*\*+\/$'), '');
+    string.split('\n').forEach((element) {
+      element = element.replaceFirst(RegExp(r'^\s*\**\s*'), '');
+      sb.writeln(element);
+    });
+  } else if (string.contains(RegExp(r'^\s*\/\/\/?\s*'))) {
+    string.split('\n').forEach((element) {
+      element = element.replaceFirst(RegExp(r'^\s*\/\/\/?\s*'), '');
+      sb.writeln(element);
+    });
+  }
 
-  // Remove any *'s in the beginning of a every line.
-  string.split('\n').forEach((element) {
-    element = element.trim().replaceFirst(RegExp(r'\**'), '').trim();
-    sb.writeln(element);
-  });
   return sb.toString().trim();
 }
 

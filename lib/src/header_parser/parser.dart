@@ -29,11 +29,9 @@ Library parse(Config c) {
     description: config.wrapperDocComment,
     header: config.preamble,
     dartBool: config.dartBool,
+    sort: config.sort,
   );
 
-  if (config.sort) {
-    library.sort();
-  }
   return library;
 }
 

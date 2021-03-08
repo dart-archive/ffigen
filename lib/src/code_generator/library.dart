@@ -27,7 +27,10 @@ class Library {
     required this.bindings,
     String? header,
     bool dartBool = true,
+    bool sort = false,
   }) {
+    if (sort) _sort();
+
     // Seperate bindings which require lookup.
     final lookUpBindings = bindings.whereType<LookUpBinding>().toList();
     final noLookUpBindings = bindings.whereType<NoLookUpBinding>().toList();
@@ -79,7 +82,7 @@ class Library {
   }
 
   /// Sort all bindings in alphabetical order.
-  void sort() {
+  void _sort() {
     bindings.sort((b1, b2) => b1.name.compareTo(b2.name));
   }
 
