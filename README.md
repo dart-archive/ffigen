@@ -214,17 +214,17 @@ comments:
   </td>
   </tr>
   <tr>
-    <td>struct-dependencies</td>
+    <td>structs -> dependency-only</td>
     <td>If `opaque`, generates empty `Opaque` structs if structs
 were not included in config (but were added since they are a dependency) and
 only passed by reference(pointer).<br>
-    Options -<br>
-    <i>struct-dependencies: full(default) | opaque </i><br>
+    Options - full(default) | opaque </i><br>
     </td>
     <td>
 
 ```yaml
-struct-dependencies: opaque
+structs:
+  dependency-only: opaque
 ```
   </td>
   </tr>
@@ -495,8 +495,12 @@ unnamed-enums:
 This happens when an excluded struct is a dependency to some included declaration.
 (A dependency means a struct is being passed/returned by a function or is member of another struct in some way)
 
-Note: If you supply `struct-dependencies` as `opaque`, ffigen will generate these
-struct dependencies as `Opaque` if they were only passed by reference(pointer).
+Note: If you supply `structs` -> `dependency-only` as `opaque` ffigen will generate
+these struct dependencies as `Opaque` if they were only passed by reference(pointer).
+```yaml
+structs:
+  dependency-only: opaque
+```
 
 ### How to expose the native pointers and typedefs?
 

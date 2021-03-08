@@ -1,5 +1,5 @@
 # 2.2.3
-- Added new key `struct-dependencies` (options - `full (default) | opaque`).
+- Added new subkey `dependency-only` (options - `full (default) | opaque`) under `structs`.
 When set to `opaque`, ffigen will generate empty `Opaque` structs if structs
 were excluded in config (i.e added because they were a dependency) and
 only passed by reference(pointer).
