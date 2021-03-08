@@ -102,7 +102,7 @@ Struc? parseStructDeclaration(
             ignoreFilter);
 
     if (!skipDependencies) {
-      // Prevents infinite recursion if struct is member of itself.
+      // Prevents infinite recursion if struct has a pointer to itself.
       _stack.top.struc!.parsedDependencies = true;
       _setStructMembers(cursor);
     } else if (!_stack.top.struc!.parsedDependencies) {

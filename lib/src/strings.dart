@@ -49,7 +49,7 @@ const rename = 'rename';
 const memberRename = 'member-rename';
 const symbolAddress = 'symbol-address';
 
-const structDependencies = 'struct-dependencies';
+const structDependencies = 'dependency-only';
 // Values for `structDependencies`.
 const fullStructDependencies = 'full';
 const opaqueStructDependencies = 'opaque';

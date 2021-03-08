@@ -32,7 +32,7 @@ enum StructDependencies { full, opaque }
 ///
 /// [E] is the return type of the extractedResult.
 class Specification<E> {
-  final bool Function(String name, dynamic value) validator;
+  final bool Function(List<String> name, dynamic value) validator;
   final E Function(dynamic map) extractor;
   final E Function()? defaultValue;
 

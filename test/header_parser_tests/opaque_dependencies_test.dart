@@ -25,10 +25,10 @@ ${strings.output}: 'unused'
 ${strings.headers}:
   ${strings.entryPoints}:
     - 'test/header_parser_tests/opaque_dependencies.h'
-${strings.structDependencies}: ${strings.opaqueStructDependencies}
 ${strings.structs}:
   ${strings.include}:
     - 'E'
+  ${strings.structDependencies}: ${strings.opaqueStructDependencies}
         ''') as yaml.YamlMap),
       );
     });
