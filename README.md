@@ -144,7 +144,8 @@ compiler-opts: '-I/usr/lib/llvm-9/include/'
   </td>
   </tr>
   <tr>
-    <td>functions<br>structs<br>enums<br>unnamed-enums<br>macros<br>globals</td>
+    <td>functions<br>structs<br>enums<br>unnamed-enums<br>macros<br>
+  </td>
     <td>Filters for declarations.<br><b>Default: all are included</b></td>
     <td>
 
@@ -179,7 +180,7 @@ globals:
     - aGlobal
   rename:
     # Removes '_' from beginning of a name.
-    - '_(.*)': '$1'
+    '_(.*)': '$1'
 ```
   </td>
   </tr>
