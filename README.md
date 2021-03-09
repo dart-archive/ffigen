@@ -179,7 +179,7 @@ globals:
     - aGlobal
   rename:
     # Removes '_' from beginning of a name.
-    - '_(.*)': '$1'
+    '_(.*)': '$1'
 ```
   </td>
   </tr>
