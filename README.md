@@ -135,11 +135,17 @@ description: 'Bindings to SQLite'
   </tr>
   <tr>
     <td>compiler-opts</td>
-    <td>Pass compiler options to clang.</td>
+    <td>Pass compiler options to clang. You can also pass
+    these via the command line tool.</td>
     <td>
 
 ```yaml
 compiler-opts: '-I/usr/lib/llvm-9/include/'
+```
+and/or via the command line -
+```bash
+dart run ffigen --compiler-opts "-I/headers
+-L 'path/to/folder name/file'"
 ```
   </td>
   </tr>
