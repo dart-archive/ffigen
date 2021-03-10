@@ -1,5 +1,5 @@
 # 2.2.5
-- Added new command line flag `--compiler-opts` to ffigen.
+- Added new command line flag `--compiler-opts` to the command line tool.
 
 # 2.2.4
 - Fix `sort: true` not working.
