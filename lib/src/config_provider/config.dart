@@ -125,6 +125,17 @@ class Config {
     return configspecs;
   }
 
+  /// Add compiler options for clang. If [highPriority] is true these are added
+  /// to the front of the list.
+  void addCompilerOpts(String compilerOpts, {bool highPriority = false}) {
+    if (highPriority) {
+      _compilerOpts.insertAll(
+          0, compilerOptsToList(compilerOpts)); // Inserts at the front.
+    } else {
+      _compilerOpts.addAll(compilerOptsToList(compilerOpts));
+    }
+  }
+
   /// Checks if there are nested [key] in [map].
   bool _checkKeyInYaml(List<String> key, YamlMap map) {
     dynamic last = map;

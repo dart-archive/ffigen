@@ -7,14 +7,20 @@ import 'collision_tests/decl_decl_collision_test.dart'
     as collision_tests_decl_decl_collision_test;
 import 'collision_tests/reserved_keyword_collision_test.dart'
     as collision_tests_reserved_keyword_collision_test;
+import 'config_tests/compiler_opts_test.dart'
+    as config_tests_compiler_opts_test;
 import 'example_tests/cjson_example_test.dart'
     as example_tests_cjson_example_test;
 import 'example_tests/libclang_example_test.dart'
     as example_tests_libclang_example_test;
 import 'example_tests/simple_example_test.dart'
     as example_tests_simple_example_test;
+import 'header_parser_tests/comment_markup_test.dart'
+    as header_parser_tests_comment_markup_test;
 import 'header_parser_tests/dart_handle_test.dart'
     as header_parser_tests_dart_handle_test;
+import 'header_parser_tests/forward_decl_test.dart'
+    as header_parser_tests_forward_decl_test;
 import 'header_parser_tests/function_n_struct_test.dart'
     as header_parser_tests_function_n_struct_test;
 import 'header_parser_tests/functions_test.dart'
@@ -27,6 +33,8 @@ import 'header_parser_tests/native_func_typedef_test.dart'
     as header_parser_tests_native_func_typedef_test;
 import 'header_parser_tests/nested_parsing_test.dart'
     as header_parser_tests_nested_parsing_test;
+import 'header_parser_tests/opaque_dependencies_test.dart'
+    as header_parser_tests_opaque_dependencies_test;
 import 'header_parser_tests/typedef_test.dart'
     as header_parser_tests_typedef_test;
 import 'header_parser_tests/unnamed_enums_test.dart'
@@ -43,13 +51,17 @@ void main() {
   example_tests_libclang_example_test.main();
   collision_tests_decl_decl_collision_test.main();
   collision_tests_reserved_keyword_collision_test.main();
+  config_tests_compiler_opts_test.main();
+  header_parser_tests_comment_markup_test.main();
   header_parser_tests_dart_handle_test.main();
+  header_parser_tests_forward_decl_test.main();
   header_parser_tests_functions_test.main();
   header_parser_tests_globals_test.main();
   header_parser_tests_macros_test.main();
   header_parser_tests_function_n_struct_test.main();
   header_parser_tests_native_func_typedef_test.main();
   header_parser_tests_nested_parsing_test.main();
+  header_parser_tests_opaque_dependencies_test.main();
   header_parser_tests_typedef_test.main();
   header_parser_tests_unnamed_enums_test.main();
   native_test_native_test.main();

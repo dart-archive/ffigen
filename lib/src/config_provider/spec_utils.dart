@@ -103,8 +103,25 @@ bool typedefmapValidator(List<String> name, dynamic yamlConfig) {
   return true;
 }
 
+final _quoteMatcher = RegExp(r'''^["'](.*)["']$''', dotAll: true);
+final _cmdlineArgMatcher = RegExp(r'''['"](\\"|[^"])*?['"]|[^ ]+''');
+List<String> compilerOptsToList(String compilerOpts) {
+  final list = <String>[];
+  _cmdlineArgMatcher.allMatches(compilerOpts).forEach((element) {
+    var match = element.group(0);
+    if (match != null) {
+      if (quiver.matchesFull(_quoteMatcher, match)) {
+        match = _quoteMatcher.allMatches(match).first.group(1)!;
+      }
+      list.add(match);
+    }
+  });
+
+  return list;
+}
+
 List<String> compilerOptsExtractor(dynamic value) =>
-    (value as String).split(' ');
+    compilerOptsToList(value as String);
 
 bool compilerOptsValidator(List<String> name, dynamic value) =>
     checkType<String>(name, value);

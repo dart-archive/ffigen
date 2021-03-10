@@ -14,6 +14,18 @@ import 'package:yaml/yaml.dart' as yaml;
 final _logger = Logger('ffigen.ffigen');
 final _ansi = Ansi(Ansi.terminalSupportsAnsi);
 
+const compilerOpts = 'compiler-opts';
+const conf = 'config';
+const help = 'help';
+const verbose = 'verbose';
+const pubspecName = 'pubspec.yaml';
+const configKey = 'ffigen';
+const logAll = 'all';
+const logFine = 'fine';
+const logInfo = 'info';
+const logWarning = 'warning';
+const logSevere = 'severe';
+
 String successPen(String str) {
   return '${_ansi.green}$str${_ansi.none}';
 }
@@ -50,19 +62,27 @@ void main(List<String> args) {
 
 Config getConfig(ArgResults result) {
   _logger.info('Running in ${Directory.current}');
+  Config config;
 
-  if (result.wasParsed('config')) {
-    return getConfigFromCustomYaml(result['config'] as String);
+  // Parse config from yaml.
+  if (result.wasParsed(conf)) {
+    config = getConfigFromCustomYaml(result[conf] as String);
   } else {
-    return getConfigFromPubspec();
+    config = getConfigFromPubspec();
   }
+
+  // Add compiler options from command line.
+  if (result.wasParsed(compilerOpts)) {
+    _logger.fine('Passed compiler opts - "${result[compilerOpts]}"');
+    config.addCompilerOpts((result[compilerOpts] as String),
+        highPriority: true);
+  }
+
+  return config;
 }
 
 /// Extracts configuration from pubspec file.
 Config getConfigFromPubspec() {
-  final pubspecName = 'pubspec.yaml';
-  final configKey = 'ffigen';
-
   final pubspecFile = File(pubspecName);
 
   if (!pubspecFile.existsSync()) {
@@ -107,33 +127,37 @@ ArgResults getArgResults(List<String> args) {
   parser.addSeparator(
       'FFIGEN: Generate dart bindings from C header files\nUsage:');
   parser.addOption(
-    'config',
-    help: 'path to Yaml file containing configurations if not in pubspec.yaml',
+    conf,
+    help: 'Path to Yaml file containing configurations if not in pubspec.yaml',
   );
   parser.addOption(
-    'verbose',
+    verbose,
     abbr: 'v',
-    defaultsTo: 'info',
+    defaultsTo: logInfo,
     allowed: [
-      'all',
-      'fine',
-      'info',
-      'warning',
-      'severe',
+      logAll,
+      logFine,
+      logInfo,
+      logWarning,
+      logSevere,
     ],
   );
   parser.addFlag(
-    'help',
+    help,
     abbr: 'h',
-    help: 'prints this usage',
+    help: 'Prints this usage',
     negatable: false,
+  );
+  parser.addOption(
+    compilerOpts,
+    help: 'Compiler options for clang. (E.g --$compilerOpts "-I/headers -W")',
   );
 
   ArgResults results;
   try {
     results = parser.parse(args);
 
-    if (results.wasParsed('help')) {
+    if (results.wasParsed(help)) {
       print(parser.usage);
       exit(0);
     }
@@ -148,25 +172,25 @@ ArgResults getArgResults(List<String> args) {
 
 /// Sets up the logging level and printing.
 void setupLogger(ArgResults result) {
-  if (result.wasParsed('verbose')) {
-    switch (result['verbose'] as String?) {
-      case 'all':
+  if (result.wasParsed(verbose)) {
+    switch (result[verbose] as String?) {
+      case logAll:
         // Logs everything, the entire AST touched by our parser.
         Logger.root.level = Level.ALL;
         break;
-      case 'fine':
+      case logFine:
         // Logs AST parts relevant to user (i.e those included in filters).
         Logger.root.level = Level.FINE;
         break;
-      case 'info':
+      case logInfo:
         // Logs relevant info for general user (default).
         Logger.root.level = Level.INFO;
         break;
-      case 'warning':
+      case logWarning:
         // Logs warnings for relevant stuff.
         Logger.root.level = Level.WARNING;
         break;
-      case 'severe':
+      case logSevere:
         // Logs severe warnings and errors.
         Logger.root.level = Level.SEVERE;
         break;
