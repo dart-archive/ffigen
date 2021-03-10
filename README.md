@@ -142,9 +142,10 @@ description: 'Bindings to SQLite'
 ```yaml
 compiler-opts: '-I/usr/lib/llvm-9/include/'
 ```
-and/or via the command line
+and/or via the command line -
 ```bash
-dart run ffigen --compiler-opts "-I/headers -L 'path/to/folder name/file'"
+dart run ffigen --compiler-opts "-I/headers
+-L 'path/to/folder name/file'"
 ```
   </td>
   </tr>
