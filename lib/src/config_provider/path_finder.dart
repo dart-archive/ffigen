@@ -2,12 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+/// Utils for finding header paths on system.
+
 import 'dart:io';
 
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 
-/// Utils for finding headers on system.
 final _logger = Logger('ffigen.config_provider.path_finder');
 
 /// This will return include path from either LLVM, XCode or CommandLineTools.
