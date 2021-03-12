@@ -2,11 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+/// Contains all the neccesary classes required by config.
 import 'dart:io';
 
-/// Contains all the neccesary classes required by config.
-
 import 'package:quiver/pattern.dart' as quiver;
+
+import 'path_finder.dart';
 
 class CommentType {
   CommentStyle style;
@@ -332,14 +333,9 @@ class CompilerOptsAuto {
   /// Extracts compiler options based on OS and config.
   List<String> extractCompilerOpts() {
     if (Platform.isMacOS) {
-      return _macExtractCompilerOpts();
+      return getHeadersForMac();
     }
 
-    return [];
-  }
-
-  List<String> _macExtractCompilerOpts() {
-    // TODO: complete implementation.
     return [];
   }
 }
