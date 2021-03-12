@@ -38,6 +38,33 @@ bool checkType<T>(List<String> keys, dynamic value) {
   return true;
 }
 
+/// Checks if there are nested [key] in [map].
+bool checkKeyInYaml(List<String> key, YamlMap map) {
+  dynamic last = map;
+  for (final k in key) {
+    if (last is YamlMap) {
+      if (!last.containsKey(k)) return false;
+      last = last[k];
+    } else {
+      return false;
+    }
+  }
+  return last != null;
+}
+
+/// Extracts value of nested [key] from [map].
+dynamic getKeyValueFromYaml(List<String> key, YamlMap map) {
+  if (checkKeyInYaml(key, map)) {
+    dynamic last = map;
+    for (final k in key) {
+      last = last[k];
+    }
+    return last;
+  }
+
+  return null;
+}
+
 bool booleanExtractor(dynamic value) => value as bool;
 
 bool booleanValidator(List<String> name, dynamic value) =>
@@ -125,6 +152,46 @@ List<String> compilerOptsExtractor(dynamic value) =>
 
 bool compilerOptsValidator(List<String> name, dynamic value) =>
     checkType<String>(name, value);
+
+CompilerOptsAuto compilerOptsAutoExtractor(dynamic value) {
+  return CompilerOptsAuto(
+    macIncludeStdLib: getKeyValueFromYaml(
+      [strings.macos, strings.includeCStdLib],
+      value as YamlMap,
+    ) as bool?,
+  );
+}
+
+bool compilerOptsAutoValidator(List<String> name, dynamic value) {
+  var _result = true;
+
+  if (!checkType<YamlMap>(name, value)) {
+    return false;
+  }
+
+  for (final oskey in (value as YamlMap).keys) {
+    if (oskey == strings.macos) {
+      if (!checkType<YamlMap>([...name, oskey as String], value[oskey])) {
+        return false;
+      }
+
+      for (final inckey in (value[oskey] as YamlMap).keys) {
+        if (inckey == strings.includeCStdLib) {
+          if (!checkType<bool>([...name, oskey, inckey as String], value)) {
+            _result = false;
+          }
+        } else {
+          _logger.severe("Unknown key '$inckey' in '$name -> $oskey.");
+          _result = false;
+        }
+      }
+    } else {
+      _logger.severe("Unknown key '$oskey' in '$name'.");
+      _result = false;
+    }
+  }
+  return _result;
+}
 
 Headers headersExtractor(dynamic yamlConfig) {
   final entryPoints = <String>[];

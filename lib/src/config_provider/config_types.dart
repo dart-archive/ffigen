@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:io';
+
 /// Contains all the neccesary classes required by config.
 
 import 'package:quiver/pattern.dart' as quiver;
@@ -317,5 +319,27 @@ class MemberRenamer {
 
     // No renaming is provided for this declaration, return unchanged.
     return member;
+  }
+}
+
+/// Handles config for automatically added compiler options.
+class CompilerOptsAuto {
+  final bool macIncludeStdLib;
+
+  CompilerOptsAuto({bool? macIncludeStdLib})
+      : macIncludeStdLib = macIncludeStdLib ?? true;
+
+  /// Extracts compiler options based on OS and config.
+  List<String> extractCompilerOpts() {
+    if (Platform.isMacOS) {
+      return _macExtractCompilerOpts();
+    }
+
+    return [];
+  }
+
+  List<String> _macExtractCompilerOpts() {
+    // TODO: complete implementation.
+    return [];
   }
 }

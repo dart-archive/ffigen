@@ -136,41 +136,14 @@ class Config {
     }
   }
 
-  /// Checks if there are nested [key] in [map].
-  bool _checkKeyInYaml(List<String> key, YamlMap map) {
-    dynamic last = map;
-    for (final k in key) {
-      if (last is YamlMap) {
-        if (!last.containsKey(k)) return false;
-        last = last[k];
-      } else {
-        return false;
-      }
-    }
-    return last != null;
-  }
-
-  /// Extracts value of nested [key] from [map].
-  dynamic _getKeyValueFromYaml(List<String> key, YamlMap map) {
-    if (_checkKeyInYaml(key, map)) {
-      dynamic last = map;
-      for (final k in key) {
-        last = last[k];
-      }
-      return last;
-    }
-
-    return null;
-  }
-
   /// Validates Yaml according to given specs.
   bool _checkConfigs(YamlMap map, Map<List<String>, Specification> specs) {
     var _result = true;
     for (final key in specs.keys) {
       final spec = specs[key];
-      if (_checkKeyInYaml(key, map)) {
+      if (checkKeyInYaml(key, map)) {
         _result =
-            _result && spec!.validator(key, _getKeyValueFromYaml(key, map));
+            _result && spec!.validator(key, getKeyValueFromYaml(key, map));
       } else if (spec!.requirement == Requirement.yes) {
         _logger.severe("Key '$key' is required.");
         _result = false;
@@ -195,8 +168,8 @@ class Config {
   void _extract(YamlMap map, Map<List<String>, Specification> specs) {
     for (final key in specs.keys) {
       final spec = specs[key];
-      if (_checkKeyInYaml(key, map)) {
-        spec!.extractedResult(spec.extractor(_getKeyValueFromYaml(key, map)));
+      if (checkKeyInYaml(key, map)) {
+        spec!.extractedResult(spec.extractor(getKeyValueFromYaml(key, map)));
       } else {
         spec!.extractedResult(spec.defaultValue?.call());
       }
@@ -235,6 +208,15 @@ class Config {
         extractedResult: (dynamic result) =>
             _compilerOpts = result as List<String>,
       ),
+      [strings.compilerOptsAuto]: Specification<CompilerOptsAuto>(
+          requirement: Requirement.no,
+          validator: compilerOptsAutoValidator,
+          extractor: compilerOptsAutoExtractor,
+          defaultValue: () => CompilerOptsAuto(),
+          extractedResult: (dynamic result) {
+            _compilerOpts
+                .addAll((result as CompilerOptsAuto).extractCompilerOpts());
+          }),
       [strings.functions]: Specification<Declaration>(
         requirement: Requirement.no,
         validator: declarationConfigValidator,
