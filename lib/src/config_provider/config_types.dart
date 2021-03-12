@@ -332,7 +332,7 @@ class CompilerOptsAuto {
 
   /// Extracts compiler options based on OS and config.
   List<String> extractCompilerOpts() {
-    if (Platform.isMacOS) {
+    if (Platform.isMacOS && macIncludeStdLib) {
       return getHeadersForMac();
     }
 

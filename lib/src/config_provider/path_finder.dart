@@ -5,20 +5,13 @@
 import 'dart:io';
 
 import 'package:logging/logging.dart';
+import 'package:path/path.dart' as p;
 
 /// Utils for finding headers on system.
 final _logger = Logger('ffigen.config_provider.path_finder');
 
+/// This will return include path from either LLVM, XCode or CommandLineTools.
 List<String> getHeadersForMac() {
-  final includePaths = <String>[];
-
-  /// If CommandLineTools are installed use those headers.
-  const cmdLineToolHeaders =
-      '/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/';
-  if (Directory(cmdLineToolHeaders).existsSync()) {
-    includePaths.add('-I' + cmdLineToolHeaders);
-  }
-
   /// Find headers from XCode or LLVM installed via brew.
   const brewLlvmPath = '/usr/local/opt/llvm/lib/clang';
   const xcodeClangPath =
@@ -32,20 +25,26 @@ List<String> getHeadersForMac() {
     if (stdout != '') {
       final versions = stdout.split('\n').where((s) => s != '');
       for (final version in versions) {
-        final path = '$searchPath/$version/include';
+        final path = p.join(searchPath, version, 'include');
         if (Directory(path).existsSync()) {
-          includePaths.add('-I' + path);
+          _logger.fine('Added stdlib path: $path to compiler-opts.');
+          return ['-I' + path];
         }
       }
     }
   }
-  if (includePaths.isEmpty) {
-    // Warnings for missing headers are printed by libclang while parsing.
-    _logger.fine('Couldn\'t find stdlib headers in default locations.');
-    _logger.fine('Paths searched: ${[cmdLineToolHeaders, ...searchPaths]}');
-  } else {
-    _logger.fine('Added paths $includePaths to compiler-opts.');
+
+  /// If CommandLineTools are installed use those headers.
+  const cmdLineToolHeaders =
+      '/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/';
+  if (Directory(cmdLineToolHeaders).existsSync()) {
+    _logger.fine('Added stdlib path: $cmdLineToolHeaders to compiler-opts.');
+    return ['-I' + cmdLineToolHeaders];
   }
 
-  return includePaths;
+  // Warnings for missing headers are printed by libclang while parsing.
+  _logger.fine('Couldn\'t find stdlib headers in default locations.');
+  _logger.fine('Paths searched: ${[cmdLineToolHeaders, ...searchPaths]}');
+
+  return [];
 }
