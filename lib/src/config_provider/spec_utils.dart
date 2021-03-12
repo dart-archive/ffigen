@@ -147,11 +147,28 @@ List<String> compilerOptsToList(String compilerOpts) {
   return list;
 }
 
-List<String> compilerOptsExtractor(dynamic value) =>
-    compilerOptsToList(value as String);
+List<String> compilerOptsExtractor(dynamic value) {
+  if (value is String) {
+    return compilerOptsToList(value);
+  }
 
-bool compilerOptsValidator(List<String> name, dynamic value) =>
-    checkType<String>(name, value);
+  final list = <String>[];
+  for (final el in (value as YamlList)) {
+    if (el is String) {
+      list.addAll(compilerOptsToList(el));
+    }
+  }
+  return list;
+}
+
+bool compilerOptsValidator(List<String> name, dynamic value) {
+  if (value is String || value is YamlList) {
+    return true;
+  } else {
+    _logger.severe('Expected $name to be a String or List of String.');
+    return false;
+  }
+}
 
 CompilerOptsAuto compilerOptsAutoExtractor(dynamic value) {
   return CompilerOptsAuto(
@@ -236,7 +253,7 @@ bool headersValidator(List<String> name, dynamic value) {
     return false;
   }
   if (!(value as YamlMap).containsKey(strings.entryPoints)) {
-    _logger.severe("Expected '$name -> ${strings.entryPoints}' to be a Map.");
+    _logger.severe("Required '$name -> ${strings.entryPoints}'.");
     return false;
   } else {
     for (final key in value.keys) {
