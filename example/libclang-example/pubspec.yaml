@@ -29,7 +29,9 @@ ffigen:
       - '**CXString.h'
       - '**Index.h'
 
-  compiler-opts: '-Ithird_party/libclang/include -IC:\Progra~1\LLVM\include -I/usr/local/opt/llvm/include/ -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/ -Wno-nullability-completeness'
+  compiler-opts:
+    - '-Ithird_party/libclang/include'
+    - '-Wno-nullability-completeness'
   functions:
     include:
       - 'clang_.*' # Can be a regexp, '.' matches any character.

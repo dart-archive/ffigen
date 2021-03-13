@@ -140,7 +140,7 @@ description: 'Bindings to SQLite'
     <td>
 
 ```yaml
-compiler-opts: # You can also pass in a string.
+compiler-opts:
   - '-I/usr/lib/llvm-9/include/'
 ```
 and/or via the command line -
