@@ -13,6 +13,16 @@ final _logger = Logger('ffigen.config_provider.path_finder');
 
 /// This will return include path from either LLVM, XCode or CommandLineTools.
 List<String> getHeadersForMac() {
+  final includePath = <String>[];
+
+  /// Add system headers.
+  const systemHeaders =
+      '/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include';
+  if (Directory(systemHeaders).existsSync()) {
+    _logger.fine('Added $systemHeaders to compiler-opts.');
+    includePath.add('-I' + systemHeaders);
+  }
+
   /// Find headers from XCode or LLVM installed via brew.
   const brewLlvmPath = '/usr/local/opt/llvm/lib/clang';
   const xcodeClangPath =
@@ -29,7 +39,8 @@ List<String> getHeadersForMac() {
         final path = p.join(searchPath, version, 'include');
         if (Directory(path).existsSync()) {
           _logger.fine('Added stdlib path: $path to compiler-opts.');
-          return ['-I' + path];
+          includePath.add('-I' + path);
+          return includePath;
         }
       }
     }
@@ -40,7 +51,8 @@ List<String> getHeadersForMac() {
       '/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/';
   if (Directory(cmdLineToolHeaders).existsSync()) {
     _logger.fine('Added stdlib path: $cmdLineToolHeaders to compiler-opts.');
-    return ['-I' + cmdLineToolHeaders];
+    includePath.add('-I' + cmdLineToolHeaders);
+    return includePath;
   }
 
   // Warnings for missing headers are printed by libclang while parsing.
