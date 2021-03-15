@@ -1,6 +1,6 @@
 # 2.4.0
-- Added new key `llvm-path` that accepts a list of `path/to/llvm`.
-- Deprecated `llvm-lib`.
+- Added new config key `llvm-path` that accepts a list of `path/to/llvm`.
+- Deprecated config key `llvm-lib`.
 
 # 2.3.0
 - Added config key `compiler-opts-automatic -> macos -> include-c-standard-library`
