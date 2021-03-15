@@ -94,7 +94,7 @@ output: 'generated_bindings.dart'
 ```yaml
 llvm-path:
   - '/usr/local/opt/llvm/lib'
-  - 'C:Program Files\llvm`
+  - 'C:\Program Files\llvm`
   - '/usr/lib/llvm-11'
 ```
   </td>
