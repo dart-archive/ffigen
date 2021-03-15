@@ -2,8 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:ffigen/ffigen.dart';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/config_provider/spec_utils.dart';
+import 'package:ffigen/src/strings.dart' as strings;
+import 'package:yaml/yaml.dart' as yaml;
 import 'package:test/test.dart';
 
 late Library actual, expected;
@@ -24,6 +27,20 @@ void main() {
           '-tab=separated',
         ],
       );
+    });
+    test('Compiler Opts Automatic', () {
+      final config = Config.fromYaml(yaml.loadYaml('''
+${strings.name}: 'NativeLibrary'
+${strings.description}: 'Compiler Opts Test'
+${strings.output}: 'unused'
+${strings.headers}:
+  ${strings.entryPoints}:
+    - 'test/header_parser_tests/comment_markup.h'
+${strings.compilerOptsAuto}:
+  ${strings.macos}:
+    ${strings.includeCStdLib}: false
+        ''') as yaml.YamlMap);
+      expect(config.compilerOpts.isEmpty, true);
     });
   });
 }

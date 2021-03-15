@@ -140,12 +140,28 @@ description: 'Bindings to SQLite'
     <td>
 
 ```yaml
-compiler-opts: '-I/usr/lib/llvm-9/include/'
+compiler-opts:
+  - '-I/usr/lib/llvm-9/include/'
 ```
 and/or via the command line -
 ```bash
 dart run ffigen --compiler-opts "-I/headers
 -L 'path/to/folder name/file'"
+```
+  </td>
+  </tr>
+    <tr>
+    <td>compiler-opts-automatic -> macos -> include-c-standard-library</td>
+    <td>Tries to automatically find and add C standard library path to
+    compiler-opts on macos.
+    <b>Default: true</b>
+    </td>
+    <td>
+
+```yaml
+compiler-opts-automatic:
+  macos:
+    include-c-standard-library: false
 ```
   </td>
   </tr>

@@ -36,8 +36,7 @@ ${strings.globals}:
       - myInt
       - pointerToLongDouble
       - globalStruct
-# Needed for stdbool.h in MacOS
-${strings.compilerOpts}: '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/ -Wno-nullability-completeness'
+${strings.compilerOpts}: '-Wno-nullability-completeness'
         ''') as yaml.YamlMap),
       );
     });

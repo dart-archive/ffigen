@@ -3,8 +3,11 @@
 // BSD-style license that can be found in the LICENSE file.
 
 /// Contains all the neccesary classes required by config.
+import 'dart:io';
 
 import 'package:quiver/pattern.dart' as quiver;
+
+import 'path_finder.dart';
 
 class CommentType {
   CommentStyle style;
@@ -317,5 +320,22 @@ class MemberRenamer {
 
     // No renaming is provided for this declaration, return unchanged.
     return member;
+  }
+}
+
+/// Handles config for automatically added compiler options.
+class CompilerOptsAuto {
+  final bool macIncludeStdLib;
+
+  CompilerOptsAuto({bool? macIncludeStdLib})
+      : macIncludeStdLib = macIncludeStdLib ?? true;
+
+  /// Extracts compiler options based on OS and config.
+  List<String> extractCompilerOpts() {
+    if (Platform.isMacOS && macIncludeStdLib) {
+      return getCStandardLibraryHeadersForMac();
+    }
+
+    return [];
   }
 }

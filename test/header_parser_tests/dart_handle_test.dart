@@ -25,7 +25,7 @@ void main() {
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Dart_Handle Test'
 ${strings.output}: 'unused'
-${strings.compilerOpts}: '-I${path.join(getSdkPath(), "include")} -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/'
+${strings.compilerOpts}: '-I${path.join(getSdkPath(), "include")}'
 
 ${strings.headers}:
   ${strings.entryPoints}:
