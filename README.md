@@ -87,12 +87,15 @@ output: 'generated_bindings.dart'
   </td>
   </tr>
   <tr>
-    <td>llvm-lib</td>
-    <td>Path to <i>llvm/lib</i> folder. Required if ffigen is unable to find this at default locations.</td>
+    <td>llvm-path</td>
+    <td>Path to <i>llvm</i> folder. ffigen will sequentially search all the specified paths. Required if ffigen is unable to find this at default locations.</td>
     <td>
 
 ```yaml
-llvm-lib: '/usr/local/opt/llvm/lib'
+llvm-path:
+  - '/usr/local/opt/llvm/lib'
+  - 'C:\Program Files\llvm`
+  - '/usr/lib/llvm-11'
 ```
   </td>
   </tr>

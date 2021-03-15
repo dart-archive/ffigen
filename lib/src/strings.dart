@@ -23,6 +23,10 @@ String get dylibFileName {
 }
 
 const llvmLib = 'llvm-lib';
+const llvmPath = 'llvm-path';
+
+/// Name of the parent folder of dynamic library `lib` or `bin` (on windows).
+String get dynamicLibParentName => Platform.isWindows ? 'bin' : 'lib';
 
 const output = 'output';
 
