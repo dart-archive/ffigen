@@ -188,7 +188,7 @@ class Config {
         extractor: llvmLibExtractor,
         defaultValue: () => '',
         extractedResult: (dynamic result) {
-          if ((result as String).isNotEmpty) _libclangDylib = result;
+          _libclangDylib = result as String;
         },
       ),
       [strings.llvmPath]: Specification<String>(
