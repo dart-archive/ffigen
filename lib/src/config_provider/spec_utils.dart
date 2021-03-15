@@ -351,7 +351,7 @@ String llvmLibExtractor(dynamic value) {
 }
 
 bool llvmLibValidator(List<String> name, dynamic value) {
-  _logger.severe(
+  _logger.warning(
       'Deprecated ${strings.llvmLib}: please use ${strings.llvmPath} instead.');
   if (!checkType<String>(name, value) ||
       !Directory(value as String).existsSync()) {
