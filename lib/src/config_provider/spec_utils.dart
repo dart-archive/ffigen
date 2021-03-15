@@ -340,8 +340,6 @@ String? findLibclangDylib(String parentFolder) {
 }
 
 String llvmLibExtractor(dynamic value) {
-  _logger.severe(
-      'Deprecated ${strings.llvmLib}: please use ${strings.llvmPath} instead.');
   // Extract libclang's dylib from this.
   final p = findLibclangDylib(value as String);
   if (p == null) {
@@ -353,6 +351,8 @@ String llvmLibExtractor(dynamic value) {
 }
 
 bool llvmLibValidator(List<String> name, dynamic value) {
+  _logger.severe(
+      'Deprecated ${strings.llvmLib}: please use ${strings.llvmPath} instead.');
   if (!checkType<String>(name, value) ||
       !Directory(value as String).existsSync()) {
     _logger.severe('Expected $name to be a valid folder Path.');
@@ -372,7 +372,9 @@ String llvmPathExtractor(dynamic value) {
       return dylibPath;
     }
   }
-  // Extract path from default locations if not found in specified locations.
+  _logger.fine(
+      "Couldn't find dynamic library under paths specified by ${strings.llvmPath}.");
+  // Extract path from default locations.
   try {
     final res = findDylibAtDefaultLocations();
     return res;
