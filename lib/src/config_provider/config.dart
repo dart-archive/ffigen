@@ -197,6 +197,7 @@ class Config {
         extractor: llvmPathExtractor,
         defaultValue: () => findDylibAtDefaultLocations(),
         extractedResult: (dynamic result) {
+          // If this key wasn't already set by `llvm-lib` use this result.
           if (_libclangDylib.isEmpty) _libclangDylib = result as String;
         },
       ),
