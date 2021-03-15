@@ -12,7 +12,7 @@ import 'package:path/path.dart' as p;
 final _logger = Logger('ffigen.config_provider.path_finder');
 
 /// This will return include path from either LLVM, XCode or CommandLineTools.
-List<String> getHeadersForMac() {
+List<String> getCStandardLibraryHeadersForMac() {
   final includePaths = <String>[];
 
   /// Add system headers.

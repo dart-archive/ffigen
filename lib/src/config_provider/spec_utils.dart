@@ -194,7 +194,8 @@ bool compilerOptsAutoValidator(List<String> name, dynamic value) {
 
       for (final inckey in (value[oskey] as YamlMap).keys) {
         if (inckey == strings.includeCStdLib) {
-          if (!checkType<bool>([...name, oskey, inckey as String], value)) {
+          if (!checkType<bool>(
+              [...name, oskey, inckey as String], value[oskey][inckey])) {
             _result = false;
           }
         } else {

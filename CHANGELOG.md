@@ -1,5 +1,5 @@
 # 2.3.0
-- Added config key `compiler-opts-auto -> macos -> include-c-standard-library`
+- Added config key `compiler-opts-automatic -> macos -> include-c-standard-library`
 (default: true) to automatically find and add C standard library on macOS.
 - Allow passing list of string to config key `compiler-opts`.
 

@@ -62,6 +62,7 @@ List<Binding> parseToBindings() {
     config.compilerOpts.add(strings.fparseAllComments);
   }
 
+  _logger.fine('CompilerOpts used: ${config.compilerOpts}');
   clangCmdArgs = createDynamicStringArray(config.compilerOpts);
   cmdLen = config.compilerOpts.length;
 
