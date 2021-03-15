@@ -196,7 +196,9 @@ class Config {
         validator: llvmPathValidator,
         extractor: llvmPathExtractor,
         defaultValue: () => findDylibAtDefaultLocations(),
-        extractedResult: (dynamic result) => _libclangDylib = result as String,
+        extractedResult: (dynamic result) {
+          if (_libclangDylib.isEmpty) _libclangDylib = result as String;
+        },
       ),
       [strings.output]: Specification<String>(
         requirement: Requirement.yes,
