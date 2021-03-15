@@ -302,7 +302,7 @@ String getDylibPath(String dylibParentFoler) {
 }
 
 /// Returns location of dynamic library by searching default locations. Logs
-/// error and exits if not found.
+/// error and throws an Exception if not found.
 String findDylibAtDefaultLocations() {
   String? k;
   if (Platform.isLinux) {
@@ -326,7 +326,7 @@ String findDylibAtDefaultLocations() {
 
   _logger.severe("Couldn't find dynamic library in default locations.");
   _logger.severe(
-      "Please supply the path/to/llvm/lib in ffigen's config under the key 'llvm-lib'.");
+      "Please supply one or more path/to/llvm in ffigen's config under the key '${strings.llvmPath}'.");
   throw Exception("Couldn't find dynamic library in default locations.");
 }
 
@@ -340,6 +340,8 @@ String? findLibclangDylib(String parentFolder) {
 }
 
 String llvmLibExtractor(dynamic value) {
+  _logger.severe(
+      'Deprecated ${strings.llvmLib}: please use ${strings.llvmPath} instead.');
   // Extract libclang's dylib from this.
   final p = findLibclangDylib(value as String);
   if (p == null) {
@@ -354,6 +356,35 @@ bool llvmLibValidator(List<String> name, dynamic value) {
   if (!checkType<String>(name, value) ||
       !Directory(value as String).existsSync()) {
     _logger.severe('Expected $name to be a valid folder Path.');
+    return false;
+  }
+  return true;
+}
+
+String llvmPathExtractor(dynamic value) {
+  // Extract libclang's dylib from user specified paths.
+  for (final path in (value as YamlList)) {
+    if (path is! String) continue;
+    final dylibPath =
+        findLibclangDylib(p.join(path, strings.dynamicLibParentName));
+    if (dylibPath != null) {
+      _logger.fine('Found dynamic library at: $dylibPath');
+      return dylibPath;
+    }
+  }
+  // Extract path from default locations if not found in specified locations.
+  try {
+    final res = findDylibAtDefaultLocations();
+    return res;
+  } catch (e) {
+    _logger.severe(
+        "Couldn't find libclang dynamic library in specified locations.");
+    exit(1);
+  }
+}
+
+bool llvmPathValidator(List<String> name, dynamic value) {
+  if (!checkType<YamlList>(name, value)) {
     return false;
   }
   return true;

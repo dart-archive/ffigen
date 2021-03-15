@@ -181,10 +181,20 @@ class Config {
   /// Key: Name, Value: [Specification]
   Map<List<String>, Specification> _getSpecs() {
     return <List<String>, Specification>{
+      //TODO: Deprecated, remove in next major update.
       [strings.llvmLib]: Specification<String>(
         requirement: Requirement.no,
         validator: llvmLibValidator,
         extractor: llvmLibExtractor,
+        defaultValue: () => '',
+        extractedResult: (dynamic result) {
+          if ((result as String).isNotEmpty) _libclangDylib = result;
+        },
+      ),
+      [strings.llvmPath]: Specification<String>(
+        requirement: Requirement.no,
+        validator: llvmPathValidator,
+        extractor: llvmPathExtractor,
         defaultValue: () => findDylibAtDefaultLocations(),
         extractedResult: (dynamic result) => _libclangDylib = result as String,
       ),
