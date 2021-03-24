@@ -88,12 +88,15 @@ output: 'generated_bindings.dart'
   </tr>
   <tr>
     <td>llvm-path</td>
-    <td>Path to <i>llvm</i> folder. ffigen will sequentially search all the specified paths. Required if ffigen is unable to find this at default locations.</td>
+    <td>Path to <i>llvm</i> folder. ffigen will sequentially search
+    for `lib/libclang.so` on linux, `lib/libclang.dylib` on macOs and
+    `bin\libclang.dll` on windows, in the specified paths.<br>
+    <i>Required</i> if ffigen is unable to find this at default locations.</td>
     <td>
 
 ```yaml
 llvm-path:
-  - '/usr/local/opt/llvm/lib'
+  - '/usr/local/opt/llvm'
   - 'C:\Program Files\llvm`
   - '/usr/lib/llvm-11'
 ```

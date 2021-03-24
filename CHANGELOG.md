@@ -1,3 +1,6 @@
+# 2.4.1
+- Added `/usr/lib` to default dynamic library location for linux.
+
 # 2.4.0
 - Added new config key `llvm-path` that accepts a list of `path/to/llvm`.
 - Deprecated config key `llvm-lib`.
