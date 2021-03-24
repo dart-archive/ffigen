@@ -166,7 +166,7 @@ dart run ffigen --compiler-opts "-I/headers
     <tr>
     <td>compiler-opts-automatic -> macos -> include-c-standard-library</td>
     <td>Tries to automatically find and add C standard library path to
-    compiler-opts on macos.
+    compiler-opts on macos.<br>
     <b>Default: true</b>
     </td>
     <td>
@@ -179,7 +179,7 @@ compiler-opts-automatic:
   </td>
   </tr>
   <tr>
-    <td>functions<br>structs<br>enums<br>unnamed-enums<br>macros<br>globals</td>
+    <td>functions<br><br>structs<br><br>enums<br><br>unnamed-enums<br><br>macros<br><br>globals</td>
     <td>Filters for declarations.<br><b>Default: all are included.</b><br><br>
     Options -<br>
     - Include/Exclude declarations.<br>
