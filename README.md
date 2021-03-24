@@ -179,16 +179,19 @@ compiler-opts-automatic:
 ```yaml
 functions:
   include: # 'exclude' is also available.
-    - [a-z][a-zA-Z0-9]* # Matches using regexp.
-    - prefix.* # '.' matches any character.
-    - someFuncName # Matches with exact name
-    - anotherName # Full names have higher priority.
+    # Matches using regexp.
+    - [a-z][a-zA-Z0-9]*
+    # '.' matches any character.
+    - prefix.*
+    # Matches with exact name
+    - someFuncName
+    # Full names have higher priority.
+    - anotherName
   rename:
     # Regexp groups based replacement.
     'clang_(.*)': '$1'
-    # full name matches have higher priority.
     'clang_dispose': 'dispose'
-    # Removes '_' from beginning of a name.
+    # Removes '_' from beginning.
     '_(.*)': '$1'
   symbol-address:
     # Used to expose symbol and typedef.
@@ -197,16 +200,20 @@ functions:
 enums:
   member-rename:
     '(.*)': # Matches any enum.
-      # Removes '_' from beginning enum member name.
+      # Removes '_' from beginning
+      # enum member name.
       '_(.*)': '$1'
-    'CXTypeKind': # Full names have higher priority.
-      # $1 keeps only the 1st group i.e '(.*)'.
+    # Full names have higher priority.
+    'CXTypeKind':
+      # $1 keeps only the 1st
+      # group i.e only '(.*)'.
       'CXType(.*)': '$1'
 globals:
   exclude:
     - aGlobal
   rename:
-    # Removes '_' from beginning of a name.
+    # Removes '_' from
+    # beginning of a name.
     '_(.*)': '$1'
 ```
   </td>
@@ -341,7 +348,8 @@ typedef-map:
 
 ```yaml
 # These are optional and also default,
-# Omitting any and the default will be used.
+# Omitting any and the default
+# will be used.
 size-map:
   char: 1
   unsigned char: 1
