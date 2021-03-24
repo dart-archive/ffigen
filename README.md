@@ -21,15 +21,21 @@ ffigen:
 Output (_generated_bindings.dart_).
 ```dart
 class NativeLibrary {
-  final DynamicLibrary _dylib;
-
-  NativeLibrary(DynamicLibrary dynamicLibrary) : _dylib = dynamicLibrary;
+  final Pointer<T> Function<T extends NativeType>(String symbolName)
+      _lookup;
+  NativeLibrary(DynamicLibrary dynamicLibrary)
+      : _lookup = dynamicLibrary.lookup;
+  NativeLibrary.fromLookup(
+      Pointer<T> Function<T extends NativeType>(String symbolName)
+          lookup)
+      : _lookup = lookup;
 
   int sum(int a, int b) {
-    return (_sum ??= _dylib.lookupFunction<_c_sum, _dart_sum>('sum'))(a, b);
+    return _sum(a, b);
   }
 
-  _dart_sum? _sum;
+  late final _sum_ptr = _lookup<NativeFunction<_c_sum>>('sum');
+  late final _dart_sum _sum = _sum_ptr.asFunction<_dart_sum>();
 }
 typedef _c_sum = Int32 Function(Int32 a, Int32 b);
 typedef _dart_sum = int Function(int a, int b);
@@ -77,7 +83,7 @@ The following configuration options are available-
 </thead>
 <tbody>
   <tr>
-    <td>output<br><i>(Required)</i></td>
+    <td>output<br><i><b>(Required)</b></i></td>
     <td>Output path of the generated bindings.</td>
     <td>
 
@@ -88,7 +94,7 @@ output: 'generated_bindings.dart'
   </tr>
   <tr>
     <td>llvm-path</td>
-    <td>Path to <i>llvm</i> folder. ffigen will sequentially search
+    <td>Path to <i>llvm</i> folder.<br> ffigen will sequentially search
     for `lib/libclang.so` on linux, `lib/libclang.dylib` on macOs and
     `bin\libclang.dll` on windows, in the specified paths.<br>
     <i>Required</i> if ffigen is unable to find this at default locations.</td>
@@ -103,8 +109,9 @@ llvm-path:
   </td>
   </tr>
   <tr>
-    <td>headers<br><i>(Required)</i></td>
-    <td>The header entry-points and include-directives. Glob syntax is allowed.</td>
+    <td>headers<br><i><b>(Required)</b></i></td>
+    <td>The header entry-points and include-directives. Glob syntax is allowed.<br>
+    If include-directives are not specified ffigen will generate everything directly/transitively under the entry-points.</td>
     <td>
 
 ```yaml
@@ -173,7 +180,13 @@ compiler-opts-automatic:
   </tr>
   <tr>
     <td>functions<br>structs<br>enums<br>unnamed-enums<br>macros<br>globals</td>
-    <td>Filters for declarations.<br><b>Default: all are included</b></td>
+    <td>Filters for declarations.<br><b>Default: all are included.</b><br><br>
+    Options -<br>
+    - Include/Exclude declarations.<br>
+    - Rename declarations.<br>
+    - Rename enum and struct members.<br>
+    - Expose symbol-address and typedef for functions and globals.<br>
+    </td>
     <td>
 
 ```yaml
@@ -233,7 +246,7 @@ array-workaround: true
   <tr>
     <td>comments</td>
     <td>Extract documentation comments for declarations.<br>
-    The style and length of the comments can be specified with the following options.<br>
+    The style and length of the comments recognized can be specified with the following options- <br>
     <i>style: doxygen(default) | any </i><br>
     <i>length: brief | full(default) </i><br>
     If you want to disable all comments you can also pass<br>
@@ -243,7 +256,7 @@ array-workaround: true
 
 ```yaml
 comments:
-  style: doxygen
+  style: any
   length: full
 ```
   </td>
@@ -253,7 +266,7 @@ comments:
     <td>If `opaque`, generates empty `Opaque` structs if structs
 were not included in config (but were added since they are a dependency) and
 only passed by reference(pointer).<br>
-    Options - full(default) | opaque </i><br>
+    <i>Options - full(default) | opaque</i><br>
     </td>
     <td>
 
@@ -289,7 +302,7 @@ use-supported-typedefs: true
   </tr>
   <tr>
     <td>dart-bool</td>
-    <td>Should generate dart `bool` for c99 bool in functions.<br>
+    <td>Should generate dart `bool` instead of Uint8 for c99 bool in functions.<br>
     <b>Default: true</b>
     </td>
     <td>
