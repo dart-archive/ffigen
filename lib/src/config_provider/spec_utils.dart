@@ -380,7 +380,7 @@ String llvmPathExtractor(dynamic value) {
     return res;
   } catch (e) {
     _logger.severe(
-        "Couldn't find libclang dynamic library in specified locations.");
+        "Couldn't find ${p.join(strings.dynamicLibParentName, strings.dylibFileName)} in specified locations.");
     exit(1);
   }
 }

@@ -146,7 +146,8 @@ const libclang_dylib_windows = 'libclang.dll';
 const linuxDylibLocations = [
   '/usr/lib/llvm-9/lib/',
   '/usr/lib/llvm-10/lib/',
-  '/usr/lib/llvm-11/lib/'
+  '/usr/lib/llvm-11/lib/',
+  '/usr/lib/'
 ];
 const windowsDylibLocations = [
   r'C:\Program Files\LLVM\bin\',

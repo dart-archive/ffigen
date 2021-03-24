@@ -30,7 +30,7 @@ ffigen:
       - '**Index.h'
 
   compiler-opts:
-    - '-Ithird_party/libclang/include'
+    - '-I../../third_party/libclang/include'
     - '-Wno-nullability-completeness'
   functions:
     include:
