@@ -70,23 +70,42 @@ class Writer {
     final allLevelsUniqueNamer = UniqueNamer(allNameSet);
 
     /// Wrapper class name must be unique among all names.
-    _className = allLevelsUniqueNamer.makeUnique(className);
-    _initialWrapperLevelUniqueNamer.markUsed(_className);
-    _initialTopLevelUniqueNamer.markUsed(_className);
+    _className = _resolveNameConflict(
+      name: className,
+      makeUnique: allLevelsUniqueNamer,
+      markUsed: [_initialWrapperLevelUniqueNamer, _initialTopLevelUniqueNamer],
+    );
 
-    /// [_ffiLibraryPrefix] should be unique in top level.
-    _ffiLibraryPrefix = _initialTopLevelUniqueNamer.makeUnique('ffi');
+    /// [_ffiLibraryPrefix] should be unique unique among all names.
+    _ffiLibraryPrefix = _resolveNameConflict(
+      name: 'ffi',
+      makeUnique: allLevelsUniqueNamer,
+      markUsed: [_initialWrapperLevelUniqueNamer, _initialTopLevelUniqueNamer],
+    );
 
     /// [_lookupFuncIdentifier] should be unique in top level.
-    _lookupFuncIdentifier = _initialTopLevelUniqueNamer.makeUnique('_lookup');
+    _lookupFuncIdentifier = _resolveNameConflict(
+      name: '_lookup',
+      makeUnique: _initialTopLevelUniqueNamer,
+      markUsed: [_initialTopLevelUniqueNamer],
+    );
 
     /// Resolve name conflicts of identifiers used for SymbolAddresses.
-    _symbolAddressClassName =
-        allLevelsUniqueNamer.makeUnique('_SymbolAddresses');
-    _symbolAddressVariableName =
-        _initialWrapperLevelUniqueNamer.makeUnique('addresses');
-    _symbolAddressLibraryVarName =
-        _initialWrapperLevelUniqueNamer.makeUnique('_library');
+    _symbolAddressClassName = _resolveNameConflict(
+      name: '_SymbolAddresses',
+      makeUnique: allLevelsUniqueNamer,
+      markUsed: [_initialWrapperLevelUniqueNamer, _initialTopLevelUniqueNamer],
+    );
+    _symbolAddressVariableName = _resolveNameConflict(
+      name: 'addresses',
+      makeUnique: _initialWrapperLevelUniqueNamer,
+      markUsed: [_initialWrapperLevelUniqueNamer],
+    );
+    _symbolAddressLibraryVarName = _resolveNameConflict(
+      name: '_library',
+      makeUnique: _initialWrapperLevelUniqueNamer,
+      markUsed: [_initialWrapperLevelUniqueNamer],
+    );
 
     /// Finding a unique prefix for Array Helper Classes and store into
     /// [_arrayHelperClassPrefix].
@@ -103,6 +122,20 @@ class Writer {
     }
 
     _resetUniqueNamersNamers();
+  }
+
+  /// Resolved name conflict using [makeUnique] and marks the result as used in
+  /// all [markUsed].
+  String _resolveNameConflict({
+    required String name,
+    required UniqueNamer makeUnique,
+    List<UniqueNamer> markUsed = const [],
+  }) {
+    final s = makeUnique.makeUnique(name);
+    for (final un in markUsed) {
+      un.markUsed(s);
+    }
+    return s;
   }
 
   /// Resets the namers to initial state. Namers are reset before generating.

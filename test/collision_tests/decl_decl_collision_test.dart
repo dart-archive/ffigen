@@ -44,6 +44,12 @@ void main() {
             returnType: Type.nativeType(SupportedNativeType.Void)),
         Constant(name: 'testCrossDecl', rawValue: '0', rawType: 'int'),
         EnumClass(name: 'testCrossDecl'),
+
+        /// Conflicts with ffi library prefix, name of prefix is changed.
+        Struc(name: 'ffi'),
+        Func(
+            name: 'ffi_1',
+            returnType: Type.nativeType(SupportedNativeType.Void)),
       ]);
       final l2 = Library(name: 'Bindings', bindings: [
         Struc(name: 'TestStruc'),
@@ -77,6 +83,10 @@ void main() {
             returnType: Type.nativeType(SupportedNativeType.Void)),
         Constant(name: 'testCrossDecl_2', rawValue: '0', rawType: 'int'),
         EnumClass(name: 'testCrossDecl_3'),
+        Struc(name: 'ffi'),
+        Func(
+            name: 'ffi_1',
+            returnType: Type.nativeType(SupportedNativeType.Void)),
       ]);
 
       expect(l1.generate(), l2.generate());

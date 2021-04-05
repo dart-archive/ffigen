@@ -1,5 +1,6 @@
 # 2.4.2
 - Fix issues due to declarations having duplicate names.
+- Fix name conflict of declaration with ffi library prefix.
 
 # 2.4.1
 - Added `/usr/lib` to default dynamic library location for linux.
