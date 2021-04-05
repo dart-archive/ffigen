@@ -1,3 +1,6 @@
+# 2.4.2
+- Fix issues due to declarations having duplicate names.
+
 # 2.4.1
 - Added `/usr/lib` to default dynamic library location for linux.
 
