@@ -24,6 +24,7 @@ var cxTypeKindToSupportedNativeTypes = <int, SupportedNativeType>{
   clang.CXTypeKind.CXType_Float: SupportedNativeType.Float,
   clang.CXTypeKind.CXType_Double: SupportedNativeType.Double,
   clang.CXTypeKind.CXType_Char_S: SupportedNativeType.Int8,
+  clang.CXTypeKind.CXType_Char_U: SupportedNativeType.Uint8,
   clang.CXTypeKind.CXType_Enum: SupportedNativeType.Int32,
 };
 
