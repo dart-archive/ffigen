@@ -37,7 +37,7 @@ void main() {
           rawValue: '0',
         ),
 
-        /// Conflicts across declarations
+        /// Conflicts across declarations.
         Struc(name: 'testCrossDecl'),
         Func(
             name: 'testCrossDecl',
