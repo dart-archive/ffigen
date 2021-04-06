@@ -31,23 +31,16 @@ class Library {
   }) {
     if (sort) _sort();
 
+    /// Handle any declaration-declaration name conflicts.
+    final declConflictHandler = UniqueNamer({});
+    for (final b in bindings) {
+      _warnIfPrivateDeclaration(b);
+      _resolveIfNameConflicts(declConflictHandler, b);
+    }
+
     // Seperate bindings which require lookup.
     final lookUpBindings = bindings.whereType<LookUpBinding>().toList();
     final noLookUpBindings = bindings.whereType<NoLookUpBinding>().toList();
-
-    /// Handle any declaration-declaration name conflict in [lookUpBindings].
-    final lookUpDeclConflictHandler = UniqueNamer({});
-    for (final b in lookUpBindings) {
-      _warnIfPrivateDeclaration(b);
-      _resolveIfNameConflicts(lookUpDeclConflictHandler, b);
-    }
-
-    /// Handle any declaration-declaration name conflict in [noLookUpBindings].
-    final noLookUpDeclConflictHandler = UniqueNamer({});
-    for (final b in noLookUpBindings) {
-      _warnIfPrivateDeclaration(b);
-      _resolveIfNameConflicts(noLookUpDeclConflictHandler, b);
-    }
 
     _writer = Writer(
       lookUpBindings: lookUpBindings,

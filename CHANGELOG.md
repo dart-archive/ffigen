@@ -1,3 +1,8 @@
+# 2.4.2
+- Fix issues due to declarations having duplicate names.
+- Fix name conflict of declaration with ffi library prefix.
+- Fix `char` not being recognized on platforms where it's unsigned by default.
+
 # 2.4.1
 - Added `/usr/lib` to default dynamic library location for linux.
 
