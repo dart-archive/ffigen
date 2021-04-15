@@ -44,6 +44,9 @@ class Struc extends NoLookUpBinding {
 
   bool get isOpaque => members.isEmpty;
 
+  /// Value for `@Packed(X)` annotation. Can be null(no packing), 1, 2, 4, 8, 16.
+  int? pack;
+
   /// Marker for checking if the dependencies are parsed.
   bool parsedDependencies = false;
 
@@ -105,6 +108,10 @@ class Struc extends NoLookUpBinding {
     /// to have the same name as the class.
     final localUniqueNamer = UniqueNamer({enclosingClassName});
 
+    /// Write @Packed(X) annotation if struct is packed.
+    if (pack != null) {
+      s.write('@Packed($pack)\n');
+    }
     // Write class declaration.
     s.write(
         'class $enclosingClassName extends ${w.ffiLibraryPrefix}.${isOpaque ? 'Opaque' : 'Struct'}{\n');

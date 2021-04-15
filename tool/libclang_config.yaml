@@ -76,6 +76,7 @@ functions:
     - clang_getPointeeType
     - clang_getCanonicalType
     - clang_Type_getNamedType
+    - clang_Type_getAlignOf
     - clang_getTypeDeclaration
     - clang_getTypedefDeclUnderlyingType
     - clang_getCursorSpelling
@@ -106,3 +107,4 @@ functions:
     - clang_Cursor_isFunctionInlined
     - clang_getCursorDefinition
     - clang_Cursor_isNull
+    - clang_Cursor_hasAttrs

@@ -25,6 +25,16 @@ class _ParsedStruc {
   bool dartHandleMember = false;
   bool incompleteStructMember = false;
 
+  // A struct without any attribute is definitely not packed. #pragma pack(...)
+  // also adds an attribute, but it's unexposed and cannot be travesed.
+  bool hasAttr = false;
+  // A struct which as a __packed__ attribute is definitely packed.
+  bool hasPackedAttr = false;
+  // Stores the max align value from all the children.
+  int maxChildAlignValue = 0;
+  // Align value of this struct.
+  int alignValue = 0;
+
   bool get isInComplete =>
       unimplementedMemberType ||
       flexibleArrayMember ||
@@ -32,6 +42,13 @@ class _ParsedStruc {
       bitFieldMember ||
       (dartHandleMember && config.useDartHandle) ||
       incompleteStructMember;
+
+  bool get isPacked {
+    if (!hasAttr || isInComplete) return false;
+    if (hasPackedAttr) return true;
+
+    return maxChildAlignValue > alignValue;
+  }
 
   _ParsedStruc();
 }
@@ -62,7 +79,6 @@ Struc? parseStructDeclaration(
   if (isForwardDeclaration(cursor)) {
     cursor = clang.clang_getCursorDefinition(cursor);
   }
-
   final structUsr = cursor.usr();
   final structName = name ?? cursor.spelling();
 
@@ -119,8 +135,8 @@ Struc? parseStructDeclaration(
 }
 
 void _setStructMembers(clang_types.CXCursor cursor) {
-  _stack.top.arrayMember = false;
-  _stack.top.unimplementedMemberType = false;
+  _stack.top.hasAttr = clang.clang_Cursor_hasAttrs(cursor) != 0;
+  _stack.top.alignValue = cursor.type().align();
 
   final resultCode = clang.clang_visitChildren(
     cursor,
@@ -128,6 +144,8 @@ void _setStructMembers(clang_types.CXCursor cursor) {
         clang_types.CXChildVisitResult.CXChildVisit_Break),
     nullptr,
   );
+
+  if (_stack.top.isPacked) _stack.top.struc!.pack = _stack.top.alignValue;
 
   visitChildrenResultChecker(resultCode);
 
@@ -183,6 +201,12 @@ int _structMembersVisitor(clang_types.CXCursor cursor,
     if (cursor.kind == clang_types.CXCursorKind.CXCursor_FieldDecl) {
       _logger.finer('===== member: ${cursor.completeStringRepr()}');
 
+      // Set maxChildAlignValue.
+      final align = cursor.type().align();
+      if (align > _stack.top.maxChildAlignValue) {
+        _stack.top.maxChildAlignValue = align;
+      }
+
       final mt = cursor.type().toCodeGenType();
       if (mt.broadType == BroadType.ConstantArray) {
         _stack.top.arrayMember = true;
@@ -219,6 +243,8 @@ int _structMembersVisitor(clang_types.CXCursor cursor,
           type: mt,
         ),
       );
+    } else if (cursor.kind == clang_types.CXCursorKind.CXCursor_PackedAttr) {
+      _stack.top.hasPackedAttr = true;
     }
   } catch (e, s) {
     _logger.severe(e);

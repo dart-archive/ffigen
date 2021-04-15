@@ -1,3 +1,7 @@
+# 2.5.0
+- Added support for `Packed` structs.
+- Updated sdk constraints to `>=2.13.0-211.6.beta`.
+
 # 2.4.2
 - Fix issues due to declarations having duplicate names.
 - Fix name conflict of declaration with ffi library prefix.
