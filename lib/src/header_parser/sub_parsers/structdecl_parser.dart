@@ -8,6 +8,7 @@ import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/config_provider/config_types.dart';
 import 'package:logging/logging.dart';
 
+import '../../strings.dart' as strings;
 import '../clang_bindings/clang_bindings.dart' as clang_types;
 import '../data.dart';
 import '../includer.dart';
@@ -25,6 +26,14 @@ class _ParsedStruc {
   bool dartHandleMember = false;
   bool incompleteStructMember = false;
 
+  bool get isInComplete =>
+      unimplementedMemberType ||
+      flexibleArrayMember ||
+      (arrayMember && !config.arrayWorkaround) ||
+      bitFieldMember ||
+      (dartHandleMember && config.useDartHandle) ||
+      incompleteStructMember;
+
   // A struct without any attribute is definitely not packed. #pragma pack(...)
   // also adds an attribute, but it's unexposed and cannot be travesed.
   bool hasAttr = false;
@@ -35,19 +44,29 @@ class _ParsedStruc {
   // Align value of this struct.
   int alignValue = 0;
 
-  bool get isInComplete =>
-      unimplementedMemberType ||
-      flexibleArrayMember ||
-      (arrayMember && !config.arrayWorkaround) ||
-      bitFieldMember ||
-      (dartHandleMember && config.useDartHandle) ||
-      incompleteStructMember;
-
-  bool get isPacked {
+  bool get _isPacked {
     if (!hasAttr || isInComplete) return false;
     if (hasPackedAttr) return true;
 
     return maxChildAlignValue > alignValue;
+  }
+
+  /// Returns pack value of a struct depending on config, returns null for no
+  /// packing.
+  int? get packValue {
+    if (config.structPacking.isOverriden(struc!.name)) {
+      return config.structPacking.getOverridenPackValue(struc!.name);
+    } else if (_isPacked) {
+      if (strings.packingValuesMap.containsKey(alignValue)) {
+        return alignValue;
+      } else {
+        _logger.warning(
+            'Unsupported pack value "$alignValue" for Struct "${struc!.name}".');
+        return null;
+      }
+    } else {
+      return null;
+    }
   }
 
   _ParsedStruc();
@@ -145,7 +164,7 @@ void _setStructMembers(clang_types.CXCursor cursor) {
     nullptr,
   );
 
-  if (_stack.top.isPacked) _stack.top.struc!.pack = _stack.top.alignValue;
+  _stack.top.struc!.pack = _stack.top.packValue;
 
   visitChildrenResultChecker(resultCode);
 

@@ -110,7 +110,7 @@ class Struc extends NoLookUpBinding {
 
     /// Write @Packed(X) annotation if struct is packed.
     if (pack != null) {
-      s.write('@Packed($pack)\n');
+      s.write('@${w.ffiLibraryPrefix}.Packed($pack)\n');
     }
     // Write class declaration.
     s.write(

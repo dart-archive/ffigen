@@ -80,6 +80,10 @@ class Config {
   StructDependencies get structDependencies => _structDependencies;
   late StructDependencies _structDependencies;
 
+  /// Holds config for how structs are packed.
+  StructPacking get structPacking => _structPacking;
+  late StructPacking _structPacking;
+
   /// If tool should generate array workarounds.
   ///
   /// If false(default), structs with inline array members will have all its
@@ -334,6 +338,14 @@ class Config {
         defaultValue: () => StructDependencies.full,
         extractedResult: (dynamic result) =>
             _structDependencies = result as StructDependencies,
+      ),
+      [strings.structs, strings.structPacking]: Specification<StructPacking>(
+        requirement: Requirement.no,
+        validator: structPackingValidator,
+        extractor: structPackingExtractor,
+        defaultValue: () => StructPacking(),
+        extractedResult: (dynamic result) =>
+            _structPacking = result as StructPacking,
       ),
       [strings.arrayWorkaround]: Specification<bool>(
         requirement: Requirement.no,

@@ -6,6 +6,7 @@
 import 'dart:io';
 
 import 'package:quiver/pattern.dart' as quiver;
+import '../strings.dart' as strings;
 
 import 'path_finder.dart';
 
@@ -30,6 +31,35 @@ enum CommentStyle { doxygen, any }
 enum CommentLength { none, brief, full }
 
 enum StructDependencies { full, opaque }
+
+/// Holds Config for how Structs will be Packed.
+class StructPacking {
+  final Map<RegExp, Object> _overridePackValues;
+
+  StructPacking({Map<RegExp, Object>? overridePackValues})
+      : _overridePackValues = overridePackValues ?? {};
+
+  /// Returns true if the user has overriden the pack value.
+  bool isOverriden(String name) {
+    for (final key in _overridePackValues.keys) {
+      if (quiver.matchesFull(key, name)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /// Returns pack value for [name]. Ensure that value [isOverriden] before
+  /// using the returned value.
+  int? getOverridenPackValue(String name) {
+    for (final opv in _overridePackValues.entries) {
+      if (quiver.matchesFull(opv.key, name)) {
+        return strings.packingValuesMap[opv.value];
+      }
+    }
+    return null;
+  }
+}
 
 /// Represents a single specification in configurations.
 ///
