@@ -39,27 +39,27 @@ class _ParsedStruc {
   bool hasAttr = false;
   // A struct which as a __packed__ attribute is definitely packed.
   bool hasPackedAttr = false;
-  // Stores the max align value from all the children.
-  int maxChildAlignValue = 0;
-  // Align value of this struct.
-  int alignValue = 0;
+  // Stores the maximum alignment from all the children.
+  int maxChildAlignment = 0;
+  // Alignment of this struct.
+  int allignment = 0;
 
   bool get _isPacked {
     if (!hasAttr || isInComplete) return false;
     if (hasPackedAttr) return true;
 
-    return maxChildAlignValue > alignValue;
+    return maxChildAlignment > allignment;
   }
 
   /// Returns pack value of a struct depending on config, returns null for no
   /// packing.
   int? get packValue {
     if (_isPacked) {
-      if (strings.packingValuesMap.containsKey(alignValue)) {
-        return alignValue;
+      if (strings.packingValuesMap.containsKey(allignment)) {
+        return allignment;
       } else {
         _logger.warning(
-            'Unsupported pack value "$alignValue" for Struct "${struc!.name}".');
+            'Unsupported pack value "$allignment" for Struct "${struc!.name}".');
         return null;
       }
     } else {
@@ -153,7 +153,7 @@ Struc? parseStructDeclaration(
 
 void _setStructMembers(clang_types.CXCursor cursor) {
   _stack.top.hasAttr = clang.clang_Cursor_hasAttrs(cursor) != 0;
-  _stack.top.alignValue = cursor.type().align();
+  _stack.top.allignment = cursor.type().alignment();
 
   final resultCode = clang.clang_visitChildren(
     cursor,
@@ -163,7 +163,7 @@ void _setStructMembers(clang_types.CXCursor cursor) {
   );
 
   _logger.finest(
-      'Opaque: ${_stack.top.isInComplete}, HasAttr: ${_stack.top.hasAttr}, AlignValue: ${_stack.top.alignValue}, MaxChildAlignValue: ${_stack.top.maxChildAlignValue}, PackValue: ${_stack.top.packValue}.');
+      'Opaque: ${_stack.top.isInComplete}, HasAttr: ${_stack.top.hasAttr}, AlignValue: ${_stack.top.allignment}, MaxChildAlignValue: ${_stack.top.maxChildAlignment}, PackValue: ${_stack.top.packValue}.');
   _stack.top.struc!.pack = _stack.top.packValue;
 
   visitChildrenResultChecker(resultCode);
@@ -221,9 +221,9 @@ int _structMembersVisitor(clang_types.CXCursor cursor,
       _logger.finer('===== member: ${cursor.completeStringRepr()}');
 
       // Set maxChildAlignValue.
-      final align = cursor.type().align();
-      if (align > _stack.top.maxChildAlignValue) {
-        _stack.top.maxChildAlignValue = align;
+      final align = cursor.type().alignment();
+      if (align > _stack.top.maxChildAlignment) {
+        _stack.top.maxChildAlignment = align;
       }
 
       final mt = cursor.type().toCodeGenType();

@@ -1,4 +1,4 @@
-# 3.0.0-beta.1
+# 2.5.0-beta.1
 - Added support for `Packed` structs. Packed annotations are generated
 automatically but can be overriden using `structs -> pack` config.
 - Updated sdk constraints to `>=2.13.0-211.6.beta`.

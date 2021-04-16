@@ -36,9 +36,10 @@ class Pack2WithPragma extends ffi.Struct {
   external int a;
 }
 
-/// Should be packed with 8.
-class Pack8WithPragma extends ffi.Struct {
-  @ffi.Int32()
+/// Should be packed with 4.
+@ffi.Packed(4)
+class Pack4WithPragma extends ffi.Struct {
+  @ffi.Int64()
   external int a;
 }
 

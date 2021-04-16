@@ -29,10 +29,10 @@ struct PackedAttrAlign8{
 struct Pack2WithPragma{
     int a;
 };
-#pragma pack(8)
-/// Should be packed with 8.
-struct Pack8WithPragma{
-    int a;
+#pragma pack(4)
+/// Should be packed with 4.
+struct Pack4WithPragma{
+    long long a;
 };
 #pragma pack(pop)
 struct NormalStruct2

@@ -234,8 +234,12 @@ globals:
   <tr>
     <td>structs -> pack</td>
     <td>Override the @Packed(X) annotation for generated structs.<br><br>
-    <i>Options - none, 1, 2, 4, 8, 16</i><br><br>
-    Note: You can use RegExp to match with the <b>generated</b> names.
+    <i>Options - none, 1, 2, 4, 8, 16</i><br>
+    You can use RegExp to match with the <b>generated</b> names.<br><br>
+    Note: Ffigen can only reliably identify packing specified using
+    __attribute__((__packed__)). However, structs packed using
+    `#pragma pack(...)` or any other way could <i>potentially</i> be incorrect
+    in which case you can override the generated annotations.
     </td>
     <td>
 

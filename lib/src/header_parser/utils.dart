@@ -236,7 +236,7 @@ extension CXTypeExt on clang_types.CXType {
     return clang.clang_getTypeKindSpelling(kind()).toStringAndDispose();
   }
 
-  int align() {
+  int alignment() {
     return clang.clang_Type_getAlignOf(this);
   }
 
