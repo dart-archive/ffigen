@@ -699,3 +699,30 @@ bool structDependenciesValidator(List<String> name, dynamic value) {
   }
   return result;
 }
+
+StructPackingOverride structPackingOverrideExtractor(dynamic value) {
+  final matcherMap = <RegExp, int?>{};
+  for (final key in value.keys) {
+    matcherMap[RegExp(key as String, dotAll: true)] =
+        strings.packingValuesMap[value[key]];
+  }
+  return StructPackingOverride(matcherMap: matcherMap);
+}
+
+bool structPackingOverrideValidator(List<String> name, dynamic value) {
+  var _result = true;
+
+  if (!checkType<YamlMap>([...name], value)) {
+    _result = false;
+  } else {
+    for (final key in value.keys) {
+      if (!(strings.packingValuesMap.keys.contains(value[key]))) {
+        _logger.severe(
+            "'$name -> $key' must be one of the following - ${strings.packingValuesMap.keys.toList()}");
+        _result = false;
+      }
+    }
+  }
+
+  return _result;
+}

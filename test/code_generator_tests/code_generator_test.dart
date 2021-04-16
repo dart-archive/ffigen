@@ -378,6 +378,32 @@ void main() {
     );
     _matchLib(library, 'sort_bindings');
   });
+  test('Pack Structs', () {
+    final library = Library(
+      name: 'Bindings',
+      bindings: [
+        Struc(name: 'NoPacking', pack: null, members: [
+          Member(name: 'a', type: Type.nativeType(SupportedNativeType.Char)),
+        ]),
+        Struc(name: 'Pack1', pack: 1, members: [
+          Member(name: 'a', type: Type.nativeType(SupportedNativeType.Char)),
+        ]),
+        Struc(name: 'Pack2', pack: 2, members: [
+          Member(name: 'a', type: Type.nativeType(SupportedNativeType.Char)),
+        ]),
+        Struc(name: 'Pack2', pack: 4, members: [
+          Member(name: 'a', type: Type.nativeType(SupportedNativeType.Char)),
+        ]),
+        Struc(name: 'Pack2', pack: 8, members: [
+          Member(name: 'a', type: Type.nativeType(SupportedNativeType.Char)),
+        ]),
+        Struc(name: 'Pack16', pack: 16, members: [
+          Member(name: 'a', type: Type.nativeType(SupportedNativeType.Char)),
+        ]),
+      ],
+    );
+    _matchLib(library, 'packed_structs');
+  });
 }
 
 /// Utility to match expected bindings to the generated bindings.

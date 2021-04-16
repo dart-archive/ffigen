@@ -236,6 +236,10 @@ extension CXTypeExt on clang_types.CXType {
     return clang.clang_getTypeKindSpelling(kind()).toStringAndDispose();
   }
 
+  int alignment() {
+    return clang.clang_Type_getAlignOf(this);
+  }
+
   /// For debugging: returns [spelling] [kind] [kindSpelling].
   String completeStringRepr() {
     final s =

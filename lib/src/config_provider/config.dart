@@ -80,6 +80,10 @@ class Config {
   StructDependencies get structDependencies => _structDependencies;
   late StructDependencies _structDependencies;
 
+  /// Holds config for how struct packing should be overriden.
+  StructPackingOverride get structPackingOverride => _structPackingOverride;
+  late StructPackingOverride _structPackingOverride;
+
   /// If tool should generate array workarounds.
   ///
   /// If false(default), structs with inline array members will have all its
@@ -334,6 +338,15 @@ class Config {
         defaultValue: () => StructDependencies.full,
         extractedResult: (dynamic result) =>
             _structDependencies = result as StructDependencies,
+      ),
+      [strings.structs, strings.structPack]:
+          Specification<StructPackingOverride>(
+        requirement: Requirement.no,
+        validator: structPackingOverrideValidator,
+        extractor: structPackingOverrideExtractor,
+        defaultValue: () => StructPackingOverride(),
+        extractedResult: (dynamic result) =>
+            _structPackingOverride = result as StructPackingOverride,
       ),
       [strings.arrayWorkaround]: Specification<bool>(
         requirement: Requirement.no,

@@ -376,6 +376,21 @@ class Clang {
   late final _dart_clang_getCursorKind _clang_getCursorKind =
       _clang_getCursorKind_ptr.asFunction<_dart_clang_getCursorKind>();
 
+  /// Determine whether the given cursor has any attributes.
+  int clang_Cursor_hasAttrs(
+    CXCursor C,
+  ) {
+    return _clang_Cursor_hasAttrs(
+      C,
+    );
+  }
+
+  late final _clang_Cursor_hasAttrs_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_Cursor_hasAttrs>>(
+          'clang_Cursor_hasAttrs');
+  late final _dart_clang_Cursor_hasAttrs _clang_Cursor_hasAttrs =
+      _clang_Cursor_hasAttrs_ptr.asFunction<_dart_clang_Cursor_hasAttrs>();
+
   /// Retrieve the physical location of the source constructor referenced
   /// by the given cursor.
   ///
@@ -771,6 +786,30 @@ class Clang {
           'clang_Type_getNamedType');
   late final _dart_clang_Type_getNamedType _clang_Type_getNamedType =
       _clang_Type_getNamedType_ptr.asFunction<_dart_clang_Type_getNamedType>();
+
+  /// Return the alignment of a type in bytes as per C++[expr.alignof]
+  /// standard.
+  ///
+  /// If the type declaration is invalid, CXTypeLayoutError_Invalid is returned.
+  /// If the type declaration is an incomplete type, CXTypeLayoutError_Incomplete
+  /// is returned.
+  /// If the type declaration is a dependent type, CXTypeLayoutError_Dependent is
+  /// returned.
+  /// If the type declaration is not a constant size type,
+  /// CXTypeLayoutError_NotConstantSize is returned.
+  int clang_Type_getAlignOf(
+    CXType T,
+  ) {
+    return _clang_Type_getAlignOf(
+      T,
+    );
+  }
+
+  late final _clang_Type_getAlignOf_ptr =
+      _lookup<ffi.NativeFunction<_c_clang_Type_getAlignOf>>(
+          'clang_Type_getAlignOf');
+  late final _dart_clang_Type_getAlignOf _clang_Type_getAlignOf =
+      _clang_Type_getAlignOf_ptr.asFunction<_dart_clang_Type_getAlignOf>();
 
   /// Determine whether the given cursor represents an anonymous
   /// tag or namespace
@@ -2690,6 +2729,14 @@ typedef _dart_clang_getCursorKind = int Function(
   CXCursor arg0,
 );
 
+typedef _c_clang_Cursor_hasAttrs = ffi.Uint32 Function(
+  CXCursor C,
+);
+
+typedef _dart_clang_Cursor_hasAttrs = int Function(
+  CXCursor C,
+);
+
 typedef _c_clang_getCursorLocation = CXSourceLocation Function(
   CXCursor arg0,
 );
@@ -2867,6 +2914,14 @@ typedef _c_clang_Type_getNamedType = CXType Function(
 );
 
 typedef _dart_clang_Type_getNamedType = CXType Function(
+  CXType T,
+);
+
+typedef _c_clang_Type_getAlignOf = ffi.Int64 Function(
+  CXType T,
+);
+
+typedef _dart_clang_Type_getAlignOf = int Function(
   CXType T,
 );
 

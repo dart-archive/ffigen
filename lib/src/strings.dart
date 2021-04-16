@@ -64,6 +64,16 @@ const structDependencies = 'dependency-only';
 const fullStructDependencies = 'full';
 const opaqueStructDependencies = 'opaque';
 
+const structPack = 'pack';
+const Map<Object, int?> packingValuesMap = {
+  'none': null,
+  1: 1,
+  2: 2,
+  4: 4,
+  8: 8,
+  16: 16,
+};
+
 const sizemap = 'size-map';
 const typedefmap = 'typedef-map';
 

@@ -8,6 +8,7 @@ import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/config_provider/config_types.dart';
 import 'package:logging/logging.dart';
 
+import '../../strings.dart' as strings;
 import '../clang_bindings/clang_bindings.dart' as clang_types;
 import '../data.dart';
 import '../includer.dart';
@@ -32,6 +33,39 @@ class _ParsedStruc {
       bitFieldMember ||
       (dartHandleMember && config.useDartHandle) ||
       incompleteStructMember;
+
+  // A struct without any attribute is definitely not packed. #pragma pack(...)
+  // also adds an attribute, but it's unexposed and cannot be travesed.
+  bool hasAttr = false;
+  // A struct which as a __packed__ attribute is definitely packed.
+  bool hasPackedAttr = false;
+  // Stores the maximum alignment from all the children.
+  int maxChildAlignment = 0;
+  // Alignment of this struct.
+  int allignment = 0;
+
+  bool get _isPacked {
+    if (!hasAttr || isInComplete) return false;
+    if (hasPackedAttr) return true;
+
+    return maxChildAlignment > allignment;
+  }
+
+  /// Returns pack value of a struct depending on config, returns null for no
+  /// packing.
+  int? get packValue {
+    if (_isPacked) {
+      if (strings.packingValuesMap.containsKey(allignment)) {
+        return allignment;
+      } else {
+        _logger.warning(
+            'Unsupported pack value "$allignment" for Struct "${struc!.name}".');
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
 
   _ParsedStruc();
 }
@@ -62,7 +96,6 @@ Struc? parseStructDeclaration(
   if (isForwardDeclaration(cursor)) {
     cursor = clang.clang_getCursorDefinition(cursor);
   }
-
   final structUsr = cursor.usr();
   final structName = name ?? cursor.spelling();
 
@@ -119,8 +152,8 @@ Struc? parseStructDeclaration(
 }
 
 void _setStructMembers(clang_types.CXCursor cursor) {
-  _stack.top.arrayMember = false;
-  _stack.top.unimplementedMemberType = false;
+  _stack.top.hasAttr = clang.clang_Cursor_hasAttrs(cursor) != 0;
+  _stack.top.allignment = cursor.type().alignment();
 
   final resultCode = clang.clang_visitChildren(
     cursor,
@@ -128,6 +161,10 @@ void _setStructMembers(clang_types.CXCursor cursor) {
         clang_types.CXChildVisitResult.CXChildVisit_Break),
     nullptr,
   );
+
+  _logger.finest(
+      'Opaque: ${_stack.top.isInComplete}, HasAttr: ${_stack.top.hasAttr}, AlignValue: ${_stack.top.allignment}, MaxChildAlignValue: ${_stack.top.maxChildAlignment}, PackValue: ${_stack.top.packValue}.');
+  _stack.top.struc!.pack = _stack.top.packValue;
 
   visitChildrenResultChecker(resultCode);
 
@@ -183,6 +220,12 @@ int _structMembersVisitor(clang_types.CXCursor cursor,
     if (cursor.kind == clang_types.CXCursorKind.CXCursor_FieldDecl) {
       _logger.finer('===== member: ${cursor.completeStringRepr()}');
 
+      // Set maxChildAlignValue.
+      final align = cursor.type().alignment();
+      if (align > _stack.top.maxChildAlignment) {
+        _stack.top.maxChildAlignment = align;
+      }
+
       final mt = cursor.type().toCodeGenType();
       if (mt.broadType == BroadType.ConstantArray) {
         _stack.top.arrayMember = true;
@@ -219,6 +262,8 @@ int _structMembersVisitor(clang_types.CXCursor cursor,
           type: mt,
         ),
       );
+    } else if (cursor.kind == clang_types.CXCursorKind.CXCursor_PackedAttr) {
+      _stack.top.hasPackedAttr = true;
     }
   } catch (e, s) {
     _logger.severe(e);
