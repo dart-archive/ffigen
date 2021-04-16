@@ -164,6 +164,8 @@ void _setStructMembers(clang_types.CXCursor cursor) {
     nullptr,
   );
 
+  _logger.finest(
+      'Opaque: ${_stack.top.isInComplete}, HasAttr: ${_stack.top.hasAttr}, AlignValue: ${_stack.top.alignValue}, MaxChildAlignValue: ${_stack.top.maxChildAlignValue}, PackValue: ${_stack.top.packValue}.');
   _stack.top.struc!.pack = _stack.top.packValue;
 
   visitChildrenResultChecker(resultCode);

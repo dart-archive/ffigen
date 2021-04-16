@@ -1,4 +1,4 @@
-# 2.5.0
+# 3.0.0-beta.1
 - Added support for `Packed` structs.
 - Updated sdk constraints to `>=2.13.0-211.6.beta`.
 

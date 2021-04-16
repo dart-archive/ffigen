@@ -55,6 +55,7 @@ class Struc extends NoLookUpBinding {
     String? originalName,
     required String name,
     this.isInComplete = false,
+    this.pack,
     String? dartDoc,
     List<Member>? members,
   })  : members = members ?? [],
