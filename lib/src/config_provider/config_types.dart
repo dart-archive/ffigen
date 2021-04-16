@@ -6,8 +6,6 @@
 import 'dart:io';
 
 import 'package:quiver/pattern.dart' as quiver;
-import '../strings.dart' as strings;
-
 import 'path_finder.dart';
 
 class CommentType {
