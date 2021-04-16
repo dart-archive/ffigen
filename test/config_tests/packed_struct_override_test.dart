@@ -16,7 +16,7 @@ void main() {
   group('packed_struct_override_test', () {
     test('Invalid Packed Config values', () {
       const baseYaml = '''${strings.name}: 'NativeLibrary'
-${strings.description}: 'Compiler Opts Test'
+${strings.description}: 'Packed Struct Override Test'
 ${strings.output}: 'unused'
 ${strings.headers}:
   ${strings.entryPoints}:
@@ -40,7 +40,7 @@ ${strings.structs}:
     test('Override values', () {
       final config = Config.fromYaml(yaml.loadYaml('''
 ${strings.name}: 'NativeLibrary'
-${strings.description}: 'Compiler Opts Test'
+${strings.description}: 'Packed Struct Override Test'
 ${strings.output}: 'unused'
 ${strings.headers}:
   ${strings.entryPoints}:

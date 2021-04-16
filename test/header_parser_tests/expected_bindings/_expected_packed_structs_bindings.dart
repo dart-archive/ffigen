@@ -46,7 +46,3 @@ class NormalStruct2 extends ffi.Struct {
   @ffi.Int8()
   external int a;
 }
-
-class Hi extends ffi.Struct {
-  external ffi.Pointer<ffi.Int32> a;
-}

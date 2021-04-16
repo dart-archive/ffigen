@@ -39,7 +39,3 @@ struct NormalStruct2
 {
     char a;
 };
-struct Hi
-{
-    int* a;
-};
