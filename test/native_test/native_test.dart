@@ -91,7 +91,7 @@ void main() {
     test('double', () {
       expect(bindings.Function1Double(0), 42.0);
     });
-    test('array-workaround: Order of access', () {
+    test('Array Test: Order of access', () {
       final struct1 = bindings.getStruct1();
       var expectedValue = 1;
       final dimensions = [3, 1, 2];
@@ -104,7 +104,7 @@ void main() {
         }
       }
     });
-    test('array-workaround: Range Errors', () {
+    test('Array Workaround: Range Errors', () {
       final struct1 = bindings.getStruct1();
       // Index (get) above range.
       expect(

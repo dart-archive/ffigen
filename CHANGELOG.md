@@ -1,3 +1,7 @@
+# 2.5.0-beta.2
+- Added support for Inline Arrays in Struct.
+- Remove config key `array-workaround`.
+
 # 2.5.0-beta.1
 - Added support for `Packed` structs. Packed annotations are generated
 automatically but can be overriden using `structs -> pack` config.

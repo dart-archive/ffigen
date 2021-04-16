@@ -23,7 +23,6 @@ ${strings.name}: LibClang
 ${strings.description}: Bindings to LibClang.
 ${strings.output}: unused
 ${strings.compilerOpts}: -I${path.join('third_party', 'libclang', 'include')}
-${strings.arrayWorkaround}: true
 ${strings.comments}:
   ${strings.style}: ${strings.doxygen}
   ${strings.length}: ${strings.brief}
@@ -55,7 +54,6 @@ ${strings.description}: Bindings to Cjson.
 ${strings.output}: unused
 ${strings.comments}:
   ${strings.length}: ${strings.full}
-${strings.arrayWorkaround}: true
 ${strings.headers}:
   ${strings.entryPoints}:
     - third_party/cjson_library/cJSON.h
@@ -78,7 +76,6 @@ ${strings.headers}:
 ${strings.name}: SQLite
 ${strings.description}: Bindings to SQLite.
 ${strings.output}: unused
-${strings.arrayWorkaround}: true
 ${strings.comments}:
   ${strings.style}: ${strings.any}
   ${strings.length}: ${strings.full}

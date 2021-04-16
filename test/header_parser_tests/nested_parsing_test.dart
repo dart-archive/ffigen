@@ -23,7 +23,6 @@ void main() {
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Nested Parsing Test'
 ${strings.output}: 'unused'
-${strings.arrayWorkaround}: true
 ${strings.headers}:
   ${strings.entryPoints}:
     - 'test/header_parser_tests/nested_parsing.h'

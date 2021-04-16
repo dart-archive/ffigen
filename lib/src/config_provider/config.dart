@@ -84,13 +84,6 @@ class Config {
   StructPackingOverride get structPackingOverride => _structPackingOverride;
   late StructPackingOverride _structPackingOverride;
 
-  /// If tool should generate array workarounds.
-  ///
-  /// If false(default), structs with inline array members will have all its
-  /// members removed.
-  bool get arrayWorkaround => _arrayWorkaround;
-  late bool _arrayWorkaround;
-
   /// If dart bool should be generated for C booleans.
   bool get dartBool => _dartBool;
   late bool _dartBool;
@@ -347,13 +340,6 @@ class Config {
         defaultValue: () => StructPackingOverride(),
         extractedResult: (dynamic result) =>
             _structPackingOverride = result as StructPackingOverride,
-      ),
-      [strings.arrayWorkaround]: Specification<bool>(
-        requirement: Requirement.no,
-        validator: booleanValidator,
-        extractor: booleanExtractor,
-        defaultValue: () => false,
-        extractedResult: (dynamic result) => _arrayWorkaround = result as bool,
       ),
       [strings.dartBool]: Specification<bool>(
         requirement: Requirement.no,
