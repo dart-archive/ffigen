@@ -5937,177 +5937,29 @@ abstract class CXGlobalOptFlags {
 /// Uniquely identifies a CXFile, that refers to the same underlying file,
 /// across an indexing session.
 class CXFileUniqueID extends ffi.Struct {
-  @ffi.Uint64()
-  external int _unique_data_item_0;
-  @ffi.Uint64()
-  external int _unique_data_item_1;
-  @ffi.Uint64()
-  external int _unique_data_item_2;
-
-  /// Helper for array `data`.
-  ArrayHelper_CXFileUniqueID_data_level0 get data =>
-      ArrayHelper_CXFileUniqueID_data_level0(this, [3], 0, 0);
-}
-
-/// Helper for array `data` in struct `CXFileUniqueID`.
-class ArrayHelper_CXFileUniqueID_data_level0 {
-  final CXFileUniqueID _struct;
-  final List<int> dimensions;
-  final int level;
-  final int _absoluteIndex;
-  int get length => dimensions[level];
-  ArrayHelper_CXFileUniqueID_data_level0(
-      this._struct, this.dimensions, this.level, this._absoluteIndex);
-  void _checkBounds(int index) {
-    if (index >= length || index < 0) {
-      throw RangeError(
-          'Dimension $level: index not in range 0..$length exclusive.');
-    }
-  }
-
-  int operator [](int index) {
-    _checkBounds(index);
-    switch (_absoluteIndex + index) {
-      case 0:
-        return _struct._unique_data_item_0;
-      case 1:
-        return _struct._unique_data_item_1;
-      case 2:
-        return _struct._unique_data_item_2;
-      default:
-        throw Exception('Invalid Array Helper generated.');
-    }
-  }
-
-  void operator []=(int index, int value) {
-    _checkBounds(index);
-    switch (_absoluteIndex + index) {
-      case 0:
-        _struct._unique_data_item_0 = value;
-        break;
-      case 1:
-        _struct._unique_data_item_1 = value;
-        break;
-      case 2:
-        _struct._unique_data_item_2 = value;
-        break;
-      default:
-        throw Exception('Invalid Array Helper generated.');
-    }
-  }
+  @ffi.Array.multi([3])
+  external ffi.Array<ffi.Uint64> data;
 }
 
 /// Identifies a specific source location within a translation unit.
 class CXSourceLocation extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _unique_ptr_data_item_0;
-  external ffi.Pointer<ffi.Void> _unique_ptr_data_item_1;
+  @ffi.Array.multi([2])
+  external ffi.Array<ffi.Pointer<ffi.Void>> ptr_data;
 
-  /// Helper for array `ptr_data`.
-  ArrayHelper_CXSourceLocation_ptr_data_level0 get ptr_data =>
-      ArrayHelper_CXSourceLocation_ptr_data_level0(this, [2], 0, 0);
   @ffi.Uint32()
   external int int_data;
 }
 
-/// Helper for array `ptr_data` in struct `CXSourceLocation`.
-class ArrayHelper_CXSourceLocation_ptr_data_level0 {
-  final CXSourceLocation _struct;
-  final List<int> dimensions;
-  final int level;
-  final int _absoluteIndex;
-  int get length => dimensions[level];
-  ArrayHelper_CXSourceLocation_ptr_data_level0(
-      this._struct, this.dimensions, this.level, this._absoluteIndex);
-  void _checkBounds(int index) {
-    if (index >= length || index < 0) {
-      throw RangeError(
-          'Dimension $level: index not in range 0..$length exclusive.');
-    }
-  }
-
-  ffi.Pointer<ffi.Void> operator [](int index) {
-    _checkBounds(index);
-    switch (_absoluteIndex + index) {
-      case 0:
-        return _struct._unique_ptr_data_item_0;
-      case 1:
-        return _struct._unique_ptr_data_item_1;
-      default:
-        throw Exception('Invalid Array Helper generated.');
-    }
-  }
-
-  void operator []=(int index, ffi.Pointer<ffi.Void> value) {
-    _checkBounds(index);
-    switch (_absoluteIndex + index) {
-      case 0:
-        _struct._unique_ptr_data_item_0 = value;
-        break;
-      case 1:
-        _struct._unique_ptr_data_item_1 = value;
-        break;
-      default:
-        throw Exception('Invalid Array Helper generated.');
-    }
-  }
-}
-
 /// Identifies a half-open character range in the source code.
 class CXSourceRange extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _unique_ptr_data_item_0;
-  external ffi.Pointer<ffi.Void> _unique_ptr_data_item_1;
+  @ffi.Array.multi([2])
+  external ffi.Array<ffi.Pointer<ffi.Void>> ptr_data;
 
-  /// Helper for array `ptr_data`.
-  ArrayHelper_CXSourceRange_ptr_data_level0 get ptr_data =>
-      ArrayHelper_CXSourceRange_ptr_data_level0(this, [2], 0, 0);
   @ffi.Uint32()
   external int begin_int_data;
 
   @ffi.Uint32()
   external int end_int_data;
-}
-
-/// Helper for array `ptr_data` in struct `CXSourceRange`.
-class ArrayHelper_CXSourceRange_ptr_data_level0 {
-  final CXSourceRange _struct;
-  final List<int> dimensions;
-  final int level;
-  final int _absoluteIndex;
-  int get length => dimensions[level];
-  ArrayHelper_CXSourceRange_ptr_data_level0(
-      this._struct, this.dimensions, this.level, this._absoluteIndex);
-  void _checkBounds(int index) {
-    if (index >= length || index < 0) {
-      throw RangeError(
-          'Dimension $level: index not in range 0..$length exclusive.');
-    }
-  }
-
-  ffi.Pointer<ffi.Void> operator [](int index) {
-    _checkBounds(index);
-    switch (_absoluteIndex + index) {
-      case 0:
-        return _struct._unique_ptr_data_item_0;
-      case 1:
-        return _struct._unique_ptr_data_item_1;
-      default:
-        throw Exception('Invalid Array Helper generated.');
-    }
-  }
-
-  void operator []=(int index, ffi.Pointer<ffi.Void> value) {
-    _checkBounds(index);
-    switch (_absoluteIndex + index) {
-      case 0:
-        _struct._unique_ptr_data_item_0 = value;
-        break;
-      case 1:
-        _struct._unique_ptr_data_item_1 = value;
-        break;
-      default:
-        throw Exception('Invalid Array Helper generated.');
-    }
-  }
 }
 
 /// Identifies an array of ranges.
@@ -6977,61 +6829,8 @@ class CXCursor extends ffi.Struct {
   @ffi.Int32()
   external int xdata;
 
-  external ffi.Pointer<ffi.Void> _unique_data_item_0;
-  external ffi.Pointer<ffi.Void> _unique_data_item_1;
-  external ffi.Pointer<ffi.Void> _unique_data_item_2;
-
-  /// Helper for array `data`.
-  ArrayHelper_CXCursor_data_level0 get data =>
-      ArrayHelper_CXCursor_data_level0(this, [3], 0, 0);
-}
-
-/// Helper for array `data` in struct `CXCursor`.
-class ArrayHelper_CXCursor_data_level0 {
-  final CXCursor _struct;
-  final List<int> dimensions;
-  final int level;
-  final int _absoluteIndex;
-  int get length => dimensions[level];
-  ArrayHelper_CXCursor_data_level0(
-      this._struct, this.dimensions, this.level, this._absoluteIndex);
-  void _checkBounds(int index) {
-    if (index >= length || index < 0) {
-      throw RangeError(
-          'Dimension $level: index not in range 0..$length exclusive.');
-    }
-  }
-
-  ffi.Pointer<ffi.Void> operator [](int index) {
-    _checkBounds(index);
-    switch (_absoluteIndex + index) {
-      case 0:
-        return _struct._unique_data_item_0;
-      case 1:
-        return _struct._unique_data_item_1;
-      case 2:
-        return _struct._unique_data_item_2;
-      default:
-        throw Exception('Invalid Array Helper generated.');
-    }
-  }
-
-  void operator []=(int index, ffi.Pointer<ffi.Void> value) {
-    _checkBounds(index);
-    switch (_absoluteIndex + index) {
-      case 0:
-        _struct._unique_data_item_0 = value;
-        break;
-      case 1:
-        _struct._unique_data_item_1 = value;
-        break;
-      case 2:
-        _struct._unique_data_item_2 = value;
-        break;
-      default:
-        throw Exception('Invalid Array Helper generated.');
-    }
-  }
+  @ffi.Array.multi([3])
+  external ffi.Array<ffi.Pointer<ffi.Void>> data;
 }
 
 /// Describe the linkage of the entity referred to by a cursor.
@@ -7271,55 +7070,8 @@ class CXType extends ffi.Struct {
   @ffi.Int32()
   external int kind;
 
-  external ffi.Pointer<ffi.Void> _unique_data_item_0;
-  external ffi.Pointer<ffi.Void> _unique_data_item_1;
-
-  /// Helper for array `data`.
-  ArrayHelper_CXType_data_level0 get data =>
-      ArrayHelper_CXType_data_level0(this, [2], 0, 0);
-}
-
-/// Helper for array `data` in struct `CXType`.
-class ArrayHelper_CXType_data_level0 {
-  final CXType _struct;
-  final List<int> dimensions;
-  final int level;
-  final int _absoluteIndex;
-  int get length => dimensions[level];
-  ArrayHelper_CXType_data_level0(
-      this._struct, this.dimensions, this.level, this._absoluteIndex);
-  void _checkBounds(int index) {
-    if (index >= length || index < 0) {
-      throw RangeError(
-          'Dimension $level: index not in range 0..$length exclusive.');
-    }
-  }
-
-  ffi.Pointer<ffi.Void> operator [](int index) {
-    _checkBounds(index);
-    switch (_absoluteIndex + index) {
-      case 0:
-        return _struct._unique_data_item_0;
-      case 1:
-        return _struct._unique_data_item_1;
-      default:
-        throw Exception('Invalid Array Helper generated.');
-    }
-  }
-
-  void operator []=(int index, ffi.Pointer<ffi.Void> value) {
-    _checkBounds(index);
-    switch (_absoluteIndex + index) {
-      case 0:
-        _struct._unique_data_item_0 = value;
-        break;
-      case 1:
-        _struct._unique_data_item_1 = value;
-        break;
-      default:
-        throw Exception('Invalid Array Helper generated.');
-    }
-  }
+  @ffi.Array.multi([2])
+  external ffi.Array<ffi.Pointer<ffi.Void>> data;
 }
 
 /// Describes the kind of a template argument.
@@ -7515,72 +7267,10 @@ abstract class CXTokenKind {
 
 /// Describes a single preprocessing token.
 class CXToken extends ffi.Struct {
-  @ffi.Uint32()
-  external int _unique_int_data_item_0;
-  @ffi.Uint32()
-  external int _unique_int_data_item_1;
-  @ffi.Uint32()
-  external int _unique_int_data_item_2;
-  @ffi.Uint32()
-  external int _unique_int_data_item_3;
+  @ffi.Array.multi([4])
+  external ffi.Array<ffi.Uint32> int_data;
 
-  /// Helper for array `int_data`.
-  ArrayHelper_CXToken_int_data_level0 get int_data =>
-      ArrayHelper_CXToken_int_data_level0(this, [4], 0, 0);
   external ffi.Pointer<ffi.Void> ptr_data;
-}
-
-/// Helper for array `int_data` in struct `CXToken`.
-class ArrayHelper_CXToken_int_data_level0 {
-  final CXToken _struct;
-  final List<int> dimensions;
-  final int level;
-  final int _absoluteIndex;
-  int get length => dimensions[level];
-  ArrayHelper_CXToken_int_data_level0(
-      this._struct, this.dimensions, this.level, this._absoluteIndex);
-  void _checkBounds(int index) {
-    if (index >= length || index < 0) {
-      throw RangeError(
-          'Dimension $level: index not in range 0..$length exclusive.');
-    }
-  }
-
-  int operator [](int index) {
-    _checkBounds(index);
-    switch (_absoluteIndex + index) {
-      case 0:
-        return _struct._unique_int_data_item_0;
-      case 1:
-        return _struct._unique_int_data_item_1;
-      case 2:
-        return _struct._unique_int_data_item_2;
-      case 3:
-        return _struct._unique_int_data_item_3;
-      default:
-        throw Exception('Invalid Array Helper generated.');
-    }
-  }
-
-  void operator []=(int index, int value) {
-    _checkBounds(index);
-    switch (_absoluteIndex + index) {
-      case 0:
-        _struct._unique_int_data_item_0 = value;
-        break;
-      case 1:
-        _struct._unique_int_data_item_1 = value;
-        break;
-      case 2:
-        _struct._unique_int_data_item_2 = value;
-        break;
-      case 3:
-        _struct._unique_int_data_item_3 = value;
-        break;
-      default:
-        throw Exception('Invalid Array Helper generated.');
-    }
-  }
 }
 
 /// A single result of code completion.
@@ -7829,57 +7519,11 @@ abstract class CXResult {
 
 /// Source location passed to index callbacks.
 class CXIdxLoc extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _unique_ptr_data_item_0;
-  external ffi.Pointer<ffi.Void> _unique_ptr_data_item_1;
+  @ffi.Array.multi([2])
+  external ffi.Array<ffi.Pointer<ffi.Void>> ptr_data;
 
-  /// Helper for array `ptr_data`.
-  ArrayHelper_CXIdxLoc_ptr_data_level0 get ptr_data =>
-      ArrayHelper_CXIdxLoc_ptr_data_level0(this, [2], 0, 0);
   @ffi.Uint32()
   external int int_data;
-}
-
-/// Helper for array `ptr_data` in struct `CXIdxLoc`.
-class ArrayHelper_CXIdxLoc_ptr_data_level0 {
-  final CXIdxLoc _struct;
-  final List<int> dimensions;
-  final int level;
-  final int _absoluteIndex;
-  int get length => dimensions[level];
-  ArrayHelper_CXIdxLoc_ptr_data_level0(
-      this._struct, this.dimensions, this.level, this._absoluteIndex);
-  void _checkBounds(int index) {
-    if (index >= length || index < 0) {
-      throw RangeError(
-          'Dimension $level: index not in range 0..$length exclusive.');
-    }
-  }
-
-  ffi.Pointer<ffi.Void> operator [](int index) {
-    _checkBounds(index);
-    switch (_absoluteIndex + index) {
-      case 0:
-        return _struct._unique_ptr_data_item_0;
-      case 1:
-        return _struct._unique_ptr_data_item_1;
-      default:
-        throw Exception('Invalid Array Helper generated.');
-    }
-  }
-
-  void operator []=(int index, ffi.Pointer<ffi.Void> value) {
-    _checkBounds(index);
-    switch (_absoluteIndex + index) {
-      case 0:
-        _struct._unique_ptr_data_item_0 = value;
-        break;
-      case 1:
-        _struct._unique_ptr_data_item_1 = value;
-        break;
-      default:
-        throw Exception('Invalid Array Helper generated.');
-    }
-  }
 }
 
 /// Data for ppIncludedFile callback.
