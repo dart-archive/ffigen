@@ -80,9 +80,9 @@ class Config {
   StructDependencies get structDependencies => _structDependencies;
   late StructDependencies _structDependencies;
 
-  /// Holds config for how structs are packed.
-  StructPacking get structPacking => _structPacking;
-  late StructPacking _structPacking;
+  /// Holds config for how struct packing should be overriden.
+  StructPackingOverride get structPackingOverride => _structPackingOverride;
+  late StructPackingOverride _structPackingOverride;
 
   /// If tool should generate array workarounds.
   ///
@@ -339,13 +339,14 @@ class Config {
         extractedResult: (dynamic result) =>
             _structDependencies = result as StructDependencies,
       ),
-      [strings.structs, strings.structPacking]: Specification<StructPacking>(
+      [strings.structs, strings.structPack]:
+          Specification<StructPackingOverride>(
         requirement: Requirement.no,
-        validator: structPackingValidator,
-        extractor: structPackingExtractor,
-        defaultValue: () => StructPacking(),
+        validator: structPackingOverrideValidator,
+        extractor: structPackingOverrideExtractor,
+        defaultValue: () => StructPackingOverride(),
         extractedResult: (dynamic result) =>
-            _structPacking = result as StructPacking,
+            _structPackingOverride = result as StructPackingOverride,
       ),
       [strings.arrayWorkaround]: Specification<bool>(
         requirement: Requirement.no,

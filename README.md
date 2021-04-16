@@ -232,6 +232,23 @@ globals:
   </td>
   </tr>
   <tr>
+    <td>structs -> pack</td>
+    <td>Override the @Packed(X) annotation for generated structs.<br><br>
+    <i>Options - none, 1, 2, 4, 8, 16</i><br><br>
+    Note: You can use RegExp to match with the <b>generated</b> names.
+    </td>
+    <td>
+
+```yaml
+structs:
+  pack:
+    # Matches with the generated name.
+    'NoPackStruct': none # No packing
+    '.*': 1 # Pack all structs with value 1
+```
+  </td>
+  </tr>
+  <tr>
     <td>array-workaround</td>
     <td>Should generate workaround for fixed arrays in Structs. See <a href="#array-workaround">Array Workaround</a><br>
       <b>Default: false</b>

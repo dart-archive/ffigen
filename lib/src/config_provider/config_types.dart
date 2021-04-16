@@ -32,16 +32,16 @@ enum CommentLength { none, brief, full }
 
 enum StructDependencies { full, opaque }
 
-/// Holds Config for how Structs will be Packed.
-class StructPacking {
-  final Map<RegExp, Object> _overridePackValues;
+/// Holds config for how Structs Packing will be overriden.
+class StructPackingOverride {
+  final Map<RegExp, int?> _matcherMap;
 
-  StructPacking({Map<RegExp, Object>? overridePackValues})
-      : _overridePackValues = overridePackValues ?? {};
+  StructPackingOverride({Map<RegExp, int?>? matcherMap})
+      : _matcherMap = matcherMap ?? {};
 
   /// Returns true if the user has overriden the pack value.
   bool isOverriden(String name) {
-    for (final key in _overridePackValues.keys) {
+    for (final key in _matcherMap.keys) {
       if (quiver.matchesFull(key, name)) {
         return true;
       }
@@ -52,9 +52,9 @@ class StructPacking {
   /// Returns pack value for [name]. Ensure that value [isOverriden] before
   /// using the returned value.
   int? getOverridenPackValue(String name) {
-    for (final opv in _overridePackValues.entries) {
+    for (final opv in _matcherMap.entries) {
       if (quiver.matchesFull(opv.key, name)) {
-        return strings.packingValuesMap[opv.value];
+        return opv.value;
       }
     }
     return null;

@@ -54,9 +54,7 @@ class _ParsedStruc {
   /// Returns pack value of a struct depending on config, returns null for no
   /// packing.
   int? get packValue {
-    if (config.structPacking.isOverriden(struc!.name)) {
-      return config.structPacking.getOverridenPackValue(struc!.name);
-    } else if (_isPacked) {
+    if (_isPacked) {
       if (strings.packingValuesMap.containsKey(alignValue)) {
         return alignValue;
       } else {

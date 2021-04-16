@@ -22,7 +22,7 @@ ${strings.headers}:
   ${strings.entryPoints}:
     - 'test/header_parser_tests/packed_structs.h'
 ${strings.structs}:
-  ${strings.structPacking}:
+  ${strings.structPack}:
     ''';
       expect(
           () => Config.fromYaml(
@@ -46,7 +46,7 @@ ${strings.headers}:
   ${strings.entryPoints}:
     - 'test/header_parser_tests/packed_structs.h'
 ${strings.structs}:
-  ${strings.structPacking}:
+  ${strings.structPack}:
     'Normal.*': 1
     'StructWithAttr': 2
     'PackedAttr': none

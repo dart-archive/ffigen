@@ -30,6 +30,7 @@ Library parse(Config c) {
     header: config.preamble,
     dartBool: config.dartBool,
     sort: config.sort,
+    packingOverride: config.structPackingOverride,
   );
 
   return library;

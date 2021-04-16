@@ -5,9 +5,11 @@
 import 'dart:io';
 
 import 'package:cli_util/cli_util.dart';
+import 'package:ffigen/src/config_provider/config_types.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 import 'binding.dart';
+import 'struc.dart';
 import 'utils.dart';
 import 'writer.dart';
 
@@ -28,6 +30,7 @@ class Library {
     String? header,
     bool dartBool = true,
     bool sort = false,
+    StructPackingOverride? packingOverride,
   }) {
     if (sort) _sort();
 
@@ -36,6 +39,16 @@ class Library {
     for (final b in bindings) {
       _warnIfPrivateDeclaration(b);
       _resolveIfNameConflicts(declConflictHandler, b);
+    }
+
+    // Override pack values according to config. We do this after declaration
+    // conflicts have been handled so that users can target the generated names.
+    if (packingOverride != null) {
+      for (final b in bindings) {
+        if (b is Struc && packingOverride.isOverriden(b.name)) {
+          b.pack = packingOverride.getOverridenPackValue(b.name);
+        }
+      }
     }
 
     // Seperate bindings which require lookup.

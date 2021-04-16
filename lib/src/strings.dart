@@ -64,7 +64,7 @@ const structDependencies = 'dependency-only';
 const fullStructDependencies = 'full';
 const opaqueStructDependencies = 'opaque';
 
-const structPacking = 'pack';
+const structPack = 'pack';
 const Map<Object, int?> packingValuesMap = {
   'none': null,
   1: 1,

@@ -700,16 +700,16 @@ bool structDependenciesValidator(List<String> name, dynamic value) {
   return result;
 }
 
-StructPacking structPackingExtractor(dynamic value) {
-  final overridePackValues = <RegExp, Object>{};
+StructPackingOverride structPackingOverrideExtractor(dynamic value) {
+  final matcherMap = <RegExp, int?>{};
   for (final key in value.keys) {
-    overridePackValues[RegExp(key as String, dotAll: true)] =
-        value[key] as Object;
+    matcherMap[RegExp(key as String, dotAll: true)] =
+        strings.packingValuesMap[value[key]];
   }
-  return StructPacking(overridePackValues: overridePackValues);
+  return StructPackingOverride(matcherMap: matcherMap);
 }
 
-bool structPackingValidator(List<String> name, dynamic value) {
+bool structPackingOverrideValidator(List<String> name, dynamic value) {
   var _result = true;
 
   if (!checkType<YamlMap>([...name], value)) {
