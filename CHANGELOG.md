@@ -1,6 +1,7 @@
 # 3.0.0-beta.0
 - Added support for inline arrays in `Struct`s.
 - Remove config key `array-workaround`.
+- Remove deprecated key `llvm-lib` from config, Use `llvm-path` instead.
 
 # 2.5.0-beta.1
 - Added support for `Packed` structs. Packed annotations are generated

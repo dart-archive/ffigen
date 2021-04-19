@@ -339,28 +339,6 @@ String? findLibclangDylib(String parentFolder) {
   }
 }
 
-String llvmLibExtractor(dynamic value) {
-  // Extract libclang's dylib from this.
-  final p = findLibclangDylib(value as String);
-  if (p == null) {
-    _logger.severe("Couldn't find ${strings.dylibFileName} at $value.");
-    exit(1);
-  } else {
-    return p;
-  }
-}
-
-bool llvmLibValidator(List<String> name, dynamic value) {
-  _logger.warning(
-      'Deprecated ${strings.llvmLib}: please use ${strings.llvmPath} instead.');
-  if (!checkType<String>(name, value) ||
-      !Directory(value as String).existsSync()) {
-    _logger.severe('Expected $name to be a valid folder Path.');
-    return false;
-  }
-  return true;
-}
-
 String llvmPathExtractor(dynamic value) {
   // Extract libclang's dylib from user specified paths.
   for (final path in (value as YamlList)) {
