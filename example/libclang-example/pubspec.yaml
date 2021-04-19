@@ -18,7 +18,8 @@ ffigen:
   # sort: true
 
   # This is required if LLVM can't be found in default locations by ffigen.
-  # llvm-lib: '/usr/local/opt/llvm/lib'
+  # llvm-path:
+  #   - '/usr/local/opt/llvm'
 
   # Bash style Glob matching is also supported.
   # TODO(11): Globs dont work on windows if they begin with '.' or '..'.
@@ -65,9 +66,6 @@ ffigen:
   name: 'LibClang'
 
   description: 'Holds bindings to LibClang.'
-
-  # False by default.
-  array-workaround: true
 
   # Doc Comments for generated binings.
   # Comments can be disabled by using comments: false

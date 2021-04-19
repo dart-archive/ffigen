@@ -22,7 +22,6 @@ String get dylibFileName {
   return name;
 }
 
-const llvmLib = 'llvm-lib';
 const llvmPath = 'llvm-path';
 
 /// Name of the parent folder of dynamic library `lib` or `bin` (on windows).
@@ -123,8 +122,6 @@ const supportedNativeType_mappings = <String, SupportedNativeType>{
 // Boolean flags.
 const sort = 'sort';
 const useSupportedTypedefs = 'use-supported-typedefs';
-const warnWhenRemoving = 'warn-when-removing';
-const arrayWorkaround = 'array-workaround';
 const dartBool = 'dart-bool';
 const useDartHandle = 'use-dart-handle';
 

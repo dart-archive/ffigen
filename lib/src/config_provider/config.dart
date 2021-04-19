@@ -84,13 +84,6 @@ class Config {
   StructPackingOverride get structPackingOverride => _structPackingOverride;
   late StructPackingOverride _structPackingOverride;
 
-  /// If tool should generate array workarounds.
-  ///
-  /// If false(default), structs with inline array members will have all its
-  /// members removed.
-  bool get arrayWorkaround => _arrayWorkaround;
-  late bool _arrayWorkaround;
-
   /// If dart bool should be generated for C booleans.
   bool get dartBool => _dartBool;
   late bool _dartBool;
@@ -185,24 +178,13 @@ class Config {
   /// Key: Name, Value: [Specification]
   Map<List<String>, Specification> _getSpecs() {
     return <List<String>, Specification>{
-      //TODO: Deprecated, remove in next major update.
-      [strings.llvmLib]: Specification<String>(
-        requirement: Requirement.no,
-        validator: llvmLibValidator,
-        extractor: llvmLibExtractor,
-        defaultValue: () => '',
-        extractedResult: (dynamic result) {
-          _libclangDylib = result as String;
-        },
-      ),
       [strings.llvmPath]: Specification<String>(
         requirement: Requirement.no,
         validator: llvmPathValidator,
         extractor: llvmPathExtractor,
         defaultValue: () => findDylibAtDefaultLocations(),
         extractedResult: (dynamic result) {
-          // If this key wasn't already set by `llvm-lib` use this result.
-          if (_libclangDylib.isEmpty) _libclangDylib = result as String;
+          _libclangDylib = result as String;
         },
       ),
       [strings.output]: Specification<String>(
@@ -347,13 +329,6 @@ class Config {
         defaultValue: () => StructPackingOverride(),
         extractedResult: (dynamic result) =>
             _structPackingOverride = result as StructPackingOverride,
-      ),
-      [strings.arrayWorkaround]: Specification<bool>(
-        requirement: Requirement.no,
-        validator: booleanValidator,
-        extractor: booleanExtractor,
-        defaultValue: () => false,
-        extractedResult: (dynamic result) => _arrayWorkaround = result as bool,
       ),
       [strings.dartBool]: Specification<bool>(
         requirement: Requirement.no,

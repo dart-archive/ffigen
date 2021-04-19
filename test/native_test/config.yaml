@@ -14,6 +14,5 @@ headers:
     - 'test/native_test/native_test.c'
   include-directives:
     - '**native_test.c'
-array-workaround: true
 
 compiler-opts: '-Wno-nullability-completeness'

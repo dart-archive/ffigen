@@ -43,7 +43,6 @@ ${strings.enums}:
 
 ${strings.name}: 'LibClang'
 ${strings.description}: 'Holds bindings to LibClang.'
-${strings.arrayWorkaround}: true
 ${strings.comments}:
   ${strings.style}: ${strings.doxygen}
   ${strings.length}: ${strings.full}

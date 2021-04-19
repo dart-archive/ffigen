@@ -21,7 +21,6 @@ class _ParsedStruc {
   Struc? struc;
   bool unimplementedMemberType = false;
   bool flexibleArrayMember = false;
-  bool arrayMember = false;
   bool bitFieldMember = false;
   bool dartHandleMember = false;
   bool incompleteStructMember = false;
@@ -29,7 +28,6 @@ class _ParsedStruc {
   bool get isInComplete =>
       unimplementedMemberType ||
       flexibleArrayMember ||
-      (arrayMember && !config.arrayWorkaround) ||
       bitFieldMember ||
       (dartHandleMember && config.useDartHandle) ||
       incompleteStructMember;
@@ -168,12 +166,7 @@ void _setStructMembers(clang_types.CXCursor cursor) {
 
   visitChildrenResultChecker(resultCode);
 
-  if (_stack.top.arrayMember && !config.arrayWorkaround) {
-    _logger.fine(
-        '---- Removed Struct members, reason: struct has array members ${cursor.completeStringRepr()}');
-    _logger.warning(
-        'Removed All Struct Members from: ${_stack.top.struc!.name}(${_stack.top.struc!.originalName}), Array members not supported');
-  } else if (_stack.top.unimplementedMemberType) {
+  if (_stack.top.unimplementedMemberType) {
     _logger.fine(
         '---- Removed Struct members, reason: member with unimplementedtype ${cursor.completeStringRepr()}');
     _logger.warning(
@@ -227,9 +220,6 @@ int _structMembersVisitor(clang_types.CXCursor cursor,
       }
 
       final mt = cursor.type().toCodeGenType();
-      if (mt.broadType == BroadType.ConstantArray) {
-        _stack.top.arrayMember = true;
-      }
       if (mt.broadType == BroadType.IncompleteArray) {
         // TODO(68): Structs with flexible Array Members are not supported.
         _stack.top.flexibleArrayMember = true;

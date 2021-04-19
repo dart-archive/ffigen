@@ -253,18 +253,6 @@ structs:
   </td>
   </tr>
   <tr>
-    <td>array-workaround</td>
-    <td>Should generate workaround for fixed arrays in Structs. See <a href="#array-workaround">Array Workaround</a><br>
-      <b>Default: false</b>
-    </td>
-    <td>
-
-```yaml
-array-workaround: true
-```
-  </td>
-  </tr>
-  <tr>
     <td>comments</td>
     <td>Extract documentation comments for declarations.<br>
     The style and length of the comments recognized can be specified with the following options- <br>
@@ -401,80 +389,6 @@ size-map:
   </tr>
 </tbody>
 </table>
-
-## Array-Workaround
-Fixed size array's in structs aren't currently supported by Dart. However we provide
-a workaround, using which array items can now be accessed using `[]` operator.
-
-Here's a C structure from libclang-
-```c
-typedef struct {
-  unsigned long long data[3];
-} CXFileUniqueID;
-```
-The generated code is -
-```dart
-class CXFileUniqueID extends ffi.Struct {
-  @ffi.Uint64()
-  external int _unique_data_item_0;
-  @ffi.Uint64()
-  external int _unique_data_item_1;
-  @ffi.Uint64()
-  external int _unique_data_item_2;
-
-  /// Helper for array `data`.
-  ArrayHelper_CXFileUniqueID_data_level0 get data =>
-      ArrayHelper_CXFileUniqueID_data_level0(this, [3], 0, 0);
-}
-
-/// Helper for array `data` in struct `CXFileUniqueID`.
-class ArrayHelper_CXFileUniqueID_data_level0 {
-  final CXFileUniqueID _struct;
-  final List<int> dimensions;
-  final int level;
-  final int _absoluteIndex;
-  int get length => dimensions[level];
-  ArrayHelper_CXFileUniqueID_data_level0(
-      this._struct, this.dimensions, this.level, this._absoluteIndex);
-  void _checkBounds(int index) {
-    if (index >= length || index < 0) {
-      throw RangeError(
-          'Dimension $level: index not in range 0..${length} exclusive.');
-    }
-  }
-
-  int operator [](int index) {
-    _checkBounds(index);
-    switch (_absoluteIndex + index) {
-      case 0:
-        return _struct._unique_data_item_0;
-      case 1:
-        return _struct._unique_data_item_1;
-      case 2:
-        return _struct._unique_data_item_2;
-      default:
-        throw Exception('Invalid Array Helper generated.');
-    }
-  }
-
-  void operator []=(int index, int value) {
-    _checkBounds(index);
-    switch (_absoluteIndex + index) {
-      case 0:
-        _struct._unique_data_item_0 = value;
-        break;
-      case 1:
-        _struct._unique_data_item_1 = value;
-        break;
-      case 2:
-        _struct._unique_data_item_2 = value;
-        break;
-      default:
-        throw Exception('Invalid Array Helper generated.');
-    }
-  }
-}
-```
 
 ## Limitations
 1. Multi OS support for types such as long. [Issue #7](https://github.com/dart-lang/ffigen/issues/7)

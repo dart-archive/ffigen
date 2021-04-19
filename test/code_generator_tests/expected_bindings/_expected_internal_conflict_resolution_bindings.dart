@@ -59,57 +59,8 @@ class init_dylib_1 {
 }
 
 class _Test extends ffi.Struct {
-  @ffi.Int8()
-  external int _unique_array_item_0;
-  @ffi.Int8()
-  external int _unique_array_item_1;
-
-  /// Helper for array `array`.
-  ArrayHelper1__Test_array_level0 get array =>
-      ArrayHelper1__Test_array_level0(this, [2], 0, 0);
-}
-
-/// Helper for array `array` in struct `_Test`.
-class ArrayHelper1__Test_array_level0 {
-  final _Test _struct;
-  final List<int> dimensions;
-  final int level;
-  final int _absoluteIndex;
-  int get length => dimensions[level];
-  ArrayHelper1__Test_array_level0(
-      this._struct, this.dimensions, this.level, this._absoluteIndex);
-  void _checkBounds(int index) {
-    if (index >= length || index < 0) {
-      throw RangeError(
-          'Dimension $level: index not in range 0..$length exclusive.');
-    }
-  }
-
-  int operator [](int index) {
-    _checkBounds(index);
-    switch (_absoluteIndex + index) {
-      case 0:
-        return _struct._unique_array_item_0;
-      case 1:
-        return _struct._unique_array_item_1;
-      default:
-        throw Exception('Invalid Array Helper generated.');
-    }
-  }
-
-  void operator []=(int index, int value) {
-    _checkBounds(index);
-    switch (_absoluteIndex + index) {
-      case 0:
-        _struct._unique_array_item_0 = value;
-        break;
-      case 1:
-        _struct._unique_array_item_1 = value;
-        break;
-      default:
-        throw Exception('Invalid Array Helper generated.');
-    }
-  }
+  @ffi.Array.multi([2])
+  external ffi.Array<ffi.Int8> array;
 }
 
 class ArrayHelperPrefixCollisionTest extends ffi.Opaque {}
