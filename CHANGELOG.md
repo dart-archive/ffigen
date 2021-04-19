@@ -1,5 +1,5 @@
-# 2.5.0-beta.2
-- Added support for Inline Arrays in Struct.
+# 3.0.0-beta.0
+- Added support for inline arrays in `Struct`s.
 - Remove config key `array-workaround`.
 
 # 2.5.0-beta.1
