@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 /// A bindings generator for dart.
-///
+
 /// See complete usage at - https://pub.dev/packages/ffigen.
 library ffigen;
 
