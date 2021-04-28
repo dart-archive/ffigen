@@ -4,6 +4,8 @@
 
 Binding generator for [FFI](https://dart.dev/guides/libraries/c-interop) bindings.
 
+> Note: ffigen only supports parsing `C` headers.
+
 ## Example
 
 For some header file _example.h_:
