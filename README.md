@@ -4,7 +4,7 @@
 
 Binding generator for [FFI](https://dart.dev/guides/libraries/c-interop) bindings.
 
-> Note: ffigen and `dart:ffi` only supports `C` at the moment.
+> Note: ffigen and `dart:ffi` only support `C` at the moment.
 
 ## Example
 
