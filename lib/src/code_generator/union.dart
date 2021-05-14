@@ -6,30 +6,30 @@ import 'package:ffigen/src/code_generator/compound.dart';
 
 /// A binding for C Struct.
 ///
-/// For a C structure -
+/// For a C union -
 /// ```c
-/// struct C {
+/// union C {
 ///   int a;
 ///   double b;
-///   int c;
+///   float c;
 /// };
 /// ```
 /// The generated dart code is -
 /// ```dart
-/// class Struct extends ffi.Struct{
+/// class Union extends ffi.Union{
 ///  @ffi.Int32()
 ///  int a;
 ///
 ///  @ffi.Double()
 ///  double b;
 ///
-///  @ffi.Uint8()
-///  int c;
+///  @ffi.Float()
+///  float c;
 ///
 /// }
 /// ```
-class Struc extends Compound {
-  Struc({
+class Union extends Compound {
+  Union({
     String? usr,
     String? originalName,
     required String name,
@@ -45,6 +45,6 @@ class Struc extends Compound {
           isInComplete: isInComplete,
           members: members,
           pack: pack,
-          compoundType: CompoundType.struct,
+          compoundType: CompoundType.union,
         );
 }

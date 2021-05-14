@@ -43,6 +43,10 @@ class Config {
   Declaration get structDecl => _structDecl;
   late Declaration _structDecl;
 
+  /// Declaration config for Structs.
+  Declaration get unionDecl => _unionDecl;
+  late Declaration _unionDecl;
+
   /// Declaration config for Enums.
   Declaration get enumClassDecl => _enumClassDecl;
   late Declaration _enumClassDecl;
@@ -232,6 +236,15 @@ class Config {
         defaultValue: () => Declaration(),
         extractedResult: (dynamic result) {
           _structDecl = result as Declaration;
+        },
+      ),
+      [strings.unions]: Specification<Declaration>(
+        requirement: Requirement.no,
+        validator: declarationConfigValidator,
+        extractor: declarationConfigExtractor,
+        defaultValue: () => Declaration(),
+        extractedResult: (dynamic result) {
+          _unionDecl = result as Declaration;
         },
       ),
       [strings.enums]: Specification<Declaration>(

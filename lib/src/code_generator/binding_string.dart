@@ -18,6 +18,7 @@ class BindingString {
 enum BindingStringType {
   func,
   struc,
+  union,
   constant,
   global,
   enumClass,
