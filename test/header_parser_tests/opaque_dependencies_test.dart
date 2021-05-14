@@ -28,7 +28,7 @@ ${strings.headers}:
 ${strings.structs}:
   ${strings.include}:
     - 'E'
-  ${strings.structDependencies}: ${strings.opaqueStructDependencies}
+  ${strings.dependencyOnly}: ${strings.opaqueCompoundDependencies}
         ''') as yaml.YamlMap),
       );
     });

@@ -658,21 +658,21 @@ bool commentValidator(List<String> name, dynamic value) {
   }
 }
 
-StructDependencies structDependenciesExtractor(dynamic value) {
-  var result = StructDependencies.full;
-  if (value == strings.opaqueStructDependencies) {
-    result = StructDependencies.opaque;
+CompoundDependencies dependencyOnlyExtractor(dynamic value) {
+  var result = CompoundDependencies.full;
+  if (value == strings.opaqueCompoundDependencies) {
+    result = CompoundDependencies.opaque;
   }
   return result;
 }
 
-bool structDependenciesValidator(List<String> name, dynamic value) {
+bool dependencyOnlyValidator(List<String> name, dynamic value) {
   var result = true;
   if (value is! String ||
-      !(value == strings.fullStructDependencies ||
-          value == strings.opaqueStructDependencies)) {
+      !(value == strings.fullCompoundDependencies ||
+          value == strings.opaqueCompoundDependencies)) {
     _logger.severe(
-        "'$name' must be one of the following - {${strings.fullStructDependencies}, ${strings.opaqueStructDependencies}}");
+        "'$name' must be one of the following - {${strings.fullCompoundDependencies}, ${strings.opaqueCompoundDependencies}}");
     result = false;
   }
   return result;

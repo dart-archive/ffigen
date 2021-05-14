@@ -59,10 +59,10 @@ const rename = 'rename';
 const memberRename = 'member-rename';
 const symbolAddress = 'symbol-address';
 
-const structDependencies = 'dependency-only';
-// Values for `structDependencies`.
-const fullStructDependencies = 'full';
-const opaqueStructDependencies = 'opaque';
+const dependencyOnly = 'dependency-only';
+// Values for `compoundDependencies`.
+const fullCompoundDependencies = 'full';
+const opaqueCompoundDependencies = 'opaque';
 
 const structPack = 'pack';
 const Map<Object, int?> packingValuesMap = {

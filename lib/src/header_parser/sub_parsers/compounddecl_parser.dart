@@ -158,11 +158,17 @@ Compound? parseCompoundDeclaration(
 
   if (isSeenDecl(declUsr)) {
     _stack.top.compound = getSeenDecl(declUsr);
-    //TODO: union dependencies.
+
+    // Skip dependencies if already seen OR user has specified `dependency-only`
+    // as opaque AND this is a pointer reference AND the declaration was not
+    // included according to config (ignoreFilter).
     final skipDependencies = _stack.top.compound!.parsedDependencies ||
-        (config.structDependencies == StructDependencies.opaque &&
-            pointerReference &&
-            ignoreFilter);
+        (pointerReference &&
+            ignoreFilter &&
+            ((compoundType == CompoundType.struct &&
+                    config.structDependencies == CompoundDependencies.opaque) ||
+                (compoundType == CompoundType.union &&
+                    config.unionDependencies == CompoundDependencies.opaque)));
 
     if (!skipDependencies) {
       // Prevents infinite recursion if struct has a pointer to itself.

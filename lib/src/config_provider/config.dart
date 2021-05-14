@@ -81,8 +81,12 @@ class Config {
   late CommentType _commentType;
 
   /// Whether structs that are dependencies should be included.
-  StructDependencies get structDependencies => _structDependencies;
-  late StructDependencies _structDependencies;
+  CompoundDependencies get structDependencies => _structDependencies;
+  late CompoundDependencies _structDependencies;
+
+  /// Whether unions that are dependencies should be included.
+  CompoundDependencies get unionDependencies => _unionDependencies;
+  late CompoundDependencies _unionDependencies;
 
   /// Holds config for how struct packing should be overriden.
   StructPackingOverride get structPackingOverride => _structPackingOverride;
@@ -325,14 +329,23 @@ class Config {
         extractedResult: (dynamic result) =>
             _commentType = result as CommentType,
       ),
-      [strings.structs, strings.structDependencies]:
-          Specification<StructDependencies>(
+      [strings.structs, strings.dependencyOnly]:
+          Specification<CompoundDependencies>(
         requirement: Requirement.no,
-        validator: structDependenciesValidator,
-        extractor: structDependenciesExtractor,
-        defaultValue: () => StructDependencies.full,
+        validator: dependencyOnlyValidator,
+        extractor: dependencyOnlyExtractor,
+        defaultValue: () => CompoundDependencies.full,
         extractedResult: (dynamic result) =>
-            _structDependencies = result as StructDependencies,
+            _structDependencies = result as CompoundDependencies,
+      ),
+      [strings.unions, strings.dependencyOnly]:
+          Specification<CompoundDependencies>(
+        requirement: Requirement.no,
+        validator: dependencyOnlyValidator,
+        extractor: dependencyOnlyExtractor,
+        defaultValue: () => CompoundDependencies.full,
+        extractedResult: (dynamic result) =>
+            _unionDependencies = result as CompoundDependencies,
       ),
       [strings.structs, strings.structPack]:
           Specification<StructPackingOverride>(
