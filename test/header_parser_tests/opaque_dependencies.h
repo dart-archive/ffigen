@@ -34,3 +34,36 @@ struct E
     struct C *c;
     struct D d;
 };
+
+// Opaque.
+union UA
+{
+    int a;
+};
+
+// Opaque.
+union UB
+{
+    int a;
+};
+
+union UB *func2(union UA *a);
+
+// Opaque.
+union UC
+{
+    int a;
+};
+
+// Full (excluded, but used by value).
+union UD
+{
+    int a;
+};
+
+// Full (included)
+union UE
+{
+    union UC *c;
+    union UD d;
+};

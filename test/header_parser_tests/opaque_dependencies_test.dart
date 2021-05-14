@@ -29,6 +29,10 @@ ${strings.structs}:
   ${strings.include}:
     - 'E'
   ${strings.dependencyOnly}: ${strings.opaqueCompoundDependencies}
+${strings.unions}:
+  ${strings.include}:
+    - 'UE'
+  ${strings.dependencyOnly}: ${strings.opaqueCompoundDependencies}
         ''') as yaml.YamlMap),
       );
     });
