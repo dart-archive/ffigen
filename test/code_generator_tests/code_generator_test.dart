@@ -404,6 +404,49 @@ void main() {
     );
     _matchLib(library, 'packed_structs');
   });
+  test('Union Bindings', () {
+    final struct1 = Struc(name: 'Struct1', members: [
+      Member(name: 'a', type: Type.nativeType(SupportedNativeType.Int8))
+    ]);
+    final union1 = Union(name: 'Union1', members: [
+      Member(name: 'a', type: Type.nativeType(SupportedNativeType.Int8))
+    ]);
+    final library = Library(
+      name: 'Bindings',
+      bindings: [
+        struct1,
+        union1,
+        Union(name: 'EmptyUnion'),
+        Union(name: 'Primitives', members: [
+          Member(name: 'a', type: Type.nativeType(SupportedNativeType.Int8)),
+          Member(name: 'b', type: Type.nativeType(SupportedNativeType.Int32)),
+          Member(name: 'c', type: Type.nativeType(SupportedNativeType.Float)),
+          Member(name: 'd', type: Type.nativeType(SupportedNativeType.Double)),
+        ]),
+        Union(name: 'PrimitivesWithPointers', members: [
+          Member(name: 'a', type: Type.nativeType(SupportedNativeType.Int8)),
+          Member(name: 'b', type: Type.nativeType(SupportedNativeType.Float)),
+          Member(
+              name: 'c',
+              type: Type.pointer(Type.nativeType(SupportedNativeType.Double))),
+          Member(name: 'd', type: Type.pointer(Type.union(union1))),
+          Member(name: 'd', type: Type.pointer(Type.struct(struct1))),
+        ]),
+        Union(name: 'WithArray', members: [
+          Member(
+              name: 'a',
+              type: Type.constantArray(
+                  10, Type.nativeType(SupportedNativeType.Int8))),
+          Member(name: 'b', type: Type.constantArray(10, Type.union(union1))),
+          Member(name: 'b', type: Type.constantArray(10, Type.struct(struct1))),
+          Member(
+              name: 'c',
+              type: Type.constantArray(10, Type.pointer(Type.union(union1)))),
+        ]),
+      ],
+    );
+    _matchLib(library, 'unions');
+  });
 }
 
 /// Utility to match expected bindings to the generated bindings.
