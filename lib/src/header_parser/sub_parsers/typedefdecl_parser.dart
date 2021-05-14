@@ -10,8 +10,8 @@ import 'package:logging/logging.dart';
 import '../clang_bindings/clang_bindings.dart' as clang_types;
 import '../data.dart';
 import '../sub_parsers/enumdecl_parser.dart';
-import '../sub_parsers/structdecl_parser.dart';
 import '../utils.dart';
+import 'compounddecl_parser.dart';
 
 final _logger = Logger('ffigen.header_parser.typedefdecl_parser');
 
@@ -82,8 +82,25 @@ int _typedefdeclarationCursorVisitor(clang_types.CXCursor cursor,
           _stack.top.binding = bindingsIndex.getSeenStruct(cursor.usr());
         } else {
           // This will update the name of struct if already seen.
-          _stack.top.binding =
-              parseStructDeclaration(cursor, name: _stack.top.typedefName);
+          _stack.top.binding = parseCompoundDeclaration(
+            cursor,
+            CompoundType.struct,
+            name: _stack.top.typedefName,
+          );
+        }
+        break;
+      case clang_types.CXCursorKind.CXCursor_UnionDecl:
+        if (_stack.top.typedefToPointer &&
+            bindingsIndex.isSeenUnion(cursor.usr())) {
+          // Skip a typedef pointer if struct is seen.
+          _stack.top.binding = bindingsIndex.getSeenUnion(cursor.usr());
+        } else {
+          // This will update the name of struct if already seen.
+          _stack.top.binding = parseCompoundDeclaration(
+            cursor,
+            CompoundType.union,
+            name: _stack.top.typedefName,
+          );
         }
         break;
       case clang_types.CXCursorKind.CXCursor_EnumDecl:

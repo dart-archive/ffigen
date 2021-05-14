@@ -5,8 +5,8 @@
 import 'package:ffigen/ffigen.dart';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/strings.dart' as strings;
-import 'package:yaml/yaml.dart' as yaml;
 import 'package:test/test.dart';
+import 'package:yaml/yaml.dart' as yaml;
 
 import '../test_utils.dart';
 

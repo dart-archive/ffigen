@@ -45,7 +45,7 @@ Func? parseFunctionDeclaration(clang_types.CXCursor cursor) {
           .func; // Returning null so that [addToBindings] function excludes this.
     }
 
-    if (rt.isIncompleteStruct || _stack.top.incompleteStructParameter) {
+    if (rt.isIncompleteCompound || _stack.top.incompleteStructParameter) {
       _logger.fine(
           '---- Removed Function, reason: Incomplete struct pass/return by value: ${cursor.completeStringRepr()}');
       _logger.warning(
@@ -101,7 +101,7 @@ List<Parameter> _getParameters(clang_types.CXCursor cursor, String funcName) {
     _logger.finer('===== parameter: ${paramCursor.completeStringRepr()}');
 
     final pt = _getParameterType(paramCursor);
-    if (pt.isIncompleteStruct) {
+    if (pt.isIncompleteCompound) {
       _stack.top.incompleteStructParameter = true;
     } else if (pt.getBaseType().broadType == BroadType.Unimplemented) {
       _logger

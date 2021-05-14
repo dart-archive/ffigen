@@ -12,9 +12,9 @@ import 'package:logging/logging.dart';
 import 'clang_bindings/clang_bindings.dart' as clang_types;
 import 'data.dart';
 import 'includer.dart';
+import 'sub_parsers/compounddecl_parser.dart';
 import 'sub_parsers/enumdecl_parser.dart';
 import 'sub_parsers/functiondecl_parser.dart';
-import 'sub_parsers/structdecl_parser.dart';
 import 'sub_parsers/typedefdecl_parser.dart';
 import 'utils.dart';
 
@@ -51,7 +51,10 @@ int _rootCursorVisitor(clang_types.CXCursor cursor, clang_types.CXCursor parent,
           addToBindings(parseTypedefDeclaration(cursor));
           break;
         case clang_types.CXCursorKind.CXCursor_StructDecl:
-          addToBindings(parseStructDeclaration(cursor));
+          addToBindings(parseCompoundDeclaration(cursor, CompoundType.struct));
+          break;
+        case clang_types.CXCursorKind.CXCursor_UnionDecl:
+          addToBindings(parseCompoundDeclaration(cursor, CompoundType.union));
           break;
         case clang_types.CXCursorKind.CXCursor_EnumDecl:
           addToBindings(parseEnumDeclaration(cursor));

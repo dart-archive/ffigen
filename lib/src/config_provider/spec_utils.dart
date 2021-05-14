@@ -9,8 +9,8 @@ import 'package:file/local.dart';
 import 'package:glob/glob.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
-import 'package:yaml/yaml.dart';
 import 'package:quiver/pattern.dart' as quiver;
+import 'package:yaml/yaml.dart';
 
 import '../strings.dart' as strings;
 import 'config_types.dart';

@@ -9,7 +9,7 @@ import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
 import '../data.dart';
-import '../sub_parsers/structdecl_parser.dart';
+import '../sub_parsers/compounddecl_parser.dart';
 import '../translation_unit_parser.dart';
 import '../type_extractor/cxtypekindmap.dart';
 import '../utils.dart';
@@ -36,8 +36,9 @@ Type getCodeGenType(
 
       // Replace Pointer<_Dart_Handle> with Handle.
       if (config.useDartHandle &&
-          s.broadType == BroadType.Struct &&
-          s.struc!.usr == strings.dartHandleUsr) {
+          s.broadType == BroadType.Compound &&
+          s.compound!.compoundType == CompoundType.struct &&
+          s.compound!.usr == strings.dartHandleUsr) {
         return Type.handle();
       }
       return Type.pointer(s);
@@ -115,48 +116,69 @@ Type _extractfromRecord(
   final cursor = clang.clang_getTypeDeclaration(cxtype);
   _logger.fine('${_padding}_extractfromRecord: ${cursor.completeStringRepr()}');
 
-  switch (clang.clang_getCursorKind(cursor)) {
-    case clang_types.CXCursorKind.CXCursor_StructDecl:
-      final structUsr = cursor.usr();
+  final cursorKind = clang.clang_getCursorKind(cursor);
+  if (cursorKind == clang_types.CXCursorKind.CXCursor_StructDecl ||
+      cursorKind == clang_types.CXCursorKind.CXCursor_UnionDecl) {
+    final declUsr = cursor.usr();
 
-      // Name of typedef (parentName) is used if available.
-      final structName = parentName ?? cursor.spelling();
+    // Name of typedef (parentName) is used if available.
+    final declName = parentName ?? cursor.spelling();
 
-      // Also add a struct binding, if its unseen.
-      // TODO(23): Check if we should auto add struct.
-      if (bindingsIndex.isSeenStruct(structUsr)) {
-        type = Type.struct(bindingsIndex.getSeenStruct(structUsr)!);
+    // Set includer functions according to compoundType.
+    final bool Function(String) isSeenDecl;
+    final Compound? Function(String) getSeenDecl;
+    final CompoundType compoundType;
 
-        // This will parse the dependencies if needed.
-        parseStructDeclaration(
-          cursor,
-          name: structName,
-          ignoreFilter: true,
-          pointerReference: pointerReference,
-          updateName: false,
-        );
-      } else {
-        final struc = parseStructDeclaration(
-          cursor,
-          name: structName,
-          ignoreFilter: true,
-          pointerReference: pointerReference,
-        );
-        type = Type.struct(struc!);
+    switch (cursorKind) {
+      case clang_types.CXCursorKind.CXCursor_StructDecl:
+        isSeenDecl = bindingsIndex.isSeenStruct;
+        getSeenDecl = bindingsIndex.getSeenStruct;
+        compoundType = CompoundType.struct;
+        break;
+      case clang_types.CXCursorKind.CXCursor_UnionDecl:
+        isSeenDecl = bindingsIndex.isSeenUnion;
+        getSeenDecl = bindingsIndex.getSeenUnion;
+        compoundType = CompoundType.union;
+        break;
+      default:
+        throw Exception('Unhandled compound type cursorkind.');
+    }
 
-        // Add to bindings if it's not Dart_Handle and is unseen.
-        if (!(config.useDartHandle && structUsr == strings.dartHandleUsr)) {
-          addToBindings(struc);
-        }
+    // Also add a struct binding, if its unseen.
+    // TODO(23): Check if we should auto add compound declarations.
+    if (isSeenDecl(declUsr)) {
+      type = Type.compound(getSeenDecl(declUsr)!);
+
+      // This will parse the dependencies if needed.
+      parseCompoundDeclaration(
+        cursor,
+        compoundType,
+        name: declName,
+        ignoreFilter: true,
+        pointerReference: pointerReference,
+        updateName: false,
+      );
+    } else {
+      final struc = parseCompoundDeclaration(
+        cursor,
+        compoundType,
+        name: declName,
+        ignoreFilter: true,
+        pointerReference: pointerReference,
+      );
+      type = Type.compound(struc!);
+
+      // Add to bindings if it's not Dart_Handle and is unseen.
+      if (!(config.useDartHandle && declUsr == strings.dartHandleUsr)) {
+        addToBindings(struc);
       }
-
-      break;
-    default:
-      _logger.fine(
-          'typedeclarationCursorVisitor: _extractfromRecord: Not Implemented, ${cursor.completeStringRepr()}');
-      return Type.unimplemented(
-          'Type: ${cxtype.kindSpelling()} not implemented');
+    }
+  } else {
+    _logger.fine(
+        'typedeclarationCursorVisitor: _extractfromRecord: Not Implemented, ${cursor.completeStringRepr()}');
+    return Type.unimplemented('Type: ${cxtype.kindSpelling()} not implemented');
   }
+
   return type;
 }
 
@@ -173,7 +195,7 @@ Type _extractFromFunctionProto(clang_types.CXType cxtype, String? parentName) {
     final t = clang.clang_getArgType(cxtype, i);
     final pt = t.toCodeGenType();
 
-    if (pt.isIncompleteStruct) {
+    if (pt.isIncompleteCompound) {
       return Type.unimplemented(
           'Incomplete Struct by value in function parameter.');
     } else if (pt.getBaseType().broadType == BroadType.Unimplemented) {

@@ -17,6 +17,16 @@ bool shouldIncludeStruct(String usr, String name) {
   }
 }
 
+bool shouldIncludeUnion(String usr, String name) {
+  if (bindingsIndex.isSeenStruct(usr) || name == '') {
+    return false;
+  } else if (config.unionDecl.shouldInclude(name)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 bool shouldIncludeFunc(String usr, String name) {
   if (bindingsIndex.isSeenFunc(usr) || name == '') {
     return false;

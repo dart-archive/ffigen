@@ -2,7 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'struc.dart';
+import 'package:ffigen/src/code_generator.dart';
+
+import 'compound.dart';
 import 'typedef.dart';
 import 'writer.dart';
 
@@ -34,7 +36,7 @@ enum BroadType {
   Boolean,
   NativeType,
   Pointer,
-  Struct,
+  Compound,
   NativeFunction,
 
   /// Represents a Dart_Handle.
@@ -44,7 +46,7 @@ enum BroadType {
   ConstantArray,
   IncompleteArray,
 
-  /// Used as a marker, so that functions/structs having these can exclude them.
+  /// Used as a marker, so that declarations having these can exclude them.
   Unimplemented,
 }
 
@@ -66,8 +68,8 @@ class Type {
     SupportedNativeType.IntPtr: _SubType(c: 'IntPtr', dart: 'int'),
   };
 
-  /// Reference to the [Struc] binding this type refers to.
-  Struc? struc;
+  /// Reference to the [Compound] binding this type refers to.
+  Compound? compound;
 
   /// Reference to the [Typedef] this type refers to.
   Typedef? nativeFunc;
@@ -90,7 +92,7 @@ class Type {
   Type._({
     required this.broadType,
     this.child,
-    this.struc,
+    this.compound,
     this.nativeType,
     this.nativeFunc,
     this.length,
@@ -100,8 +102,14 @@ class Type {
   factory Type.pointer(Type child) {
     return Type._(broadType: BroadType.Pointer, child: child);
   }
+  factory Type.compound(Compound compound) {
+    return Type._(broadType: BroadType.Compound, compound: compound);
+  }
   factory Type.struct(Struc struc) {
-    return Type._(broadType: BroadType.Struct, struc: struc);
+    return Type._(broadType: BroadType.Compound, compound: struc);
+  }
+  factory Type.union(Union union) {
+    return Type._(broadType: BroadType.Compound, compound: union);
   }
   factory Type.nativeFunc(Typedef nativeFunc) {
     return Type._(broadType: BroadType.NativeFunction, nativeFunc: nativeFunc);
@@ -162,11 +170,13 @@ class Type {
   bool get isPrimitive =>
       (broadType == BroadType.NativeType || broadType == BroadType.Boolean);
 
-  /// Returns true if the type is a [Struc] and is incomplete.
-  bool get isIncompleteStruct =>
-      (broadType == BroadType.Struct && struc != null && struc!.isInComplete) ||
+  /// Returns true if the type is a [Compound] and is incomplete.
+  bool get isIncompleteCompound =>
+      (broadType == BroadType.Compound &&
+          compound != null &&
+          compound!.isInComplete) ||
       (broadType == BroadType.ConstantArray &&
-          getBaseArrayType().isIncompleteStruct);
+          getBaseArrayType().isIncompleteCompound);
 
   String getCType(Writer w) {
     switch (broadType) {
@@ -174,8 +184,8 @@ class Type {
         return '${w.ffiLibraryPrefix}.${_primitives[nativeType!]!.c}';
       case BroadType.Pointer:
         return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
-      case BroadType.Struct:
-        return '${struc!.name}';
+      case BroadType.Compound:
+        return '${compound!.name}';
       case BroadType.NativeFunction:
         return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc!.name}>';
       case BroadType
@@ -199,8 +209,8 @@ class Type {
         return _primitives[nativeType!]!.dart;
       case BroadType.Pointer:
         return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
-      case BroadType.Struct:
-        return '${struc!.name}';
+      case BroadType.Compound:
+        return '${compound!.name}';
       case BroadType.NativeFunction:
         return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc!.name}>';
       case BroadType

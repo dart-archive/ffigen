@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/code_generator/typedef.dart';
 
 import 'binding.dart';
@@ -13,7 +14,7 @@ import 'writer.dart';
 enum CompoundType { struct, union }
 
 /// A binding for Compound type - Struct/Union.
-class Compound extends NoLookUpBinding {
+abstract class Compound extends NoLookUpBinding {
   /// Marker for if a struct definition is complete.
   ///
   /// A function can be safely pass this struct by value if it's complete.
@@ -38,7 +39,7 @@ class Compound extends NoLookUpBinding {
     String? originalName,
     required String name,
     required this.compoundType,
-    required this.isInComplete,
+    this.isInComplete = false,
     this.pack,
     String? dartDoc,
     List<Member>? members,
@@ -49,6 +50,40 @@ class Compound extends NoLookUpBinding {
           name: name,
           dartDoc: dartDoc,
         );
+
+  factory Compound.fromType({
+    required CompoundType type,
+    String? usr,
+    String? originalName,
+    required String name,
+    bool isInComplete = false,
+    int? pack,
+    String? dartDoc,
+    List<Member>? members,
+  }) {
+    switch (type) {
+      case CompoundType.struct:
+        return Struc(
+          usr: usr,
+          originalName: originalName,
+          name: name,
+          isInComplete: isInComplete,
+          pack: pack,
+          dartDoc: dartDoc,
+          members: members,
+        );
+      case CompoundType.union:
+        return Union(
+          usr: usr,
+          originalName: originalName,
+          name: name,
+          isInComplete: isInComplete,
+          pack: pack,
+          dartDoc: dartDoc,
+          members: members,
+        );
+    }
+  }
 
   List<int> _getArrayDimensionLengths(Type type) {
     final array = <int>[];
