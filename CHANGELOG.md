@@ -1,5 +1,5 @@
 # 3.0.0
-- Release for dart sdk `>=2.13` (Support for packed structs and inline arrays)
+- Release for dart sdk `>=2.13` (Support for packed structs and inline arrays).
 
 # 3.0.0-beta.0
 - Added support for inline arrays in `Struct`s.
