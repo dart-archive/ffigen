@@ -4,9 +4,8 @@
 
 import 'package:ffigen/src/code_generator/compound.dart';
 
-/// A binding for C Struct.
+/// A binding for a C union -
 ///
-/// For a C union -
 /// ```c
 /// union C {
 ///   int a;

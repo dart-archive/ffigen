@@ -83,7 +83,7 @@ Compound? parseCompoundDeclaration(
   bool ignoreFilter = false,
 
   /// To track if the declaration was used by reference(i.e T*). (Used to only
-  /// generate these as opaque if `struct-dependencies` was set to opaque).
+  /// generate these as opaque if `dependency-only` was set to opaque).
   bool pointerReference = false,
 
   /// If the compound name should be updated, if it was already seen.

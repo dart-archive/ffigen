@@ -43,7 +43,7 @@ class Config {
   Declaration get structDecl => _structDecl;
   late Declaration _structDecl;
 
-  /// Declaration config for Structs.
+  /// Declaration config for Unions.
   Declaration get unionDecl => _unionDecl;
   late Declaration _unionDecl;
 
