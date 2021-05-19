@@ -52,7 +52,7 @@ class _ParsedCompound {
   /// Returns pack value of a struct depending on config, returns null for no
   /// packing.
   int? get packValue {
-    if (_isPacked) {
+    if (compound!.isStruct && _isPacked) {
       if (strings.packingValuesMap.containsKey(allignment)) {
         return allignment;
       } else {
