@@ -58,7 +58,6 @@ void main(List<String> arguments) {
   final options = getPlatformOptions()!;
 
   // Run clang compiler to generate the dynamic library.
-  // ignore: omit_local_variable_types
   final processResult = runClangProcess(options);
   printSuccess(processResult, options);
 }
