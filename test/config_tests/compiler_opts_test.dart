@@ -6,8 +6,8 @@ import 'package:ffigen/ffigen.dart';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/config_provider/spec_utils.dart';
 import 'package:ffigen/src/strings.dart' as strings;
-import 'package:yaml/yaml.dart' as yaml;
 import 'package:test/test.dart';
+import 'package:yaml/yaml.dart' as yaml;
 
 late Library actual, expected;
 
