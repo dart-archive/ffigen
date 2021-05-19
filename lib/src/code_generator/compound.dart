@@ -1,4 +1,4 @@
-// Copyright (c) 2020, the Dart project authors. Please see the AUTHORS file
+// Copyright (c) 2021, the Dart project authors. Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
@@ -25,6 +25,8 @@ abstract class Compound extends NoLookUpBinding {
   bool get isOpaque => members.isEmpty;
 
   /// Value for `@Packed(X)` annotation. Can be null(no packing), 1, 2, 4, 8, 16.
+  ///
+  /// Only supported for [CompoundType.struct].
   int? pack;
 
   /// Marker for checking if the dependencies are parsed.

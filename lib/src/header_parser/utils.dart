@@ -326,8 +326,8 @@ class Macro {
 /// Tracks if a binding is 'seen' or not.
 class BindingsIndex {
   // Tracks if bindings are already seen, Map key is USR obtained from libclang.
-  final Map<String, Compound> _structs = {};
-  final Map<String, Compound> _unions = {};
+  final Map<String, Struc> _structs = {};
+  final Map<String, Union> _unions = {};
   final Map<String, Func> _functions = {};
   final Map<String, EnumClass> _enumClass = {};
   final Map<String, Constant> _unnamedEnumConstants = {};
@@ -341,10 +341,10 @@ class BindingsIndex {
   }
 
   void addStructToSeen(String usr, Compound struc) {
-    _structs[usr] = struc;
+    _structs[usr] = struc as Struc;
   }
 
-  Compound? getSeenStruct(String usr) {
+  Struc? getSeenStruct(String usr) {
     return _structs[usr];
   }
 
@@ -353,10 +353,10 @@ class BindingsIndex {
   }
 
   void addUnionToSeen(String usr, Compound union) {
-    _unions[usr] = union;
+    _unions[usr] = union as Union;
   }
 
-  Compound? getSeenUnion(String usr) {
+  Union? getSeenUnion(String usr) {
     return _unions[usr];
   }
 
