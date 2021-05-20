@@ -1,3 +1,6 @@
+# 3.1.0-dev.0
+- Added support for generating unions.
+
 # 3.0.0
 - Release for dart sdk `>=2.13` (Support for packed structs and inline arrays).
 

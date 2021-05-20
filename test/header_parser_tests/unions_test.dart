@@ -14,25 +14,17 @@ import '../test_utils.dart';
 
 late Library actual;
 void main() {
-  group('opaque_dependencies_test', () {
+  group('packed_structs_test', () {
     setUpAll(() {
       logWarnings(Level.SEVERE);
       actual = parser.parse(
         Config.fromYaml(yaml.loadYaml('''
 ${strings.name}: 'NativeLibrary'
-${strings.description}: 'Opaque Dependencies Test'
+${strings.description}: 'Unions Test'
 ${strings.output}: 'unused'
 ${strings.headers}:
   ${strings.entryPoints}:
-    - 'test/header_parser_tests/opaque_dependencies.h'
-${strings.structs}:
-  ${strings.include}:
-    - 'E'
-  ${strings.dependencyOnly}: ${strings.opaqueCompoundDependencies}
-${strings.unions}:
-  ${strings.include}:
-    - 'UE'
-  ${strings.dependencyOnly}: ${strings.opaqueCompoundDependencies}
+    - 'test/header_parser_tests/unions.h'
         ''') as yaml.YamlMap),
       );
     });
@@ -41,12 +33,12 @@ ${strings.unions}:
       matchLibraryWithExpected(actual, [
         'test',
         'debug_generated',
-        'opaque_dependencies_test_output.dart'
+        'unions_test_output.dart'
       ], [
         'test',
         'header_parser_tests',
         'expected_bindings',
-        '_expected_opaque_dependencies_bindings.dart'
+        '_expected_unions_bindings.dart'
       ]);
     });
   });

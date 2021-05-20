@@ -29,7 +29,7 @@ class CommentType {
 enum CommentStyle { doxygen, any }
 enum CommentLength { none, brief, full }
 
-enum StructDependencies { full, opaque }
+enum CompoundDependencies { full, opaque }
 
 /// Holds config for how Structs Packing will be overriden.
 class StructPackingOverride {

@@ -181,7 +181,7 @@ compiler-opts-automatic:
   </td>
   </tr>
   <tr>
-    <td>functions<br><br>structs<br><br>enums<br><br>unnamed-enums<br><br>macros<br><br>globals</td>
+    <td>functions<br><br>structs<br><br>unions<br><br>enums<br><br>unnamed-enums<br><br>macros<br><br>globals</td>
     <td>Filters for declarations.<br><b>Default: all are included.</b><br><br>
     Options -<br>
     - Include/Exclude declarations.<br>
@@ -273,8 +273,10 @@ comments:
   </td>
   </tr>
   <tr>
-    <td>structs -> dependency-only</td>
-    <td>If `opaque`, generates empty `Opaque` structs if structs
+    <td>structs -> dependency-only<br><br>
+        unions -> dependency-only
+    </td>
+    <td>If `opaque`, generates empty `Opaque` structs/unions if they
 were not included in config (but were added since they are a dependency) and
 only passed by reference(pointer).<br>
     <i>Options - full(default) | opaque</i><br>
@@ -283,6 +285,8 @@ only passed by reference(pointer).<br>
 
 ```yaml
 structs:
+  dependency-only: opaque
+unions:
   dependency-only: opaque
 ```
   </td>
@@ -476,15 +480,17 @@ unnamed-enums:
     'CXType_(.*)': '$1'
 ```
 
-### Why are some struct declarations generated even after excluded them in config?
+### Why are some struct/union declarations generated even after excluded them in config?
 
-This happens when an excluded struct is a dependency to some included declaration.
+This happens when an excluded struct/union is a dependency to some included declaration.
 (A dependency means a struct is being passed/returned by a function or is member of another struct in some way)
 
 Note: If you supply `structs` -> `dependency-only` as `opaque` ffigen will generate
 these struct dependencies as `Opaque` if they were only passed by reference(pointer).
 ```yaml
 structs:
+  dependency-only: opaque
+unions:
   dependency-only: opaque
 ```
 
