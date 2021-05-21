@@ -349,6 +349,14 @@ String llvmPathExtractor(dynamic value) {
       _logger.fine('Found dynamic library at: $dylibPath');
       return dylibPath;
     }
+    // Check if user has specified complete path to dylib.
+    final completeDylibPath = path;
+    if (p.extension(completeDylibPath).isNotEmpty &&
+        File(completeDylibPath).existsSync()) {
+      _logger.info(
+          'Using complete dylib path: $completeDylibPath from llvm-path.');
+      return completeDylibPath;
+    }
   }
   _logger.fine(
       "Couldn't find dynamic library under paths specified by ${strings.llvmPath}.");
