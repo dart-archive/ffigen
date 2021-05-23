@@ -55,4 +55,11 @@ class Constant extends NoLookUpBinding {
     return BindingString(
         type: BindingStringType.constant, string: s.toString());
   }
+
+  @override
+  void getDependencies(Set<Binding> dependencies) {
+    if (dependencies.contains(this)) return;
+
+    dependencies.add(this);
+  }
 }

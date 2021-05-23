@@ -167,6 +167,14 @@ abstract class Compound extends NoLookUpBinding {
         type: isStruct ? BindingStringType.struc : BindingStringType.union,
         string: s.toString());
   }
+
+  @override
+  void getDependencies(Set<Binding> dependencies) {
+    if (dependencies.contains(this)) return;
+
+    dependencies.add(this);
+    members.forEach((m) => m.type.getDependencies(dependencies));
+  }
 }
 
 class Member {

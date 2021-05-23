@@ -90,4 +90,12 @@ class Global extends LookUpBinding {
 
     return BindingString(type: BindingStringType.global, string: s.toString());
   }
+
+  @override
+  void getDependencies(Set<Binding> dependencies) {
+    if (dependencies.contains(this)) return;
+
+    dependencies.add(this);
+    type.getDependencies(dependencies);
+  }
 }

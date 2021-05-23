@@ -31,6 +31,9 @@ abstract class Binding {
   /// Return typedef dependencies.
   List<Typedef> getTypedefDependencies(Writer w) => const [];
 
+  /// Get all dependencies, including itself and save them in [dependencies].
+  void getDependencies(Set<Binding> dependencies);
+
   /// Converts a Binding to its actual string representation.
   ///
   /// Note: This does not print the typedef dependencies.

@@ -168,6 +168,15 @@ class Func extends LookUpBinding {
     }
     return BindingString(type: BindingStringType.func, string: s.toString());
   }
+
+  @override
+  void getDependencies(Set<Binding> dependencies) {
+    if (dependencies.contains(this)) return;
+
+    dependencies.add(this);
+    returnType.getDependencies(dependencies);
+    parameters.forEach((p) => p.type.getDependencies(dependencies));
+  }
 }
 
 /// Represents a Parameter, used in [Func] and [Typedef].

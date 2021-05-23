@@ -143,6 +143,16 @@ class Type {
     return Type._(broadType: BroadType.Handle);
   }
 
+  /// Get all dependencies of this type and save them in [dependencies].
+  void getDependencies(Set<Binding> dependencies) {
+    if (compound != null && !dependencies.contains(compound)) {
+      compound?.getDependencies(dependencies);
+    }
+    if (child != null && !dependencies.contains(child)) {
+      child?.getDependencies(dependencies);
+    }
+  }
+
   /// Get base type for any type.
   ///
   /// E.g int** has base [Type] of int.
