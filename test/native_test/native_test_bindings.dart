@@ -29,9 +29,10 @@ class NativeLibrary {
   }
 
   late final _Function1Bool_ptr =
-      _lookup<ffi.NativeFunction<_c_Function1Bool>>('Function1Bool');
-  late final _dart_Function1Bool _Function1Bool =
-      _Function1Bool_ptr.asFunction<_dart_Function1Bool>();
+      _lookup<ffi.NativeFunction<ffi.Uint8 Function(ffi.Uint8)>>(
+          'Function1Bool');
+  late final _Function1Bool =
+      _Function1Bool_ptr.asFunction<int Function(int)>();
 
   int Function1Uint8(
     int x,
@@ -42,9 +43,10 @@ class NativeLibrary {
   }
 
   late final _Function1Uint8_ptr =
-      _lookup<ffi.NativeFunction<_c_Function1Uint8>>('Function1Uint8');
-  late final _dart_Function1Uint8 _Function1Uint8 =
-      _Function1Uint8_ptr.asFunction<_dart_Function1Uint8>();
+      _lookup<ffi.NativeFunction<ffi.Uint8 Function(ffi.Uint8)>>(
+          'Function1Uint8');
+  late final _Function1Uint8 =
+      _Function1Uint8_ptr.asFunction<int Function(int)>();
 
   int Function1Uint16(
     int x,
@@ -55,9 +57,10 @@ class NativeLibrary {
   }
 
   late final _Function1Uint16_ptr =
-      _lookup<ffi.NativeFunction<_c_Function1Uint16>>('Function1Uint16');
-  late final _dart_Function1Uint16 _Function1Uint16 =
-      _Function1Uint16_ptr.asFunction<_dart_Function1Uint16>();
+      _lookup<ffi.NativeFunction<ffi.Uint16 Function(ffi.Uint16)>>(
+          'Function1Uint16');
+  late final _Function1Uint16 =
+      _Function1Uint16_ptr.asFunction<int Function(int)>();
 
   int Function1Uint32(
     int x,
@@ -68,9 +71,10 @@ class NativeLibrary {
   }
 
   late final _Function1Uint32_ptr =
-      _lookup<ffi.NativeFunction<_c_Function1Uint32>>('Function1Uint32');
-  late final _dart_Function1Uint32 _Function1Uint32 =
-      _Function1Uint32_ptr.asFunction<_dart_Function1Uint32>();
+      _lookup<ffi.NativeFunction<ffi.Uint32 Function(ffi.Uint32)>>(
+          'Function1Uint32');
+  late final _Function1Uint32 =
+      _Function1Uint32_ptr.asFunction<int Function(int)>();
 
   int Function1Uint64(
     int x,
@@ -81,9 +85,10 @@ class NativeLibrary {
   }
 
   late final _Function1Uint64_ptr =
-      _lookup<ffi.NativeFunction<_c_Function1Uint64>>('Function1Uint64');
-  late final _dart_Function1Uint64 _Function1Uint64 =
-      _Function1Uint64_ptr.asFunction<_dart_Function1Uint64>();
+      _lookup<ffi.NativeFunction<ffi.Uint64 Function(ffi.Uint64)>>(
+          'Function1Uint64');
+  late final _Function1Uint64 =
+      _Function1Uint64_ptr.asFunction<int Function(int)>();
 
   int Function1Int8(
     int x,
@@ -94,9 +99,9 @@ class NativeLibrary {
   }
 
   late final _Function1Int8_ptr =
-      _lookup<ffi.NativeFunction<_c_Function1Int8>>('Function1Int8');
-  late final _dart_Function1Int8 _Function1Int8 =
-      _Function1Int8_ptr.asFunction<_dart_Function1Int8>();
+      _lookup<ffi.NativeFunction<ffi.Int8 Function(ffi.Int8)>>('Function1Int8');
+  late final _Function1Int8 =
+      _Function1Int8_ptr.asFunction<int Function(int)>();
 
   int Function1Int16(
     int x,
@@ -107,9 +112,10 @@ class NativeLibrary {
   }
 
   late final _Function1Int16_ptr =
-      _lookup<ffi.NativeFunction<_c_Function1Int16>>('Function1Int16');
-  late final _dart_Function1Int16 _Function1Int16 =
-      _Function1Int16_ptr.asFunction<_dart_Function1Int16>();
+      _lookup<ffi.NativeFunction<ffi.Int16 Function(ffi.Int16)>>(
+          'Function1Int16');
+  late final _Function1Int16 =
+      _Function1Int16_ptr.asFunction<int Function(int)>();
 
   int Function1Int32(
     int x,
@@ -120,9 +126,10 @@ class NativeLibrary {
   }
 
   late final _Function1Int32_ptr =
-      _lookup<ffi.NativeFunction<_c_Function1Int32>>('Function1Int32');
-  late final _dart_Function1Int32 _Function1Int32 =
-      _Function1Int32_ptr.asFunction<_dart_Function1Int32>();
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(ffi.Int32)>>(
+          'Function1Int32');
+  late final _Function1Int32 =
+      _Function1Int32_ptr.asFunction<int Function(int)>();
 
   int Function1Int64(
     int x,
@@ -133,9 +140,10 @@ class NativeLibrary {
   }
 
   late final _Function1Int64_ptr =
-      _lookup<ffi.NativeFunction<_c_Function1Int64>>('Function1Int64');
-  late final _dart_Function1Int64 _Function1Int64 =
-      _Function1Int64_ptr.asFunction<_dart_Function1Int64>();
+      _lookup<ffi.NativeFunction<ffi.Int64 Function(ffi.Int64)>>(
+          'Function1Int64');
+  late final _Function1Int64 =
+      _Function1Int64_ptr.asFunction<int Function(int)>();
 
   int Function1IntPtr(
     int x,
@@ -146,9 +154,10 @@ class NativeLibrary {
   }
 
   late final _Function1IntPtr_ptr =
-      _lookup<ffi.NativeFunction<_c_Function1IntPtr>>('Function1IntPtr');
-  late final _dart_Function1IntPtr _Function1IntPtr =
-      _Function1IntPtr_ptr.asFunction<_dart_Function1IntPtr>();
+      _lookup<ffi.NativeFunction<ffi.IntPtr Function(ffi.IntPtr)>>(
+          'Function1IntPtr');
+  late final _Function1IntPtr =
+      _Function1IntPtr_ptr.asFunction<int Function(int)>();
 
   double Function1Float(
     double x,
@@ -159,9 +168,10 @@ class NativeLibrary {
   }
 
   late final _Function1Float_ptr =
-      _lookup<ffi.NativeFunction<_c_Function1Float>>('Function1Float');
-  late final _dart_Function1Float _Function1Float =
-      _Function1Float_ptr.asFunction<_dart_Function1Float>();
+      _lookup<ffi.NativeFunction<ffi.Float Function(ffi.Float)>>(
+          'Function1Float');
+  late final _Function1Float =
+      _Function1Float_ptr.asFunction<double Function(double)>();
 
   double Function1Double(
     double x,
@@ -172,18 +182,20 @@ class NativeLibrary {
   }
 
   late final _Function1Double_ptr =
-      _lookup<ffi.NativeFunction<_c_Function1Double>>('Function1Double');
-  late final _dart_Function1Double _Function1Double =
-      _Function1Double_ptr.asFunction<_dart_Function1Double>();
+      _lookup<ffi.NativeFunction<ffi.Double Function(ffi.Double)>>(
+          'Function1Double');
+  late final _Function1Double =
+      _Function1Double_ptr.asFunction<double Function(double)>();
 
   ffi.Pointer<Struct1> getStruct1() {
     return _getStruct1();
   }
 
   late final _getStruct1_ptr =
-      _lookup<ffi.NativeFunction<_c_getStruct1>>('getStruct1');
-  late final _dart_getStruct1 _getStruct1 =
-      _getStruct1_ptr.asFunction<_dart_getStruct1>();
+      _lookup<ffi.NativeFunction<ffi.Pointer<Struct1> Function()>>(
+          'getStruct1');
+  late final _getStruct1 =
+      _getStruct1_ptr.asFunction<ffi.Pointer<Struct1> Function()>();
 
   Struct3 Function1StructReturnByValue(
     int a,
@@ -197,12 +209,12 @@ class NativeLibrary {
     );
   }
 
-  late final _Function1StructReturnByValue_ptr =
-      _lookup<ffi.NativeFunction<_c_Function1StructReturnByValue>>(
-          'Function1StructReturnByValue');
-  late final _dart_Function1StructReturnByValue _Function1StructReturnByValue =
-      _Function1StructReturnByValue_ptr.asFunction<
-          _dart_Function1StructReturnByValue>();
+  late final _Function1StructReturnByValue_ptr = _lookup<
+      ffi.NativeFunction<
+          Struct3 Function(ffi.Int32, ffi.Int32,
+              ffi.Int32)>>('Function1StructReturnByValue');
+  late final _Function1StructReturnByValue = _Function1StructReturnByValue_ptr
+      .asFunction<Struct3 Function(int, int, int)>();
 
   int Function1StructPassByValue(
     Struct3 sum_a_b_c,
@@ -213,11 +225,10 @@ class NativeLibrary {
   }
 
   late final _Function1StructPassByValue_ptr =
-      _lookup<ffi.NativeFunction<_c_Function1StructPassByValue>>(
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(Struct3)>>(
           'Function1StructPassByValue');
-  late final _dart_Function1StructPassByValue _Function1StructPassByValue =
-      _Function1StructPassByValue_ptr.asFunction<
-          _dart_Function1StructPassByValue>();
+  late final _Function1StructPassByValue =
+      _Function1StructPassByValue_ptr.asFunction<int Function(Struct3)>();
 }
 
 class Struct1 extends ffi.Struct {
@@ -238,123 +249,3 @@ class Struct3 extends ffi.Struct {
   @ffi.Int32()
   external int c;
 }
-
-typedef _c_Function1Bool = ffi.Uint8 Function(
-  ffi.Uint8 x,
-);
-
-typedef _dart_Function1Bool = int Function(
-  int x,
-);
-
-typedef _c_Function1Uint8 = ffi.Uint8 Function(
-  ffi.Uint8 x,
-);
-
-typedef _dart_Function1Uint8 = int Function(
-  int x,
-);
-
-typedef _c_Function1Uint16 = ffi.Uint16 Function(
-  ffi.Uint16 x,
-);
-
-typedef _dart_Function1Uint16 = int Function(
-  int x,
-);
-
-typedef _c_Function1Uint32 = ffi.Uint32 Function(
-  ffi.Uint32 x,
-);
-
-typedef _dart_Function1Uint32 = int Function(
-  int x,
-);
-
-typedef _c_Function1Uint64 = ffi.Uint64 Function(
-  ffi.Uint64 x,
-);
-
-typedef _dart_Function1Uint64 = int Function(
-  int x,
-);
-
-typedef _c_Function1Int8 = ffi.Int8 Function(
-  ffi.Int8 x,
-);
-
-typedef _dart_Function1Int8 = int Function(
-  int x,
-);
-
-typedef _c_Function1Int16 = ffi.Int16 Function(
-  ffi.Int16 x,
-);
-
-typedef _dart_Function1Int16 = int Function(
-  int x,
-);
-
-typedef _c_Function1Int32 = ffi.Int32 Function(
-  ffi.Int32 x,
-);
-
-typedef _dart_Function1Int32 = int Function(
-  int x,
-);
-
-typedef _c_Function1Int64 = ffi.Int64 Function(
-  ffi.Int64 x,
-);
-
-typedef _dart_Function1Int64 = int Function(
-  int x,
-);
-
-typedef _c_Function1IntPtr = ffi.IntPtr Function(
-  ffi.IntPtr x,
-);
-
-typedef _dart_Function1IntPtr = int Function(
-  int x,
-);
-
-typedef _c_Function1Float = ffi.Float Function(
-  ffi.Float x,
-);
-
-typedef _dart_Function1Float = double Function(
-  double x,
-);
-
-typedef _c_Function1Double = ffi.Double Function(
-  ffi.Double x,
-);
-
-typedef _dart_Function1Double = double Function(
-  double x,
-);
-
-typedef _c_getStruct1 = ffi.Pointer<Struct1> Function();
-
-typedef _dart_getStruct1 = ffi.Pointer<Struct1> Function();
-
-typedef _c_Function1StructReturnByValue = Struct3 Function(
-  ffi.Int32 a,
-  ffi.Int32 b,
-  ffi.Int32 c,
-);
-
-typedef _dart_Function1StructReturnByValue = Struct3 Function(
-  int a,
-  int b,
-  int c,
-);
-
-typedef _c_Function1StructPassByValue = ffi.Int32 Function(
-  Struct3 sum_a_b_c,
-);
-
-typedef _dart_Function1StructPassByValue = int Function(
-  Struct3 sum_a_b_c,
-);

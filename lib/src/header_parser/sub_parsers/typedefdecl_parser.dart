@@ -85,7 +85,6 @@ int _typedefdeclarationCursorVisitor(clang_types.CXCursor cursor,
           _stack.top.binding = parseCompoundDeclaration(
             cursor,
             CompoundType.struct,
-            name: _stack.top.typedefName,
           );
         }
         break;
@@ -99,13 +98,11 @@ int _typedefdeclarationCursorVisitor(clang_types.CXCursor cursor,
           _stack.top.binding = parseCompoundDeclaration(
             cursor,
             CompoundType.union,
-            name: _stack.top.typedefName,
           );
         }
         break;
       case clang_types.CXCursorKind.CXCursor_EnumDecl:
-        _stack.top.binding =
-            parseEnumDeclaration(cursor, name: _stack.top.typedefName);
+        _stack.top.binding = parseEnumDeclaration(cursor);
         break;
       default:
         _logger.finest('typedefdeclarationCursorVisitor: Ignored');

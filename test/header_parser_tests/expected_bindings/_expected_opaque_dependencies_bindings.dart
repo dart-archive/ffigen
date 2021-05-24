@@ -19,7 +19,7 @@ class NativeLibrary {
           lookup)
       : _lookup = lookup;
 
-  ffi.Pointer<B> func(
+  ffi.Pointer<B_alias> func(
     ffi.Pointer<A> a,
   ) {
     return _func(
@@ -27,8 +27,11 @@ class NativeLibrary {
     );
   }
 
-  late final _func_ptr = _lookup<ffi.NativeFunction<_c_func>>('func');
-  late final _dart_func _func = _func_ptr.asFunction<_dart_func>();
+  late final _func_ptr = _lookup<
+          ffi.NativeFunction<ffi.Pointer<B_alias> Function(ffi.Pointer<A>)>>(
+      'func');
+  late final _func =
+      _func_ptr.asFunction<ffi.Pointer<B_alias> Function(ffi.Pointer<A>)>();
 
   ffi.Pointer<UB> func2(
     ffi.Pointer<UA> a,
@@ -38,13 +41,24 @@ class NativeLibrary {
     );
   }
 
-  late final _func2_ptr = _lookup<ffi.NativeFunction<_c_func2>>('func2');
-  late final _dart_func2 _func2 = _func2_ptr.asFunction<_dart_func2>();
+  late final _func2_ptr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<UB> Function(ffi.Pointer<UA>)>>(
+          'func2');
+  late final _func2 =
+      _func2_ptr.asFunction<ffi.Pointer<UB> Function(ffi.Pointer<UA>)>();
 }
+
+typedef B_alias = B;
 
 class B extends ffi.Opaque {}
 
 class A extends ffi.Opaque {}
+
+class E extends ffi.Struct {
+  external ffi.Pointer<C> c;
+
+  external D d;
+}
 
 class C extends ffi.Opaque {}
 
@@ -53,22 +67,9 @@ class D extends ffi.Struct {
   external int a;
 }
 
-class E extends ffi.Struct {
-  external ffi.Pointer<C> c;
-
-  external D d;
-}
-
 class UB extends ffi.Opaque {}
 
 class UA extends ffi.Opaque {}
-
-class UC extends ffi.Opaque {}
-
-class UD extends ffi.Union {
-  @ffi.Int32()
-  external int a;
-}
 
 class UE extends ffi.Union {
   external ffi.Pointer<UC> c;
@@ -76,18 +77,9 @@ class UE extends ffi.Union {
   external UD d;
 }
 
-typedef _c_func = ffi.Pointer<B> Function(
-  ffi.Pointer<A> a,
-);
+class UC extends ffi.Opaque {}
 
-typedef _dart_func = ffi.Pointer<B> Function(
-  ffi.Pointer<A> a,
-);
-
-typedef _c_func2 = ffi.Pointer<UB> Function(
-  ffi.Pointer<UA> a,
-);
-
-typedef _dart_func2 = ffi.Pointer<UB> Function(
-  ffi.Pointer<UA> a,
-);
+class UD extends ffi.Union {
+  @ffi.Int32()
+  external int a;
+}

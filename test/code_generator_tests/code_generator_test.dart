@@ -447,6 +447,40 @@ void main() {
     );
     _matchLib(library, 'unions');
   });
+  test('Typealias Bindings', () {
+    final library = Library(
+      name: 'Bindings',
+      bindings: [
+        Typealias(
+            name: 'RawUnused', type: Type.compound(Struc(name: 'Struct1'))),
+        Struc(name: 'WithTypealiasStruc', members: [
+          Member(
+              name: 't',
+              type: Type.typealias(Typealias(
+                  name: 'Struct2Typealias',
+                  type: Type.struct(Struc(name: 'Struct2', members: [
+                    Member(
+                        name: 'a',
+                        type: Type.nativeType(SupportedNativeType.Double))
+                  ])))))
+        ]),
+        Func(
+            name: 'WithTypealiasStruc',
+            returnType: Type.pointer(Type.nativeFunc(
+                NativeFunc.fromFunctionType(FunctionType(
+                    returnType: Type.nativeType(SupportedNativeType.Void),
+                    parameters: [])))),
+            parameters: [
+              Parameter(
+                  name: 't',
+                  type: Type.typealias(Typealias(
+                      name: 'Struct3Typealias',
+                      type: Type.struct(Struc(name: 'Struct3')))))
+            ]),
+      ],
+    );
+    _matchLib(library, 'typealias');
+  });
 }
 
 /// Utility to match expected bindings to the generated bindings.

@@ -56,6 +56,14 @@ ${strings.headers}:
     test('Struct5 incompleted struct member', () {
       expect((actual.getBinding('Struct5') as Struc).members.isEmpty, true);
     });
+    test('Struct6 typedef constant array', () {
+      expect(actual.getBindingAsString('Struct6'),
+          expected.getBindingAsString('Struct6'));
+    });
+    test('func3 constant typedef array parameter', () {
+      expect(actual.getBindingAsString('func3'),
+          expected.getBindingAsString('func3'));
+    });
   });
 }
 
@@ -97,8 +105,27 @@ Library expectedLibrary() {
           SupportedNativeType.Void,
         ),
       ),
+      Func(
+        name: 'func3',
+        parameters: [
+          Parameter(
+              name: 'a',
+              type: Type.pointer(Type.nativeType(SupportedNativeType.Int32))),
+        ],
+        returnType: Type.nativeType(
+          SupportedNativeType.Void,
+        ),
+      ),
       Struc(name: 'Struct4'),
       Struc(name: 'Struct5'),
+      Struc(name: 'Struct6', members: [
+        Member(
+            name: 'a',
+            type: Type.constantArray(
+                2,
+                Type.constantArray(
+                    10, Type.nativeType(SupportedNativeType.Int32))))
+      ]),
     ],
   );
 }

@@ -30,8 +30,10 @@ class NativeLibrary {
     );
   }
 
-  late final _sum_ptr = _lookup<ffi.NativeFunction<_c_sum>>('sum');
-  late final _dart_sum _sum = _sum_ptr.asFunction<_dart_sum>();
+  late final _sum_ptr =
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(ffi.Int32, ffi.Int32)>>(
+          'sum');
+  late final _sum = _sum_ptr.asFunction<int Function(int, int)>();
 
   /// Subtracts 2 integers.
   int subtract(
@@ -44,10 +46,11 @@ class NativeLibrary {
     );
   }
 
-  late final _subtract_ptr =
-      _lookup<ffi.NativeFunction<_c_subtract>>('subtract');
-  late final _dart_subtract _subtract =
-      _subtract_ptr.asFunction<_dart_subtract>();
+  late final _subtract_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(ffi.Pointer<ffi.Int32>, ffi.Int32)>>('subtract');
+  late final _subtract =
+      _subtract_ptr.asFunction<int Function(ffi.Pointer<ffi.Int32>, int)>();
 
   /// Multiplies 2 integers, returns pointer to an integer,.
   ffi.Pointer<ffi.Int32> multiply(
@@ -60,10 +63,11 @@ class NativeLibrary {
     );
   }
 
-  late final _multiply_ptr =
-      _lookup<ffi.NativeFunction<_c_multiply>>('multiply');
-  late final _dart_multiply _multiply =
-      _multiply_ptr.asFunction<_dart_multiply>();
+  late final _multiply_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Int32> Function(ffi.Int32, ffi.Int32)>>('multiply');
+  late final _multiply =
+      _multiply_ptr.asFunction<ffi.Pointer<ffi.Int32> Function(int, int)>();
 
   /// Divides 2 integers, returns pointer to a float.
   ffi.Pointer<ffi.Float> divide(
@@ -76,8 +80,11 @@ class NativeLibrary {
     );
   }
 
-  late final _divide_ptr = _lookup<ffi.NativeFunction<_c_divide>>('divide');
-  late final _dart_divide _divide = _divide_ptr.asFunction<_dart_divide>();
+  late final _divide_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Float> Function(ffi.Int32, ffi.Int32)>>('divide');
+  late final _divide =
+      _divide_ptr.asFunction<ffi.Pointer<ffi.Float> Function(int, int)>();
 
   /// Divides 2 floats, returns a pointer to double.
   ffi.Pointer<ffi.Double> dividePercision(
@@ -90,58 +97,11 @@ class NativeLibrary {
     );
   }
 
-  late final _dividePercision_ptr =
-      _lookup<ffi.NativeFunction<_c_dividePercision>>('dividePercision');
-  late final _dart_dividePercision _dividePercision =
-      _dividePercision_ptr.asFunction<_dart_dividePercision>();
+  late final _dividePercision_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Double> Function(ffi.Pointer<ffi.Float>,
+              ffi.Pointer<ffi.Float>)>>('dividePercision');
+  late final _dividePercision = _dividePercision_ptr.asFunction<
+      ffi.Pointer<ffi.Double> Function(
+          ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>)>();
 }
-
-typedef _c_sum = ffi.Int32 Function(
-  ffi.Int32 a,
-  ffi.Int32 b,
-);
-
-typedef _dart_sum = int Function(
-  int a,
-  int b,
-);
-
-typedef _c_subtract = ffi.Int32 Function(
-  ffi.Pointer<ffi.Int32> a,
-  ffi.Int32 b,
-);
-
-typedef _dart_subtract = int Function(
-  ffi.Pointer<ffi.Int32> a,
-  int b,
-);
-
-typedef _c_multiply = ffi.Pointer<ffi.Int32> Function(
-  ffi.Int32 a,
-  ffi.Int32 b,
-);
-
-typedef _dart_multiply = ffi.Pointer<ffi.Int32> Function(
-  int a,
-  int b,
-);
-
-typedef _c_divide = ffi.Pointer<ffi.Float> Function(
-  ffi.Int32 a,
-  ffi.Int32 b,
-);
-
-typedef _dart_divide = ffi.Pointer<ffi.Float> Function(
-  int a,
-  int b,
-);
-
-typedef _c_dividePercision = ffi.Pointer<ffi.Double> Function(
-  ffi.Pointer<ffi.Float> a,
-  ffi.Pointer<ffi.Float> b,
-);
-
-typedef _dart_dividePercision = ffi.Pointer<ffi.Double> Function(
-  ffi.Pointer<ffi.Float> a,
-  ffi.Pointer<ffi.Float> b,
-);

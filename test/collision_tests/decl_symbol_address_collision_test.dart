@@ -36,7 +36,7 @@ void main() {
       matchLibraryWithExpected(actual, [
         'test',
         'debug_generated',
-        'decl_symbol_address_collision_output.dart'
+        'collision_test_decl_symbol_address_collision_output.dart'
       ], [
         'test',
         'collision_tests',

@@ -36,7 +36,7 @@ ${strings.comments}:
       matchLibraryWithExpected(actual, [
         'test',
         'debug_generated',
-        'comment_markup_test_output.dart'
+        'header_parser_comment_markup_test_output.dart'
       ], [
         'test',
         'header_parser_tests',

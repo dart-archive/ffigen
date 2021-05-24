@@ -29,9 +29,11 @@ import 'writer.dart';
 /// typedef _dart_sum = int Function(int a, int b);
 /// ```
 class Func extends LookUpBinding {
-  final Type returnType;
-  final List<Parameter> parameters;
+  final FunctionType functionType;
   final bool exposeSymbolAddress;
+
+  /// Contains typealias for function type if [exposeSymbolAddress] is true.
+  Type? _exposedFunctionType;
 
   /// [originalName] is looked up in dynamic library, if not
   /// provided, takes the value of [name].
@@ -40,64 +42,28 @@ class Func extends LookUpBinding {
     required String name,
     String? originalName,
     String? dartDoc,
-    required this.returnType,
+    required Type returnType,
     List<Parameter>? parameters,
     this.exposeSymbolAddress = false,
-  })  : parameters = parameters ?? [],
+  })  : functionType = FunctionType(
+          returnType: returnType,
+          parameters: parameters ?? const [],
+        ),
         super(
           usr: usr,
           originalName: originalName,
           name: name,
           dartDoc: dartDoc,
         ) {
-    for (var i = 0; i < this.parameters.length; i++) {
-      if (this.parameters[i].name.trim() == '') {
-        this.parameters[i].name = 'arg$i';
+    for (var i = 0; i < functionType.parameters.length; i++) {
+      if (functionType.parameters[i].name.trim() == '') {
+        functionType.parameters[i].name = 'arg$i';
       }
     }
+
+    _exposedFunctionType = Type.typealias(
+        Typealias(name: 'Native_$name', type: Type.functionType(functionType)));
   }
-
-  List<Typedef>? _typedefDependencies;
-  @override
-  List<Typedef> getTypedefDependencies(Writer w) {
-    if (_typedefDependencies == null) {
-      _typedefDependencies = <Typedef>[];
-
-      // Add typedef's required by return type.
-      final returnTypeBase = returnType.getBaseType();
-      if (returnTypeBase.broadType == BroadType.NativeFunction) {
-        _typedefDependencies!
-            .addAll(returnTypeBase.nativeFunc!.getDependencies());
-      }
-
-      // Add typedef's required by parameters.
-      for (final p in parameters) {
-        final base = p.type.getBaseType();
-        if (base.broadType == BroadType.NativeFunction) {
-          _typedefDependencies!.addAll(base.nativeFunc!.getDependencies());
-        }
-      }
-      // Add C function typedef.
-      _typedefDependencies!.add(cType);
-      // Add Dart function typedef.
-      _typedefDependencies!.add(dartType);
-    }
-    return _typedefDependencies!;
-  }
-
-  Typedef? _cType, _dartType;
-  Typedef get cType => _cType ??= Typedef(
-        name: exposeSymbolAddress ? 'Native_$name' : '_c_$name',
-        returnType: returnType,
-        parameters: parameters,
-        typedefType: TypedefType.C,
-      );
-  Typedef get dartType => _dartType ??= Typedef(
-        name: '_dart_$name',
-        returnType: returnType,
-        parameters: parameters,
-        typedefType: TypedefType.Dart,
-      );
 
   @override
   BindingString toBindingString(Writer w) {
@@ -112,17 +78,18 @@ class Func extends LookUpBinding {
     }
     // Resolve name conflicts in function parameter names.
     final paramNamer = UniqueNamer({});
-    for (final p in parameters) {
+    for (final p in functionType.parameters) {
       p.name = paramNamer.makeUnique(p.name);
     }
     // Write enclosing function.
-    if (w.dartBool && returnType.broadType == BroadType.Boolean) {
+    if (w.dartBool && functionType.returnType.broadType == BroadType.Boolean) {
       // Use bool return type in enclosing function.
       s.write('bool $enclosingFuncName(\n');
     } else {
-      s.write('${returnType.getDartType(w)} $enclosingFuncName(\n');
+      s.write(
+          '${functionType.returnType.getDartType(w)} $enclosingFuncName(\n');
     }
-    for (final p in parameters) {
+    for (final p in functionType.parameters) {
       if (w.dartBool && p.type.broadType == BroadType.Boolean) {
         // Use bool parameter type in enclosing function.
         s.write('  bool ${p.name},\n');
@@ -134,7 +101,7 @@ class Func extends LookUpBinding {
     s.write('return $funcVarName');
 
     s.write('(\n');
-    for (final p in parameters) {
+    for (final p in functionType.parameters) {
       if (w.dartBool && p.type.broadType == BroadType.Boolean) {
         // Convert bool parameter to int before calling.
         s.write('    ${p.name}?1:0,\n');
@@ -142,7 +109,7 @@ class Func extends LookUpBinding {
         s.write('    ${p.name},\n');
       }
     }
-    if (w.dartBool && returnType.broadType == BroadType.Boolean) {
+    if (w.dartBool && functionType.returnType.broadType == BroadType.Boolean) {
       // Convert int return type to bool.
       s.write('  )!=0;\n');
     } else {
@@ -150,22 +117,26 @@ class Func extends LookUpBinding {
     }
     s.write('}\n');
 
-    // Write function pointer.
-    s.write(
-        "late final $funcPointerName = ${w.lookupFuncIdentifier}<${w.ffiLibraryPrefix}.NativeFunction<${cType.name}>>('$originalName');\n");
-    // Write function variable.
-    s.write(
-        'late final ${dartType.name} $funcVarName = $funcPointerName.asFunction<${dartType.name}>();\n\n');
+    final cType = exposeSymbolAddress
+        ? _exposedFunctionType!.getCType(w)
+        : functionType.getCType(w, writeArgumentNames: false);
+    final dartType = functionType.getDartType(w, writeArgumentNames: false);
 
     if (exposeSymbolAddress) {
       // Add to SymbolAddress in writer.
       w.symbolAddressWriter.addSymbol(
         type:
-            '${w.ffiLibraryPrefix}.Pointer<${w.ffiLibraryPrefix}.NativeFunction<${cType.name}>>',
+            '${w.ffiLibraryPrefix}.Pointer<${w.ffiLibraryPrefix}.NativeFunction<$cType>>',
         name: name,
         ptrName: funcPointerName,
       );
     }
+    // Write function pointer.
+    s.write(
+        "late final $funcPointerName = ${w.lookupFuncIdentifier}<${w.ffiLibraryPrefix}.NativeFunction<$cType>>('$originalName');\n");
+    s.write(
+        'late final $funcVarName = $funcPointerName.asFunction<$dartType>();\n\n');
+
     return BindingString(type: BindingStringType.func, string: s.toString());
   }
 
@@ -174,12 +145,14 @@ class Func extends LookUpBinding {
     if (dependencies.contains(this)) return;
 
     dependencies.add(this);
-    returnType.getDependencies(dependencies);
-    parameters.forEach((p) => p.type.getDependencies(dependencies));
+    if (exposeSymbolAddress) {
+      _exposedFunctionType!.getDependencies(dependencies);
+    }
+    functionType.getDependencies(dependencies);
   }
 }
 
-/// Represents a Parameter, used in [Func] and [Typedef].
+/// Represents a Parameter, used in [Func] and [Typealias].
 class Parameter {
   final String? originalName;
   String name;
@@ -189,7 +162,7 @@ class Parameter {
       : originalName = originalName ?? name,
         // A type with broadtype [BroadType.NativeFunction] is wrapped with a
         // pointer because this is a shorthand used in C for Pointer to function.
-        type = type.broadType == BroadType.NativeFunction
+        type = type.getBaseTypealiasType().broadType == BroadType.NativeFunction
             ? Type.pointer(type)
             : type;
 }

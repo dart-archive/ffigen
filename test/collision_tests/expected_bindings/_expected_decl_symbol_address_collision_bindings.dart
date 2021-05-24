@@ -25,8 +25,7 @@ class Bindings_1 {
 
   late final __library_ptr =
       _lookup<ffi.NativeFunction<Native__library>>('_library');
-  late final _dart__library __library =
-      __library_ptr.asFunction<_dart__library>();
+  late final __library = __library_ptr.asFunction<void Function()>();
 
   void _SymbolAddresses_1() {
     return __SymbolAddresses_1();
@@ -35,8 +34,8 @@ class Bindings_1 {
   late final __SymbolAddresses_1_ptr =
       _lookup<ffi.NativeFunction<Native__SymbolAddresses_1>>(
           '_SymbolAddresses_1');
-  late final _dart__SymbolAddresses_1 __SymbolAddresses_1 =
-      __SymbolAddresses_1_ptr.asFunction<_dart__SymbolAddresses_1>();
+  late final __SymbolAddresses_1 =
+      __SymbolAddresses_1_ptr.asFunction<void Function()>();
 
   late final addresses = _SymbolAddresses_2(this);
 }
@@ -57,9 +56,4 @@ class _SymbolAddresses extends ffi.Opaque {}
 abstract class Bindings {}
 
 typedef Native__library = ffi.Void Function();
-
-typedef _dart__library = void Function();
-
 typedef Native__SymbolAddresses_1 = ffi.Void Function();
-
-typedef _dart__SymbolAddresses_1 = void Function();

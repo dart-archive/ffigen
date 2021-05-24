@@ -10,7 +10,7 @@ import 'package:logging/logging.dart';
 import '../clang_bindings/clang_bindings.dart' as clang_types;
 import '../data.dart';
 import '../sub_parsers/compounddecl_parser.dart';
-import '../translation_unit_parser.dart';
+import '../sub_parsers/enumdecl_parser.dart';
 import '../type_extractor/cxtypekindmap.dart';
 import '../utils.dart';
 
@@ -20,7 +20,6 @@ const _padding = '  ';
 /// Converts cxtype to a typestring code_generator can accept.
 Type getCodeGenType(
   clang_types.CXType cxtype, {
-  String? parentName,
 
   /// Passed on if a value was marked as a pointer before this one.
   bool pointerReference = false,
@@ -31,8 +30,7 @@ Type getCodeGenType(
   switch (kind) {
     case clang_types.CXTypeKind.CXType_Pointer:
       final pt = clang.clang_getPointeeType(cxtype);
-      final s =
-          getCodeGenType(pt, parentName: parentName, pointerReference: true);
+      final s = getCodeGenType(pt, pointerReference: true);
 
       // Replace Pointer<_Dart_Handle> with Handle.
       if (config.useDartHandle &&
@@ -43,6 +41,7 @@ Type getCodeGenType(
       }
       return Type.pointer(s);
     case clang_types.CXTypeKind.CXType_Typedef:
+      //TODO: get comment for typealias.
       final spelling = clang.clang_getTypedefName(cxtype).toStringAndDispose();
       if (config.typedefNativeTypeMappings.containsKey(spelling)) {
         _logger.fine('  Type Mapped from typedef-map');
@@ -58,30 +57,66 @@ Type getCodeGenType(
       }
 
       // This is important or we get stuck in infinite recursion.
-      final ct = clang.clang_getTypedefDeclUnderlyingType(
-          clang.clang_getTypeDeclaration(cxtype));
+      final cursor = clang.clang_getTypeDeclaration(cxtype);
+      final typedefUsr = cursor.usr();
+      if (bindingsIndex.isSeenTypealias(typedefUsr)) {
+        return Type.typealias(bindingsIndex.getSeenTypealias(typedefUsr)!);
+      } else {
+        final ct = clang.clang_getTypedefDeclUnderlyingType(cursor);
+        final s = getCodeGenType(ct, pointerReference: pointerReference);
 
-      final s = getCodeGenType(ct,
-          parentName: parentName ?? spelling,
-          pointerReference: pointerReference);
-      return s;
+        if (s.broadType == BroadType.Unimplemented) {
+          return Type.unimplemented('Typedef refers to an unimplimented type.');
+        } else if (s.broadType == BroadType.Compound &&
+            s.compound!.name == spelling) {
+          // Do not use typedef if it refers to a compound with the same name.
+          return s;
+        } else if (s.broadType == BroadType.Enum) {
+          // Ignore typedefs to Enum.
+          return s;
+        } else if (s.broadType == BroadType.Handle) {
+          // Do not use typedefs to Handle.
+          return s;
+        } else if (s.broadType == BroadType.ConstantArray ||
+            s.broadType == BroadType.IncompleteArray) {
+          // Do not use typedefs to Constant Array.
+          return s;
+        } else {
+          final typealias = Typealias(name: spelling, type: s);
+          bindingsIndex.addTypealiasToSeen(typedefUsr, typealias);
+          return Type.typealias(typealias);
+        }
+      }
     case clang_types.CXTypeKind.CXType_Elaborated:
       final et = clang.clang_Type_getNamedType(cxtype);
-      final s = getCodeGenType(et,
-          parentName: parentName, pointerReference: pointerReference);
+      final s = getCodeGenType(et, pointerReference: pointerReference);
       return s;
     case clang_types.CXTypeKind.CXType_Record:
-      return _extractfromRecord(cxtype, parentName, pointerReference);
+      return _extractfromRecord(cxtype, pointerReference);
     case clang_types.CXTypeKind.CXType_Enum:
-      return Type.nativeType(
-        enumNativeType,
-      );
+      final cursor = clang.clang_getTypeDeclaration(cxtype);
+      final usr = cursor.usr();
+
+      if (bindingsIndex.isSeenEnumClass(usr)) {
+        return Type.enumClass(bindingsIndex.getSeenEnumClass(usr)!);
+      } else {
+        final enumClass = parseEnumDeclaration(
+          cursor,
+          ignoreFilter: true,
+        );
+        if (enumClass == null) {
+          // Handle anonymous enum declarations within another declaration.
+          return Type.nativeType(Type.enumNativeType);
+        } else {
+          return Type.enumClass(enumClass);
+        }
+      }
     case clang_types.CXTypeKind.CXType_FunctionProto:
       // Primarily used for function pointers.
-      return _extractFromFunctionProto(cxtype, parentName);
+      return _extractFromFunctionProto(cxtype);
     case clang_types.CXTypeKind.CXType_FunctionNoProto:
       // Primarily used for function types with zero arguments.
-      return _extractFromFunctionProto(cxtype, parentName);
+      return _extractFromFunctionProto(cxtype);
     case clang_types.CXTypeKind
         .CXType_ConstantArray: // Primarily used for constant array in struct members.
       return Type.constantArray(
@@ -109,8 +144,7 @@ Type getCodeGenType(
   }
 }
 
-Type _extractfromRecord(
-    clang_types.CXType cxtype, String? parentName, bool pointerReference) {
+Type _extractfromRecord(clang_types.CXType cxtype, bool pointerReference) {
   Type type;
 
   final cursor = clang.clang_getTypeDeclaration(cxtype);
@@ -120,9 +154,6 @@ Type _extractfromRecord(
   if (cursorKind == clang_types.CXCursorKind.CXCursor_StructDecl ||
       cursorKind == clang_types.CXCursorKind.CXCursor_UnionDecl) {
     final declUsr = cursor.usr();
-
-    // Name of typedef (parentName) is used if available.
-    final declName = parentName ?? cursor.spelling();
 
     // Set includer functions according to compoundType.
     final bool Function(String) isSeenDecl;
@@ -153,25 +184,17 @@ Type _extractfromRecord(
       parseCompoundDeclaration(
         cursor,
         compoundType,
-        name: declName,
         ignoreFilter: true,
         pointerReference: pointerReference,
-        updateName: false,
       );
     } else {
       final struc = parseCompoundDeclaration(
         cursor,
         compoundType,
-        name: declName,
         ignoreFilter: true,
         pointerReference: pointerReference,
       );
       type = Type.compound(struc!);
-
-      // Add to bindings if it's not Dart_Handle and is unseen.
-      if (!(config.useDartHandle && declUsr == strings.dartHandleUsr)) {
-        addToBindings(struc);
-      }
     }
   } else {
     _logger.fine(
@@ -183,12 +206,7 @@ Type _extractfromRecord(
 }
 
 // Used for function pointer arguments.
-Type _extractFromFunctionProto(clang_types.CXType cxtype, String? parentName) {
-  var name = parentName;
-
-  // An empty name means the function prototype was declared in-place, instead
-  // of using a typedef.
-  name = name ?? '';
+Type _extractFromFunctionProto(clang_types.CXType cxtype) {
   final _parameters = <Parameter>[];
   final totalArgs = clang.clang_getNumArgTypes(cxtype);
   for (var i = 0; i < totalArgs; i++) {
@@ -207,21 +225,8 @@ Type _extractFromFunctionProto(clang_types.CXType cxtype, String? parentName) {
     );
   }
 
-  Typedef? typedefC;
-  if (bindingsIndex.isSeenFunctionTypedef(name)) {
-    typedefC = bindingsIndex.getSeenFunctionTypedef(name);
-  } else {
-    typedefC = Typedef(
-      name: name.isNotEmpty ? name : incrementalNamer.name('_typedefC'),
-      typedefType: TypedefType.C,
-      parameters: _parameters,
-      returnType: clang.clang_getResultType(cxtype).toCodeGenType(),
-    );
-    // Add to seen, if name isn't empty.
-    if (name.isNotEmpty) {
-      bindingsIndex.addFunctionTypedefToSeen(name, typedefC);
-    }
-  }
-
-  return Type.nativeFunc(typedefC!);
+  return Type.nativeFunc(NativeFunc.fromFunctionType(FunctionType(
+    parameters: _parameters,
+    returnType: clang.clang_getResultType(cxtype).toCodeGenType(),
+  )));
 }

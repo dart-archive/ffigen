@@ -52,7 +52,7 @@ ${strings.preamble}: |
 
       matchLibraryWithExpected(
         library,
-        ['test', 'debug_generated', 'c_json.dart'],
+        ['test', 'debug_generated', 'example_c_json.dart'],
         ['example', 'c_json', config.output],
       );
     });

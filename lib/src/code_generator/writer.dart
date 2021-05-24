@@ -5,7 +5,6 @@
 import 'package:ffigen/src/code_generator/utils.dart';
 
 import 'binding.dart';
-import 'typedef.dart';
 
 /// To store generated String bindings.
 class Writer {
@@ -165,20 +164,6 @@ class Writer {
     s.write("import 'dart:ffi' as $ffiLibraryPrefix;\n");
     s.write('\n');
 
-    // Will contain duplicates, must be processed.
-    final rawDependencies = <Typedef>[];
-
-    /// Get typedef dependencies, these will be written at the end.
-    for (final b in lookUpBindings) {
-      rawDependencies.addAll(b.getTypedefDependencies(this));
-    }
-    for (final b in noLookUpBindings) {
-      rawDependencies.addAll(b.getTypedefDependencies(this));
-    }
-
-    // Dependencies, processed to remove duplicates and resolve name conflicts.
-    final dependencies = processDependencies(rawDependencies);
-
     /// Write [lookUpBindings].
     if (lookUpBindings.isNotEmpty) {
       // Write doc comment for wrapper class.
@@ -221,37 +206,7 @@ class Writer {
       s.write(b.toBindingString(this).string);
     }
 
-    // Write typedef dependencies.
-    for (final d in dependencies) {
-      s.write(d.toTypedefString(this));
-    }
-
     return s.toString();
-  }
-
-  /// Removes duplicates and resolves all name conflicts.
-  Set<Typedef> processDependencies(List<Typedef> dependencies) {
-    final processedDependencies = dependencies.toSet();
-
-    for (final d in processedDependencies) {
-      d.name = _makeUniqueTypedefName(d.name);
-    }
-    return processedDependencies;
-  }
-
-  /// Returns a typedef name that is unique in both top level and wrapper level,
-  /// ans only marks it as used at top-level.
-  String _makeUniqueTypedefName(String name) {
-    final base = name;
-    var uniqueName = name;
-    var suffix = 0;
-    while (topLevelUniqueNamer.isUsed(uniqueName) ||
-        wrapperLevelUniqueNamer.isUsed(uniqueName)) {
-      suffix++;
-      uniqueName = base + suffix.toString();
-    }
-    topLevelUniqueNamer.markUsed(uniqueName);
-    return uniqueName;
   }
 }
 

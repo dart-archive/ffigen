@@ -14,5 +14,5 @@ export 'code_generator/global.dart';
 export 'code_generator/library.dart';
 export 'code_generator/struc.dart';
 export 'code_generator/type.dart';
-export 'code_generator/typedef.dart';
+export 'code_generator/typealias.dart';
 export 'code_generator/union.dart';

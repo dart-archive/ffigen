@@ -29,8 +29,10 @@ class NativeLibrary {
     );
   }
 
-  late final _func_ptr = _lookup<ffi.NativeFunction<_c_func>>('func');
-  late final _dart_func _func = _func_ptr.asFunction<_dart_func>();
+  late final _func_ptr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<A>, ffi.Int32)>>(
+          'func');
+  late final _func = _func_ptr.asFunction<void Function(ffi.Pointer<A>, int)>();
 }
 
 class A extends ffi.Struct {
@@ -45,13 +47,3 @@ abstract class B {
   static const int a = 0;
   static const int b = 1;
 }
-
-typedef _c_func = ffi.Void Function(
-  ffi.Pointer<A> a,
-  ffi.Int32 b,
-);
-
-typedef _dart_func = void Function(
-  ffi.Pointer<A> a,
-  int b,
-);

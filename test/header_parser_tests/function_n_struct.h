@@ -33,7 +33,16 @@ struct Struct5
     struct Struct3 s; // Incomplete nested struct.
 };
 
+typedef int arr10[10];
+
+struct Struct6
+{
+    arr10 a[2];
+};
+
 void func1(struct Struct2 *s);
 
 // Incomplete array parameter will be treated as a pointer.
 void func2(struct Struct3 s[]);
+
+void func3(arr10 a);

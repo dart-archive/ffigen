@@ -329,12 +329,11 @@ class BindingsIndex {
   final Map<String, Struc> _structs = {};
   final Map<String, Union> _unions = {};
   final Map<String, Func> _functions = {};
+  final Map<String, Typealias> _typealiases = {};
   final Map<String, EnumClass> _enumClass = {};
   final Map<String, Constant> _unnamedEnumConstants = {};
   final Map<String, String> _macros = {};
   final Map<String, Global> _globals = {};
-  // Stores only named typedefC used in NativeFunc.
-  final Map<String, Typedef> _functionTypedefs = {};
 
   bool isSeenStruct(String usr) {
     return _structs.containsKey(usr);
@@ -420,15 +419,15 @@ class BindingsIndex {
     return _macros[usr];
   }
 
-  bool isSeenFunctionTypedef(String originalName) {
-    return _functionTypedefs.containsKey(originalName);
+  bool isSeenTypealias(String usr) {
+    return _typealiases.containsKey(usr);
   }
 
-  void addFunctionTypedefToSeen(String originalName, Typedef t) {
-    _functionTypedefs[originalName] = t;
+  void addTypealiasToSeen(String usr, Typealias t) {
+    _typealiases[usr] = t;
   }
 
-  Typedef? getSeenFunctionTypedef(String originalName) {
-    return _functionTypedefs[originalName];
+  Typealias? getSeenTypealias(String usr) {
+    return _typealiases[usr];
   }
 }

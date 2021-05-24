@@ -9,12 +9,12 @@ struct A
 };
 
 // Opaque.
-struct B
+typedef struct B
 {
     int a;
-};
+} B_alias;
 
-struct B *func(struct A *a);
+B_alias *func(struct A *a);
 
 // Opaque.
 struct C

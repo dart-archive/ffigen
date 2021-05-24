@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:ffigen/src/code_generator/typedef.dart';
-
 import 'binding.dart';
 import 'binding_string.dart';
 import 'type.dart';
@@ -37,21 +35,6 @@ class Global extends LookUpBinding {
           name: name,
           dartDoc: dartDoc,
         );
-
-  List<Typedef>? _typedefDependencies;
-  @override
-  List<Typedef> getTypedefDependencies(Writer w) {
-    if (_typedefDependencies == null) {
-      _typedefDependencies = <Typedef>[];
-
-      // Add typedef's required by the variable's type.
-      final valueType = type.getBaseType();
-      if (valueType.broadType == BroadType.NativeFunction) {
-        _typedefDependencies!.addAll(valueType.nativeFunc!.getDependencies());
-      }
-    }
-    return _typedefDependencies!;
-  }
 
   @override
   BindingString toBindingString(Writer w) {
