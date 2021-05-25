@@ -27,6 +27,8 @@ ${strings.headers}:
   ${strings.includeDirectives}:
     - '**cJSON.h'
 ${strings.comments}: false
+${strings.typedefmap}:
+  'size_t': 'IntPtr'
 ${strings.preamble}: |
   // Copyright (c) 2009-2017 Dave Gamble and cJSON contributors
   //

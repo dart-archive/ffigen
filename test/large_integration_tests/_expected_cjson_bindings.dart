@@ -1192,7 +1192,7 @@ class CJson {
   }
 
   late final _cJSON_malloc_ptr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(size_t)>>(
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.IntPtr)>>(
           'cJSON_malloc');
   late final _cJSON_malloc =
       _cJSON_malloc_ptr.asFunction<ffi.Pointer<ffi.Void> Function(int)>();
@@ -1234,17 +1234,14 @@ class cJSON extends ffi.Struct {
 }
 
 class cJSON_Hooks extends ffi.Struct {
-  external ffi
-          .Pointer<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(size_t)>>
-      malloc_fn;
+  external ffi.Pointer<
+      ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.IntPtr)>> malloc_fn;
 
   external ffi
           .Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>
       free_fn;
 }
 
-typedef size_t = __darwin_size_t;
-typedef __darwin_size_t = ffi.Uint64;
 typedef cJSON_bool = ffi.Int32;
 
 const int CJSON_VERSION_MAJOR = 1;

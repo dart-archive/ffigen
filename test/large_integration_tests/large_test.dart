@@ -62,6 +62,8 @@ ${strings.headers}:
     - third_party/cjson_library/cJSON.h
   ${strings.includeDirectives}:
     - '**cJSON.h'
+${strings.typedefmap}:
+  'size_t': 'IntPtr'
       ''') as YamlMap);
       final library = parse(config);
 
