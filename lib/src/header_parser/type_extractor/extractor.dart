@@ -4,6 +4,7 @@
 
 /// Extracts code_gen Type from type.
 import 'package:ffigen/src/code_generator.dart';
+import 'package:ffigen/src/header_parser/sub_parsers/typedefdecl_parser.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
 
@@ -41,7 +42,6 @@ Type getCodeGenType(
       }
       return Type.pointer(s);
     case clang_types.CXTypeKind.CXType_Typedef:
-      //TODO: get comment for typealias.
       final spelling = clang.clang_getTypedefName(cxtype).toStringAndDispose();
       if (config.typedefNativeTypeMappings.containsKey(spelling)) {
         _logger.fine('  Type Mapped from typedef-map');
@@ -59,35 +59,19 @@ Type getCodeGenType(
       // This is important or we get stuck in infinite recursion.
       final cursor = clang.clang_getTypeDeclaration(cxtype);
       final typedefUsr = cursor.usr();
+
       if (bindingsIndex.isSeenTypealias(typedefUsr)) {
         return Type.typealias(bindingsIndex.getSeenTypealias(typedefUsr)!);
       } else {
-        final ct = clang.clang_getTypedefDeclUnderlyingType(cursor);
-        final s = getCodeGenType(ct, pointerReference: pointerReference);
+        final typealias = parseTypedefDeclaration(cursor,
+            ignoreFilter: true, pointerReference: pointerReference);
 
-        if (s.broadType == BroadType.Unimplemented) {
-          return Type.unimplemented('Typedef refers to an unimplimented type.');
-        } else if (s.broadType == BroadType.Compound &&
-            s.compound!.name == spelling) {
-          // Do not use typedef if it refers to a compound with the same name.
-          return s;
-        } else if (s.broadType == BroadType.Enum) {
-          // Ignore typedefs to Enum.
-          return s;
-        } else if (s.broadType == BroadType.Handle) {
-          // Do not use typedefs to Handle.
-          return s;
-        } else if (s.broadType == BroadType.ConstantArray ||
-            s.broadType == BroadType.IncompleteArray) {
-          // Do not use typedefs to Constant Array.
-          return s;
-        } else if (s.broadType == BroadType.Boolean) {
-          // Do not use typedefs to Boolean.
-          return s;
-        } else {
-          final typealias = Typealias(name: spelling, type: s);
-          bindingsIndex.addTypealiasToSeen(typedefUsr, typealias);
+        if (typealias != null) {
           return Type.typealias(typealias);
+        } else {
+          // Use underlying type if typealias couldn't be created.
+          final ct = clang.clang_getTypedefDeclUnderlyingType(cursor);
+          return getCodeGenType(ct, pointerReference: pointerReference);
         }
       }
     case clang_types.CXTypeKind.CXType_Elaborated:

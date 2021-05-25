@@ -6038,10 +6038,13 @@ class CXStringSet extends ffi.Struct {
 
 class CXVirtualFileOverlayImpl extends ffi.Opaque {}
 
+/// Object encapsulating information about overlaying virtual file/directories
+/// over the real file system.
 typedef CXVirtualFileOverlay = ffi.Pointer<CXVirtualFileOverlayImpl>;
 
 class CXModuleMapDescriptorImpl extends ffi.Opaque {}
 
+/// Object encapsulating information about a module.map file.
 typedef CXModuleMapDescriptor = ffi.Pointer<CXModuleMapDescriptorImpl>;
 
 class CXTargetInfoImpl extends ffi.Opaque {}
@@ -6132,6 +6135,8 @@ abstract class CXCursor_ExceptionSpecificationKind {
   static const int CXCursor_ExceptionSpecificationKind_NoThrow = 9;
 }
 
+/// An "index" that consists of a set of translation units that would typically
+/// be linked together into an executable or library.
 typedef CXIndex = ffi.Pointer<ffi.Void>;
 
 abstract class CXGlobalOptFlags {
@@ -6151,6 +6156,7 @@ abstract class CXGlobalOptFlags {
   static const int CXGlobalOpt_ThreadBackgroundPriorityForAll = 3;
 }
 
+/// A particular source file that is part of a translation unit.
 typedef CXFile = ffi.Pointer<ffi.Void>;
 typedef time_t = __darwin_time_t;
 typedef __darwin_time_t = ffi.Int64;
@@ -6162,6 +6168,7 @@ class CXFileUniqueID extends ffi.Struct {
   external ffi.Array<ffi.Uint64> data;
 }
 
+/// A single translation unit, which resides in an index.
 typedef CXTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>;
 typedef size_t = __darwin_size_t;
 typedef __darwin_size_t = ffi.Uint64;
@@ -6217,7 +6224,11 @@ abstract class CXDiagnosticSeverity {
   static const int CXDiagnostic_Fatal = 4;
 }
 
+/// A group of CXDiagnostics.
 typedef CXDiagnosticSet = ffi.Pointer<ffi.Void>;
+
+/// A single diagnostic, containing the diagnostic's severity, location, text,
+/// source ranges, and fix-it hints.
 typedef CXDiagnostic = ffi.Pointer<ffi.Void>;
 
 /// Describes the kind of error that occurred (if any) in a call to
@@ -6396,6 +6407,7 @@ class CXTUResourceUsage extends ffi.Struct {
   external ffi.Pointer<CXTUResourceUsageEntry> entries;
 }
 
+/// An opaque type representing target information for a given translation unit.
 typedef CXTargetInfo = ffi.Pointer<CXTargetInfoImpl>;
 
 /// Describes the kind of entity that a cursor refers to.
@@ -7144,6 +7156,7 @@ abstract class CXTLSKind {
 
 class CXCursorSetImpl extends ffi.Opaque {}
 
+/// A fast container representing a set of CXCursors.
 typedef CXCursorSet = ffi.Pointer<CXCursorSetImpl>;
 
 /// Describes the kind of type
@@ -7406,8 +7419,12 @@ abstract class CXChildVisitResult {
   static const int CXChildVisit_Recurse = 2;
 }
 
+/// Visitor invoked for each cursor found by a traversal.
 typedef CXCursorVisitor = ffi.Pointer<
     ffi.NativeFunction<ffi.Int32 Function(CXCursor, CXCursor, CXClientData)>>;
+
+/// Opaque pointer representing client data that will be passed through to
+/// various callbacks and visitors.
 typedef CXClientData = ffi.Pointer<ffi.Void>;
 
 /// Properties for the printing policy.
@@ -7441,6 +7458,8 @@ abstract class CXPrintingPolicyProperty {
   static const int CXPrintingPolicy_LastProperty = 25;
 }
 
+/// Opaque pointer representing a policy that controls pretty printing for
+/// clang_getCursorPrettyPrinted.
 typedef CXPrintingPolicy = ffi.Pointer<ffi.Void>;
 
 /// Property attributes for a CXCursor_ObjCPropertyDecl.
@@ -7473,6 +7492,7 @@ abstract class CXObjCDeclQualifierKind {
   static const int CXObjCDeclQualifier_Oneway = 32;
 }
 
+/// The functions in this group provide access to information about modules.
 typedef CXModule = ffi.Pointer<ffi.Void>;
 
 abstract class CXNameRefFlags {
@@ -7524,6 +7544,7 @@ class CXCompletionResult extends ffi.Struct {
   external CXCompletionString CompletionString;
 }
 
+/// A semantic string that describes a code-completion result.
 typedef CXCompletionString = ffi.Pointer<ffi.Void>;
 
 /// Describes a single piece of text within a code-completion string.
@@ -7726,6 +7747,8 @@ abstract class CXCompletionContext {
   static const int CXCompletionContext_Unknown = 8388607;
 }
 
+/// Visitor invoked for each file in a translation unit (used with
+/// clang_getInclusions()).
 typedef CXInclusionVisitor = ffi.Pointer<
     ffi.NativeFunction<
         ffi.Void Function(
@@ -7741,7 +7764,10 @@ abstract class CXEvalResultKind {
   static const int CXEval_UnExposed = 0;
 }
 
+/// Evaluation result of a cursor
 typedef CXEvalResult = ffi.Pointer<ffi.Void>;
+
+/// A remapping of original source files and their translated files.
 typedef CXRemapping = ffi.Pointer<ffi.Void>;
 
 /// @{
@@ -8135,10 +8161,22 @@ class IndexerCallbacks extends ffi.Struct {
       indexEntityReference;
 }
 
+/// The client's data object that is associated with a CXFile.
 typedef CXIdxClientFile = ffi.Pointer<ffi.Void>;
+
+/// The client's data object that is associated with an AST file (PCH or
+/// module).
 typedef CXIdxClientASTFile = ffi.Pointer<ffi.Void>;
+
+/// The client's data object that is associated with a semantic container of
+/// entities.
 typedef CXIdxClientContainer = ffi.Pointer<ffi.Void>;
+
+/// The client's data object that is associated with a semantic entity.
 typedef CXIdxClientEntity = ffi.Pointer<ffi.Void>;
+
+/// An indexing action/session, to be applied to one or multiple translation
+/// units.
 typedef CXIndexAction = ffi.Pointer<ffi.Void>;
 
 abstract class CXIndexOptFlags {
@@ -8167,6 +8205,7 @@ abstract class CXIndexOptFlags {
   static const int CXIndexOpt_SkipParsedBodiesInSession = 16;
 }
 
+/// Visitor invoked for each field found by a traversal.
 typedef CXFieldVisitor = ffi
     .Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCursor, CXClientData)>>;
 

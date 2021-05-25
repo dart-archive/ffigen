@@ -77,6 +77,14 @@ bool shouldIncludeMacro(String usr, String name) {
   }
 }
 
+bool shouldIncludeTypealias(String usr, String name) {
+  if (bindingsIndex.isSeenTypealias(usr) || name == '') {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 /// Cache for headers.
 final _headerCache = <String, bool>{};
 

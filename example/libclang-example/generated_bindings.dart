@@ -7872,6 +7872,9 @@ class CXVersion extends ffi.Struct {
 
 typedef Native_clang_createIndex = CXIndex Function(
     ffi.Int32 excludeDeclarationsFromPCH, ffi.Int32 displayDiagnostics);
+
+/// An "index" that consists of a set of translation units that would
+/// typically be linked together into an executable or library.
 typedef CXIndex = ffi.Pointer<ffi.Void>;
 typedef Native_clang_disposeIndex = ffi.Void Function(CXIndex index);
 
@@ -7905,6 +7908,8 @@ typedef Native_clang_CXIndex_getGlobalOptions = ffi.Uint32 Function(
 typedef Native_clang_CXIndex_setInvocationEmissionPathOption = ffi.Void
     Function(CXIndex arg0, ffi.Pointer<ffi.Int8> Path);
 typedef Native_clang_getFileName = CXString Function(CXFile SFile);
+
+/// A particular source file that is part of a translation unit.
 typedef CXFile = ffi.Pointer<ffi.Void>;
 typedef Native_clang_getFileTime = time_t Function(CXFile SFile);
 typedef time_t = __darwin_time_t;
@@ -7921,6 +7926,8 @@ typedef Native_clang_getFileUniqueID = ffi.Int32 Function(
     CXFile file, ffi.Pointer<CXFileUniqueID> outID);
 typedef Native_clang_isFileMultipleIncludeGuarded = ffi.Uint32 Function(
     CXTranslationUnit tu, CXFile file);
+
+/// A single translation unit, which resides in an index.
 typedef CXTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>;
 typedef Native_clang_getFile = CXFile Function(
     CXTranslationUnit tu, ffi.Pointer<ffi.Int8> file_name);
@@ -8029,9 +8036,14 @@ typedef Native_clang_disposeSourceRangeList = ffi.Void Function(
     ffi.Pointer<CXSourceRangeList> ranges);
 typedef Native_clang_getNumDiagnosticsInSet = ffi.Uint32 Function(
     CXDiagnosticSet Diags);
+
+/// A group of CXDiagnostics.
 typedef CXDiagnosticSet = ffi.Pointer<ffi.Void>;
 typedef Native_clang_getDiagnosticInSet = CXDiagnostic Function(
     CXDiagnosticSet Diags, ffi.Uint32 Index);
+
+/// A single diagnostic, containing the diagnostic's severity,
+/// location, text, source ranges, and fix-it hints.
 typedef CXDiagnostic = ffi.Pointer<ffi.Void>;
 typedef Native_clang_loadDiagnostics = CXDiagnosticSet Function(
     ffi.Pointer<ffi.Int8> file,
@@ -8252,6 +8264,9 @@ typedef Native_clang_disposeCXTUResourceUsage = ffi.Void Function(
     CXTUResourceUsage usage);
 typedef Native_clang_getTranslationUnitTargetInfo = CXTargetInfo Function(
     CXTranslationUnit CTUnit);
+
+/// An opaque type representing target information for a given translation
+/// unit.
 typedef CXTargetInfo = ffi.Pointer<CXTargetInfoImpl>;
 typedef Native_clang_TargetInfo_dispose = ffi.Void Function(CXTargetInfo Info);
 typedef Native_clang_TargetInfo_getTriple = CXString Function(
@@ -9218,6 +9233,8 @@ typedef Native_clang_Cursor_getTranslationUnit = CXTranslationUnit Function(
 class CXCursorSetImpl extends ffi.Opaque {}
 
 typedef Native_clang_createCXCursorSet = CXCursorSet Function();
+
+/// A fast container representing a set of CXCursors.
 typedef CXCursorSet = ffi.Pointer<CXCursorSetImpl>;
 typedef Native_clang_disposeCXCursorSet = ffi.Void Function(CXCursorSet cset);
 typedef Native_clang_CXCursorSet_contains = ffi.Uint32 Function(
@@ -9568,6 +9585,17 @@ typedef Native_clang_getOverloadedDecl = CXCursor Function(
 typedef Native_clang_getIBOutletCollectionType = CXType Function(CXCursor arg0);
 typedef Native_clang_visitChildren = ffi.Uint32 Function(
     CXCursor parent, CXCursorVisitor visitor, CXClientData client_data);
+
+/// Visitor invoked for each cursor found by a traversal.
+///
+/// This visitor function will be invoked for each cursor found by
+/// clang_visitCursorChildren(). Its first argument is the cursor being
+/// visited, its second argument is the parent visitor for that cursor,
+/// and its third argument is the client data provided to
+/// clang_visitCursorChildren().
+///
+/// The visitor should return one of the \c CXChildVisitResult values
+/// to direct clang_visitCursorChildren().
 typedef CXCursorVisitor = ffi.Pointer<
     ffi.NativeFunction<ffi.Int32 Function(CXCursor, CXCursor, CXClientData)>>;
 
@@ -9589,6 +9617,8 @@ abstract class CXChildVisitResult {
   static const int CXChildVisit_Recurse = 2;
 }
 
+/// Opaque pointer representing client data that will be passed through
+/// to various callbacks and visitors.
 typedef CXClientData = ffi.Pointer<ffi.Void>;
 typedef Native_clang_getCursorUSR = CXString Function(CXCursor arg0);
 typedef Native_clang_constructUSR_ObjCClass = CXString Function(
@@ -9608,6 +9638,9 @@ typedef Native_clang_Cursor_getSpellingNameRange = CXSourceRange Function(
     CXCursor arg0, ffi.Uint32 pieceIndex, ffi.Uint32 options);
 typedef Native_clang_PrintingPolicy_getProperty = ffi.Uint32 Function(
     CXPrintingPolicy Policy, ffi.Int32 Property);
+
+/// Opaque pointer representing a policy that controls pretty printing
+/// for \c clang_getCursorPrettyPrinted.
 typedef CXPrintingPolicy = ffi.Pointer<ffi.Void>;
 
 /// Properties for the printing policy.
@@ -9685,6 +9718,12 @@ typedef Native_clang_Cursor_getCXXManglings = ffi.Pointer<CXStringSet> Function(
 typedef Native_clang_Cursor_getObjCManglings = ffi.Pointer<CXStringSet>
     Function(CXCursor arg0);
 typedef Native_clang_Cursor_getModule = CXModule Function(CXCursor C);
+
+/// \defgroup CINDEX_MODULE Module introspection
+///
+/// The functions in this group provide access to information about modules.
+///
+/// @{
 typedef CXModule = ffi.Pointer<ffi.Void>;
 typedef Native_clang_getModuleForFile = CXModule Function(
     CXTranslationUnit arg0, CXFile arg1);
@@ -9801,6 +9840,17 @@ class CXCompletionResult extends ffi.Struct {
   external CXCompletionString CompletionString;
 }
 
+/// A semantic string that describes a code-completion result.
+///
+/// A semantic string that describes the formatting of a code-completion
+/// result as a single "template" of text that should be inserted into the
+/// source buffer when a particular code-completion result is selected.
+/// Each semantic string is made up of some number of "chunks", each of which
+/// contains some text along with a description of what that text means, e.g.,
+/// the name of the entity being referenced, whether the text chunk is part of
+/// the template, or whether it is a "placeholder" that the user should replace
+/// with actual code,of a specific kind. See \c CXCompletionChunkKind for a
+/// description of the different kinds of chunks.
 typedef CXCompletionString = ffi.Pointer<ffi.Void>;
 typedef Native_clang_getCompletionChunkKind = ffi.Int32 Function(
     CXCompletionString completion_string, ffi.Uint32 chunk_number);
@@ -10027,11 +10077,23 @@ typedef Native_clang_toggleCrashRecovery = ffi.Void Function(
     ffi.Uint32 isEnabled);
 typedef Native_clang_getInclusions = ffi.Void Function(
     CXTranslationUnit tu, CXInclusionVisitor visitor, CXClientData client_data);
+
+/// Visitor invoked for each file in a translation unit
+/// (used with clang_getInclusions()).
+///
+/// This visitor function will be invoked by clang_getInclusions() for each
+/// file included (either at the top-level or by \#include directives) within
+/// a translation unit.  The first argument is the file being included, and
+/// the second and third arguments provide the inclusion stack.  The
+/// array is sorted in order of immediate inclusion.  For example,
+/// the first element refers to the location that included 'included_file'.
 typedef CXInclusionVisitor = ffi.Pointer<
     ffi.NativeFunction<
         ffi.Void Function(
             CXFile, ffi.Pointer<CXSourceLocation>, ffi.Uint32, CXClientData)>>;
 typedef Native_clang_Cursor_Evaluate = CXEvalResult Function(CXCursor C);
+
+/// Evaluation result of a cursor
 typedef CXEvalResult = ffi.Pointer<ffi.Void>;
 typedef Native_clang_EvalResult_getKind = ffi.Int32 Function(CXEvalResult E);
 
@@ -10059,6 +10121,8 @@ typedef Native_clang_EvalResult_getAsStr = ffi.Pointer<ffi.Int8> Function(
 typedef Native_clang_EvalResult_dispose = ffi.Void Function(CXEvalResult E);
 typedef Native_clang_getRemappings = CXRemapping Function(
     ffi.Pointer<ffi.Int8> path);
+
+/// A remapping of original source files and their translated files.
 typedef CXRemapping = ffi.Pointer<ffi.Void>;
 typedef Native_clang_getRemappingsFromFileList = CXRemapping Function(
     ffi.Pointer<ffi.Pointer<ffi.Int8>> filePaths, ffi.Uint32 numFiles);
@@ -10457,15 +10521,23 @@ typedef Native_clang_index_getCXXClassDeclInfo
         ffi.Pointer<CXIdxDeclInfo> arg0);
 typedef Native_clang_index_getClientContainer = CXIdxClientContainer Function(
     ffi.Pointer<CXIdxContainerInfo> arg0);
+
+/// The client's data object that is associated with a semantic container
+/// of entities.
 typedef CXIdxClientContainer = ffi.Pointer<ffi.Void>;
 typedef Native_clang_index_setClientContainer = ffi.Void Function(
     ffi.Pointer<CXIdxContainerInfo> arg0, CXIdxClientContainer arg1);
 typedef Native_clang_index_getClientEntity = CXIdxClientEntity Function(
     ffi.Pointer<CXIdxEntityInfo> arg0);
+
+/// The client's data object that is associated with a semantic entity.
 typedef CXIdxClientEntity = ffi.Pointer<ffi.Void>;
 typedef Native_clang_index_setClientEntity = ffi.Void Function(
     ffi.Pointer<CXIdxEntityInfo> arg0, CXIdxClientEntity arg1);
 typedef Native_clang_IndexAction_create = CXIndexAction Function(CXIndex CIdx);
+
+/// An indexing action/session, to be applied to one or multiple
+/// translation units.
 typedef CXIndexAction = ffi.Pointer<ffi.Void>;
 typedef Native_clang_IndexAction_dispose = ffi.Void Function(
     CXIndexAction arg0);
@@ -10541,7 +10613,11 @@ class IndexerCallbacks extends ffi.Struct {
       indexEntityReference;
 }
 
+/// The client's data object that is associated with a CXFile.
 typedef CXIdxClientFile = ffi.Pointer<ffi.Void>;
+
+/// The client's data object that is associated with an AST file (PCH
+/// or module).
 typedef CXIdxClientASTFile = ffi.Pointer<ffi.Void>;
 typedef Native_clang_indexSourceFileFullArgv = ffi.Int32 Function(
     CXIndexAction arg0,
@@ -10574,6 +10650,16 @@ typedef Native_clang_indexLoc_getCXSourceLocation = CXSourceLocation Function(
     CXIdxLoc loc);
 typedef Native_clang_Type_visitFields = ffi.Uint32 Function(
     CXType T, CXFieldVisitor visitor, CXClientData client_data);
+
+/// Visitor invoked for each field found by a traversal.
+///
+/// This visitor function will be invoked for each field found by
+/// \c clang_Type_visitFields. Its first argument is the cursor being
+/// visited, its second argument is the client data provided to
+/// \c clang_Type_visitFields.
+///
+/// The visitor should return one of the \c CXVisitorResult values
+/// to direct \c clang_Type_visitFields.
 typedef CXFieldVisitor = ffi
     .Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCursor, CXClientData)>>;
 

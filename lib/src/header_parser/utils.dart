@@ -329,11 +329,14 @@ class BindingsIndex {
   final Map<String, Struc> _structs = {};
   final Map<String, Union> _unions = {};
   final Map<String, Func> _functions = {};
-  final Map<String, Typealias> _typealiases = {};
   final Map<String, EnumClass> _enumClass = {};
   final Map<String, Constant> _unnamedEnumConstants = {};
   final Map<String, String> _macros = {};
   final Map<String, Global> _globals = {};
+
+  /// Contains usr for typedefs which cannot be generated.
+  final Set<String> _unsupportedTypealiases = {};
+  final Map<String, Typealias> _typealiases = {};
 
   bool isSeenStruct(String usr) {
     return _structs.containsKey(usr);
@@ -425,6 +428,14 @@ class BindingsIndex {
 
   void addTypealiasToSeen(String usr, Typealias t) {
     _typealiases[usr] = t;
+  }
+
+  bool isSeenUnsupportedTypealias(String usr) {
+    return _unsupportedTypealiases.contains(usr);
+  }
+
+  void addUnsupportedTypealiasToSeen(String usr) {
+    _unsupportedTypealiases.add(usr);
   }
 
   Typealias? getSeenTypealias(String usr) {

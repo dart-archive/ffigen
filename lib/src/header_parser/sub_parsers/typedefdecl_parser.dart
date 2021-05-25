@@ -2,16 +2,14 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:ffi';
-
 import 'package:ffigen/src/code_generator.dart';
+import 'package:ffigen/src/header_parser/includer.dart';
+import 'package:ffigen/src/header_parser/type_extractor/extractor.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
 import '../data.dart';
-import '../sub_parsers/enumdecl_parser.dart';
 import '../utils.dart';
-import 'compounddecl_parser.dart';
 
 final _logger = Logger('ffigen.header_parser.typedefdecl_parser');
 
@@ -32,85 +30,77 @@ final _logger = Logger('ffigen.header_parser.typedefdecl_parser');
 ///
 /// typedef A D; // Typeref.
 /// ```
-class _ParsedTypedef {
-  Binding? binding;
+class _ParsedTypealias {
+  Typealias? typealias;
   String? typedefName;
   bool typedefToPointer = false;
-  _ParsedTypedef();
+  _ParsedTypealias();
 }
 
-final _stack = Stack<_ParsedTypedef>();
+final _stack = Stack<_ParsedTypealias>();
 
 /// Parses a typedef declaration.
-Binding? parseTypedefDeclaration(clang_types.CXCursor cursor) {
-  _stack.push(_ParsedTypedef());
+Typealias? parseTypedefDeclaration(
+  clang_types.CXCursor cursor, {
 
-  /// Check if typedef declaration is to a pointer.
-  _stack.top.typedefToPointer =
-      (clang.clang_getTypedefDeclUnderlyingType(cursor).kind ==
-          clang_types.CXTypeKind.CXType_Pointer);
+  /// Option to ignore declaration filter (Useful in case of extracting
+  /// declarations when they are passed/returned by an included function.)
+  bool ignoreFilter = false,
+  bool pointerReference = false,
+}) {
+  _stack.push(_ParsedTypealias());
 
-  // Name of typedef.
-  _stack.top.typedefName = cursor.spelling();
-  final resultCode = clang.clang_visitChildren(
-    cursor,
-    Pointer.fromFunction(_typedefdeclarationCursorVisitor,
-        clang_types.CXChildVisitResult.CXChildVisit_Break),
-    nullptr,
-  );
+  final spelling = cursor.spelling();
+  final usr = cursor.usr();
+  if ((ignoreFilter || shouldIncludeTypealias(usr, spelling)) &&
+      (!bindingsIndex.isSeenTypealias(usr))) {
+    final ct = clang.clang_getTypedefDeclUnderlyingType(cursor);
+    final s = getCodeGenType(ct, pointerReference: pointerReference);
 
-  visitChildrenResultChecker(resultCode);
-  return _stack.pop().binding;
-}
-
-/// Visitor for extracting binding for a TypedefDeclarations of a
-/// [clang.CXCursorKind.CXCursor_TypedefDecl].
-///
-/// Visitor invoked on cursor of type declaration returned by
-/// [clang.clang_getTypeDeclaration_wrap].
-int _typedefdeclarationCursorVisitor(clang_types.CXCursor cursor,
-    clang_types.CXCursor parent, Pointer<Void> clientData) {
-  try {
-    _logger.finest(
-        'typedefdeclarationCursorVisitor: ${cursor.completeStringRepr()}');
-
-    switch (clang.clang_getCursorKind(cursor)) {
-      case clang_types.CXCursorKind.CXCursor_StructDecl:
-        if (_stack.top.typedefToPointer &&
-            bindingsIndex.isSeenStruct(cursor.usr())) {
-          // Skip a typedef pointer if struct is seen.
-          _stack.top.binding = bindingsIndex.getSeenStruct(cursor.usr());
-        } else {
-          // This will update the name of struct if already seen.
-          _stack.top.binding = parseCompoundDeclaration(
-            cursor,
-            CompoundType.struct,
-          );
-        }
-        break;
-      case clang_types.CXCursorKind.CXCursor_UnionDecl:
-        if (_stack.top.typedefToPointer &&
-            bindingsIndex.isSeenUnion(cursor.usr())) {
-          // Skip a typedef pointer if struct is seen.
-          _stack.top.binding = bindingsIndex.getSeenUnion(cursor.usr());
-        } else {
-          // This will update the name of struct if already seen.
-          _stack.top.binding = parseCompoundDeclaration(
-            cursor,
-            CompoundType.union,
-          );
-        }
-        break;
-      case clang_types.CXCursorKind.CXCursor_EnumDecl:
-        _stack.top.binding = parseEnumDeclaration(cursor);
-        break;
-      default:
-        _logger.finest('typedefdeclarationCursorVisitor: Ignored');
+    if (bindingsIndex.isSeenUnsupportedTypealias(usr)) {
+      // Do not process unsupported typealiases again.
+    } else if (s.broadType == BroadType.Unimplemented) {
+      _logger.fine("Skipped Typedef '$spelling': Unimplemented type referred.");
+      bindingsIndex.addUnsupportedTypealiasToSeen(usr);
+    } else if (s.broadType == BroadType.Compound &&
+        s.compound!.name == spelling) {
+      // Ignore typedef if it refers to a compound with the same name.
+      bindingsIndex.addUnsupportedTypealiasToSeen(usr);
+      _logger.fine(
+          "Skipped Typedef '$spelling': Name matches with referred struct/union.");
+    } else if (s.broadType == BroadType.Enum) {
+      // Ignore typedefs to Enum.
+      bindingsIndex.addUnsupportedTypealiasToSeen(usr);
+      _logger.fine("Skipped Typedef '$spelling': typedef to enum.");
+    } else if (s.broadType == BroadType.Handle) {
+      // Ignore typedefs to Handle.
+      _logger.fine("Skipped Typedef '$spelling': typedef to Dart Handle.");
+      bindingsIndex.addUnsupportedTypealiasToSeen(usr);
+    } else if (s.broadType == BroadType.ConstantArray ||
+        s.broadType == BroadType.IncompleteArray) {
+      // Ignore typedefs to Constant Array.
+      _logger.fine("Skipped Typedef '$spelling': typedef to array.");
+      bindingsIndex.addUnsupportedTypealiasToSeen(usr);
+    } else if (s.broadType == BroadType.Boolean) {
+      // Ignore typedefs to Boolean.
+      _logger.fine("Skipped Typedef '$spelling': typedef to bool.");
+      bindingsIndex.addUnsupportedTypealiasToSeen(usr);
+    } else {
+      // Create typealias.
+      _stack.top.typealias = Typealias(
+        usr: usr,
+        originalName: spelling,
+        name: spelling,
+        type: s,
+        dartDoc: getCursorDocComment(cursor),
+      );
+      bindingsIndex.addTypealiasToSeen(usr, _stack.top.typealias!);
     }
-  } catch (e, s) {
-    _logger.severe(e);
-    _logger.severe(s);
-    rethrow;
   }
-  return clang_types.CXChildVisitResult.CXChildVisit_Continue;
+
+  if (bindingsIndex.isSeenTypealias(usr)) {
+    _stack.top.typealias = bindingsIndex.getSeenTypealias(usr);
+  }
+
+  return _stack.pop().typealias;
 }
