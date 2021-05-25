@@ -7,6 +7,7 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:ffi/ffi.dart';
+import 'package:path/path.dart' as p;
 
 import 'cjson_generated_bindings.dart' as cj;
 
@@ -45,12 +46,14 @@ void main() {
 }
 
 String _getPath() {
-  var path = '../../third_party/cjson_library/libcjson.so';
+  final cjsonExamplePath = Directory.current.absolute.path;
+  var path = p.join(cjsonExamplePath, '../../third_party/cjson_library/');
   if (Platform.isMacOS) {
-    path = '../../third_party/cjson_library/libstructs.dylib';
-  }
-  if (Platform.isWindows) {
-    path = r'..\..\third_party\cjson_library\Debug\structs.dll';
+    path = p.join(path, 'libcjson.dylib');
+  } else if (Platform.isWindows) {
+    path = p.join(path, 'Debug', 'cjson.dll');
+  } else {
+    path = p.join(path, 'libcjson.so');
   }
   return path;
 }
