@@ -1,3 +1,7 @@
+# 4.0.0-dev.0
+- Added support for generating typedefs.
+- C and Dart Types for functions are now generated inline.
+
 # 3.1.0-dev.1
 - Users can now specify exact path to dynamic library in `llvm-path`.
 

@@ -62,6 +62,11 @@ ffigen:
     unsigned long long: 8
     enum: 4
 
+  # These can be used to map any typedef to a specific native type.
+  typedef-map:
+    'size_t': 'IntPtr'
+    'time_t': 'Int64'
+
   # Default is 'NativeLibrary'
   name: 'LibClang'
 

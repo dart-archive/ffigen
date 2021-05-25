@@ -407,7 +407,8 @@ class LibClang {
   }
 
   late final _clang_getFileTime_ptr =
-      _lookup<ffi.NativeFunction<time_t Function(CXFile)>>('clang_getFileTime');
+      _lookup<ffi.NativeFunction<ffi.Int64 Function(CXFile)>>(
+          'clang_getFileTime');
   late final _clang_getFileTime =
       _clang_getFileTime_ptr.asFunction<int Function(CXFile)>();
 
@@ -471,7 +472,7 @@ class LibClang {
   ffi.Pointer<ffi.Int8> clang_getFileContents(
     CXTranslationUnit tu,
     CXFile file,
-    ffi.Pointer<size_t> size,
+    ffi.Pointer<ffi.IntPtr> size,
   ) {
     return _clang_getFileContents(
       tu,
@@ -483,10 +484,10 @@ class LibClang {
   late final _clang_getFileContents_ptr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<ffi.Int8> Function(CXTranslationUnit, CXFile,
-              ffi.Pointer<size_t>)>>('clang_getFileContents');
+              ffi.Pointer<ffi.IntPtr>)>>('clang_getFileContents');
   late final _clang_getFileContents = _clang_getFileContents_ptr.asFunction<
       ffi.Pointer<ffi.Int8> Function(
-          CXTranslationUnit, CXFile, ffi.Pointer<size_t>)>();
+          CXTranslationUnit, CXFile, ffi.Pointer<ffi.IntPtr>)>();
 
   /// Returns non-zero if the file1 and file2 point to the same file, or they
   /// are both NULL.
@@ -6158,8 +6159,6 @@ abstract class CXGlobalOptFlags {
 
 /// A particular source file that is part of a translation unit.
 typedef CXFile = ffi.Pointer<ffi.Void>;
-typedef time_t = __darwin_time_t;
-typedef __darwin_time_t = ffi.Int64;
 
 /// Uniquely identifies a CXFile, that refers to the same underlying file,
 /// across an indexing session.
@@ -6170,8 +6169,6 @@ class CXFileUniqueID extends ffi.Struct {
 
 /// A single translation unit, which resides in an index.
 typedef CXTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>;
-typedef size_t = __darwin_size_t;
-typedef __darwin_size_t = ffi.Uint64;
 
 /// Identifies a specific source location within a translation unit.
 class CXSourceLocation extends ffi.Struct {

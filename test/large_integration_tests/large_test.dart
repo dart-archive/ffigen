@@ -37,6 +37,9 @@ ${strings.headers}:
     - '**Documentation.h'
     - '**FataErrorHandler.h'
     - '**Index.h'
+${strings.typedefmap}:
+  'size_t': 'IntPtr'
+  'time_t': 'Int64'
       ''') as YamlMap);
       final library = parse(config);
 
