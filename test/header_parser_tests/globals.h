@@ -19,3 +19,6 @@ struct EmptyStruct
 };
 
 struct EmptyStruct globalStruct;
+
+typedef struct EmptyStruct EmptyStruct_Alias;
+EmptyStruct_Alias globalStruct_from_alias;

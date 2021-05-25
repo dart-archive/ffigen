@@ -81,6 +81,9 @@ Type getCodeGenType(
             s.broadType == BroadType.IncompleteArray) {
           // Do not use typedefs to Constant Array.
           return s;
+        } else if (s.broadType == BroadType.Boolean) {
+          // Do not use typedefs to Boolean.
+          return s;
         } else {
           final typealias = Typealias(name: spelling, type: s);
           bindingsIndex.addTypealiasToSeen(typedefUsr, typealias);

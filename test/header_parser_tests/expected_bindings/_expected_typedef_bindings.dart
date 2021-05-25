@@ -68,6 +68,21 @@ class Bindings {
       ffi.NativeFunction<
           ffi.Void Function(ffi.IntPtr, nesting_a_specified_type)>>('func3');
   late final _func3 = _func3_ptr.asFunction<void Function(int, int)>();
+
+  bool func4(
+    ffi.Pointer<ffi.Uint8> a,
+  ) {
+    return _func4(
+          a,
+        ) !=
+        0;
+  }
+
+  late final _func4_ptr =
+      _lookup<ffi.NativeFunction<ffi.Uint8 Function(ffi.Pointer<ffi.Uint8>)>>(
+          'func4');
+  late final _func4 =
+      _func4_ptr.asFunction<int Function(ffi.Pointer<ffi.Uint8>)>();
 }
 
 class Struct1 extends ffi.Struct {
@@ -99,3 +114,8 @@ abstract class _NamedEnumInTypedef {
 typedef nesting_a_specified_type = ffi.IntPtr;
 
 class Struct2 extends ffi.Opaque {}
+
+class withBoolAlias extends ffi.Struct {
+  @ffi.Uint8()
+  external int b;
+}

@@ -82,7 +82,9 @@ class Func extends LookUpBinding {
       p.name = paramNamer.makeUnique(p.name);
     }
     // Write enclosing function.
-    if (w.dartBool && functionType.returnType.broadType == BroadType.Boolean) {
+    if (w.dartBool &&
+        functionType.returnType.getBaseTypealiasType().broadType ==
+            BroadType.Boolean) {
       // Use bool return type in enclosing function.
       s.write('bool $enclosingFuncName(\n');
     } else {
@@ -90,7 +92,8 @@ class Func extends LookUpBinding {
           '${functionType.returnType.getDartType(w)} $enclosingFuncName(\n');
     }
     for (final p in functionType.parameters) {
-      if (w.dartBool && p.type.broadType == BroadType.Boolean) {
+      if (w.dartBool &&
+          p.type.getBaseTypealiasType().broadType == BroadType.Boolean) {
         // Use bool parameter type in enclosing function.
         s.write('  bool ${p.name},\n');
       } else {
@@ -102,7 +105,8 @@ class Func extends LookUpBinding {
 
     s.write('(\n');
     for (final p in functionType.parameters) {
-      if (w.dartBool && p.type.broadType == BroadType.Boolean) {
+      if (w.dartBool &&
+          p.type.getBaseTypealiasType().broadType == BroadType.Boolean) {
         // Convert bool parameter to int before calling.
         s.write('    ${p.name}?1:0,\n');
       } else {

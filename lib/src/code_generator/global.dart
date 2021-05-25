@@ -49,8 +49,9 @@ class Global extends LookUpBinding {
 
     s.write(
         "late final ${w.ffiLibraryPrefix}.Pointer<$cType> $pointerName = ${w.lookupFuncIdentifier}<$cType>('$originalName');\n\n");
-    if (type.broadType == BroadType.Compound) {
-      if (type.compound!.isOpaque) {
+    final baseTypealiasType = type.getBaseTypealiasType();
+    if (baseTypealiasType.broadType == BroadType.Compound) {
+      if (baseTypealiasType.compound!.isOpaque) {
         s.write(
             '${w.ffiLibraryPrefix}.Pointer<$cType> get $globalVarName => $pointerName;\n\n');
       } else {

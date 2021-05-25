@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+#include<stdbool.h>
+
 typedef void (*NamedFunctionProto)();
 
 struct Struct1
@@ -59,3 +61,11 @@ void func3(specified_type_as_IntPtr, nesting_a_specified_type b);
 typedef struct
 {
 } Struct2, Struct3, *pStruct2, *pStruct3;
+
+typedef bool bool_alias;
+
+bool_alias func4(bool_alias *a);
+
+struct withBoolAlias{
+    bool_alias b;
+};
