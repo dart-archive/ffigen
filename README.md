@@ -237,6 +237,58 @@ globals:
   </td>
   </tr>
   <tr>
+    <td>typedefs</td>
+    <td>Filters for typedefs.<br><br>
+    Note: Typedefs that are not referred to anywhere will not be generated.
+    Options -<br>
+    - Include/Exclude (generated typedefs only).<br>
+    - Rename typedefs.<br>
+    </td>
+    <td>
+
+```yaml
+functions:
+  include: # 'exclude' is also available.
+    # Matches using regexp.
+    - [a-z][a-zA-Z0-9]*
+    # '.' matches any character.
+    - prefix.*
+    # Matches with exact name
+    - someFuncName
+    # Full names have higher priority.
+    - anotherName
+  rename:
+    # Regexp groups based replacement.
+    'clang_(.*)': '$1'
+    'clang_dispose': 'dispose'
+    # Removes '_' from beginning.
+    '_(.*)': '$1'
+  symbol-address:
+    # Used to expose symbol and typedef.
+    include:
+      - myFunc
+enums:
+  member-rename:
+    '(.*)': # Matches any enum.
+      # Removes '_' from beginning
+      # enum member name.
+      '_(.*)': '$1'
+    # Full names have higher priority.
+    'CXTypeKind':
+      # $1 keeps only the 1st
+      # group i.e only '(.*)'.
+      'CXType(.*)': '$1'
+globals:
+  exclude:
+    - aGlobal
+  rename:
+    # Removes '_' from
+    # beginning of a name.
+    '_(.*)': '$1'
+```
+  </td>
+  </tr>
+  <tr>
     <td>structs -> pack</td>
     <td>Override the @Packed(X) annotation for generated structs.<br><br>
     <i>Options - none, 1, 2, 4, 8, 16</i><br>
