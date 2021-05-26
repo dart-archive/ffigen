@@ -156,7 +156,8 @@ const linuxDylibLocations = [
   '/usr/lib/llvm-9/lib/',
   '/usr/lib/llvm-10/lib/',
   '/usr/lib/llvm-11/lib/',
-  '/usr/lib/'
+  '/usr/lib/',
+  '/usr/lib64/',
 ];
 const windowsDylibLocations = [
   r'C:\Program Files\LLVM\bin\',
