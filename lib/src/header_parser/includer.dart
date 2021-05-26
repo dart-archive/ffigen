@@ -80,8 +80,10 @@ bool shouldIncludeMacro(String usr, String name) {
 bool shouldIncludeTypealias(String usr, String name) {
   if (bindingsIndex.isSeenTypealias(usr) || name == '') {
     return false;
-  } else {
+  } else if (config.typedefs.shouldInclude(name)) {
     return true;
+  } else {
+    return false;
   }
 }
 

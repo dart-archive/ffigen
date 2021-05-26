@@ -51,6 +51,7 @@ const enums = 'enums';
 const unnamedEnums = 'unnamed-enums';
 const globals = 'globals';
 const macros = 'macros';
+const typedefs = 'typedefs';
 
 // Sub-fields of Declarations.
 const include = 'include';

@@ -26,10 +26,15 @@ struct AnyMatchStruct5
     int _underscore;
 };
 
+typedef struct Struct5{
+    int a;
+} Struct5_Alias;
+
 void func1(struct Struct1 *s);
 void test_func2(struct Test_Struct2 *s);
 void fullMatch_func3(struct FullMatchStruct3 *s);
 void memberRename_func4(int _underscore, float fullMatch, int);
+void typedefRenameFunc(Struct5_Alias s);
 
 enum Enum1
 {

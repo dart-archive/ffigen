@@ -40,66 +40,64 @@ class _ParsedTypealias {
 final _stack = Stack<_ParsedTypealias>();
 
 /// Parses a typedef declaration.
+///
+/// Returns `null` if the typedef could not be generated or has been excluded
+/// by the config.
 Typealias? parseTypedefDeclaration(
   clang_types.CXCursor cursor, {
-
-  /// Option to ignore declaration filter (Useful in case of extracting
-  /// declarations when they are passed/returned by an included function.)
-  bool ignoreFilter = false,
   bool pointerReference = false,
 }) {
   _stack.push(_ParsedTypealias());
-
-  final spelling = cursor.spelling();
-  final usr = cursor.usr();
-  if ((ignoreFilter || shouldIncludeTypealias(usr, spelling)) &&
-      (!bindingsIndex.isSeenTypealias(usr))) {
+  final typedefName = cursor.spelling();
+  final typedefUsr = cursor.usr();
+  if (shouldIncludeTypealias(typedefUsr, typedefName)) {
     final ct = clang.clang_getTypedefDeclUnderlyingType(cursor);
     final s = getCodeGenType(ct, pointerReference: pointerReference);
 
-    if (bindingsIndex.isSeenUnsupportedTypealias(usr)) {
+    if (bindingsIndex.isSeenUnsupportedTypealias(typedefUsr)) {
       // Do not process unsupported typealiases again.
     } else if (s.broadType == BroadType.Unimplemented) {
-      _logger.fine("Skipped Typedef '$spelling': Unimplemented type referred.");
-      bindingsIndex.addUnsupportedTypealiasToSeen(usr);
+      _logger
+          .fine("Skipped Typedef '$typedefName': Unimplemented type referred.");
+      bindingsIndex.addUnsupportedTypealiasToSeen(typedefUsr);
     } else if (s.broadType == BroadType.Compound &&
-        s.compound!.name == spelling) {
-      // Ignore typedef if it refers to a compound with the same name.
-      bindingsIndex.addUnsupportedTypealiasToSeen(usr);
+        s.compound!.originalName == typedefName) {
+      // Ignore typedef if it refers to a compound with the same original name.
+      bindingsIndex.addUnsupportedTypealiasToSeen(typedefUsr);
       _logger.fine(
-          "Skipped Typedef '$spelling': Name matches with referred struct/union.");
+          "Skipped Typedef '$typedefName': Name matches with referred struct/union.");
     } else if (s.broadType == BroadType.Enum) {
       // Ignore typedefs to Enum.
-      bindingsIndex.addUnsupportedTypealiasToSeen(usr);
-      _logger.fine("Skipped Typedef '$spelling': typedef to enum.");
+      bindingsIndex.addUnsupportedTypealiasToSeen(typedefUsr);
+      _logger.fine("Skipped Typedef '$typedefName': typedef to enum.");
     } else if (s.broadType == BroadType.Handle) {
       // Ignore typedefs to Handle.
-      _logger.fine("Skipped Typedef '$spelling': typedef to Dart Handle.");
-      bindingsIndex.addUnsupportedTypealiasToSeen(usr);
+      _logger.fine("Skipped Typedef '$typedefName': typedef to Dart Handle.");
+      bindingsIndex.addUnsupportedTypealiasToSeen(typedefUsr);
     } else if (s.broadType == BroadType.ConstantArray ||
         s.broadType == BroadType.IncompleteArray) {
       // Ignore typedefs to Constant Array.
-      _logger.fine("Skipped Typedef '$spelling': typedef to array.");
-      bindingsIndex.addUnsupportedTypealiasToSeen(usr);
+      _logger.fine("Skipped Typedef '$typedefName': typedef to array.");
+      bindingsIndex.addUnsupportedTypealiasToSeen(typedefUsr);
     } else if (s.broadType == BroadType.Boolean) {
       // Ignore typedefs to Boolean.
-      _logger.fine("Skipped Typedef '$spelling': typedef to bool.");
-      bindingsIndex.addUnsupportedTypealiasToSeen(usr);
+      _logger.fine("Skipped Typedef '$typedefName': typedef to bool.");
+      bindingsIndex.addUnsupportedTypealiasToSeen(typedefUsr);
     } else {
       // Create typealias.
       _stack.top.typealias = Typealias(
-        usr: usr,
-        originalName: spelling,
-        name: spelling,
+        usr: typedefUsr,
+        originalName: typedefName,
+        name: config.typedefs.renameUsingConfig(typedefName),
         type: s,
         dartDoc: getCursorDocComment(cursor),
       );
-      bindingsIndex.addTypealiasToSeen(usr, _stack.top.typealias!);
+      bindingsIndex.addTypealiasToSeen(typedefUsr, _stack.top.typealias!);
     }
   }
 
-  if (bindingsIndex.isSeenTypealias(usr)) {
-    _stack.top.typealias = bindingsIndex.getSeenTypealias(usr);
+  if (bindingsIndex.isSeenTypealias(typedefUsr)) {
+    _stack.top.typealias = bindingsIndex.getSeenTypealias(typedefUsr);
   }
 
   return _stack.pop().typealias;

@@ -63,13 +63,14 @@ Type getCodeGenType(
       if (bindingsIndex.isSeenTypealias(typedefUsr)) {
         return Type.typealias(bindingsIndex.getSeenTypealias(typedefUsr)!);
       } else {
-        final typealias = parseTypedefDeclaration(cursor,
-            ignoreFilter: true, pointerReference: pointerReference);
+        final typealias =
+            parseTypedefDeclaration(cursor, pointerReference: pointerReference);
 
         if (typealias != null) {
           return Type.typealias(typealias);
         } else {
-          // Use underlying type if typealias couldn't be created.
+          // Use underlying type if typealias couldn't be created or if
+          // the user excluded this typedef.
           final ct = clang.clang_getTypedefDeclUnderlyingType(cursor);
           return getCodeGenType(ct, pointerReference: pointerReference);
         }

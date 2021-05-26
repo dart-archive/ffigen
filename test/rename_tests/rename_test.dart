@@ -31,7 +31,7 @@ ${strings.headers}:
   ${strings.entryPoints}:
     - 'test/rename_tests/rename.h'
 
-functions:
+${strings.functions}:
   ${strings.rename}:
     'test_(.*)': '\$1'
     '.*': '$functionPrefix\$0'
@@ -42,7 +42,7 @@ functions:
       'fullMatch': 'fullMatchSuccess'
       '': 'unnamed'
 
-structs:
+${strings.structs}:
   ${strings.rename}:
     'Test_(.*)': '\$1'
     '.*': '$structPrefix\$0'
@@ -54,7 +54,7 @@ structs:
     '.*':
       '_(.*)': '\$1'
 
-enums:
+${strings.enums}:
   ${strings.rename}:
     'Test_(.*)': '\$1'
     '.*': '$enumPrefix\$0'
@@ -64,17 +64,20 @@ enums:
       '_(.*)': '\$1'
       'fullMatch': 'fullMatchSuccess'
 
-unnamed-enums:
+${strings.unnamedEnums}:
   ${strings.rename}:
     '_(.*)': '\$1'
     'unnamedFullMatch': 'unnamedFullMatchSuccess'
 
-macros:
+${strings.macros}:
   ${strings.rename}:
     'Test_(.*)': '\$1'
     '.*': '$macroPrefix\$0'
     'FullMatchMacro3': 'Macro3'
 
+${strings.typedefs}:
+  ${strings.rename}:
+    'Struct5_Alias': 'Struct5_Alias_Renamed'
     ''') as yaml.YamlMap));
     });
 
@@ -150,6 +153,10 @@ macros:
       expect(actual.getBindingAsString('unnamedFullMatchSuccess'),
           expected.getBindingAsString('unnamedFullMatchSuccess'));
     });
+    test('typedef rename', () {
+      expect(actual.getBindingAsString('Struct5_Alias_Renamed'),
+          expected.getBindingAsString('Struct5_Alias_Renamed'));
+    });
   });
 }
 
@@ -217,6 +224,21 @@ Library expectedLibrary() {
           Parameter(
             name: 'unnamed',
             type: Type.nativeType(SupportedNativeType.Int32),
+          ),
+        ],
+      ),
+      Func(
+        name: '${functionPrefix}typedefRenameFunc',
+        originalName: 'typedefRenameFunc',
+        returnType: Type.nativeType(
+          SupportedNativeType.Void,
+        ),
+        parameters: [
+          Parameter(
+            name: 's',
+            type: Type.typealias(Typealias(
+                name: 'Struct5_Alias_Renamed',
+                type: Type.struct(Struc(name: '${structPrefix}Struct5')))),
           ),
         ],
       ),
