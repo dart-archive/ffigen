@@ -145,14 +145,14 @@ class Func extends LookUpBinding {
   }
 
   @override
-  void getDependencies(Set<Binding> dependencies) {
+  void addDependencies(Set<Binding> dependencies) {
     if (dependencies.contains(this)) return;
 
     dependencies.add(this);
     if (exposeSymbolAddress) {
-      _exposedFunctionType!.getDependencies(dependencies);
+      _exposedFunctionType!.addDependencies(dependencies);
     }
-    functionType.getDependencies(dependencies);
+    functionType.addDependencies(dependencies);
   }
 }
 

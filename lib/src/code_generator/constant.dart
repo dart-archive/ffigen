@@ -57,7 +57,7 @@ class Constant extends NoLookUpBinding {
   }
 
   @override
-  void getDependencies(Set<Binding> dependencies) {
+  void addDependencies(Set<Binding> dependencies) {
     if (dependencies.contains(this)) return;
 
     dependencies.add(this);

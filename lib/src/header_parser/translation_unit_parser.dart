@@ -46,7 +46,6 @@ int _rootCursorVisitor(clang_types.CXCursor cursor, clang_types.CXCursor parent,
         case clang_types.CXCursorKind.CXCursor_FunctionDecl:
           addToBindings(parseFunctionDeclaration(cursor));
           break;
-        // TODO: should add typedefs included by user.
         case clang_types.CXCursorKind.CXCursor_StructDecl:
           addToBindings(parseCompoundDeclaration(cursor, CompoundType.struct));
           break;

@@ -34,7 +34,7 @@ class Library {
   }) {
     /// Get all dependencies (includes itself).
     final dependencies = <Binding>{};
-    bindings.forEach((b) => b.getDependencies(dependencies));
+    bindings.forEach((b) => b.addDependencies(dependencies));
 
     /// Save bindings.
     this.bindings = dependencies.toList();

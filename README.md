@@ -532,3 +532,16 @@ functions:
       - 'myFunc'
       - '.*' # Do this to expose all pointers.
 ```
+
+### How are Structs/Unions/Enums that are reffered to via typedefs handled?
+
+Named declarations use their own names even when inside another typedef.
+However, unnamed declarations inside typedefs take the name of the _first_ typedef
+that refers to them.
+
+### Why are some typedefs not generated?
+
+The following typedefs are not generated -
+- They are not referred to anywhere in the included declarations.
+- They refer to a struct/union having the same name as itself.
+- They refer to a boolean, enum, inline array, Handle or any unsupported type.

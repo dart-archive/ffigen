@@ -33,11 +33,11 @@ class Typealias extends NoLookUpBinding {
         );
 
   @override
-  void getDependencies(Set<Binding> dependencies) {
+  void addDependencies(Set<Binding> dependencies) {
     if (dependencies.contains(this)) return;
 
     dependencies.add(this);
-    type.getDependencies(dependencies);
+    type.addDependencies(dependencies);
   }
 
   @override

@@ -338,6 +338,9 @@ class BindingsIndex {
   final Set<String> _unsupportedTypealiases = {};
   final Map<String, Typealias> _typealiases = {};
 
+  /// Index for headers.
+  final Map<String, bool> _headerCache = {};
+
   bool isSeenStruct(String usr) {
     return _structs.containsKey(usr);
   }
@@ -440,5 +443,17 @@ class BindingsIndex {
 
   Typealias? getSeenTypealias(String usr) {
     return _typealiases[usr];
+  }
+
+  bool isSeenHeader(String source) {
+    return _headerCache.containsKey(source);
+  }
+
+  void addHeaderToSeen(String source, bool includeStatus) {
+    _headerCache[source] = includeStatus;
+  }
+
+  bool? getSeenHeaderStatus(String source) {
+    return _headerCache[source];
   }
 }

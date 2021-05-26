@@ -1202,7 +1202,11 @@ class CXUnsavedFile extends ffi.Struct {
   external int Length;
 }
 
+/// An "index" that consists of a set of translation units that would
+/// typically be linked together into an executable or library.
 typedef CXIndex = ffi.Pointer<ffi.Void>;
+
+/// A particular source file that is part of a translation unit.
 typedef CXFile = ffi.Pointer<ffi.Void>;
 
 /// Identifies a specific source location within a translation
@@ -1233,7 +1237,11 @@ class CXSourceRange extends ffi.Struct {
   external int end_int_data;
 }
 
+/// A single translation unit, which resides in an index.
 typedef CXTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>;
+
+/// A single diagnostic, containing the diagnostic's severity,
+/// location, text, source ranges, and fix-it hints.
 typedef CXDiagnostic = ffi.Pointer<ffi.Void>;
 
 /// Options to control the display of diagnostics.
@@ -2380,8 +2388,21 @@ abstract class CXChildVisitResult {
   static const int CXChildVisit_Recurse = 2;
 }
 
+/// Visitor invoked for each cursor found by a traversal.
+///
+/// This visitor function will be invoked for each cursor found by
+/// clang_visitCursorChildren(). Its first argument is the cursor being
+/// visited, its second argument is the parent visitor for that cursor,
+/// and its third argument is the client data provided to
+/// clang_visitCursorChildren().
+///
+/// The visitor should return one of the \c CXChildVisitResult values
+/// to direct clang_visitCursorChildren().
 typedef CXCursorVisitor = ffi.Pointer<
     ffi.NativeFunction<ffi.Int32 Function(CXCursor, CXCursor, CXClientData)>>;
+
+/// Opaque pointer representing client data that will be passed through
+/// to various callbacks and visitors.
 typedef CXClientData = ffi.Pointer<ffi.Void>;
 
 abstract class CXEvalResultKind {
@@ -2394,6 +2415,7 @@ abstract class CXEvalResultKind {
   static const int CXEval_UnExposed = 0;
 }
 
+/// Evaluation result of a cursor
 typedef CXEvalResult = ffi.Pointer<ffi.Void>;
 
 const int CINDEX_VERSION_MAJOR = 0;

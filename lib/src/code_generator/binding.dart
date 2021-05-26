@@ -28,7 +28,7 @@ abstract class Binding {
   });
 
   /// Get all dependencies, including itself and save them in [dependencies].
-  void getDependencies(Set<Binding> dependencies);
+  void addDependencies(Set<Binding> dependencies);
 
   /// Converts a Binding to its actual string representation.
   ///

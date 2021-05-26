@@ -50,7 +50,7 @@ enum BroadType {
 
   Enum,
 
-  /// Stores its element type in NativeType as only those are supported.
+  /// Represents an Array type.
   ConstantArray,
   IncompleteArray,
 
@@ -177,19 +177,22 @@ class Type {
   }
 
   /// Get all dependencies of this type and save them in [dependencies].
-  void getDependencies(Set<Binding> dependencies) {
-    if (compound != null && !dependencies.contains(compound)) {
-      compound!.getDependencies(dependencies);
-    } else if (child != null && !dependencies.contains(child)) {
-      child!.getDependencies(dependencies);
-    } else if (typealias != null && !dependencies.contains(typealias)) {
-      typealias!.getDependencies(dependencies);
-    } else if (nativeFunc != null) {
-      nativeFunc!.getDependencies(dependencies);
-    } else if (functionType != null) {
-      functionType!.getDependencies(dependencies);
-    } else if (enumClass != null) {
-      enumClass!.getDependencies(dependencies);
+  void addDependencies(Set<Binding> dependencies) {
+    switch (broadType) {
+      case BroadType.Compound:
+        return compound!.addDependencies(dependencies);
+      case BroadType.NativeFunction:
+        return nativeFunc!.addDependencies(dependencies);
+      case BroadType.FunctionType:
+        return functionType!.addDependencies(dependencies);
+      case BroadType.Typealias:
+        return typealias!.addDependencies(dependencies);
+      case BroadType.Enum:
+        return enumClass!.addDependencies(dependencies);
+      default:
+        if (child != null) {
+          return child!.addDependencies(dependencies);
+        }
     }
   }
 
@@ -362,9 +365,9 @@ class FunctionType {
     return sb.toString();
   }
 
-  void getDependencies(Set<Binding> dependencies) {
-    returnType.getDependencies(dependencies);
-    parameters.forEach((p) => p.type.getDependencies(dependencies));
+  void addDependencies(Set<Binding> dependencies) {
+    returnType.addDependencies(dependencies);
+    parameters.forEach((p) => p.type.addDependencies(dependencies));
   }
 }
 
@@ -378,7 +381,7 @@ class NativeFunc {
   NativeFunc.fromFunctionTypealias(Typealias typealias)
       : type = Type.typealias(typealias);
 
-  void getDependencies(Set<Binding> dependencies) {
-    type.getDependencies(dependencies);
+  void addDependencies(Set<Binding> dependencies) {
+    type.addDependencies(dependencies);
   }
 }
