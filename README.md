@@ -215,6 +215,12 @@ functions:
     # Used to expose symbol and typedef.
     include:
       - myFunc
+structs:
+  rename:
+    '_(.*)': '$1' # Removes prefix underscores from all structures.
+  member-rename:
+    '.*': # Matches any struct.
+      '_(.*)': '$1' # Removes prefix underscores from members.
 enums:
   member-rename:
     '(.*)': # Matches any enum.
