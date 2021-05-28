@@ -217,10 +217,14 @@ functions:
       - myFunc
 structs:
   rename:
-    '_(.*)': '$1' # Removes prefix underscores from all structures.
+    # Removes prefix underscores
+    # from all structures.
+    '_(.*)': '$1'
   member-rename:
     '.*': # Matches any struct.
-      '_(.*)': '$1' # Removes prefix underscores from members.
+      # Removes prefix underscores
+      # from members.
+      '_(.*)': '$1'
 enums:
   member-rename:
     '(.*)': # Matches any enum.
