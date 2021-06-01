@@ -1,6 +1,38 @@
 # 4.0.0-dev.0
-- Added support for generating typedefs.
-- C and Dart Types for functions are now generated inline.
+- Added support for generating typedefs (_referred_ typedefs only).
+<table>
+<tr>
+<td>Example C Code</td>
+<td>Generated Dart typedef</td>
+</tr>
+<tr>
+<td>
+
+```C++
+typedef struct _A{
+    ...
+} A, *pA;
+
+A func(pA ptr);
+```
+</td>
+<td>
+
+```dart
+class _A extends ffi.Struct {...}
+
+typedef A = _A;
+typedef pA = ffi.Pointer<A>;
+```
+</td>
+</tr>
+</table>
+
+- All declarations that are excluded by the user are now only included if being
+used somewhere.
+- Improved struct/union include/exclude. These declarations can now be targetted
+by their actual name, or if they are unnamed then by the name of the first
+typedef that refers to them.
 
 # 3.1.0-dev.1
 - Users can now specify exact path to dynamic library in `llvm-path`.

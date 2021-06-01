@@ -15,7 +15,6 @@ import 'writer.dart';
 /// typedef $name = $type;
 /// );
 /// ```
-/// Note: re-set [name] after resolving name conflicts.
 class Typealias extends NoLookUpBinding {
   final Type type;
 

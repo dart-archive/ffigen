@@ -36,11 +36,9 @@ class NativeLibrary {
     return _sum(a, b);
   }
 
-  late final _sum_ptr = _lookup<NativeFunction<_c_sum>>('sum');
-  late final _dart_sum _sum = _sum_ptr.asFunction<_dart_sum>();
+  late final _sum_ptr = _lookup<ffi.NativeFunction<ffi.Int32 Function(ffi.Int32, ffi.Int32)>>('sum');
+  late final _sum = _sum_ptr.asFunction<int Function(int, int)>();
 }
-typedef _c_sum = Int32 Function(Int32 a, Int32 b);
-typedef _dart_sum = int Function(int a, int b);
 ```
 ## Using this package
 - Add `ffigen` under `dev_dependencies` in your `pubspec.yaml`.
