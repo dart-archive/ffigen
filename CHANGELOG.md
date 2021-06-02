@@ -9,20 +9,20 @@
 <td>
 
 ```C++
-typedef struct _A{
+typedef struct A{
     ...
-} A, *pA;
+} TA, *PA;
 
-A func(pA ptr);
+TA func(PA ptr);
 ```
 </td>
 <td>
 
 ```dart
-class _A extends ffi.Struct {...}
-
-typedef A = _A;
-typedef pA = ffi.Pointer<A>;
+class A extends ffi.Struct {...}
+typedef TA = A;
+typedef PA = ffi.Pointer<A>;
+TA func(PA ptr){...}
 ```
 </td>
 </tr>
