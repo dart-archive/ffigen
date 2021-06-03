@@ -61,8 +61,8 @@ class Func extends LookUpBinding {
       }
     }
 
-    _exposedFunctionType = Type.typealias(
-        Typealias(name: 'Native_$name', type: Type.functionType(functionType)));
+    _exposedFunctionType = Type.typealias(Typealias(
+        name: '${name}NativeType', type: Type.functionType(functionType)));
   }
 
   @override
@@ -70,8 +70,7 @@ class Func extends LookUpBinding {
     final s = StringBuffer();
     final enclosingFuncName = name;
     final funcVarName = w.wrapperLevelUniqueNamer.makeUnique('_$name');
-    final funcPointerName =
-        w.wrapperLevelUniqueNamer.makeUnique('_${name}_ptr');
+    final funcPointerName = w.wrapperLevelUniqueNamer.makeUnique('_${name}Ptr');
 
     if (dartDoc != null) {
       s.write(makeDartDoc(dartDoc!));
