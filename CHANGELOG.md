@@ -1,3 +1,6 @@
+# 4.0.0-dev.1
+- Use camelCase to name internal variables.
+
 # 4.0.0-dev.0
 - Added support for generating typedefs (_referred_ typedefs only).
 <table>
