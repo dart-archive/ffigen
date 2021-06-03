@@ -136,7 +136,7 @@ Compound? parseCompoundDeclaration(
       // must be generated.
       _stack.top.compound = Compound.fromType(
         type: compoundType,
-        name: incrementalNamer.name('unnamed$className'),
+        name: incrementalNamer.name('Unnamed$className'),
         usr: declUsr,
         dartDoc: getCursorDocComment(cursor),
       );

@@ -19,7 +19,7 @@ class NativeLibrary {
           lookup)
       : _lookup = lookup;
 
-  ffi.Pointer<B_alias> func(
+  ffi.Pointer<BAlias> func(
     ffi.Pointer<A> a,
   ) {
     return _func(
@@ -27,11 +27,11 @@ class NativeLibrary {
     );
   }
 
-  late final _func_ptr = _lookup<
-          ffi.NativeFunction<ffi.Pointer<B_alias> Function(ffi.Pointer<A>)>>(
-      'func');
+  late final _funcPtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<BAlias> Function(ffi.Pointer<A>)>>(
+          'func');
   late final _func =
-      _func_ptr.asFunction<ffi.Pointer<B_alias> Function(ffi.Pointer<A>)>();
+      _funcPtr.asFunction<ffi.Pointer<BAlias> Function(ffi.Pointer<A>)>();
 
   ffi.Pointer<UB> func2(
     ffi.Pointer<UA> a,
@@ -41,14 +41,14 @@ class NativeLibrary {
     );
   }
 
-  late final _func2_ptr =
+  late final _func2Ptr =
       _lookup<ffi.NativeFunction<ffi.Pointer<UB> Function(ffi.Pointer<UA>)>>(
           'func2');
   late final _func2 =
-      _func2_ptr.asFunction<ffi.Pointer<UB> Function(ffi.Pointer<UA>)>();
+      _func2Ptr.asFunction<ffi.Pointer<UB> Function(ffi.Pointer<UA>)>();
 }
 
-typedef B_alias = B;
+typedef BAlias = B;
 
 class B extends ffi.Opaque {}
 

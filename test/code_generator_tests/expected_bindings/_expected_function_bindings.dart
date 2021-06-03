@@ -23,9 +23,9 @@ class Bindings {
     return _noParam();
   }
 
-  late final _noParam_ptr =
+  late final _noParamPtr =
       _lookup<ffi.NativeFunction<ffi.Int32 Function()>>('noParam');
-  late final _noParam = _noParam_ptr.asFunction<int Function()>();
+  late final _noParam = _noParamPtr.asFunction<int Function()>();
 
   int withPrimitiveParam(
     int a,
@@ -37,11 +37,11 @@ class Bindings {
     );
   }
 
-  late final _withPrimitiveParam_ptr =
+  late final _withPrimitiveParamPtr =
       _lookup<ffi.NativeFunction<ffi.Uint8 Function(ffi.Int32, ffi.Uint8)>>(
           'withPrimitiveParam');
   late final _withPrimitiveParam =
-      _withPrimitiveParam_ptr.asFunction<int Function(int, int)>();
+      _withPrimitiveParamPtr.asFunction<int Function(int, int)>();
 
   ffi.Pointer<ffi.Double> withPointerParam(
     ffi.Pointer<ffi.Int32> a,
@@ -53,11 +53,11 @@ class Bindings {
     );
   }
 
-  late final _withPointerParam_ptr = _lookup<
+  late final _withPointerParamPtr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<ffi.Double> Function(ffi.Pointer<ffi.Int32>,
               ffi.Pointer<ffi.Pointer<ffi.Uint8>>)>>('withPointerParam');
-  late final _withPointerParam = _withPointerParam_ptr.asFunction<
+  late final _withPointerParam = _withPointerParamPtr.asFunction<
       ffi.Pointer<ffi.Double> Function(
           ffi.Pointer<ffi.Int32>, ffi.Pointer<ffi.Pointer<ffi.Uint8>>)>();
 }

@@ -71,7 +71,7 @@ Library expectedLibrary() {
       type: Type.nativeType(SupportedNativeType.Int32),
     ),
   ]);
-  final unnamedInternalStruc = Struc(name: 'unnamedStruct_1', members: [
+  final unnamedInternalStruc = Struc(name: 'UnnamedStruct1', members: [
     Member(
       name: 'a',
       type: Type.nativeType(SupportedNativeType.Int32),

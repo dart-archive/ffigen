@@ -55,20 +55,20 @@ void main() {
         /// Conflicts with ffi library prefix, name of prefix is changed.
         Struc(name: 'ffi'),
         Func(
-            name: 'ffi_1',
+            name: 'ffi1',
             returnType: Type.nativeType(SupportedNativeType.Void)),
       ]);
       final l2 = Library(name: 'Bindings', bindings: [
         Struc(name: 'TestStruc'),
-        Struc(name: 'TestStruc_1'),
+        Struc(name: 'TestStruc1'),
         EnumClass(name: 'TestEnum'),
-        EnumClass(name: 'TestEnum_1'),
+        EnumClass(name: 'TestEnum1'),
         Func(
             name: 'testFunc',
             originalName: 'testFunc',
             returnType: Type.nativeType(SupportedNativeType.Void)),
         Func(
-            name: 'testFunc_1',
+            name: 'testFunc1',
             originalName: 'testFunc',
             returnType: Type.nativeType(SupportedNativeType.Void)),
         Constant(
@@ -79,28 +79,28 @@ void main() {
         ),
         Constant(
           originalName: 'Test_Macro',
-          name: 'Test_Macro_1',
+          name: 'Test_Macro1',
           rawType: 'int',
           rawValue: '0',
         ),
         Typealias(
             name: 'testAlias', type: Type.nativeType(SupportedNativeType.Void)),
         Typealias(
-            name: 'testAlias_1',
+            name: 'testAlias1',
             type: Type.nativeType(SupportedNativeType.Void)),
         Struc(name: 'testCrossDecl', originalName: 'testCrossDecl'),
         Func(
-            name: 'testCrossDecl_1',
+            name: 'testCrossDecl1',
             originalName: 'testCrossDecl',
             returnType: Type.nativeType(SupportedNativeType.Void)),
-        Constant(name: 'testCrossDecl_2', rawValue: '0', rawType: 'int'),
-        EnumClass(name: 'testCrossDecl_3'),
+        Constant(name: 'testCrossDecl2', rawValue: '0', rawType: 'int'),
+        EnumClass(name: 'testCrossDecl3'),
         Typealias(
-            name: 'testCrossDecl_4',
+            name: 'testCrossDecl4',
             type: Type.nativeType(SupportedNativeType.Void)),
         Struc(name: 'ffi'),
         Func(
-            name: 'ffi_1',
+            name: 'ffi1',
             returnType: Type.nativeType(SupportedNativeType.Void)),
       ]);
 

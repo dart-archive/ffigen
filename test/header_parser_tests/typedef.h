@@ -52,20 +52,20 @@ typedef enum _NamedEnumInTypedef
 } NamedEnumInTypedef;
 
 // Should be treated as IntPtr when used.
-typedef char specified_type_as_IntPtr;
-typedef specified_type_as_IntPtr nesting_a_specified_type;
+typedef char SpecifiedTypeAsIntPtr;
+typedef SpecifiedTypeAsIntPtr NestingASpecifiedType;
 
-void func3(specified_type_as_IntPtr, nesting_a_specified_type b);
+void func3(SpecifiedTypeAsIntPtr, NestingASpecifiedType b);
 
 // Struct3 is used. `pStruct2` and `pStruct3` are ignored.
 typedef struct
 {
 } Struct2, Struct3, *pStruct2, *pStruct3;
 
-typedef bool bool_alias;
+typedef bool BoolAlias;
 
-bool_alias func4(bool_alias *a);
+BoolAlias func4(BoolAlias *a);
 
-struct withBoolAlias{
-    bool_alias b;
+struct WithBoolAlias{
+    BoolAlias b;
 };

@@ -532,8 +532,7 @@ unions:
 ### How to expose the native pointers and typedefs?
 
 By default all native pointers and typedefs are hidden, but you can use the
-`symbol-address` subkey for functions/globals and make them public by matching with its name. The pointers are then accesible via `nativeLibrary.addresses` and the native
-typedef are suffixed with `NativeType`.
+`symbol-address` subkey for functions/globals and make them public by matching with its name. The pointers are then accesible via `nativeLibrary.addresses` and the native typedef are prefixed with `Native_`.
 
 Example -
 ```yaml

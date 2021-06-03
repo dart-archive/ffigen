@@ -24,9 +24,9 @@ class NativeLibrary {
     return _com1();
   }
 
-  late final _com1_ptr =
+  late final _com1Ptr =
       _lookup<ffi.NativeFunction<ffi.Void Function()>>('com1');
-  late final _com1 = _com1_ptr.asFunction<void Function()>();
+  late final _com1 = _com1Ptr.asFunction<void Function()>();
 
   /// This is a multi-line
   /// test comment.
@@ -34,9 +34,9 @@ class NativeLibrary {
     return _com2();
   }
 
-  late final _com2_ptr =
+  late final _com2Ptr =
       _lookup<ffi.NativeFunction<ffi.Void Function()>>('com2');
-  late final _com2 = _com2_ptr.asFunction<void Function()>();
+  late final _com2 = _com2Ptr.asFunction<void Function()>();
 
   /// This is a multi-line
   /// doxygen style
@@ -45,13 +45,13 @@ class NativeLibrary {
     return _com3();
   }
 
-  late final _com3_ptr =
+  late final _com3Ptr =
       _lookup<ffi.NativeFunction<ffi.Void Function()>>('com3');
-  late final _com3 = _com3_ptr.asFunction<void Function()>();
+  late final _com3 = _com3Ptr.asFunction<void Function()>();
 }
 
 /// Test comment for struct.
-class com4 extends ffi.Struct {
+class Com4 extends ffi.Struct {
   /// Muli-line test comment for struct field
   /// With multiple line and both // and ///.
   @ffi.Int32()

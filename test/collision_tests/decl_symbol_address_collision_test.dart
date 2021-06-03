@@ -14,7 +14,8 @@ void main() {
       logWarnings(Level.SEVERE);
       actual = Library(
         name: 'Bindings',
-        header: '// ignore_for_file: unused_element',
+        header:
+            '// ignore_for_file: unused_element, camel_case_types, non_constant_identifier_names\n',
         bindings: [
           Struc(name: 'addresses'),
           Struc(name: '_SymbolAddresses'),

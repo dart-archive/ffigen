@@ -61,8 +61,8 @@ class Func extends LookUpBinding {
       }
     }
 
-    _exposedFunctionType = Type.typealias(Typealias(
-        name: '${name}NativeType', type: Type.functionType(functionType)));
+    _exposedFunctionType = Type.typealias(
+        Typealias(name: 'Native_$name', type: Type.functionType(functionType)));
   }
 
   @override

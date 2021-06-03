@@ -48,40 +48,40 @@ void main() {
         Typealias(name: 'var', type: Type.nativeType(SupportedNativeType.Void)),
       ]);
       final l2 = Library(name: 'Bindings', bindings: [
-        Struc(name: 'abstract_1'),
-        Struc(name: 'abstract_2'),
-        Struc(name: 'if_1'),
-        EnumClass(name: 'return_1'),
-        EnumClass(name: 'export_1'),
+        Struc(name: 'abstract1'),
+        Struc(name: 'abstract2'),
+        Struc(name: 'if1'),
+        EnumClass(name: 'return1'),
+        EnumClass(name: 'export1'),
         Func(
-            name: 'show_1',
+            name: 'show1',
             originalName: 'show',
             returnType: Type.nativeType(SupportedNativeType.Void)),
         Func(
-            name: 'implements_1',
+            name: 'implements1',
             originalName: 'implements',
             parameters: [
               Parameter(
                 type: Type.nativeType(SupportedNativeType.Int32),
-                name: 'if_1',
+                name: 'if1',
               ),
               Parameter(
                 type: Type.nativeType(SupportedNativeType.Int32),
-                name: 'abstract_1',
+                name: 'abstract1',
               ),
               Parameter(
                 type: Type.nativeType(SupportedNativeType.Int32),
-                name: 'in_1',
+                name: 'in1',
               ),
             ],
             returnType: Type.nativeType(SupportedNativeType.Void)),
         Constant(
-          name: 'else_1',
+          name: 'else1',
           rawType: 'int',
           rawValue: '0',
         ),
         Typealias(
-            name: 'var_1', type: Type.nativeType(SupportedNativeType.Void)),
+            name: 'var1', type: Type.nativeType(SupportedNativeType.Void)),
       ]);
       expect(l1.generate(), l2.generate());
     });

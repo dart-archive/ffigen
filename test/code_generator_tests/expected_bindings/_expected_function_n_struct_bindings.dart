@@ -25,11 +25,11 @@ class Bindings {
     );
   }
 
-  late final _someFunc_ptr = _lookup<
+  late final _someFuncPtr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<SomeStruc> Function(
               ffi.Pointer<ffi.Pointer<SomeStruc>>)>>('someFunc');
-  late final _someFunc = _someFunc_ptr.asFunction<
+  late final _someFunc = _someFuncPtr.asFunction<
       ffi.Pointer<SomeStruc> Function(ffi.Pointer<ffi.Pointer<SomeStruc>>)>();
 }
 

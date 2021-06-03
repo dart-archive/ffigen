@@ -27,11 +27,11 @@ class NativeLibrary {
     );
   }
 
-  late final _func1_ptr =
+  late final _func1Ptr =
       _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<Union2>)>>(
           'func1');
   late final _func1 =
-      _func1_ptr.asFunction<void Function(ffi.Pointer<Union2>)>();
+      _func1Ptr.asFunction<void Function(ffi.Pointer<Union2>)>();
 
   void func2(
     ffi.Pointer<Union3> s,
@@ -41,11 +41,11 @@ class NativeLibrary {
     );
   }
 
-  late final _func2_ptr =
+  late final _func2Ptr =
       _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<Union3>)>>(
           'func2');
   late final _func2 =
-      _func2_ptr.asFunction<void Function(ffi.Pointer<Union3>)>();
+      _func2Ptr.asFunction<void Function(ffi.Pointer<Union3>)>();
 }
 
 class Union1 extends ffi.Union {

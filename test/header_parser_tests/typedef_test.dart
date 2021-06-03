@@ -33,11 +33,10 @@ ${strings.structs}:
     - ExcludedStruct
     - _ExcludedStruct
 ${strings.typedefmap}:
-  'specified_type_as_IntPtr': 'IntPtr'
+  'SpecifiedTypeAsIntPtr': 'IntPtr'
 
 ${strings.preamble}: |
-  // ignore_for_file: unused_element
-  // ignore_for_file: unused_field
+  // ignore_for_file: unused_element, unused_field
         ''') as yaml.YamlMap),
       );
     });
