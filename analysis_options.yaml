@@ -5,7 +5,6 @@
 include: package:lints/recommended.yaml
 
 analyzer:
-  exclude: ['**bindings.dart'] # Exclude all generated bindings.
   strong-mode:
     implicit-casts: false
     implicit-dynamic: false
