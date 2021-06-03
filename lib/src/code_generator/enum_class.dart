@@ -55,13 +55,13 @@ class EnumClass extends NoLookUpBinding {
     s.write('abstract class $enclosingClassName {\n');
     const depth = '  ';
     for (final ec in enumConstants) {
-      final enum_value_name = localUniqueNamer.makeUnique(ec.name);
+      final enumValueName = localUniqueNamer.makeUnique(ec.name);
       if (ec.dartDoc != null) {
         s.write(depth + '/// ');
         s.writeAll(ec.dartDoc!.split('\n'), '\n' + depth + '/// ');
         s.write('\n');
       }
-      s.write(depth + 'static const int $enum_value_name = ${ec.value};\n');
+      s.write(depth + 'static const int $enumValueName = ${ec.value};\n');
     }
     s.write('}\n\n');
 

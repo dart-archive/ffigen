@@ -2,9 +2,10 @@
 # for details. All rights reserved. Use of this source code is governed by a
 # BSD-style license that can be found in the LICENSE file.
 
-include: package:pedantic/analysis_options.yaml
+include: package:lints/core.yaml
 
 analyzer:
+  exclude: ['**bindings.dart'] # Exclude all generated bindings.
   strong-mode:
     implicit-casts: false
     implicit-dynamic: false

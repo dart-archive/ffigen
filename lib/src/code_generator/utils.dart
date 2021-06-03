@@ -15,16 +15,16 @@ class UniqueNamer {
   ///
   /// Adds the resulting name to the used names by default.
   String makeUnique(String name, [bool addToUsedUpNames = true]) {
-    var cr_name = name;
+    var crName = name;
     var i = 1;
-    while (_usedUpNames.contains(cr_name)) {
-      cr_name = '${name}_$i';
+    while (_usedUpNames.contains(crName)) {
+      crName = '${name}_$i';
       i++;
     }
     if (addToUsedUpNames) {
-      _usedUpNames.add(cr_name);
+      _usedUpNames.add(crName);
     }
-    return cr_name;
+    return crName;
   }
 
   /// Adds a name to used names.
