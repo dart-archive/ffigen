@@ -18,7 +18,6 @@ void main() {
   group('typedef_test', () {
     setUpAll(() {
       logWarnings(Level.SEVERE);
-      expected = expectedLibrary();
       actual = parser.parse(
         Config.fromYaml(yaml.loadYaml('''
 ${strings.name}: 'Bindings'
@@ -27,102 +26,33 @@ ${strings.output}: 'unused'
 ${strings.headers}:
   ${strings.entryPoints}:
     - 'test/header_parser_tests/typedef.h'
+  ${strings.includeDirectives}:
+    - '**typedef.h'
 ${strings.structs}:
   ${strings.exclude}:
     - ExcludedStruct
     - _ExcludedStruct
 ${strings.typedefmap}:
   'specified_type_as_IntPtr': 'IntPtr'
+
+${strings.preamble}: |
+  // ignore_for_file: unused_element
+  // ignore_for_file: unused_field
         ''') as yaml.YamlMap),
       );
     });
 
-    test('Library output', () {
-      expect(actual.generate(), expected.generate());
+    test('Expected Bindings', () {
+      matchLibraryWithExpected(actual, [
+        'test',
+        'debug_generated',
+        'header_parser_typedef_test_output.dart'
+      ], [
+        'test',
+        'header_parser_tests',
+        'expected_bindings',
+        '_expected_typedef_bindings.dart'
+      ]);
     });
   });
-}
-
-Library expectedLibrary() {
-  final namedTypedef = Typedef(
-    name: 'NamedFunctionProto',
-    typedefType: TypedefType.C,
-    returnType: Type.nativeType(SupportedNativeType.Void),
-  );
-
-  final excludedNtyperef = Struc(name: 'NTyperef1');
-  return Library(
-    name: 'Bindings',
-    bindings: [
-      Struc(name: 'Struct1', members: [
-        Member(
-          name: 'named',
-          type: Type.pointer(Type.nativeFunc(namedTypedef)),
-        ),
-        Member(
-          name: 'unnamed',
-          type: Type.pointer(Type.nativeFunc(Typedef(
-            name: '_typedefC_1',
-            typedefType: TypedefType.C,
-            returnType: Type.nativeType(SupportedNativeType.Void),
-          ))),
-        ),
-      ]),
-      Func(
-        name: 'func1',
-        parameters: [
-          Parameter(
-            name: 'named',
-            type: Type.pointer(Type.nativeFunc(namedTypedef)),
-          ),
-          Parameter(
-            name: 'unnamed',
-            type: Type.pointer(Type.nativeFunc(Typedef(
-              name: '_typedefC_2',
-              typedefType: TypedefType.C,
-              parameters: [
-                Parameter(type: Type.nativeType(SupportedNativeType.Int32)),
-              ],
-              returnType: Type.nativeType(SupportedNativeType.Void),
-            ))),
-          ),
-        ],
-        returnType: Type.pointer(Type.nativeFunc(namedTypedef)),
-      ),
-      Struc(name: 'AnonymousStructInTypedef'),
-      Struc(name: 'NamedStructInTypedef'),
-      excludedNtyperef,
-      Func(
-        name: 'func2',
-        returnType: Type.nativeType(SupportedNativeType.Void),
-        parameters: [
-          Parameter(type: Type.pointer(Type.struct(excludedNtyperef)))
-        ],
-      ),
-      EnumClass(
-        name: 'AnonymousEnumInTypedef',
-        enumConstants: [
-          EnumConstant(name: 'a', value: 0),
-        ],
-      ),
-      EnumClass(
-        name: 'NamedEnumInTypedef',
-        enumConstants: [
-          EnumConstant(name: 'b', value: 0),
-        ],
-      ),
-      Func(
-        name: 'func3',
-        returnType: Type.nativeType(SupportedNativeType.Void),
-        parameters: [
-          Parameter(type: Type.nativeType(SupportedNativeType.IntPtr)),
-          Parameter(
-            type: Type.nativeType(SupportedNativeType.IntPtr),
-            name: 'b',
-          ),
-        ],
-      ),
-      Struc(name: 'Struct3'),
-    ],
-  );
 }

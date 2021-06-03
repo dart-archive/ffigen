@@ -50,9 +50,16 @@ class Constant extends NoLookUpBinding {
       s.write(makeDartDoc(dartDoc!));
     }
 
-    s.write('const $rawType $constantName = $rawValue;\n\n');
+    s.write('\nconst $rawType $constantName = $rawValue;\n\n');
 
     return BindingString(
         type: BindingStringType.constant, string: s.toString());
+  }
+
+  @override
+  void addDependencies(Set<Binding> dependencies) {
+    if (dependencies.contains(this)) return;
+
+    dependencies.add(this);
   }
 }

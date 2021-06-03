@@ -36,6 +36,10 @@ void main() {
           rawType: 'int',
           rawValue: '0',
         ),
+        Typealias(
+            name: 'testAlias', type: Type.nativeType(SupportedNativeType.Void)),
+        Typealias(
+            name: 'testAlias', type: Type.nativeType(SupportedNativeType.Void)),
 
         /// Conflicts across declarations.
         Struc(name: 'testCrossDecl'),
@@ -44,6 +48,9 @@ void main() {
             returnType: Type.nativeType(SupportedNativeType.Void)),
         Constant(name: 'testCrossDecl', rawValue: '0', rawType: 'int'),
         EnumClass(name: 'testCrossDecl'),
+        Typealias(
+            name: 'testCrossDecl',
+            type: Type.nativeType(SupportedNativeType.Void)),
 
         /// Conflicts with ffi library prefix, name of prefix is changed.
         Struc(name: 'ffi'),
@@ -76,6 +83,11 @@ void main() {
           rawType: 'int',
           rawValue: '0',
         ),
+        Typealias(
+            name: 'testAlias', type: Type.nativeType(SupportedNativeType.Void)),
+        Typealias(
+            name: 'testAlias_1',
+            type: Type.nativeType(SupportedNativeType.Void)),
         Struc(name: 'testCrossDecl', originalName: 'testCrossDecl'),
         Func(
             name: 'testCrossDecl_1',
@@ -83,6 +95,9 @@ void main() {
             returnType: Type.nativeType(SupportedNativeType.Void)),
         Constant(name: 'testCrossDecl_2', rawValue: '0', rawType: 'int'),
         EnumClass(name: 'testCrossDecl_3'),
+        Typealias(
+            name: 'testCrossDecl_4',
+            type: Type.nativeType(SupportedNativeType.Void)),
         Struc(name: 'ffi'),
         Func(
             name: 'ffi_1',

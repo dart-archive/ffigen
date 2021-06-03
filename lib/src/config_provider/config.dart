@@ -63,6 +63,10 @@ class Config {
   Declaration get macroDecl => _macroDecl;
   late Declaration _macroDecl;
 
+  /// Declaration config for Typedefs.
+  Declaration get typedefs => _typedefs;
+  late Declaration _typedefs;
+
   /// If generated bindings should be sorted alphabetically.
   bool get sort => _sort;
   late bool _sort;
@@ -284,6 +288,15 @@ class Config {
         defaultValue: () => Declaration(),
         extractedResult: (dynamic result) {
           _macroDecl = result as Declaration;
+        },
+      ),
+      [strings.typedefs]: Specification<Declaration>(
+        requirement: Requirement.no,
+        validator: declarationConfigValidator,
+        extractor: declarationConfigExtractor,
+        defaultValue: () => Declaration(),
+        extractedResult: (dynamic result) {
+          _typedefs = result as Declaration;
         },
       ),
       [strings.sizemap]: Specification<Map<int, SupportedNativeType>>(

@@ -27,8 +27,11 @@ class NativeLibrary {
     );
   }
 
-  late final _func1_ptr = _lookup<ffi.NativeFunction<_c_func1>>('func1');
-  late final _dart_func1 _func1 = _func1_ptr.asFunction<_dart_func1>();
+  late final _func1_ptr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<Union2>)>>(
+          'func1');
+  late final _func1 =
+      _func1_ptr.asFunction<void Function(ffi.Pointer<Union2>)>();
 
   void func2(
     ffi.Pointer<Union3> s,
@@ -38,8 +41,11 @@ class NativeLibrary {
     );
   }
 
-  late final _func2_ptr = _lookup<ffi.NativeFunction<_c_func2>>('func2');
-  late final _dart_func2 _func2 = _func2_ptr.asFunction<_dart_func2>();
+  late final _func2_ptr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<Union3>)>>(
+          'func2');
+  late final _func2 =
+      _func2_ptr.asFunction<void Function(ffi.Pointer<Union3>)>();
 }
 
 class Union1 extends ffi.Union {
@@ -56,19 +62,3 @@ class Union3 extends ffi.Opaque {}
 class Union4 extends ffi.Opaque {}
 
 class Union5 extends ffi.Opaque {}
-
-typedef _c_func1 = ffi.Void Function(
-  ffi.Pointer<Union2> s,
-);
-
-typedef _dart_func1 = void Function(
-  ffi.Pointer<Union2> s,
-);
-
-typedef _c_func2 = ffi.Void Function(
-  ffi.Pointer<Union3> s,
-);
-
-typedef _dart_func2 = void Function(
-  ffi.Pointer<Union3> s,
-);

@@ -24,38 +24,41 @@ class init_dylib_1 {
     return _test_1();
   }
 
-  late final _test_ptr = _lookup<ffi.NativeFunction<_c_test1>>('test');
-  late final _dart_test1 _test_1 = _test_ptr.asFunction<_dart_test1>();
+  late final _test_ptr =
+      _lookup<ffi.NativeFunction<ffi.Void Function()>>('test');
+  late final _test_1 = _test_ptr.asFunction<void Function()>();
 
   void _test() {
     return __test();
   }
 
-  late final __test_ptr = _lookup<ffi.NativeFunction<_c__test>>('_test');
-  late final _dart__test __test = __test_ptr.asFunction<_dart__test>();
+  late final __test_ptr =
+      _lookup<ffi.NativeFunction<ffi.Void Function()>>('_test');
+  late final __test = __test_ptr.asFunction<void Function()>();
 
   void _c_test() {
     return __c_test();
   }
 
-  late final __c_test_ptr = _lookup<ffi.NativeFunction<_c__c_test>>('_c_test');
-  late final _dart__c_test __c_test = __c_test_ptr.asFunction<_dart__c_test>();
+  late final __c_test_ptr =
+      _lookup<ffi.NativeFunction<ffi.Void Function()>>('_c_test');
+  late final __c_test = __c_test_ptr.asFunction<void Function()>();
 
   void _dart_test() {
     return __dart_test();
   }
 
   late final __dart_test_ptr =
-      _lookup<ffi.NativeFunction<_c__dart_test>>('_dart_test');
-  late final _dart__dart_test __dart_test =
-      __dart_test_ptr.asFunction<_dart__dart_test>();
+      _lookup<ffi.NativeFunction<ffi.Void Function()>>('_dart_test');
+  late final __dart_test = __dart_test_ptr.asFunction<void Function()>();
 
   void Test() {
     return _Test();
   }
 
-  late final _Test_ptr = _lookup<ffi.NativeFunction<_c_Test1>>('Test');
-  late final _dart_Test _Test = _Test_ptr.asFunction<_dart_Test>();
+  late final _Test_ptr =
+      _lookup<ffi.NativeFunction<ffi.Void Function()>>('Test');
+  late final _Test = _Test_ptr.asFunction<void Function()>();
 }
 
 class _Test extends ffi.Struct {
@@ -68,23 +71,3 @@ class ArrayHelperPrefixCollisionTest extends ffi.Opaque {}
 abstract class _c_Test {}
 
 abstract class init_dylib {}
-
-typedef _c_test1 = ffi.Void Function();
-
-typedef _dart_test1 = void Function();
-
-typedef _c__test = ffi.Void Function();
-
-typedef _dart__test = void Function();
-
-typedef _c__c_test = ffi.Void Function();
-
-typedef _dart__c_test = void Function();
-
-typedef _c__dart_test = ffi.Void Function();
-
-typedef _dart__dart_test = void Function();
-
-typedef _c_Test1 = ffi.Void Function();
-
-typedef _dart_Test = void Function();

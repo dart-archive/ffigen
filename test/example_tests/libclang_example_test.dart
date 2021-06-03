@@ -40,7 +40,9 @@ ${strings.enums}:
   ${strings.include}:
     - 'CXTypeKind'
     - 'CXGlobalOptFlags'
-
+${strings.typedefmap}:
+    'size_t': 'IntPtr'
+    'time_t': 'Int64'
 ${strings.name}: 'LibClang'
 ${strings.description}: 'Holds bindings to LibClang.'
 ${strings.comments}:
@@ -57,7 +59,7 @@ ${strings.preamble}: |
 
       matchLibraryWithExpected(
         library,
-        ['test', 'debug_generated', 'libclang-example.dart'],
+        ['test', 'debug_generated', 'example_libclang.dart'],
         ['example', 'libclang-example', config.output],
       );
     });

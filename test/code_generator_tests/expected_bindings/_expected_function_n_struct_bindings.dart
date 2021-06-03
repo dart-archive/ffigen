@@ -25,10 +25,12 @@ class Bindings {
     );
   }
 
-  late final _someFunc_ptr =
-      _lookup<ffi.NativeFunction<_c_someFunc>>('someFunc');
-  late final _dart_someFunc _someFunc =
-      _someFunc_ptr.asFunction<_dart_someFunc>();
+  late final _someFunc_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<SomeStruc> Function(
+              ffi.Pointer<ffi.Pointer<SomeStruc>>)>>('someFunc');
+  late final _someFunc = _someFunc_ptr.asFunction<
+      ffi.Pointer<SomeStruc> Function(ffi.Pointer<ffi.Pointer<SomeStruc>>)>();
 }
 
 class SomeStruc extends ffi.Struct {
@@ -41,11 +43,3 @@ class SomeStruc extends ffi.Struct {
   @ffi.Uint8()
   external int c;
 }
-
-typedef _c_someFunc = ffi.Pointer<SomeStruc> Function(
-  ffi.Pointer<ffi.Pointer<SomeStruc>> some,
-);
-
-typedef _dart_someFunc = ffi.Pointer<SomeStruc> Function(
-  ffi.Pointer<ffi.Pointer<SomeStruc>> some,
-);

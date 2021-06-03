@@ -37,6 +37,9 @@ ${strings.headers}:
     - '**Documentation.h'
     - '**FataErrorHandler.h'
     - '**Index.h'
+${strings.typedefmap}:
+  'size_t': 'IntPtr'
+  'time_t': 'Int64'
       ''') as YamlMap);
       final library = parse(config);
 
@@ -59,6 +62,8 @@ ${strings.headers}:
     - third_party/cjson_library/cJSON.h
   ${strings.includeDirectives}:
     - '**cJSON.h'
+${strings.typedefmap}:
+  'size_t': 'IntPtr'
       ''') as YamlMap);
       final library = parse(config);
 

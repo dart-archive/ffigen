@@ -36,11 +36,9 @@ class NativeLibrary {
     return _sum(a, b);
   }
 
-  late final _sum_ptr = _lookup<NativeFunction<_c_sum>>('sum');
-  late final _dart_sum _sum = _sum_ptr.asFunction<_dart_sum>();
+  late final _sum_ptr = _lookup<ffi.NativeFunction<ffi.Int32 Function(ffi.Int32, ffi.Int32)>>('sum');
+  late final _sum = _sum_ptr.asFunction<int Function(int, int)>();
 }
-typedef _c_sum = Int32 Function(Int32 a, Int32 b);
-typedef _dart_sum = int Function(int a, int b);
 ```
 ## Using this package
 - Add `ffigen` under `dev_dependencies` in your `pubspec.yaml`.
@@ -245,6 +243,27 @@ globals:
   rename:
     # Removes '_' from
     # beginning of a name.
+    '_(.*)': '$1'
+```
+  </td>
+  </tr>
+  <tr>
+    <td>typedefs</td>
+    <td>Filters for referred typedefs.<br><br>
+    Options -<br>
+    - Include/Exclude (referred typedefs only).<br>
+    - Rename typedefs.<br><br>
+    Note: Typedefs that are not referred to anywhere will not be generated.
+    </td>
+    <td>
+
+```yaml
+typedefs:
+  exclude:
+    # Typedefs starting with `p` are not generated.
+    - 'p.*'
+  rename:
+    # Removes '_' from beginning of a typedef.
     '_(.*)': '$1'
 ```
   </td>
@@ -524,3 +543,16 @@ functions:
       - 'myFunc'
       - '.*' # Do this to expose all pointers.
 ```
+
+### How are Structs/Unions/Enums that are reffered to via typedefs handled?
+
+Named declarations use their own names even when inside another typedef.
+However, unnamed declarations inside typedefs take the name of the _first_ typedef
+that refers to them.
+
+### Why are some typedefs not generated?
+
+The following typedefs are not generated -
+- They are not referred to anywhere in the included declarations.
+- They refer to a struct/union having the same name as itself.
+- They refer to a boolean, enum, inline array, Handle or any unsupported type.

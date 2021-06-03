@@ -333,8 +333,13 @@ class BindingsIndex {
   final Map<String, Constant> _unnamedEnumConstants = {};
   final Map<String, String> _macros = {};
   final Map<String, Global> _globals = {};
-  // Stores only named typedefC used in NativeFunc.
-  final Map<String, Typedef> _functionTypedefs = {};
+
+  /// Contains usr for typedefs which cannot be generated.
+  final Set<String> _unsupportedTypealiases = {};
+  final Map<String, Typealias> _typealiases = {};
+
+  /// Index for headers.
+  final Map<String, bool> _headerCache = {};
 
   bool isSeenStruct(String usr) {
     return _structs.containsKey(usr);
@@ -420,15 +425,35 @@ class BindingsIndex {
     return _macros[usr];
   }
 
-  bool isSeenFunctionTypedef(String originalName) {
-    return _functionTypedefs.containsKey(originalName);
+  bool isSeenTypealias(String usr) {
+    return _typealiases.containsKey(usr);
   }
 
-  void addFunctionTypedefToSeen(String originalName, Typedef t) {
-    _functionTypedefs[originalName] = t;
+  void addTypealiasToSeen(String usr, Typealias t) {
+    _typealiases[usr] = t;
   }
 
-  Typedef? getSeenFunctionTypedef(String originalName) {
-    return _functionTypedefs[originalName];
+  bool isSeenUnsupportedTypealias(String usr) {
+    return _unsupportedTypealiases.contains(usr);
+  }
+
+  void addUnsupportedTypealiasToSeen(String usr) {
+    _unsupportedTypealiases.add(usr);
+  }
+
+  Typealias? getSeenTypealias(String usr) {
+    return _typealiases[usr];
+  }
+
+  bool isSeenHeader(String source) {
+    return _headerCache.containsKey(source);
+  }
+
+  void addHeaderToSeen(String source, bool includeStatus) {
+    _headerCache[source] = includeStatus;
+  }
+
+  bool? getSeenHeaderStatus(String source) {
+    return _headerCache[source];
   }
 }

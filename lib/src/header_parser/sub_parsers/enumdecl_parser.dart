@@ -24,12 +24,13 @@ class _ParsedEnum {
 
 final _stack = Stack<_ParsedEnum>();
 
-/// Parses a function declaration.
+/// Parses an enum declaration.
 EnumClass? parseEnumDeclaration(
   clang_types.CXCursor cursor, {
 
-  /// Optionally provide name to use (useful in case enum is inside a typedef).
-  String? name,
+  /// Option to ignore declaration filter (Useful in case of extracting
+  /// declarations when they are passed/returned by an included function.)
+  bool ignoreFilter = false,
 }) {
   _stack.push(_ParsedEnum());
 
@@ -39,16 +40,22 @@ EnumClass? parseEnumDeclaration(
   }
 
   final enumUsr = cursor.usr();
-  final enumName = name ?? cursor.spelling();
-  if (enumName == '') {
-    // Save this unnamed enum if it is anonymous (therefore not in a typedef).
-    if (clang.clang_Cursor_isAnonymous(cursor) != 0) {
-      _logger.fine('Saving anonymous enum.');
-      saveUnNamedEnum(cursor);
-    } else {
-      _logger.fine('Unnamed enum inside a typedef.');
-    }
-  } else if (shouldIncludeEnumClass(enumUsr, enumName)) {
+  final String enumName;
+  // Only set name using USR if the type is not Anonymous (i.e not inside
+  // any typedef and declared inplace inside another type).
+  if (clang.clang_Cursor_isAnonymous(cursor) == 0) {
+    // This gives the significant name, i.e name of the enum if defined or
+    // name of the first typedef declaration that refers to it.
+    enumName = enumUsr.split('@').last;
+  } else {
+    enumName = '';
+  }
+
+  if (enumName.isEmpty) {
+    _logger.fine('Saving anonymous enum.');
+    saveUnNamedEnum(cursor);
+  } else if ((ignoreFilter || shouldIncludeEnumClass(enumUsr, enumName)) &&
+      (!bindingsIndex.isSeenEnumClass(enumUsr))) {
     _logger.fine('++++ Adding Enum: ${cursor.completeStringRepr()}');
     _stack.top.enumClass = EnumClass(
       usr: enumUsr,
@@ -61,10 +68,6 @@ EnumClass? parseEnumDeclaration(
   }
   if (bindingsIndex.isSeenEnumClass(enumUsr)) {
     _stack.top.enumClass = bindingsIndex.getSeenEnumClass(enumUsr);
-
-    // If enum is seen, update it's name.
-    _stack.top.enumClass!.name =
-        config.enumClassDecl.renameUsingConfig(enumName);
   }
 
   return _stack.pop().enumClass;

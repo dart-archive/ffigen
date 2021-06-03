@@ -38,7 +38,7 @@ ${strings.headers}:
       matchLibraryWithExpected(actual, [
         'test',
         'debug_generated',
-        'native_func_typedef_test_output.dart'
+        'header_parser_native_func_typedef_test_output.dart'
       ], [
         'test',
         'header_parser_tests',

@@ -68,6 +68,13 @@ class EnumClass extends NoLookUpBinding {
     return BindingString(
         type: BindingStringType.enumClass, string: s.toString());
   }
+
+  @override
+  void addDependencies(Set<Binding> dependencies) {
+    if (dependencies.contains(this)) return;
+
+    dependencies.add(this);
+  }
 }
 
 /// Represents a single value in an enum.

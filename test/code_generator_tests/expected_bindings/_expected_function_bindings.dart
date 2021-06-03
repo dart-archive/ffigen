@@ -23,8 +23,9 @@ class Bindings {
     return _noParam();
   }
 
-  late final _noParam_ptr = _lookup<ffi.NativeFunction<_c_noParam>>('noParam');
-  late final _dart_noParam _noParam = _noParam_ptr.asFunction<_dart_noParam>();
+  late final _noParam_ptr =
+      _lookup<ffi.NativeFunction<ffi.Int32 Function()>>('noParam');
+  late final _noParam = _noParam_ptr.asFunction<int Function()>();
 
   int withPrimitiveParam(
     int a,
@@ -37,9 +38,10 @@ class Bindings {
   }
 
   late final _withPrimitiveParam_ptr =
-      _lookup<ffi.NativeFunction<_c_withPrimitiveParam>>('withPrimitiveParam');
-  late final _dart_withPrimitiveParam _withPrimitiveParam =
-      _withPrimitiveParam_ptr.asFunction<_dart_withPrimitiveParam>();
+      _lookup<ffi.NativeFunction<ffi.Uint8 Function(ffi.Int32, ffi.Uint8)>>(
+          'withPrimitiveParam');
+  late final _withPrimitiveParam =
+      _withPrimitiveParam_ptr.asFunction<int Function(int, int)>();
 
   ffi.Pointer<ffi.Double> withPointerParam(
     ffi.Pointer<ffi.Int32> a,
@@ -51,32 +53,11 @@ class Bindings {
     );
   }
 
-  late final _withPointerParam_ptr =
-      _lookup<ffi.NativeFunction<_c_withPointerParam>>('withPointerParam');
-  late final _dart_withPointerParam _withPointerParam =
-      _withPointerParam_ptr.asFunction<_dart_withPointerParam>();
+  late final _withPointerParam_ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Double> Function(ffi.Pointer<ffi.Int32>,
+              ffi.Pointer<ffi.Pointer<ffi.Uint8>>)>>('withPointerParam');
+  late final _withPointerParam = _withPointerParam_ptr.asFunction<
+      ffi.Pointer<ffi.Double> Function(
+          ffi.Pointer<ffi.Int32>, ffi.Pointer<ffi.Pointer<ffi.Uint8>>)>();
 }
-
-typedef _c_noParam = ffi.Int32 Function();
-
-typedef _dart_noParam = int Function();
-
-typedef _c_withPrimitiveParam = ffi.Uint8 Function(
-  ffi.Int32 a,
-  ffi.Uint8 b,
-);
-
-typedef _dart_withPrimitiveParam = int Function(
-  int a,
-  int b,
-);
-
-typedef _c_withPointerParam = ffi.Pointer<ffi.Double> Function(
-  ffi.Pointer<ffi.Int32> a,
-  ffi.Pointer<ffi.Pointer<ffi.Uint8>> b,
-);
-
-typedef _dart_withPointerParam = ffi.Pointer<ffi.Double> Function(
-  ffi.Pointer<ffi.Int32> a,
-  ffi.Pointer<ffi.Pointer<ffi.Uint8>> b,
-);

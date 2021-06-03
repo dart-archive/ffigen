@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:ffigen/src/code_generator/typedef.dart';
-
 import 'binding.dart';
 import 'binding_string.dart';
 import 'type.dart';
@@ -38,21 +36,6 @@ class Global extends LookUpBinding {
           dartDoc: dartDoc,
         );
 
-  List<Typedef>? _typedefDependencies;
-  @override
-  List<Typedef> getTypedefDependencies(Writer w) {
-    if (_typedefDependencies == null) {
-      _typedefDependencies = <Typedef>[];
-
-      // Add typedef's required by the variable's type.
-      final valueType = type.getBaseType();
-      if (valueType.broadType == BroadType.NativeFunction) {
-        _typedefDependencies!.addAll(valueType.nativeFunc!.getDependencies());
-      }
-    }
-    return _typedefDependencies!;
-  }
-
   @override
   BindingString toBindingString(Writer w) {
     final s = StringBuffer();
@@ -66,8 +49,9 @@ class Global extends LookUpBinding {
 
     s.write(
         "late final ${w.ffiLibraryPrefix}.Pointer<$cType> $pointerName = ${w.lookupFuncIdentifier}<$cType>('$originalName');\n\n");
-    if (type.broadType == BroadType.Compound) {
-      if (type.compound!.isOpaque) {
+    final baseTypealiasType = type.getBaseTypealiasType();
+    if (baseTypealiasType.broadType == BroadType.Compound) {
+      if (baseTypealiasType.compound!.isOpaque) {
         s.write(
             '${w.ffiLibraryPrefix}.Pointer<$cType> get $globalVarName => $pointerName;\n\n');
       } else {
@@ -89,5 +73,13 @@ class Global extends LookUpBinding {
     }
 
     return BindingString(type: BindingStringType.global, string: s.toString());
+  }
+
+  @override
+  void addDependencies(Set<Binding> dependencies) {
+    if (dependencies.contains(this)) return;
+
+    dependencies.add(this);
+    type.addDependencies(dependencies);
   }
 }

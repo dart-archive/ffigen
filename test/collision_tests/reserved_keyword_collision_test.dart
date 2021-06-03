@@ -45,6 +45,7 @@ void main() {
           rawType: 'int',
           rawValue: '0',
         ),
+        Typealias(name: 'var', type: Type.nativeType(SupportedNativeType.Void)),
       ]);
       final l2 = Library(name: 'Bindings', bindings: [
         Struc(name: 'abstract_1'),
@@ -79,6 +80,8 @@ void main() {
           rawType: 'int',
           rawValue: '0',
         ),
+        Typealias(
+            name: 'var_1', type: Type.nativeType(SupportedNativeType.Void)),
       ]);
       expect(l1.generate(), l2.generate());
     });

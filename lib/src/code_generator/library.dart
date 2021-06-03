@@ -18,7 +18,7 @@ final _logger = Logger('ffigen.code_generator.library');
 /// Container for all Bindings.
 class Library {
   /// List of bindings in this library.
-  final List<Binding> bindings;
+  late List<Binding> bindings;
 
   late Writer _writer;
   Writer get writer => _writer;
@@ -26,17 +26,26 @@ class Library {
   Library({
     required String name,
     String? description,
-    required this.bindings,
+    required List<Binding> bindings,
     String? header,
     bool dartBool = true,
     bool sort = false,
     StructPackingOverride? packingOverride,
   }) {
-    if (sort) _sort();
+    /// Get all dependencies (includes itself).
+    final dependencies = <Binding>{};
+    bindings.forEach((b) => b.addDependencies(dependencies));
+
+    /// Save bindings.
+    this.bindings = dependencies.toList();
+
+    if (sort) {
+      _sort();
+    }
 
     /// Handle any declaration-declaration name conflicts.
     final declConflictHandler = UniqueNamer({});
-    for (final b in bindings) {
+    for (final b in this.bindings) {
       _warnIfPrivateDeclaration(b);
       _resolveIfNameConflicts(declConflictHandler, b);
     }
@@ -44,7 +53,7 @@ class Library {
     // Override pack values according to config. We do this after declaration
     // conflicts have been handled so that users can target the generated names.
     if (packingOverride != null) {
-      for (final b in bindings) {
+      for (final b in this.bindings) {
         if (b is Struc && packingOverride.isOverriden(b.name)) {
           b.pack = packingOverride.getOverridenPackValue(b.name);
         }
@@ -52,8 +61,9 @@ class Library {
     }
 
     // Seperate bindings which require lookup.
-    final lookUpBindings = bindings.whereType<LookUpBinding>().toList();
-    final noLookUpBindings = bindings.whereType<NoLookUpBinding>().toList();
+    final lookUpBindings = this.bindings.whereType<LookUpBinding>().toList();
+    final noLookUpBindings =
+        this.bindings.whereType<NoLookUpBinding>().toList();
 
     _writer = Writer(
       lookUpBindings: lookUpBindings,

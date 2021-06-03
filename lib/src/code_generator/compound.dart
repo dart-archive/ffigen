@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/code_generator/typedef.dart';
 
 import 'binding.dart';
 import 'binding_string.dart';
@@ -104,23 +103,6 @@ abstract class Compound extends NoLookUpBinding {
     return type.getCType(w);
   }
 
-  List<Typedef>? _typedefDependencies;
-  @override
-  List<Typedef> getTypedefDependencies(Writer w) {
-    if (_typedefDependencies == null) {
-      _typedefDependencies = <Typedef>[];
-
-      // Write typedef's required by members and resolve name conflicts.
-      for (final m in members) {
-        final base = m.type.getBaseType();
-        if (base.broadType == BroadType.NativeFunction) {
-          _typedefDependencies!.addAll(base.nativeFunc!.getDependencies());
-        }
-      }
-    }
-    return _typedefDependencies ?? [];
-  }
-
   @override
   BindingString toBindingString(Writer w) {
     final s = StringBuffer();
@@ -155,7 +137,7 @@ abstract class Compound extends NoLookUpBinding {
           s.writeAll(m.dartDoc!.split('\n'), '\n' + depth + '/// ');
           s.write('\n');
         }
-        if (m.type.isPrimitive) {
+        if (!m.type.sameDartAndCType(w)) {
           s.write('$depth@${m.type.getCType(w)}()\n');
         }
         s.write('${depth}external ${m.type.getDartType(w)} $memberName;\n\n');
@@ -166,6 +148,14 @@ abstract class Compound extends NoLookUpBinding {
     return BindingString(
         type: isStruct ? BindingStringType.struc : BindingStringType.union,
         string: s.toString());
+  }
+
+  @override
+  void addDependencies(Set<Binding> dependencies) {
+    if (dependencies.contains(this)) return;
+
+    dependencies.add(this);
+    members.forEach((m) => m.type.addDependencies(dependencies));
   }
 }
 

@@ -56,29 +56,37 @@ ${strings.headers}:
     test('Struct5 incompleted struct member', () {
       expect((actual.getBinding('Struct5') as Struc).members.isEmpty, true);
     });
+    test('Struct6 typedef constant array', () {
+      expect(actual.getBindingAsString('Struct6'),
+          expected.getBindingAsString('Struct6'));
+    });
+    test('func3 constant typedef array parameter', () {
+      expect(actual.getBindingAsString('func3'),
+          expected.getBindingAsString('func3'));
+    });
   });
 }
 
 Library expectedLibrary() {
-  final struc1 = Struc(name: 'Struct1', members: []);
+  final struc1 = Struc(name: 'Struct1', members: [
+    Member(
+      name: 'a',
+      type: Type.nativeType(SupportedNativeType.Int32),
+    ),
+  ]);
   final struc2 = Struc(name: 'Struct2', members: [
     Member(
       name: 'a',
       type: Type.struct(struc1),
     ),
   ]);
-  final struc3 = Struc(name: 'Struct3', members: []);
+  final struc3 = Struc(name: 'Struct3');
   return Library(
     name: 'Bindings',
     bindings: [
+      struc1,
       struc2,
       struc3,
-      Struc(name: 'Struct1', members: [
-        Member(
-          name: 'a',
-          type: Type.nativeType(SupportedNativeType.Int32),
-        ),
-      ]),
       Func(
         name: 'func1',
         parameters: [
@@ -97,13 +105,27 @@ Library expectedLibrary() {
           SupportedNativeType.Void,
         ),
       ),
-      Struc(name: 'Struct4', members: [
-        Member(
-          name: 'a',
-          type: Type.struct(struc1),
+      Func(
+        name: 'func3',
+        parameters: [
+          Parameter(
+              name: 'a',
+              type: Type.pointer(Type.nativeType(SupportedNativeType.Int32))),
+        ],
+        returnType: Type.nativeType(
+          SupportedNativeType.Void,
         ),
-      ]),
+      ),
+      Struc(name: 'Struct4'),
       Struc(name: 'Struct5'),
+      Struc(name: 'Struct6', members: [
+        Member(
+            name: 'a',
+            type: Type.constantArray(
+                2,
+                Type.constantArray(
+                    10, Type.nativeType(SupportedNativeType.Int32))))
+      ]),
     ],
   );
 }

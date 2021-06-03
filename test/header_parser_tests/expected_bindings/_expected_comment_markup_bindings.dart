@@ -24,8 +24,9 @@ class NativeLibrary {
     return _com1();
   }
 
-  late final _com1_ptr = _lookup<ffi.NativeFunction<_c_com1>>('com1');
-  late final _dart_com1 _com1 = _com1_ptr.asFunction<_dart_com1>();
+  late final _com1_ptr =
+      _lookup<ffi.NativeFunction<ffi.Void Function()>>('com1');
+  late final _com1 = _com1_ptr.asFunction<void Function()>();
 
   /// This is a multi-line
   /// test comment.
@@ -33,8 +34,9 @@ class NativeLibrary {
     return _com2();
   }
 
-  late final _com2_ptr = _lookup<ffi.NativeFunction<_c_com2>>('com2');
-  late final _dart_com2 _com2 = _com2_ptr.asFunction<_dart_com2>();
+  late final _com2_ptr =
+      _lookup<ffi.NativeFunction<ffi.Void Function()>>('com2');
+  late final _com2 = _com2_ptr.asFunction<void Function()>();
 
   /// This is a multi-line
   /// doxygen style
@@ -43,8 +45,9 @@ class NativeLibrary {
     return _com3();
   }
 
-  late final _com3_ptr = _lookup<ffi.NativeFunction<_c_com3>>('com3');
-  late final _dart_com3 _com3 = _com3_ptr.asFunction<_dart_com3>();
+  late final _com3_ptr =
+      _lookup<ffi.NativeFunction<ffi.Void Function()>>('com3');
+  late final _com3 = _com3_ptr.asFunction<void Function()>();
 }
 
 /// Test comment for struct.
@@ -58,15 +61,3 @@ class com4 extends ffi.Struct {
   @ffi.Float()
   external double b;
 }
-
-typedef _c_com1 = ffi.Void Function();
-
-typedef _dart_com1 = void Function();
-
-typedef _c_com2 = ffi.Void Function();
-
-typedef _dart_com2 = void Function();
-
-typedef _c_com3 = ffi.Void Function();
-
-typedef _dart_com3 = void Function();

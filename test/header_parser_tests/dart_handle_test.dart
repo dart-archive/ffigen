@@ -19,7 +19,6 @@ void main() {
   group('dart_handle_test', () {
     setUpAll(() {
       logWarnings();
-      expected = expectedLibrary();
       actual = parser.parse(
         Config.fromYaml(yaml.loadYaml('''
 ${strings.name}: 'NativeLibrary'
@@ -35,86 +34,17 @@ ${strings.headers}:
         ''') as yaml.YamlMap),
       );
     });
-    test('Total bindings count', () {
-      expect(actual.bindings.length, expected.bindings.length);
-    });
-
-    test('func1', () {
-      expect(actual.getBindingAsString('func1'),
-          expected.getBindingAsString('func1'));
-    });
-    test('func2', () {
-      expect(actual.getBindingAsString('func2'),
-          expected.getBindingAsString('func2'));
-    });
-    test('func3', () {
-      expect(actual.getBindingAsString('func3'),
-          expected.getBindingAsString('func3'));
-    });
-    test('func4', () {
-      expect(actual.getBindingAsString('func4'),
-          expected.getBindingAsString('func4'));
-    });
-    test('struc1', () {
-      expect(actual.getBindingAsString('struc1'),
-          expected.getBindingAsString('struc1'));
-    });
-    test('struc2', () {
-      expect(actual.getBindingAsString('struc2'),
-          expected.getBindingAsString('struc2'));
+    test('Expected Bindings', () {
+      matchLibraryWithExpected(actual, [
+        'test',
+        'debug_generated',
+        'header_parser_dart_handle_test_output.dart'
+      ], [
+        'test',
+        'header_parser_tests',
+        'expected_bindings',
+        '_expected_dart_handle_bindings.dart'
+      ]);
     });
   });
-}
-
-Library expectedLibrary() {
-  final namedTypedef = Typedef(
-    name: 'typedef1',
-    typedefType: TypedefType.C,
-    returnType: Type.nativeType(SupportedNativeType.Void),
-    parameters: [Parameter(type: Type.handle())],
-  );
-  return Library(
-    name: 'NativeLibrary',
-    bindings: [
-      Func(
-        name: 'func1',
-        returnType: Type.nativeType(
-          SupportedNativeType.Void,
-        ),
-        parameters: [
-          Parameter(type: Type.handle()),
-        ],
-      ),
-      Func(
-        name: 'func2',
-        returnType: Type.handle(),
-      ),
-      Func(
-        name: 'func3',
-        returnType: Type.pointer(Type.pointer(Type.handle())),
-        parameters: [
-          Parameter(
-            type: Type.pointer(Type.handle()),
-          ),
-        ],
-      ),
-      Func(
-        name: 'func4',
-        returnType: Type.nativeType(SupportedNativeType.Void),
-        parameters: [
-          Parameter(
-            type: Type.pointer(Type.nativeFunc(namedTypedef)),
-          ),
-        ],
-      ),
-      // struc1 should have no members.
-      Struc(name: 'struc1'),
-      Struc(
-        name: 'struc2',
-        members: [
-          Member(name: 'h', type: Type.pointer(Type.handle())),
-        ],
-      ),
-    ],
-  );
 }

@@ -87,6 +87,16 @@ Library expectedLibrary() {
         type: Type.struct(globalStruc),
         exposeSymbolAddress: true,
       ),
+      Global(
+        name: 'globalStruct_from_alias',
+        type: Type.typealias(
+          Typealias(
+            name: 'EmptyStruct_Alias',
+            type: Type.struct(globalStruc),
+          ),
+        ),
+        exposeSymbolAddress: true,
+      )
     ],
   );
 }

@@ -2,83 +2,61 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'data.dart';
-
 /// Utility functions to check whether a binding should be parsed or not
 /// based on filters.
 
-bool shouldIncludeStruct(String usr, String name) {
-  if (bindingsIndex.isSeenStruct(usr) || name == '') {
+import 'data.dart';
+
+bool _shouldIncludeDecl(String usr, String name,
+    bool Function(String) isSeenDecl, bool Function(String) configIncludes) {
+  if (isSeenDecl(usr) || name == '') {
     return false;
-  } else if (config.structDecl.shouldInclude(name)) {
+  } else if (configIncludes(name)) {
     return true;
   } else {
     return false;
   }
+}
+
+bool shouldIncludeStruct(String usr, String name) {
+  return _shouldIncludeDecl(
+      usr, name, bindingsIndex.isSeenStruct, config.structDecl.shouldInclude);
 }
 
 bool shouldIncludeUnion(String usr, String name) {
-  if (bindingsIndex.isSeenStruct(usr) || name == '') {
-    return false;
-  } else if (config.unionDecl.shouldInclude(name)) {
-    return true;
-  } else {
-    return false;
-  }
+  return _shouldIncludeDecl(
+      usr, name, bindingsIndex.isSeenUnion, config.unionDecl.shouldInclude);
 }
 
 bool shouldIncludeFunc(String usr, String name) {
-  if (bindingsIndex.isSeenFunc(usr) || name == '') {
-    return false;
-  } else if (config.functionDecl.shouldInclude(name)) {
-    return true;
-  } else {
-    return false;
-  }
+  return _shouldIncludeDecl(
+      usr, name, bindingsIndex.isSeenFunc, config.functionDecl.shouldInclude);
 }
 
 bool shouldIncludeEnumClass(String usr, String name) {
-  if (bindingsIndex.isSeenEnumClass(usr) || name == '') {
-    return false;
-  } else if (config.enumClassDecl.shouldInclude(name)) {
-    return true;
-  } else {
-    return false;
-  }
+  return _shouldIncludeDecl(usr, name, bindingsIndex.isSeenEnumClass,
+      config.enumClassDecl.shouldInclude);
 }
 
 bool shouldIncludeUnnamedEnumConstant(String usr, String name) {
-  if (bindingsIndex.isSeenUnnamedEnumConstant(usr) || name == '') {
-    return false;
-  } else if (config.unnamedEnumConstants.shouldInclude(name)) {
-    return true;
-  } else {
-    return false;
-  }
+  return _shouldIncludeDecl(usr, name, bindingsIndex.isSeenUnnamedEnumConstant,
+      config.unnamedEnumConstants.shouldInclude);
 }
 
 bool shouldIncludeGlobalVar(String usr, String name) {
-  if (bindingsIndex.isSeenGlobalVar(usr) || name == '') {
-    return false;
-  } else if (config.globals.shouldInclude(name)) {
-    return true;
-  } else {
-    return false;
-  }
+  return _shouldIncludeDecl(
+      usr, name, bindingsIndex.isSeenGlobalVar, config.globals.shouldInclude);
 }
 
 bool shouldIncludeMacro(String usr, String name) {
-  if (bindingsIndex.isSeenMacro(usr) || name == '') {
-    return false;
-  } else if (config.macroDecl.shouldInclude(name)) {
-    return true;
-  } else {
-    return false;
-  }
+  return _shouldIncludeDecl(
+      usr, name, bindingsIndex.isSeenMacro, config.macroDecl.shouldInclude);
 }
 
-/// Cache for headers.
-final _headerCache = <String, bool>{};
+bool shouldIncludeTypealias(String usr, String name) {
+  return _shouldIncludeDecl(
+      usr, name, bindingsIndex.isSeenTypealias, config.typedefs.shouldInclude);
+}
 
 /// True if a cursor should be included based on headers config, used on root
 /// declarations.
@@ -88,11 +66,11 @@ bool shouldIncludeRootCursor(String sourceFile) {
     return false;
   }
 
-  // Add header to cache if its not.
-  if (!_headerCache.containsKey(sourceFile)) {
-    _headerCache[sourceFile] =
-        config.headers.includeFilter.shouldInclude(sourceFile);
+  // Add header to seen if it's not.
+  if (!bindingsIndex.isSeenHeader(sourceFile)) {
+    bindingsIndex.addHeaderToSeen(
+        sourceFile, config.headers.includeFilter.shouldInclude(sourceFile));
   }
 
-  return _headerCache[sourceFile]!;
+  return bindingsIndex.getSeenHeaderStatus(sourceFile)!;
 }

@@ -75,9 +75,6 @@ Compound? parseCompoundDeclaration(
   clang_types.CXCursor cursor,
   CompoundType compoundType, {
 
-  /// Optionally provide name (useful in case declaration is inside a typedef).
-  String? name,
-
   /// Option to ignore declaration filter (Useful in case of extracting
   /// declarations when they are passed/returned by an included function.)
   bool ignoreFilter = false,
@@ -85,18 +82,8 @@ Compound? parseCompoundDeclaration(
   /// To track if the declaration was used by reference(i.e T*). (Used to only
   /// generate these as opaque if `dependency-only` was set to opaque).
   bool pointerReference = false,
-
-  /// If the compound name should be updated, if it was already seen.
-  bool updateName = true,
 }) {
   _stack.push(_ParsedCompound());
-
-  // Parse the cursor definition instead, if this is a forward declaration.
-  if (isForwardDeclaration(cursor)) {
-    cursor = clang.clang_getCursorDefinition(cursor);
-  }
-  final declUsr = cursor.usr();
-  final declName = name ?? cursor.spelling();
 
   // Set includer functions according to compoundType.
   final bool Function(String, String) shouldIncludeDecl;
@@ -124,6 +111,25 @@ Compound? parseCompoundDeclaration(
       break;
   }
 
+  // Parse the cursor definition instead, if this is a forward declaration.
+  if (isForwardDeclaration(cursor)) {
+    cursor = clang.clang_getCursorDefinition(cursor);
+  }
+  final declUsr = cursor.usr();
+  final String declName;
+
+  // Only set name using USR if the type is not Anonymous (A struct is anonymous
+  // if it has no name, is not inside any typedef and declared inline inside
+  // another declaration).
+  if (clang.clang_Cursor_isAnonymous(cursor) == 0) {
+    // This gives the significant name, i.e name of the struct if defined or
+    // name of the first typedef declaration that refers to it.
+    declName = declUsr.split('@').last;
+  } else {
+    // Empty names are treated as inline declarations.
+    declName = '';
+  }
+
   if (declName.isEmpty) {
     if (ignoreFilter) {
       // This declaration is defined inside some other declaration and hence
@@ -136,24 +142,22 @@ Compound? parseCompoundDeclaration(
       );
       _setMembers(cursor, className);
     } else {
-      _logger.finest('unnamed $className or typedef $className declaration');
+      _logger.finest('unnamed $className declaration');
     }
-  } else {
-    if ((ignoreFilter || shouldIncludeDecl(declUsr, declName)) &&
-        (!isSeenDecl(declUsr))) {
-      _logger.fine(
-          '++++ Adding $className: Name: $declName, ${cursor.completeStringRepr()}');
-      _stack.top.compound = Compound.fromType(
-        type: compoundType,
-        usr: declUsr,
-        originalName: declName,
-        name: configDecl.renameUsingConfig(declName),
-        dartDoc: getCursorDocComment(cursor),
-      );
-      // Adding to seen here to stop recursion if a declaration has itself as a
-      // member, members are updated later.
-      addDeclToSeen(declUsr, _stack.top.compound!);
-    }
+  } else if ((ignoreFilter || shouldIncludeDecl(declUsr, declName)) &&
+      (!isSeenDecl(declUsr))) {
+    _logger.fine(
+        '++++ Adding $className: Name: $declName, ${cursor.completeStringRepr()}');
+    _stack.top.compound = Compound.fromType(
+      type: compoundType,
+      usr: declUsr,
+      originalName: declName,
+      name: configDecl.renameUsingConfig(declName),
+      dartDoc: getCursorDocComment(cursor),
+    );
+    // Adding to seen here to stop recursion if a declaration has itself as a
+    // member, members are updated later.
+    addDeclToSeen(declUsr, _stack.top.compound!);
   }
 
   if (isSeenDecl(declUsr)) {
@@ -176,11 +180,6 @@ Compound? parseCompoundDeclaration(
       _setMembers(cursor, className);
     } else if (!_stack.top.compound!.parsedDependencies) {
       _logger.fine('Skipped dependencies.');
-    }
-
-    if (updateName) {
-      // If struct is seen, update it's name.
-      _stack.top.compound!.name = configDecl.renameUsingConfig(declName);
     }
   }
 
