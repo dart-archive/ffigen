@@ -255,7 +255,7 @@ class Type {
       case BroadType.Pointer:
         return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
       case BroadType.Compound:
-        return '${compound!.name}';
+        return compound!.name;
       case BroadType.Enum:
         return '${w.ffiLibraryPrefix}.${_primitives[enumNativeType]!.c}';
       case BroadType.NativeFunction:
@@ -286,7 +286,7 @@ class Type {
       case BroadType.Pointer:
         return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
       case BroadType.Compound:
-        return '${compound!.name}';
+        return compound!.name;
       case BroadType.Enum:
         return _primitives[enumNativeType]!.dart;
       case BroadType.NativeFunction:
@@ -367,7 +367,9 @@ class FunctionType {
 
   void addDependencies(Set<Binding> dependencies) {
     returnType.addDependencies(dependencies);
-    parameters.forEach((p) => p.type.addDependencies(dependencies));
+    for (final p in parameters) {
+      p.type.addDependencies(dependencies);
+    }
   }
 }
 

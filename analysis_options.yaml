@@ -2,7 +2,7 @@
 # for details. All rights reserved. Use of this source code is governed by a
 # BSD-style license that can be found in the LICENSE file.
 
-include: package:lints/core.yaml
+include: package:lints/recommended.yaml
 
 analyzer:
   exclude: ['**bindings.dart'] # Exclude all generated bindings.
@@ -12,8 +12,9 @@ analyzer:
 
 linter:
   rules:
-    - directives_ordering
-    - prefer_final_fields
-    - prefer_final_locals
-    - prefer_final_in_for_each
-    - unnecessary_brace_in_string_interps
+    # Enabled.
+    directives_ordering: true
+    prefer_final_locals: true
+    prefer_final_in_for_each: true
+    # Disabled.
+    constant_identifier_names: false
