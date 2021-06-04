@@ -39,7 +39,10 @@ ffigen:
       - 'clang_.*' # Can be a regexp, '.' matches any character.
     symbol-address:
       include:
-        - 'clang_.*' # Symbol Address and Typedefs for these functions will be exposed via addresses.
+        - 'clang_.*' # Symbol Address for these functions will be exposed via addresses.
+    expose-typedefs:
+      include:
+        - 'clang_.*' # Typedefs for Native and Dart type for these functions will be generated.
   structs:
     include:
         - 'CX.*'

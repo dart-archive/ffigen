@@ -24,6 +24,7 @@ void main() {
             name: '_library',
             returnType: Type.nativeType(SupportedNativeType.Void),
             exposeSymbolAddress: true,
+            exposeFunctionTypedefs: true,
           ),
           Func(
             name: '_SymbolAddresses_1',

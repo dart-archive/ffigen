@@ -17,6 +17,7 @@ import 'writer.dart';
 /// ```
 class Typealias extends NoLookUpBinding {
   final Type type;
+  final bool _useDartType;
 
   Typealias({
     String? usr,
@@ -24,7 +25,13 @@ class Typealias extends NoLookUpBinding {
     String? dartDoc,
     required String name,
     required this.type,
-  }) : super(
+
+    /// If true, the binding string uses Dart type instead of C type.
+    ///
+    /// E.g if C type is ffi.Void func(ffi.Int32), Dart type is void func(int).
+    bool useDartType = false,
+  })  : _useDartType = useDartType,
+        super(
           usr: usr,
           name: name,
           dartDoc: dartDoc,
@@ -45,7 +52,8 @@ class Typealias extends NoLookUpBinding {
     if (dartDoc != null) {
       sb.write(makeDartDoc(dartDoc!));
     }
-    sb.write('typedef $name = ${type.getCType(w)};\n');
+    sb.write(
+        'typedef $name = ${_useDartType ? type.getDartType(w) : type.getCType(w)};\n');
     return BindingString(
         type: BindingStringType.typeDef, string: sb.toString());
   }

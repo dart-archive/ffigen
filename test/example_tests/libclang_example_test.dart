@@ -33,6 +33,9 @@ ${strings.functions}:
   ${strings.symbolAddress}:
       ${strings.include}:
         - 'clang_.*'
+  ${strings.exposeFunctionTypedefs}:
+      ${strings.include}:
+        - 'clang_.*'
 ${strings.structs}:
   ${strings.include}:
       - 'CX.*'

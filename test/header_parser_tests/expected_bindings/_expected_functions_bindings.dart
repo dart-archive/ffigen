@@ -55,7 +55,10 @@ class NativeLibrary {
     );
   }
 
-  late final _func3Ptr = _lookup<ffi.NativeFunction<Native_func3>>('func3');
+  late final _func3Ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Double Function(
+              ffi.Float, ffi.Int8, ffi.Int64, ffi.Int32)>>('func3');
   late final _func3 =
       _func3Ptr.asFunction<double Function(double, int, int, int)>();
 
@@ -71,7 +74,12 @@ class NativeLibrary {
     );
   }
 
-  late final _func4Ptr = _lookup<ffi.NativeFunction<Native_func4>>('func4');
+  late final _func4Ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Void> Function(
+              ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+              ffi.Double,
+              ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Int32>>>)>>('func4');
   late final _func4 = _func4Ptr.asFunction<
       ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Pointer<ffi.Int8>>, double,
           ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Int32>>>)>();
@@ -100,15 +108,18 @@ class NativeLibrary {
 class _SymbolAddresses {
   final NativeLibrary _library;
   _SymbolAddresses(this._library);
-  ffi.Pointer<ffi.NativeFunction<Native_func3>> get func3 => _library._func3Ptr;
-  ffi.Pointer<ffi.NativeFunction<Native_func4>> get func4 => _library._func4Ptr;
+  ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Double Function(ffi.Float, ffi.Int8, ffi.Int64, ffi.Int32)>>
+      get func3 => _library._func3Ptr;
+  ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Void> Function(
+              ffi.Pointer<ffi.Pointer<ffi.Int8>>,
+              ffi.Double,
+              ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Int32>>>)>> get func4 =>
+      _library._func4Ptr;
 }
 
-typedef Native_func3 = ffi.Double Function(
-    ffi.Float arg0, ffi.Int8 a, ffi.Int64 arg2, ffi.Int32 b);
-typedef Native_func4 = ffi.Pointer<ffi.Void> Function(
-    ffi.Pointer<ffi.Pointer<ffi.Int8>> arg0,
-    ffi.Double arg1,
-    ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Int32>>> arg2);
 typedef shortHand = ffi.NativeFunction<
     ffi.Void Function(ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>)>;
