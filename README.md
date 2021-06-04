@@ -36,7 +36,7 @@ class NativeLibrary {
     return _sum(a, b);
   }
 
-  late final _sum_ptr = _lookup<ffi.NativeFunction<ffi.Int32 Function(ffi.Int32, ffi.Int32)>>('sum');
+  late final _sumPtr = _lookup<ffi.NativeFunction<ffi.Int32 Function(ffi.Int32, ffi.Int32)>>('sum');
   late final _sum = _sum_ptr.asFunction<int Function(int, int)>();
 }
 ```
