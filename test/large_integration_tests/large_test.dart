@@ -40,6 +40,8 @@ ${strings.headers}:
 ${strings.typedefmap}:
   'size_t': 'IntPtr'
   'time_t': 'Int64'
+${strings.preamble}: |
+  // ignore_for_file: camel_case_types, non_constant_identifier_names
       ''') as YamlMap);
       final library = parse(config);
 
@@ -64,6 +66,8 @@ ${strings.headers}:
     - '**cJSON.h'
 ${strings.typedefmap}:
   'size_t': 'IntPtr'
+${strings.preamble}: |
+  // ignore_for_file: camel_case_types, non_constant_identifier_names
       ''') as YamlMap);
       final library = parse(config);
 
@@ -94,6 +98,8 @@ ${strings.functions}:
     - sqlite3_vmprintf
     - sqlite3_vsnprintf
     - sqlite3_str_vappendf
+${strings.preamble}: |
+  // ignore_for_file: camel_case_types, non_constant_identifier_names
       ''') as YamlMap);
       final library = parse(config);
 

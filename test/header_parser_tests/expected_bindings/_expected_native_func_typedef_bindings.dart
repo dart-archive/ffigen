@@ -31,7 +31,7 @@ class NativeLibrary {
     );
   }
 
-  late final _func_ptr = _lookup<
+  late final _funcPtr = _lookup<
       ffi.NativeFunction<
           ffi.Void Function(
               ffi.Pointer<
@@ -40,7 +40,7 @@ class NativeLibrary {
                           ffi.Pointer<
                               ffi.NativeFunction<
                                   ffi.Void Function()>>)>>)>>('func');
-  late final _func = _func_ptr.asFunction<
+  late final _func = _funcPtr.asFunction<
       void Function(
           ffi.Pointer<
               ffi.NativeFunction<
@@ -49,30 +49,30 @@ class NativeLibrary {
                           ffi.NativeFunction<ffi.Void Function()>>)>>)>();
 
   void funcWithNativeFunc(
-    withTypedefReturnType named,
+    WithTypedefReturnType named,
   ) {
     return _funcWithNativeFunc(
       named,
     );
   }
 
-  late final _funcWithNativeFunc_ptr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(withTypedefReturnType)>>(
+  late final _funcWithNativeFuncPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(WithTypedefReturnType)>>(
           'funcWithNativeFunc');
-  late final _funcWithNativeFunc = _funcWithNativeFunc_ptr
-      .asFunction<void Function(withTypedefReturnType)>();
+  late final _funcWithNativeFunc =
+      _funcWithNativeFuncPtr.asFunction<void Function(WithTypedefReturnType)>();
 }
 
-class struc extends ffi.Struct {
+class Struc extends ffi.Struct {
   external ffi.Pointer<
       ffi.NativeFunction<
           ffi.Void Function(
               ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>)>> unnamed1;
 }
 
-typedef withTypedefReturnType
-    = ffi.Pointer<ffi.NativeFunction<insideReturnType Function()>>;
-typedef insideReturnType = ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>;
+typedef WithTypedefReturnType
+    = ffi.Pointer<ffi.NativeFunction<InsideReturnType Function()>>;
+typedef InsideReturnType = ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>;
 
 class Struc2 extends ffi.Struct {
   external VoidFuncPointer constFuncPointer;

@@ -70,8 +70,7 @@ class Func extends LookUpBinding {
     final s = StringBuffer();
     final enclosingFuncName = name;
     final funcVarName = w.wrapperLevelUniqueNamer.makeUnique('_$name');
-    final funcPointerName =
-        w.wrapperLevelUniqueNamer.makeUnique('_${name}_ptr');
+    final funcPointerName = w.wrapperLevelUniqueNamer.makeUnique('_${name}Ptr');
 
     if (dartDoc != null) {
       s.write(makeDartDoc(dartDoc!));

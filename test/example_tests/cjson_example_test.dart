@@ -49,6 +49,8 @@ ${strings.preamble}: |
   // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
   // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
   // THE SOFTWARE.
+
+  // ignore_for_file: camel_case_types, non_constant_identifier_names
 ''') as YamlMap);
       final library = parse(config);
 

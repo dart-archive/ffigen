@@ -27,14 +27,14 @@ class Bindings {
     );
   }
 
-  late final _test1_ptr = _lookup<
+  late final _test1Ptr = _lookup<
       ffi.NativeFunction<
           ffi.Uint8 Function(ffi.Uint8, ffi.Pointer<ffi.Uint8>)>>('test1');
   late final _test1 =
-      _test1_ptr.asFunction<int Function(int, ffi.Pointer<ffi.Uint8>)>();
+      _test1Ptr.asFunction<int Function(int, ffi.Pointer<ffi.Uint8>)>();
 }
 
-class test2 extends ffi.Struct {
+class Test2 extends ffi.Struct {
   @ffi.Uint8()
   external int a;
 }

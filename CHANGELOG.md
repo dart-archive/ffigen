@@ -1,3 +1,9 @@
+# 4.0.0-dev.1
+- This package now targets package:lints for the generated code. The generated
+code uses C symbol names as is. Use either `// ignore_for_file: lintRule1, lintRule2`
+in the `preamble`, or rename the symbols to make package:lints happy.
+- Name collisions are now resolved by suffixing `<int>` instead of `_<int>`.
+
 # 4.0.0-dev.0
 - Added support for generating typedefs (_referred_ typedefs only).
 <table>

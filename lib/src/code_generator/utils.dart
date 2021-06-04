@@ -11,20 +11,20 @@ class UniqueNamer {
   /// Creates a UniqueNamer with given [usedUpNames] only.
   UniqueNamer._raw(this._usedUpNames);
 
-  /// Returns a unique name by appending `_<int>` to it if necessary.
+  /// Returns a unique name by appending `<int>` to it if necessary.
   ///
   /// Adds the resulting name to the used names by default.
   String makeUnique(String name, [bool addToUsedUpNames = true]) {
-    var cr_name = name;
+    var crName = name;
     var i = 1;
-    while (_usedUpNames.contains(cr_name)) {
-      cr_name = '${name}_$i';
+    while (_usedUpNames.contains(crName)) {
+      crName = '$name$i';
       i++;
     }
     if (addToUsedUpNames) {
-      _usedUpNames.add(cr_name);
+      _usedUpNames.add(crName);
     }
-    return cr_name;
+    return crName;
   }
 
   /// Adds a name to used names.

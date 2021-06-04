@@ -27,17 +27,17 @@ class NativeLibrary {
     );
   }
 
-  late final _func1_ptr =
+  late final _func1Ptr =
       _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Handle)>>('func1');
-  late final _func1 = _func1_ptr.asFunction<void Function(Object)>();
+  late final _func1 = _func1Ptr.asFunction<void Function(Object)>();
 
   Object func2() {
     return _func2();
   }
 
-  late final _func2_ptr =
+  late final _func2Ptr =
       _lookup<ffi.NativeFunction<ffi.Handle Function()>>('func2');
-  late final _func2 = _func2_ptr.asFunction<Object Function()>();
+  late final _func2 = _func2Ptr.asFunction<Object Function()>();
 
   ffi.Pointer<ffi.Pointer<ffi.Handle>> func3(
     ffi.Pointer<ffi.Handle> arg0,
@@ -47,31 +47,31 @@ class NativeLibrary {
     );
   }
 
-  late final _func3_ptr = _lookup<
+  late final _func3Ptr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<ffi.Pointer<ffi.Handle>> Function(
               ffi.Pointer<ffi.Handle>)>>('func3');
-  late final _func3 = _func3_ptr.asFunction<
+  late final _func3 = _func3Ptr.asFunction<
       ffi.Pointer<ffi.Pointer<ffi.Handle>> Function(ffi.Pointer<ffi.Handle>)>();
 
   void func4(
-    typedef1 arg0,
+    Typedef1 arg0,
   ) {
     return _func4(
       arg0,
     );
   }
 
-  late final _func4_ptr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(typedef1)>>('func4');
-  late final _func4 = _func4_ptr.asFunction<void Function(typedef1)>();
+  late final _func4Ptr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(Typedef1)>>('func4');
+  late final _func4 = _func4Ptr.asFunction<void Function(Typedef1)>();
 }
 
-typedef typedef1
+typedef Typedef1
     = ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Handle)>>;
 
-class struc1 extends ffi.Opaque {}
+class Struc1 extends ffi.Opaque {}
 
-class struc2 extends ffi.Struct {
+class Struc2 extends ffi.Struct {
   external ffi.Pointer<ffi.Handle> h;
 }

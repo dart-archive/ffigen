@@ -1,5 +1,4 @@
-// ignore_for_file: unused_element
-// ignore_for_file: unused_field
+// ignore_for_file: unused_element, unused_field
 
 // AUTO GENERATED FILE, DO NOT EDIT.
 //
@@ -30,13 +29,13 @@ class Bindings {
     );
   }
 
-  late final _func1_ptr = _lookup<
+  late final _func1Ptr = _lookup<
       ffi.NativeFunction<
           NamedFunctionProto Function(
               NamedFunctionProto,
               ffi.Pointer<
                   ffi.NativeFunction<ffi.Void Function(ffi.Int32)>>)>>('func1');
-  late final _func1 = _func1_ptr.asFunction<
+  late final _func1 = _func1Ptr.asFunction<
       NamedFunctionProto Function(NamedFunctionProto,
           ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Int32)>>)>();
 
@@ -48,11 +47,11 @@ class Bindings {
     );
   }
 
-  late final _func2_ptr =
+  late final _func2Ptr =
       _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<NTyperef1>)>>(
           'func2');
   late final _func2 =
-      _func2_ptr.asFunction<void Function(ffi.Pointer<NTyperef1>)>();
+      _func2Ptr.asFunction<void Function(ffi.Pointer<NTyperef1>)>();
 
   void func3(
     int arg0,
@@ -64,10 +63,10 @@ class Bindings {
     );
   }
 
-  late final _func3_ptr = _lookup<
+  late final _func3Ptr = _lookup<
       ffi.NativeFunction<
-          ffi.Void Function(ffi.IntPtr, nesting_a_specified_type)>>('func3');
-  late final _func3 = _func3_ptr.asFunction<void Function(int, int)>();
+          ffi.Void Function(ffi.IntPtr, NestingASpecifiedType)>>('func3');
+  late final _func3 = _func3Ptr.asFunction<void Function(int, int)>();
 
   bool func4(
     ffi.Pointer<ffi.Uint8> a,
@@ -78,11 +77,11 @@ class Bindings {
         0;
   }
 
-  late final _func4_ptr =
+  late final _func4Ptr =
       _lookup<ffi.NativeFunction<ffi.Uint8 Function(ffi.Pointer<ffi.Uint8>)>>(
           'func4');
   late final _func4 =
-      _func4_ptr.asFunction<int Function(ffi.Pointer<ffi.Uint8>)>();
+      _func4Ptr.asFunction<int Function(ffi.Pointer<ffi.Uint8>)>();
 }
 
 class Struct1 extends ffi.Struct {
@@ -111,11 +110,11 @@ abstract class _NamedEnumInTypedef {
   static const int b = 0;
 }
 
-typedef nesting_a_specified_type = ffi.IntPtr;
+typedef NestingASpecifiedType = ffi.IntPtr;
 
 class Struct2 extends ffi.Opaque {}
 
-class withBoolAlias extends ffi.Struct {
+class WithBoolAlias extends ffi.Struct {
   @ffi.Uint8()
   external int b;
 }

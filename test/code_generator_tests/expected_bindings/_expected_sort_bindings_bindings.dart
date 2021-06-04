@@ -21,17 +21,17 @@ class Bindings {
     return _a();
   }
 
-  late final _a_ptr = _lookup<ffi.NativeFunction<ffi.Void Function()>>('a');
-  late final _a = _a_ptr.asFunction<void Function()>();
+  late final _aPtr = _lookup<ffi.NativeFunction<ffi.Void Function()>>('a');
+  late final _a = _aPtr.asFunction<void Function()>();
 
   void b() {
     return _b();
   }
 
-  late final _b_ptr = _lookup<ffi.NativeFunction<ffi.Void Function()>>('b');
-  late final _b = _b_ptr.asFunction<void Function()>();
+  late final _bPtr = _lookup<ffi.NativeFunction<ffi.Void Function()>>('b');
+  late final _b = _bPtr.asFunction<void Function()>();
 }
 
-class c extends ffi.Opaque {}
+class C extends ffi.Opaque {}
 
-class d extends ffi.Opaque {}
+class D extends ffi.Opaque {}

@@ -34,7 +34,9 @@ class Library {
   }) {
     /// Get all dependencies (includes itself).
     final dependencies = <Binding>{};
-    bindings.forEach((b) => b.addDependencies(dependencies));
+    for (final b in bindings) {
+      b.addDependencies(dependencies);
+    }
 
     /// Save bindings.
     this.bindings = dependencies.toList();
@@ -131,5 +133,8 @@ class Library {
   }
 
   @override
-  bool operator ==(Object o) => o is Library && o.generate() == generate();
+  bool operator ==(other) => other is Library && other.generate() == generate();
+
+  @override
+  int get hashCode => bindings.hashCode;
 }

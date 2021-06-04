@@ -16,7 +16,7 @@ void com2();
 void com3();
 
 // Test comment for struct.
-struct com4{
+struct Com4{
     /// Muli-line test comment for struct field
     // With multiple line and both // and ///.
     int a;

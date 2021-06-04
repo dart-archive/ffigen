@@ -10,6 +10,7 @@ environment:
 dev_dependencies:
   ffigen:
     path: '../../'
+  lints: ^1.0.1
 
 ffigen:
   name: NativeLibrary

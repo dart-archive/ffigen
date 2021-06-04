@@ -140,7 +140,7 @@ void main() {
     });
 
     test('Function and Struct Binding (pointer to Struct)', () {
-      final struct_some = Struc(
+      final structSome = Struc(
         name: 'SomeStruc',
         members: [
           Member(
@@ -166,7 +166,7 @@ void main() {
       final library = Library(
         name: 'Bindings',
         bindings: [
-          struct_some,
+          structSome,
           Func(
             name: 'someFunc',
             parameters: [
@@ -175,7 +175,7 @@ void main() {
                 type: Type.pointer(
                   Type.pointer(
                     Type.struct(
-                      struct_some,
+                      structSome,
                     ),
                   ),
                 ),
@@ -183,7 +183,7 @@ void main() {
             ],
             returnType: Type.pointer(
               Type.struct(
-                struct_some,
+                structSome,
               ),
             ),
           ),
@@ -194,7 +194,7 @@ void main() {
     });
 
     test('global (primitives, pointers, pointer to struct)', () {
-      final struc_some = Struc(
+      final strucSome = Struc(
         name: 'Some',
       );
       final emptyGlobalStruc = Struc(name: 'EmptyStruct');
@@ -216,12 +216,12 @@ void main() {
               ),
             ),
           ),
-          struc_some,
+          strucSome,
           Global(
             name: 'test5',
             type: Type.pointer(
               Type.struct(
-                struc_some,
+                strucSome,
               ),
             ),
           ),
@@ -275,7 +275,8 @@ void main() {
     test('Internal conflict resolution', () {
       final library = Library(
         name: 'init_dylib',
-        header: '// ignore_for_file: unused_element\n',
+        header:
+            '// ignore_for_file: unused_element, camel_case_types, non_constant_identifier_names\n',
         bindings: [
           Func(
             name: 'test',
@@ -333,7 +334,7 @@ void main() {
           ],
         ),
         Struc(
-          name: 'test2',
+          name: 'Test2',
           members: [
             Member(name: 'a', type: Type.boolean()),
           ],
@@ -356,7 +357,7 @@ void main() {
           ],
         ),
         Struc(
-          name: 'test2',
+          name: 'Test2',
           members: [
             Member(name: 'a', type: Type.boolean()),
           ],
@@ -372,8 +373,8 @@ void main() {
       bindings: [
         Func(name: 'b', returnType: Type.nativeType(SupportedNativeType.Void)),
         Func(name: 'a', returnType: Type.nativeType(SupportedNativeType.Void)),
-        Struc(name: 'd'),
-        Struc(name: 'c'),
+        Struc(name: 'D'),
+        Struc(name: 'C'),
       ],
     );
     _matchLib(library, 'sort_bindings');
@@ -450,6 +451,7 @@ void main() {
   test('Typealias Bindings', () {
     final library = Library(
       name: 'Bindings',
+      header: '// ignore_for_file: non_constant_identifier_names\n',
       bindings: [
         Typealias(
             name: 'RawUnused', type: Type.compound(Struc(name: 'Struct1'))),

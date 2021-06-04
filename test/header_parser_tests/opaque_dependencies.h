@@ -12,9 +12,9 @@ struct A
 typedef struct B
 {
     int a;
-} B_alias;
+} BAlias;
 
-B_alias *func(struct A *a);
+BAlias *func(struct A *a);
 
 // Opaque.
 struct C

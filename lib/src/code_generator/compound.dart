@@ -155,7 +155,9 @@ abstract class Compound extends NoLookUpBinding {
     if (dependencies.contains(this)) return;
 
     dependencies.add(this);
-    members.forEach((m) => m.type.addDependencies(dependencies));
+    for (final m in members) {
+      m.type.addDependencies(dependencies);
+    }
   }
 }
 

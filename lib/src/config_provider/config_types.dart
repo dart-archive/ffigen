@@ -109,10 +109,10 @@ class GlobHeaderFilter extends HeaderIncludeFilter {
   });
 
   @override
-  bool shouldInclude(String header) {
+  bool shouldInclude(String headerSourceFile) {
     // Return true if header was included.
     for (final globPattern in includeGlobs!) {
-      if (quiver.matchesFull(globPattern, header)) {
+      if (quiver.matchesFull(globPattern, headerSourceFile)) {
         return true;
       }
     }
