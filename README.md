@@ -270,7 +270,7 @@ typedefs:
   </tr>
   <tr>
     <td>functions -> expose-typedefs</td>
-    <td>Generate the typedefs to Native and Dart type of a function<br><br>
+    <td>Generate the typedefs to Native and Dart type of a function<br>
     <b>Default: Inline types are used and no typedefs to Native/Dart
     type are generated.</b>
     </td>
@@ -569,7 +569,9 @@ functions:
 ### How to get typedefs to Native and Dart type of a function?
 
 By default these types are inline. But you can use the `expose-typedef` subkey
-for functions to generate them.
+for functions to generate them. This will expose the Native and Dart type.
+E.g - for a function named `hello`, the generated typedefs are named
+as `NativeHello` and `DartHello`.
 
 Example -
 ```yaml

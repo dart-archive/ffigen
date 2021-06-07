@@ -62,13 +62,16 @@ class Func extends LookUpBinding {
         functionType.parameters[i].name = 'arg$i';
       }
     }
+
+    // Get function name with first letter in upper case.
+    final upperCaseName = name[0].toUpperCase() + name.substring(1);
     if (exposeFunctionTypedefs) {
       _exposedCFunctionTypealias = Typealias(
-        name: 'Native_$name',
+        name: 'Native$upperCaseName',
         type: Type.functionType(functionType),
       );
       _exposedDartFunctionTypealias = Typealias(
-        name: 'Dart_$name',
+        name: 'Dart$upperCaseName',
         type: Type.functionType(functionType),
         useDartType: true,
       );
