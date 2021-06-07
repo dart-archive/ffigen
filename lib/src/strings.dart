@@ -60,6 +60,9 @@ const rename = 'rename';
 const memberRename = 'member-rename';
 const symbolAddress = 'symbol-address';
 
+// Nested under `functions`
+const exposeFunctionTypedefs = 'expose-typedefs';
+
 const dependencyOnly = 'dependency-only';
 // Values for `compoundDependencies`.
 const fullCompoundDependencies = 'full';

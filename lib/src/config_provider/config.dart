@@ -116,6 +116,9 @@ class Config {
   bool get useDartHandle => _useDartHandle;
   late bool _useDartHandle;
 
+  Includer get exposeFunctionTypedefs => _exposeFunctionTypedefs;
+  late Includer _exposeFunctionTypedefs;
+
   Config._();
 
   /// Create config from Yaml map.
@@ -403,6 +406,15 @@ class Config {
         extractor: booleanExtractor,
         defaultValue: () => true,
         extractedResult: (dynamic result) => _useDartHandle = result as bool,
+      ),
+      [strings.functions, strings.exposeFunctionTypedefs]:
+          Specification<Includer>(
+        requirement: Requirement.no,
+        validator: exposeFunctionTypeValidator,
+        extractor: exposeFunctionTypeExtractor,
+        defaultValue: () => Includer.excludeByDefault(),
+        extractedResult: (dynamic result) =>
+            _exposeFunctionTypedefs = result as Includer,
       ),
     };
   }

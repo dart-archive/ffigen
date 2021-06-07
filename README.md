@@ -188,7 +188,7 @@ compiler-opts-automatic:
     - Include/Exclude declarations.<br>
     - Rename declarations.<br>
     - Rename enum and struct members.<br>
-    - Expose symbol-address and typedef for functions and globals.<br>
+    - Expose symbol-address for functions and globals.<br>
     </td>
     <td>
 
@@ -210,7 +210,7 @@ functions:
     # Removes '_' from beginning.
     '_(.*)': '$1'
   symbol-address:
-    # Used to expose symbol and typedef.
+    # Used to expose symbol address.
     include:
       - myFunc
 structs:
@@ -265,6 +265,29 @@ typedefs:
   rename:
     # Removes '_' from beginning of a typedef.
     '_(.*)': '$1'
+```
+  </td>
+  </tr>
+  <tr>
+    <td>functions -> expose-typedefs</td>
+    <td>Generate the typedefs to Native and Dart type of a function<br>
+    <b>Default: Inline types are used and no typedefs to Native/Dart
+    type are generated.</b>
+    </td>
+    <td>
+
+```yaml
+functions:
+  expose-typedefs:
+    include:
+      # Match function name.
+      - 'myFunc'
+       # Do this to expose types for all function.
+      - '.*'
+    exclude:
+      # If you only use exclude, then everything
+      # not excluded is generated.
+      - 'dispose'
 ```
   </td>
   </tr>
@@ -527,18 +550,38 @@ unions:
   dependency-only: opaque
 ```
 
-### How to expose the native pointers and typedefs?
+### How to expose the native pointers?
 
-By default all native pointers and typedefs are hidden, but you can use the
-`symbol-address` subkey for functions/globals and make them public by matching with its name. The pointers are then accesible via `nativeLibrary.addresses` and the native typedef are prefixed with `Native_`.
+By default the native pointers are private, but you can use the
+`symbol-address` subkey for functions/globals and make them public by matching with its name. The pointers are then accesible via `nativeLibrary.addresses`.
 
 Example -
 ```yaml
 functions:
   symbol-address:
     include:
-      - 'myFunc'
-      - '.*' # Do this to expose all pointers.
+      - 'myFunc' # Match function name.
+      - '.*' # Do this to expose all function pointers.
+    exclude: # If you only use exclude, then everything not excluded is generated.
+      - 'dispose'
+```
+
+### How to get typedefs to Native and Dart type of a function?
+
+By default these types are inline. But you can use the `expose-typedef` subkey
+for functions to generate them. This will expose the Native and Dart type.
+E.g - for a function named `hello`, the generated typedefs are named
+as `NativeHello` and `DartHello`.
+
+Example -
+```yaml
+functions:
+  expose-typedefs:
+    include:
+      - 'myFunc' # Match function name.
+      - '.*' # Do this to expose types for all function.
+    exclude: # If you only use exclude, then everything not excluded is generated.
+      - 'dispose'
 ```
 
 ### How are Structs/Unions/Enums that are reffered to via typedefs handled?

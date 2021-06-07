@@ -31,9 +31,10 @@ import 'writer.dart';
 class Func extends LookUpBinding {
   final FunctionType functionType;
   final bool exposeSymbolAddress;
+  final bool exposeFunctionTypedefs;
 
-  /// Contains typealias for function type if [exposeSymbolAddress] is true.
-  Type? _exposedFunctionType;
+  /// Contains typealias for function type if [exposeFunctionTypedefs] is true.
+  Typealias? _exposedCFunctionTypealias, _exposedDartFunctionTypealias;
 
   /// [originalName] is looked up in dynamic library, if not
   /// provided, takes the value of [name].
@@ -45,6 +46,7 @@ class Func extends LookUpBinding {
     required Type returnType,
     List<Parameter>? parameters,
     this.exposeSymbolAddress = false,
+    this.exposeFunctionTypedefs = false,
   })  : functionType = FunctionType(
           returnType: returnType,
           parameters: parameters ?? const [],
@@ -61,8 +63,19 @@ class Func extends LookUpBinding {
       }
     }
 
-    _exposedFunctionType = Type.typealias(
-        Typealias(name: 'Native_$name', type: Type.functionType(functionType)));
+    // Get function name with first letter in upper case.
+    final upperCaseName = name[0].toUpperCase() + name.substring(1);
+    if (exposeFunctionTypedefs) {
+      _exposedCFunctionTypealias = Typealias(
+        name: 'Native$upperCaseName',
+        type: Type.functionType(functionType),
+      );
+      _exposedDartFunctionTypealias = Typealias(
+        name: 'Dart$upperCaseName',
+        type: Type.functionType(functionType),
+        useDartType: true,
+      );
+    }
   }
 
   @override
@@ -120,10 +133,12 @@ class Func extends LookUpBinding {
     }
     s.write('}\n');
 
-    final cType = exposeSymbolAddress
-        ? _exposedFunctionType!.getCType(w)
+    final cType = exposeFunctionTypedefs
+        ? _exposedCFunctionTypealias!.name
         : functionType.getCType(w, writeArgumentNames: false);
-    final dartType = functionType.getDartType(w, writeArgumentNames: false);
+    final dartType = exposeFunctionTypedefs
+        ? _exposedDartFunctionTypealias!.name
+        : functionType.getDartType(w, writeArgumentNames: false);
 
     if (exposeSymbolAddress) {
       // Add to SymbolAddress in writer.
@@ -148,10 +163,11 @@ class Func extends LookUpBinding {
     if (dependencies.contains(this)) return;
 
     dependencies.add(this);
-    if (exposeSymbolAddress) {
-      _exposedFunctionType!.addDependencies(dependencies);
-    }
     functionType.addDependencies(dependencies);
+    if (exposeFunctionTypedefs) {
+      _exposedCFunctionTypealias!.addDependencies(dependencies);
+      _exposedDartFunctionTypealias!.addDependencies(dependencies);
+    }
   }
 }
 

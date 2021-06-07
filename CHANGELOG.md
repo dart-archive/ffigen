@@ -1,3 +1,9 @@
+# 4.0.0-dev.2
+- Added config key `functions -> expose-typedefs` to expose the typedef
+to Native and Dart type.
+- Config key `function`->`symbol-address` no longer exposes the typedef
+to Native type. Use `expose-typedefs` to get the native type.
+
 # 4.0.0-dev.1
 - This package now targets package:lints for the generated code. The generated
 code uses C symbol names as is. Use either `// ignore_for_file: lintRule1, lintRule2`
