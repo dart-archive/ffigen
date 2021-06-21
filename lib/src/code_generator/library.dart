@@ -106,17 +106,17 @@ class Library {
 
   /// Generates [file] by generating C bindings.
   ///
-  /// If format is true(default), 'dartfmt -w $PATH' will be called to format the generated file.
+  /// If format is true(default), the formatter will be called to format the generated file.
   void generateFile(File file, {bool format = true}) {
     if (!file.existsSync()) file.createSync(recursive: true);
     file.writeAsStringSync(generate());
     if (format) {
-      _dartFmt(file.path);
+      _dartFormat(file.path);
     }
   }
 
-  /// Formats a file using `dartfmt`.
-  void _dartFmt(String path) {
+  /// Formats a file using the Dart formatter.
+  void _dartFormat(String path) {
     final sdkPath = getSdkPath();
     final result = Process.runSync(
         p.join(sdkPath, 'bin', 'dart'), ['format', path],
