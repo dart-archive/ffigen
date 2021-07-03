@@ -1,28 +1,28 @@
-# **_package:ffigen_**: Internal Working
+# **_package:wasmjsgen_**: Internal Working
 ## Table of Contents -
 1. [Overview](#overview)
 2. [LibClang](#LibClang)
     1. [Bindings](#Bindings)
 3. [Scripts](#scripts)
-    1. [ffigen.dart](#ffigen.dart)
+    1. [wasmjsgen.dart](#wasmjsgen.dart)
 4. [Components](#components)
     1. [Config Provider](#Config-Provider)
     2. [Header Parser](#Header-Parser)
     3. [Code Generator](#Code-Generator)
 # Overview
-`package:ffigen` simplifies the process of generating `dart:ffi` bindings from C header files. It is simple to use, with the input being a small YAML config file. It requires LLVM (9+) to work. This document tries to give a complete overview of every component without going into too many details about every single class/file.
+`package:wasmjsgen` simplifies the process of generating `dart:ffi` bindings from C header files. It is simple to use, with the input being a small YAML config file. It requires LLVM (9+) to work. This document tries to give a complete overview of every component without going into too many details about every single class/file.
 # LibClang
-`package:ffigen` binds to LibClang using `dart:ffi` for parsing C header files. 
+`package:wasmjsgen` binds to LibClang using `dart:ffi` for parsing C header files. 
 ## Bindings
 The config file for generating bindings is `tool/libclang_config.yaml`. The bindings are generated to `lib/src/header_parser/clang_bindings/clang_bindings.dart`. These are used by [Header Parser](#header-parser) for calling libclang functions.
 # Scripts
-## ffigen.dart
-This is the main entry point for the user-  `dart run ffigen`.
+## wasmjsgen.dart
+This is the main entry point for the user-  `dart run wasmjsgen`.
 - Command-line options:
     - `--verbose`: Sets log level.
     - `--config`: Specifies a config file.
-- The internal modules are called by `ffigen.dart` in the following way:
-- `ffigen.dart` will try to find dynamic library in default locations. If that fails, the user must excplicitly specify location in ffigen's config under the key `llvm-path`.
+- The internal modules are called by `wasmjsgen.dart` in the following way:
+- `wasmjsgen.dart` will try to find dynamic library in default locations. If that fails, the user must excplicitly specify location in wasmjsgen's config under the key `llvm-path`.
     - It first creates a `Config` object from an input Yaml file. This is used by other modules.
     - The `parse` method is then invoked to generate a `Library` object.
     - Finally, the code is generated from the `Library` object to the specified file.

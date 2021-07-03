@@ -1,10 +1,10 @@
-[![pub package](https://img.shields.io/pub/v/ffigen.svg)](https://pub.dev/packages/ffigen)
-[![Build Status](https://github.com/dart-lang/ffigen/workflows/Dart%20CI/badge.svg)](https://github.com/dart-lang/ffigen/actions?query=workflow%3A"Dart+CI")
-[![Coverage Status](https://coveralls.io/repos/github/dart-lang/ffigen/badge.svg?branch=master)](https://coveralls.io/github/dart-lang/ffigen?branch=master)
+[![pub package](https://img.shields.io/pub/v/wasmjsgen.svg)](https://pub.dev/packages/wasmjsgen)
+[![Build Status](https://github.com/thlorenz/wasmjsgen/workflows/Dart%20CI/badge.svg)](https://github.com/thlorenz/wasmjsgen/actions?query=workflow%3A"Dart+CI")
+[![Coverage Status](https://coveralls.io/repos/github/thlorenz/wasmjsgen/badge.svg?branch=master)](https://coveralls.io/github/thlorenz/wasmjsgen?branch=master)
 
-Binding generator for [FFI](https://dart.dev/guides/libraries/c-interop) bindings.
+Binding generator for Wasmjs flavor of [FFI](https://dart.dev/guides/libraries/c-interop) bindings.
 
-> Note: ffigen only supports parsing `C` headers.
+> Note: wasmjsgen only supports parsing `C` headers.
 
 ## Example
 
@@ -14,7 +14,7 @@ int sum(int a, int b);
 ```
 Add configurations to Pubspec File:
 ```yaml
-ffigen:
+wasmjsgen:
   output: 'generated_bindings.dart'
   headers:
     entry-points:
@@ -41,15 +41,15 @@ class NativeLibrary {
 }
 ```
 ## Using this package
-- Add `ffigen` under `dev_dependencies` in your `pubspec.yaml`.
+- Add `wasmjsgen` under `dev_dependencies` in your `pubspec.yaml`.
 - Install LLVM (see [Installing LLVM](#installing-llvm)).
 - Configurations must be provided in `pubspec.yaml` or in a custom YAML file (see [configurations](#configurations)).
-- Run the tool- `dart run ffigen`.
+- Run the tool- `dart run wasmjsgen`.
 
 Jump to [FAQ](#faq).
 
 ## Installing LLVM
-`package:ffigen` uses LLVM. Install LLVM (9+) in the following way.
+`package:wasmjsgen` uses LLVM. Install LLVM (9+) in the following way.
 
 #### ubuntu/linux
 1. Install libclangdev - `sudo apt-get install libclang-dev`.
@@ -62,11 +62,14 @@ Jump to [FAQ](#faq).
 1. Install Xcode.
 2. Install LLVM - `brew install llvm`.
 
+---
+# From FFIgen Readme
+
 ## Configurations
 Configurations can be provided in 2 ways-
-1. In the project's `pubspec.yaml` file under the key `ffigen`.
+1. In the project's `pubspec.yaml` file under the key `wasmjsgen`.
 2. Via a custom YAML file, then specify this file while running -
-`dart run ffigen --config config.yaml`
+`dart run wasmjsgen --config config.yaml`
 
 The following configuration options are available-
 <table>
