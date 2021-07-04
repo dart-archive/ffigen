@@ -3,11 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 /// Validates the yaml input by the user, prints useful info for the user
-
+import 'package:logging/logging.dart';
 import 'package:wasmjsgen/src/code_generator.dart';
 import 'package:wasmjsgen/src/header_parser/type_extractor/cxtypekindmap.dart';
-
-import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart';
 
 import '../strings.dart' as strings;
@@ -103,6 +101,18 @@ class Config {
   /// Name of the wrapper class.
   String get wrapperName => _wrapperName;
   late String _wrapperName;
+
+  /// Name of the memory allocator function.
+  String? get allocate => _allocate;
+  late String? _allocate;
+
+  /// Name of the memory deallocator function.
+  String? get deallocate => _deallocate;
+  late String? _deallocate;
+
+  /// Name of the memory reallocator function.
+  String? get reallocate => _reallocate;
+  late String? _reallocate;
 
   /// Doc comment for the wrapper class.
   String? get wrapperDocComment => _wrapperDocComment;
@@ -385,6 +395,27 @@ class Config {
         extractor: stringExtractor,
         defaultValue: () => 'NativeLibrary',
         extractedResult: (dynamic result) => _wrapperName = result as String,
+      ),
+      [strings.allocate]: Specification<String?>(
+        requirement: Requirement.prefer,
+        validator: dartClassNameValidator,
+        extractor: stringExtractor,
+        defaultValue: () => null,
+        extractedResult: (dynamic result) => _allocate = result as String?,
+      ),
+      [strings.deallocate]: Specification<String?>(
+        requirement: Requirement.no,
+        validator: dartClassNameValidator,
+        extractor: stringExtractor,
+        defaultValue: () => null,
+        extractedResult: (dynamic result) => _deallocate = result as String?,
+      ),
+      [strings.reallocate]: Specification<String?>(
+        requirement: Requirement.no,
+        validator: dartClassNameValidator,
+        extractor: stringExtractor,
+        defaultValue: () => null,
+        extractedResult: (dynamic result) => _reallocate = result as String?,
       ),
       [strings.description]: Specification<String?>(
         requirement: Requirement.prefer,

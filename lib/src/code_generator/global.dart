@@ -48,12 +48,11 @@ class Global extends LookUpBinding {
     final cType = type.getCType(w);
 
     s.write(
-        "late final ${w.ffiLibraryPrefix}.Pointer<$cType> $pointerName = ${w.lookupFuncIdentifier}<$cType>('$originalName');\n\n");
+        "late final Pointer<$cType> $pointerName = ${w.lookupFuncIdentifier}<$cType>('$originalName');\n\n");
     final baseTypealiasType = type.getBaseTypealiasType();
     if (baseTypealiasType.broadType == BroadType.Compound) {
       if (baseTypealiasType.compound!.isOpaque) {
-        s.write(
-            '${w.ffiLibraryPrefix}.Pointer<$cType> get $globalVarName => $pointerName;\n\n');
+        s.write('Pointer<$cType> get $globalVarName => $pointerName;\n\n');
       } else {
         s.write('$dartType get $globalVarName => $pointerName.ref;\n\n');
       }
@@ -66,7 +65,7 @@ class Global extends LookUpBinding {
     if (exposeSymbolAddress) {
       // Add to SymbolAddress in writer.
       w.symbolAddressWriter.addSymbol(
-        type: '${w.ffiLibraryPrefix}.Pointer<$cType>',
+        type: 'Pointer<$cType>',
         name: name,
         ptrName: pointerName,
       );

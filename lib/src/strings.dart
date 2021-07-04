@@ -148,6 +148,9 @@ const fparseAllComments = '-fparse-all-comments';
 const name = 'name';
 const description = 'description';
 const preamble = 'preamble';
+const allocate = 'allocate';
+const deallocate = 'deallocate';
+const reallocate = 'reallocate';
 
 // Dynamic library names.
 const libclang_dylib_linux = 'libclang.so';

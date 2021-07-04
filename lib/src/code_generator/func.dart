@@ -83,7 +83,6 @@ class Func extends LookUpBinding {
     final s = StringBuffer();
     final enclosingFuncName = name;
     final funcVarName = w.wrapperLevelUniqueNamer.makeUnique('_$name');
-    final funcPointerName = w.wrapperLevelUniqueNamer.makeUnique('_${name}Ptr');
 
     if (dartDoc != null) {
       s.write(makeDartDoc(dartDoc!));
@@ -93,16 +92,19 @@ class Func extends LookUpBinding {
     for (final p in functionType.parameters) {
       p.name = paramNamer.makeUnique(p.name);
     }
-    // Write enclosing function.
-    if (w.dartBool &&
-        functionType.returnType.getBaseTypealiasType().broadType ==
-            BroadType.Boolean) {
-      // Use bool return type in enclosing function.
-      s.write('bool $enclosingFuncName(\n');
-    } else {
-      s.write(
-          '${functionType.returnType.getDartType(w)} $enclosingFuncName(\n');
-    }
+
+    // -----------------
+    // Enclosing Function
+    // -----------------
+
+    final returnType = (w.dartBool &&
+            functionType.returnType.getBaseTypealiasType().broadType ==
+                BroadType.Boolean)
+        ? 'bool'
+        : functionType.returnType.getDartType(w);
+    s.write('$returnType $enclosingFuncName(\n');
+
+    // Input params
     for (final p in functionType.parameters) {
       if (w.dartBool &&
           p.type.getBaseTypealiasType().broadType == BroadType.Boolean) {
@@ -112,48 +114,32 @@ class Func extends LookUpBinding {
         s.write('  ${p.type.getDartType(w)} ${p.name},\n');
       }
     }
+
+    // Function body
+    final returnOpen = functionType.returnType.getReturnWrapOpen(w);
+    final returnClose = functionType.returnType.getReturnWrapClose(w);
     s.write(') {\n');
-    s.write('return $funcVarName');
+
+    s.write('return $returnOpen$funcVarName');
 
     s.write('(\n');
     for (final p in functionType.parameters) {
-      if (w.dartBool &&
-          p.type.getBaseTypealiasType().broadType == BroadType.Boolean) {
-        // Convert bool parameter to int before calling.
-        s.write('    ${p.name}?1:0,\n');
-      } else {
-        s.write('    ${p.name},\n');
-      }
+      final resolution = p.type.getParameterResolution(w);
+      s.write('    ${p.name}$resolution,\n');
     }
-    if (w.dartBool && functionType.returnType.broadType == BroadType.Boolean) {
-      // Convert int return type to bool.
-      s.write('  )!=0;\n');
-    } else {
-      s.write('  );\n');
-    }
+    s.write('$returnClose);\n');
     s.write('}\n');
 
-    final cType = exposeFunctionTypedefs
-        ? _exposedCFunctionTypealias!.name
-        : functionType.getCType(w, writeArgumentNames: false);
-    final dartType = exposeFunctionTypedefs
-        ? _exposedDartFunctionTypealias!.name
-        : functionType.getDartType(w, writeArgumentNames: false);
-
-    if (exposeSymbolAddress) {
-      // Add to SymbolAddress in writer.
-      w.symbolAddressWriter.addSymbol(
-        type:
-            '${w.ffiLibraryPrefix}.Pointer<${w.ffiLibraryPrefix}.NativeFunction<$cType>>',
-        name: name,
-        ptrName: funcPointerName,
-      );
+    // -----------------
+    // Enclosed Function
+    // -----------------
+    s.write(
+        'late final ${functionType.returnType.getLookupDartType(w)} Function(');
+    for (final p in functionType.parameters) {
+      s.write('${p.type.getLookupDartType(w)},\n');
     }
-    // Write function pointer.
     s.write(
-        "late final $funcPointerName = ${w.lookupFuncIdentifier}<${w.ffiLibraryPrefix}.NativeFunction<$cType>>('$originalName');\n");
-    s.write(
-        'late final $funcVarName = $funcPointerName.asFunction<$dartType>();\n\n');
+        ") $funcVarName =${w.lookupFuncIdentifier}('$enclosingFuncName');\n");
 
     return BindingString(type: BindingStringType.func, string: s.toString());
   }

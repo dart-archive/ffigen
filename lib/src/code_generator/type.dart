@@ -58,9 +58,19 @@ enum BroadType {
   Unimplemented,
 }
 
+bool isJsBigInt(SupportedNativeType nativeType) {
+  switch (nativeType) {
+    case SupportedNativeType.Int64:
+    case SupportedNativeType.Uint64:
+      return true;
+    default:
+      return false;
+  }
+}
+
 /// Type class for return types, variable types, etc.
 class Type {
-  static const _primitives = <SupportedNativeType, _SubType>{
+  static const primitives = <SupportedNativeType, _SubType>{
     SupportedNativeType.Void: _SubType(c: 'Void', dart: 'void'),
     SupportedNativeType.Char: _SubType(c: 'Uint8', dart: 'int'),
     SupportedNativeType.Int8: _SubType(c: 'Int8', dart: 'int'),
@@ -251,25 +261,25 @@ class Type {
   String getCType(Writer w) {
     switch (broadType) {
       case BroadType.NativeType:
-        return '${w.ffiLibraryPrefix}.${_primitives[nativeType!]!.c}';
+        return Type.primitives[nativeType!]!.c;
       case BroadType.Pointer:
-        return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
+        return 'Pointer<${child!.getCType(w)}>';
       case BroadType.Compound:
         return compound!.name;
       case BroadType.Enum:
-        return '${w.ffiLibraryPrefix}.${_primitives[enumNativeType]!.c}';
+        return Type.primitives[Type.enumNativeType]!.c;
       case BroadType.NativeFunction:
-        return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc!.type.getCType(w)}>';
+        return 'NativeFunction<${nativeFunc!.type.getCType(w)}>';
       case BroadType
           .IncompleteArray: // Array parameters are treated as Pointers in C.
-        return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
+        return 'Pointer<${child!.getCType(w)}>';
       case BroadType
           .ConstantArray: // Array parameters are treated as Pointers in C.
-        return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
+        return 'Pointer<${child!.getCType(w)}>';
       case BroadType.Boolean: // Booleans are treated as uint8.
-        return '${w.ffiLibraryPrefix}.${_primitives[SupportedNativeType.Uint8]!.c}';
+        return Type.primitives[SupportedNativeType.Uint8]!.c;
       case BroadType.Handle:
-        return '${w.ffiLibraryPrefix}.Handle';
+        return 'Handle';
       case BroadType.FunctionType:
         return functionType!.getCType(w);
       case BroadType.Typealias:
@@ -282,23 +292,23 @@ class Type {
   String getDartType(Writer w) {
     switch (broadType) {
       case BroadType.NativeType:
-        return _primitives[nativeType!]!.dart;
+        return primitives[nativeType!]!.dart;
       case BroadType.Pointer:
-        return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
+        return 'Pointer<${child!.getCType(w)}>';
       case BroadType.Compound:
         return compound!.name;
       case BroadType.Enum:
-        return _primitives[enumNativeType]!.dart;
+        return primitives[enumNativeType]!.dart;
       case BroadType.NativeFunction:
-        return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc!.type.getDartType(w)}>';
+        return 'NativeFunction<${nativeFunc!.type.getDartType(w)}>';
       case BroadType
           .IncompleteArray: // Array parameters are treated as Pointers in C.
-        return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
+        return 'Pointer<${child!.getCType(w)}>';
       case BroadType
           .ConstantArray: // Array parameters are treated as Pointers in C.
-        return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
+        return 'Pointer<${child!.getCType(w)}>';
       case BroadType.Boolean: // Booleans are treated as uint8.
-        return _primitives[SupportedNativeType.Uint8]!.dart;
+        return primitives[SupportedNativeType.Uint8]!.dart;
       case BroadType.Handle:
         return 'Object';
       case BroadType.FunctionType:
@@ -314,6 +324,98 @@ class Type {
       case BroadType.Unimplemented:
         throw UnimplementedError(
             'dart type unknown for ${broadType.toString()}');
+    }
+  }
+
+  String getLookupDartType(Writer w) {
+    switch (broadType) {
+      case BroadType.NativeType:
+        return isJsBigInt(nativeType!) ? w.jsBigInt : getDartType(w);
+      case BroadType.Pointer:
+        return Type.nativeType(SupportedNativeType.Int32).getDartType(w);
+      case BroadType.Compound:
+      case BroadType.Enum:
+      case BroadType.NativeFunction:
+      case BroadType.IncompleteArray:
+      case BroadType.ConstantArray:
+      case BroadType.Boolean:
+      case BroadType.Handle:
+      case BroadType.FunctionType:
+        return getDartType(w);
+      case BroadType.Typealias:
+        return typealias!.type.getLookupDartType(w);
+      case BroadType.Unimplemented:
+        return getDartType(w);
+    }
+  }
+
+  String getParameterResolution(Writer w) {
+    switch (broadType) {
+      case BroadType.Pointer:
+        return '.address';
+      case BroadType.NativeType:
+        return isJsBigInt(nativeType!) ? '.toString()' : '';
+      case BroadType.Compound:
+      case BroadType.Enum:
+      case BroadType.NativeFunction:
+      case BroadType.IncompleteArray:
+      case BroadType.ConstantArray:
+        return '';
+      case BroadType.Boolean:
+        return w.dartBool ? '? 1 : 0' : '';
+      case BroadType.Handle:
+      case BroadType.FunctionType:
+        return '';
+      case BroadType.Typealias:
+        return typealias!.type.getParameterResolution(w);
+      case BroadType.Unimplemented:
+        return '';
+    }
+  }
+
+  String getReturnWrapOpen(Writer w) {
+    switch (broadType) {
+      case BroadType.Pointer:
+        return 'Pointer.fromAddress(${child!.getCType(w)}(';
+      case BroadType.NativeType:
+        return isJsBigInt(nativeType!) ? '${w.jsBigIntToInt}(' : '';
+      case BroadType.Compound:
+      case BroadType.Enum:
+      case BroadType.NativeFunction:
+      case BroadType.IncompleteArray:
+      case BroadType.ConstantArray:
+      case BroadType.Boolean:
+      case BroadType.Handle:
+      case BroadType.FunctionType:
+        return '';
+      case BroadType.Typealias:
+        return typealias!.type.getReturnWrapOpen(w);
+      case BroadType.Unimplemented:
+        return '';
+    }
+  }
+
+  String getReturnWrapClose(Writer w) {
+    switch (broadType) {
+      case BroadType.Pointer:
+        return '),),';
+      case BroadType.NativeType:
+        return isJsBigInt(nativeType!) ? '),' : '';
+      case BroadType.Compound:
+      case BroadType.Enum:
+      case BroadType.NativeFunction:
+      case BroadType.IncompleteArray:
+      case BroadType.ConstantArray:
+        return '';
+      case BroadType.Boolean:
+        return w.dartBool ? ' != 0' : '';
+      case BroadType.Handle:
+      case BroadType.FunctionType:
+        return '';
+      case BroadType.Typealias:
+        return typealias!.type.getReturnWrapClose(w);
+      case BroadType.Unimplemented:
+        return '';
     }
   }
 

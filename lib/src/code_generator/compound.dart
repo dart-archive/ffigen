@@ -10,6 +10,9 @@ import 'type.dart';
 import 'utils.dart';
 import 'writer.dart';
 
+// NOTE: at this point wasmjsgen only supports opaque structs
+const FORCE_OPAQUE = true;
+
 enum CompoundType { struct, union }
 
 /// A binding for Compound type - Struct/Union.
@@ -86,23 +89,6 @@ abstract class Compound extends NoLookUpBinding {
     }
   }
 
-  List<int> _getArrayDimensionLengths(Type type) {
-    final array = <int>[];
-    var startType = type;
-    while (startType.broadType == BroadType.ConstantArray) {
-      array.add(startType.length!);
-      startType = startType.child!;
-    }
-    return array;
-  }
-
-  String _getInlineArrayTypeString(Type type, Writer w) {
-    if (type.broadType == BroadType.ConstantArray) {
-      return '${w.ffiLibraryPrefix}.Array<${_getInlineArrayTypeString(type.child!, w)}>';
-    }
-    return type.getCType(w);
-  }
-
   @override
   BindingString toBindingString(Writer w) {
     final s = StringBuffer();
@@ -117,30 +103,34 @@ abstract class Compound extends NoLookUpBinding {
 
     /// Write @Packed(X) annotation if struct is packed.
     if (isStruct && pack != null) {
-      s.write('@${w.ffiLibraryPrefix}.Packed($pack)\n');
+      s.write('// @Packed($pack)\n');
     }
     final dartClassName = isStruct ? 'Struct' : 'Union';
     // Write class declaration.
-    s.write(
-        'class $enclosingClassName extends ${w.ffiLibraryPrefix}.${isOpaque ? 'Opaque' : dartClassName}{\n');
+    if (FORCE_OPAQUE || isOpaque) {
+      s.writeln('class $enclosingClassName extends Opaque {');
+      s.writeln('  $enclosingClassName(int address) : super(address);');
+    } else {
+      s.write('class $enclosingClassName extends $dartClassName {\n');
+    }
     const depth = '  ';
-    for (final m in members) {
-      final memberName = localUniqueNamer.makeUnique(m.name);
-      if (m.type.broadType == BroadType.ConstantArray) {
-        s.write(
-            '$depth@${w.ffiLibraryPrefix}.Array.multi(${_getArrayDimensionLengths(m.type)})\n');
-        s.write(
-            '${depth}external ${_getInlineArrayTypeString(m.type, w)} $memberName;\n\n');
-      } else {
-        if (m.dartDoc != null) {
-          s.write(depth + '/// ');
-          s.writeAll(m.dartDoc!.split('\n'), '\n' + depth + '/// ');
-          s.write('\n');
+    if (!FORCE_OPAQUE) {
+      for (final m in members) {
+        final memberName = localUniqueNamer.makeUnique(m.name);
+        if (m.type.broadType == BroadType.ConstantArray) {
+          assert(false,
+              'wasmjs does not handle ConstantArray yet like ffigen does');
+        } else {
+          if (m.dartDoc != null) {
+            s.write(depth + '/// ');
+            s.writeAll(m.dartDoc!.split('\n'), '\n' + depth + '/// ');
+            s.write('\n');
+          }
+          if (!m.type.sameDartAndCType(w)) {
+            s.write('$depth@${m.type.getCType(w)}()\n');
+          }
+          s.write('${depth}external ${m.type.getDartType(w)} $memberName;\n\n');
         }
-        if (!m.type.sameDartAndCType(w)) {
-          s.write('$depth@${m.type.getCType(w)}()\n');
-        }
-        s.write('${depth}external ${m.type.getDartType(w)} $memberName;\n\n');
       }
     }
     s.write('}\n\n');
