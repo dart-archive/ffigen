@@ -3,4 +3,4 @@
 // BSD-style license that can be found in the LICENSE file.
 //
 
-export 'package:ffigen/src/executables/ffigen.dart';
+export 'package:wasmjsgen/src/executables/wasmjsgen.dart';

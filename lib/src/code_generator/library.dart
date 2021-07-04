@@ -5,7 +5,7 @@
 import 'dart:io';
 
 import 'package:cli_util/cli_util.dart';
-import 'package:ffigen/src/config_provider/config_types.dart';
+import 'package:wasmjsgen/src/config_provider/config_types.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 import 'binding.dart';
@@ -13,7 +13,7 @@ import 'struc.dart';
 import 'utils.dart';
 import 'writer.dart';
 
-final _logger = Logger('ffigen.code_generator.library');
+final _logger = Logger('wasmjsgen.code_generator.library');
 
 /// Container for all Bindings.
 class Library {

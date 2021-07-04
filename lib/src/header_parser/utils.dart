@@ -5,8 +5,8 @@
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
-import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/config_provider/config_types.dart';
+import 'package:wasmjsgen/src/code_generator.dart';
+import 'package:wasmjsgen/src/config_provider/config_types.dart';
 import 'package:logging/logging.dart';
 
 import 'clang_bindings/clang_bindings.dart' as clang_types;

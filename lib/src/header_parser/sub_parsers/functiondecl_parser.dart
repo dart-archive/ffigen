@@ -2,8 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/header_parser/data.dart';
+import 'package:wasmjsgen/src/code_generator.dart';
+import 'package:wasmjsgen/src/header_parser/data.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
@@ -11,7 +11,7 @@ import '../data.dart' show clang;
 import '../includer.dart';
 import '../utils.dart';
 
-final _logger = Logger('ffigen.header_parser.functiondecl_parser');
+final _logger = Logger('wasmjsgen.header_parser.functiondecl_parser');
 
 /// Holds temporary information regarding [Func] while parsing.
 class _ParserFunc {

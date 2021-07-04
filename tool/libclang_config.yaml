@@ -6,7 +6,7 @@
 
 # ===================== GENERATING BINDINGS =====================
 #    cd to project's root, and run -
-#    dart run ffigen --config tool/libclang_config.yaml
+#    dart run wasmjsgen --config tool/libclang_config.yaml
 # ===============================================================
 
 name: Clang

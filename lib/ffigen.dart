@@ -4,8 +4,8 @@
 
 /// A bindings generator for dart.
 ///
-/// See complete usage at - https://pub.dev/packages/ffigen.
-library ffigen;
+/// See complete usage at - https://pub.dev/packages/wasmjsgen.
+library wasmjsgen;
 
 export 'src/code_generator.dart' show Library;
 export 'src/config_provider.dart' show Config;

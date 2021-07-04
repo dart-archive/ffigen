@@ -5,12 +5,12 @@
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
-import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/config_provider.dart';
-import 'package:ffigen/src/config_provider/config_types.dart';
-import 'package:ffigen/src/header_parser/sub_parsers/macro_parser.dart';
-import 'package:ffigen/src/header_parser/translation_unit_parser.dart';
-import 'package:ffigen/src/strings.dart' as strings;
+import 'package:wasmjsgen/src/code_generator.dart';
+import 'package:wasmjsgen/src/config_provider.dart';
+import 'package:wasmjsgen/src/config_provider/config_types.dart';
+import 'package:wasmjsgen/src/header_parser/sub_parsers/macro_parser.dart';
+import 'package:wasmjsgen/src/header_parser/translation_unit_parser.dart';
+import 'package:wasmjsgen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
 
 import 'clang_bindings/clang_bindings.dart' as clang_types;
@@ -40,7 +40,7 @@ Library parse(Config c) {
 //           BELOW FUNCTIONS ARE MEANT FOR INTERNAL USE AND TESTING
 // ===================================================================================
 
-final _logger = Logger('ffigen.header_parser.parser');
+final _logger = Logger('wasmjsgen.header_parser.parser');
 
 /// Initializes parser, clears any previous values.
 void initParser(Config c) {

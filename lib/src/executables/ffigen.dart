@@ -7,11 +7,11 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:cli_util/cli_logging.dart' show Ansi;
-import 'package:ffigen/ffigen.dart';
+import 'package:wasmjsgen/wasmjsgen.dart';
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart' as yaml;
 
-final _logger = Logger('ffigen.ffigen');
+final _logger = Logger('wasmjsgen.wasmjsgen');
 final _ansi = Ansi(Ansi.terminalSupportsAnsi);
 
 const compilerOpts = 'compiler-opts';
@@ -19,7 +19,7 @@ const conf = 'config';
 const help = 'help';
 const verbose = 'verbose';
 const pubspecName = 'pubspec.yaml';
-const configKey = 'ffigen';
+const configKey = 'wasmjsgen';
 const logAll = 'all';
 const logFine = 'fine';
 const logInfo = 'info';

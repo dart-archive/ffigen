@@ -4,7 +4,7 @@
 
 import 'dart:io';
 
-import 'package:ffigen/src/code_generator.dart';
+import 'package:wasmjsgen/src/code_generator.dart';
 import 'package:file/local.dart';
 import 'package:glob/glob.dart';
 import 'package:logging/logging.dart';
@@ -15,7 +15,7 @@ import 'package:yaml/yaml.dart';
 import '../strings.dart' as strings;
 import 'config_types.dart';
 
-final _logger = Logger('ffigen.config_provider.spec_utils');
+final _logger = Logger('wasmjsgen.config_provider.spec_utils');
 
 /// Replaces the path separators according to current platform.
 String _replaceSeparators(String path) {
@@ -326,7 +326,7 @@ String findDylibAtDefaultLocations() {
 
   _logger.severe("Couldn't find dynamic library in default locations.");
   _logger.severe(
-      "Please supply one or more path/to/llvm in ffigen's config under the key '${strings.llvmPath}'.");
+      "Please supply one or more path/to/llvm in wasmjsgen's config under the key '${strings.llvmPath}'.");
   throw Exception("Couldn't find dynamic library in default locations.");
 }
 

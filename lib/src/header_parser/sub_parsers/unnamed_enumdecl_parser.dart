@@ -4,16 +4,16 @@
 
 import 'dart:ffi';
 
-import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/header_parser/data.dart';
-import 'package:ffigen/src/header_parser/includer.dart';
+import 'package:wasmjsgen/src/code_generator.dart';
+import 'package:wasmjsgen/src/header_parser/data.dart';
+import 'package:wasmjsgen/src/header_parser/includer.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
 import '../data.dart';
 import '../utils.dart';
 
-final _logger = Logger('ffigen.header_parser.unnamed_enumdecl_parser');
+final _logger = Logger('wasmjsgen.header_parser.unnamed_enumdecl_parser');
 
 /// Saves unnamed enums.
 void saveUnNamedEnum(clang_types.CXCursor cursor) {

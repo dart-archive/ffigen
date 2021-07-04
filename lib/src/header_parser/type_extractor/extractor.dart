@@ -3,9 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 /// Extracts code_gen Type from type.
-import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/header_parser/sub_parsers/typedefdecl_parser.dart';
-import 'package:ffigen/src/strings.dart' as strings;
+import 'package:wasmjsgen/src/code_generator.dart';
+import 'package:wasmjsgen/src/header_parser/sub_parsers/typedefdecl_parser.dart';
+import 'package:wasmjsgen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
@@ -15,7 +15,7 @@ import '../sub_parsers/enumdecl_parser.dart';
 import '../type_extractor/cxtypekindmap.dart';
 import '../utils.dart';
 
-final _logger = Logger('ffigen.header_parser.extractor');
+final _logger = Logger('wasmjsgen.header_parser.extractor');
 const _padding = '  ';
 
 /// Converts cxtype to a typestring code_generator can accept.

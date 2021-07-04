@@ -3,8 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 import 'dart:io';
 
-import 'package:ffigen/src/code_generator/type.dart';
-import 'package:ffigen/src/header_parser/clang_bindings/clang_bindings.dart'
+import 'package:wasmjsgen/src/code_generator/type.dart';
+import 'package:wasmjsgen/src/header_parser/clang_bindings/clang_bindings.dart'
     as clang;
 
 /// Name of the dynamic library file according to current platform.

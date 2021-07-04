@@ -4,8 +4,8 @@
 
 /// Validates the yaml input by the user, prints useful info for the user
 
-import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/header_parser/type_extractor/cxtypekindmap.dart';
+import 'package:wasmjsgen/src/code_generator.dart';
+import 'package:wasmjsgen/src/header_parser/type_extractor/cxtypekindmap.dart';
 
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart';
@@ -14,7 +14,7 @@ import '../strings.dart' as strings;
 import 'config_types.dart';
 import 'spec_utils.dart';
 
-final _logger = Logger('ffigen.config_provider.config');
+final _logger = Logger('wasmjsgen.config_provider.config');
 
 /// Provides configurations to other modules.
 ///
