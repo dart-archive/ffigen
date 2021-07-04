@@ -8,17 +8,17 @@ environment:
   sdk: '>=2.13.0 <3.0.0'
 
 dev_dependencies:
-  ffigen:
+  wasmjsgen:
     path: '../../'
   lints: ^1.0.1
 
-ffigen:
+wasmjsgen:
   output: 'generated_bindings.dart'
 
   # This will sort the bindings alphabetically.
   # sort: true
 
-  # This is required if LLVM can't be found in default locations by ffigen.
+  # This is required if LLVM can't be found in default locations by wasmjsgen.
   # llvm-path:
   #   - '/usr/local/opt/llvm'
 

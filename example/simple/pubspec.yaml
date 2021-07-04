@@ -8,11 +8,11 @@ environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dev_dependencies:
-  ffigen:
+  wasmjsgen:
     path: '../../'
   lints: ^1.0.1
 
-ffigen:
+wasmjsgen:
   name: NativeLibrary
   description: Bindings to `headers/example.h`.
   output: 'generated_bindings.dart'

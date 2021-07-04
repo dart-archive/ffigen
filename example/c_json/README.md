@@ -15,7 +15,7 @@ make
 ## Generating bindings
 At the root of this example (`example/c_json`), run -
 ```
-dart run ffigen
+dart run wasmjsgen
 ```
 This will generate bindings in a file: [cjson_generated_bindings.dart](./cjson_generated_bindings.dart)
 

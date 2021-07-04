@@ -12,11 +12,11 @@ dependencies:
   path: ^1.8.0
 
 dev_dependencies:
-  ffigen:
+  wasmjsgen:
     path: '../../'
   lints: ^1.0.1
 
-ffigen:
+wasmjsgen:
   output: 'cjson_generated_bindings.dart'
   name: 'CJson'
   description: 'Holds bindings to cJSON.'
