@@ -2,9 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:ffigen/ffigen.dart';
-import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/strings.dart' as strings;
+import 'package:wasmjsgen/wasmjsgen.dart';
+import 'package:wasmjsgen/src/code_generator.dart';
+import 'package:wasmjsgen/src/strings.dart' as strings;
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart' as yaml;
 

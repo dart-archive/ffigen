@@ -6,7 +6,7 @@ import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:ffigen/ffigen.dart';
+import 'package:wasmjsgen/wasmjsgen.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';

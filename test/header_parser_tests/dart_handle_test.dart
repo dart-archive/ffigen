@@ -3,10 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cli_util/cli_util.dart';
-import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/config_provider.dart';
-import 'package:ffigen/src/header_parser.dart' as parser;
-import 'package:ffigen/src/strings.dart' as strings;
+import 'package:wasmjsgen/src/code_generator.dart';
+import 'package:wasmjsgen/src/config_provider.dart';
+import 'package:wasmjsgen/src/header_parser.dart' as parser;
+import 'package:wasmjsgen/src/strings.dart' as strings;
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart' as yaml;
