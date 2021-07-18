@@ -2,8 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:wasmjsgen/src/code_generator.dart';
 import 'package:test/test.dart';
+import 'package:wasmjsgen/src/code_generator.dart';
+
 import '../test_utils.dart';
 
 void main() {
@@ -235,7 +236,6 @@ void main() {
     test('constant', () {
       final library = Library(
         name: 'Bindings',
-        header: '// ignore_for_file: unused_import\n',
         bindings: [
           Constant(
             name: 'test1',
@@ -255,7 +255,6 @@ void main() {
     test('enum_class', () {
       final library = Library(
         name: 'Bindings',
-        header: '// ignore_for_file: unused_import\n',
         bindings: [
           EnumClass(
             name: 'Constants',
@@ -320,6 +319,7 @@ void main() {
       _matchLib(library, 'internal_conflict_resolution');
     });
   });
+  /* TODO(thlorenz): support bool return eventually
   test('boolean_dartBool', () {
     final library = Library(
       name: 'Bindings',
@@ -343,6 +343,7 @@ void main() {
     );
     _matchLib(library, 'boolean_dartbool');
   });
+  */
   test('boolean_no_dartBool', () {
     final library = Library(
       name: 'Bindings',

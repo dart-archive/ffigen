@@ -22,5 +22,6 @@ dependencies:
   file: ^6.0.0
 
 dev_dependencies:
+  wasm_interop: ^2.0.0
   lints: ^1.0.1
   test: ^1.16.2

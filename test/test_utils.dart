@@ -43,7 +43,11 @@ void matchLibraryWithExpected(
 
   try {
     final actual = file.readAsStringSync();
-    final expected = File(path.joinAll(pathToExpected)).readAsStringSync();
+    final expectedFile = File(path.joinAll(pathToExpected));
+    if (!expectedFile.existsSync()) {
+      expectedFile.writeAsStringSync(actual);
+    }
+    final expected = file.readAsStringSync();
     expect(actual, expected);
     if (file.existsSync()) {
       file.delete();
