@@ -52,10 +52,11 @@ jobs:
         run: cd test/native_test && dart build_test_dylib.dart && cd ../..
       - name: Run VM tests
         run: dart test --platform vm
-      - name: Collect coverage
-        run: ./tool/coverage.sh
-      - name: Upload coverage
-        uses: coverallsapp/github-action@v1.1.2
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: lcov.info
+  # TODO reactivate coverage when needed
+  #   - name: Collect coverage
+  #     run: ./tool/coverage.sh
+  #   - name: Upload coverage
+  #     uses: coverallsapp/github-action@v1.1.2
+  #     with:
+  #       github-token: ${{ secrets.GITHUB_TOKEN }}
+  #       path-to-lcov: lcov.info
