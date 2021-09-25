@@ -292,6 +292,28 @@ functions:
   </td>
   </tr>
   <tr>
+    <td>functions -> leaf</td>
+    <td>Set isLeaf:true for functions.<br>
+    <b>Default: all functions are excluded.</b>
+    </td>
+    <td>
+
+```yaml
+functions:
+  leaf:
+    include:
+      # Match function name.
+      - 'myFunc'
+       # Do this to set isLeaf:true for all functions.
+      - '.*'
+    exclude:
+      # If you only use exclude, then everything
+      # not excluded is generated.
+      - 'dispose'
+```
+  </td>
+  </tr>
+  <tr>
     <td>structs -> pack</td>
     <td>Override the @Packed(X) annotation for generated structs.<br><br>
     <i>Options - none, 1, 2, 4, 8, 16</i><br>

@@ -1,3 +1,6 @@
+# 4.1.0
+- Add config key `functions -> leaf` for specifying `isLeaf:true` for functions.
+
 # 4.0.0
 - Release for Dart SDK `>=2.14`.
 
