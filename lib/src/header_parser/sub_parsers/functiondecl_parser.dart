@@ -80,6 +80,7 @@ Func? parseFunctionDeclaration(clang_types.CXCursor cursor) {
           config.functionDecl.shouldIncludeSymbolAddress(funcName),
       exposeFunctionTypedefs:
           config.exposeFunctionTypedefs.shouldInclude(funcName),
+      isLeaf: config.leafFunctions.shouldInclude(funcName),
     );
     bindingsIndex.addFuncToSeen(funcUsr, _stack.top.func!);
   } else if (bindingsIndex.isSeenFunc(funcUsr)) {

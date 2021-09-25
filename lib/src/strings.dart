@@ -62,6 +62,7 @@ const symbolAddress = 'symbol-address';
 
 // Nested under `functions`
 const exposeFunctionTypedefs = 'expose-typedefs';
+const leafFunctions = 'leaf';
 
 const dependencyOnly = 'dependency-only';
 // Values for `compoundDependencies`.

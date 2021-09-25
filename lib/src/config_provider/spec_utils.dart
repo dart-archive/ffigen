@@ -592,6 +592,31 @@ bool exposeFunctionTypeValidator(List<String> name, dynamic value) {
   return _result;
 }
 
+Includer leafFunctionExtractor(dynamic value) =>
+    _extractIncluderFromYaml(value);
+
+bool leafFunctionValidator(List<String> name, dynamic value) {
+  var _result = true;
+
+  if (!checkType<YamlMap>(name, value)) {
+    _result = false;
+  } else {
+    final mp = value as YamlMap;
+    for (final key in mp.keys) {
+      if (key == strings.include || key == strings.exclude) {
+        if (!checkType<YamlList>([...name, key as String], value[key])) {
+          _result = false;
+        }
+      } else {
+        _logger.severe("Unknown subkey '$key' in '$name'.");
+        _result = false;
+      }
+    }
+  }
+
+  return _result;
+}
+
 SupportedNativeType nativeSupportedType(int value, {bool signed = true}) {
   switch (value) {
     case 1:

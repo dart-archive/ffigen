@@ -119,6 +119,9 @@ class Config {
   Includer get exposeFunctionTypedefs => _exposeFunctionTypedefs;
   late Includer _exposeFunctionTypedefs;
 
+  Includer get leafFunctions => _leafFunctions;
+  late Includer _leafFunctions;
+
   Config._();
 
   /// Create config from Yaml map.
@@ -415,6 +418,14 @@ class Config {
         defaultValue: () => Includer.excludeByDefault(),
         extractedResult: (dynamic result) =>
             _exposeFunctionTypedefs = result as Includer,
+      ),
+      [strings.functions, strings.leafFunctions]: Specification<Includer>(
+        requirement: Requirement.no,
+        validator: leafFunctionValidator,
+        extractor: leafFunctionExtractor,
+        defaultValue: () => Includer.excludeByDefault(),
+        extractedResult: (dynamic result) =>
+            _leafFunctions = result as Includer,
       ),
     };
   }
