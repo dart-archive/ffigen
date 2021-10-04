@@ -32,6 +32,7 @@ class Func extends LookUpBinding {
   final FunctionType functionType;
   final bool exposeSymbolAddress;
   final bool exposeFunctionTypedefs;
+  final bool isLeaf;
 
   /// Contains typealias for function type if [exposeFunctionTypedefs] is true.
   Typealias? _exposedCFunctionTypealias, _exposedDartFunctionTypealias;
@@ -47,6 +48,7 @@ class Func extends LookUpBinding {
     List<Parameter>? parameters,
     this.exposeSymbolAddress = false,
     this.exposeFunctionTypedefs = false,
+    this.isLeaf = false,
   })  : functionType = FunctionType(
           returnType: returnType,
           parameters: parameters ?? const [],
@@ -152,8 +154,9 @@ class Func extends LookUpBinding {
     // Write function pointer.
     s.write(
         "late final $funcPointerName = ${w.lookupFuncIdentifier}<${w.ffiLibraryPrefix}.NativeFunction<$cType>>('$originalName');\n");
+    final isLeafString = isLeaf ? 'isLeaf:true' : '';
     s.write(
-        'late final $funcVarName = $funcPointerName.asFunction<$dartType>();\n\n');
+        'late final $funcVarName = $funcPointerName.asFunction<$dartType>($isLeafString);\n\n');
 
     return BindingString(type: BindingStringType.func, string: s.toString());
   }

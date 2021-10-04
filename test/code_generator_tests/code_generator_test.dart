@@ -67,6 +67,22 @@ void main() {
               ),
             ),
           ),
+          Func(
+            isLeaf: true,
+            name: 'leafFunc',
+            dartDoc: 'A function with isLeaf: true',
+            parameters: [
+              Parameter(
+                name: 'a',
+                type: Type.nativeType(
+                  SupportedNativeType.Int32,
+                ),
+              ),
+            ],
+            returnType: Type.nativeType(
+              SupportedNativeType.Int32,
+            ),
+          ),
         ],
       );
 

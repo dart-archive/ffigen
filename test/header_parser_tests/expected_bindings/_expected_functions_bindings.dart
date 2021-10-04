@@ -27,7 +27,7 @@ class NativeLibrary {
 
   late final _func1Ptr =
       _lookup<ffi.NativeFunction<ffi.Void Function()>>('func1');
-  late final _func1 = _func1Ptr.asFunction<void Function()>();
+  late final _func1 = _func1Ptr.asFunction<void Function()>(isLeaf: true);
 
   int func2(
     int arg0,

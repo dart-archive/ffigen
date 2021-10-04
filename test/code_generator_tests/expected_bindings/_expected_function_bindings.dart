@@ -60,4 +60,18 @@ class Bindings {
   late final _withPointerParam = _withPointerParamPtr.asFunction<
       ffi.Pointer<ffi.Double> Function(
           ffi.Pointer<ffi.Int32>, ffi.Pointer<ffi.Pointer<ffi.Uint8>>)>();
+
+  /// A function with isLeaf: true
+  int leafFunc(
+    int a,
+  ) {
+    return _leafFunc(
+      a,
+    );
+  }
+
+  late final _leafFuncPtr =
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(ffi.Int32)>>('leafFunc');
+  late final _leafFunc =
+      _leafFuncPtr.asFunction<int Function(int)>(isLeaf: true);
 }

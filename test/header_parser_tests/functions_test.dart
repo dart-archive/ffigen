@@ -34,6 +34,9 @@ ${strings.functions}:
     ${strings.include}:
       - func3
       - func4
+  ${strings.leafFunctions}:
+    ${strings.include}:
+      - func1
 
 ${strings.preamble}: |
   // ignore_for_file: camel_case_types
