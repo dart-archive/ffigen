@@ -397,6 +397,9 @@ Includer _extractIncluderFromYaml(dynamic yamlMap) {
 
   final include = (yamlMap[strings.include] as YamlList?)?.cast<String>();
   if (include != null) {
+    if (include.isEmpty) {
+      return Includer.excludeByDefault();
+    }
     for (final str in include) {
       if (isFullDeclarationName(str)) {
         includeFull.add(str);
