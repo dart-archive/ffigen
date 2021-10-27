@@ -115,6 +115,12 @@ abstract class Compound extends NoLookUpBinding {
     /// to have the same name as the class.
     final localUniqueNamer = UniqueNamer({enclosingClassName});
 
+    /// Marking type names because dart doesn't allow class member to have the
+    /// same name as a type name used internally.
+    for (final m in members) {
+      localUniqueNamer.markUsed(m.type.getDartType(w));
+    }
+
     /// Write @Packed(X) annotation if struct is packed.
     if (isStruct && pack != null) {
       s.write('@${w.ffiLibraryPrefix}.Packed($pack)\n');
