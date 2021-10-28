@@ -1,3 +1,7 @@
+# 4.1.1
+- Added fix for errors due to name collision between member name
+and type name used internally in structs/unions.
+
 # 4.1.0
 - Add config key `functions -> leaf` for specifying `isLeaf:true` for functions.
 
