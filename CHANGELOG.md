@@ -1,3 +1,6 @@
+# 4.1.2
+- Added fix for empty include list to exclude all
+
 # 4.1.1
 - Added fix for errors due to name collision between member name
 and type name used internally in structs/unions.
