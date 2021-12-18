@@ -4,8 +4,6 @@
 
 import 'package:ffigen/src/code_generator.dart';
 
-import 'compound.dart';
-import 'typealias.dart';
 import 'writer.dart';
 
 class _SubType {

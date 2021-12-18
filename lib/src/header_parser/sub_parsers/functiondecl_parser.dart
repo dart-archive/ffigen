@@ -7,7 +7,6 @@ import 'package:ffigen/src/header_parser/data.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
-import '../data.dart' show clang;
 import '../includer.dart';
 import '../utils.dart';
 

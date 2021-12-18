@@ -19,8 +19,7 @@ final _logger = Logger('ffigen.header_parser.unnamed_enumdecl_parser');
 void saveUnNamedEnum(clang_types.CXCursor cursor) {
   final resultCode = clang.clang_visitChildren(
     cursor,
-    Pointer.fromFunction(_unnamedenumCursorVisitor,
-        clang_types.CXChildVisitResult.CXChildVisit_Break),
+    Pointer.fromFunction(_unnamedenumCursorVisitor, exceptional_visitor_return),
     nullptr,
   );
 

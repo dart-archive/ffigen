@@ -76,8 +76,7 @@ EnumClass? parseEnumDeclaration(
 void _addEnumConstant(clang_types.CXCursor cursor) {
   final resultCode = clang.clang_visitChildren(
     cursor,
-    Pointer.fromFunction(
-        _enumCursorVisitor, clang_types.CXChildVisitResult.CXChildVisit_Break),
+    Pointer.fromFunction(_enumCursorVisitor, exceptional_visitor_return),
     nullptr,
   );
 
