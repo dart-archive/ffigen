@@ -80,6 +80,14 @@ class Config {
       _typedefNativeTypeMappings;
   late Map<String, SupportedNativeType> _typedefNativeTypeMappings;
 
+  /// Stores all the library imports specified by user including those for ffi and pkg_ffi.
+  Map<String, LibraryImport> get libraryImports => _libraryImports;
+  late Map<String, LibraryImport> _libraryImports;
+
+  /// Stores typedef name to NativeType mappings specified by user.
+  Map<String, ImportedType> get typeMappings => _typeMappings;
+  late Map<String, ImportedType> _typeMappings;
+
   /// Extracted Doc comment type.
   CommentType get commentType => _commentType;
   late CommentType _commentType;
@@ -324,6 +332,39 @@ class Config {
         defaultValue: () => <String, SupportedNativeType>{},
         extractedResult: (dynamic result) => _typedefNativeTypeMappings =
             result as Map<String, SupportedNativeType>,
+      ),
+      [strings.libraryImports]: Specification<Map<String, LibraryImport>>(
+        validator: libraryImportsValidator,
+        extractor: libraryImportsExtractor,
+        defaultValue: () => <String, LibraryImport>{},
+        extractedResult: (dynamic result) {
+          _libraryImports = <String, LibraryImport>{};
+          // Add predefined imports.
+          for (final key in strings.predefinedLibraryImports.keys) {
+            _libraryImports[key] =
+                LibraryImport(key, strings.predefinedLibraryImports[key]!);
+          }
+          _libraryImports.addAll(result as Map<String, LibraryImport>);
+        },
+      ),
+      [strings.typeMap]: Specification<Map<String, List<String>>>(
+        validator: typeMapValidator,
+        extractor: typeMapExtractor,
+        defaultValue: () => <String, List<String>>{},
+        extractedResult: (dynamic result) {
+          final _rawTypeMappings = result as Map<String, List<String>>;
+          _typeMappings = <String, ImportedType>{};
+          for (final key in _rawTypeMappings.keys) {
+            final lib = _rawTypeMappings[key]![0];
+            final cType = _rawTypeMappings[key]![1];
+            final dartType = _rawTypeMappings[key]![2];
+            if (!_libraryImports.containsKey(lib)) {
+              throw Exception("Please declare $lib under library-imports.");
+            }
+            _typeMappings[key] =
+                ImportedType(_libraryImports[lib]!, cType, dartType);
+          }
+        },
       ),
       [strings.sort]: Specification<bool>(
         requirement: Requirement.no,

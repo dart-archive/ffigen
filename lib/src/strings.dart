@@ -110,6 +110,20 @@ const sizemap_native_mapping = <String, int>{
   Enum: clang.CXTypeKind.CXType_Enum
 };
 
+// Library imports.
+const libraryImports = 'library-imports';
+
+const predefinedLibraryImports = {
+  'ffi': 'dart:ffi',
+  'pkg_ffi': 'package:ffi/ffi.dart',
+};
+
+const typeMap = 'type-map';
+// Sub-keys for keys under typeMap.
+const lib = 'lib';
+const cType = 'c-type';
+const dartType = 'dart-type';
+
 const supportedNativeType_mappings = <String, SupportedNativeType>{
   'Void': SupportedNativeType.Void,
   'Uint8': SupportedNativeType.Uint8,

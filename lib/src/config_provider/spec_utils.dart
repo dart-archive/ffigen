@@ -130,6 +130,75 @@ bool typedefmapValidator(List<String> name, dynamic yamlConfig) {
   return true;
 }
 
+Map<String, LibraryImport> libraryImportsExtractor(dynamic yamlConfig) {
+  final resultMap = <String, LibraryImport>{};
+  final typedefmap = yamlConfig as YamlMap?;
+  if (typedefmap != null) {
+    for (final typeName in typedefmap.keys) {
+      resultMap[typeName as String] =
+          LibraryImport(typeName, typedefmap[typeName] as String);
+    }
+  }
+  return resultMap;
+}
+
+bool libraryImportsValidator(List<String> name, dynamic yamlConfig) {
+  if (!checkType<YamlMap>(name, yamlConfig)) {
+    return false;
+  }
+  for (final key in (yamlConfig as YamlMap).keys) {
+    if (!checkType<String>([...name, key as String], yamlConfig[key])) {
+      return false;
+    }
+  }
+  return true;
+}
+
+Map<String, List<String>> typeMapExtractor(dynamic yamlConfig) {
+  // Key - type_name, Value - [lib, cType, dartType].
+  final resultMap = <String, List<String>>{};
+  final typeMap = yamlConfig as YamlMap?;
+  if (typeMap != null) {
+    for (final typeName in typeMap.keys) {
+      final typeConfigItem = typeMap[typeName] as YamlMap;
+      resultMap[typeName as String] = [
+        typeConfigItem[strings.lib] as String,
+        typeConfigItem[strings.cType] as String,
+        typeConfigItem[strings.dartType] as String,
+      ];
+    }
+  }
+  return resultMap;
+}
+
+bool typeMapValidator(List<String> name, dynamic yamlConfig) {
+  if (!checkType<YamlMap>(name, yamlConfig)) {
+    return false;
+  }
+  var result = true;
+  for (final key in (yamlConfig as YamlMap).keys) {
+    if (!checkType<YamlMap>([...name, key as String], yamlConfig[key])) {
+      return false;
+    }
+    final lib = (yamlConfig[key] as YamlMap).containsKey(strings.lib);
+    if (!lib) {
+      _logger.severe("Key '${strings.lib}' in $name -> $key is required.");
+      result = false;
+    }
+    final cType = (yamlConfig[key] as YamlMap).containsKey(strings.cType);
+    if (!cType) {
+      _logger.severe("Key '${strings.cType}' in $name -> $key is required.");
+      result = false;
+    }
+    final dartType = (yamlConfig[key] as YamlMap).containsKey(strings.dartType);
+    if (!dartType) {
+      _logger.severe("Key '${strings.dartType}' in $name -> $key is required.");
+      result = false;
+    }
+  }
+  return result;
+}
+
 final _quoteMatcher = RegExp(r'''^["'](.*)["']$''', dotAll: true);
 final _cmdlineArgMatcher = RegExp(r'''['"](\\"|[^"])*?['"]|[^ ]+''');
 List<String> compilerOptsToList(String compilerOpts) {
