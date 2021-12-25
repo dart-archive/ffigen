@@ -338,13 +338,7 @@ class Config {
         extractor: libraryImportsExtractor,
         defaultValue: () => <String, LibraryImport>{},
         extractedResult: (dynamic result) {
-          _libraryImports = <String, LibraryImport>{};
-          // Add predefined imports.
-          for (final key in strings.predefinedLibraryImports.keys) {
-            _libraryImports[key] =
-                LibraryImport(key, strings.predefinedLibraryImports[key]!);
-          }
-          _libraryImports.addAll(result as Map<String, LibraryImport>);
+          _libraryImports = result as Map<String, LibraryImport>;
         },
       ),
       [strings.typeMap]: Specification<Map<String, List<String>>>(

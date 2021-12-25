@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 import 'dart:io';
 
-import 'package:ffigen/src/code_generator/type.dart';
+import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser/clang_bindings/clang_bindings.dart'
     as clang;
 
@@ -113,10 +113,7 @@ const sizemap_native_mapping = <String, int>{
 // Library imports.
 const libraryImports = 'library-imports';
 
-const predefinedLibraryImports = {
-  'ffi': 'dart:ffi',
-  'pkg_ffi': 'package:ffi/ffi.dart',
-};
+final predefinedLibraryImports = {ffiImport, ffiPkgImport};
 
 const typeMap = 'type-map';
 // Sub-keys for keys under typeMap.

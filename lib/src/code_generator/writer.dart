@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:ffigen/src/code_generator/imports.dart';
 import 'package:ffigen/src/code_generator/utils.dart';
 
 import 'binding.dart';
@@ -22,8 +23,14 @@ class Writer {
   late String _className;
   final String? classDocComment;
 
-  late String _ffiLibraryPrefix;
-  String get ffiLibraryPrefix => _ffiLibraryPrefix;
+  String? _ffiLibraryPrefix;
+  String get ffiLibraryPrefix {
+    _ffiLibraryPrefix ??=
+        libraryImports.firstWhere((element) => element.name == 'ffi').prefix;
+    return _ffiLibraryPrefix!;
+  }
+
+  final Set<LibraryImport> libraryImports;
 
   late String _lookupFuncIdentifier;
   String get lookupFuncIdentifier => _lookupFuncIdentifier;
@@ -55,6 +62,7 @@ class Writer {
     required this.noLookUpBindings,
     required String className,
     required this.dartBool,
+    required this.libraryImports,
     this.classDocComment,
     this.header,
   }) {
@@ -75,12 +83,17 @@ class Writer {
       markUsed: [_initialWrapperLevelUniqueNamer, _initialTopLevelUniqueNamer],
     );
 
-    /// [_ffiLibraryPrefix] should be unique unique among all names.
-    _ffiLibraryPrefix = _resolveNameConflict(
-      name: 'ffi',
-      makeUnique: allLevelsUniqueNamer,
-      markUsed: [_initialWrapperLevelUniqueNamer, _initialTopLevelUniqueNamer],
-    );
+    /// Library imports prefix should be unique unique among all names.
+    for (final lib in libraryImports) {
+      lib.prefix = _resolveNameConflict(
+        name: lib.prefix,
+        makeUnique: allLevelsUniqueNamer,
+        markUsed: [
+          _initialWrapperLevelUniqueNamer,
+          _initialTopLevelUniqueNamer
+        ],
+      );
+    }
 
     /// [_lookupFuncIdentifier] should be unique in top level.
     _lookupFuncIdentifier = _resolveNameConflict(

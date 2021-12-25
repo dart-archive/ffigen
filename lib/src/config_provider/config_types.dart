@@ -368,21 +368,3 @@ class CompilerOptsAuto {
     return [];
   }
 }
-
-class LibraryImport {
-  final String name;
-  final String importPath;
-  late String prefix;
-
-  LibraryImport(this.name, this.importPath) {
-    prefix = name;
-  }
-}
-
-class ImportedType {
-  final LibraryImport libraryImport;
-  final String cType;
-  final String dartType;
-
-  ImportedType(this.libraryImport, this.cType, this.dartType);
-}

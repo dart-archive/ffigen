@@ -137,6 +137,10 @@ Map<String, LibraryImport> libraryImportsExtractor(dynamic yamlConfig) {
     for (final typeName in typedefmap.keys) {
       resultMap[typeName as String] =
           LibraryImport(typeName, typedefmap[typeName] as String);
+      if (strings.predefinedLibraryImports.contains(resultMap[typeName])) {
+        throw Exception(
+            'library-import -> typeName collides with a predefined import.');
+      }
     }
   }
   return resultMap;
