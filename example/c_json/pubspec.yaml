@@ -26,8 +26,11 @@ ffigen:
     include-directives:
       - '**cJSON.h'
   comments: false
-  typedef-map:
-    'size_t': 'IntPtr'
+  type-map:
+    'typedef size_t':
+      lib: 'ffi'
+      c-type: 'IntPtr'
+      dart-type: 'int'
 
   preamble: |
     // Copyright (c) 2009-2017 Dave Gamble and cJSON contributors

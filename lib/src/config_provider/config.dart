@@ -5,7 +5,6 @@
 /// Validates the yaml input by the user, prints useful info for the user
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/header_parser/type_extractor/cxtypekindmap.dart';
 
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart';
@@ -74,11 +73,6 @@ class Config {
   /// If typedef of supported types(int8_t) should be directly used.
   bool get useSupportedTypedefs => _useSupportedTypedefs;
   late bool _useSupportedTypedefs;
-
-  /// Stores typedef name to NativeType mappings specified by user.
-  Map<String, SupportedNativeType> get typedefNativeTypeMappings =>
-      _typedefNativeTypeMappings;
-  late Map<String, SupportedNativeType> _typedefNativeTypeMappings;
 
   /// Stores all the library imports specified by user including those for ffi and pkg_ffi.
   Map<String, LibraryImport> get libraryImports => _libraryImports;
@@ -313,26 +307,6 @@ class Config {
           _typedefs = result as Declaration;
         },
       ),
-      [strings.sizemap]: Specification<Map<int, SupportedNativeType>>(
-        validator: sizemapValidator,
-        extractor: sizemapExtractor,
-        defaultValue: () => <int, SupportedNativeType>{},
-        extractedResult: (dynamic result) {
-          final map = result as Map<int, SupportedNativeType>;
-          for (final key in map.keys) {
-            if (cxTypeKindToSupportedNativeTypes.containsKey(key)) {
-              cxTypeKindToSupportedNativeTypes[key] = map[key]!;
-            }
-          }
-        },
-      ),
-      [strings.typedefmap]: Specification<Map<String, SupportedNativeType>>(
-        validator: typedefmapValidator,
-        extractor: typedefmapExtractor,
-        defaultValue: () => <String, SupportedNativeType>{},
-        extractedResult: (dynamic result) => _typedefNativeTypeMappings =
-            result as Map<String, SupportedNativeType>,
-      ),
       [strings.libraryImports]: Specification<Map<String, LibraryImport>>(
         validator: libraryImportsValidator,
         extractor: libraryImportsExtractor,
@@ -352,11 +326,15 @@ class Config {
             final lib = _rawTypeMappings[key]![0];
             final cType = _rawTypeMappings[key]![1];
             final dartType = _rawTypeMappings[key]![2];
-            if (!_libraryImports.containsKey(lib)) {
+            if (strings.predefinedLibraryImports.containsKey(lib)) {
+              _typeMappings[key] = ImportedType(
+                  strings.predefinedLibraryImports[lib]!, cType, dartType);
+            } else if (_libraryImports.containsKey(lib)) {
+              _typeMappings[key] =
+                  ImportedType(_libraryImports[lib]!, cType, dartType);
+            } else {
               throw Exception("Please declare $lib under library-imports.");
             }
-            _typeMappings[key] =
-                ImportedType(_libraryImports[lib]!, cType, dartType);
           }
         },
       ),

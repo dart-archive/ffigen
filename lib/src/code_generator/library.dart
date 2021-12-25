@@ -72,7 +72,7 @@ class Library {
 
     libraryImports ??= {};
     // Add predefined imports.
-    libraryImports.addAll(strings.predefinedLibraryImports);
+    libraryImports.addAll(strings.predefinedLibraryImports.values);
 
     _writer = Writer(
       lookUpBindings: lookUpBindings,

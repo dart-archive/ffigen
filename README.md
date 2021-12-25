@@ -431,43 +431,46 @@ preamble: |
 </td>
   </tr>
   <tr>
-    <td>typedef-map</td>
-    <td>Map typedefs to Native Types.<br> Values can only be
-    <i>Void, Uint8, Int8, Uint16, Int16, Uint32, Int32, Uint64, Int64, IntPtr, Float and Double.</i>
+    <td>library-imports</td>
+    <td>Specify library imports for use in type-map.
     </td>
     <td>
 
 ```yaml
-typedef-map:
-  'my_custom_type': 'IntPtr'
-  'size_t': 'Int64'
+library-imports:
+  custom_lib: 'package:some_pkg/some_file.dart'
 ```
   </td>
   </tr>
   <tr>
-    <td>size-map</td>
-    <td>Size of integers to use (in bytes).<br>
-    <b>The defaults (see example) <i>may</i> not be portable on all OS.
-    Do not change these unless absolutely sure.</b>
+    <td>type-map</td>
+    <td>Map types like integers, typedefs, structs,  unions to any other type defined in <br>
+    ffi (dart:ffi), pkg_ffi(package:ffi/ffi.dart) or any custom library import.
     </td>
     <td>
 
 ```yaml
-# These are optional and also default,
-# Omitting any and the default
-# will be used.
-size-map:
-  char: 1
-  unsigned char: 1
-  short: 2
-  unsigned short: 2
-  int: 4
-  unsigned int: 4
-  long: 8
-  unsigned long: 8
-  long long: 8
-  unsigned long long: 8
-  enum: 4
+type-map:
+  'char':
+    'lib': 'ffi'
+    'c-type': 'Int8'
+    'dart-type': 'int'
+  'int':
+    'lib': 'pkg_ffi'
+    'c-type': 'AbiSpecificInt'
+    'dart-type': 'int'
+  'typedef my_type1': # This will target typedefs.
+    'lib': 'custom_lib'
+    'c-type': 'CustomType'
+    'dart-type': 'CustomType'
+  'struct my_type2': # This will target structs.
+    'lib': 'custom_lib'
+    'c-type': 'CustomType2'
+    'dart-type': 'CustomType2'
+  'union my_type3': # This will target unions.
+    'lib': 'custom_lib'
+    'c-type': 'CustomType3'
+    'dart-type': 'CustomType3'
 ```
   </td>
   </tr>

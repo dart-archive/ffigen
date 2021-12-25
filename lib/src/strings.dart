@@ -79,9 +79,6 @@ const Map<Object, int?> packingValuesMap = {
   16: 16,
 };
 
-const sizemap = 'size-map';
-const typedefmap = 'typedef-map';
-
 // Sizemap values.
 const SChar = 'char';
 const UChar = 'unsigned char';
@@ -113,7 +110,10 @@ const sizemap_native_mapping = <String, int>{
 // Library imports.
 const libraryImports = 'library-imports';
 
-final predefinedLibraryImports = {ffiImport, ffiPkgImport};
+final predefinedLibraryImports = {
+  ffiImport.name: ffiImport,
+  // ffiPkgImport.name: ffiPkgImport // TODO: add this import.
+};
 
 const typeMap = 'type-map';
 // Sub-keys for keys under typeMap.

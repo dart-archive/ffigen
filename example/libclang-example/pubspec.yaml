@@ -51,25 +51,16 @@ ffigen:
       - 'CXTypeKind' # Full names are given higher priority than regexp.
       - 'CXGlobalOptFlags'
 
-  # These are optional and also default,
-  # Omitting any and the default will be used.
-  size-map:
-    char: 1
-    unsigned char: 1
-    short: 2
-    unsigned short: 2
-    int: 4
-    unsigned int: 4
-    long: 8
-    unsigned long: 8
-    long long: 8
-    unsigned long long: 8
-    enum: 4
-
   # These can be used to map any typedef to a specific native type.
-  typedef-map:
-    'size_t': 'IntPtr'
-    'time_t': 'Int64'
+  type-map:
+    'typedef size_t':
+      lib: 'ffi'
+      c-type: 'IntPtr'
+      dart-type: 'int'
+    'typedef time_t':
+      lib: 'ffi'
+      c-type: 'Int64'
+      dart-type: 'int'
 
   # Default is 'NativeLibrary'
   name: 'LibClang'

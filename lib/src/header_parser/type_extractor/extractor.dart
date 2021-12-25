@@ -43,9 +43,10 @@ Type getCodeGenType(
       return Type.pointer(s);
     case clang_types.CXTypeKind.CXType_Typedef:
       final spelling = clang.clang_getTypedefName(cxtype).toStringAndDispose();
-      if (config.typedefNativeTypeMappings.containsKey(spelling)) {
-        _logger.fine('  Type Mapped from typedef-map');
-        return Type.nativeType(config.typedefNativeTypeMappings[spelling]!);
+      final typedefKey = 'typedef $spelling';
+      if (config.typeMappings.containsKey(typedefKey)) {
+        _logger.fine('  Type Mapped from type-map');
+        return Type.importedType(config.typeMappings[typedefKey]!);
       }
       // Get name from supported typedef name if config allows.
       if (config.useSupportedTypedefs) {
@@ -119,10 +120,16 @@ Type getCodeGenType(
     case clang_types.CXTypeKind.CXType_Bool:
       return Type.boolean();
     default:
-      if (cxTypeKindToSupportedNativeTypes.containsKey(kind)) {
-        return Type.nativeType(
-          cxTypeKindToSupportedNativeTypes[kind]!,
-        );
+      var typeSpellKey =
+          clang.clang_getTypeSpelling(cxtype).toStringAndDispose();
+      if (typeSpellKey.startsWith('const ')) {
+        typeSpellKey = typeSpellKey.replaceFirst('const ', '');
+      }
+      if (config.typeMappings.containsKey(typeSpellKey)) {
+        _logger.fine('  Type Mapped from supported typedef');
+        return Type.importedType(config.typeMappings[typeSpellKey]!);
+      } else if (cxTypeKindToImportedTypes.containsKey(typeSpellKey)) {
+        return Type.importedType(cxTypeKindToImportedTypes[typeSpellKey]!);
       } else {
         _logger.fine(
             'typedeclarationCursorVisitor: getCodeGenType: Type Not Implemented, ${cxtype.completeStringRepr()}');
@@ -142,22 +149,26 @@ Type _extractfromRecord(clang_types.CXType cxtype, bool pointerReference) {
   if (cursorKind == clang_types.CXCursorKind.CXCursor_StructDecl ||
       cursorKind == clang_types.CXCursorKind.CXCursor_UnionDecl) {
     final declUsr = cursor.usr();
+    final declSpelling = cursor.spelling();
 
     // Set includer functions according to compoundType.
     final bool Function(String) isSeenDecl;
     final Compound? Function(String) getSeenDecl;
     final CompoundType compoundType;
+    final String compoundKey;
 
     switch (cursorKind) {
       case clang_types.CXCursorKind.CXCursor_StructDecl:
         isSeenDecl = bindingsIndex.isSeenStruct;
         getSeenDecl = bindingsIndex.getSeenStruct;
         compoundType = CompoundType.struct;
+        compoundKey = 'struct $declSpelling';
         break;
       case clang_types.CXCursorKind.CXCursor_UnionDecl:
         isSeenDecl = bindingsIndex.isSeenUnion;
         getSeenDecl = bindingsIndex.getSeenUnion;
         compoundType = CompoundType.union;
+        compoundKey = 'union $declSpelling';
         break;
       default:
         throw Exception('Unhandled compound type cursorkind.');
@@ -165,7 +176,10 @@ Type _extractfromRecord(clang_types.CXType cxtype, bool pointerReference) {
 
     // Also add a struct binding, if its unseen.
     // TODO(23): Check if we should auto add compound declarations.
-    if (isSeenDecl(declUsr)) {
+    if (config.typeMappings.containsKey(compoundKey)) {
+      _logger.fine('  Type Mapped from type-map');
+      return Type.importedType(config.typeMappings[compoundKey]!);
+    } else if (isSeenDecl(declUsr)) {
       type = Type.compound(getSeenDecl(declUsr)!);
 
       // This will parse the dependencies if needed.

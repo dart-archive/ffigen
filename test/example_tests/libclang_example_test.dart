@@ -43,9 +43,15 @@ ${strings.enums}:
   ${strings.include}:
     - 'CXTypeKind'
     - 'CXGlobalOptFlags'
-${strings.typedefmap}:
-    'size_t': 'IntPtr'
-    'time_t': 'Int64'
+${strings.typeMap}:
+    'typedef size_t':
+      lib: 'ffi'
+      c-type: 'IntPtr'
+      dart-type: 'int'
+    'typedef time_t':
+      lib: 'ffi'
+      c-type: 'Int64'
+      dart-type: 'int'
 ${strings.name}: 'LibClang'
 ${strings.description}: 'Holds bindings to LibClang.'
 ${strings.comments}:

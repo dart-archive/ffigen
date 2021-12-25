@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator.dart' show SupportedNativeType;
+import 'package:ffigen/src/code_generator/imports.dart';
 import 'package:ffigen/src/header_parser/clang_bindings/clang_bindings.dart'
     as clang;
 
@@ -25,6 +26,22 @@ var cxTypeKindToSupportedNativeTypes = <int, SupportedNativeType>{
   clang.CXTypeKind.CXType_Double: SupportedNativeType.Double,
   clang.CXTypeKind.CXType_Char_S: SupportedNativeType.Int8,
   clang.CXTypeKind.CXType_Char_U: SupportedNativeType.Uint8,
+};
+
+var cxTypeKindToImportedTypes = <String, ImportedType>{
+  'void': voidType,
+  'unsigned char': unsignedCharType,
+  'char': charType,
+  'unsigned short': unsignedShortType,
+  'short': shortType,
+  'unsigned int': unsignedIntType,
+  'int': intType,
+  'unsigned long': unsignedLongType,
+  'long': longType,
+  'unsigned long long': unsignedLongLongType,
+  'long long': longLongType,
+  'float': floatType,
+  'double': doubleType,
 };
 
 var suportedTypedefToSuportedNativeType = <String, SupportedNativeType>{

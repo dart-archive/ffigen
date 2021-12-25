@@ -70,77 +70,18 @@ bool booleanExtractor(dynamic value) => value as bool;
 bool booleanValidator(List<String> name, dynamic value) =>
     checkType<bool>(name, value);
 
-Map<int, SupportedNativeType> sizemapExtractor(dynamic yamlConfig) {
-  final resultMap = <int, SupportedNativeType>{};
-  final sizemap = yamlConfig as YamlMap?;
-  if (sizemap != null) {
-    for (final typeName in strings.sizemap_native_mapping.keys) {
-      if (sizemap.containsKey(typeName)) {
-        final cxTypeInt = strings.sizemap_native_mapping[typeName] as int;
-        final byteSize = sizemap[typeName] as int;
-        resultMap[cxTypeInt] = nativeSupportedType(byteSize,
-            signed: typeName.contains('unsigned') ? false : true);
-      }
-    }
-  }
-  return resultMap;
-}
-
-bool sizemapValidator(List<String> name, dynamic yamlConfig) {
-  if (!checkType<YamlMap>(name, yamlConfig)) {
-    return false;
-  }
-  for (final key in (yamlConfig as YamlMap).keys) {
-    if (!strings.sizemap_native_mapping.containsKey(key)) {
-      _logger.warning("Unknown subkey '$key' in '$name'.");
-    }
-  }
-
-  return true;
-}
-
-Map<String, SupportedNativeType> typedefmapExtractor(dynamic yamlConfig) {
-  final resultMap = <String, SupportedNativeType>{};
-  final typedefmap = yamlConfig as YamlMap?;
-  if (typedefmap != null) {
-    for (final typeName in typedefmap.keys) {
-      if (typedefmap[typeName] is String &&
-          strings.supportedNativeType_mappings
-              .containsKey(typedefmap[typeName])) {
-        // Map this typename to specified supportedNativeType.
-        resultMap[typeName as String] =
-            strings.supportedNativeType_mappings[typedefmap[typeName]]!;
-      }
-    }
-  }
-  return resultMap;
-}
-
-bool typedefmapValidator(List<String> name, dynamic yamlConfig) {
-  if (!checkType<YamlMap>(name, yamlConfig)) {
-    return false;
-  }
-  for (final value in (yamlConfig as YamlMap).values) {
-    if (value is! String ||
-        !strings.supportedNativeType_mappings.containsKey(value)) {
-      _logger.severe("Unknown value of subkey '$value' in '$name'.");
-    }
-  }
-
-  return true;
-}
-
 Map<String, LibraryImport> libraryImportsExtractor(dynamic yamlConfig) {
   final resultMap = <String, LibraryImport>{};
-  final typedefmap = yamlConfig as YamlMap?;
-  if (typedefmap != null) {
-    for (final typeName in typedefmap.keys) {
-      resultMap[typeName as String] =
-          LibraryImport(typeName, typedefmap[typeName] as String);
-      if (strings.predefinedLibraryImports.contains(resultMap[typeName])) {
+  final typeMap = yamlConfig as YamlMap?;
+  if (typeMap != null) {
+    for (final typeName in typeMap.keys) {
+      if (strings.predefinedLibraryImports
+          .containsKey(resultMap[typeName]!.name)) {
         throw Exception(
             'library-import -> typeName collides with a predefined import.');
       }
+      resultMap[typeName as String] =
+          LibraryImport(typeName, typeMap[typeName] as String);
     }
   }
   return resultMap;

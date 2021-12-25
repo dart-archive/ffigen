@@ -10743,100 +10743,7 @@ class sqlite3_file extends ffi.Struct {
   external ffi.Pointer<sqlite3_io_methods> pMethods;
 }
 
-class sqlite3_io_methods extends ffi.Struct {
-  @ffi.Int32()
-  external int iVersion;
-
-  external ffi.Pointer<
-      ffi.NativeFunction<ffi.Int32 Function(ffi.Pointer<sqlite3_file>)>> xClose;
-
-  external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int32 Function(ffi.Pointer<sqlite3_file>, ffi.Pointer<ffi.Void>,
-              ffi.Int32, sqlite3_int64)>> xRead;
-
-  external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int32 Function(ffi.Pointer<sqlite3_file>, ffi.Pointer<ffi.Void>,
-              ffi.Int32, sqlite3_int64)>> xWrite;
-
-  external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Int32 Function(ffi.Pointer<sqlite3_file>, sqlite3_int64)>>
-      xTruncate;
-
-  external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int32 Function(ffi.Pointer<sqlite3_file>, ffi.Int32)>> xSync;
-
-  external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Int32 Function(
-                  ffi.Pointer<sqlite3_file>, ffi.Pointer<sqlite3_int64>)>>
-      xFileSize;
-
-  external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int32 Function(ffi.Pointer<sqlite3_file>, ffi.Int32)>> xLock;
-
-  external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int32 Function(ffi.Pointer<sqlite3_file>, ffi.Int32)>> xUnlock;
-
-  external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Int32 Function(
-                  ffi.Pointer<sqlite3_file>, ffi.Pointer<ffi.Int32>)>>
-      xCheckReservedLock;
-
-  external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Int32 Function(
-                  ffi.Pointer<sqlite3_file>, ffi.Int32, ffi.Pointer<ffi.Void>)>>
-      xFileControl;
-
-  external ffi.Pointer<
-          ffi.NativeFunction<ffi.Int32 Function(ffi.Pointer<sqlite3_file>)>>
-      xSectorSize;
-
-  external ffi.Pointer<
-          ffi.NativeFunction<ffi.Int32 Function(ffi.Pointer<sqlite3_file>)>>
-      xDeviceCharacteristics;
-
-  /// Methods above are valid for version 1
-  external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int32 Function(ffi.Pointer<sqlite3_file>, ffi.Int32, ffi.Int32,
-              ffi.Int32, ffi.Pointer<ffi.Pointer<ffi.Void>>)>> xShmMap;
-
-  external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Int32 Function(
-                  ffi.Pointer<sqlite3_file>, ffi.Int32, ffi.Int32, ffi.Int32)>>
-      xShmLock;
-
-  external ffi.Pointer<
-          ffi.NativeFunction<ffi.Void Function(ffi.Pointer<sqlite3_file>)>>
-      xShmBarrier;
-
-  external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int32 Function(ffi.Pointer<sqlite3_file>, ffi.Int32)>> xShmUnmap;
-
-  /// Methods above are valid for version 2
-  external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int32 Function(ffi.Pointer<sqlite3_file>, sqlite3_int64,
-              ffi.Int32, ffi.Pointer<ffi.Pointer<ffi.Void>>)>> xFetch;
-
-  external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int32 Function(ffi.Pointer<sqlite3_file>, sqlite3_int64,
-              ffi.Pointer<ffi.Void>)>> xUnfetch;
-}
-
-typedef sqlite3_int64 = sqlite_int64;
-typedef sqlite_int64 = ffi.Int64;
+class sqlite3_io_methods extends ffi.Opaque {}
 
 class sqlite3_mutex extends ffi.Opaque {}
 
@@ -10960,6 +10867,8 @@ class sqlite3_vfs extends ffi.Struct {
       xNextSystemCall;
 }
 
+typedef sqlite3_int64 = sqlite_int64;
+typedef sqlite_int64 = ffi.Int64;
 typedef sqlite3_syscall_ptr
     = ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>;
 

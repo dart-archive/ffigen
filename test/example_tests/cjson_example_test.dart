@@ -27,8 +27,11 @@ ${strings.headers}:
   ${strings.includeDirectives}:
     - '**cJSON.h'
 ${strings.comments}: false
-${strings.typedefmap}:
-  'size_t': 'IntPtr'
+${strings.typeMap}:
+  'typedef size_t':
+    lib: 'ffi'
+    c-type: 'IntPtr'
+    dart-type: 'int'
 ${strings.preamble}: |
   // Copyright (c) 2009-2017 Dave Gamble and cJSON contributors
   //

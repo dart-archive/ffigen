@@ -33,3 +33,19 @@ class ImportedType {
 
 final ffiImport = LibraryImport('ffi', 'dart:ffi');
 final ffiPkgImport = LibraryImport('pkg_ffi', 'package:ffi/ffi.dart');
+
+final voidType = ImportedType(ffiImport, 'Void', 'void');
+
+final unsignedCharType = ImportedType(ffiImport, 'Uint8', 'int');
+final charType = ImportedType(ffiImport, 'Int8', 'int');
+final unsignedShortType = ImportedType(ffiImport, 'Uint16', 'int');
+final shortType = ImportedType(ffiImport, 'Int16', 'int');
+final unsignedIntType = ImportedType(ffiImport, 'Uint32', 'int');
+final intType = ImportedType(ffiImport, 'Int32', 'int');
+final unsignedLongType = ImportedType(ffiImport, 'Uint64', 'int');
+final longType = ImportedType(ffiImport, 'Int64', 'int');
+final unsignedLongLongType = ImportedType(ffiImport, 'Uint64', 'int');
+final longLongType = ImportedType(ffiImport, 'Int64', 'int');
+
+final floatType = ImportedType(ffiImport, 'Float', 'double');
+final doubleType = ImportedType(ffiImport, 'Double', 'double');

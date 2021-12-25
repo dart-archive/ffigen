@@ -40,6 +40,9 @@ enum BroadType {
   /// Represents a function type.
   FunctionType,
 
+  /// Represents an imported type.
+  ImportedType,
+
   /// Represents a typealias.
   Typealias,
 
@@ -92,6 +95,9 @@ class Type {
   /// Reference to the [EnumClass] this type refers to.
   EnumClass? enumClass;
 
+  /// Reference to the [ImportedType] this type refers to.
+  ImportedType? importedType;
+
   /// For providing [SupportedNativeType] only.
   final SupportedNativeType? nativeType;
 
@@ -116,6 +122,7 @@ class Type {
     this.nativeFunc,
     this.typealias,
     this.functionType,
+    this.importedType,
     this.length,
     this.unimplementedReason,
   });
@@ -138,6 +145,10 @@ class Type {
   factory Type.functionType(FunctionType functionType) {
     return Type._(
         broadType: BroadType.FunctionType, functionType: functionType);
+  }
+  factory Type.importedType(ImportedType importedType) {
+    return Type._(
+        broadType: BroadType.ImportedType, importedType: importedType);
   }
   factory Type.nativeFunc(NativeFunc nativeFunc) {
     return Type._(broadType: BroadType.NativeFunction, nativeFunc: nativeFunc);
@@ -270,6 +281,8 @@ class Type {
         return '${w.ffiLibraryPrefix}.Handle';
       case BroadType.FunctionType:
         return functionType!.getCType(w);
+      case BroadType.ImportedType:
+        return '${importedType!.libraryImport.prefix}.${importedType!.cType}';
       case BroadType.Typealias:
         return typealias!.name;
       case BroadType.Unimplemented:
@@ -301,6 +314,12 @@ class Type {
         return 'Object';
       case BroadType.FunctionType:
         return functionType!.getDartType(w);
+      case BroadType.ImportedType:
+        if (importedType!.cType == importedType!.dartType) {
+          return getCType(w);
+        } else {
+          return importedType!.dartType;
+        }
       case BroadType.Typealias:
         // Typealias cannot be used by name in Dart types unless both the C and
         // Dart type of the underlying types are same.

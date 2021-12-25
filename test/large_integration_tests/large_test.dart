@@ -37,9 +37,15 @@ ${strings.headers}:
     - '**Documentation.h'
     - '**FataErrorHandler.h'
     - '**Index.h'
-${strings.typedefmap}:
-  'size_t': 'IntPtr'
-  'time_t': 'Int64'
+${strings.typeMap}:
+  'typedef size_t':
+    lib: 'ffi'
+    c-type: 'IntPtr'
+    dart-type: 'int'
+  'typedef time_t':
+    lib: 'ffi'
+    c-type: 'Int64'
+    dart-type: 'int'
 ${strings.preamble}: |
   // ignore_for_file: camel_case_types, non_constant_identifier_names
       ''') as YamlMap);
@@ -64,8 +70,11 @@ ${strings.headers}:
     - third_party/cjson_library/cJSON.h
   ${strings.includeDirectives}:
     - '**cJSON.h'
-${strings.typedefmap}:
-  'size_t': 'IntPtr'
+${strings.typeMap}:
+  'typedef size_t':
+    lib: 'ffi'
+    c-type: 'IntPtr'
+    dart-type: 'int'
 ${strings.preamble}: |
   // ignore_for_file: camel_case_types, non_constant_identifier_names
       ''') as YamlMap);
