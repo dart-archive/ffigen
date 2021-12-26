@@ -432,7 +432,8 @@ preamble: |
   </tr>
   <tr>
     <td>library-imports</td>
-    <td>Specify library imports for use in type-map.
+    <td>Specify library imports for use in type-map.<br><br>
+    Note: ffi (dart:ffi) is already available as a predefined import.
     </td>
     <td>
 
@@ -444,30 +445,30 @@ library-imports:
   </tr>
   <tr>
     <td>type-map</td>
-    <td>Map types like integers, typedefs, structs,  unions to any other type defined in <br>
-    ffi (dart:ffi), pkg_ffi(package:ffi/ffi.dart) or any custom library import.
+    <td>Map types like integers, typedefs, structs,  unions to any other type.<br><br>
+    <i>lib</i> must be specified in library-import or be one of a predefined import.
     </td>
     <td>
 
 ```yaml
 type-map:
   'char':
-    'lib': 'ffi'
+    'lib': 'ffi' # predefined import.
     'c-type': 'Int8'
-    'dart-type': 'int'
+    'dart-type': 'int' # For native-types dart-type can be be int, double, float but same otherwise.
   'int':
-    'lib': 'pkg_ffi'
+    'lib': 'custom_lib'
     'c-type': 'AbiSpecificInt'
     'dart-type': 'int'
-  'typedef my_type1': # This will target typedefs.
+  'typedef my_type1': # Targets typedefs.
     'lib': 'custom_lib'
     'c-type': 'CustomType'
     'dart-type': 'CustomType'
-  'struct my_type2': # This will target structs.
+  'struct my_type2': # Targets structs.
     'lib': 'custom_lib'
     'c-type': 'CustomType2'
     'dart-type': 'CustomType2'
-  'union my_type3': # This will target unions.
+  'union my_type3': # Targets unions.
     'lib': 'custom_lib'
     'c-type': 'CustomType3'
     'dart-type': 'CustomType3'
