@@ -24,14 +24,15 @@ Library parse(Config c) {
   final bindings = parseToBindings();
 
   final library = Library(
-      bindings: bindings,
-      name: config.wrapperName,
-      description: config.wrapperDocComment,
-      header: config.preamble,
-      dartBool: config.dartBool,
-      sort: config.sort,
-      packingOverride: config.structPackingOverride,
-      libraryImports: c.libraryImports.values.toSet());
+    bindings: bindings,
+    name: config.wrapperName,
+    description: config.wrapperDocComment,
+    header: config.preamble,
+    dartBool: config.dartBool,
+    sort: config.sort,
+    packingOverride: config.structPackingOverride,
+    libraryImports: c.libraryImports.values.toSet(),
+  );
 
   return library;
 }

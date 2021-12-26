@@ -25,8 +25,9 @@ class Writer {
 
   String? _ffiLibraryPrefix;
   String get ffiLibraryPrefix {
-    _ffiLibraryPrefix ??=
-        libraryImports.firstWhere((element) => element.name == 'ffi').prefix;
+    _ffiLibraryPrefix ??= libraryImports
+        .firstWhere((element) => element.name == ffiImport.name)
+        .prefix;
     return _ffiLibraryPrefix!;
   }
 
