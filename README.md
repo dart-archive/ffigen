@@ -446,7 +446,7 @@ library-imports:
   <tr>
     <td>type-map</td>
     <td>Map types like integers, typedefs, structs,  unions to any other type.<br><br>
-    <i>lib</i> must be specified in library-import or be one of a predefined import.
+    <b><i>lib</i></b> must be specified in <i>library-imports</i> or be one of a predefined import.
     </td>
     <td>
 
@@ -455,7 +455,9 @@ type-map:
   'char':
     'lib': 'ffi' # predefined import.
     'c-type': 'Int8'
-    'dart-type': 'int' # For native-types dart-type can be be int, double, float but same otherwise.
+    # For native-types dart-type can be be int, double or float
+    # but same otherwise.
+    'dart-type': 'int'
   'int':
     'lib': 'custom_lib'
     'c-type': 'AbiSpecificInt'
