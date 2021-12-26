@@ -70,9 +70,12 @@ class Library {
     final noLookUpBindings =
         this.bindings.whereType<NoLookUpBinding>().toList();
 
-    libraryImports ??= {};
     // Add predefined imports.
-    libraryImports.addAll(strings.predefinedLibraryImports.values);
+    final _libraryImports = <LibraryImport>{};
+    _libraryImports.addAll(strings.predefinedLibraryImports.values);
+    if (libraryImports != null) {
+      _libraryImports.addAll(libraryImports);
+    }
 
     _writer = Writer(
       lookUpBindings: lookUpBindings,
@@ -81,7 +84,7 @@ class Library {
       classDocComment: description,
       header: header,
       dartBool: dartBool,
-      libraryImports: libraryImports,
+      libraryImports: _libraryImports,
     );
   }
 

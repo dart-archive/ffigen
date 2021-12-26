@@ -75,11 +75,6 @@ Map<String, LibraryImport> libraryImportsExtractor(dynamic yamlConfig) {
   final typeMap = yamlConfig as YamlMap?;
   if (typeMap != null) {
     for (final typeName in typeMap.keys) {
-      if (strings.predefinedLibraryImports
-          .containsKey(resultMap[typeName]!.name)) {
-        throw Exception(
-            'library-import -> typeName collides with a predefined import.');
-      }
       resultMap[typeName as String] =
           LibraryImport(typeName, typeMap[typeName] as String);
     }
@@ -93,6 +88,11 @@ bool libraryImportsValidator(List<String> name, dynamic yamlConfig) {
   }
   for (final key in (yamlConfig as YamlMap).keys) {
     if (!checkType<String>([...name, key as String], yamlConfig[key])) {
+      return false;
+    }
+    if (strings.predefinedLibraryImports.containsKey(key)) {
+      _logger.severe(
+          'library-import -> $key should not collide with any predefined imports - ${strings.predefinedLibraryImports.keys}.');
       return false;
     }
   }

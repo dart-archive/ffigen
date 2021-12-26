@@ -51,16 +51,27 @@ ffigen:
       - 'CXTypeKind' # Full names are given higher priority than regexp.
       - 'CXGlobalOptFlags'
 
+  library-imports:
+    custom_import: 'custom_import.dart'
+
   # These can be used to map any typedef to a specific native type.
   type-map:
     'typedef size_t':
-      lib: 'ffi'
-      c-type: 'IntPtr'
+      lib: 'custom_import'
+      c-type: 'UintPtr'
       dart-type: 'int'
     'typedef time_t':
       lib: 'ffi'
       c-type: 'Int64'
       dart-type: 'int'
+    'unsigned long':
+      lib: 'custom_import'
+      c-type: 'UnsignedLong'
+      dart-type: 'int'
+    'struct CXCursorSetImpl':
+      lib: 'custom_import'
+      c-type: 'CXCursorSetImpl'
+      dart-type: 'CXCursorSetImpl'
 
   # Default is 'NativeLibrary'
   name: 'LibClang'
