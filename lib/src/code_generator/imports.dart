@@ -1,17 +1,14 @@
-// Copyright (c) 2021, the Dart project authors. Please see the AUTHORS file
+// Copyright (c) 2022, the Dart project authors. Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-/// Represents a library import which will be written as an import in the
-/// generated file.
+/// A library import which will be written as an import in the generated file.
 class LibraryImport {
   final String name;
   final String importPath;
-  late String prefix;
+  String prefix;
 
-  LibraryImport(this.name, this.importPath) {
-    prefix = name;
-  }
+  LibraryImport(this.name, this.importPath) : prefix = name;
 
   @override
   bool operator ==(other) {
@@ -22,7 +19,7 @@ class LibraryImport {
   int get hashCode => name.hashCode;
 }
 
-/// Represents an imported type.
+/// An imported type which will be used in the generated code.
 class ImportedType {
   final LibraryImport libraryImport;
   final String cType;
