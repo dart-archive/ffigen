@@ -112,7 +112,7 @@ const libraryImports = 'library-imports';
 
 final predefinedLibraryImports = {
   ffiImport.name: ffiImport,
-  // ffiPkgImport.name: ffiPkgImport // TODO: add this import.
+  ffiPkgImport.name: ffiPkgImport
 };
 
 const typeMap = 'type-map';

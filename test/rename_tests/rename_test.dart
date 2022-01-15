@@ -215,15 +215,15 @@ Library expectedLibrary() {
         parameters: [
           Parameter(
             name: 'underscore',
-            type: Type.nativeType(SupportedNativeType.Int32),
+            type: Type.importedType(intType),
           ),
           Parameter(
             name: 'fullMatchSuccess',
-            type: Type.nativeType(SupportedNativeType.Float),
+            type: Type.importedType(floatType),
           ),
           Parameter(
             name: 'unnamed',
-            type: Type.nativeType(SupportedNativeType.Int32),
+            type: Type.importedType(intType),
           ),
         ],
       ),
@@ -250,11 +250,11 @@ Library expectedLibrary() {
         members: [
           Member(
             name: 'underscore',
-            type: Type.nativeType(SupportedNativeType.Int32),
+            type: Type.importedType(intType),
           ),
           Member(
             name: 'fullMatchSuccess',
-            type: Type.nativeType(SupportedNativeType.Float),
+            type: Type.importedType(floatType),
           ),
         ],
       ),
@@ -263,7 +263,7 @@ Library expectedLibrary() {
         members: [
           Member(
             name: 'underscore',
-            type: Type.nativeType(SupportedNativeType.Int32),
+            type: Type.importedType(intType),
           ),
         ],
       ),

@@ -8,7 +8,10 @@ environment:
   sdk: '>=2.13.0 <3.0.0'
 
 dependencies:
-  ffi: ^1.0.0
+  ffi:
+    git:
+      url: git@github.com:dart-lang/ffi.git
+      ref: abi-specific
   path: ^1.8.0
 
 dev_dependencies:

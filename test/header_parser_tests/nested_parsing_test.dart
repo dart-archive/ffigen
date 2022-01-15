@@ -64,21 +64,21 @@ Library expectedLibrary() {
   final struc2 = Struc(name: 'Struct2', members: [
     Member(
       name: 'e',
-      type: Type.nativeType(SupportedNativeType.Int32),
+      type: Type.importedType(intType),
     ),
     Member(
       name: 'f',
-      type: Type.nativeType(SupportedNativeType.Int32),
+      type: Type.importedType(intType),
     ),
   ]);
   final unnamedInternalStruc = Struc(name: 'UnnamedStruct1', members: [
     Member(
       name: 'a',
-      type: Type.nativeType(SupportedNativeType.Int32),
+      type: Type.importedType(intType),
     ),
     Member(
       name: 'b',
-      type: Type.nativeType(SupportedNativeType.Int32),
+      type: Type.importedType(intType),
     ),
   ]);
   return Library(
@@ -89,18 +89,18 @@ Library expectedLibrary() {
       Struc(name: 'Struct1', members: [
         Member(
           name: 'a',
-          type: Type.nativeType(SupportedNativeType.Int32),
+          type: Type.importedType(intType),
         ),
         Member(
           name: 'b',
-          type: Type.nativeType(SupportedNativeType.Int32),
+          type: Type.importedType(intType),
         ),
         Member(name: 'struct2', type: Type.pointer(Type.struct(struc2))),
       ]),
       Struc(name: 'Struct3', members: [
         Member(
           name: 'a',
-          type: Type.nativeType(SupportedNativeType.Int32),
+          type: Type.importedType(intType),
         ),
         Member(
           name: 'b',

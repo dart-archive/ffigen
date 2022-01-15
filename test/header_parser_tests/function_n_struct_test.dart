@@ -71,7 +71,7 @@ Library expectedLibrary() {
   final struc1 = Struc(name: 'Struct1', members: [
     Member(
       name: 'a',
-      type: Type.nativeType(SupportedNativeType.Int32),
+      type: Type.importedType(intType),
     ),
   ]);
   final struc2 = Struc(name: 'Struct2', members: [
@@ -108,9 +108,7 @@ Library expectedLibrary() {
       Func(
         name: 'func3',
         parameters: [
-          Parameter(
-              name: 'a',
-              type: Type.pointer(Type.nativeType(SupportedNativeType.Int32))),
+          Parameter(name: 'a', type: Type.pointer(Type.importedType(intType))),
         ],
         returnType: Type.nativeType(
           SupportedNativeType.Void,
@@ -122,9 +120,7 @@ Library expectedLibrary() {
         Member(
             name: 'a',
             type: Type.constantArray(
-                2,
-                Type.constantArray(
-                    10, Type.nativeType(SupportedNativeType.Int32))))
+                2, Type.constantArray(10, Type.importedType(intType))))
       ]),
     ],
   );
