@@ -53,6 +53,9 @@ Type getCodeGenType(
           _logger.fine('  Type Mapped from supported typedef');
           return Type.nativeType(
               suportedTypedefToSuportedNativeType[spelling]!);
+        } else if (supportedTypedefToImportedType.containsKey(spelling)) {
+          _logger.fine('  Type Mapped from supported typedef');
+          return Type.importedType(supportedTypedefToImportedType[spelling]!);
         }
       }
 

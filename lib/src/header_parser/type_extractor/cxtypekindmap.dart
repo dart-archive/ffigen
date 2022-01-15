@@ -55,3 +55,10 @@ var suportedTypedefToSuportedNativeType = <String, SupportedNativeType>{
   'int64_t': SupportedNativeType.Int64,
   'intptr_t': SupportedNativeType.IntPtr,
 };
+
+var supportedTypedefToImportedType = <String, ImportedType>{
+  'size_t': sizeType,
+  'ssize_t': sSizeType,
+  'off_t': offType,
+  'wchar_t': wCharType,
+};

@@ -385,7 +385,7 @@ sort: true
   </tr>
   <tr>
     <td>use-supported-typedefs</td>
-    <td>Should automatically map typedefs, E.g uint8_t => Uint8, int16_t => Int16 etc.<br>
+    <td>Should automatically map typedefs, E.g uint8_t => Uint8, int16_t => Int16, size_t => Size etc.<br>
     <b>Default: true</b>
     </td>
     <td>

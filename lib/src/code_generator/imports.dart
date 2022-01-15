@@ -47,3 +47,8 @@ final longLongType = ImportedType(ffiPkgImport, 'LongLong', 'int');
 
 final floatType = ImportedType(ffiImport, 'Float', 'double');
 final doubleType = ImportedType(ffiImport, 'Double', 'double');
+
+final sizeType = ImportedType(ffiPkgImport, 'Size', 'Size');
+final sSizeType = ImportedType(ffiPkgImport, 'SSize', 'SSize');
+final offType = ImportedType(ffiPkgImport, 'Off', 'Off');
+final wCharType = ImportedType(ffiPkgImport, 'WChar', 'WChar');
