@@ -144,6 +144,27 @@ bool typeMapValidator(List<String> name, dynamic yamlConfig) {
   return result;
 }
 
+Map<String, ImportedType> makeImportTypeMapping(
+    Map<String, List<String>> rawTypeMappings,
+    Map<String, LibraryImport> libraryImportsMap) {
+  final typeMappings = <String, ImportedType>{};
+  for (final key in rawTypeMappings.keys) {
+    final lib = rawTypeMappings[key]![0];
+    final cType = rawTypeMappings[key]![1];
+    final dartType = rawTypeMappings[key]![2];
+    if (strings.predefinedLibraryImports.containsKey(lib)) {
+      typeMappings[key] =
+          ImportedType(strings.predefinedLibraryImports[lib]!, cType, dartType);
+    } else if (libraryImportsMap.containsKey(lib)) {
+      typeMappings[key] =
+          ImportedType(libraryImportsMap[lib]!, cType, dartType);
+    } else {
+      throw Exception("Please declare $lib under library-imports.");
+    }
+  }
+  return typeMappings;
+}
+
 final _quoteMatcher = RegExp(r'''^["'](.*)["']$''', dotAll: true);
 final _cmdlineArgMatcher = RegExp(r'''['"](\\"|[^"])*?['"]|[^ ]+''');
 List<String> compilerOptsToList(String compilerOpts) {

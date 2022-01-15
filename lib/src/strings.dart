@@ -116,7 +116,14 @@ final predefinedLibraryImports = {
 };
 
 const typeMap = 'type-map';
-// Sub-keys for keys under typeMap.
+
+// Sub-fields for type-map.
+const typeMapTypedefs = 'typedefs';
+const typeMapStructs = 'structs';
+const typeMapUnions = 'unions';
+const typeMapNativeTypes = 'native-types';
+
+// Sub-sub-keys for fields under typeMap.
 const lib = 'lib';
 const cType = 'c-type';
 const dartType = 'dart-type';

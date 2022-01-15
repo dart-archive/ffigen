@@ -78,9 +78,21 @@ class Config {
   Map<String, LibraryImport> get libraryImports => _libraryImports;
   late Map<String, LibraryImport> _libraryImports;
 
-  /// Stores typedef name to NativeType mappings specified by user.
-  Map<String, ImportedType> get typeMappings => _typeMappings;
-  late Map<String, ImportedType> _typeMappings;
+  /// Stores typedef name to ImportedType mappings specified by user.
+  Map<String, ImportedType> get typedefTypeMappings => _typedefTypeMappings;
+  late Map<String, ImportedType> _typedefTypeMappings;
+
+  /// Stores struct name to ImportedType mappings specified by user.
+  Map<String, ImportedType> get structTypeMappings => _structTypeMappings;
+  late Map<String, ImportedType> _structTypeMappings;
+
+  /// Stores union name to ImportedType mappings specified by user.
+  Map<String, ImportedType> get unionTypeMappings => _unionTypeMappings;
+  late Map<String, ImportedType> _unionTypeMappings;
+
+  /// Stores native int name to ImportedType mappings specified by user.
+  Map<String, ImportedType> get nativeTypeMappings => _nativeTypeMappings;
+  late Map<String, ImportedType> _nativeTypeMappings;
 
   /// Extracted Doc comment type.
   CommentType get commentType => _commentType;
@@ -315,27 +327,44 @@ class Config {
           _libraryImports = result as Map<String, LibraryImport>;
         },
       ),
-      [strings.typeMap]: Specification<Map<String, List<String>>>(
+      [strings.typeMap, strings.typeMapTypedefs]:
+          Specification<Map<String, List<String>>>(
         validator: typeMapValidator,
         extractor: typeMapExtractor,
         defaultValue: () => <String, List<String>>{},
         extractedResult: (dynamic result) {
-          final _rawTypeMappings = result as Map<String, List<String>>;
-          _typeMappings = <String, ImportedType>{};
-          for (final key in _rawTypeMappings.keys) {
-            final lib = _rawTypeMappings[key]![0];
-            final cType = _rawTypeMappings[key]![1];
-            final dartType = _rawTypeMappings[key]![2];
-            if (strings.predefinedLibraryImports.containsKey(lib)) {
-              _typeMappings[key] = ImportedType(
-                  strings.predefinedLibraryImports[lib]!, cType, dartType);
-            } else if (_libraryImports.containsKey(lib)) {
-              _typeMappings[key] =
-                  ImportedType(_libraryImports[lib]!, cType, dartType);
-            } else {
-              throw Exception("Please declare $lib under library-imports.");
-            }
-          }
+          _typedefTypeMappings = makeImportTypeMapping(
+              result as Map<String, List<String>>, _libraryImports);
+        },
+      ),
+      [strings.typeMap, strings.typeMapStructs]:
+          Specification<Map<String, List<String>>>(
+        validator: typeMapValidator,
+        extractor: typeMapExtractor,
+        defaultValue: () => <String, List<String>>{},
+        extractedResult: (dynamic result) {
+          _structTypeMappings = makeImportTypeMapping(
+              result as Map<String, List<String>>, _libraryImports);
+        },
+      ),
+      [strings.typeMap, strings.typeMapUnions]:
+          Specification<Map<String, List<String>>>(
+        validator: typeMapValidator,
+        extractor: typeMapExtractor,
+        defaultValue: () => <String, List<String>>{},
+        extractedResult: (dynamic result) {
+          _unionTypeMappings = makeImportTypeMapping(
+              result as Map<String, List<String>>, _libraryImports);
+        },
+      ),
+      [strings.typeMap, strings.typeMapNativeTypes]:
+          Specification<Map<String, List<String>>>(
+        validator: typeMapValidator,
+        extractor: typeMapExtractor,
+        defaultValue: () => <String, List<String>>{},
+        extractedResult: (dynamic result) {
+          _nativeTypeMappings = makeImportTypeMapping(
+              result as Map<String, List<String>>, _libraryImports);
         },
       ),
       [strings.sort]: Specification<bool>(

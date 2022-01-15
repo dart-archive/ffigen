@@ -446,34 +446,39 @@ library-imports:
   <tr>
     <td>type-map</td>
     <td>Map types like integers, typedefs, structs,  unions to any other type.<br><br>
+    <b>Sub-fields</b> - <i>typedefs</i>, <i>structs</i>, <i>unions</i>, <i>ints</i><br><br>
     <b><i>lib</i></b> must be specified in <i>library-imports</i> or be one of a predefined import.
     </td>
     <td>
 
 ```yaml
 type-map:
-  'char':
-    'lib': 'ffi' # predefined import.
-    'c-type': 'Int8'
-    # For native-types dart-type can be be int, double or float
-    # but same otherwise.
-    'dart-type': 'int'
-  'int':
-    'lib': 'custom_lib'
-    'c-type': 'AbiSpecificInt'
-    'dart-type': 'int'
-  'typedef my_type1': # Targets typedefs.
-    'lib': 'custom_lib'
-    'c-type': 'CustomType'
-    'dart-type': 'CustomType'
-  'struct my_type2': # Targets structs.
-    'lib': 'custom_lib'
-    'c-type': 'CustomType2'
-    'dart-type': 'CustomType2'
-  'union my_type3': # Targets unions.
-    'lib': 'custom_lib'
-    'c-type': 'CustomType3'
-    'dart-type': 'CustomType3'
+  'native-types': # Targets native types.
+    'char':
+      'lib': 'ffi' # predefined import.
+      'c-type': 'Int8'
+      # For native-types dart-type can be be int, double or float
+      # but same otherwise.
+      'dart-type': 'int'
+    'int':
+      'lib': 'custom_lib'
+      'c-type': 'AbiSpecificInt'
+      'dart-type': 'int'
+  'typedefs': # Targets typedefs.
+    'my_type1':
+      'lib': 'custom_lib'
+      'c-type': 'CustomType'
+      'dart-type': 'CustomType'
+  'structs': # Targets structs.
+    'my_type2':
+      'lib': 'custom_lib'
+      'c-type': 'CustomType2'
+      'dart-type': 'CustomType2'
+  'unions': # Targets unions.
+    'my_type3':
+      'lib': 'custom_lib'
+      'c-type': 'CustomType3'
+      'dart-type': 'CustomType3'
 ```
   </td>
   </tr>

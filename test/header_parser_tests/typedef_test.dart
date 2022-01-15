@@ -33,10 +33,11 @@ ${strings.structs}:
     - ExcludedStruct
     - _ExcludedStruct
 ${strings.typeMap}:
-  'typedef SpecifiedTypeAsIntPtr':
-      lib: 'ffi'
-      c-type: 'IntPtr'
-      dart-type: 'int'
+  ${strings.typeMapTypedefs}:
+    'SpecifiedTypeAsIntPtr':
+        lib: 'ffi'
+        c-type: 'IntPtr'
+        dart-type: 'int'
 ${strings.preamble}: |
   // ignore_for_file: unused_element, unused_field
         ''') as yaml.YamlMap),

@@ -43,10 +43,9 @@ Type getCodeGenType(
       return Type.pointer(s);
     case clang_types.CXTypeKind.CXType_Typedef:
       final spelling = clang.clang_getTypedefName(cxtype).toStringAndDispose();
-      final typedefKey = 'typedef $spelling';
-      if (config.typeMappings.containsKey(typedefKey)) {
-        _logger.fine('  Type Mapped from type-map');
-        return Type.importedType(config.typeMappings[typedefKey]!);
+      if (config.typedefTypeMappings.containsKey(spelling)) {
+        _logger.fine('  Type $spelling mapped from type-map');
+        return Type.importedType(config.typedefTypeMappings[spelling]!);
       }
       // Get name from supported typedef name if config allows.
       if (config.useSupportedTypedefs) {
@@ -125,9 +124,9 @@ Type getCodeGenType(
       if (typeSpellKey.startsWith('const ')) {
         typeSpellKey = typeSpellKey.replaceFirst('const ', '');
       }
-      if (config.typeMappings.containsKey(typeSpellKey)) {
-        _logger.fine('  Type Mapped from supported typedef');
-        return Type.importedType(config.typeMappings[typeSpellKey]!);
+      if (config.nativeTypeMappings.containsKey(typeSpellKey)) {
+        _logger.fine('  Type $typeSpellKey mapped from type-map.');
+        return Type.importedType(config.nativeTypeMappings[typeSpellKey]!);
       } else if (cxTypeKindToImportedTypes.containsKey(typeSpellKey)) {
         return Type.importedType(cxTypeKindToImportedTypes[typeSpellKey]!);
       } else {
@@ -155,20 +154,20 @@ Type _extractfromRecord(clang_types.CXType cxtype, bool pointerReference) {
     final bool Function(String) isSeenDecl;
     final Compound? Function(String) getSeenDecl;
     final CompoundType compoundType;
-    final String compoundKey;
+    final Map<String, ImportedType> compoundTypeMappings;
 
     switch (cursorKind) {
       case clang_types.CXCursorKind.CXCursor_StructDecl:
         isSeenDecl = bindingsIndex.isSeenStruct;
         getSeenDecl = bindingsIndex.getSeenStruct;
         compoundType = CompoundType.struct;
-        compoundKey = 'struct $declSpelling';
+        compoundTypeMappings = config.structTypeMappings;
         break;
       case clang_types.CXCursorKind.CXCursor_UnionDecl:
         isSeenDecl = bindingsIndex.isSeenUnion;
         getSeenDecl = bindingsIndex.getSeenUnion;
         compoundType = CompoundType.union;
-        compoundKey = 'union $declSpelling';
+        compoundTypeMappings = config.unionTypeMappings;
         break;
       default:
         throw Exception('Unhandled compound type cursorkind.');
@@ -176,9 +175,9 @@ Type _extractfromRecord(clang_types.CXType cxtype, bool pointerReference) {
 
     // Also add a struct binding, if its unseen.
     // TODO(23): Check if we should auto add compound declarations.
-    if (config.typeMappings.containsKey(compoundKey)) {
+    if (compoundTypeMappings.containsKey(declSpelling)) {
       _logger.fine('  Type Mapped from type-map');
-      return Type.importedType(config.typeMappings[compoundKey]!);
+      return Type.importedType(compoundTypeMappings[declSpelling]!);
     } else if (isSeenDecl(declUsr)) {
       type = Type.compound(getSeenDecl(declUsr)!);
 
