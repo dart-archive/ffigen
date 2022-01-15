@@ -22,6 +22,7 @@ ffigen:
 ```
 Output (_generated_bindings.dart_).
 ```dart
+import 'package:ffi/ffi.dart' as pkg_ffi;
 class NativeLibrary {
   final Pointer<T> Function<T extends NativeType>(String symbolName)
       _lookup;
@@ -36,12 +37,13 @@ class NativeLibrary {
     return _sum(a, b);
   }
 
-  late final _sumPtr = _lookup<ffi.NativeFunction<ffi.Int32 Function(ffi.Int32, ffi.Int32)>>('sum');
+  late final _sumPtr = _lookup<ffi.NativeFunction<pkg_ffi.Int Function(pkg_ffi.Int, pkg_ffi.Int)>>('sum');
   late final _sum = _sum_ptr.asFunction<int Function(int, int)>();
 }
 ```
 ## Using this package
 - Add `ffigen` under `dev_dependencies` in your `pubspec.yaml` (run `dart pub add -d ffigen`).
+- Add `package:ffi` under `dependencies` in your `pubspec.yaml` (run `dart pub add ffigen`).
 - Install LLVM (see [Installing LLVM](#installing-llvm)).
 - Configurations must be provided in `pubspec.yaml` or in a custom YAML file (see [configurations](#configurations)).
 - Run the tool- `dart run ffigen`.
