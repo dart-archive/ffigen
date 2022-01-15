@@ -65,6 +65,41 @@ dynamic getKeyValueFromYaml(List<String> key, YamlMap map) {
   return null;
 }
 
+/// Recursively checks the keys in [configKeyMap] from [allowedKeyList].
+void warnUnknownKeys(List<List<String>> allowedKeyList, YamlMap configKeyMap) {
+  final allowedKeyMap = <String, dynamic>{};
+  for (final specKeys in allowedKeyList) {
+    var _item = allowedKeyMap;
+    for (final specSubKey in specKeys) {
+      _item.putIfAbsent(specSubKey, () => <String, dynamic>{});
+      _item = _item[specSubKey] as Map<String, dynamic>;
+    }
+    // Add empty key to mark that any sub-keys of this key are allowed.
+    _item[''] = <String, dynamic>{};
+  }
+  _warnUnknownKeysInMap(allowedKeyMap, configKeyMap, <dynamic>[]);
+}
+
+/// Recursive function to check a key set in a configKeyMap.
+void _warnUnknownKeysInMap(Map<String, dynamic> allowedKeyMap,
+    dynamic configKeyMap, List<dynamic> prev) {
+  if (allowedKeyMap.containsKey('') || configKeyMap is! YamlMap) {
+    return;
+  }
+  for (final key in configKeyMap.keys) {
+    if (allowedKeyMap.containsKey(key)) {
+      prev.add(key);
+      _warnUnknownKeysInMap(
+          allowedKeyMap[key] as Map<String, dynamic>, configKeyMap[key], prev);
+      prev.removeLast();
+    } else {
+      prev.add(key);
+      _logger.warning('Unknown key - ${prev.join(' -> ')}.');
+      prev.removeLast();
+    }
+  }
+}
+
 bool booleanExtractor(dynamic value) => value as bool;
 
 bool booleanValidator(List<String> name, dynamic value) =>

@@ -181,12 +181,7 @@ class Config {
       }
     }
     // Warn about unknown keys.
-    for (final key in map.keys) {
-      final specString = specs.keys.map((e) => e.join(':')).toSet();
-      if (!specString.contains(key)) {
-        _logger.warning("Unknown key '$key' found.");
-      }
-    }
+    warnUnknownKeys(specs.keys.toList(), map);
 
     return _result;
   }

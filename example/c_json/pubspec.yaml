@@ -27,10 +27,11 @@ ffigen:
       - '**cJSON.h'
   comments: false
   type-map:
-    'typedef size_t':
-      lib: 'ffi'
-      c-type: 'IntPtr'
-      dart-type: 'int'
+    typedefs:
+      'size_t':
+        lib: 'ffi'
+        c-type: 'IntPtr'
+        dart-type: 'int'
 
   preamble: |
     // Copyright (c) 2009-2017 Dave Gamble and cJSON contributors
