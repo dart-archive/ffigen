@@ -43,9 +43,28 @@ ${strings.enums}:
   ${strings.include}:
     - 'CXTypeKind'
     - 'CXGlobalOptFlags'
-${strings.typedefmap}:
-    'size_t': 'IntPtr'
-    'time_t': 'Int64'
+${strings.libraryImports}:
+  custom_import: 'custom_import.dart'
+${strings.typeMap}:
+  ${strings.typeMapTypedefs}:
+    'size_t':
+      lib: 'pkg_ffi'
+      c-type: 'Size'
+      dart-type: 'int'
+    'time_t':
+      lib: 'ffi'
+      c-type: 'Int64'
+      dart-type: 'int'
+  ${strings.typeMapNativeTypes}:
+    'unsigned long':
+      lib: 'custom_import'
+      c-type: 'UnsignedLong'
+      dart-type: 'int'
+  ${strings.typeMapStructs}:
+    'CXCursorSetImpl':
+      lib: 'custom_import'
+      c-type: 'CXCursorSetImpl'
+      dart-type: 'CXCursorSetImpl'
 ${strings.name}: 'LibClang'
 ${strings.description}: 'Holds bindings to LibClang.'
 ${strings.comments}:

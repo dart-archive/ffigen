@@ -5,6 +5,8 @@
 include: package:lints/recommended.yaml
 
 analyzer:
+  exclude:
+    - 'test/**_expected*'
   strong-mode:
     implicit-casts: false
     implicit-dynamic: false

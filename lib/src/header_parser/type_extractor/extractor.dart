@@ -43,9 +43,9 @@ Type getCodeGenType(
       return Type.pointer(s);
     case clang_types.CXTypeKind.CXType_Typedef:
       final spelling = clang.clang_getTypedefName(cxtype).toStringAndDispose();
-      if (config.typedefNativeTypeMappings.containsKey(spelling)) {
-        _logger.fine('  Type Mapped from typedef-map');
-        return Type.nativeType(config.typedefNativeTypeMappings[spelling]!);
+      if (config.typedefTypeMappings.containsKey(spelling)) {
+        _logger.fine('  Type $spelling mapped from type-map');
+        return Type.importedType(config.typedefTypeMappings[spelling]!);
       }
       // Get name from supported typedef name if config allows.
       if (config.useSupportedTypedefs) {
@@ -53,6 +53,9 @@ Type getCodeGenType(
           _logger.fine('  Type Mapped from supported typedef');
           return Type.nativeType(
               suportedTypedefToSuportedNativeType[spelling]!);
+        } else if (supportedTypedefToImportedType.containsKey(spelling)) {
+          _logger.fine('  Type Mapped from supported typedef');
+          return Type.importedType(supportedTypedefToImportedType[spelling]!);
         }
       }
 
@@ -119,10 +122,16 @@ Type getCodeGenType(
     case clang_types.CXTypeKind.CXType_Bool:
       return Type.boolean();
     default:
-      if (cxTypeKindToSupportedNativeTypes.containsKey(kind)) {
-        return Type.nativeType(
-          cxTypeKindToSupportedNativeTypes[kind]!,
-        );
+      var typeSpellKey =
+          clang.clang_getTypeSpelling(cxtype).toStringAndDispose();
+      if (typeSpellKey.startsWith('const ')) {
+        typeSpellKey = typeSpellKey.replaceFirst('const ', '');
+      }
+      if (config.nativeTypeMappings.containsKey(typeSpellKey)) {
+        _logger.fine('  Type $typeSpellKey mapped from type-map.');
+        return Type.importedType(config.nativeTypeMappings[typeSpellKey]!);
+      } else if (cxTypeKindToImportedTypes.containsKey(typeSpellKey)) {
+        return Type.importedType(cxTypeKindToImportedTypes[typeSpellKey]!);
       } else {
         _logger.fine(
             'typedeclarationCursorVisitor: getCodeGenType: Type Not Implemented, ${cxtype.completeStringRepr()}');
@@ -142,22 +151,26 @@ Type _extractfromRecord(clang_types.CXType cxtype, bool pointerReference) {
   if (cursorKind == clang_types.CXCursorKind.CXCursor_StructDecl ||
       cursorKind == clang_types.CXCursorKind.CXCursor_UnionDecl) {
     final declUsr = cursor.usr();
+    final declSpelling = cursor.spelling();
 
     // Set includer functions according to compoundType.
     final bool Function(String) isSeenDecl;
     final Compound? Function(String) getSeenDecl;
     final CompoundType compoundType;
+    final Map<String, ImportedType> compoundTypeMappings;
 
     switch (cursorKind) {
       case clang_types.CXCursorKind.CXCursor_StructDecl:
         isSeenDecl = bindingsIndex.isSeenStruct;
         getSeenDecl = bindingsIndex.getSeenStruct;
         compoundType = CompoundType.struct;
+        compoundTypeMappings = config.structTypeMappings;
         break;
       case clang_types.CXCursorKind.CXCursor_UnionDecl:
         isSeenDecl = bindingsIndex.isSeenUnion;
         getSeenDecl = bindingsIndex.getSeenUnion;
         compoundType = CompoundType.union;
+        compoundTypeMappings = config.unionTypeMappings;
         break;
       default:
         throw Exception('Unhandled compound type cursorkind.');
@@ -165,7 +178,10 @@ Type _extractfromRecord(clang_types.CXType cxtype, bool pointerReference) {
 
     // Also add a struct binding, if its unseen.
     // TODO(23): Check if we should auto add compound declarations.
-    if (isSeenDecl(declUsr)) {
+    if (compoundTypeMappings.containsKey(declSpelling)) {
+      _logger.fine('  Type Mapped from type-map');
+      return Type.importedType(compoundTypeMappings[declSpelling]!);
+    } else if (isSeenDecl(declUsr)) {
       type = Type.compound(getSeenDecl(declUsr)!);
 
       // This will parse the dependencies if needed.

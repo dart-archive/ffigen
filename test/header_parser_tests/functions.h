@@ -19,3 +19,5 @@ void func5(shortHand a, void(b)());
 
 // Should be skipped as inline functions are not supported.
 static inline void inlineFunc();
+
+char diffChars(unsigned char a, signed char b);

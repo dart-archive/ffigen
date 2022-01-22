@@ -80,8 +80,7 @@ List<Constant>? parseSavedMacros() {
 
     final resultCode = clang.clang_visitChildren(
       rootCursor,
-      Pointer.fromFunction(_macroVariablevisitor,
-          clang_types.CXChildVisitResult.CXChildVisit_Break),
+      Pointer.fromFunction(_macroVariablevisitor, exceptional_visitor_return),
       nullptr,
     );
 
@@ -240,7 +239,7 @@ class MacroVariableString {
 /// E.g- For a string "Hello\nWorld", The new line character is converted to \n.
 /// Note: The string is considered to be Utf8, but is treated as Extended ASCII,
 /// if the conversion fails.
-String _getWrittenRepresentation(String macroName, Pointer<Int8> strPtr) {
+String _getWrittenRepresentation(String macroName, Pointer<Char> strPtr) {
   final sb = StringBuffer();
   try {
     // Consider string to be Utf8 encoded by default.

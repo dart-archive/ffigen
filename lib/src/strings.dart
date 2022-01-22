@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 import 'dart:io';
 
-import 'package:ffigen/src/code_generator/type.dart';
+import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser/clang_bindings/clang_bindings.dart'
     as clang;
 
@@ -79,9 +79,6 @@ const Map<Object, int?> packingValuesMap = {
   16: 16,
 };
 
-const sizemap = 'size-map';
-const typedefmap = 'typedef-map';
-
 // Sizemap values.
 const SChar = 'char';
 const UChar = 'unsigned char';
@@ -109,6 +106,27 @@ const sizemap_native_mapping = <String, int>{
   ULongLong: clang.CXTypeKind.CXType_ULongLong,
   Enum: clang.CXTypeKind.CXType_Enum
 };
+
+// Library imports.
+const libraryImports = 'library-imports';
+
+final predefinedLibraryImports = {
+  ffiImport.name: ffiImport,
+  ffiPkgImport.name: ffiPkgImport
+};
+
+const typeMap = 'type-map';
+
+// Sub-fields for type-map.
+const typeMapTypedefs = 'typedefs';
+const typeMapStructs = 'structs';
+const typeMapUnions = 'unions';
+const typeMapNativeTypes = 'native-types';
+
+// Sub-sub-keys for fields under typeMap.
+const lib = 'lib';
+const cType = 'c-type';
+const dartType = 'dart-type';
 
 const supportedNativeType_mappings = <String, SupportedNativeType>{
   'Void': SupportedNativeType.Void,

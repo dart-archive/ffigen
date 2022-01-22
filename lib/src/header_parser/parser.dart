@@ -31,6 +31,7 @@ Library parse(Config c) {
     dartBool: config.dartBool,
     sort: config.sort,
     packingOverride: config.structPackingOverride,
+    libraryImports: c.libraryImports.values.toSet(),
   );
 
   return library;

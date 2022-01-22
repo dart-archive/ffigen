@@ -5,7 +5,6 @@
 /// Validates the yaml input by the user, prints useful info for the user
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/header_parser/type_extractor/cxtypekindmap.dart';
 
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart';
@@ -75,10 +74,25 @@ class Config {
   bool get useSupportedTypedefs => _useSupportedTypedefs;
   late bool _useSupportedTypedefs;
 
-  /// Stores typedef name to NativeType mappings specified by user.
-  Map<String, SupportedNativeType> get typedefNativeTypeMappings =>
-      _typedefNativeTypeMappings;
-  late Map<String, SupportedNativeType> _typedefNativeTypeMappings;
+  /// Stores all the library imports specified by user including those for ffi and pkg_ffi.
+  Map<String, LibraryImport> get libraryImports => _libraryImports;
+  late Map<String, LibraryImport> _libraryImports;
+
+  /// Stores typedef name to ImportedType mappings specified by user.
+  Map<String, ImportedType> get typedefTypeMappings => _typedefTypeMappings;
+  late Map<String, ImportedType> _typedefTypeMappings;
+
+  /// Stores struct name to ImportedType mappings specified by user.
+  Map<String, ImportedType> get structTypeMappings => _structTypeMappings;
+  late Map<String, ImportedType> _structTypeMappings;
+
+  /// Stores union name to ImportedType mappings specified by user.
+  Map<String, ImportedType> get unionTypeMappings => _unionTypeMappings;
+  late Map<String, ImportedType> _unionTypeMappings;
+
+  /// Stores native int name to ImportedType mappings specified by user.
+  Map<String, ImportedType> get nativeTypeMappings => _nativeTypeMappings;
+  late Map<String, ImportedType> _nativeTypeMappings;
 
   /// Extracted Doc comment type.
   CommentType get commentType => _commentType;
@@ -167,12 +181,7 @@ class Config {
       }
     }
     // Warn about unknown keys.
-    for (final key in map.keys) {
-      final specString = specs.keys.map((e) => e.join(':')).toSet();
-      if (!specString.contains(key)) {
-        _logger.warning("Unknown key '$key' found.");
-      }
-    }
+    warnUnknownKeys(specs.keys.toList(), map);
 
     return _result;
   }
@@ -305,25 +314,53 @@ class Config {
           _typedefs = result as Declaration;
         },
       ),
-      [strings.sizemap]: Specification<Map<int, SupportedNativeType>>(
-        validator: sizemapValidator,
-        extractor: sizemapExtractor,
-        defaultValue: () => <int, SupportedNativeType>{},
+      [strings.libraryImports]: Specification<Map<String, LibraryImport>>(
+        validator: libraryImportsValidator,
+        extractor: libraryImportsExtractor,
+        defaultValue: () => <String, LibraryImport>{},
         extractedResult: (dynamic result) {
-          final map = result as Map<int, SupportedNativeType>;
-          for (final key in map.keys) {
-            if (cxTypeKindToSupportedNativeTypes.containsKey(key)) {
-              cxTypeKindToSupportedNativeTypes[key] = map[key]!;
-            }
-          }
+          _libraryImports = result as Map<String, LibraryImport>;
         },
       ),
-      [strings.typedefmap]: Specification<Map<String, SupportedNativeType>>(
-        validator: typedefmapValidator,
-        extractor: typedefmapExtractor,
-        defaultValue: () => <String, SupportedNativeType>{},
-        extractedResult: (dynamic result) => _typedefNativeTypeMappings =
-            result as Map<String, SupportedNativeType>,
+      [strings.typeMap, strings.typeMapTypedefs]:
+          Specification<Map<String, List<String>>>(
+        validator: typeMapValidator,
+        extractor: typeMapExtractor,
+        defaultValue: () => <String, List<String>>{},
+        extractedResult: (dynamic result) {
+          _typedefTypeMappings = makeImportTypeMapping(
+              result as Map<String, List<String>>, _libraryImports);
+        },
+      ),
+      [strings.typeMap, strings.typeMapStructs]:
+          Specification<Map<String, List<String>>>(
+        validator: typeMapValidator,
+        extractor: typeMapExtractor,
+        defaultValue: () => <String, List<String>>{},
+        extractedResult: (dynamic result) {
+          _structTypeMappings = makeImportTypeMapping(
+              result as Map<String, List<String>>, _libraryImports);
+        },
+      ),
+      [strings.typeMap, strings.typeMapUnions]:
+          Specification<Map<String, List<String>>>(
+        validator: typeMapValidator,
+        extractor: typeMapExtractor,
+        defaultValue: () => <String, List<String>>{},
+        extractedResult: (dynamic result) {
+          _unionTypeMappings = makeImportTypeMapping(
+              result as Map<String, List<String>>, _libraryImports);
+        },
+      ),
+      [strings.typeMap, strings.typeMapNativeTypes]:
+          Specification<Map<String, List<String>>>(
+        validator: typeMapValidator,
+        extractor: typeMapExtractor,
+        defaultValue: () => <String, List<String>>{},
+        extractedResult: (dynamic result) {
+          _nativeTypeMappings = makeImportTypeMapping(
+              result as Map<String, List<String>>, _libraryImports);
+        },
       ),
       [strings.sort]: Specification<bool>(
         requirement: Requirement.no,

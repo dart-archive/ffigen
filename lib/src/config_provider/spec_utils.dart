@@ -65,69 +65,139 @@ dynamic getKeyValueFromYaml(List<String> key, YamlMap map) {
   return null;
 }
 
+/// Recursively checks the keys in [configKeyMap] from [allowedKeyList].
+void warnUnknownKeys(List<List<String>> allowedKeyList, YamlMap configKeyMap) {
+  final allowedKeyMap = <String, dynamic>{};
+  for (final specKeys in allowedKeyList) {
+    var _item = allowedKeyMap;
+    for (final specSubKey in specKeys) {
+      _item.putIfAbsent(specSubKey, () => <String, dynamic>{});
+      _item = _item[specSubKey] as Map<String, dynamic>;
+    }
+    // Add empty key to mark that any sub-keys of this key are allowed.
+    _item[''] = <String, dynamic>{};
+  }
+  _warnUnknownKeysInMap(allowedKeyMap, configKeyMap, <dynamic>[]);
+}
+
+/// Recursive function to check a key set in a configKeyMap.
+void _warnUnknownKeysInMap(Map<String, dynamic> allowedKeyMap,
+    dynamic configKeyMap, List<dynamic> prev) {
+  if (allowedKeyMap.containsKey('') || configKeyMap is! YamlMap) {
+    return;
+  }
+  for (final key in configKeyMap.keys) {
+    if (allowedKeyMap.containsKey(key)) {
+      prev.add(key);
+      _warnUnknownKeysInMap(
+          allowedKeyMap[key] as Map<String, dynamic>, configKeyMap[key], prev);
+      prev.removeLast();
+    } else {
+      prev.add(key);
+      _logger.warning('Unknown key - ${prev.join(' -> ')}.');
+      prev.removeLast();
+    }
+  }
+}
+
 bool booleanExtractor(dynamic value) => value as bool;
 
 bool booleanValidator(List<String> name, dynamic value) =>
     checkType<bool>(name, value);
 
-Map<int, SupportedNativeType> sizemapExtractor(dynamic yamlConfig) {
-  final resultMap = <int, SupportedNativeType>{};
-  final sizemap = yamlConfig as YamlMap?;
-  if (sizemap != null) {
-    for (final typeName in strings.sizemap_native_mapping.keys) {
-      if (sizemap.containsKey(typeName)) {
-        final cxTypeInt = strings.sizemap_native_mapping[typeName] as int;
-        final byteSize = sizemap[typeName] as int;
-        resultMap[cxTypeInt] = nativeSupportedType(byteSize,
-            signed: typeName.contains('unsigned') ? false : true);
-      }
+Map<String, LibraryImport> libraryImportsExtractor(dynamic yamlConfig) {
+  final resultMap = <String, LibraryImport>{};
+  final typeMap = yamlConfig as YamlMap?;
+  if (typeMap != null) {
+    for (final typeName in typeMap.keys) {
+      resultMap[typeName as String] =
+          LibraryImport(typeName, typeMap[typeName] as String);
     }
   }
   return resultMap;
 }
 
-bool sizemapValidator(List<String> name, dynamic yamlConfig) {
+bool libraryImportsValidator(List<String> name, dynamic yamlConfig) {
   if (!checkType<YamlMap>(name, yamlConfig)) {
     return false;
   }
   for (final key in (yamlConfig as YamlMap).keys) {
-    if (!strings.sizemap_native_mapping.containsKey(key)) {
-      _logger.warning("Unknown subkey '$key' in '$name'.");
+    if (!checkType<String>([...name, key as String], yamlConfig[key])) {
+      return false;
+    }
+    if (strings.predefinedLibraryImports.containsKey(key)) {
+      _logger.severe(
+          'library-import -> $key should not collide with any predefined imports - ${strings.predefinedLibraryImports.keys}.');
+      return false;
     }
   }
-
   return true;
 }
 
-Map<String, SupportedNativeType> typedefmapExtractor(dynamic yamlConfig) {
-  final resultMap = <String, SupportedNativeType>{};
-  final typedefmap = yamlConfig as YamlMap?;
-  if (typedefmap != null) {
-    for (final typeName in typedefmap.keys) {
-      if (typedefmap[typeName] is String &&
-          strings.supportedNativeType_mappings
-              .containsKey(typedefmap[typeName])) {
-        // Map this typename to specified supportedNativeType.
-        resultMap[typeName as String] =
-            strings.supportedNativeType_mappings[typedefmap[typeName]]!;
-      }
+Map<String, List<String>> typeMapExtractor(dynamic yamlConfig) {
+  // Key - type_name, Value - [lib, cType, dartType].
+  final resultMap = <String, List<String>>{};
+  final typeMap = yamlConfig as YamlMap?;
+  if (typeMap != null) {
+    for (final typeName in typeMap.keys) {
+      final typeConfigItem = typeMap[typeName] as YamlMap;
+      resultMap[typeName as String] = [
+        typeConfigItem[strings.lib] as String,
+        typeConfigItem[strings.cType] as String,
+        typeConfigItem[strings.dartType] as String,
+      ];
     }
   }
   return resultMap;
 }
 
-bool typedefmapValidator(List<String> name, dynamic yamlConfig) {
+bool typeMapValidator(List<String> name, dynamic yamlConfig) {
   if (!checkType<YamlMap>(name, yamlConfig)) {
     return false;
   }
-  for (final value in (yamlConfig as YamlMap).values) {
-    if (value is! String ||
-        !strings.supportedNativeType_mappings.containsKey(value)) {
-      _logger.severe("Unknown value of subkey '$value' in '$name'.");
+  var result = true;
+  for (final key in (yamlConfig as YamlMap).keys) {
+    if (!checkType<YamlMap>([...name, key as String], yamlConfig[key])) {
+      return false;
+    }
+    final lib = (yamlConfig[key] as YamlMap).containsKey(strings.lib);
+    if (!lib) {
+      _logger.severe("Key '${strings.lib}' in $name -> $key is required.");
+      result = false;
+    }
+    final cType = (yamlConfig[key] as YamlMap).containsKey(strings.cType);
+    if (!cType) {
+      _logger.severe("Key '${strings.cType}' in $name -> $key is required.");
+      result = false;
+    }
+    final dartType = (yamlConfig[key] as YamlMap).containsKey(strings.dartType);
+    if (!dartType) {
+      _logger.severe("Key '${strings.dartType}' in $name -> $key is required.");
+      result = false;
     }
   }
+  return result;
+}
 
-  return true;
+Map<String, ImportedType> makeImportTypeMapping(
+    Map<String, List<String>> rawTypeMappings,
+    Map<String, LibraryImport> libraryImportsMap) {
+  final typeMappings = <String, ImportedType>{};
+  for (final key in rawTypeMappings.keys) {
+    final lib = rawTypeMappings[key]![0];
+    final cType = rawTypeMappings[key]![1];
+    final dartType = rawTypeMappings[key]![2];
+    if (strings.predefinedLibraryImports.containsKey(lib)) {
+      typeMappings[key] =
+          ImportedType(strings.predefinedLibraryImports[lib]!, cType, dartType);
+    } else if (libraryImportsMap.containsKey(lib)) {
+      typeMappings[key] =
+          ImportedType(libraryImportsMap[lib]!, cType, dartType);
+    } else {
+      throw Exception("Please declare $lib under library-imports.");
+    }
+  }
+  return typeMappings;
 }
 
 final _quoteMatcher = RegExp(r'''^["'](.*)["']$''', dotAll: true);

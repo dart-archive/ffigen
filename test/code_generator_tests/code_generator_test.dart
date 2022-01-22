@@ -422,12 +422,12 @@ void main() {
     _matchLib(library, 'packed_structs');
   });
   test('Union Bindings', () {
-    final struct1 = Struc(name: 'Struct1', members: [
-      Member(name: 'a', type: Type.nativeType(SupportedNativeType.Int8))
-    ]);
-    final union1 = Union(name: 'Union1', members: [
-      Member(name: 'a', type: Type.nativeType(SupportedNativeType.Int8))
-    ]);
+    final struct1 = Struc(
+        name: 'Struct1',
+        members: [Member(name: 'a', type: Type.importedType(charType))]);
+    final union1 = Union(
+        name: 'Union1',
+        members: [Member(name: 'a', type: Type.importedType(charType))]);
     final library = Library(
       name: 'Bindings',
       bindings: [
@@ -435,25 +435,22 @@ void main() {
         union1,
         Union(name: 'EmptyUnion'),
         Union(name: 'Primitives', members: [
-          Member(name: 'a', type: Type.nativeType(SupportedNativeType.Int8)),
-          Member(name: 'b', type: Type.nativeType(SupportedNativeType.Int32)),
-          Member(name: 'c', type: Type.nativeType(SupportedNativeType.Float)),
-          Member(name: 'd', type: Type.nativeType(SupportedNativeType.Double)),
+          Member(name: 'a', type: Type.importedType(charType)),
+          Member(name: 'b', type: Type.importedType(intType)),
+          Member(name: 'c', type: Type.importedType(floatType)),
+          Member(name: 'd', type: Type.importedType(doubleType)),
         ]),
         Union(name: 'PrimitivesWithPointers', members: [
-          Member(name: 'a', type: Type.nativeType(SupportedNativeType.Int8)),
-          Member(name: 'b', type: Type.nativeType(SupportedNativeType.Float)),
-          Member(
-              name: 'c',
-              type: Type.pointer(Type.nativeType(SupportedNativeType.Double))),
+          Member(name: 'a', type: Type.importedType(charType)),
+          Member(name: 'b', type: Type.importedType(floatType)),
+          Member(name: 'c', type: Type.pointer(Type.importedType(doubleType))),
           Member(name: 'd', type: Type.pointer(Type.union(union1))),
           Member(name: 'd', type: Type.pointer(Type.struct(struct1))),
         ]),
         Union(name: 'WithArray', members: [
           Member(
               name: 'a',
-              type: Type.constantArray(
-                  10, Type.nativeType(SupportedNativeType.Int8))),
+              type: Type.constantArray(10, Type.importedType(charType))),
           Member(name: 'b', type: Type.constantArray(10, Type.union(union1))),
           Member(name: 'b', type: Type.constantArray(10, Type.struct(struct1))),
           Member(
@@ -477,9 +474,7 @@ void main() {
               type: Type.typealias(Typealias(
                   name: 'Struct2Typealias',
                   type: Type.struct(Struc(name: 'Struct2', members: [
-                    Member(
-                        name: 'a',
-                        type: Type.nativeType(SupportedNativeType.Double))
+                    Member(name: 'a', type: Type.importedType(doubleType))
                   ])))))
         ]),
         Func(

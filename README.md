@@ -22,6 +22,7 @@ ffigen:
 ```
 Output (_generated_bindings.dart_).
 ```dart
+import 'package:ffi/ffi.dart' as pkg_ffi;
 class NativeLibrary {
   final Pointer<T> Function<T extends NativeType>(String symbolName)
       _lookup;
@@ -36,12 +37,13 @@ class NativeLibrary {
     return _sum(a, b);
   }
 
-  late final _sumPtr = _lookup<ffi.NativeFunction<ffi.Int32 Function(ffi.Int32, ffi.Int32)>>('sum');
+  late final _sumPtr = _lookup<ffi.NativeFunction<pkg_ffi.Int Function(pkg_ffi.Int, pkg_ffi.Int)>>('sum');
   late final _sum = _sum_ptr.asFunction<int Function(int, int)>();
 }
 ```
 ## Using this package
 - Add `ffigen` under `dev_dependencies` in your `pubspec.yaml` (run `dart pub add -d ffigen`).
+- Add `package:ffi` under `dependencies` in your `pubspec.yaml` (run `dart pub add ffigen`).
 - Install LLVM (see [Installing LLVM](#installing-llvm)).
 - Configurations must be provided in `pubspec.yaml` or in a custom YAML file (see [configurations](#configurations)).
 - Run the tool- `dart run ffigen`.
@@ -385,7 +387,7 @@ sort: true
   </tr>
   <tr>
     <td>use-supported-typedefs</td>
-    <td>Should automatically map typedefs, E.g uint8_t => Uint8, int16_t => Int16 etc.<br>
+    <td>Should automatically map typedefs, E.g uint8_t => Uint8, int16_t => Int16, size_t => Size etc.<br>
     <b>Default: true</b>
     </td>
     <td>
@@ -431,43 +433,54 @@ preamble: |
 </td>
   </tr>
   <tr>
-    <td>typedef-map</td>
-    <td>Map typedefs to Native Types.<br> Values can only be
-    <i>Void, Uint8, Int8, Uint16, Int16, Uint32, Int32, Uint64, Int64, IntPtr, Float and Double.</i>
+    <td>library-imports</td>
+    <td>Specify library imports for use in type-map.<br><br>
+    Note: ffi (dart:ffi) is already available as a predefined import.
     </td>
     <td>
 
 ```yaml
-typedef-map:
-  'my_custom_type': 'IntPtr'
-  'size_t': 'Int64'
+library-imports:
+  custom_lib: 'package:some_pkg/some_file.dart'
 ```
   </td>
   </tr>
   <tr>
-    <td>size-map</td>
-    <td>Size of integers to use (in bytes).<br>
-    <b>The defaults (see example) <i>may</i> not be portable on all OS.
-    Do not change these unless absolutely sure.</b>
+    <td>type-map</td>
+    <td>Map types like integers, typedefs, structs,  unions to any other type.<br><br>
+    <b>Sub-fields</b> - <i>typedefs</i>, <i>structs</i>, <i>unions</i>, <i>ints</i><br><br>
+    <b><i>lib</i></b> must be specified in <i>library-imports</i> or be one of a predefined import.
     </td>
     <td>
 
 ```yaml
-# These are optional and also default,
-# Omitting any and the default
-# will be used.
-size-map:
-  char: 1
-  unsigned char: 1
-  short: 2
-  unsigned short: 2
-  int: 4
-  unsigned int: 4
-  long: 8
-  unsigned long: 8
-  long long: 8
-  unsigned long long: 8
-  enum: 4
+type-map:
+  'native-types': # Targets native types.
+    'char':
+      'lib': 'pkg_ffi' # predefined import.
+      'c-type': 'Char'
+      # For native-types dart-type can be be int, double or float
+      # but same otherwise.
+      'dart-type': 'int'
+    'int':
+      'lib': 'custom_lib'
+      'c-type': 'CustomType4'
+      'dart-type': 'int'
+  'typedefs': # Targets typedefs.
+    'my_type1':
+      'lib': 'custom_lib'
+      'c-type': 'CustomType'
+      'dart-type': 'CustomType'
+  'structs': # Targets structs.
+    'my_type2':
+      'lib': 'custom_lib'
+      'c-type': 'CustomType2'
+      'dart-type': 'CustomType2'
+  'unions': # Targets unions.
+    'my_type3':
+      'lib': 'custom_lib'
+      'c-type': 'CustomType3'
+      'dart-type': 'CustomType3'
 ```
   </td>
   </tr>

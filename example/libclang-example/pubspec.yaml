@@ -5,8 +5,10 @@
 name: libclang_example
 
 environment:
-  sdk: '>=2.13.0 <3.0.0'
+  sdk: '>=2.16.0-124.0.dev <3.0.0'
 
+dependencies:
+  ffi: ^1.2.0-dev.0
 dev_dependencies:
   ffigen:
     path: '../../'
@@ -51,25 +53,30 @@ ffigen:
       - 'CXTypeKind' # Full names are given higher priority than regexp.
       - 'CXGlobalOptFlags'
 
-  # These are optional and also default,
-  # Omitting any and the default will be used.
-  size-map:
-    char: 1
-    unsigned char: 1
-    short: 2
-    unsigned short: 2
-    int: 4
-    unsigned int: 4
-    long: 8
-    unsigned long: 8
-    long long: 8
-    unsigned long long: 8
-    enum: 4
+  library-imports:
+    custom_import: 'custom_import.dart'
 
   # These can be used to map any typedef to a specific native type.
-  typedef-map:
-    'size_t': 'IntPtr'
-    'time_t': 'Int64'
+  type-map:
+    typedefs:
+      'size_t':
+        lib: 'pkg_ffi'
+        c-type: 'Size'
+        dart-type: 'int'
+      'time_t':
+        lib: 'ffi'
+        c-type: 'Int64'
+        dart-type: 'int'
+    native-types:
+      'unsigned long':
+        lib: 'custom_import'
+        c-type: 'UnsignedLong'
+        dart-type: 'int'
+    structs:
+      'CXCursorSetImpl':
+        lib: 'custom_import'
+        c-type: 'CXCursorSetImpl'
+        dart-type: 'CXCursorSetImpl'
 
   # Default is 'NativeLibrary'
   name: 'LibClang'

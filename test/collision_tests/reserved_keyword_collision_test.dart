@@ -27,15 +27,15 @@ void main() {
             name: 'implements',
             parameters: [
               Parameter(
-                type: Type.nativeType(SupportedNativeType.Int32),
+                type: Type.importedType(intType),
                 name: 'if',
               ),
               Parameter(
-                type: Type.nativeType(SupportedNativeType.Int32),
+                type: Type.importedType(intType),
                 name: 'abstract',
               ),
               Parameter(
-                type: Type.nativeType(SupportedNativeType.Int32),
+                type: Type.importedType(intType),
                 name: 'in',
               ),
             ],
@@ -62,15 +62,15 @@ void main() {
             originalName: 'implements',
             parameters: [
               Parameter(
-                type: Type.nativeType(SupportedNativeType.Int32),
+                type: Type.importedType(intType),
                 name: 'if1',
               ),
               Parameter(
-                type: Type.nativeType(SupportedNativeType.Int32),
+                type: Type.importedType(intType),
                 name: 'abstract1',
               ),
               Parameter(
-                type: Type.nativeType(SupportedNativeType.Int32),
+                type: Type.importedType(intType),
                 name: 'in1',
               ),
             ],

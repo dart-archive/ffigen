@@ -13,11 +13,14 @@ import 'clang_bindings/clang_bindings.dart' as clang_types;
 import 'data.dart';
 import 'type_extractor/extractor.dart';
 
+const exceptional_visitor_return =
+    clang_types.CXChildVisitResult.CXChildVisit_Break;
+
 /// Check [resultCode] of [clang.clang_visitChildren_wrap].
 ///
-/// Throws exception if resultCode is not 0.
+/// Throws exception if resultCode is not [exceptional_visitor_return].
 void visitChildrenResultChecker(int resultCode) {
-  if (resultCode != 0) {
+  if (resultCode != exceptional_visitor_return) {
     throw Exception(
         'Exception thrown in a dart function called via C, use --verbose to see more details');
   }
@@ -101,9 +104,9 @@ extension CXCursorExt on clang_types.CXCursor {
   String sourceFileName() {
     final cxsource = clang.clang_getCursorLocation(this);
     final cxfilePtr = calloc<Pointer<Void>>();
-    final line = calloc<Uint32>();
-    final column = calloc<Uint32>();
-    final offset = calloc<Uint32>();
+    final line = calloc<UnsignedInt>();
+    final column = calloc<UnsignedInt>();
+    final offset = calloc<UnsignedInt>();
 
     // Puts the values in these pointers.
     clang.clang_getFileLocation(cxsource, cxfilePtr, line, column, offset);
