@@ -104,9 +104,9 @@ extension CXCursorExt on clang_types.CXCursor {
   String sourceFileName() {
     final cxsource = clang.clang_getCursorLocation(this);
     final cxfilePtr = calloc<Pointer<Void>>();
-    final line = calloc<Uint32>();
-    final column = calloc<Uint32>();
-    final offset = calloc<Uint32>();
+    final line = calloc<UnsignedInt>();
+    final column = calloc<UnsignedInt>();
+    final offset = calloc<UnsignedInt>();
 
     // Puts the values in these pointers.
     clang.clang_getFileLocation(cxsource, cxfilePtr, line, column, offset);

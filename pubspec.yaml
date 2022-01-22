@@ -11,10 +11,7 @@ environment:
   sdk: '>=2.16.0-124.0.dev <3.0.0'
 
 dependencies:
-  ffi:
-    git:
-      url: git@github.com:dart-lang/ffi.git
-      ref: abi-specific
+  ffi: ^1.2.0-dev.0
   yaml: ^3.0.0
   path: ^1.8.0
   quiver: ^3.0.0
