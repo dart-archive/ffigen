@@ -36,7 +36,5 @@ var suportedTypedefToSuportedNativeType = <String, SupportedNativeType>{
 
 var supportedTypedefToImportedType = <String, ImportedType>{
   'size_t': sizeType,
-  'ssize_t': sSizeType,
-  'off_t': offType,
   'wchar_t': wCharType,
 };
