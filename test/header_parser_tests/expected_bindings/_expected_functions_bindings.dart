@@ -103,6 +103,22 @@ class NativeLibrary {
       void Function(ffi.Pointer<shortHand>,
           ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>)>();
 
+  int diffChars(
+    int a,
+    int b,
+  ) {
+    return _diffChars(
+      a,
+      b,
+    );
+  }
+
+  late final _diffCharsPtr = _lookup<
+      ffi.NativeFunction<
+          pkg_ffi.Char Function(
+              pkg_ffi.UnsignedChar, pkg_ffi.SignedChar)>>('diffChars');
+  late final _diffChars = _diffCharsPtr.asFunction<int Function(int, int)>();
+
   late final addresses = _SymbolAddresses(this);
 }
 
