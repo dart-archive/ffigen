@@ -29,8 +29,8 @@ ffigen:
   type-map:
     typedefs:
       'size_t':
-        lib: 'ffi'
-        c-type: 'IntPtr'
+        lib: 'pkg_ffi'
+        c-type: 'Size'
         dart-type: 'int'
 
   preamble: |

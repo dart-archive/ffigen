@@ -457,14 +457,14 @@ library-imports:
 type-map:
   'native-types': # Targets native types.
     'char':
-      'lib': 'ffi' # predefined import.
-      'c-type': 'Int8'
+      'lib': 'pkg_ffi' # predefined import.
+      'c-type': 'Char'
       # For native-types dart-type can be be int, double or float
       # but same otherwise.
       'dart-type': 'int'
     'int':
       'lib': 'custom_lib'
-      'c-type': 'AbiSpecificInt'
+      'c-type': 'CustomType4'
       'dart-type': 'int'
   'typedefs': # Targets typedefs.
     'my_type1':

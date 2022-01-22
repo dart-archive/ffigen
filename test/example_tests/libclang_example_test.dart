@@ -48,8 +48,8 @@ ${strings.libraryImports}:
 ${strings.typeMap}:
   ${strings.typeMapTypedefs}:
     'size_t':
-      lib: 'custom_import'
-      c-type: 'UintPtr'
+      lib: 'pkg_ffi'
+      c-type: 'Size'
       dart-type: 'int'
     'time_t':
       lib: 'ffi'

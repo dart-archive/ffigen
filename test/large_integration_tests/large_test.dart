@@ -40,8 +40,8 @@ ${strings.headers}:
 ${strings.typeMap}:
   ${strings.typeMapTypedefs}:
     'size_t':
-      lib: 'ffi'
-      c-type: 'IntPtr'
+      lib: 'pkg_ffi'
+      c-type: 'Size'
       dart-type: 'int'
     'time_t':
       lib: 'ffi'
@@ -74,8 +74,8 @@ ${strings.headers}:
 ${strings.typeMap}:
   ${strings.typeMapTypedefs}:
     'size_t':
-      lib: 'ffi'
-      c-type: 'IntPtr'
+      lib: 'pkg_ffi'
+      c-type: 'Size'
       dart-type: 'int'
 ${strings.preamble}: |
   // ignore_for_file: camel_case_types, non_constant_identifier_names

@@ -30,8 +30,8 @@ ${strings.comments}: false
 ${strings.typeMap}:
   ${strings.typeMapTypedefs}:
     'size_t':
-      lib: 'ffi'
-      c-type: 'IntPtr'
+      lib: 'pkg_ffi'
+      c-type: 'Size'
       dart-type: 'int'
 ${strings.preamble}: |
   // Copyright (c) 2009-2017 Dave Gamble and cJSON contributors

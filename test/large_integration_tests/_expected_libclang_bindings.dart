@@ -484,7 +484,7 @@ class LibClang {
   ffi.Pointer<pkg_ffi.Char> clang_getFileContents(
     CXTranslationUnit tu,
     CXFile file,
-    ffi.Pointer<ffi.IntPtr> size,
+    ffi.Pointer<pkg_ffi.Size> size,
   ) {
     return _clang_getFileContents(
       tu,
@@ -496,10 +496,10 @@ class LibClang {
   late final _clang_getFileContentsPtr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<pkg_ffi.Char> Function(CXTranslationUnit, CXFile,
-              ffi.Pointer<ffi.IntPtr>)>>('clang_getFileContents');
+              ffi.Pointer<pkg_ffi.Size>)>>('clang_getFileContents');
   late final _clang_getFileContents = _clang_getFileContentsPtr.asFunction<
       ffi.Pointer<pkg_ffi.Char> Function(
-          CXTranslationUnit, CXFile, ffi.Pointer<ffi.IntPtr>)>();
+          CXTranslationUnit, CXFile, ffi.Pointer<pkg_ffi.Size>)>();
 
   /// Returns non-zero if the file1 and file2 point to the same file, or they
   /// are both NULL.
