@@ -80,8 +80,7 @@ List<Constant>? parseSavedMacros() {
 
     final resultCode = clang.clang_visitChildren(
       rootCursor,
-      Pointer.fromFunction(_macroVariablevisitor,
-          clang_types.CXChildVisitResult.CXChildVisit_Break),
+      Pointer.fromFunction(_macroVariablevisitor, exceptional_visitor_return),
       nullptr,
     );
 
