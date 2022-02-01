@@ -192,8 +192,7 @@ void _setMembers(clang_types.CXCursor cursor, String className) {
 
   final resultCode = clang.clang_visitChildren(
     cursor,
-    Pointer.fromFunction(_compoundMembersVisitor,
-        clang_types.CXChildVisitResult.CXChildVisit_Break),
+    Pointer.fromFunction(_compoundMembersVisitor, exceptional_visitor_return),
     nullptr,
   );
 
