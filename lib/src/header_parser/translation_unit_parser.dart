@@ -27,7 +27,7 @@ Set<Binding> parseTranslationUnit(clang_types.CXCursor translationUnitCursor) {
   final resultCode = clang.clang_visitChildren(
     translationUnitCursor,
     Pointer.fromFunction(
-        _rootCursorVisitor, clang_types.CXChildVisitResult.CXChildVisit_Break),
+        _rootCursorVisitor, exceptional_visitor_return),
     nullptr,
   );
 
