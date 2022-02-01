@@ -586,7 +586,7 @@ bool declarationConfigValidator(List<String> name, dynamic value) {
         if (!checkType<YamlMap>([...name, key as String], value[key])) {
           _result = false;
         } else {
-          for (final subkey in value[key].keys) {
+          for (final subkey in (value[key] as YamlMap).keys) {
             if (!checkType<String>(
                 [...name, key, subkey as String], value[key][subkey])) {
               _result = false;
@@ -597,12 +597,13 @@ bool declarationConfigValidator(List<String> name, dynamic value) {
         if (!checkType<YamlMap>([...name, key as String], value[key])) {
           _result = false;
         } else {
-          for (final declNameKey in value[key].keys) {
+          for (final declNameKey in (value[key] as YamlMap).keys) {
             if (!checkType<YamlMap>([...name, key, declNameKey as String],
                 value[key][declNameKey])) {
               _result = false;
             } else {
-              for (final memberNameKey in value[key][declNameKey].keys) {
+              for (final memberNameKey
+                  in ((value[key] as YamlMap)[declNameKey] as YamlMap).keys) {
                 if (!checkType<String>([
                   ...name,
                   key,
@@ -619,7 +620,7 @@ bool declarationConfigValidator(List<String> name, dynamic value) {
         if (!checkType<YamlMap>([...name, key as String], value[key])) {
           _result = false;
         } else {
-          for (final subkey in value[key].keys) {
+          for (final subkey in (value[key] as YamlMap).keys) {
             if (subkey == strings.include || subkey == strings.exclude) {
               if (!checkType<YamlList>(
                   [...name, key, subkey as String], value[key][subkey])) {
@@ -811,7 +812,7 @@ bool dependencyOnlyValidator(List<String> name, dynamic value) {
 
 StructPackingOverride structPackingOverrideExtractor(dynamic value) {
   final matcherMap = <RegExp, int?>{};
-  for (final key in value.keys) {
+  for (final key in (value as YamlMap).keys) {
     matcherMap[RegExp(key as String, dotAll: true)] =
         strings.packingValuesMap[value[key]];
   }
@@ -824,7 +825,7 @@ bool structPackingOverrideValidator(List<String> name, dynamic value) {
   if (!checkType<YamlMap>([...name], value)) {
     _result = false;
   } else {
-    for (final key in value.keys) {
+    for (final key in (value as YamlMap).keys) {
       if (!(strings.packingValuesMap.keys.contains(value[key]))) {
         _logger.severe(
             "'$name -> $key' must be one of the following - ${strings.packingValuesMap.keys.toList()}");

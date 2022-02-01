@@ -7,9 +7,9 @@ include: package:lints/recommended.yaml
 analyzer:
   exclude:
     - 'test/**_expected*'
-  strong-mode:
-    implicit-casts: false
-    implicit-dynamic: false
+  language:
+    strict-casts: true
+    strict-inference: true
 
 linter:
   rules:
