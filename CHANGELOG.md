@@ -1,3 +1,6 @@
+# 5.0.0
+- Release for Dart SDK `>=2.16`.
+
 # 5.0.0-dev.0
 - Added support for generating ABI Specific integers.
 - Breaking: removed config keys - `size-map` and `typedef-map`.

@@ -5,7 +5,7 @@
 name: libclang_example
 
 environment:
-  sdk: '>=2.16.0-124.0.dev <3.0.0'
+  sdk: '>=2.16.0 <3.0.0'
 
 dependencies:
   ffi: ^1.2.0-dev.0
