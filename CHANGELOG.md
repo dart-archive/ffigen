@@ -1,3 +1,6 @@
+# 5.0.0-dev.1
+- Fixed invalid default dart types being generated for `size_t` and `wchar_t`.
+
 # 5.0.0-dev.0
 - Added support for generating ABI Specific integers.
 - Breaking: removed config keys - `size-map` and `typedef-map`.
