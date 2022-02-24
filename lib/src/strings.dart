@@ -187,7 +187,6 @@ const windowsDylibLocations = [
 const macOsDylibLocations = [
   '/usr/local/opt/llvm/lib/',
   '/opt/homebrew/opt/llvm/lib/',
-  '/noNotSubmit/',
 ];
 
 // Writen doubles.
