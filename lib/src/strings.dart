@@ -174,19 +174,20 @@ const libclang_dylib_macos = 'libclang.dylib';
 const libclang_dylib_windows = 'libclang.dll';
 
 // Dynamic library default locations.
-const linuxDylibLocations = [
+const linuxDylibLocations = {
   '/usr/lib/llvm-9/lib/',
   '/usr/lib/llvm-10/lib/',
   '/usr/lib/llvm-11/lib/',
   '/usr/lib/',
   '/usr/lib64/',
-];
-const windowsDylibLocations = [
+};
+const windowsDylibLocations = {
   r'C:\Program Files\LLVM\bin\',
-];
-const macOsDylibLocations = [
+};
+const macOsDylibLocations = {
   '/usr/local/opt/llvm/lib/',
-];
+  '/opt/homebrew/opt/llvm/lib/',
+};
 
 // Writen doubles.
 const doubleInfinity = 'double.infinity';
