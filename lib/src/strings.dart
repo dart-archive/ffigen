@@ -29,6 +29,15 @@ String get dynamicLibParentName => Platform.isWindows ? 'bin' : 'lib';
 
 const output = 'output';
 
+const language = 'language';
+
+// String mappings for the Language enum.
+const langC = 'c';
+const langObjC = 'objc';
+
+// Clang command line args for Objective C.
+const clangLangObjC = ['-x', 'objective-c'];
+
 const headers = 'headers';
 
 // Sub-fields of headers
