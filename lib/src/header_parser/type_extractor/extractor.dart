@@ -121,6 +121,12 @@ Type getCodeGenType(
       );
     case clang_types.CXTypeKind.CXType_Bool:
       return Type.boolean();
+    case clang_types.CXTypeKind.CXType_ObjCId:
+    case clang_types.CXTypeKind.CXType_ObjCSel:
+    case clang_types.CXTypeKind.CXType_ObjCObjectPointer:
+    case clang_types.CXTypeKind.CXType_BlockPointer:
+    case clang_types.CXTypeKind.CXType_ObjCClass:
+      return Type.pointer(Type.importedType(opaqueType));
     default:
       var typeSpellKey =
           clang.clang_getTypeSpelling(cxtype).toStringAndDispose();

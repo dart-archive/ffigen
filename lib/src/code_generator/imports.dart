@@ -32,6 +32,7 @@ final ffiImport = LibraryImport('ffi', 'dart:ffi');
 final ffiPkgImport = LibraryImport('pkg_ffi', 'package:ffi/ffi.dart');
 
 final voidType = ImportedType(ffiImport, 'Void', 'void');
+final opaqueType = ImportedType(ffiImport, 'Opaque', 'Opaque');
 
 final unsignedCharType = ImportedType(ffiPkgImport, 'UnsignedChar', 'int');
 final signedCharType = ImportedType(ffiPkgImport, 'SignedChar', 'int');
