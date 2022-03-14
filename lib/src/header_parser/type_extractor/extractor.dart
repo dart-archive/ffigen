@@ -28,23 +28,24 @@ Type getCodeGenType(
   _logger.fine('${_padding}getCodeGenType ${cxtype.completeStringRepr()}');
 
   // If the type has a declaration cursor, then use the BindingsIndex to break
-  // any potential cycles, and dedupe them.
+  // any potential cycles, and dedupe the Type.
   final cursor = clang.clang_getTypeDeclaration(cxtype);
   if (cursor.kind != clang_types.CXCursorKind.CXCursor_NoDeclFound) {
     final usr = cursor.usr();
     final cachedType = bindingsIndex.getSeenType(usr);
     if (cachedType != null) return cachedType;
-    var newType = Type.unfilled();
+    final newType = Type.cacheEntry();
     bindingsIndex.addTypeToSeen(usr, newType);
-    _fillTypeFromCursor(cursor, newType, pointerReference);
-    return newType;
+    final extractedType = _extractFromCursor(cxtype, cursor, pointerReference);
+    newType.child = extractedType;
+    bindingsIndex.addTypeToSeen(usr, extractedType);
+    return extractedType;
   }
 
   // If the type doesn't have a declaration cursor, then it's a basic type such
   // as int, or a simple derived type like a pointer, so doesn't need to be
   // cached.
-  final kind = cxtype.kind;
-  switch (kind) {
+  switch (cxtype.kind) {
     case clang_types.CXTypeKind.CXType_Pointer:
       final pt = clang.clang_getPointeeType(cxtype);
       final s = getCodeGenType(pt, pointerReference: true);
@@ -100,43 +101,40 @@ Type getCodeGenType(
   }
 }
 
-void _fillTypeFromCursor(clang_types.CXCursor cursor, Type newType, bool pointerReference) {
-  switch (kind) {
+Type _extractFromCursor(clang_types.CXType cxtype, clang_types.CXCursor cursor,
+    bool pointerReference) {
+  switch (cxtype.kind) {
     case clang_types.CXTypeKind.CXType_Typedef:
       final spelling = clang.clang_getTypedefName(cxtype).toStringAndDispose();
       if (config.typedefTypeMappings.containsKey(spelling)) {
         _logger.fine('  Type $spelling mapped from type-map');
-        newType.fillImportedType(config.typedefTypeMappings[spelling]!);
-        return;
+        return Type.importedType(config.typedefTypeMappings[spelling]!);
       }
       // Get name from supported typedef name if config allows.
       if (config.useSupportedTypedefs) {
         if (suportedTypedefToSuportedNativeType.containsKey(spelling)) {
           _logger.fine('  Type Mapped from supported typedef');
-          newType.fillNativeType(
+          return Type.nativeType(
               suportedTypedefToSuportedNativeType[spelling]!);
-          return;
         } else if (supportedTypedefToImportedType.containsKey(spelling)) {
           _logger.fine('  Type Mapped from supported typedef');
-          newType.fillImportedType(supportedTypedefToImportedType[spelling]!);
-          return;
+          return Type.importedType(supportedTypedefToImportedType[spelling]!);
         }
       }
+
       final typealias =
           parseTypedefDeclaration(cursor, pointerReference: pointerReference);
 
       if (typealias != null) {
-        newType.fillTypealias(typealias);
+        return Type.typealias(typealias);
       } else {
-        // Use underlying type if typealias couldn't be created or if
-        // the user excluded this typedef.
+        // Use underlying type if typealias couldn't be created or if the user
+        // excluded this typedef.
         final ct = clang.clang_getTypedefDeclUnderlyingType(cursor);
         return getCodeGenType(ct, pointerReference: pointerReference);
       }
-      break;
     case clang_types.CXTypeKind.CXType_Record:
-      _fillTypefromRecord(cursor, newType, pointerReference);
-      break;
+      return _extractfromRecord(cxtype, cursor, pointerReference);
     case clang_types.CXTypeKind.CXType_Enum:
       final usr = cursor.usr();
 
@@ -146,20 +144,21 @@ void _fillTypeFromCursor(clang_types.CXCursor cursor, Type newType, bool pointer
       );
       if (enumClass == null) {
         // Handle anonymous enum declarations within another declaration.
-        newType.fillNativeType(Type.enumNativeType);
+        return Type.nativeType(Type.enumNativeType);
       } else {
-        newType.fillEnumClass(enumClass);
+        return Type.enumClass(enumClass);
       }
       break;
     default:
-      throw
+      // TODO: Just using this for testing. Remove this before merging.
+      throw 'Unknown cursor kind: ${cursor.completeStringRepr()}';
   }
 }
 
-Type _extractfromRecord(clang_types.CXType cxtype, bool pointerReference) {
+Type _extractfromRecord(clang_types.CXType cxtype, clang_types.CXCursor cursor,
+    bool pointerReference) {
   Type type;
 
-  final cursor = clang.clang_getTypeDeclaration(cxtype);
   _logger.fine('${_padding}_extractfromRecord: ${cursor.completeStringRepr()}');
 
   final cursorKind = clang.clang_getCursorKind(cursor);
@@ -169,21 +168,15 @@ Type _extractfromRecord(clang_types.CXType cxtype, bool pointerReference) {
     final declSpelling = cursor.spelling();
 
     // Set includer functions according to compoundType.
-    final bool Function(String) isSeenDecl;
-    final Compound? Function(String) getSeenDecl;
     final CompoundType compoundType;
     final Map<String, ImportedType> compoundTypeMappings;
 
     switch (cursorKind) {
       case clang_types.CXCursorKind.CXCursor_StructDecl:
-        isSeenDecl = bindingsIndex.isSeenStruct;
-        getSeenDecl = bindingsIndex.getSeenStruct;
         compoundType = CompoundType.struct;
         compoundTypeMappings = config.structTypeMappings;
         break;
       case clang_types.CXCursorKind.CXCursor_UnionDecl:
-        isSeenDecl = bindingsIndex.isSeenUnion;
-        getSeenDecl = bindingsIndex.getSeenUnion;
         compoundType = CompoundType.union;
         compoundTypeMappings = config.unionTypeMappings;
         break;
@@ -196,16 +189,6 @@ Type _extractfromRecord(clang_types.CXType cxtype, bool pointerReference) {
     if (compoundTypeMappings.containsKey(declSpelling)) {
       _logger.fine('  Type Mapped from type-map');
       return Type.importedType(compoundTypeMappings[declSpelling]!);
-    } else if (isSeenDecl(declUsr)) {
-      type = Type.compound(getSeenDecl(declUsr)!);
-
-      // This will parse the dependencies if needed.
-      parseCompoundDeclaration(
-        cursor,
-        compoundType,
-        ignoreFilter: true,
-        pointerReference: pointerReference,
-      );
     } else {
       final struc = parseCompoundDeclaration(
         cursor,

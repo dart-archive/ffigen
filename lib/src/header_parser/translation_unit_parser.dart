@@ -15,6 +15,7 @@ import 'includer.dart';
 import 'sub_parsers/compounddecl_parser.dart';
 import 'sub_parsers/enumdecl_parser.dart';
 import 'sub_parsers/functiondecl_parser.dart';
+import 'type_extractor/extractor.dart';
 import 'utils.dart';
 
 final _logger = Logger('ffigen.header_parser.translation_unit_parser');
@@ -46,13 +47,11 @@ int _rootCursorVisitor(clang_types.CXCursor cursor, clang_types.CXCursor parent,
           addToBindings(parseFunctionDeclaration(cursor));
           break;
         case clang_types.CXCursorKind.CXCursor_StructDecl:
-          addToBindings(parseCompoundDeclaration(cursor, CompoundType.struct));
-          break;
         case clang_types.CXCursorKind.CXCursor_UnionDecl:
-          addToBindings(parseCompoundDeclaration(cursor, CompoundType.union));
+          addToBindings(getCodeGenType(cursor.type()).cachedType.compound);
           break;
         case clang_types.CXCursorKind.CXCursor_EnumDecl:
-          addToBindings(parseEnumDeclaration(cursor));
+          addToBindings(getCodeGenType(cursor.type()).cachedType.enumClass);
           break;
         case clang_types.CXCursorKind.CXCursor_MacroDefinition:
           saveMacroDefinition(cursor);

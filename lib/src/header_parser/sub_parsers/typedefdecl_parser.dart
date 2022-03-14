@@ -92,12 +92,7 @@ Typealias? parseTypedefDeclaration(
         type: s,
         dartDoc: getCursorDocComment(cursor),
       );
-      bindingsIndex.addTypealiasToSeen(typedefUsr, _stack.top.typealias!);
     }
-  }
-
-  if (bindingsIndex.isSeenTypealias(typedefUsr)) {
-    _stack.top.typealias = bindingsIndex.getSeenTypealias(typedefUsr);
   }
 
   return _stack.pop().typealias;

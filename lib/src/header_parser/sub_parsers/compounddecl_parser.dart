@@ -135,8 +135,7 @@ Compound? parseCompoundDeclaration(
     } else {
       _logger.finest('unnamed $className declaration');
     }
-  } else if ((ignoreFilter || shouldIncludeDecl(declUsr, declName)) &&
-      (!bindingsIndex.isSeenType(declUsr))) {
+  } else if (ignoreFilter || shouldIncludeDecl(declUsr, declName)) {
     _logger.fine(
         '++++ Adding $className: Name: $declName, ${cursor.completeStringRepr()}');
     _stack.top.compound = Compound.fromType(
@@ -146,14 +145,9 @@ Compound? parseCompoundDeclaration(
       name: configDecl.renameUsingConfig(declName),
       dartDoc: getCursorDocComment(cursor),
     );
-    // Adding to seen here to stop recursion if a declaration has itself as a
-    // member, members are updated later.
-    bindingsIndex.addTypeToSeen(declUsr, _stack.top.compound!);
   }
 
-  if (bindingsIndex.isSeenType(declUsr)) {
-    _stack.top.compound = bindingsIndex.getSeenType(declUsr);
-
+  if (_stack.top.compound != null) {
     // Skip dependencies if already seen OR user has specified `dependency-only`
     // as opaque AND this is a pointer reference AND the declaration was not
     // included according to config (ignoreFilter).

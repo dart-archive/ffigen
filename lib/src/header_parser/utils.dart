@@ -89,14 +89,14 @@ extension CXCursorExt on clang_types.CXCursor {
     return s;
   }
 
-  /// Dispose type using [type.dispose].
+  /// Type associated with the pointer if any. Type will have kind
+  /// [clang.CXTypeKind.CXType_Invalid] otherwise.
   clang_types.CXType type() {
     return clang.clang_getCursorType(this);
   }
 
-  /// Only valid for [clang.CXCursorKind.CXCursor_FunctionDecl].
-  ///
-  /// Dispose type using [type.dispose].
+  /// Only valid for [clang.CXCursorKind.CXCursor_FunctionDecl]. Type will have
+  /// kind [clang.CXTypeKind.CXType_Invalid] otherwise.
   clang_types.CXType returnType() {
     return clang.clang_getResultType(type());
   }
@@ -341,70 +341,30 @@ class BindingsIndex {
   /// Index for headers.
   final Map<String, bool> _headerCache = {};
 
-  bool isSeenType(String usr) {
-    return _declaredTypes.containsKey(usr);
-  }
-
-  void addTypeToSeen(String usr, Type type) {
-    _declaredTypes[usr] = type;
-  }
-
-  Type? getSeenType(String usr) {
-    return _declaredTypes[usr];
-  }
-
-  bool isSeenUnnamedEnumConstant(String usr) {
-    return _unnamedEnumConstants.containsKey(usr);
-
-  void addUnnamedEnumConstantToSeen(String usr, Constant enumConstant) {
-    _unnamedEnumConstants[usr] = enumConstant;
-  }
-
-  Constant? getSeenUnnamedEnumConstant(String usr) {
-    return _unnamedEnumConstants[usr];
-  }
-
-  bool isSeenGlobalVar(String usr) {
-    return _globals.containsKey(usr);
-  }
-
-  void addGlobalVarToSeen(String usr, Global global) {
-    _globals[usr] = global;
-  }
-
-  Global? getSeenGlobalVar(String usr) {
-    return _globals[usr];
-  }
-
-  bool isSeenMacro(String usr) {
-    return _macros.containsKey(usr);
-  }
-
-  void addMacroToSeen(String usr, String macro) {
-    _macros[usr] = macro;
-  }
-
-  String? getSeenMacro(String usr) {
-    return _macros[usr];
-  }
-
-  bool isSeenUnsupportedTypealias(String usr) {
-    return _unsupportedTypealiases.contains(usr);
-  }
-
-  void addUnsupportedTypealiasToSeen(String usr) {
-    _unsupportedTypealiases.add(usr);
-  }
-
-  bool isSeenHeader(String source) {
-    return _headerCache.containsKey(source);
-  }
-
-  void addHeaderToSeen(String source, bool includeStatus) {
-    _headerCache[source] = includeStatus;
-  }
-
-  bool? getSeenHeaderStatus(String source) {
-    return _headerCache[source];
-  }
+  bool isSeenType(String usr) => _declaredTypes.containsKey(usr);
+  void addTypeToSeen(String usr, Type type) => _declaredTypes[usr] = type;
+  Type? getSeenType(String usr) => _declaredTypes[usr];
+  bool isSeenFunc(String usr) => _functions.containsKey(usr);
+  void addFuncToSeen(String usr, Func func) => _functions[usr] = func;
+  Func? getSeenFunc(String usr) => _functions[usr];
+  bool isSeenUnnamedEnumConstant(String usr) =>
+      _unnamedEnumConstants.containsKey(usr);
+  void addUnnamedEnumConstantToSeen(String usr, Constant enumConstant) =>
+      _unnamedEnumConstants[usr] = enumConstant;
+  Constant? getSeenUnnamedEnumConstant(String usr) =>
+      _unnamedEnumConstants[usr];
+  bool isSeenGlobalVar(String usr) => _globals.containsKey(usr);
+  void addGlobalVarToSeen(String usr, Global global) => _globals[usr] = global;
+  Global? getSeenGlobalVar(String usr) => _globals[usr];
+  bool isSeenMacro(String usr) => _macros.containsKey(usr);
+  void addMacroToSeen(String usr, String macro) => _macros[usr] = macro;
+  String? getSeenMacro(String usr) => _macros[usr];
+  bool isSeenUnsupportedTypealias(String usr) =>
+      _unsupportedTypealiases.contains(usr);
+  void addUnsupportedTypealiasToSeen(String usr) =>
+      _unsupportedTypealiases.add(usr);
+  bool isSeenHeader(String source) => _headerCache.containsKey(source);
+  void addHeaderToSeen(String source, bool includeStatus) =>
+      _headerCache[source] = includeStatus;
+  bool? getSeenHeaderStatus(String source) => _headerCache[source];
 }

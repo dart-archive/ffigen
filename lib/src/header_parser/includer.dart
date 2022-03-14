@@ -34,8 +34,8 @@ bool shouldIncludeFunc(String usr, String name) {
 }
 
 bool shouldIncludeEnumClass(String usr, String name) {
-  return _shouldIncludeDecl(usr, name, bindingsIndex.isSeenType,
-      config.enumClassDecl.shouldInclude);
+  return _shouldIncludeDecl(
+      usr, name, bindingsIndex.isSeenType, config.enumClassDecl.shouldInclude);
 }
 
 bool shouldIncludeUnnamedEnumConstant(String usr, String name) {
@@ -55,7 +55,7 @@ bool shouldIncludeMacro(String usr, String name) {
 
 bool shouldIncludeTypealias(String usr, String name) {
   return _shouldIncludeDecl(
-      usr, name, bindingsIndex.isSeenTypealias, config.typedefs.shouldInclude);
+      usr, name, bindingsIndex.isSeenType, config.typedefs.shouldInclude);
 }
 
 /// True if a cursor should be included based on headers config, used on root

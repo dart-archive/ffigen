@@ -58,8 +58,10 @@ enum BroadType {
   /// Used as a marker, so that declarations having these can exclude them.
   Unimplemented,
 
-  /// Placeholder type for a compound type that hasn't been filled in yet.
-  Unfilled,
+  /// Placeholder for a type in a cache. Once the entry is fully filled in,
+  /// the types child will point to the real type, and the cache entry should be
+  /// considered exactly equivalent to the wrapped type.
+  CacheEntry,
 }
 
 /// Type class for return types, variable types, etc.
@@ -107,8 +109,9 @@ class Type {
   /// The BroadType of this Type.
   final BroadType broadType;
 
-  /// Child Type, e.g Pointer(Parent) to Int(Child), or Child Type of an Array.
-  final Type? child;
+  /// Child Type, e.g Pointer(Parent) to Int(Child), Child Type of an Array, or
+  /// the type that a CacheEntry points to.
+  Type? child;
 
   /// For ConstantArray and IncompleteArray type.
   final int? length;
@@ -116,92 +119,56 @@ class Type {
   /// For storing cursor type info for an unimplemented type.
   String? unimplementedReason;
 
-  Type() : broadType = BroadType.Unfilled;
+  Type._({
+    required this.broadType,
+    this.child,
+    this.compound,
+    this.enumClass,
+    this.nativeType,
+    this.nativeFunc,
+    this.typealias,
+    this.functionType,
+    this.importedType,
+    this.length,
+    this.unimplementedReason,
+  });
 
-  void _fill({
-    required BroadType broadType_,
-    Type? child_,
-    Compound? compound_,
-    EnumClass? enumClass_,
-    SupportedNativeType? nativeType_,
-    NativeFunc? nativeFunc_,
-    Typealias? typealias_,
-    FunctionType? functionType_,
-    ImportedType? importedType_,
-    int? length_,
-    String? unimplementedReason_,
-  }) {
-    assert(broadType == BroadType.Unfilled);
-    broadType = broadType_;
-    child = child_;
-    compound = compound_;
-    enumClass = enumClass_;
-    nativeType = nativeType_;
-    nativeFunc = nativeFunc_;
-    typealias = typealias_;
-    functionType = functionType_;
-    importedType = importedType_;
-    length = length_;
-    unimplementedReason = unimplementedReason_;
-  }
-
-  void fillPointer(Type child) {
-    _fill(broadType: BroadType.Pointer, child: child);
-  }
-  void fillCompound(Compound compound) {
-    _fill(broadType: BroadType.Compound, compound: compound);
-  }
-  void fillStruct(Struc struc) {
-    _fill(broadType: BroadType.Compound, compound: struc);
-  }
-  void fillUnion(Union union) {
-    _fill(broadType: BroadType.Compound, compound: union);
-  }
-  void fillEnumClass(EnumClass enumClass) {
-    _fill(broadType: BroadType.Enum, enumClass: enumClass);
-  }
-  void fillFunctionType(FunctionType functionType) {
-    _fill(
-        broadType: BroadType.FunctionType, functionType: functionType);
-  }
-  void fillImportedType(ImportedType importedType) {
-    _fill(
-        broadType: BroadType.ImportedType, importedType: importedType);
-  }
-  void fillNativeFunc(NativeFunc nativeFunc) {
-    _fill(broadType: BroadType.NativeFunction, nativeFunc: nativeFunc);
-  }
-  void fillTypealias(Typealias typealias) {
-    _fill(broadType: BroadType.Typealias, typealias: typealias);
-  }
-  void fillNativeType(SupportedNativeType nativeType) {
-    _fill(broadType: BroadType.NativeType, nativeType: nativeType);
-  }
-  void fillConstantArray(int length, Type elementType) {
-    _fill(
-      broadType: BroadType.ConstantArray,
-      child: elementType,
-      length: length,
-    );
-  }
-  void fillIncompleteArray(Type elementType) {
-    _fill(
-      broadType: BroadType.IncompleteArray,
-      child: elementType,
-    );
-  }
-  void fillBoolean() {
-    _fill(
-      broadType: BroadType.Boolean,
-    );
-  }
-  void fillUnimplemented(String reason) {
-    _fill(
-        broadType: BroadType.Unimplemented, unimplementedReason: reason);
-  }
-  void fillHandle() {
-    _fill(broadType: BroadType.Handle);
-  }
+  factory Type.pointer(Type child) =>
+      Type._(broadType: BroadType.Pointer, child: child);
+  factory Type.compound(Compound compound) =>
+      Type._(broadType: BroadType.Compound, compound: compound);
+  factory Type.struct(Struc struc) =>
+      Type._(broadType: BroadType.Compound, compound: struc);
+  factory Type.union(Union union) =>
+      Type._(broadType: BroadType.Compound, compound: union);
+  factory Type.enumClass(EnumClass enumClass) =>
+      Type._(broadType: BroadType.Enum, enumClass: enumClass);
+  factory Type.functionType(FunctionType functionType) =>
+      Type._(broadType: BroadType.FunctionType, functionType: functionType);
+  factory Type.importedType(ImportedType importedType) =>
+      Type._(broadType: BroadType.ImportedType, importedType: importedType);
+  factory Type.nativeFunc(NativeFunc nativeFunc) =>
+      Type._(broadType: BroadType.NativeFunction, nativeFunc: nativeFunc);
+  factory Type.typealias(Typealias typealias) =>
+      Type._(broadType: BroadType.Typealias, typealias: typealias);
+  factory Type.nativeType(SupportedNativeType nativeType) =>
+      Type._(broadType: BroadType.NativeType, nativeType: nativeType);
+  factory Type.constantArray(int length, Type elementType) => Type._(
+        broadType: BroadType.ConstantArray,
+        child: elementType,
+        length: length,
+      );
+  factory Type.incompleteArray(Type elementType) => Type._(
+        broadType: BroadType.IncompleteArray,
+        child: elementType,
+      );
+  factory Type.boolean() => Type._(
+        broadType: BroadType.Boolean,
+      );
+  factory Type.unimplemented(String reason) =>
+      Type._(broadType: BroadType.Unimplemented, unimplementedReason: reason);
+  factory Type.handle() => Type._(broadType: BroadType.Handle);
+  factory Type.cacheEntry() => Type._(broadType: BroadType.CacheEntry);
 
   /// Get all dependencies of this type and save them in [dependencies].
   void addDependencies(Set<Binding> dependencies) {
@@ -275,6 +242,11 @@ class Type {
     }
   }
 
+  /// If this is a [BroadType.CacheEntry], returns the wrapped type. Otherwise
+  /// returns this type. Assumes the cache entry is filled.
+  Type get cachedType =>
+      broadType == BroadType.CacheEntry ? child!.cachedType : this;
+
   String getCType(Writer w) {
     switch (broadType) {
       case BroadType.NativeType:
@@ -303,6 +275,8 @@ class Type {
         return '${importedType!.libraryImport.prefix}.${importedType!.cType}';
       case BroadType.Typealias:
         return typealias!.name;
+      case BroadType.CacheEntry:
+        return cachedType.getCType(w);
       case BroadType.Unimplemented:
         throw UnimplementedError('C type unknown for ${broadType.toString()}');
     }
@@ -346,6 +320,8 @@ class Type {
         } else {
           return typealias!.type.getDartType(w);
         }
+      case BroadType.CacheEntry:
+        return cachedType.getDartType(w);
       case BroadType.Unimplemented:
         throw UnimplementedError(
             'dart type unknown for ${broadType.toString()}');
