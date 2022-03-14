@@ -242,11 +242,16 @@ class Type {
     }
   }
 
-  /// If this is a [BroadType.CacheEntry], returns the wrapped type. Otherwise
-  /// returns this type. Assumes the cache entry is filled.
+  /// If this is a filled [BroadType.CacheEntry], returns the wrapped type.
+  /// Otherwise returns this type.
   Type get cachedType => broadType == BroadType.CacheEntry && child != null
       ? child!.cachedType
       : this;
+
+  /// Returns false if this is an unfilled [BroadType.CacheEntry]. Otherwise
+  /// returns true.
+  bool get isCacheEntryFilled =>
+      broadType == BroadType.CacheEntry ? child != null : true;
 
   String getCType(Writer w) {
     switch (broadType) {
