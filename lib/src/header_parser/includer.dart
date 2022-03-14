@@ -20,21 +20,21 @@ bool _shouldIncludeDecl(String usr, String name,
 
 bool shouldIncludeStruct(String usr, String name) {
   return _shouldIncludeDecl(
-      usr, name, bindingsIndex.isSeenStruct, config.structDecl.shouldInclude);
+      usr, name, bindingsIndex.isSeenType, config.structDecl.shouldInclude);
 }
 
 bool shouldIncludeUnion(String usr, String name) {
   return _shouldIncludeDecl(
-      usr, name, bindingsIndex.isSeenUnion, config.unionDecl.shouldInclude);
+      usr, name, bindingsIndex.isSeenType, config.unionDecl.shouldInclude);
 }
 
 bool shouldIncludeFunc(String usr, String name) {
   return _shouldIncludeDecl(
-      usr, name, bindingsIndex.isSeenFunc, config.functionDecl.shouldInclude);
+      usr, name, bindingsIndex.isSeenType, config.functionDecl.shouldInclude);
 }
 
 bool shouldIncludeEnumClass(String usr, String name) {
-  return _shouldIncludeDecl(usr, name, bindingsIndex.isSeenEnumClass,
+  return _shouldIncludeDecl(usr, name, bindingsIndex.isSeenType,
       config.enumClassDecl.shouldInclude);
 }
 

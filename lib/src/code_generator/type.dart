@@ -57,6 +57,9 @@ enum BroadType {
 
   /// Used as a marker, so that declarations having these can exclude them.
   Unimplemented,
+
+  /// Placeholder type for a compound type that hasn't been filled in yet.
+  Unfilled,
 }
 
 /// Type class for return types, variable types, etc.
@@ -113,76 +116,91 @@ class Type {
   /// For storing cursor type info for an unimplemented type.
   String? unimplementedReason;
 
-  Type._({
-    required this.broadType,
-    this.child,
-    this.compound,
-    this.enumClass,
-    this.nativeType,
-    this.nativeFunc,
-    this.typealias,
-    this.functionType,
-    this.importedType,
-    this.length,
-    this.unimplementedReason,
-  });
+  Type() : broadType = BroadType.Unfilled;
 
-  factory Type.pointer(Type child) {
-    return Type._(broadType: BroadType.Pointer, child: child);
+  void _fill({
+    required BroadType broadType_,
+    Type? child_,
+    Compound? compound_,
+    EnumClass? enumClass_,
+    SupportedNativeType? nativeType_,
+    NativeFunc? nativeFunc_,
+    Typealias? typealias_,
+    FunctionType? functionType_,
+    ImportedType? importedType_,
+    int? length_,
+    String? unimplementedReason_,
+  }) {
+    assert(broadType == BroadType.Unfilled);
+    broadType = broadType_;
+    child = child_;
+    compound = compound_;
+    enumClass = enumClass_;
+    nativeType = nativeType_;
+    nativeFunc = nativeFunc_;
+    typealias = typealias_;
+    functionType = functionType_;
+    importedType = importedType_;
+    length = length_;
+    unimplementedReason = unimplementedReason_;
   }
-  factory Type.compound(Compound compound) {
-    return Type._(broadType: BroadType.Compound, compound: compound);
+
+  void fillPointer(Type child) {
+    _fill(broadType: BroadType.Pointer, child: child);
   }
-  factory Type.struct(Struc struc) {
-    return Type._(broadType: BroadType.Compound, compound: struc);
+  void fillCompound(Compound compound) {
+    _fill(broadType: BroadType.Compound, compound: compound);
   }
-  factory Type.union(Union union) {
-    return Type._(broadType: BroadType.Compound, compound: union);
+  void fillStruct(Struc struc) {
+    _fill(broadType: BroadType.Compound, compound: struc);
   }
-  factory Type.enumClass(EnumClass enumClass) {
-    return Type._(broadType: BroadType.Enum, enumClass: enumClass);
+  void fillUnion(Union union) {
+    _fill(broadType: BroadType.Compound, compound: union);
   }
-  factory Type.functionType(FunctionType functionType) {
-    return Type._(
+  void fillEnumClass(EnumClass enumClass) {
+    _fill(broadType: BroadType.Enum, enumClass: enumClass);
+  }
+  void fillFunctionType(FunctionType functionType) {
+    _fill(
         broadType: BroadType.FunctionType, functionType: functionType);
   }
-  factory Type.importedType(ImportedType importedType) {
-    return Type._(
+  void fillImportedType(ImportedType importedType) {
+    _fill(
         broadType: BroadType.ImportedType, importedType: importedType);
   }
-  factory Type.nativeFunc(NativeFunc nativeFunc) {
-    return Type._(broadType: BroadType.NativeFunction, nativeFunc: nativeFunc);
+  void fillNativeFunc(NativeFunc nativeFunc) {
+    _fill(broadType: BroadType.NativeFunction, nativeFunc: nativeFunc);
   }
-  factory Type.typealias(Typealias typealias) {
-    return Type._(broadType: BroadType.Typealias, typealias: typealias);
+  void fillTypealias(Typealias typealias) {
+    _fill(broadType: BroadType.Typealias, typealias: typealias);
   }
-  factory Type.nativeType(SupportedNativeType nativeType) {
-    return Type._(broadType: BroadType.NativeType, nativeType: nativeType);
+  void fillNativeType(SupportedNativeType nativeType) {
+    _fill(broadType: BroadType.NativeType, nativeType: nativeType);
   }
-  factory Type.constantArray(int length, Type elementType) {
-    return Type._(
+  void fillConstantArray(int length, Type elementType) {
+    _fill(
       broadType: BroadType.ConstantArray,
       child: elementType,
       length: length,
     );
   }
-  factory Type.incompleteArray(Type elementType) {
-    return Type._(
+  void fillIncompleteArray(Type elementType) {
+    _fill(
       broadType: BroadType.IncompleteArray,
       child: elementType,
     );
   }
-  factory Type.boolean() {
-    return Type._(
+  void fillBoolean() {
+    _fill(
       broadType: BroadType.Boolean,
     );
   }
-  factory Type.unimplemented(String reason) {
-    return Type._(
+  void fillUnimplemented(String reason) {
+    _fill(
         broadType: BroadType.Unimplemented, unimplementedReason: reason);
   }
-  factory Type.handle() {
-    return Type._(broadType: BroadType.Handle);
+  void fillHandle() {
+    _fill(broadType: BroadType.Handle);
   }
 
   /// Get all dependencies of this type and save them in [dependencies].

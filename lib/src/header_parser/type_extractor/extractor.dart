@@ -26,8 +26,24 @@ Type getCodeGenType(
   bool pointerReference = false,
 }) {
   _logger.fine('${_padding}getCodeGenType ${cxtype.completeStringRepr()}');
-  final kind = cxtype.kind;
 
+  // If the type has a declaration cursor, then use the BindingsIndex to break
+  // any potential cycles, and dedupe them.
+  final cursor = clang.clang_getTypeDeclaration(cxtype);
+  if (cursor.kind != clang_types.CXCursorKind.CXCursor_NoDeclFound) {
+    final usr = cursor.usr();
+    final cachedType = bindingsIndex.getSeenType(usr);
+    if (cachedType != null) return cachedType;
+    var newType = Type.unfilled();
+    bindingsIndex.addTypeToSeen(usr, newType);
+    _fillTypeFromCursor(cursor, newType, pointerReference);
+    return newType;
+  }
+
+  // If the type doesn't have a declaration cursor, then it's a basic type such
+  // as int, or a simple derived type like a pointer, so doesn't need to be
+  // cached.
+  final kind = cxtype.kind;
   switch (kind) {
     case clang_types.CXTypeKind.CXType_Pointer:
       final pt = clang.clang_getPointeeType(cxtype);
@@ -41,67 +57,10 @@ Type getCodeGenType(
         return Type.handle();
       }
       return Type.pointer(s);
-    case clang_types.CXTypeKind.CXType_Typedef:
-      final spelling = clang.clang_getTypedefName(cxtype).toStringAndDispose();
-      if (config.typedefTypeMappings.containsKey(spelling)) {
-        _logger.fine('  Type $spelling mapped from type-map');
-        return Type.importedType(config.typedefTypeMappings[spelling]!);
-      }
-      // Get name from supported typedef name if config allows.
-      if (config.useSupportedTypedefs) {
-        if (suportedTypedefToSuportedNativeType.containsKey(spelling)) {
-          _logger.fine('  Type Mapped from supported typedef');
-          return Type.nativeType(
-              suportedTypedefToSuportedNativeType[spelling]!);
-        } else if (supportedTypedefToImportedType.containsKey(spelling)) {
-          _logger.fine('  Type Mapped from supported typedef');
-          return Type.importedType(supportedTypedefToImportedType[spelling]!);
-        }
-      }
-
-      // This is important or we get stuck in infinite recursion.
-      final cursor = clang.clang_getTypeDeclaration(cxtype);
-      final typedefUsr = cursor.usr();
-
-      if (bindingsIndex.isSeenTypealias(typedefUsr)) {
-        return Type.typealias(bindingsIndex.getSeenTypealias(typedefUsr)!);
-      } else {
-        final typealias =
-            parseTypedefDeclaration(cursor, pointerReference: pointerReference);
-
-        if (typealias != null) {
-          return Type.typealias(typealias);
-        } else {
-          // Use underlying type if typealias couldn't be created or if
-          // the user excluded this typedef.
-          final ct = clang.clang_getTypedefDeclUnderlyingType(cursor);
-          return getCodeGenType(ct, pointerReference: pointerReference);
-        }
-      }
     case clang_types.CXTypeKind.CXType_Elaborated:
       final et = clang.clang_Type_getNamedType(cxtype);
       final s = getCodeGenType(et, pointerReference: pointerReference);
       return s;
-    case clang_types.CXTypeKind.CXType_Record:
-      return _extractfromRecord(cxtype, pointerReference);
-    case clang_types.CXTypeKind.CXType_Enum:
-      final cursor = clang.clang_getTypeDeclaration(cxtype);
-      final usr = cursor.usr();
-
-      if (bindingsIndex.isSeenEnumClass(usr)) {
-        return Type.enumClass(bindingsIndex.getSeenEnumClass(usr)!);
-      } else {
-        final enumClass = parseEnumDeclaration(
-          cursor,
-          ignoreFilter: true,
-        );
-        if (enumClass == null) {
-          // Handle anonymous enum declarations within another declaration.
-          return Type.nativeType(Type.enumNativeType);
-        } else {
-          return Type.enumClass(enumClass);
-        }
-      }
     case clang_types.CXTypeKind.CXType_FunctionProto:
       // Primarily used for function pointers.
       return _extractFromFunctionProto(cxtype);
@@ -138,6 +97,62 @@ Type getCodeGenType(
         return Type.unimplemented(
             'Type: ${cxtype.kindSpelling()} not implemented');
       }
+  }
+}
+
+void _fillTypeFromCursor(clang_types.CXCursor cursor, Type newType, bool pointerReference) {
+  switch (kind) {
+    case clang_types.CXTypeKind.CXType_Typedef:
+      final spelling = clang.clang_getTypedefName(cxtype).toStringAndDispose();
+      if (config.typedefTypeMappings.containsKey(spelling)) {
+        _logger.fine('  Type $spelling mapped from type-map');
+        newType.fillImportedType(config.typedefTypeMappings[spelling]!);
+        return;
+      }
+      // Get name from supported typedef name if config allows.
+      if (config.useSupportedTypedefs) {
+        if (suportedTypedefToSuportedNativeType.containsKey(spelling)) {
+          _logger.fine('  Type Mapped from supported typedef');
+          newType.fillNativeType(
+              suportedTypedefToSuportedNativeType[spelling]!);
+          return;
+        } else if (supportedTypedefToImportedType.containsKey(spelling)) {
+          _logger.fine('  Type Mapped from supported typedef');
+          newType.fillImportedType(supportedTypedefToImportedType[spelling]!);
+          return;
+        }
+      }
+      final typealias =
+          parseTypedefDeclaration(cursor, pointerReference: pointerReference);
+
+      if (typealias != null) {
+        newType.fillTypealias(typealias);
+      } else {
+        // Use underlying type if typealias couldn't be created or if
+        // the user excluded this typedef.
+        final ct = clang.clang_getTypedefDeclUnderlyingType(cursor);
+        return getCodeGenType(ct, pointerReference: pointerReference);
+      }
+      break;
+    case clang_types.CXTypeKind.CXType_Record:
+      _fillTypefromRecord(cursor, newType, pointerReference);
+      break;
+    case clang_types.CXTypeKind.CXType_Enum:
+      final usr = cursor.usr();
+
+      final enumClass = parseEnumDeclaration(
+        cursor,
+        ignoreFilter: true,
+      );
+      if (enumClass == null) {
+        // Handle anonymous enum declarations within another declaration.
+        newType.fillNativeType(Type.enumNativeType);
+      } else {
+        newType.fillEnumClass(enumClass);
+      }
+      break;
+    default:
+      throw
   }
 }
 

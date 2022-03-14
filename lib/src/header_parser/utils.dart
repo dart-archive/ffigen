@@ -329,72 +329,32 @@ class Macro {
 /// Tracks if a binding is 'seen' or not.
 class BindingsIndex {
   // Tracks if bindings are already seen, Map key is USR obtained from libclang.
-  final Map<String, Struc> _structs = {};
-  final Map<String, Union> _unions = {};
+  final Map<String, Type> _declaredTypes = {};
   final Map<String, Func> _functions = {};
-  final Map<String, EnumClass> _enumClass = {};
   final Map<String, Constant> _unnamedEnumConstants = {};
   final Map<String, String> _macros = {};
   final Map<String, Global> _globals = {};
 
   /// Contains usr for typedefs which cannot be generated.
   final Set<String> _unsupportedTypealiases = {};
-  final Map<String, Typealias> _typealiases = {};
 
   /// Index for headers.
   final Map<String, bool> _headerCache = {};
 
-  bool isSeenStruct(String usr) {
-    return _structs.containsKey(usr);
+  bool isSeenType(String usr) {
+    return _declaredTypes.containsKey(usr);
   }
 
-  void addStructToSeen(String usr, Compound struc) {
-    _structs[usr] = struc as Struc;
+  void addTypeToSeen(String usr, Type type) {
+    _declaredTypes[usr] = type;
   }
 
-  Struc? getSeenStruct(String usr) {
-    return _structs[usr];
-  }
-
-  bool isSeenUnion(String usr) {
-    return _unions.containsKey(usr);
-  }
-
-  void addUnionToSeen(String usr, Compound union) {
-    _unions[usr] = union as Union;
-  }
-
-  Union? getSeenUnion(String usr) {
-    return _unions[usr];
-  }
-
-  bool isSeenFunc(String usr) {
-    return _functions.containsKey(usr);
-  }
-
-  void addFuncToSeen(String usr, Func func) {
-    _functions[usr] = func;
-  }
-
-  Func? getSeenFunc(String usr) {
-    return _functions[usr];
-  }
-
-  bool isSeenEnumClass(String usr) {
-    return _enumClass.containsKey(usr);
-  }
-
-  void addEnumClassToSeen(String usr, EnumClass enumClass) {
-    _enumClass[usr] = enumClass;
-  }
-
-  EnumClass? getSeenEnumClass(String usr) {
-    return _enumClass[usr];
+  Type? getSeenType(String usr) {
+    return _declaredTypes[usr];
   }
 
   bool isSeenUnnamedEnumConstant(String usr) {
     return _unnamedEnumConstants.containsKey(usr);
-  }
 
   void addUnnamedEnumConstantToSeen(String usr, Constant enumConstant) {
     _unnamedEnumConstants[usr] = enumConstant;
@@ -428,24 +388,12 @@ class BindingsIndex {
     return _macros[usr];
   }
 
-  bool isSeenTypealias(String usr) {
-    return _typealiases.containsKey(usr);
-  }
-
-  void addTypealiasToSeen(String usr, Typealias t) {
-    _typealiases[usr] = t;
-  }
-
   bool isSeenUnsupportedTypealias(String usr) {
     return _unsupportedTypealiases.contains(usr);
   }
 
   void addUnsupportedTypealiasToSeen(String usr) {
     _unsupportedTypealiases.add(usr);
-  }
-
-  Typealias? getSeenTypealias(String usr) {
-    return _typealiases[usr];
   }
 
   bool isSeenHeader(String source) {

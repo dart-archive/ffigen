@@ -87,25 +87,16 @@ Compound? parseCompoundDeclaration(
 
   // Set includer functions according to compoundType.
   final bool Function(String, String) shouldIncludeDecl;
-  final bool Function(String) isSeenDecl;
-  final Compound? Function(String) getSeenDecl;
-  final void Function(String, Compound) addDeclToSeen;
   final Declaration configDecl;
   final String className;
   switch (compoundType) {
     case CompoundType.struct:
       shouldIncludeDecl = shouldIncludeStruct;
-      isSeenDecl = bindingsIndex.isSeenStruct;
-      getSeenDecl = bindingsIndex.getSeenStruct;
-      addDeclToSeen = bindingsIndex.addStructToSeen;
       configDecl = config.structDecl;
       className = 'Struct';
       break;
     case CompoundType.union:
       shouldIncludeDecl = shouldIncludeUnion;
-      isSeenDecl = bindingsIndex.isSeenUnion;
-      getSeenDecl = bindingsIndex.getSeenUnion;
-      addDeclToSeen = bindingsIndex.addUnionToSeen;
       configDecl = config.unionDecl;
       className = 'Union';
       break;
@@ -145,7 +136,7 @@ Compound? parseCompoundDeclaration(
       _logger.finest('unnamed $className declaration');
     }
   } else if ((ignoreFilter || shouldIncludeDecl(declUsr, declName)) &&
-      (!isSeenDecl(declUsr))) {
+      (!bindingsIndex.isSeenType(declUsr))) {
     _logger.fine(
         '++++ Adding $className: Name: $declName, ${cursor.completeStringRepr()}');
     _stack.top.compound = Compound.fromType(
@@ -157,11 +148,11 @@ Compound? parseCompoundDeclaration(
     );
     // Adding to seen here to stop recursion if a declaration has itself as a
     // member, members are updated later.
-    addDeclToSeen(declUsr, _stack.top.compound!);
+    bindingsIndex.addTypeToSeen(declUsr, _stack.top.compound!);
   }
 
-  if (isSeenDecl(declUsr)) {
-    _stack.top.compound = getSeenDecl(declUsr);
+  if (bindingsIndex.isSeenType(declUsr)) {
+    _stack.top.compound = bindingsIndex.getSeenType(declUsr);
 
     // Skip dependencies if already seen OR user has specified `dependency-only`
     // as opaque AND this is a pointer reference AND the declaration was not
