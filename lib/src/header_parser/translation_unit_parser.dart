@@ -15,6 +15,7 @@ import 'includer.dart';
 import 'sub_parsers/compounddecl_parser.dart';
 import 'sub_parsers/enumdecl_parser.dart';
 import 'sub_parsers/functiondecl_parser.dart';
+import 'sub_parsers/objcinterfacedecl_parser.dart';
 import 'utils.dart';
 
 final _logger = Logger('ffigen.header_parser.translation_unit_parser');
@@ -59,6 +60,9 @@ int _rootCursorVisitor(clang_types.CXCursor cursor, clang_types.CXCursor parent,
           break;
         case clang_types.CXCursorKind.CXCursor_VarDecl:
           addToBindings(parseVarDeclaration(cursor));
+          break;
+        case clang_types.CXCursorKind.CXCursor_ObjCInterfaceDecl:
+          addToBindings(parseObjCInterfaceDeclaration(cursor));
           break;
         default:
           _logger.finer('rootCursorVisitor: CursorKind not implemented');

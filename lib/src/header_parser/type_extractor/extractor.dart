@@ -26,10 +26,12 @@ Type getCodeGenType(
   bool pointerReference = false,
 }) {
   _logger.fine('${_padding}getCodeGenType ${cxtype.completeStringRepr()}');
+  print('     ${cxtype.completeStringRepr()}  ->  ${clang.clang_getTypeDeclaration(cxtype).completeStringRepr()}');
   final kind = cxtype.kind;
 
   switch (kind) {
     case clang_types.CXTypeKind.CXType_Pointer:
+    case clang_types.CXTypeKind.CXType_ObjCObjectPointer:
       final pt = clang.clang_getPointeeType(cxtype);
       final s = getCodeGenType(pt, pointerReference: true);
 
@@ -123,7 +125,6 @@ Type getCodeGenType(
       return Type.boolean();
     case clang_types.CXTypeKind.CXType_ObjCId:
     case clang_types.CXTypeKind.CXType_ObjCSel:
-    case clang_types.CXTypeKind.CXType_ObjCObjectPointer:
     case clang_types.CXTypeKind.CXType_BlockPointer:
     case clang_types.CXTypeKind.CXType_ObjCClass:
       return Type.pointer(Type.importedType(opaqueType));

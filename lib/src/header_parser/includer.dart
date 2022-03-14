@@ -33,6 +33,13 @@ bool shouldIncludeFunc(String usr, String name) {
       usr, name, bindingsIndex.isSeenFunc, config.functionDecl.shouldInclude);
 }
 
+bool shouldIncludeInterface(String usr, String name) {
+  // TODO: Check config YAML.
+  return true;
+  // return _shouldIncludeDecl(
+  //     usr, name, bindingsIndex.isSeenFunc, config.functionDecl.shouldInclude);
+}
+
 bool shouldIncludeEnumClass(String usr, String name) {
   return _shouldIncludeDecl(usr, name, bindingsIndex.isSeenEnumClass,
       config.enumClassDecl.shouldInclude);

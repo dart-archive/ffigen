@@ -109,3 +109,6 @@ functions:
     - clang_getCursorDefinition
     - clang_Cursor_isNull
     - clang_Cursor_hasAttrs
+    - clang_Type_getObjCObjectBaseType
+    - clang_Cursor_getObjCPropertyGetterName
+    - clang_Cursor_getObjCPropertySetterName

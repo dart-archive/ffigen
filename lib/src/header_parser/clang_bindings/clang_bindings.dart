@@ -759,6 +759,24 @@ class Clang {
   late final _clang_getArgType =
       _clang_getArgTypePtr.asFunction<CXType Function(CXType, int)>();
 
+  /// Retrieves the base type of the ObjCObjectType.
+  ///
+  /// If the type is not an ObjC object, an invalid type is returned.
+  CXType clang_Type_getObjCObjectBaseType(
+    CXType T,
+  ) {
+    return _clang_Type_getObjCObjectBaseType(
+      T,
+    );
+  }
+
+  late final _clang_Type_getObjCObjectBaseTypePtr =
+      _lookup<ffi.NativeFunction<CXType Function(CXType)>>(
+          'clang_Type_getObjCObjectBaseType');
+  late final _clang_Type_getObjCObjectBaseType =
+      _clang_Type_getObjCObjectBaseTypePtr
+          .asFunction<CXType Function(CXType)>();
+
   /// Return the number of elements of an array or vector type.
   ///
   /// If a type is passed in that is not an array or vector type,
@@ -982,6 +1000,40 @@ class Clang {
           'clang_getCursorDefinition');
   late final _clang_getCursorDefinition =
       _clang_getCursorDefinitionPtr.asFunction<CXCursor Function(CXCursor)>();
+
+  /// Given a cursor that represents a property declaration, return the
+  /// name of the method that implements the getter.
+  CXString clang_Cursor_getObjCPropertyGetterName(
+    CXCursor C,
+  ) {
+    return _clang_Cursor_getObjCPropertyGetterName(
+      C,
+    );
+  }
+
+  late final _clang_Cursor_getObjCPropertyGetterNamePtr =
+      _lookup<ffi.NativeFunction<CXString Function(CXCursor)>>(
+          'clang_Cursor_getObjCPropertyGetterName');
+  late final _clang_Cursor_getObjCPropertyGetterName =
+      _clang_Cursor_getObjCPropertyGetterNamePtr
+          .asFunction<CXString Function(CXCursor)>();
+
+  /// Given a cursor that represents a property declaration, return the
+  /// name of the method that implements the setter, if any.
+  CXString clang_Cursor_getObjCPropertySetterName(
+    CXCursor C,
+  ) {
+    return _clang_Cursor_getObjCPropertySetterName(
+      C,
+    );
+  }
+
+  late final _clang_Cursor_getObjCPropertySetterNamePtr =
+      _lookup<ffi.NativeFunction<CXString Function(CXCursor)>>(
+          'clang_Cursor_getObjCPropertySetterName');
+  late final _clang_Cursor_getObjCPropertySetterName =
+      _clang_Cursor_getObjCPropertySetterNamePtr
+          .asFunction<CXString Function(CXCursor)>();
 
   /// Given a cursor that represents a declaration, return the associated
   /// comment's source range.  The range may include multiple consecutive comments

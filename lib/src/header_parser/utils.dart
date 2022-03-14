@@ -249,6 +249,11 @@ extension CXTypeExt on clang_types.CXType {
         '(Type) spelling: ${spelling()}, kind: ${kind()}, kindSpelling: ${kindSpelling()}';
     return s;
   }
+
+  // @override
+  // bool operator==(Object other) {
+  //   return other is clang_types.CXType && kind == other.kind && data[0] == other.data[0] && data[1] == other.data[1];
+  // }
 }
 
 extension CXStringExt on clang_types.CXString {
