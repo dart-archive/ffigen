@@ -136,8 +136,6 @@ Type _extractFromCursor(clang_types.CXType cxtype, clang_types.CXCursor cursor,
     case clang_types.CXTypeKind.CXType_Record:
       return _extractfromRecord(cxtype, cursor, pointerReference);
     case clang_types.CXTypeKind.CXType_Enum:
-      final usr = cursor.usr();
-
       final enumClass = parseEnumDeclaration(
         cursor,
         ignoreFilter: true,
@@ -148,7 +146,6 @@ Type _extractFromCursor(clang_types.CXType cxtype, clang_types.CXCursor cursor,
       } else {
         return Type.enumClass(enumClass);
       }
-      break;
     default:
       // TODO: Just using this for testing. Remove this before merging.
       throw 'Unknown cursor kind: ${cursor.completeStringRepr()}';
@@ -164,7 +161,6 @@ Type _extractfromRecord(clang_types.CXType cxtype, clang_types.CXCursor cursor,
   final cursorKind = clang.clang_getCursorKind(cursor);
   if (cursorKind == clang_types.CXCursorKind.CXCursor_StructDecl ||
       cursorKind == clang_types.CXCursorKind.CXCursor_UnionDecl) {
-    final declUsr = cursor.usr();
     final declSpelling = cursor.spelling();
 
     // Set includer functions according to compoundType.

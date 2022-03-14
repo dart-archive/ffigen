@@ -12,8 +12,6 @@ import 'package:logging/logging.dart';
 import 'clang_bindings/clang_bindings.dart' as clang_types;
 import 'data.dart';
 import 'includer.dart';
-import 'sub_parsers/compounddecl_parser.dart';
-import 'sub_parsers/enumdecl_parser.dart';
 import 'sub_parsers/functiondecl_parser.dart';
 import 'type_extractor/extractor.dart';
 import 'utils.dart';

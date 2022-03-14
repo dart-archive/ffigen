@@ -244,8 +244,9 @@ class Type {
 
   /// If this is a [BroadType.CacheEntry], returns the wrapped type. Otherwise
   /// returns this type. Assumes the cache entry is filled.
-  Type get cachedType =>
-      broadType == BroadType.CacheEntry ? child!.cachedType : this;
+  Type get cachedType => broadType == BroadType.CacheEntry && child != null
+      ? child!.cachedType
+      : this;
 
   String getCType(Writer w) {
     switch (broadType) {
