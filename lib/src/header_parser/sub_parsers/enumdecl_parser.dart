@@ -51,21 +51,10 @@ EnumClass? parseEnumDeclaration(
     enumName = '';
   }
 
-  final debug = enumName == 'CXTUResourceUsageKind';
-  if (debug) {
-    print(">>>>>> ${cursor.completeStringRepr()}   $ignoreFilter    ${shouldIncludeEnumClass(enumUsr, enumName)}");
-  }
-
   if (enumName.isEmpty) {
     _logger.fine('Saving anonymous enum.');
     saveUnNamedEnum(cursor);
-    if (debug) {
-      print("   >>>>>>> Anonymous enum: ${cursor.completeStringRepr()}   $ignoreFilter    ${shouldIncludeEnumClass(enumUsr, enumName)}");
-    }
   } else if (ignoreFilter || shouldIncludeEnumClass(enumUsr, enumName)) {
-    if (debug) {
-      print("   >>>>>>> Including enum: ${cursor.completeStringRepr()}   $ignoreFilter    ${shouldIncludeEnumClass(enumUsr, enumName)}");
-    }
     _logger.fine('++++ Adding Enum: ${cursor.completeStringRepr()}');
     _stack.top.enumClass = EnumClass(
       usr: enumUsr,
@@ -74,10 +63,6 @@ EnumClass? parseEnumDeclaration(
       name: config.enumClassDecl.renameUsingConfig(enumName),
     );
     _addEnumConstant(cursor);
-  } else {
-    if (debug) {
-      print("   >>>>>>> Excluding enum: ${cursor.completeStringRepr()}   $ignoreFilter    ${shouldIncludeEnumClass(enumUsr, enumName)}");
-    }
   }
 
   return _stack.pop().enumClass;

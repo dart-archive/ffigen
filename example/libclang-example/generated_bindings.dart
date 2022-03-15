@@ -7966,6 +7966,26 @@ typedef NativeClang_getDiagnosticInSet = CXDiagnostic Function(
     CXDiagnosticSet Diags, pkg_ffi.UnsignedInt Index);
 typedef DartClang_getDiagnosticInSet = CXDiagnostic Function(
     CXDiagnosticSet Diags, int Index);
+
+/// Describes the kind of error that occurred (if any) in a call to
+/// \c clang_loadDiagnostics.
+abstract class CXLoadDiag_Error {
+  /// Indicates that no error occurred.
+  static const int CXLoadDiag_None = 0;
+
+  /// Indicates that an unknown error occurred while attempting to
+  /// deserialize diagnostics.
+  static const int CXLoadDiag_Unknown = 1;
+
+  /// Indicates that the file containing the serialized diagnostics
+  /// could not be opened.
+  static const int CXLoadDiag_CannotLoad = 2;
+
+  /// Indicates that the serialized diagnostics file is invalid or
+  /// corrupt.
+  static const int CXLoadDiag_InvalidFile = 3;
+}
+
 typedef NativeClang_loadDiagnostics = CXDiagnosticSet Function(
     ffi.Pointer<pkg_ffi.Char> file,
     ffi.Pointer<ffi.Int32> error,
@@ -8002,6 +8022,30 @@ typedef DartClang_formatDiagnostic = CXString Function(
 typedef NativeClang_defaultDiagnosticDisplayOptions = pkg_ffi.UnsignedInt
     Function();
 typedef DartClang_defaultDiagnosticDisplayOptions = int Function();
+
+/// Describes the severity of a particular diagnostic.
+abstract class CXDiagnosticSeverity {
+  /// A diagnostic that has been suppressed, e.g., by a command-line
+  /// option.
+  static const int CXDiagnostic_Ignored = 0;
+
+  /// This diagnostic is a note that should be attached to the
+  /// previous (non-note) diagnostic.
+  static const int CXDiagnostic_Note = 1;
+
+  /// This diagnostic indicates suspicious code that may not be
+  /// wrong.
+  static const int CXDiagnostic_Warning = 2;
+
+  /// This diagnostic indicates that the code is ill-formed.
+  static const int CXDiagnostic_Error = 3;
+
+  /// This diagnostic indicates that the code is ill-formed such
+  /// that future parser recovery is unlikely to produce useful
+  /// results.
+  static const int CXDiagnostic_Fatal = 4;
+}
+
 typedef NativeClang_getDiagnosticSeverity = ffi.Int32 Function(
     CXDiagnostic arg0);
 typedef DartClang_getDiagnosticSeverity = int Function(CXDiagnostic arg0);
@@ -8187,6 +8231,29 @@ typedef DartClang_reparseTranslationUnit = int Function(
     int num_unsaved_files,
     ffi.Pointer<CXUnsavedFile> unsaved_files,
     int options);
+
+/// Categorizes how memory is being used by a translation unit.
+abstract class CXTUResourceUsageKind {
+  static const int CXTUResourceUsage_AST = 1;
+  static const int CXTUResourceUsage_Identifiers = 2;
+  static const int CXTUResourceUsage_Selectors = 3;
+  static const int CXTUResourceUsage_GlobalCompletionResults = 4;
+  static const int CXTUResourceUsage_SourceManagerContentCache = 5;
+  static const int CXTUResourceUsage_AST_SideTables = 6;
+  static const int CXTUResourceUsage_SourceManager_Membuffer_Malloc = 7;
+  static const int CXTUResourceUsage_SourceManager_Membuffer_MMap = 8;
+  static const int CXTUResourceUsage_ExternalASTSource_Membuffer_Malloc = 9;
+  static const int CXTUResourceUsage_ExternalASTSource_Membuffer_MMap = 10;
+  static const int CXTUResourceUsage_Preprocessor = 11;
+  static const int CXTUResourceUsage_PreprocessingRecord = 12;
+  static const int CXTUResourceUsage_SourceManager_DataStructures = 13;
+  static const int CXTUResourceUsage_Preprocessor_HeaderSearch = 14;
+  static const int CXTUResourceUsage_MEMORY_IN_BYTES_BEGIN = 1;
+  static const int CXTUResourceUsage_MEMORY_IN_BYTES_END = 14;
+  static const int CXTUResourceUsage_First = 1;
+  static const int CXTUResourceUsage_Last = 14;
+}
+
 typedef NativeClang_getTUResourceUsageName = ffi.Pointer<pkg_ffi.Char> Function(
     ffi.Int32 kind);
 typedef DartClang_getTUResourceUsageName = ffi.Pointer<pkg_ffi.Char> Function(
@@ -8261,6 +8328,792 @@ class CXCursor extends ffi.Struct {
   external ffi.Array<ffi.Pointer<ffi.Void>> data;
 }
 
+/// Describes the kind of entity that a cursor refers to.
+abstract class CXCursorKind {
+  /// A declaration whose specific kind is not exposed via this
+  /// interface.
+  ///
+  /// Unexposed declarations have the same operations as any other kind
+  /// of declaration; one can extract their location information,
+  /// spelling, find their definitions, etc. However, the specific kind
+  /// of the declaration is not reported.
+  static const int CXCursor_UnexposedDecl = 1;
+
+  /// A C or C++ struct.
+  static const int CXCursor_StructDecl = 2;
+
+  /// A C or C++ union.
+  static const int CXCursor_UnionDecl = 3;
+
+  /// A C++ class.
+  static const int CXCursor_ClassDecl = 4;
+
+  /// An enumeration.
+  static const int CXCursor_EnumDecl = 5;
+
+  /// A field (in C) or non-static data member (in C++) in a
+  /// struct, union, or C++ class.
+  static const int CXCursor_FieldDecl = 6;
+
+  /// An enumerator constant.
+  static const int CXCursor_EnumConstantDecl = 7;
+
+  /// A function.
+  static const int CXCursor_FunctionDecl = 8;
+
+  /// A variable.
+  static const int CXCursor_VarDecl = 9;
+
+  /// A function or method parameter.
+  static const int CXCursor_ParmDecl = 10;
+
+  /// An Objective-C \@interface.
+  static const int CXCursor_ObjCInterfaceDecl = 11;
+
+  /// An Objective-C \@interface for a category.
+  static const int CXCursor_ObjCCategoryDecl = 12;
+
+  /// An Objective-C \@protocol declaration.
+  static const int CXCursor_ObjCProtocolDecl = 13;
+
+  /// An Objective-C \@property declaration.
+  static const int CXCursor_ObjCPropertyDecl = 14;
+
+  /// An Objective-C instance variable.
+  static const int CXCursor_ObjCIvarDecl = 15;
+
+  /// An Objective-C instance method.
+  static const int CXCursor_ObjCInstanceMethodDecl = 16;
+
+  /// An Objective-C class method.
+  static const int CXCursor_ObjCClassMethodDecl = 17;
+
+  /// An Objective-C \@implementation.
+  static const int CXCursor_ObjCImplementationDecl = 18;
+
+  /// An Objective-C \@implementation for a category.
+  static const int CXCursor_ObjCCategoryImplDecl = 19;
+
+  /// A typedef.
+  static const int CXCursor_TypedefDecl = 20;
+
+  /// A C++ class method.
+  static const int CXCursor_CXXMethod = 21;
+
+  /// A C++ namespace.
+  static const int CXCursor_Namespace = 22;
+
+  /// A linkage specification, e.g. 'extern "C"'.
+  static const int CXCursor_LinkageSpec = 23;
+
+  /// A C++ constructor.
+  static const int CXCursor_Constructor = 24;
+
+  /// A C++ destructor.
+  static const int CXCursor_Destructor = 25;
+
+  /// A C++ conversion function.
+  static const int CXCursor_ConversionFunction = 26;
+
+  /// A C++ template type parameter.
+  static const int CXCursor_TemplateTypeParameter = 27;
+
+  /// A C++ non-type template parameter.
+  static const int CXCursor_NonTypeTemplateParameter = 28;
+
+  /// A C++ template template parameter.
+  static const int CXCursor_TemplateTemplateParameter = 29;
+
+  /// A C++ function template.
+  static const int CXCursor_FunctionTemplate = 30;
+
+  /// A C++ class template.
+  static const int CXCursor_ClassTemplate = 31;
+
+  /// A C++ class template partial specialization.
+  static const int CXCursor_ClassTemplatePartialSpecialization = 32;
+
+  /// A C++ namespace alias declaration.
+  static const int CXCursor_NamespaceAlias = 33;
+
+  /// A C++ using directive.
+  static const int CXCursor_UsingDirective = 34;
+
+  /// A C++ using declaration.
+  static const int CXCursor_UsingDeclaration = 35;
+
+  /// A C++ alias declaration
+  static const int CXCursor_TypeAliasDecl = 36;
+
+  /// An Objective-C \@synthesize definition.
+  static const int CXCursor_ObjCSynthesizeDecl = 37;
+
+  /// An Objective-C \@dynamic definition.
+  static const int CXCursor_ObjCDynamicDecl = 38;
+
+  /// An access specifier.
+  static const int CXCursor_CXXAccessSpecifier = 39;
+  static const int CXCursor_FirstDecl = 1;
+  static const int CXCursor_LastDecl = 39;
+  static const int CXCursor_FirstRef = 40;
+  static const int CXCursor_ObjCSuperClassRef = 40;
+  static const int CXCursor_ObjCProtocolRef = 41;
+  static const int CXCursor_ObjCClassRef = 42;
+
+  /// A reference to a type declaration.
+  ///
+  /// A type reference occurs anywhere where a type is named but not
+  /// declared. For example, given:
+  ///
+  /// \code
+  /// typedef unsigned size_type;
+  /// size_type size;
+  /// \endcode
+  ///
+  /// The typedef is a declaration of size_type (CXCursor_TypedefDecl),
+  /// while the type of the variable "size" is referenced. The cursor
+  /// referenced by the type of size is the typedef for size_type.
+  static const int CXCursor_TypeRef = 43;
+  static const int CXCursor_CXXBaseSpecifier = 44;
+
+  /// A reference to a class template, function template, template
+  /// template parameter, or class template partial specialization.
+  static const int CXCursor_TemplateRef = 45;
+
+  /// A reference to a namespace or namespace alias.
+  static const int CXCursor_NamespaceRef = 46;
+
+  /// A reference to a member of a struct, union, or class that occurs in
+  /// some non-expression context, e.g., a designated initializer.
+  static const int CXCursor_MemberRef = 47;
+
+  /// A reference to a labeled statement.
+  ///
+  /// This cursor kind is used to describe the jump to "start_over" in the
+  /// goto statement in the following example:
+  ///
+  /// \code
+  /// start_over:
+  /// ++counter;
+  ///
+  /// goto start_over;
+  /// \endcode
+  ///
+  /// A label reference cursor refers to a label statement.
+  static const int CXCursor_LabelRef = 48;
+
+  /// A reference to a set of overloaded functions or function templates
+  /// that has not yet been resolved to a specific function or function template.
+  ///
+  /// An overloaded declaration reference cursor occurs in C++ templates where
+  /// a dependent name refers to a function. For example:
+  ///
+  /// \code
+  /// template<typename T> void swap(T&, T&);
+  ///
+  /// struct X { ... };
+  /// void swap(X&, X&);
+  ///
+  /// template<typename T>
+  /// void reverse(T* first, T* last) {
+  /// while (first < last - 1) {
+  /// swap(*first, *--last);
+  /// ++first;
+  /// }
+  /// }
+  ///
+  /// struct Y { };
+  /// void swap(Y&, Y&);
+  /// \endcode
+  ///
+  /// Here, the identifier "swap" is associated with an overloaded declaration
+  /// reference. In the template definition, "swap" refers to either of the two
+  /// "swap" functions declared above, so both results will be available. At
+  /// instantiation time, "swap" may also refer to other functions found via
+  /// argument-dependent lookup (e.g., the "swap" function at the end of the
+  /// example).
+  ///
+  /// The functions \c clang_getNumOverloadedDecls() and
+  /// \c clang_getOverloadedDecl() can be used to retrieve the definitions
+  /// referenced by this cursor.
+  static const int CXCursor_OverloadedDeclRef = 49;
+
+  /// A reference to a variable that occurs in some non-expression
+  /// context, e.g., a C++ lambda capture list.
+  static const int CXCursor_VariableRef = 50;
+  static const int CXCursor_LastRef = 50;
+  static const int CXCursor_FirstInvalid = 70;
+  static const int CXCursor_InvalidFile = 70;
+  static const int CXCursor_NoDeclFound = 71;
+  static const int CXCursor_NotImplemented = 72;
+  static const int CXCursor_InvalidCode = 73;
+  static const int CXCursor_LastInvalid = 73;
+  static const int CXCursor_FirstExpr = 100;
+
+  /// An expression whose specific kind is not exposed via this
+  /// interface.
+  ///
+  /// Unexposed expressions have the same operations as any other kind
+  /// of expression; one can extract their location information,
+  /// spelling, children, etc. However, the specific kind of the
+  /// expression is not reported.
+  static const int CXCursor_UnexposedExpr = 100;
+
+  /// An expression that refers to some value declaration, such
+  /// as a function, variable, or enumerator.
+  static const int CXCursor_DeclRefExpr = 101;
+
+  /// An expression that refers to a member of a struct, union,
+  /// class, Objective-C class, etc.
+  static const int CXCursor_MemberRefExpr = 102;
+
+  /// An expression that calls a function.
+  static const int CXCursor_CallExpr = 103;
+
+  /// An expression that sends a message to an Objective-C
+  /// object or class.
+  static const int CXCursor_ObjCMessageExpr = 104;
+
+  /// An expression that represents a block literal.
+  static const int CXCursor_BlockExpr = 105;
+
+  /// An integer literal.
+  static const int CXCursor_IntegerLiteral = 106;
+
+  /// A floating point number literal.
+  static const int CXCursor_FloatingLiteral = 107;
+
+  /// An imaginary number literal.
+  static const int CXCursor_ImaginaryLiteral = 108;
+
+  /// A string literal.
+  static const int CXCursor_StringLiteral = 109;
+
+  /// A character literal.
+  static const int CXCursor_CharacterLiteral = 110;
+
+  /// A parenthesized expression, e.g. "(1)".
+  ///
+  /// This AST node is only formed if full location information is requested.
+  static const int CXCursor_ParenExpr = 111;
+
+  /// This represents the unary-expression's (except sizeof and
+  /// alignof).
+  static const int CXCursor_UnaryOperator = 112;
+
+  /// [C99 6.5.2.1] Array Subscripting.
+  static const int CXCursor_ArraySubscriptExpr = 113;
+
+  /// A builtin binary operation expression such as "x + y" or
+  /// "x <= y".
+  static const int CXCursor_BinaryOperator = 114;
+
+  /// Compound assignment such as "+=".
+  static const int CXCursor_CompoundAssignOperator = 115;
+
+  /// The ?: ternary operator.
+  static const int CXCursor_ConditionalOperator = 116;
+
+  /// An explicit cast in C (C99 6.5.4) or a C-style cast in C++
+  /// (C++ [expr.cast]), which uses the syntax (Type)expr.
+  ///
+  /// For example: (int)f.
+  static const int CXCursor_CStyleCastExpr = 117;
+
+  /// [C99 6.5.2.5]
+  static const int CXCursor_CompoundLiteralExpr = 118;
+
+  /// Describes an C or C++ initializer list.
+  static const int CXCursor_InitListExpr = 119;
+
+  /// The GNU address of label extension, representing &&label.
+  static const int CXCursor_AddrLabelExpr = 120;
+
+  /// This is the GNU Statement Expression extension: ({int X=4; X;})
+  static const int CXCursor_StmtExpr = 121;
+
+  /// Represents a C11 generic selection.
+  static const int CXCursor_GenericSelectionExpr = 122;
+
+  /// Implements the GNU __null extension, which is a name for a null
+  /// pointer constant that has integral type (e.g., int or long) and is the same
+  /// size and alignment as a pointer.
+  ///
+  /// The __null extension is typically only used by system headers, which define
+  /// NULL as __null in C++ rather than using 0 (which is an integer that may not
+  /// match the size of a pointer).
+  static const int CXCursor_GNUNullExpr = 123;
+
+  /// C++'s static_cast<> expression.
+  static const int CXCursor_CXXStaticCastExpr = 124;
+
+  /// C++'s dynamic_cast<> expression.
+  static const int CXCursor_CXXDynamicCastExpr = 125;
+
+  /// C++'s reinterpret_cast<> expression.
+  static const int CXCursor_CXXReinterpretCastExpr = 126;
+
+  /// C++'s const_cast<> expression.
+  static const int CXCursor_CXXConstCastExpr = 127;
+
+  /// Represents an explicit C++ type conversion that uses "functional"
+  /// notion (C++ [expr.type.conv]).
+  ///
+  /// Example:
+  /// \code
+  /// x = int(0.5);
+  /// \endcode
+  static const int CXCursor_CXXFunctionalCastExpr = 128;
+
+  /// A C++ typeid expression (C++ [expr.typeid]).
+  static const int CXCursor_CXXTypeidExpr = 129;
+
+  /// [C++ 2.13.5] C++ Boolean Literal.
+  static const int CXCursor_CXXBoolLiteralExpr = 130;
+
+  /// [C++0x 2.14.7] C++ Pointer Literal.
+  static const int CXCursor_CXXNullPtrLiteralExpr = 131;
+
+  /// Represents the "this" expression in C++
+  static const int CXCursor_CXXThisExpr = 132;
+
+  /// [C++ 15] C++ Throw Expression.
+  ///
+  /// This handles 'throw' and 'throw' assignment-expression. When
+  /// assignment-expression isn't present, Op will be null.
+  static const int CXCursor_CXXThrowExpr = 133;
+
+  /// A new expression for memory allocation and constructor calls, e.g:
+  /// "new CXXNewExpr(foo)".
+  static const int CXCursor_CXXNewExpr = 134;
+
+  /// A delete expression for memory deallocation and destructor calls,
+  /// e.g. "delete[] pArray".
+  static const int CXCursor_CXXDeleteExpr = 135;
+
+  /// A unary expression. (noexcept, sizeof, or other traits)
+  static const int CXCursor_UnaryExpr = 136;
+
+  /// An Objective-C string literal i.e. @"foo".
+  static const int CXCursor_ObjCStringLiteral = 137;
+
+  /// An Objective-C \@encode expression.
+  static const int CXCursor_ObjCEncodeExpr = 138;
+
+  /// An Objective-C \@selector expression.
+  static const int CXCursor_ObjCSelectorExpr = 139;
+
+  /// An Objective-C \@protocol expression.
+  static const int CXCursor_ObjCProtocolExpr = 140;
+
+  /// An Objective-C "bridged" cast expression, which casts between
+  /// Objective-C pointers and C pointers, transferring ownership in the process.
+  ///
+  /// \code
+  /// NSString *str = (__bridge_transfer NSString *)CFCreateString();
+  /// \endcode
+  static const int CXCursor_ObjCBridgedCastExpr = 141;
+
+  /// Represents a C++0x pack expansion that produces a sequence of
+  /// expressions.
+  ///
+  /// A pack expansion expression contains a pattern (which itself is an
+  /// expression) followed by an ellipsis. For example:
+  ///
+  /// \code
+  /// template<typename F, typename ...Types>
+  /// void forward(F f, Types &&...args) {
+  /// f(static_cast<Types&&>(args)...);
+  /// }
+  /// \endcode
+  static const int CXCursor_PackExpansionExpr = 142;
+
+  /// Represents an expression that computes the length of a parameter
+  /// pack.
+  ///
+  /// \code
+  /// template<typename ...Types>
+  /// struct count {
+  /// static const unsigned value = sizeof...(Types);
+  /// };
+  /// \endcode
+  static const int CXCursor_SizeOfPackExpr = 143;
+  static const int CXCursor_LambdaExpr = 144;
+
+  /// Objective-c Boolean Literal.
+  static const int CXCursor_ObjCBoolLiteralExpr = 145;
+
+  /// Represents the "self" expression in an Objective-C method.
+  static const int CXCursor_ObjCSelfExpr = 146;
+
+  /// OpenMP 4.0 [2.4, Array Section].
+  static const int CXCursor_OMPArraySectionExpr = 147;
+
+  /// Represents an @available(...) check.
+  static const int CXCursor_ObjCAvailabilityCheckExpr = 148;
+
+  /// Fixed point literal
+  static const int CXCursor_FixedPointLiteral = 149;
+  static const int CXCursor_LastExpr = 149;
+  static const int CXCursor_FirstStmt = 200;
+
+  /// A statement whose specific kind is not exposed via this
+  /// interface.
+  ///
+  /// Unexposed statements have the same operations as any other kind of
+  /// statement; one can extract their location information, spelling,
+  /// children, etc. However, the specific kind of the statement is not
+  /// reported.
+  static const int CXCursor_UnexposedStmt = 200;
+
+  /// A labelled statement in a function.
+  ///
+  /// This cursor kind is used to describe the "start_over:" label statement in
+  /// the following example:
+  ///
+  /// \code
+  /// start_over:
+  /// ++counter;
+  /// \endcode
+  static const int CXCursor_LabelStmt = 201;
+
+  /// A group of statements like { stmt stmt }.
+  ///
+  /// This cursor kind is used to describe compound statements, e.g. function
+  /// bodies.
+  static const int CXCursor_CompoundStmt = 202;
+
+  /// A case statement.
+  static const int CXCursor_CaseStmt = 203;
+
+  /// A default statement.
+  static const int CXCursor_DefaultStmt = 204;
+
+  /// An if statement
+  static const int CXCursor_IfStmt = 205;
+
+  /// A switch statement.
+  static const int CXCursor_SwitchStmt = 206;
+
+  /// A while statement.
+  static const int CXCursor_WhileStmt = 207;
+
+  /// A do statement.
+  static const int CXCursor_DoStmt = 208;
+
+  /// A for statement.
+  static const int CXCursor_ForStmt = 209;
+
+  /// A goto statement.
+  static const int CXCursor_GotoStmt = 210;
+
+  /// An indirect goto statement.
+  static const int CXCursor_IndirectGotoStmt = 211;
+
+  /// A continue statement.
+  static const int CXCursor_ContinueStmt = 212;
+
+  /// A break statement.
+  static const int CXCursor_BreakStmt = 213;
+
+  /// A return statement.
+  static const int CXCursor_ReturnStmt = 214;
+
+  /// A GCC inline assembly statement extension.
+  static const int CXCursor_GCCAsmStmt = 215;
+  static const int CXCursor_AsmStmt = 215;
+
+  /// Objective-C's overall \@try-\@catch-\@finally statement.
+  static const int CXCursor_ObjCAtTryStmt = 216;
+
+  /// Objective-C's \@catch statement.
+  static const int CXCursor_ObjCAtCatchStmt = 217;
+
+  /// Objective-C's \@finally statement.
+  static const int CXCursor_ObjCAtFinallyStmt = 218;
+
+  /// Objective-C's \@throw statement.
+  static const int CXCursor_ObjCAtThrowStmt = 219;
+
+  /// Objective-C's \@synchronized statement.
+  static const int CXCursor_ObjCAtSynchronizedStmt = 220;
+
+  /// Objective-C's autorelease pool statement.
+  static const int CXCursor_ObjCAutoreleasePoolStmt = 221;
+
+  /// Objective-C's collection statement.
+  static const int CXCursor_ObjCForCollectionStmt = 222;
+
+  /// C++'s catch statement.
+  static const int CXCursor_CXXCatchStmt = 223;
+
+  /// C++'s try statement.
+  static const int CXCursor_CXXTryStmt = 224;
+
+  /// C++'s for (* : *) statement.
+  static const int CXCursor_CXXForRangeStmt = 225;
+
+  /// Windows Structured Exception Handling's try statement.
+  static const int CXCursor_SEHTryStmt = 226;
+
+  /// Windows Structured Exception Handling's except statement.
+  static const int CXCursor_SEHExceptStmt = 227;
+
+  /// Windows Structured Exception Handling's finally statement.
+  static const int CXCursor_SEHFinallyStmt = 228;
+
+  /// A MS inline assembly statement extension.
+  static const int CXCursor_MSAsmStmt = 229;
+
+  /// The null statement ";": C99 6.8.3p3.
+  ///
+  /// This cursor kind is used to describe the null statement.
+  static const int CXCursor_NullStmt = 230;
+
+  /// Adaptor class for mixing declarations with statements and
+  /// expressions.
+  static const int CXCursor_DeclStmt = 231;
+
+  /// OpenMP parallel directive.
+  static const int CXCursor_OMPParallelDirective = 232;
+
+  /// OpenMP SIMD directive.
+  static const int CXCursor_OMPSimdDirective = 233;
+
+  /// OpenMP for directive.
+  static const int CXCursor_OMPForDirective = 234;
+
+  /// OpenMP sections directive.
+  static const int CXCursor_OMPSectionsDirective = 235;
+
+  /// OpenMP section directive.
+  static const int CXCursor_OMPSectionDirective = 236;
+
+  /// OpenMP single directive.
+  static const int CXCursor_OMPSingleDirective = 237;
+
+  /// OpenMP parallel for directive.
+  static const int CXCursor_OMPParallelForDirective = 238;
+
+  /// OpenMP parallel sections directive.
+  static const int CXCursor_OMPParallelSectionsDirective = 239;
+
+  /// OpenMP task directive.
+  static const int CXCursor_OMPTaskDirective = 240;
+
+  /// OpenMP master directive.
+  static const int CXCursor_OMPMasterDirective = 241;
+
+  /// OpenMP critical directive.
+  static const int CXCursor_OMPCriticalDirective = 242;
+
+  /// OpenMP taskyield directive.
+  static const int CXCursor_OMPTaskyieldDirective = 243;
+
+  /// OpenMP barrier directive.
+  static const int CXCursor_OMPBarrierDirective = 244;
+
+  /// OpenMP taskwait directive.
+  static const int CXCursor_OMPTaskwaitDirective = 245;
+
+  /// OpenMP flush directive.
+  static const int CXCursor_OMPFlushDirective = 246;
+
+  /// Windows Structured Exception Handling's leave statement.
+  static const int CXCursor_SEHLeaveStmt = 247;
+
+  /// OpenMP ordered directive.
+  static const int CXCursor_OMPOrderedDirective = 248;
+
+  /// OpenMP atomic directive.
+  static const int CXCursor_OMPAtomicDirective = 249;
+
+  /// OpenMP for SIMD directive.
+  static const int CXCursor_OMPForSimdDirective = 250;
+
+  /// OpenMP parallel for SIMD directive.
+  static const int CXCursor_OMPParallelForSimdDirective = 251;
+
+  /// OpenMP target directive.
+  static const int CXCursor_OMPTargetDirective = 252;
+
+  /// OpenMP teams directive.
+  static const int CXCursor_OMPTeamsDirective = 253;
+
+  /// OpenMP taskgroup directive.
+  static const int CXCursor_OMPTaskgroupDirective = 254;
+
+  /// OpenMP cancellation point directive.
+  static const int CXCursor_OMPCancellationPointDirective = 255;
+
+  /// OpenMP cancel directive.
+  static const int CXCursor_OMPCancelDirective = 256;
+
+  /// OpenMP target data directive.
+  static const int CXCursor_OMPTargetDataDirective = 257;
+
+  /// OpenMP taskloop directive.
+  static const int CXCursor_OMPTaskLoopDirective = 258;
+
+  /// OpenMP taskloop simd directive.
+  static const int CXCursor_OMPTaskLoopSimdDirective = 259;
+
+  /// OpenMP distribute directive.
+  static const int CXCursor_OMPDistributeDirective = 260;
+
+  /// OpenMP target enter data directive.
+  static const int CXCursor_OMPTargetEnterDataDirective = 261;
+
+  /// OpenMP target exit data directive.
+  static const int CXCursor_OMPTargetExitDataDirective = 262;
+
+  /// OpenMP target parallel directive.
+  static const int CXCursor_OMPTargetParallelDirective = 263;
+
+  /// OpenMP target parallel for directive.
+  static const int CXCursor_OMPTargetParallelForDirective = 264;
+
+  /// OpenMP target update directive.
+  static const int CXCursor_OMPTargetUpdateDirective = 265;
+
+  /// OpenMP distribute parallel for directive.
+  static const int CXCursor_OMPDistributeParallelForDirective = 266;
+
+  /// OpenMP distribute parallel for simd directive.
+  static const int CXCursor_OMPDistributeParallelForSimdDirective = 267;
+
+  /// OpenMP distribute simd directive.
+  static const int CXCursor_OMPDistributeSimdDirective = 268;
+
+  /// OpenMP target parallel for simd directive.
+  static const int CXCursor_OMPTargetParallelForSimdDirective = 269;
+
+  /// OpenMP target simd directive.
+  static const int CXCursor_OMPTargetSimdDirective = 270;
+
+  /// OpenMP teams distribute directive.
+  static const int CXCursor_OMPTeamsDistributeDirective = 271;
+
+  /// OpenMP teams distribute simd directive.
+  static const int CXCursor_OMPTeamsDistributeSimdDirective = 272;
+
+  /// OpenMP teams distribute parallel for simd directive.
+  static const int CXCursor_OMPTeamsDistributeParallelForSimdDirective = 273;
+
+  /// OpenMP teams distribute parallel for directive.
+  static const int CXCursor_OMPTeamsDistributeParallelForDirective = 274;
+
+  /// OpenMP target teams directive.
+  static const int CXCursor_OMPTargetTeamsDirective = 275;
+
+  /// OpenMP target teams distribute directive.
+  static const int CXCursor_OMPTargetTeamsDistributeDirective = 276;
+
+  /// OpenMP target teams distribute parallel for directive.
+  static const int CXCursor_OMPTargetTeamsDistributeParallelForDirective = 277;
+
+  /// OpenMP target teams distribute parallel for simd directive.
+  static const int CXCursor_OMPTargetTeamsDistributeParallelForSimdDirective =
+      278;
+
+  /// OpenMP target teams distribute simd directive.
+  static const int CXCursor_OMPTargetTeamsDistributeSimdDirective = 279;
+
+  /// C++2a std::bit_cast expression.
+  static const int CXCursor_BuiltinBitCastExpr = 280;
+
+  /// OpenMP master taskloop directive.
+  static const int CXCursor_OMPMasterTaskLoopDirective = 281;
+
+  /// OpenMP parallel master taskloop directive.
+  static const int CXCursor_OMPParallelMasterTaskLoopDirective = 282;
+
+  /// OpenMP master taskloop simd directive.
+  static const int CXCursor_OMPMasterTaskLoopSimdDirective = 283;
+
+  /// OpenMP parallel master taskloop simd directive.
+  static const int CXCursor_OMPParallelMasterTaskLoopSimdDirective = 284;
+
+  /// OpenMP parallel master directive.
+  static const int CXCursor_OMPParallelMasterDirective = 285;
+  static const int CXCursor_LastStmt = 285;
+
+  /// Cursor that represents the translation unit itself.
+  ///
+  /// The translation unit cursor exists primarily to act as the root
+  /// cursor for traversing the contents of a translation unit.
+  static const int CXCursor_TranslationUnit = 300;
+  static const int CXCursor_FirstAttr = 400;
+
+  /// An attribute whose specific kind is not exposed via this
+  /// interface.
+  static const int CXCursor_UnexposedAttr = 400;
+  static const int CXCursor_IBActionAttr = 401;
+  static const int CXCursor_IBOutletAttr = 402;
+  static const int CXCursor_IBOutletCollectionAttr = 403;
+  static const int CXCursor_CXXFinalAttr = 404;
+  static const int CXCursor_CXXOverrideAttr = 405;
+  static const int CXCursor_AnnotateAttr = 406;
+  static const int CXCursor_AsmLabelAttr = 407;
+  static const int CXCursor_PackedAttr = 408;
+  static const int CXCursor_PureAttr = 409;
+  static const int CXCursor_ConstAttr = 410;
+  static const int CXCursor_NoDuplicateAttr = 411;
+  static const int CXCursor_CUDAConstantAttr = 412;
+  static const int CXCursor_CUDADeviceAttr = 413;
+  static const int CXCursor_CUDAGlobalAttr = 414;
+  static const int CXCursor_CUDAHostAttr = 415;
+  static const int CXCursor_CUDASharedAttr = 416;
+  static const int CXCursor_VisibilityAttr = 417;
+  static const int CXCursor_DLLExport = 418;
+  static const int CXCursor_DLLImport = 419;
+  static const int CXCursor_NSReturnsRetained = 420;
+  static const int CXCursor_NSReturnsNotRetained = 421;
+  static const int CXCursor_NSReturnsAutoreleased = 422;
+  static const int CXCursor_NSConsumesSelf = 423;
+  static const int CXCursor_NSConsumed = 424;
+  static const int CXCursor_ObjCException = 425;
+  static const int CXCursor_ObjCNSObject = 426;
+  static const int CXCursor_ObjCIndependentClass = 427;
+  static const int CXCursor_ObjCPreciseLifetime = 428;
+  static const int CXCursor_ObjCReturnsInnerPointer = 429;
+  static const int CXCursor_ObjCRequiresSuper = 430;
+  static const int CXCursor_ObjCRootClass = 431;
+  static const int CXCursor_ObjCSubclassingRestricted = 432;
+  static const int CXCursor_ObjCExplicitProtocolImpl = 433;
+  static const int CXCursor_ObjCDesignatedInitializer = 434;
+  static const int CXCursor_ObjCRuntimeVisible = 435;
+  static const int CXCursor_ObjCBoxable = 436;
+  static const int CXCursor_FlagEnum = 437;
+  static const int CXCursor_ConvergentAttr = 438;
+  static const int CXCursor_WarnUnusedAttr = 439;
+  static const int CXCursor_WarnUnusedResultAttr = 440;
+  static const int CXCursor_AlignedAttr = 441;
+  static const int CXCursor_LastAttr = 441;
+  static const int CXCursor_PreprocessingDirective = 500;
+  static const int CXCursor_MacroDefinition = 501;
+  static const int CXCursor_MacroExpansion = 502;
+  static const int CXCursor_MacroInstantiation = 502;
+  static const int CXCursor_InclusionDirective = 503;
+  static const int CXCursor_FirstPreprocessing = 500;
+  static const int CXCursor_LastPreprocessing = 503;
+
+  /// A module import declaration.
+  static const int CXCursor_ModuleImportDecl = 600;
+  static const int CXCursor_TypeAliasTemplateDecl = 601;
+
+  /// A static_assert or _Static_assert node
+  static const int CXCursor_StaticAssert = 602;
+
+  /// a friend declaration.
+  static const int CXCursor_FriendDecl = 603;
+  static const int CXCursor_FirstExtraDecl = 600;
+  static const int CXCursor_LastExtraDecl = 603;
+
+  /// A code completion overload candidate.
+  static const int CXCursor_OverloadCandidate = 700;
+}
+
 typedef NativeClang_getNullCursor = CXCursor Function();
 typedef DartClang_getNullCursor = CXCursor Function();
 typedef NativeClang_getTranslationUnitCursor = CXCursor Function(
@@ -8302,10 +9155,68 @@ typedef NativeClang_isPreprocessing = pkg_ffi.UnsignedInt Function(
 typedef DartClang_isPreprocessing = int Function(int arg0);
 typedef NativeClang_isUnexposed = pkg_ffi.UnsignedInt Function(ffi.Int32 arg0);
 typedef DartClang_isUnexposed = int Function(int arg0);
+
+/// Describe the linkage of the entity referred to by a cursor.
+abstract class CXLinkageKind {
+  /// This value indicates that no linkage information is available
+  /// for a provided CXCursor.
+  static const int CXLinkage_Invalid = 0;
+
+  /// This is the linkage for variables, parameters, and so on that
+  /// have automatic storage.  This covers normal (non-extern) local variables.
+  static const int CXLinkage_NoLinkage = 1;
+
+  /// This is the linkage for static variables and static functions.
+  static const int CXLinkage_Internal = 2;
+
+  /// This is the linkage for entities with external linkage that live
+  /// in C++ anonymous namespaces.
+  static const int CXLinkage_UniqueExternal = 3;
+
+  /// This is the linkage for entities with true, external linkage.
+  static const int CXLinkage_External = 4;
+}
+
 typedef NativeClang_getCursorLinkage = ffi.Int32 Function(CXCursor cursor);
 typedef DartClang_getCursorLinkage = int Function(CXCursor cursor);
+
+abstract class CXVisibilityKind {
+  /// This value indicates that no visibility information is available
+  /// for a provided CXCursor.
+  static const int CXVisibility_Invalid = 0;
+
+  /// Symbol not seen by the linker.
+  static const int CXVisibility_Hidden = 1;
+
+  /// Symbol seen by the linker but resolves to a symbol inside this object.
+  static const int CXVisibility_Protected = 2;
+
+  /// Symbol seen by the linker and acts like a normal symbol.
+  static const int CXVisibility_Default = 3;
+}
+
 typedef NativeClang_getCursorVisibility = ffi.Int32 Function(CXCursor cursor);
 typedef DartClang_getCursorVisibility = int Function(CXCursor cursor);
+
+/// Describes the availability of a particular entity, which indicates
+/// whether the use of this entity will result in a warning or error due to
+/// it being deprecated or unavailable.
+abstract class CXAvailabilityKind {
+  /// The entity is available.
+  static const int CXAvailability_Available = 0;
+
+  /// The entity is available, but has been deprecated (and its use is
+  /// not recommended).
+  static const int CXAvailability_Deprecated = 1;
+
+  /// The entity is not available; any use of it will be an error.
+  static const int CXAvailability_NotAvailable = 2;
+
+  /// The entity is available, but not accessible; any use of it will be
+  /// an error.
+  static const int CXAvailability_NotAccessible = 3;
+}
+
 typedef NativeClang_getCursorAvailability = ffi.Int32 Function(CXCursor cursor);
 typedef DartClang_getCursorAvailability = int Function(CXCursor cursor);
 
@@ -8358,8 +9269,26 @@ typedef NativeClang_disposeCXPlatformAvailability = ffi.Void Function(
     ffi.Pointer<CXPlatformAvailability> availability);
 typedef DartClang_disposeCXPlatformAvailability = void Function(
     ffi.Pointer<CXPlatformAvailability> availability);
+
+/// Describe the "language" of the entity referred to by a cursor.
+abstract class CXLanguageKind {
+  static const int CXLanguage_Invalid = 0;
+  static const int CXLanguage_C = 1;
+  static const int CXLanguage_ObjC = 2;
+  static const int CXLanguage_CPlusPlus = 3;
+}
+
 typedef NativeClang_getCursorLanguage = ffi.Int32 Function(CXCursor cursor);
 typedef DartClang_getCursorLanguage = int Function(CXCursor cursor);
+
+/// Describe the "thread-local storage (TLS) kind" of the declaration
+/// referred to by a cursor.
+abstract class CXTLSKind {
+  static const int CXTLS_None = 0;
+  static const int CXTLS_Dynamic = 1;
+  static const int CXTLS_Static = 2;
+}
+
 typedef NativeClang_getCursorTLSKind = ffi.Int32 Function(CXCursor cursor);
 typedef DartClang_getCursorTLSKind = int Function(CXCursor cursor);
 typedef NativeClang_Cursor_getTranslationUnit = CXTranslationUnit Function(
@@ -8573,6 +9502,24 @@ typedef DartClang_Cursor_getArgument = CXCursor Function(CXCursor C, int i);
 typedef NativeClang_Cursor_getNumTemplateArguments = pkg_ffi.Int Function(
     CXCursor C);
 typedef DartClang_Cursor_getNumTemplateArguments = int Function(CXCursor C);
+
+/// Describes the kind of a template argument.
+///
+/// See the definition of llvm::clang::TemplateArgument::ArgKind for full
+/// element descriptions.
+abstract class CXTemplateArgumentKind {
+  static const int CXTemplateArgumentKind_Null = 0;
+  static const int CXTemplateArgumentKind_Type = 1;
+  static const int CXTemplateArgumentKind_Declaration = 2;
+  static const int CXTemplateArgumentKind_NullPtr = 3;
+  static const int CXTemplateArgumentKind_Integral = 4;
+  static const int CXTemplateArgumentKind_Template = 5;
+  static const int CXTemplateArgumentKind_TemplateExpansion = 6;
+  static const int CXTemplateArgumentKind_Expression = 7;
+  static const int CXTemplateArgumentKind_Pack = 8;
+  static const int CXTemplateArgumentKind_Invalid = 9;
+}
+
 typedef NativeClang_Cursor_getTemplateArgumentKind = ffi.Int32 Function(
     CXCursor C, pkg_ffi.UnsignedInt I);
 typedef DartClang_Cursor_getTemplateArgumentKind = int Function(
@@ -8626,6 +9573,31 @@ typedef NativeClang_Type_getObjCEncoding = CXString Function(CXType type);
 typedef DartClang_Type_getObjCEncoding = CXString Function(CXType type);
 typedef NativeClang_getTypeKindSpelling = CXString Function(ffi.Int32 K);
 typedef DartClang_getTypeKindSpelling = CXString Function(int K);
+
+/// Describes the calling convention of a function type
+abstract class CXCallingConv {
+  static const int CXCallingConv_Default = 0;
+  static const int CXCallingConv_C = 1;
+  static const int CXCallingConv_X86StdCall = 2;
+  static const int CXCallingConv_X86FastCall = 3;
+  static const int CXCallingConv_X86ThisCall = 4;
+  static const int CXCallingConv_X86Pascal = 5;
+  static const int CXCallingConv_AAPCS = 6;
+  static const int CXCallingConv_AAPCS_VFP = 7;
+  static const int CXCallingConv_X86RegCall = 8;
+  static const int CXCallingConv_IntelOclBicc = 9;
+  static const int CXCallingConv_Win64 = 10;
+  static const int CXCallingConv_X86_64Win64 = 10;
+  static const int CXCallingConv_X86_64SysV = 11;
+  static const int CXCallingConv_X86VectorCall = 12;
+  static const int CXCallingConv_Swift = 13;
+  static const int CXCallingConv_PreserveMost = 14;
+  static const int CXCallingConv_PreserveAll = 15;
+  static const int CXCallingConv_AArch64VectorCall = 16;
+  static const int CXCallingConv_Invalid = 100;
+  static const int CXCallingConv_Unexposed = 200;
+}
+
 typedef NativeClang_getFunctionTypeCallingConv = ffi.Int32 Function(CXType T);
 typedef DartClang_getFunctionTypeCallingConv = int Function(CXType T);
 typedef NativeClang_getResultType = CXType Function(CXType T);
@@ -8676,6 +9648,24 @@ typedef DartClang_Type_getNamedType = CXType Function(CXType T);
 typedef NativeClang_Type_isTransparentTagTypedef = pkg_ffi.UnsignedInt Function(
     CXType T);
 typedef DartClang_Type_isTransparentTagTypedef = int Function(CXType T);
+
+abstract class CXTypeNullabilityKind {
+  /// Values of this type can never be null.
+  static const int CXTypeNullability_NonNull = 0;
+
+  /// Values of this type can be null.
+  static const int CXTypeNullability_Nullable = 1;
+
+  /// Whether values of this type can be null is (explicitly)
+  /// unspecified. This captures a (fairly rare) case where we
+  /// can't conclude anything about the nullability of the type even
+  /// though it has been considered.
+  static const int CXTypeNullability_Unspecified = 2;
+
+  /// Nullability is not applicable to this type.
+  static const int CXTypeNullability_Invalid = 3;
+}
+
 typedef NativeClang_Type_getNullability = ffi.Int32 Function(CXType T);
 typedef DartClang_Type_getNullability = int Function(CXType T);
 typedef NativeClang_Type_getAlignOf = pkg_ffi.LongLong Function(CXType T);
@@ -8709,6 +9699,18 @@ typedef NativeClang_Type_getTemplateArgumentAsType = CXType Function(
     CXType T, pkg_ffi.UnsignedInt i);
 typedef DartClang_Type_getTemplateArgumentAsType = CXType Function(
     CXType T, int i);
+
+abstract class CXRefQualifierKind {
+  /// No ref-qualifier was provided.
+  static const int CXRefQualifier_None = 0;
+
+  /// An lvalue ref-qualifier was provided (\c &).
+  static const int CXRefQualifier_LValue = 1;
+
+  /// An rvalue ref-qualifier was provided (\c &&).
+  static const int CXRefQualifier_RValue = 2;
+}
+
 typedef NativeClang_Type_getCXXRefQualifier = ffi.Int32 Function(CXType T);
 typedef DartClang_Type_getCXXRefQualifier = int Function(CXType T);
 typedef NativeClang_Cursor_isBitField = pkg_ffi.UnsignedInt Function(
@@ -8716,8 +9718,32 @@ typedef NativeClang_Cursor_isBitField = pkg_ffi.UnsignedInt Function(
 typedef DartClang_Cursor_isBitField = int Function(CXCursor C);
 typedef NativeClang_isVirtualBase = pkg_ffi.UnsignedInt Function(CXCursor arg0);
 typedef DartClang_isVirtualBase = int Function(CXCursor arg0);
+
+/// Represents the C++ access control level to a base class for a
+/// cursor with kind CX_CXXBaseSpecifier.
+abstract class CX_CXXAccessSpecifier {
+  static const int CX_CXXInvalidAccessSpecifier = 0;
+  static const int CX_CXXPublic = 1;
+  static const int CX_CXXProtected = 2;
+  static const int CX_CXXPrivate = 3;
+}
+
 typedef NativeClang_getCXXAccessSpecifier = ffi.Int32 Function(CXCursor arg0);
 typedef DartClang_getCXXAccessSpecifier = int Function(CXCursor arg0);
+
+/// Represents the storage classes as declared in the source. CX_SC_Invalid
+/// was added for the case that the passed cursor in not a declaration.
+abstract class CX_StorageClass {
+  static const int CX_SC_Invalid = 0;
+  static const int CX_SC_None = 1;
+  static const int CX_SC_Extern = 2;
+  static const int CX_SC_Static = 3;
+  static const int CX_SC_PrivateExtern = 4;
+  static const int CX_SC_OpenCLWorkGroupLocal = 5;
+  static const int CX_SC_Auto = 6;
+  static const int CX_SC_Register = 7;
+}
+
 typedef NativeClang_Cursor_getStorageClass = ffi.Int32 Function(CXCursor arg0);
 typedef DartClang_Cursor_getStorageClass = int Function(CXCursor arg0);
 typedef NativeClang_getNumOverloadedDecls = pkg_ffi.UnsignedInt Function(
@@ -8742,6 +9768,24 @@ typedef DartClang_getIBOutletCollectionType = CXType Function(CXCursor arg0);
 /// to direct clang_visitCursorChildren().
 typedef CXCursorVisitor = ffi.Pointer<
     ffi.NativeFunction<ffi.Int32 Function(CXCursor, CXCursor, CXClientData)>>;
+
+/// Describes how the traversal of the children of a particular
+/// cursor should proceed after visiting a particular child cursor.
+///
+/// A value of this enumeration type should be returned by each
+/// \c CXCursorVisitor to indicate how clang_visitChildren() proceed.
+abstract class CXChildVisitResult {
+  /// Terminates the cursor traversal.
+  static const int CXChildVisit_Break = 0;
+
+  /// Continues the cursor traversal with the next sibling of
+  /// the cursor just visited, without visiting its children.
+  static const int CXChildVisit_Continue = 1;
+
+  /// Recursively traverse the children of this cursor, using
+  /// the same visitor and client data.
+  static const int CXChildVisit_Recurse = 2;
+}
 
 /// Opaque pointer representing client data that will be passed through
 /// to various callbacks and visitors.
@@ -8790,6 +9834,40 @@ typedef DartClang_Cursor_getSpellingNameRange = CXSourceRange Function(
 /// Opaque pointer representing a policy that controls pretty printing
 /// for \c clang_getCursorPrettyPrinted.
 typedef CXPrintingPolicy = ffi.Pointer<ffi.Void>;
+
+/// Properties for the printing policy.
+///
+/// See \c clang::PrintingPolicy for more information.
+abstract class CXPrintingPolicyProperty {
+  static const int CXPrintingPolicy_Indentation = 0;
+  static const int CXPrintingPolicy_SuppressSpecifiers = 1;
+  static const int CXPrintingPolicy_SuppressTagKeyword = 2;
+  static const int CXPrintingPolicy_IncludeTagDefinition = 3;
+  static const int CXPrintingPolicy_SuppressScope = 4;
+  static const int CXPrintingPolicy_SuppressUnwrittenScope = 5;
+  static const int CXPrintingPolicy_SuppressInitializers = 6;
+  static const int CXPrintingPolicy_ConstantArraySizeAsWritten = 7;
+  static const int CXPrintingPolicy_AnonymousTagLocations = 8;
+  static const int CXPrintingPolicy_SuppressStrongLifetime = 9;
+  static const int CXPrintingPolicy_SuppressLifetimeQualifiers = 10;
+  static const int CXPrintingPolicy_SuppressTemplateArgsInCXXConstructors = 11;
+  static const int CXPrintingPolicy_Bool = 12;
+  static const int CXPrintingPolicy_Restrict = 13;
+  static const int CXPrintingPolicy_Alignof = 14;
+  static const int CXPrintingPolicy_UnderscoreAlignof = 15;
+  static const int CXPrintingPolicy_UseVoidForZeroParams = 16;
+  static const int CXPrintingPolicy_TerseOutput = 17;
+  static const int CXPrintingPolicy_PolishForDeclaration = 18;
+  static const int CXPrintingPolicy_Half = 19;
+  static const int CXPrintingPolicy_MSWChar = 20;
+  static const int CXPrintingPolicy_IncludeNewlines = 21;
+  static const int CXPrintingPolicy_MSVCFormatting = 22;
+  static const int CXPrintingPolicy_ConstantsAsWritten = 23;
+  static const int CXPrintingPolicy_SuppressImplicitBase = 24;
+  static const int CXPrintingPolicy_FullyQualifiedName = 25;
+  static const int CXPrintingPolicy_LastProperty = 25;
+}
+
 typedef NativeClang_PrintingPolicy_getProperty = pkg_ffi.UnsignedInt Function(
     CXPrintingPolicy Policy, ffi.Int32 Property);
 typedef DartClang_PrintingPolicy_getProperty = int Function(
@@ -8968,8 +10046,24 @@ typedef DartClang_getToken = ffi.Pointer<CXToken> Function(
     CXTranslationUnit TU, CXSourceLocation Location);
 
 /// Describes a kind of token.
-typedef CXTokenKind = ffi.Int32;
-typedef NativeClang_getTokenKind = CXTokenKind Function(CXToken arg0);
+abstract class CXTokenKind {
+  /// A token that contains some kind of punctuation.
+  static const int CXToken_Punctuation = 0;
+
+  /// A language keyword.
+  static const int CXToken_Keyword = 1;
+
+  /// An identifier (that is not a keyword).
+  static const int CXToken_Identifier = 2;
+
+  /// A numeric, string, or character literal.
+  static const int CXToken_Literal = 3;
+
+  /// A comment.
+  static const int CXToken_Comment = 4;
+}
+
+typedef NativeClang_getTokenKind = ffi.Int32 Function(CXToken arg0);
 typedef DartClang_getTokenKind = int Function(CXToken arg0);
 typedef NativeClang_getTokenSpelling = CXString Function(
     CXTranslationUnit arg0, CXToken arg1);
@@ -9065,6 +10159,154 @@ class CXCompletionResult extends ffi.Struct {
 /// with actual code,of a specific kind. See \c CXCompletionChunkKind for a
 /// description of the different kinds of chunks.
 typedef CXCompletionString = ffi.Pointer<ffi.Void>;
+
+/// Describes a single piece of text within a code-completion string.
+///
+/// Each "chunk" within a code-completion string (\c CXCompletionString) is
+/// either a piece of text with a specific "kind" that describes how that text
+/// should be interpreted by the client or is another completion string.
+abstract class CXCompletionChunkKind {
+  /// A code-completion string that describes "optional" text that
+  /// could be a part of the template (but is not required).
+  ///
+  /// The Optional chunk is the only kind of chunk that has a code-completion
+  /// string for its representation, which is accessible via
+  /// \c clang_getCompletionChunkCompletionString(). The code-completion string
+  /// describes an additional part of the template that is completely optional.
+  /// For example, optional chunks can be used to describe the placeholders for
+  /// arguments that match up with defaulted function parameters, e.g. given:
+  ///
+  /// \code
+  /// void f(int x, float y = 3.14, double z = 2.71828);
+  /// \endcode
+  ///
+  /// The code-completion string for this function would contain:
+  /// - a TypedText chunk for "f".
+  /// - a LeftParen chunk for "(".
+  /// - a Placeholder chunk for "int x"
+  /// - an Optional chunk containing the remaining defaulted arguments, e.g.,
+  /// - a Comma chunk for ","
+  /// - a Placeholder chunk for "float y"
+  /// - an Optional chunk containing the last defaulted argument:
+  /// - a Comma chunk for ","
+  /// - a Placeholder chunk for "double z"
+  /// - a RightParen chunk for ")"
+  ///
+  /// There are many ways to handle Optional chunks. Two simple approaches are:
+  /// - Completely ignore optional chunks, in which case the template for the
+  /// function "f" would only include the first parameter ("int x").
+  /// - Fully expand all optional chunks, in which case the template for the
+  /// function "f" would have all of the parameters.
+  static const int CXCompletionChunk_Optional = 0;
+
+  /// Text that a user would be expected to type to get this
+  /// code-completion result.
+  ///
+  /// There will be exactly one "typed text" chunk in a semantic string, which
+  /// will typically provide the spelling of a keyword or the name of a
+  /// declaration that could be used at the current code point. Clients are
+  /// expected to filter the code-completion results based on the text in this
+  /// chunk.
+  static const int CXCompletionChunk_TypedText = 1;
+
+  /// Text that should be inserted as part of a code-completion result.
+  ///
+  /// A "text" chunk represents text that is part of the template to be
+  /// inserted into user code should this particular code-completion result
+  /// be selected.
+  static const int CXCompletionChunk_Text = 2;
+
+  /// Placeholder text that should be replaced by the user.
+  ///
+  /// A "placeholder" chunk marks a place where the user should insert text
+  /// into the code-completion template. For example, placeholders might mark
+  /// the function parameters for a function declaration, to indicate that the
+  /// user should provide arguments for each of those parameters. The actual
+  /// text in a placeholder is a suggestion for the text to display before
+  /// the user replaces the placeholder with real code.
+  static const int CXCompletionChunk_Placeholder = 3;
+
+  /// Informative text that should be displayed but never inserted as
+  /// part of the template.
+  ///
+  /// An "informative" chunk contains annotations that can be displayed to
+  /// help the user decide whether a particular code-completion result is the
+  /// right option, but which is not part of the actual template to be inserted
+  /// by code completion.
+  static const int CXCompletionChunk_Informative = 4;
+
+  /// Text that describes the current parameter when code-completion is
+  /// referring to function call, message send, or template specialization.
+  ///
+  /// A "current parameter" chunk occurs when code-completion is providing
+  /// information about a parameter corresponding to the argument at the
+  /// code-completion point. For example, given a function
+  ///
+  /// \code
+  /// int add(int x, int y);
+  /// \endcode
+  ///
+  /// and the source code \c add(, where the code-completion point is after the
+  /// "(", the code-completion string will contain a "current parameter" chunk
+  /// for "int x", indicating that the current argument will initialize that
+  /// parameter. After typing further, to \c add(17, (where the code-completion
+  /// point is after the ","), the code-completion string will contain a
+  /// "current parameter" chunk to "int y".
+  static const int CXCompletionChunk_CurrentParameter = 5;
+
+  /// A left parenthesis ('('), used to initiate a function call or
+  /// signal the beginning of a function parameter list.
+  static const int CXCompletionChunk_LeftParen = 6;
+
+  /// A right parenthesis (')'), used to finish a function call or
+  /// signal the end of a function parameter list.
+  static const int CXCompletionChunk_RightParen = 7;
+
+  /// A left bracket ('[').
+  static const int CXCompletionChunk_LeftBracket = 8;
+
+  /// A right bracket (']').
+  static const int CXCompletionChunk_RightBracket = 9;
+
+  /// A left brace ('{').
+  static const int CXCompletionChunk_LeftBrace = 10;
+
+  /// A right brace ('}').
+  static const int CXCompletionChunk_RightBrace = 11;
+
+  /// A left angle bracket ('<').
+  static const int CXCompletionChunk_LeftAngle = 12;
+
+  /// A right angle bracket ('>').
+  static const int CXCompletionChunk_RightAngle = 13;
+
+  /// A comma separator (',').
+  static const int CXCompletionChunk_Comma = 14;
+
+  /// Text that specifies the result type of a given result.
+  ///
+  /// This special kind of informative chunk is not meant to be inserted into
+  /// the text buffer. Rather, it is meant to illustrate the type that an
+  /// expression using the given completion string would have.
+  static const int CXCompletionChunk_ResultType = 15;
+
+  /// A colon (':').
+  static const int CXCompletionChunk_Colon = 16;
+
+  /// A semicolon (';').
+  static const int CXCompletionChunk_SemiColon = 17;
+
+  /// An '=' sign.
+  static const int CXCompletionChunk_Equal = 18;
+
+  /// Horizontal space (' ').
+  static const int CXCompletionChunk_HorizontalSpace = 19;
+
+  /// Vertical space ('\\n'), after which it is generally a good idea to
+  /// perform indentation.
+  static const int CXCompletionChunk_VerticalSpace = 20;
+}
+
 typedef NativeClang_getCompletionChunkKind = ffi.Int32 Function(
     CXCompletionString completion_string, pkg_ffi.UnsignedInt chunk_number);
 typedef DartClang_getCompletionChunkKind = int Function(
@@ -9223,9 +10465,18 @@ typedef DartClang_getInclusions = void Function(
 typedef CXEvalResult = ffi.Pointer<ffi.Void>;
 typedef NativeClang_Cursor_Evaluate = CXEvalResult Function(CXCursor C);
 typedef DartClang_Cursor_Evaluate = CXEvalResult Function(CXCursor C);
-typedef CXEvalResultKind = ffi.Int32;
-typedef NativeClang_EvalResult_getKind = CXEvalResultKind Function(
-    CXEvalResult E);
+
+abstract class CXEvalResultKind {
+  static const int CXEval_Int = 1;
+  static const int CXEval_Float = 2;
+  static const int CXEval_ObjCStrLiteral = 3;
+  static const int CXEval_StrLiteral = 4;
+  static const int CXEval_CFStr = 5;
+  static const int CXEval_Other = 6;
+  static const int CXEval_UnExposed = 0;
+}
+
+typedef NativeClang_EvalResult_getKind = ffi.Int32 Function(CXEvalResult E);
 typedef DartClang_EvalResult_getKind = int Function(CXEvalResult E);
 typedef NativeClang_EvalResult_getAsInt = pkg_ffi.Int Function(CXEvalResult E);
 typedef DartClang_EvalResult_getAsInt = int Function(CXEvalResult E);
@@ -9284,12 +10535,31 @@ class CXCursorAndRangeVisitor extends ffi.Struct {
               ffi.Pointer<ffi.Void>, CXCursor, CXSourceRange)>> visit;
 }
 
-typedef CXResult = ffi.Int32;
-typedef NativeClang_findReferencesInFile = CXResult Function(
+/// \defgroup CINDEX_HIGH Higher level API functions
+///
+/// @{
+abstract class CXVisitorResult {
+  static const int CXVisit_Break = 0;
+  static const int CXVisit_Continue = 1;
+}
+
+abstract class CXResult {
+  /// Function returned successfully.
+  static const int CXResult_Success = 0;
+
+  /// One of the parameters was invalid for the function.
+  static const int CXResult_Invalid = 1;
+
+  /// The function was terminated by a callback (e.g. it returned
+  /// CXVisit_Break)
+  static const int CXResult_VisitBreak = 2;
+}
+
+typedef NativeClang_findReferencesInFile = ffi.Int32 Function(
     CXCursor cursor, CXFile file, CXCursorAndRangeVisitor visitor);
 typedef DartClang_findReferencesInFile = int Function(
     CXCursor cursor, CXFile file, CXCursorAndRangeVisitor visitor);
-typedef NativeClang_findIncludesInFile = CXResult Function(
+typedef NativeClang_findIncludesInFile = ffi.Int32 Function(
     CXTranslationUnit TU, CXFile file, CXCursorAndRangeVisitor visitor);
 typedef DartClang_findIncludesInFile = int Function(
     CXTranslationUnit TU, CXFile file, CXCursorAndRangeVisitor visitor);
@@ -9344,7 +10614,7 @@ class CXIdxImportedASTFileInfo extends ffi.Struct {
 }
 
 class CXIdxAttrInfo extends ffi.Struct {
-  @CXIdxAttrKind()
+  @ffi.Int32()
   external int kind;
 
   external CXCursor cursor;
@@ -9352,16 +10622,21 @@ class CXIdxAttrInfo extends ffi.Struct {
   external CXIdxLoc loc;
 }
 
-typedef CXIdxAttrKind = ffi.Int32;
+abstract class CXIdxAttrKind {
+  static const int CXIdxAttr_Unexposed = 0;
+  static const int CXIdxAttr_IBAction = 1;
+  static const int CXIdxAttr_IBOutlet = 2;
+  static const int CXIdxAttr_IBOutletCollection = 3;
+}
 
 class CXIdxEntityInfo extends ffi.Struct {
-  @CXIdxEntityKind()
+  @ffi.Int32()
   external int kind;
 
-  @CXIdxEntityCXXTemplateKind()
+  @ffi.Int32()
   external int templateKind;
 
-  @CXIdxEntityLanguage()
+  @ffi.Int32()
   external int lang;
 
   external ffi.Pointer<pkg_ffi.Char> name;
@@ -9376,7 +10651,35 @@ class CXIdxEntityInfo extends ffi.Struct {
   external int numAttributes;
 }
 
-typedef CXIdxEntityKind = ffi.Int32;
+abstract class CXIdxEntityKind {
+  static const int CXIdxEntity_Unexposed = 0;
+  static const int CXIdxEntity_Typedef = 1;
+  static const int CXIdxEntity_Function = 2;
+  static const int CXIdxEntity_Variable = 3;
+  static const int CXIdxEntity_Field = 4;
+  static const int CXIdxEntity_EnumConstant = 5;
+  static const int CXIdxEntity_ObjCClass = 6;
+  static const int CXIdxEntity_ObjCProtocol = 7;
+  static const int CXIdxEntity_ObjCCategory = 8;
+  static const int CXIdxEntity_ObjCInstanceMethod = 9;
+  static const int CXIdxEntity_ObjCClassMethod = 10;
+  static const int CXIdxEntity_ObjCProperty = 11;
+  static const int CXIdxEntity_ObjCIvar = 12;
+  static const int CXIdxEntity_Enum = 13;
+  static const int CXIdxEntity_Struct = 14;
+  static const int CXIdxEntity_Union = 15;
+  static const int CXIdxEntity_CXXClass = 16;
+  static const int CXIdxEntity_CXXNamespace = 17;
+  static const int CXIdxEntity_CXXNamespaceAlias = 18;
+  static const int CXIdxEntity_CXXStaticVariable = 19;
+  static const int CXIdxEntity_CXXStaticMethod = 20;
+  static const int CXIdxEntity_CXXInstanceMethod = 21;
+  static const int CXIdxEntity_CXXConstructor = 22;
+  static const int CXIdxEntity_CXXDestructor = 23;
+  static const int CXIdxEntity_CXXConversionFunction = 24;
+  static const int CXIdxEntity_CXXTypeAlias = 25;
+  static const int CXIdxEntity_CXXInterface = 26;
+}
 
 /// Extra C++ template information for an entity. This can apply to:
 /// CXIdxEntity_Function
@@ -9386,8 +10689,20 @@ typedef CXIdxEntityKind = ffi.Int32;
 /// CXIdxEntity_CXXConstructor
 /// CXIdxEntity_CXXConversionFunction
 /// CXIdxEntity_CXXTypeAlias
-typedef CXIdxEntityCXXTemplateKind = ffi.Int32;
-typedef CXIdxEntityLanguage = ffi.Int32;
+abstract class CXIdxEntityCXXTemplateKind {
+  static const int CXIdxEntity_NonTemplate = 0;
+  static const int CXIdxEntity_Template = 1;
+  static const int CXIdxEntity_TemplatePartialSpecialization = 2;
+  static const int CXIdxEntity_TemplateSpecialization = 3;
+}
+
+abstract class CXIdxEntityLanguage {
+  static const int CXIdxEntityLang_None = 0;
+  static const int CXIdxEntityLang_C = 1;
+  static const int CXIdxEntityLang_ObjC = 2;
+  static const int CXIdxEntityLang_CXX = 3;
+  static const int CXIdxEntityLang_Swift = 4;
+}
 
 class CXIdxContainerInfo extends ffi.Struct {
   external CXCursor cursor;
@@ -9444,11 +10759,15 @@ class CXIdxDeclInfo extends ffi.Struct {
 class CXIdxObjCContainerDeclInfo extends ffi.Struct {
   external ffi.Pointer<CXIdxDeclInfo> declInfo;
 
-  @CXIdxObjCContainerKind()
+  @ffi.Int32()
   external int kind;
 }
 
-typedef CXIdxObjCContainerKind = ffi.Int32;
+abstract class CXIdxObjCContainerKind {
+  static const int CXIdxObjCContainer_ForwardRef = 0;
+  static const int CXIdxObjCContainer_Interface = 1;
+  static const int CXIdxObjCContainer_Implementation = 2;
+}
 
 class CXIdxBaseClassInfo extends ffi.Struct {
   external ffi.Pointer<CXIdxEntityInfo> base;
@@ -9512,7 +10831,7 @@ class CXIdxCXXClassDeclInfo extends ffi.Struct {
 
 /// Data for IndexerCallbacks#indexEntityReference.
 class CXIdxEntityRefInfo extends ffi.Struct {
-  @CXIdxEntityRefKind()
+  @ffi.Int32()
   external int kind;
 
   /// Reference cursor.
@@ -9538,7 +10857,7 @@ class CXIdxEntityRefInfo extends ffi.Struct {
   external ffi.Pointer<CXIdxContainerInfo> container;
 
   /// Sets of symbol roles of the reference.
-  @CXSymbolRole()
+  @ffi.Int32()
   external int role;
 }
 
@@ -9546,15 +10865,34 @@ class CXIdxEntityRefInfo extends ffi.Struct {
 ///
 /// This may be deprecated in a future version as this duplicates
 /// the \c CXSymbolRole_Implicit bit in \c CXSymbolRole.
-typedef CXIdxEntityRefKind = ffi.Int32;
+abstract class CXIdxEntityRefKind {
+  /// The entity is referenced directly in user's code.
+  static const int CXIdxEntityRef_Direct = 1;
+
+  /// An implicit reference, e.g. a reference of an Objective-C method
+  /// via the dot syntax.
+  static const int CXIdxEntityRef_Implicit = 2;
+}
 
 /// Roles that are attributed to symbol occurrences.
 ///
 /// Internal: this currently mirrors low 9 bits of clang::index::SymbolRole with
 /// higher bits zeroed. These high bits may be exposed in the future.
-typedef CXSymbolRole = ffi.Int32;
+abstract class CXSymbolRole {
+  static const int CXSymbolRole_None = 0;
+  static const int CXSymbolRole_Declaration = 1;
+  static const int CXSymbolRole_Definition = 2;
+  static const int CXSymbolRole_Reference = 4;
+  static const int CXSymbolRole_Read = 8;
+  static const int CXSymbolRole_Write = 16;
+  static const int CXSymbolRole_Call = 32;
+  static const int CXSymbolRole_Dynamic = 64;
+  static const int CXSymbolRole_AddressOf = 128;
+  static const int CXSymbolRole_Implicit = 256;
+}
+
 typedef NativeClang_index_isEntityObjCContainerKind = pkg_ffi.Int Function(
-    CXIdxEntityKind arg0);
+    ffi.Int32 arg0);
 typedef DartClang_index_isEntityObjCContainerKind = int Function(int arg0);
 typedef NativeClang_index_getObjCContainerDeclInfo
     = ffi.Pointer<CXIdxObjCContainerDeclInfo> Function(

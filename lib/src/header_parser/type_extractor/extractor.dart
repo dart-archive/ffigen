@@ -44,13 +44,16 @@ Type getCodeGenType(
     final usr = cursor.usr();
     var type = bindingsIndex.getSeenType(usr);
     if (type == null) {
-      type =
+      final result =
           _createTypeFromCursor(cxtype, cursor, ignoreFilter, pointerReference);
+      type = result.type;
       if (type == null) {
         return Type.unimplemented(
             'Type: ${cxtype.kindSpelling()} not implemented');
       }
-      bindingsIndex.addTypeToSeen(usr, type);
+      if (result.addToCache) {
+        bindingsIndex.addTypeToSeen(usr, type);
+      }
     }
     _fillFromCursorIfNeeded(type, cursor, ignoreFilter, pointerReference);
     return type;
@@ -111,24 +114,38 @@ Type getCodeGenType(
   }
 }
 
-Type? _createTypeFromCursor(clang_types.CXType cxtype,
+class _CreateTypeFromCursorResult {
+  final Type? type;
+
+  // Flag that controls whether the type is added to the cache. It should not
+  // be added to the cache if it's just a fallback implementation, such as the
+  // int that is returned when an enum is excluded by the config. Later we might
+  // need to build the full enum type (eg if it's part of an included struct),
+  // and if we put the fallback int in the cache then the full enum will never
+  // be created.
+  final bool addToCache;
+
+  _CreateTypeFromCursorResult(this.type, {this.addToCache = true});
+}
+
+_CreateTypeFromCursorResult _createTypeFromCursor(clang_types.CXType cxtype,
     clang_types.CXCursor cursor, bool ignoreFilter, bool pointerReference) {
   switch (cxtype.kind) {
     case clang_types.CXTypeKind.CXType_Typedef:
       final spelling = clang.clang_getTypedefName(cxtype).toStringAndDispose();
       if (config.typedefTypeMappings.containsKey(spelling)) {
         _logger.fine('  Type $spelling mapped from type-map');
-        return Type.importedType(config.typedefTypeMappings[spelling]!);
+        return _CreateTypeFromCursorResult(Type.importedType(config.typedefTypeMappings[spelling]!));
       }
       // Get name from supported typedef name if config allows.
       if (config.useSupportedTypedefs) {
         if (suportedTypedefToSuportedNativeType.containsKey(spelling)) {
           _logger.fine('  Type Mapped from supported typedef');
-          return Type.nativeType(
-              suportedTypedefToSuportedNativeType[spelling]!);
+          return _CreateTypeFromCursorResult(Type.nativeType(
+              suportedTypedefToSuportedNativeType[spelling]!));
         } else if (supportedTypedefToImportedType.containsKey(spelling)) {
           _logger.fine('  Type Mapped from supported typedef');
-          return Type.importedType(supportedTypedefToImportedType[spelling]!);
+          return _CreateTypeFromCursorResult(Type.importedType(supportedTypedefToImportedType[spelling]!));
         }
       }
 
@@ -136,15 +153,15 @@ Type? _createTypeFromCursor(clang_types.CXType cxtype,
           parseTypedefDeclaration(cursor, pointerReference: pointerReference);
 
       if (typealias != null) {
-        return Type.typealias(typealias);
+        return _CreateTypeFromCursorResult(Type.typealias(typealias));
       } else {
         // Use underlying type if typealias couldn't be created or if the user
         // excluded this typedef.
         final ct = clang.clang_getTypedefDeclUnderlyingType(cursor);
-        return getCodeGenType(ct, pointerReference: pointerReference);
+        return _CreateTypeFromCursorResult(getCodeGenType(ct, pointerReference: pointerReference), addToCache: false);
       }
     case clang_types.CXTypeKind.CXType_Record:
-      return _extractfromRecord(cxtype, cursor, ignoreFilter, pointerReference);
+      return _CreateTypeFromCursorResult(_extractfromRecord(cxtype, cursor, ignoreFilter, pointerReference));
     case clang_types.CXTypeKind.CXType_Enum:
       final enumClass = parseEnumDeclaration(
         cursor,
@@ -152,9 +169,9 @@ Type? _createTypeFromCursor(clang_types.CXType cxtype,
       );
       if (enumClass == null) {
         // Handle anonymous enum declarations within another declaration.
-        return Type.nativeType(Type.enumNativeType);
+        return _CreateTypeFromCursorResult(Type.nativeType(Type.enumNativeType), addToCache: false);
       } else {
-        return Type.enumClass(enumClass);
+        return _CreateTypeFromCursorResult(Type.enumClass(enumClass));
       }
     default:
       // TODO: Just using this for testing. Remove this before merging.
