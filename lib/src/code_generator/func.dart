@@ -125,7 +125,7 @@ class Func extends LookUpBinding {
         s.write('    ${p.name},\n');
       }
     }
-    if (w.dartBool && functionType.returnType.broadType == BroadType.Boolean) {
+    if (w.dartBool && functionType.returnType.getBaseTypealiasType().broadType == BroadType.Boolean) {
       // Convert int return type to bool.
       s.write('  )!=0;\n');
     } else {

@@ -99,10 +99,10 @@ class AnonymousStructInTypedef extends ffi.Opaque {}
 
 class _NamedStructInTypedef extends ffi.Opaque {}
 
-class _ExcludedStruct extends ffi.Opaque {}
-
 typedef NTyperef1 = ExcludedStruct;
 typedef ExcludedStruct = _ExcludedStruct;
+
+class _ExcludedStruct extends ffi.Opaque {}
 
 abstract class AnonymousEnumInTypedef {
   static const int a = 0;

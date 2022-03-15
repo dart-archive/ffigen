@@ -207,7 +207,8 @@ class Type {
   /// Returns itself if it's not an Array Type.
   Type getBaseArrayType() {
     if (broadType == BroadType.ConstantArray ||
-        broadType == BroadType.IncompleteArray) {
+        broadType == BroadType.IncompleteArray ||
+        broadType == BroadType.CacheEntry) {
       return child!.getBaseArrayType();
     } else {
       return this;
@@ -220,6 +221,8 @@ class Type {
   Type getBaseTypealiasType() {
     if (broadType == BroadType.Typealias) {
       return typealias!.type.getBaseTypealiasType();
+    } else if (broadType == BroadType.CacheEntry) {
+      return child!.getBaseTypealiasType();
     } else {
       return this;
     }
@@ -282,7 +285,7 @@ class Type {
       case BroadType.Typealias:
         return typealias!.name;
       case BroadType.CacheEntry:
-        return cachedType?.getCType(w) ?? '';
+        return cachedType!.getCType(w);
       case BroadType.Unimplemented:
         throw UnimplementedError('C type unknown for ${broadType.toString()}');
     }
@@ -327,7 +330,7 @@ class Type {
           return typealias!.type.getDartType(w);
         }
       case BroadType.CacheEntry:
-        return cachedType?.getDartType(w) ?? '';
+        return cachedType!.getDartType(w);
       case BroadType.Unimplemented:
         throw UnimplementedError(
             'dart type unknown for ${broadType.toString()}');

@@ -13,8 +13,7 @@ import '../utils.dart';
 
 final _logger = Logger('ffigen.header_parser.typedefdecl_parser');
 
-/// Holds temporary information regarding a typedef referenced [Binding]
-/// while parsing.
+/// Parses a typedef declaration.
 ///
 /// Notes:
 /// - Pointer to Typedefs structs are skipped if the struct is seen.
@@ -30,16 +29,6 @@ final _logger = Logger('ffigen.header_parser.typedefdecl_parser');
 ///
 /// typedef A D; // Typeref.
 /// ```
-class _ParsedTypealias {
-  Typealias? typealias;
-  String? typedefName;
-  bool typedefToPointer = false;
-  _ParsedTypealias();
-}
-
-final _stack = Stack<_ParsedTypealias>();
-
-/// Parses a typedef declaration.
 ///
 /// Returns `null` if the typedef could not be generated or has been excluded
 /// by the config.
@@ -47,13 +36,13 @@ Typealias? parseTypedefDeclaration(
   clang_types.CXCursor cursor, {
   bool pointerReference = false,
 }) {
-  _stack.push(_ParsedTypealias());
   final typedefName = cursor.spelling();
   final typedefUsr = cursor.usr();
-  //print("    TYPEDEF  ${cursor.completeStringRepr()}  $pointerReference");
+  // print("    TYPEDEF  ${cursor.completeStringRepr()}  $pointerReference");
   if (shouldIncludeTypealias(typedefUsr, typedefName)) {
     final ct = clang.clang_getTypedefDeclUnderlyingType(cursor);
-    final s = getCodeGenType(ct, pointerReference: pointerReference);
+    final s = getCodeGenType(ct, pointerReference: pointerReference).cachedType!;
+    // print("              ${s}");
 
     if (bindingsIndex.isSeenUnsupportedTypealias(typedefUsr)) {
       // Do not process unsupported typealiases again.
@@ -86,7 +75,7 @@ Typealias? parseTypedefDeclaration(
       bindingsIndex.addUnsupportedTypealiasToSeen(typedefUsr);
     } else {
       // Create typealias.
-      _stack.top.typealias = Typealias(
+      return Typealias(
         usr: typedefUsr,
         originalName: typedefName,
         name: config.typedefs.renameUsingConfig(typedefName),
@@ -95,6 +84,5 @@ Typealias? parseTypedefDeclaration(
       );
     }
   }
-
-  return _stack.pop().typealias;
+  return null;
 }
