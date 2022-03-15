@@ -135,17 +135,19 @@ _CreateTypeFromCursorResult _createTypeFromCursor(clang_types.CXType cxtype,
       final spelling = clang.clang_getTypedefName(cxtype).toStringAndDispose();
       if (config.typedefTypeMappings.containsKey(spelling)) {
         _logger.fine('  Type $spelling mapped from type-map');
-        return _CreateTypeFromCursorResult(Type.importedType(config.typedefTypeMappings[spelling]!));
+        return _CreateTypeFromCursorResult(
+            Type.importedType(config.typedefTypeMappings[spelling]!));
       }
       // Get name from supported typedef name if config allows.
       if (config.useSupportedTypedefs) {
         if (suportedTypedefToSuportedNativeType.containsKey(spelling)) {
           _logger.fine('  Type Mapped from supported typedef');
-          return _CreateTypeFromCursorResult(Type.nativeType(
-              suportedTypedefToSuportedNativeType[spelling]!));
+          return _CreateTypeFromCursorResult(
+              Type.nativeType(suportedTypedefToSuportedNativeType[spelling]!));
         } else if (supportedTypedefToImportedType.containsKey(spelling)) {
           _logger.fine('  Type Mapped from supported typedef');
-          return _CreateTypeFromCursorResult(Type.importedType(supportedTypedefToImportedType[spelling]!));
+          return _CreateTypeFromCursorResult(
+              Type.importedType(supportedTypedefToImportedType[spelling]!));
         }
       }
 
@@ -158,10 +160,13 @@ _CreateTypeFromCursorResult _createTypeFromCursor(clang_types.CXType cxtype,
         // Use underlying type if typealias couldn't be created or if the user
         // excluded this typedef.
         final ct = clang.clang_getTypedefDeclUnderlyingType(cursor);
-        return _CreateTypeFromCursorResult(getCodeGenType(ct, pointerReference: pointerReference), addToCache: false);
+        return _CreateTypeFromCursorResult(
+            getCodeGenType(ct, pointerReference: pointerReference),
+            addToCache: false);
       }
     case clang_types.CXTypeKind.CXType_Record:
-      return _CreateTypeFromCursorResult(_extractfromRecord(cxtype, cursor, ignoreFilter, pointerReference));
+      return _CreateTypeFromCursorResult(
+          _extractfromRecord(cxtype, cursor, ignoreFilter, pointerReference));
     case clang_types.CXTypeKind.CXType_Enum:
       final enumClass = parseEnumDeclaration(
         cursor,
@@ -169,13 +174,14 @@ _CreateTypeFromCursorResult _createTypeFromCursor(clang_types.CXType cxtype,
       );
       if (enumClass == null) {
         // Handle anonymous enum declarations within another declaration.
-        return _CreateTypeFromCursorResult(Type.nativeType(Type.enumNativeType), addToCache: false);
+        return _CreateTypeFromCursorResult(Type.nativeType(Type.enumNativeType),
+            addToCache: false);
       } else {
         return _CreateTypeFromCursorResult(Type.enumClass(enumClass));
       }
     default:
-      // TODO: Just using this for testing. Remove this before merging.
-      throw 'Unknown cursor kind: ${cursor.completeStringRepr()}';
+      throw UnimplementedError(
+          'Unknown cursor kind: ${cursor.completeStringRepr()}');
   }
 }
 
