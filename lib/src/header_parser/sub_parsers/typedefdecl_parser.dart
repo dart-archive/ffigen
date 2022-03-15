@@ -50,6 +50,7 @@ Typealias? parseTypedefDeclaration(
   _stack.push(_ParsedTypealias());
   final typedefName = cursor.spelling();
   final typedefUsr = cursor.usr();
+  //print("    TYPEDEF  ${cursor.completeStringRepr()}  $pointerReference");
   if (shouldIncludeTypealias(typedefUsr, typedefName)) {
     final ct = clang.clang_getTypedefDeclUnderlyingType(cursor);
     final s = getCodeGenType(ct, pointerReference: pointerReference);

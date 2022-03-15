@@ -46,10 +46,10 @@ int _rootCursorVisitor(clang_types.CXCursor cursor, clang_types.CXCursor parent,
           break;
         case clang_types.CXCursorKind.CXCursor_StructDecl:
         case clang_types.CXCursorKind.CXCursor_UnionDecl:
-          addToBindings(getCodeGenType(cursor.type()).cachedType.compound);
+          addToBindings(_getCodeGenTypeFromCursor(cursor)?.compound);
           break;
         case clang_types.CXCursorKind.CXCursor_EnumDecl:
-          addToBindings(getCodeGenType(cursor.type()).cachedType.enumClass);
+          addToBindings(_getCodeGenTypeFromCursor(cursor)?.enumClass);
           break;
         case clang_types.CXCursorKind.CXCursor_MacroDefinition:
           saveMacroDefinition(cursor);
@@ -78,4 +78,8 @@ void addToBindings(Binding? b) {
     // This is a set, and hence will not have duplicates.
     _bindings.add(b);
   }
+}
+
+Type? _getCodeGenTypeFromCursor(clang_types.CXCursor cursor) {
+  return getCodeGenType(cursor.type(), ignoreFilter: false).cachedType;
 }

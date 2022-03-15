@@ -244,8 +244,8 @@ class Type {
 
   /// If this is a filled [BroadType.CacheEntry], returns the wrapped type.
   /// Otherwise returns this type.
-  Type get cachedType => broadType == BroadType.CacheEntry && child != null
-      ? child!.cachedType
+  Type? get cachedType => broadType == BroadType.CacheEntry
+      ? child?.cachedType
       : this;
 
   /// Returns false if this is an unfilled [BroadType.CacheEntry]. Otherwise
@@ -282,7 +282,7 @@ class Type {
       case BroadType.Typealias:
         return typealias!.name;
       case BroadType.CacheEntry:
-        return cachedType.getCType(w);
+        return cachedType?.getCType(w) ?? '';
       case BroadType.Unimplemented:
         throw UnimplementedError('C type unknown for ${broadType.toString()}');
     }
@@ -327,7 +327,7 @@ class Type {
           return typealias!.type.getDartType(w);
         }
       case BroadType.CacheEntry:
-        return cachedType.getDartType(w);
+        return cachedType?.getDartType(w) ?? '';
       case BroadType.Unimplemented:
         throw UnimplementedError(
             'dart type unknown for ${broadType.toString()}');
