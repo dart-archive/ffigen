@@ -33,7 +33,8 @@ Type getCodeGenType(
 
   // Special case: Elaborated types just refer to another type.
   if (cxtype.kind == clang_types.CXTypeKind.CXType_Elaborated) {
-    return getCodeGenType(clang.clang_Type_getNamedType(cxtype), ignoreFilter: ignoreFilter, pointerReference: pointerReference);
+    return getCodeGenType(clang.clang_Type_getNamedType(cxtype),
+        ignoreFilter: ignoreFilter, pointerReference: pointerReference);
   }
 
   // If the type has a declaration cursor, then use the BindingsIndex to break
@@ -43,10 +44,11 @@ Type getCodeGenType(
     final usr = cursor.usr();
     var type = bindingsIndex.getSeenType(usr);
     if (type == null) {
-      type = _createTypeFromCursor(
-          cxtype, cursor, ignoreFilter, pointerReference);
+      type =
+          _createTypeFromCursor(cxtype, cursor, ignoreFilter, pointerReference);
       if (type == null) {
-        return Type.unimplemented('Type: ${cxtype.kindSpelling()} not implemented');
+        return Type.unimplemented(
+            'Type: ${cxtype.kindSpelling()} not implemented');
       }
       bindingsIndex.addTypeToSeen(usr, type);
     }
@@ -109,8 +111,8 @@ Type getCodeGenType(
   }
 }
 
-Type? _createTypeFromCursor(clang_types.CXType cxtype, clang_types.CXCursor cursor,
-    bool ignoreFilter, bool pointerReference) {
+Type? _createTypeFromCursor(clang_types.CXType cxtype,
+    clang_types.CXCursor cursor, bool ignoreFilter, bool pointerReference) {
   switch (cxtype.kind) {
     case clang_types.CXTypeKind.CXType_Typedef:
       final spelling = clang.clang_getTypedefName(cxtype).toStringAndDispose();
@@ -165,8 +167,7 @@ void _fillFromCursorIfNeeded(Type? type, clang_types.CXCursor cursor,
   if (type == null) return;
   if (type.compound != null) {
     fillCompoundMembersIfNeeded(type.compound!, cursor,
-        ignoreFilter: ignoreFilter,
-        pointerReference: pointerReference);
+        ignoreFilter: ignoreFilter, pointerReference: pointerReference);
   }
 }
 
@@ -211,11 +212,10 @@ Type? _extractfromRecord(clang_types.CXType cxtype, clang_types.CXCursor cursor,
       if (struct == null) return null;
       return Type.compound(struct);
     }
-  } else {
-    _logger.fine(
-        'typedeclarationCursorVisitor: _extractfromRecord: Not Implemented, ${cursor.completeStringRepr()}');
-    return Type.unimplemented('Type: ${cxtype.kindSpelling()} not implemented');
   }
+  _logger.fine(
+      'typedeclarationCursorVisitor: _extractfromRecord: Not Implemented, ${cursor.completeStringRepr()}');
+  return Type.unimplemented('Type: ${cxtype.kindSpelling()} not implemented');
 }
 
 // Used for function pointer arguments.

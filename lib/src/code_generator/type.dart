@@ -105,7 +105,7 @@ class Type {
   final BroadType broadType;
 
   /// Child Type, e.g Pointer(Parent) to Int(Child), or Child Type of an Array.
-  Type? child;
+  final Type? child;
 
   /// For ConstantArray and IncompleteArray type.
   final int? length;
@@ -127,41 +127,63 @@ class Type {
     this.unimplementedReason,
   });
 
-  factory Type.pointer(Type child) =>
-      Type._(broadType: BroadType.Pointer, child: child);
-  factory Type.compound(Compound compound) =>
-      Type._(broadType: BroadType.Compound, compound: compound);
-  factory Type.struct(Struc struc) =>
-      Type._(broadType: BroadType.Compound, compound: struc);
-  factory Type.union(Union union) =>
-      Type._(broadType: BroadType.Compound, compound: union);
-  factory Type.enumClass(EnumClass enumClass) =>
-      Type._(broadType: BroadType.Enum, enumClass: enumClass);
-  factory Type.functionType(FunctionType functionType) =>
-      Type._(broadType: BroadType.FunctionType, functionType: functionType);
-  factory Type.importedType(ImportedType importedType) =>
-      Type._(broadType: BroadType.ImportedType, importedType: importedType);
-  factory Type.nativeFunc(NativeFunc nativeFunc) =>
-      Type._(broadType: BroadType.NativeFunction, nativeFunc: nativeFunc);
-  factory Type.typealias(Typealias typealias) =>
-      Type._(broadType: BroadType.Typealias, typealias: typealias);
-  factory Type.nativeType(SupportedNativeType nativeType) =>
-      Type._(broadType: BroadType.NativeType, nativeType: nativeType);
-  factory Type.constantArray(int length, Type elementType) => Type._(
-        broadType: BroadType.ConstantArray,
-        child: elementType,
-        length: length,
-      );
-  factory Type.incompleteArray(Type elementType) => Type._(
-        broadType: BroadType.IncompleteArray,
-        child: elementType,
-      );
-  factory Type.boolean() => Type._(
-        broadType: BroadType.Boolean,
-      );
-  factory Type.unimplemented(String reason) =>
-      Type._(broadType: BroadType.Unimplemented, unimplementedReason: reason);
-  factory Type.handle() => Type._(broadType: BroadType.Handle);
+  factory Type.pointer(Type child) {
+    return Type._(broadType: BroadType.Pointer, child: child);
+  }
+  factory Type.compound(Compound compound) {
+    return Type._(broadType: BroadType.Compound, compound: compound);
+  }
+  factory Type.struct(Struc struc) {
+    return Type._(broadType: BroadType.Compound, compound: struc);
+  }
+  factory Type.union(Union union) {
+    return Type._(broadType: BroadType.Compound, compound: union);
+  }
+  factory Type.enumClass(EnumClass enumClass) {
+    return Type._(broadType: BroadType.Enum, enumClass: enumClass);
+  }
+  factory Type.functionType(FunctionType functionType) {
+    return Type._(
+        broadType: BroadType.FunctionType, functionType: functionType);
+  }
+  factory Type.importedType(ImportedType importedType) {
+    return Type._(
+        broadType: BroadType.ImportedType, importedType: importedType);
+  }
+  factory Type.nativeFunc(NativeFunc nativeFunc) {
+    return Type._(broadType: BroadType.NativeFunction, nativeFunc: nativeFunc);
+  }
+  factory Type.typealias(Typealias typealias) {
+    return Type._(broadType: BroadType.Typealias, typealias: typealias);
+  }
+  factory Type.nativeType(SupportedNativeType nativeType) {
+    return Type._(broadType: BroadType.NativeType, nativeType: nativeType);
+  }
+  factory Type.constantArray(int length, Type elementType) {
+    return Type._(
+      broadType: BroadType.ConstantArray,
+      child: elementType,
+      length: length,
+    );
+  }
+  factory Type.incompleteArray(Type elementType) {
+    return Type._(
+      broadType: BroadType.IncompleteArray,
+      child: elementType,
+    );
+  }
+  factory Type.boolean() {
+    return Type._(
+      broadType: BroadType.Boolean,
+    );
+  }
+  factory Type.unimplemented(String reason) {
+    return Type._(
+        broadType: BroadType.Unimplemented, unimplementedReason: reason);
+  }
+  factory Type.handle() {
+    return Type._(broadType: BroadType.Handle);
+  }
 
   /// Get all dependencies of this type and save them in [dependencies].
   void addDependencies(Set<Binding> dependencies) {

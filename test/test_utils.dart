@@ -12,14 +12,8 @@ import 'package:test/test.dart';
 extension LibraryTestExt on Library {
   /// Get a [Binding]'s generated string with a given name.
   String getBindingAsString(String name) {
-    // final debug = name == 'Struct5_Alias_Renamed';
     try {
-      final b = bindings.firstWhere((element) {
-        // if (debug) {
-        //   print('     ${element.toBindingString(writer).string}');
-        // }
-        return element.name == name;
-      });
+      final b = bindings.firstWhere((element) => element.name == name);
       return b.toBindingString(writer).string;
     } catch (e) {
       throw NotFoundException("Binding '$name' not found.");

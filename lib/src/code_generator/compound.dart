@@ -130,22 +130,21 @@ abstract class Compound extends NoLookUpBinding {
     const depth = '  ';
     for (final m in members) {
       final memberName = localUniqueNamer.makeUnique(m.name);
-      final memberType = m.type;
-      if (memberType.broadType == BroadType.ConstantArray) {
+      if (m.type.broadType == BroadType.ConstantArray) {
         s.write(
-            '$depth@${w.ffiLibraryPrefix}.Array.multi(${_getArrayDimensionLengths(memberType)})\n');
+            '$depth@${w.ffiLibraryPrefix}.Array.multi(${_getArrayDimensionLengths(m.type)})\n');
         s.write(
-            '${depth}external ${_getInlineArrayTypeString(memberType, w)} $memberName;\n\n');
+            '${depth}external ${_getInlineArrayTypeString(m.type, w)} $memberName;\n\n');
       } else {
         if (m.dartDoc != null) {
           s.write(depth + '/// ');
           s.writeAll(m.dartDoc!.split('\n'), '\n' + depth + '/// ');
           s.write('\n');
         }
-        if (!memberType.sameDartAndCType(w)) {
-          s.write('$depth@${memberType.getCType(w)}()\n');
+        if (!m.type.sameDartAndCType(w)) {
+          s.write('$depth@${m.type.getCType(w)}()\n');
         }
-        s.write('${depth}external ${memberType.getDartType(w)} $memberName;\n\n');
+        s.write('${depth}external ${m.type.getDartType(w)} $memberName;\n\n');
       }
     }
     s.write('}\n\n');

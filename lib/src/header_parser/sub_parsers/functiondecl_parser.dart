@@ -40,9 +40,7 @@ Func? parseFunctionDeclaration(clang_types.CXCursor cursor) {
       _logger.warning(
           "Skipped Function '$funcName', inline functions are not supported.");
       // Returning null so that [addToBindings] function excludes this.
-      return _stack
-          .pop()
-          .func;
+      return _stack.pop().func;
     }
 
     if (rt.isIncompleteCompound || _stack.top.incompleteStructParameter) {
@@ -50,10 +48,8 @@ Func? parseFunctionDeclaration(clang_types.CXCursor cursor) {
           '---- Removed Function, reason: Incomplete struct pass/return by value: ${cursor.completeStringRepr()}');
       _logger.warning(
           "Skipped Function '$funcName', Incomplete struct pass/return by value not supported.");
-           // Returning null so that [addToBindings] function excludes this.
-      return _stack
-          .pop()
-          .func;
+      // Returning null so that [addToBindings] function excludes this.
+      return _stack.pop().func;
     }
 
     if (rt.getBaseType().broadType == BroadType.Unimplemented ||
@@ -62,10 +58,8 @@ Func? parseFunctionDeclaration(clang_types.CXCursor cursor) {
           '---- Removed Function, reason: unsupported return type or parameter type: ${cursor.completeStringRepr()}');
       _logger.warning(
           "Skipped Function '$funcName', function has unsupported return type or parameter type.");
-          // Returning null so that [addToBindings] function excludes this.
-      return _stack
-          .pop()
-          .func; 
+      // Returning null so that [addToBindings] function excludes this.
+      return _stack.pop().func;
     }
 
     _stack.top.func = Func(

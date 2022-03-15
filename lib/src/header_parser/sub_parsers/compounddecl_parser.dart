@@ -83,7 +83,6 @@ Compound? parseCompoundDeclaration(
   /// generate these as opaque if `dependency-only` was set to opaque).
   bool pointerReference = false,
 }) {
-
   // Set includer functions according to compoundType.
   final bool Function(String, String) shouldIncludeDecl;
   final Declaration configDecl;
@@ -145,7 +144,10 @@ Compound? parseCompoundDeclaration(
   return null;
 }
 
-void fillCompoundMembersIfNeeded(Compound compound, clang_types.CXCursor cursor, {
+void fillCompoundMembersIfNeeded(
+  Compound compound,
+  clang_types.CXCursor cursor, {
+
   /// Option to ignore declaration filter (Useful in case of extracting
   /// declarations when they are passed/returned by an included function.)
   bool ignoreFilter = false,
@@ -172,7 +174,7 @@ void fillCompoundMembersIfNeeded(Compound compound, clang_types.CXCursor cursor,
   final String className = _compoundTypeDebugName(compoundType);
   parsed.hasAttr = clang.clang_Cursor_hasAttrs(cursor) != 0;
   parsed.alignment = cursor.type().alignment();
-  compound.parsedDependencies = true;  // Break cycles.
+  compound.parsedDependencies = true; // Break cycles.
 
   _stack.push(parsed);
   final resultCode = clang.clang_visitChildren(
