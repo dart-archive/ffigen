@@ -89,14 +89,14 @@ abstract class Compound extends NoLookUpBinding {
     var startType = type;
     while (startType.broadType == BroadType.ConstantArray) {
       array.add(startType.length!);
-      startType = startType.child!;
+      startType = startType.child!.cachedType!;
     }
     return array;
   }
 
   String _getInlineArrayTypeString(Type type, Writer w) {
     if (type.broadType == BroadType.ConstantArray) {
-      return '${w.ffiLibraryPrefix}.Array<${_getInlineArrayTypeString(type.child!, w)}>';
+      return '${w.ffiLibraryPrefix}.Array<${_getInlineArrayTypeString(type.child!.cachedType!, w)}>';
     }
     return type.getCType(w);
   }
@@ -130,21 +130,22 @@ abstract class Compound extends NoLookUpBinding {
     const depth = '  ';
     for (final m in members) {
       final memberName = localUniqueNamer.makeUnique(m.name);
-      if (m.type.broadType == BroadType.ConstantArray) {
+      final memberType = m.type.cachedType!;
+      if (memberType.broadType == BroadType.ConstantArray) {
         s.write(
-            '$depth@${w.ffiLibraryPrefix}.Array.multi(${_getArrayDimensionLengths(m.type)})\n');
+            '$depth@${w.ffiLibraryPrefix}.Array.multi(${_getArrayDimensionLengths(memberType)})\n');
         s.write(
-            '${depth}external ${_getInlineArrayTypeString(m.type, w)} $memberName;\n\n');
+            '${depth}external ${_getInlineArrayTypeString(memberType, w)} $memberName;\n\n');
       } else {
         if (m.dartDoc != null) {
           s.write(depth + '/// ');
           s.writeAll(m.dartDoc!.split('\n'), '\n' + depth + '/// ');
           s.write('\n');
         }
-        if (!m.type.sameDartAndCType(w)) {
-          s.write('$depth@${m.type.getCType(w)}()\n');
+        if (!memberType.sameDartAndCType(w)) {
+          s.write('$depth@${memberType.getCType(w)}()\n');
         }
-        s.write('${depth}external ${m.type.getDartType(w)} $memberName;\n\n');
+        s.write('${depth}external ${memberType.getDartType(w)} $memberName;\n\n');
       }
     }
     s.write('}\n\n');
