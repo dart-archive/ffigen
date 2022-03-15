@@ -19,22 +19,22 @@ bool _shouldIncludeDecl(String usr, String name,
 }
 
 bool shouldIncludeStruct(String usr, String name) {
-  return _shouldIncludeDecl(usr, name, bindingsIndex.isSeenAndFilledType,
+  return _shouldIncludeDecl(usr, name, bindingsIndex.isSeenType,
       config.structDecl.shouldInclude);
 }
 
 bool shouldIncludeUnion(String usr, String name) {
-  return _shouldIncludeDecl(usr, name, bindingsIndex.isSeenAndFilledType,
+  return _shouldIncludeDecl(usr, name, bindingsIndex.isSeenType,
       config.unionDecl.shouldInclude);
 }
 
 bool shouldIncludeFunc(String usr, String name) {
-  return _shouldIncludeDecl(usr, name, bindingsIndex.isSeenAndFilledType,
+  return _shouldIncludeDecl(usr, name, bindingsIndex.isSeenType,
       config.functionDecl.shouldInclude);
 }
 
 bool shouldIncludeEnumClass(String usr, String name) {
-  return _shouldIncludeDecl(usr, name, bindingsIndex.isSeenAndFilledType,
+  return _shouldIncludeDecl(usr, name, bindingsIndex.isSeenType,
       config.enumClassDecl.shouldInclude);
 }
 
@@ -54,7 +54,7 @@ bool shouldIncludeMacro(String usr, String name) {
 }
 
 bool shouldIncludeTypealias(String usr, String name) {
-  return _shouldIncludeDecl(usr, name, bindingsIndex.isSeenAndFilledType,
+  return _shouldIncludeDecl(usr, name, bindingsIndex.isSeenType,
       config.typedefs.shouldInclude);
 }
 

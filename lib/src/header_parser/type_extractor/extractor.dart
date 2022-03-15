@@ -41,17 +41,17 @@ Type getCodeGenType(
   final cursor = clang.clang_getTypeDeclaration(cxtype);
   if (cursor.kind != clang_types.CXCursorKind.CXCursor_NoDeclFound) {
     final usr = cursor.usr();
-    var cacheEntry = bindingsIndex.getSeenType(usr);
-    if (cacheEntry == null) {
-      cacheEntry = Type.cacheEntry();
-      bindingsIndex.addTypeToSeen(usr, cacheEntry);
-    }
-    if (cacheEntry.cachedType == null) {
-      cacheEntry.child = _createTypeFromCursor(
+    var type = bindingsIndex.getSeenType(usr);
+    if (type == null) {
+      type = _createTypeFromCursor(
           cxtype, cursor, ignoreFilter, pointerReference);
+      if (type == null) {
+        return Type.unimplemented('Type: ${cxtype.kindSpelling()} not implemented');
+      }
+      bindingsIndex.addTypeToSeen(usr, type);
     }
-    _fillFromCursorIfNeeded(cacheEntry.cachedType, cursor, ignoreFilter, pointerReference);
-    return cacheEntry;
+    _fillFromCursorIfNeeded(type, cursor, ignoreFilter, pointerReference);
+    return type;
   }
 
   // If the type doesn't have a declaration cursor, then it's a basic type such

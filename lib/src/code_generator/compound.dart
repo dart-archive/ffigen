@@ -89,14 +89,14 @@ abstract class Compound extends NoLookUpBinding {
     var startType = type;
     while (startType.broadType == BroadType.ConstantArray) {
       array.add(startType.length!);
-      startType = startType.child!.cachedType!;
+      startType = startType.child!;
     }
     return array;
   }
 
   String _getInlineArrayTypeString(Type type, Writer w) {
     if (type.broadType == BroadType.ConstantArray) {
-      return '${w.ffiLibraryPrefix}.Array<${_getInlineArrayTypeString(type.child!.cachedType!, w)}>';
+      return '${w.ffiLibraryPrefix}.Array<${_getInlineArrayTypeString(type.child!, w)}>';
     }
     return type.getCType(w);
   }
@@ -130,7 +130,7 @@ abstract class Compound extends NoLookUpBinding {
     const depth = '  ';
     for (final m in members) {
       final memberName = localUniqueNamer.makeUnique(m.name);
-      final memberType = m.type.cachedType!;
+      final memberType = m.type;
       if (memberType.broadType == BroadType.ConstantArray) {
         s.write(
             '$depth@${w.ffiLibraryPrefix}.Array.multi(${_getArrayDimensionLengths(memberType)})\n');

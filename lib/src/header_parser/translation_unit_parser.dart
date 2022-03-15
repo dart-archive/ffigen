@@ -81,5 +81,5 @@ void addToBindings(Binding? b) {
 }
 
 Type? _getCodeGenTypeFromCursor(clang_types.CXCursor cursor) {
-  return getCodeGenType(cursor.type(), ignoreFilter: false).cachedType;
+  return getCodeGenType(cursor.type(), ignoreFilter: false);
 }

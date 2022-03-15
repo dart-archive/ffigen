@@ -41,7 +41,7 @@ Typealias? parseTypedefDeclaration(
   // print("    TYPEDEF  ${cursor.completeStringRepr()}  $pointerReference");
   if (shouldIncludeTypealias(typedefUsr, typedefName)) {
     final ct = clang.clang_getTypedefDeclUnderlyingType(cursor);
-    final s = getCodeGenType(ct, pointerReference: pointerReference).cachedType!;
+    final s = getCodeGenType(ct, pointerReference: pointerReference);
     // print("              ${s}");
 
     if (bindingsIndex.isSeenUnsupportedTypealias(typedefUsr)) {

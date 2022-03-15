@@ -57,11 +57,6 @@ enum BroadType {
 
   /// Used as a marker, so that declarations having these can exclude them.
   Unimplemented,
-
-  /// Placeholder for a type in a cache. Once the entry is fully filled in,
-  /// the types child will point to the real type, and the cache entry should be
-  /// considered exactly equivalent to the wrapped type.
-  CacheEntry,
 }
 
 /// Type class for return types, variable types, etc.
@@ -109,8 +104,7 @@ class Type {
   /// The BroadType of this Type.
   final BroadType broadType;
 
-  /// Child Type, e.g Pointer(Parent) to Int(Child), Child Type of an Array, or
-  /// the type that a CacheEntry points to.
+  /// Child Type, e.g Pointer(Parent) to Int(Child), or Child Type of an Array.
   Type? child;
 
   /// For ConstantArray and IncompleteArray type.
@@ -168,7 +162,6 @@ class Type {
   factory Type.unimplemented(String reason) =>
       Type._(broadType: BroadType.Unimplemented, unimplementedReason: reason);
   factory Type.handle() => Type._(broadType: BroadType.Handle);
-  factory Type.cacheEntry() => Type._(broadType: BroadType.CacheEntry);
 
   /// Get all dependencies of this type and save them in [dependencies].
   void addDependencies(Set<Binding> dependencies) {
@@ -207,8 +200,7 @@ class Type {
   /// Returns itself if it's not an Array Type.
   Type getBaseArrayType() {
     if (broadType == BroadType.ConstantArray ||
-        broadType == BroadType.IncompleteArray ||
-        broadType == BroadType.CacheEntry) {
+        broadType == BroadType.IncompleteArray) {
       return child!.getBaseArrayType();
     } else {
       return this;
@@ -221,8 +213,6 @@ class Type {
   Type getBaseTypealiasType() {
     if (broadType == BroadType.Typealias) {
       return typealias!.type.getBaseTypealiasType();
-    } else if (broadType == BroadType.CacheEntry) {
-      return child!.getBaseTypealiasType();
     } else {
       return this;
     }
@@ -244,17 +234,6 @@ class Type {
       return baseTypealiasType.isIncompleteCompound;
     }
   }
-
-  /// If this is a filled [BroadType.CacheEntry], returns the wrapped type.
-  /// Otherwise returns this type.
-  Type? get cachedType => broadType == BroadType.CacheEntry
-      ? child?.cachedType
-      : this;
-
-  /// Returns false if this is an unfilled [BroadType.CacheEntry]. Otherwise
-  /// returns true.
-  bool get isCacheEntryFilled =>
-      broadType == BroadType.CacheEntry ? child != null : true;
 
   String getCType(Writer w) {
     switch (broadType) {
@@ -284,8 +263,6 @@ class Type {
         return '${importedType!.libraryImport.prefix}.${importedType!.cType}';
       case BroadType.Typealias:
         return typealias!.name;
-      case BroadType.CacheEntry:
-        return cachedType!.getCType(w);
       case BroadType.Unimplemented:
         throw UnimplementedError('C type unknown for ${broadType.toString()}');
     }
@@ -329,8 +306,6 @@ class Type {
         } else {
           return typealias!.type.getDartType(w);
         }
-      case BroadType.CacheEntry:
-        return cachedType!.getDartType(w);
       case BroadType.Unimplemented:
         throw UnimplementedError(
             'dart type unknown for ${broadType.toString()}');

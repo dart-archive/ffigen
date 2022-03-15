@@ -367,6 +367,4 @@ class BindingsIndex {
   void addHeaderToSeen(String source, bool includeStatus) =>
       _headerCache[source] = includeStatus;
   bool? getSeenHeaderStatus(String source) => _headerCache[source];
-  bool isSeenAndFilledType(String usr) =>
-      isSeenType(usr) && getSeenType(usr)!.isCacheEntryFilled;
 }
