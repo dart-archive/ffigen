@@ -20,22 +20,22 @@ bool _shouldIncludeDecl(String usr, String name,
 
 bool shouldIncludeStruct(String usr, String name) {
   return _shouldIncludeDecl(
-      usr, name, bindingsIndex.isSeenStruct, config.structDecl.shouldInclude);
+      usr, name, bindingsIndex.isSeenType, config.structDecl.shouldInclude);
 }
 
 bool shouldIncludeUnion(String usr, String name) {
   return _shouldIncludeDecl(
-      usr, name, bindingsIndex.isSeenUnion, config.unionDecl.shouldInclude);
+      usr, name, bindingsIndex.isSeenType, config.unionDecl.shouldInclude);
 }
 
 bool shouldIncludeFunc(String usr, String name) {
   return _shouldIncludeDecl(
-      usr, name, bindingsIndex.isSeenFunc, config.functionDecl.shouldInclude);
+      usr, name, bindingsIndex.isSeenType, config.functionDecl.shouldInclude);
 }
 
 bool shouldIncludeEnumClass(String usr, String name) {
-  return _shouldIncludeDecl(usr, name, bindingsIndex.isSeenEnumClass,
-      config.enumClassDecl.shouldInclude);
+  return _shouldIncludeDecl(
+      usr, name, bindingsIndex.isSeenType, config.enumClassDecl.shouldInclude);
 }
 
 bool shouldIncludeUnnamedEnumConstant(String usr, String name) {
@@ -55,7 +55,7 @@ bool shouldIncludeMacro(String usr, String name) {
 
 bool shouldIncludeTypealias(String usr, String name) {
   return _shouldIncludeDecl(
-      usr, name, bindingsIndex.isSeenTypealias, config.typedefs.shouldInclude);
+      usr, name, bindingsIndex.isSeenType, config.typedefs.shouldInclude);
 }
 
 /// True if a cursor should be included based on headers config, used on root
