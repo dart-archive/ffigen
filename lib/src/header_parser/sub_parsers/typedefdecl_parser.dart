@@ -13,8 +13,7 @@ import '../utils.dart';
 
 final _logger = Logger('ffigen.header_parser.typedefdecl_parser');
 
-/// Holds temporary information regarding a typedef referenced [Binding]
-/// while parsing.
+/// Parses a typedef declaration.
 ///
 /// Notes:
 /// - Pointer to Typedefs structs are skipped if the struct is seen.
@@ -30,16 +29,6 @@ final _logger = Logger('ffigen.header_parser.typedefdecl_parser');
 ///
 /// typedef A D; // Typeref.
 /// ```
-class _ParsedTypealias {
-  Typealias? typealias;
-  String? typedefName;
-  bool typedefToPointer = false;
-  _ParsedTypealias();
-}
-
-final _stack = Stack<_ParsedTypealias>();
-
-/// Parses a typedef declaration.
 ///
 /// Returns `null` if the typedef could not be generated or has been excluded
 /// by the config.
@@ -47,7 +36,6 @@ Typealias? parseTypedefDeclaration(
   clang_types.CXCursor cursor, {
   bool pointerReference = false,
 }) {
-  _stack.push(_ParsedTypealias());
   final typedefName = cursor.spelling();
   final typedefUsr = cursor.usr();
   if (shouldIncludeTypealias(typedefUsr, typedefName)) {
@@ -85,20 +73,14 @@ Typealias? parseTypedefDeclaration(
       bindingsIndex.addUnsupportedTypealiasToSeen(typedefUsr);
     } else {
       // Create typealias.
-      _stack.top.typealias = Typealias(
+      return Typealias(
         usr: typedefUsr,
         originalName: typedefName,
         name: config.typedefs.renameUsingConfig(typedefName),
         type: s,
         dartDoc: getCursorDocComment(cursor),
       );
-      bindingsIndex.addTypealiasToSeen(typedefUsr, _stack.top.typealias!);
     }
   }
-
-  if (bindingsIndex.isSeenTypealias(typedefUsr)) {
-    _stack.top.typealias = bindingsIndex.getSeenTypealias(typedefUsr);
-  }
-
-  return _stack.pop().typealias;
+  return null;
 }

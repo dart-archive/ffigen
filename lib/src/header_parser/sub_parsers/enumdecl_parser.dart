@@ -54,8 +54,7 @@ EnumClass? parseEnumDeclaration(
   if (enumName.isEmpty) {
     _logger.fine('Saving anonymous enum.');
     saveUnNamedEnum(cursor);
-  } else if ((ignoreFilter || shouldIncludeEnumClass(enumUsr, enumName)) &&
-      (!bindingsIndex.isSeenEnumClass(enumUsr))) {
+  } else if (ignoreFilter || shouldIncludeEnumClass(enumUsr, enumName)) {
     _logger.fine('++++ Adding Enum: ${cursor.completeStringRepr()}');
     _stack.top.enumClass = EnumClass(
       usr: enumUsr,
@@ -63,11 +62,7 @@ EnumClass? parseEnumDeclaration(
       originalName: enumName,
       name: config.enumClassDecl.renameUsingConfig(enumName),
     );
-    bindingsIndex.addEnumClassToSeen(enumUsr, _stack.top.enumClass!);
     _addEnumConstant(cursor);
-  }
-  if (bindingsIndex.isSeenEnumClass(enumUsr)) {
-    _stack.top.enumClass = bindingsIndex.getSeenEnumClass(enumUsr);
   }
 
   return _stack.pop().enumClass;
