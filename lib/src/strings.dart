@@ -38,7 +38,8 @@ const langObjC = 'objc';
 // Clang command line args for Objective C.
 const clangLangObjC = ['-x', 'objective-c'];
 const clangInclude = '-include';
-const clangDefaultObjCSystemHeaderPath = '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include';
+const clangDefaultObjCSystemHeaderPath =
+    '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include';
 const clangDefaultObjCSystemHeaders = ['objc/NSObject.h'];
 
 const headers = 'headers';
