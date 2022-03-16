@@ -22,13 +22,47 @@ const _padding = '  ';
 Type getCodeGenType(
   clang_types.CXType cxtype, {
 
+  /// Option to ignore declaration filter (Useful in case of extracting
+  /// declarations when they are passed/returned by an included function.)
+  bool ignoreFilter = true,
+
   /// Passed on if a value was marked as a pointer before this one.
   bool pointerReference = false,
 }) {
   _logger.fine('${_padding}getCodeGenType ${cxtype.completeStringRepr()}');
-  final kind = cxtype.kind;
 
-  switch (kind) {
+  // Special case: Elaborated types just refer to another type.
+  if (cxtype.kind == clang_types.CXTypeKind.CXType_Elaborated) {
+    return getCodeGenType(clang.clang_Type_getNamedType(cxtype),
+        ignoreFilter: ignoreFilter, pointerReference: pointerReference);
+  }
+
+  // If the type has a declaration cursor, then use the BindingsIndex to break
+  // any potential cycles, and dedupe the Type.
+  final cursor = clang.clang_getTypeDeclaration(cxtype);
+  if (cursor.kind != clang_types.CXCursorKind.CXCursor_NoDeclFound) {
+    final usr = cursor.usr();
+    var type = bindingsIndex.getSeenType(usr);
+    if (type == null) {
+      final result =
+          _createTypeFromCursor(cxtype, cursor, ignoreFilter, pointerReference);
+      type = result.type;
+      if (type == null) {
+        return Type.unimplemented(
+            'Type: ${cxtype.kindSpelling()} not implemented');
+      }
+      if (result.addToCache) {
+        bindingsIndex.addTypeToSeen(usr, type);
+      }
+    }
+    _fillFromCursorIfNeeded(type, cursor, ignoreFilter, pointerReference);
+    return type;
+  }
+
+  // If the type doesn't have a declaration cursor, then it's a basic type such
+  // as int, or a simple derived type like a pointer, so doesn't need to be
+  // cached.
+  switch (cxtype.kind) {
     case clang_types.CXTypeKind.CXType_Pointer:
       final pt = clang.clang_getPointeeType(cxtype);
       final s = getCodeGenType(pt, pointerReference: true);
@@ -41,67 +75,6 @@ Type getCodeGenType(
         return Type.handle();
       }
       return Type.pointer(s);
-    case clang_types.CXTypeKind.CXType_Typedef:
-      final spelling = clang.clang_getTypedefName(cxtype).toStringAndDispose();
-      if (config.typedefTypeMappings.containsKey(spelling)) {
-        _logger.fine('  Type $spelling mapped from type-map');
-        return Type.importedType(config.typedefTypeMappings[spelling]!);
-      }
-      // Get name from supported typedef name if config allows.
-      if (config.useSupportedTypedefs) {
-        if (suportedTypedefToSuportedNativeType.containsKey(spelling)) {
-          _logger.fine('  Type Mapped from supported typedef');
-          return Type.nativeType(
-              suportedTypedefToSuportedNativeType[spelling]!);
-        } else if (supportedTypedefToImportedType.containsKey(spelling)) {
-          _logger.fine('  Type Mapped from supported typedef');
-          return Type.importedType(supportedTypedefToImportedType[spelling]!);
-        }
-      }
-
-      // This is important or we get stuck in infinite recursion.
-      final cursor = clang.clang_getTypeDeclaration(cxtype);
-      final typedefUsr = cursor.usr();
-
-      if (bindingsIndex.isSeenTypealias(typedefUsr)) {
-        return Type.typealias(bindingsIndex.getSeenTypealias(typedefUsr)!);
-      } else {
-        final typealias =
-            parseTypedefDeclaration(cursor, pointerReference: pointerReference);
-
-        if (typealias != null) {
-          return Type.typealias(typealias);
-        } else {
-          // Use underlying type if typealias couldn't be created or if
-          // the user excluded this typedef.
-          final ct = clang.clang_getTypedefDeclUnderlyingType(cursor);
-          return getCodeGenType(ct, pointerReference: pointerReference);
-        }
-      }
-    case clang_types.CXTypeKind.CXType_Elaborated:
-      final et = clang.clang_Type_getNamedType(cxtype);
-      final s = getCodeGenType(et, pointerReference: pointerReference);
-      return s;
-    case clang_types.CXTypeKind.CXType_Record:
-      return _extractfromRecord(cxtype, pointerReference);
-    case clang_types.CXTypeKind.CXType_Enum:
-      final cursor = clang.clang_getTypeDeclaration(cxtype);
-      final usr = cursor.usr();
-
-      if (bindingsIndex.isSeenEnumClass(usr)) {
-        return Type.enumClass(bindingsIndex.getSeenEnumClass(usr)!);
-      } else {
-        final enumClass = parseEnumDeclaration(
-          cursor,
-          ignoreFilter: true,
-        );
-        if (enumClass == null) {
-          // Handle anonymous enum declarations within another declaration.
-          return Type.nativeType(Type.enumNativeType);
-        } else {
-          return Type.enumClass(enumClass);
-        }
-      }
     case clang_types.CXTypeKind.CXType_FunctionProto:
       // Primarily used for function pointers.
       return _extractFromFunctionProto(cxtype);
@@ -141,34 +114,105 @@ Type getCodeGenType(
   }
 }
 
-Type _extractfromRecord(clang_types.CXType cxtype, bool pointerReference) {
-  Type type;
+class _CreateTypeFromCursorResult {
+  final Type? type;
 
-  final cursor = clang.clang_getTypeDeclaration(cxtype);
+  // Flag that controls whether the type is added to the cache. It should not
+  // be added to the cache if it's just a fallback implementation, such as the
+  // int that is returned when an enum is excluded by the config. Later we might
+  // need to build the full enum type (eg if it's part of an included struct),
+  // and if we put the fallback int in the cache then the full enum will never
+  // be created.
+  final bool addToCache;
+
+  _CreateTypeFromCursorResult(this.type, {this.addToCache = true});
+}
+
+_CreateTypeFromCursorResult _createTypeFromCursor(clang_types.CXType cxtype,
+    clang_types.CXCursor cursor, bool ignoreFilter, bool pointerReference) {
+  switch (cxtype.kind) {
+    case clang_types.CXTypeKind.CXType_Typedef:
+      final spelling = clang.clang_getTypedefName(cxtype).toStringAndDispose();
+      if (config.typedefTypeMappings.containsKey(spelling)) {
+        _logger.fine('  Type $spelling mapped from type-map');
+        return _CreateTypeFromCursorResult(
+            Type.importedType(config.typedefTypeMappings[spelling]!));
+      }
+      // Get name from supported typedef name if config allows.
+      if (config.useSupportedTypedefs) {
+        if (suportedTypedefToSuportedNativeType.containsKey(spelling)) {
+          _logger.fine('  Type Mapped from supported typedef');
+          return _CreateTypeFromCursorResult(
+              Type.nativeType(suportedTypedefToSuportedNativeType[spelling]!));
+        } else if (supportedTypedefToImportedType.containsKey(spelling)) {
+          _logger.fine('  Type Mapped from supported typedef');
+          return _CreateTypeFromCursorResult(
+              Type.importedType(supportedTypedefToImportedType[spelling]!));
+        }
+      }
+
+      final typealias =
+          parseTypedefDeclaration(cursor, pointerReference: pointerReference);
+
+      if (typealias != null) {
+        return _CreateTypeFromCursorResult(Type.typealias(typealias));
+      } else {
+        // Use underlying type if typealias couldn't be created or if the user
+        // excluded this typedef.
+        final ct = clang.clang_getTypedefDeclUnderlyingType(cursor);
+        return _CreateTypeFromCursorResult(
+            getCodeGenType(ct, pointerReference: pointerReference),
+            addToCache: false);
+      }
+    case clang_types.CXTypeKind.CXType_Record:
+      return _CreateTypeFromCursorResult(
+          _extractfromRecord(cxtype, cursor, ignoreFilter, pointerReference));
+    case clang_types.CXTypeKind.CXType_Enum:
+      final enumClass = parseEnumDeclaration(
+        cursor,
+        ignoreFilter: ignoreFilter,
+      );
+      if (enumClass == null) {
+        // Handle anonymous enum declarations within another declaration.
+        return _CreateTypeFromCursorResult(Type.nativeType(Type.enumNativeType),
+            addToCache: false);
+      } else {
+        return _CreateTypeFromCursorResult(Type.enumClass(enumClass));
+      }
+    default:
+      throw UnimplementedError(
+          'Unknown cursor kind: ${cursor.completeStringRepr()}');
+  }
+}
+
+void _fillFromCursorIfNeeded(Type? type, clang_types.CXCursor cursor,
+    bool ignoreFilter, bool pointerReference) {
+  if (type == null) return;
+  if (type.compound != null) {
+    fillCompoundMembersIfNeeded(type.compound!, cursor,
+        ignoreFilter: ignoreFilter, pointerReference: pointerReference);
+  }
+}
+
+Type? _extractfromRecord(clang_types.CXType cxtype, clang_types.CXCursor cursor,
+    bool ignoreFilter, bool pointerReference) {
   _logger.fine('${_padding}_extractfromRecord: ${cursor.completeStringRepr()}');
 
   final cursorKind = clang.clang_getCursorKind(cursor);
   if (cursorKind == clang_types.CXCursorKind.CXCursor_StructDecl ||
       cursorKind == clang_types.CXCursorKind.CXCursor_UnionDecl) {
-    final declUsr = cursor.usr();
     final declSpelling = cursor.spelling();
 
     // Set includer functions according to compoundType.
-    final bool Function(String) isSeenDecl;
-    final Compound? Function(String) getSeenDecl;
     final CompoundType compoundType;
     final Map<String, ImportedType> compoundTypeMappings;
 
     switch (cursorKind) {
       case clang_types.CXCursorKind.CXCursor_StructDecl:
-        isSeenDecl = bindingsIndex.isSeenStruct;
-        getSeenDecl = bindingsIndex.getSeenStruct;
         compoundType = CompoundType.struct;
         compoundTypeMappings = config.structTypeMappings;
         break;
       case clang_types.CXCursorKind.CXCursor_UnionDecl:
-        isSeenDecl = bindingsIndex.isSeenUnion;
-        getSeenDecl = bindingsIndex.getSeenUnion;
         compoundType = CompoundType.union;
         compoundTypeMappings = config.unionTypeMappings;
         break;
@@ -181,32 +225,20 @@ Type _extractfromRecord(clang_types.CXType cxtype, bool pointerReference) {
     if (compoundTypeMappings.containsKey(declSpelling)) {
       _logger.fine('  Type Mapped from type-map');
       return Type.importedType(compoundTypeMappings[declSpelling]!);
-    } else if (isSeenDecl(declUsr)) {
-      type = Type.compound(getSeenDecl(declUsr)!);
-
-      // This will parse the dependencies if needed.
-      parseCompoundDeclaration(
-        cursor,
-        compoundType,
-        ignoreFilter: true,
-        pointerReference: pointerReference,
-      );
     } else {
-      final struc = parseCompoundDeclaration(
+      final struct = parseCompoundDeclaration(
         cursor,
         compoundType,
-        ignoreFilter: true,
+        ignoreFilter: ignoreFilter,
         pointerReference: pointerReference,
       );
-      type = Type.compound(struc!);
+      if (struct == null) return null;
+      return Type.compound(struct);
     }
-  } else {
-    _logger.fine(
-        'typedeclarationCursorVisitor: _extractfromRecord: Not Implemented, ${cursor.completeStringRepr()}');
-    return Type.unimplemented('Type: ${cxtype.kindSpelling()} not implemented');
   }
-
-  return type;
+  _logger.fine(
+      'typedeclarationCursorVisitor: _extractfromRecord: Not Implemented, ${cursor.completeStringRepr()}');
+  return Type.unimplemented('Type: ${cxtype.kindSpelling()} not implemented');
 }
 
 // Used for function pointer arguments.

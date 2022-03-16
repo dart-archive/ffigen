@@ -9296,8 +9296,6 @@ typedef NativeClang_Cursor_getTranslationUnit = CXTranslationUnit Function(
 typedef DartClang_Cursor_getTranslationUnit = CXTranslationUnit Function(
     CXCursor arg0);
 
-class CXCursorSetImpl extends ffi.Opaque {}
-
 /// A fast container representing a set of CXCursors.
 typedef CXCursorSet = ffi.Pointer<custom_import.CXCursorSetImpl>;
 typedef NativeClang_createCXCursorSet = CXCursorSet Function();
