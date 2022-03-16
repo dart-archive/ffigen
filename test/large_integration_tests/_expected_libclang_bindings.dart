@@ -3520,6 +3520,25 @@ class LibClang {
   late final _clang_visitChildren = _clang_visitChildrenPtr
       .asFunction<int Function(CXCursor, CXCursorVisitor, CXClientData)>();
 
+  /// Visits the children of a cursor using the specified block. Behaves
+  /// identically to clang_visitChildren() in all other respects.
+  int clang_visitChildrenWithBlock(
+    CXCursor parent,
+    CXCursorVisitorBlock block,
+  ) {
+    return _clang_visitChildrenWithBlock(
+      parent,
+      block,
+    );
+  }
+
+  late final _clang_visitChildrenWithBlockPtr = _lookup<
+      ffi.NativeFunction<
+          pkg_ffi.UnsignedInt Function(
+              CXCursor, CXCursorVisitorBlock)>>('clang_visitChildrenWithBlock');
+  late final _clang_visitChildrenWithBlock = _clang_visitChildrenWithBlockPtr
+      .asFunction<int Function(CXCursor, CXCursorVisitorBlock)>();
+
   /// Retrieve a Unified Symbol Resolution (USR) for the entity referenced by
   /// the given cursor.
   CXString clang_getCursorUSR(
@@ -5561,6 +5580,49 @@ class LibClang {
       _clang_findIncludesInFilePtr.asFunction<
           int Function(CXTranslationUnit, CXFile, CXCursorAndRangeVisitor)>();
 
+  int clang_findReferencesInFileWithBlock(
+    CXCursor arg0,
+    CXFile arg1,
+    CXCursorAndRangeVisitorBlock arg2,
+  ) {
+    return _clang_findReferencesInFileWithBlock(
+      arg0,
+      arg1,
+      arg2,
+    );
+  }
+
+  late final _clang_findReferencesInFileWithBlockPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Int32 Function(
+                  CXCursor, CXFile, CXCursorAndRangeVisitorBlock)>>(
+      'clang_findReferencesInFileWithBlock');
+  late final _clang_findReferencesInFileWithBlock =
+      _clang_findReferencesInFileWithBlockPtr.asFunction<
+          int Function(CXCursor, CXFile, CXCursorAndRangeVisitorBlock)>();
+
+  int clang_findIncludesInFileWithBlock(
+    CXTranslationUnit arg0,
+    CXFile arg1,
+    CXCursorAndRangeVisitorBlock arg2,
+  ) {
+    return _clang_findIncludesInFileWithBlock(
+      arg0,
+      arg1,
+      arg2,
+    );
+  }
+
+  late final _clang_findIncludesInFileWithBlockPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Int32 Function(
+                  CXTranslationUnit, CXFile, CXCursorAndRangeVisitorBlock)>>(
+      'clang_findIncludesInFileWithBlock');
+  late final _clang_findIncludesInFileWithBlock =
+      _clang_findIncludesInFileWithBlockPtr.asFunction<
+          int Function(
+              CXTranslationUnit, CXFile, CXCursorAndRangeVisitorBlock)>();
+
   int clang_index_isEntityObjCContainerKind(
     int arg0,
   ) {
@@ -7462,6 +7524,9 @@ typedef CXCursorVisitor = ffi.Pointer<
 /// various callbacks and visitors.
 typedef CXClientData = ffi.Pointer<ffi.Void>;
 
+/// Visitor invoked for each cursor found by a traversal.
+typedef CXCursorVisitorBlock = ffi.Pointer<ffi.Opaque>;
+
 /// Properties for the printing policy.
 abstract class CXPrintingPolicyProperty {
   static const int CXPrintingPolicy_Indentation = 0;
@@ -7830,6 +7895,8 @@ abstract class CXResult {
   /// The function was terminated by a callback (e.g. it returned CXVisit_Break)
   static const int CXResult_VisitBreak = 2;
 }
+
+typedef CXCursorAndRangeVisitorBlock = ffi.Pointer<ffi.Opaque>;
 
 /// Source location passed to index callbacks.
 class CXIdxLoc extends ffi.Struct {

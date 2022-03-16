@@ -3975,6 +3975,24 @@ class LibClang {
   late final _clang_visitChildren =
       _clang_visitChildrenPtr.asFunction<DartClang_visitChildren>();
 
+  /// Visits the children of a cursor using the specified block.  Behaves
+  /// identically to clang_visitChildren() in all other respects.
+  int clang_visitChildrenWithBlock(
+    CXCursor parent,
+    CXCursorVisitorBlock block,
+  ) {
+    return _clang_visitChildrenWithBlock(
+      parent,
+      block,
+    );
+  }
+
+  late final _clang_visitChildrenWithBlockPtr =
+      _lookup<ffi.NativeFunction<NativeClang_visitChildrenWithBlock>>(
+          'clang_visitChildrenWithBlock');
+  late final _clang_visitChildrenWithBlock = _clang_visitChildrenWithBlockPtr
+      .asFunction<DartClang_visitChildrenWithBlock>();
+
   /// Retrieve a Unified Symbol Resolution (USR) for the entity referenced
   /// by the given cursor.
   ///
@@ -6383,6 +6401,44 @@ class LibClang {
   late final _clang_findIncludesInFile =
       _clang_findIncludesInFilePtr.asFunction<DartClang_findIncludesInFile>();
 
+  int clang_findReferencesInFileWithBlock(
+    CXCursor arg0,
+    CXFile arg1,
+    CXCursorAndRangeVisitorBlock arg2,
+  ) {
+    return _clang_findReferencesInFileWithBlock(
+      arg0,
+      arg1,
+      arg2,
+    );
+  }
+
+  late final _clang_findReferencesInFileWithBlockPtr =
+      _lookup<ffi.NativeFunction<NativeClang_findReferencesInFileWithBlock>>(
+          'clang_findReferencesInFileWithBlock');
+  late final _clang_findReferencesInFileWithBlock =
+      _clang_findReferencesInFileWithBlockPtr
+          .asFunction<DartClang_findReferencesInFileWithBlock>();
+
+  int clang_findIncludesInFileWithBlock(
+    CXTranslationUnit arg0,
+    CXFile arg1,
+    CXCursorAndRangeVisitorBlock arg2,
+  ) {
+    return _clang_findIncludesInFileWithBlock(
+      arg0,
+      arg1,
+      arg2,
+    );
+  }
+
+  late final _clang_findIncludesInFileWithBlockPtr =
+      _lookup<ffi.NativeFunction<NativeClang_findIncludesInFileWithBlock>>(
+          'clang_findIncludesInFileWithBlock');
+  late final _clang_findIncludesInFileWithBlock =
+      _clang_findIncludesInFileWithBlockPtr
+          .asFunction<DartClang_findIncludesInFileWithBlock>();
+
   int clang_index_isEntityObjCContainerKind(
     int arg0,
   ) {
@@ -7290,6 +7346,9 @@ class _SymbolAddresses {
           _library._clang_getIBOutletCollectionTypePtr;
   ffi.Pointer<ffi.NativeFunction<NativeClang_visitChildren>>
       get clang_visitChildren => _library._clang_visitChildrenPtr;
+  ffi.Pointer<ffi.NativeFunction<NativeClang_visitChildrenWithBlock>>
+      get clang_visitChildrenWithBlock =>
+          _library._clang_visitChildrenWithBlockPtr;
   ffi.Pointer<ffi.NativeFunction<NativeClang_getCursorUSR>>
       get clang_getCursorUSR => _library._clang_getCursorUSRPtr;
   ffi.Pointer<ffi.NativeFunction<NativeClang_constructUSR_ObjCClass>>
@@ -7583,6 +7642,12 @@ class _SymbolAddresses {
       get clang_findReferencesInFile => _library._clang_findReferencesInFilePtr;
   ffi.Pointer<ffi.NativeFunction<NativeClang_findIncludesInFile>>
       get clang_findIncludesInFile => _library._clang_findIncludesInFilePtr;
+  ffi.Pointer<ffi.NativeFunction<NativeClang_findReferencesInFileWithBlock>>
+      get clang_findReferencesInFileWithBlock =>
+          _library._clang_findReferencesInFileWithBlockPtr;
+  ffi.Pointer<ffi.NativeFunction<NativeClang_findIncludesInFileWithBlock>>
+      get clang_findIncludesInFileWithBlock =>
+          _library._clang_findIncludesInFileWithBlockPtr;
   ffi.Pointer<ffi.NativeFunction<NativeClang_index_isEntityObjCContainerKind>>
       get clang_index_isEntityObjCContainerKind =>
           _library._clang_index_isEntityObjCContainerKindPtr;
@@ -9794,6 +9859,20 @@ typedef NativeClang_visitChildren = pkg_ffi.UnsignedInt Function(
     CXCursor parent, CXCursorVisitor visitor, CXClientData client_data);
 typedef DartClang_visitChildren = int Function(
     CXCursor parent, CXCursorVisitor visitor, CXClientData client_data);
+
+/// Visitor invoked for each cursor found by a traversal.
+///
+/// This visitor block will be invoked for each cursor found by
+/// clang_visitChildrenWithBlock(). Its first argument is the cursor being
+/// visited, its second argument is the parent visitor for that cursor.
+///
+/// The visitor should return one of the \c CXChildVisitResult values
+/// to direct clang_visitChildrenWithBlock().
+typedef CXCursorVisitorBlock = ffi.Pointer<ffi.Opaque>;
+typedef NativeClang_visitChildrenWithBlock = pkg_ffi.UnsignedInt Function(
+    CXCursor parent, CXCursorVisitorBlock block);
+typedef DartClang_visitChildrenWithBlock = int Function(
+    CXCursor parent, CXCursorVisitorBlock block);
 typedef NativeClang_getCursorUSR = CXString Function(CXCursor arg0);
 typedef DartClang_getCursorUSR = CXString Function(CXCursor arg0);
 typedef NativeClang_constructUSR_ObjCClass = CXString Function(
@@ -10563,6 +10642,15 @@ typedef NativeClang_findIncludesInFile = ffi.Int32 Function(
     CXTranslationUnit TU, CXFile file, CXCursorAndRangeVisitor visitor);
 typedef DartClang_findIncludesInFile = int Function(
     CXTranslationUnit TU, CXFile file, CXCursorAndRangeVisitor visitor);
+typedef CXCursorAndRangeVisitorBlock = ffi.Pointer<ffi.Opaque>;
+typedef NativeClang_findReferencesInFileWithBlock = ffi.Int32 Function(
+    CXCursor arg0, CXFile arg1, CXCursorAndRangeVisitorBlock arg2);
+typedef DartClang_findReferencesInFileWithBlock = int Function(
+    CXCursor arg0, CXFile arg1, CXCursorAndRangeVisitorBlock arg2);
+typedef NativeClang_findIncludesInFileWithBlock = ffi.Int32 Function(
+    CXTranslationUnit arg0, CXFile arg1, CXCursorAndRangeVisitorBlock arg2);
+typedef DartClang_findIncludesInFileWithBlock = int Function(
+    CXTranslationUnit arg0, CXFile arg1, CXCursorAndRangeVisitorBlock arg2);
 
 /// Source location passed to index callbacks.
 class CXIdxLoc extends ffi.Struct {

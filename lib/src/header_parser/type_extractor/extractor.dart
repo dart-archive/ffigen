@@ -94,13 +94,9 @@ Type getCodeGenType(
       );
     case clang_types.CXTypeKind.CXType_Bool:
       return Type.boolean();
-    case clang_types.CXTypeKind.CXType_ObjCId:
-    case clang_types.CXTypeKind.CXType_ObjCSel:
     case clang_types.CXTypeKind.CXType_ObjCObjectPointer:
     case clang_types.CXTypeKind.CXType_BlockPointer:
       return Type.pointer(Type.importedType(opaqueType));
-    case clang_types.CXTypeKind.CXType_ObjCClass:
-      return Type.importedType(opaqueType);
     default:
       var typeSpellKey =
           clang.clang_getTypeSpelling(cxtype).toStringAndDispose();
@@ -186,6 +182,12 @@ _CreateTypeFromCursorResult _createTypeFromCursor(clang_types.CXType cxtype,
       } else {
         return _CreateTypeFromCursorResult(Type.enumClass(enumClass));
       }
+    case clang_types.CXTypeKind.CXType_ObjCId:
+    case clang_types.CXTypeKind.CXType_ObjCSel:
+      return _CreateTypeFromCursorResult(
+          Type.pointer(Type.importedType(opaqueType)));
+    case clang_types.CXTypeKind.CXType_ObjCClass:
+      return _CreateTypeFromCursorResult(Type.importedType(opaqueType));
     default:
       throw UnimplementedError(
           'Unknown cursor kind: ${cursor.completeStringRepr()}');
