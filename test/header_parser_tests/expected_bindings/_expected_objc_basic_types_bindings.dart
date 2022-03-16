@@ -41,7 +41,7 @@ class NativeLibrary {
           .asFunction<int Function(int, ffi.Pointer<ffi.Void>, int)>();
 
   ffi.Pointer<pkg_ffi.Char> sel_getName(
-    ffi.Pointer<ffi.Opaque> sel,
+    ffi.Pointer<ObjCObject> sel,
   ) {
     return _sel_getName(
       sel,
@@ -51,11 +51,11 @@ class NativeLibrary {
   late final _sel_getNamePtr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<pkg_ffi.Char> Function(
-              ffi.Pointer<ffi.Opaque>)>>('sel_getName');
+              ffi.Pointer<ObjCObject>)>>('sel_getName');
   late final _sel_getName = _sel_getNamePtr.asFunction<
-      ffi.Pointer<pkg_ffi.Char> Function(ffi.Pointer<ffi.Opaque>)>();
+      ffi.Pointer<pkg_ffi.Char> Function(ffi.Pointer<ObjCObject>)>();
 
-  ffi.Pointer<ffi.Opaque> sel_registerName(
+  ffi.Pointer<ObjCObject> sel_registerName(
     ffi.Pointer<pkg_ffi.Char> str,
   ) {
     return _sel_registerName(
@@ -65,13 +65,13 @@ class NativeLibrary {
 
   late final _sel_registerNamePtr = _lookup<
       ffi.NativeFunction<
-          ffi.Pointer<ffi.Opaque> Function(
+          ffi.Pointer<ObjCObject> Function(
               ffi.Pointer<pkg_ffi.Char>)>>('sel_registerName');
   late final _sel_registerName = _sel_registerNamePtr.asFunction<
-      ffi.Pointer<ffi.Opaque> Function(ffi.Pointer<pkg_ffi.Char>)>();
+      ffi.Pointer<ObjCObject> Function(ffi.Pointer<pkg_ffi.Char>)>();
 
   ffi.Pointer<pkg_ffi.Char> object_getClassName(
-    ffi.Pointer<ffi.Opaque> obj,
+    ffi.Pointer<ObjCObject> obj,
   ) {
     return _object_getClassName(
       obj,
@@ -81,12 +81,12 @@ class NativeLibrary {
   late final _object_getClassNamePtr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<pkg_ffi.Char> Function(
-              ffi.Pointer<ffi.Opaque>)>>('object_getClassName');
+              ffi.Pointer<ObjCObject>)>>('object_getClassName');
   late final _object_getClassName = _object_getClassNamePtr.asFunction<
-      ffi.Pointer<pkg_ffi.Char> Function(ffi.Pointer<ffi.Opaque>)>();
+      ffi.Pointer<pkg_ffi.Char> Function(ffi.Pointer<ObjCObject>)>();
 
   ffi.Pointer<ffi.Void> object_getIndexedIvars(
-    ffi.Pointer<ffi.Opaque> obj,
+    ffi.Pointer<ObjCObject> obj,
   ) {
     return _object_getIndexedIvars(
       obj,
@@ -96,12 +96,12 @@ class NativeLibrary {
   late final _object_getIndexedIvarsPtr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<ffi.Void> Function(
-              ffi.Pointer<ffi.Opaque>)>>('object_getIndexedIvars');
+              ffi.Pointer<ObjCObject>)>>('object_getIndexedIvars');
   late final _object_getIndexedIvars = _object_getIndexedIvarsPtr
-      .asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Opaque>)>();
+      .asFunction<ffi.Pointer<ffi.Void> Function(ffi.Pointer<ObjCObject>)>();
 
   int sel_isMapped(
-    ffi.Pointer<ffi.Opaque> sel,
+    ffi.Pointer<ObjCObject> sel,
   ) {
     return _sel_isMapped(
       sel,
@@ -109,12 +109,12 @@ class NativeLibrary {
   }
 
   late final _sel_isMappedPtr =
-      _lookup<ffi.NativeFunction<BOOL Function(ffi.Pointer<ffi.Opaque>)>>(
+      _lookup<ffi.NativeFunction<BOOL Function(ffi.Pointer<ObjCObject>)>>(
           'sel_isMapped');
   late final _sel_isMapped =
-      _sel_isMappedPtr.asFunction<int Function(ffi.Pointer<ffi.Opaque>)>();
+      _sel_isMappedPtr.asFunction<int Function(ffi.Pointer<ObjCObject>)>();
 
-  ffi.Pointer<ffi.Opaque> sel_getUid(
+  ffi.Pointer<ObjCObject> sel_getUid(
     ffi.Pointer<pkg_ffi.Char> str,
   ) {
     return _sel_getUid(
@@ -124,12 +124,12 @@ class NativeLibrary {
 
   late final _sel_getUidPtr = _lookup<
       ffi.NativeFunction<
-          ffi.Pointer<ffi.Opaque> Function(
+          ffi.Pointer<ObjCObject> Function(
               ffi.Pointer<pkg_ffi.Char>)>>('sel_getUid');
   late final _sel_getUid = _sel_getUidPtr.asFunction<
-      ffi.Pointer<ffi.Opaque> Function(ffi.Pointer<pkg_ffi.Char>)>();
+      ffi.Pointer<ObjCObject> Function(ffi.Pointer<pkg_ffi.Char>)>();
 
-  ffi.Pointer<ffi.Opaque> objc_retainedObject(
+  ffi.Pointer<ObjCObject> objc_retainedObject(
     objc_objectptr_t obj,
   ) {
     return _objc_retainedObject(
@@ -139,12 +139,12 @@ class NativeLibrary {
 
   late final _objc_retainedObjectPtr = _lookup<
       ffi.NativeFunction<
-          ffi.Pointer<ffi.Opaque> Function(
+          ffi.Pointer<ObjCObject> Function(
               objc_objectptr_t)>>('objc_retainedObject');
   late final _objc_retainedObject = _objc_retainedObjectPtr
-      .asFunction<ffi.Pointer<ffi.Opaque> Function(objc_objectptr_t)>();
+      .asFunction<ffi.Pointer<ObjCObject> Function(objc_objectptr_t)>();
 
-  ffi.Pointer<ffi.Opaque> objc_unretainedObject(
+  ffi.Pointer<ObjCObject> objc_unretainedObject(
     objc_objectptr_t obj,
   ) {
     return _objc_unretainedObject(
@@ -154,13 +154,13 @@ class NativeLibrary {
 
   late final _objc_unretainedObjectPtr = _lookup<
       ffi.NativeFunction<
-          ffi.Pointer<ffi.Opaque> Function(
+          ffi.Pointer<ObjCObject> Function(
               objc_objectptr_t)>>('objc_unretainedObject');
   late final _objc_unretainedObject = _objc_unretainedObjectPtr
-      .asFunction<ffi.Pointer<ffi.Opaque> Function(objc_objectptr_t)>();
+      .asFunction<ffi.Pointer<ObjCObject> Function(objc_objectptr_t)>();
 
   objc_objectptr_t objc_unretainedPointer(
-    ffi.Pointer<ffi.Opaque> obj,
+    ffi.Pointer<ObjCObject> obj,
   ) {
     return _objc_unretainedPointer(
       obj,
@@ -170,9 +170,9 @@ class NativeLibrary {
   late final _objc_unretainedPointerPtr = _lookup<
       ffi.NativeFunction<
           objc_objectptr_t Function(
-              ffi.Pointer<ffi.Opaque>)>>('objc_unretainedPointer');
+              ffi.Pointer<ObjCObject>)>>('objc_unretainedPointer');
   late final _objc_unretainedPointer = _objc_unretainedPointerPtr
-      .asFunction<objc_objectptr_t Function(ffi.Pointer<ffi.Opaque>)>();
+      .asFunction<objc_objectptr_t Function(ffi.Pointer<ObjCObject>)>();
 }
 
 class __mbstate_t extends ffi.Union {
@@ -183,6 +183,8 @@ class __mbstate_t extends ffi.Union {
   external int _mbstateL;
 }
 
+class ObjCObject extends ffi.Opaque {}
+
 typedef BOOL = pkg_ffi.SignedChar;
 typedef objc_objectptr_t = ffi.Pointer<ffi.Void>;
 
@@ -190,15 +192,15 @@ class Foo extends ffi.Struct {
   @BOOL()
   external int someBool;
 
-  external ffi.Pointer<ffi.Opaque> anId;
+  external ffi.Pointer<ObjCObject> anId;
 
-  external ffi.Pointer<ffi.Opaque> selector;
+  external ffi.Pointer<ObjCObject> selector;
 
-  external ffi.Pointer<ffi.Opaque> object;
+  external ffi.Pointer<ObjCObject> object;
 
-  external ffi.Pointer<ffi.Opaque> clazz;
+  external ffi.Pointer<ObjCObject> clazz;
 
-  external ffi.Pointer<ffi.Opaque> blockThatReturnsAnInt;
+  external ffi.Pointer<ObjCObject> blockThatReturnsAnInt;
 }
 
 const int true1 = 1;

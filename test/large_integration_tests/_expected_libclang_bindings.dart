@@ -7525,7 +7525,9 @@ typedef CXCursorVisitor = ffi.Pointer<
 typedef CXClientData = ffi.Pointer<ffi.Void>;
 
 /// Visitor invoked for each cursor found by a traversal.
-typedef CXCursorVisitorBlock = ffi.Pointer<ffi.Opaque>;
+typedef CXCursorVisitorBlock = ffi.Pointer<ObjCObject>;
+
+class ObjCObject extends ffi.Opaque {}
 
 /// Properties for the printing policy.
 abstract class CXPrintingPolicyProperty {
@@ -7896,7 +7898,7 @@ abstract class CXResult {
   static const int CXResult_VisitBreak = 2;
 }
 
-typedef CXCursorAndRangeVisitorBlock = ffi.Pointer<ffi.Opaque>;
+typedef CXCursorAndRangeVisitorBlock = ffi.Pointer<ObjCObject>;
 
 /// Source location passed to index callbacks.
 class CXIdxLoc extends ffi.Struct {

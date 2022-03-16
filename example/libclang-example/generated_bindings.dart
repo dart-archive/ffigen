@@ -9868,7 +9868,10 @@ typedef DartClang_visitChildren = int Function(
 ///
 /// The visitor should return one of the \c CXChildVisitResult values
 /// to direct clang_visitChildrenWithBlock().
-typedef CXCursorVisitorBlock = ffi.Pointer<ffi.Opaque>;
+typedef CXCursorVisitorBlock = ffi.Pointer<ObjCObject>;
+
+class ObjCObject extends ffi.Opaque {}
+
 typedef NativeClang_visitChildrenWithBlock = pkg_ffi.UnsignedInt Function(
     CXCursor parent, CXCursorVisitorBlock block);
 typedef DartClang_visitChildrenWithBlock = int Function(
@@ -10642,7 +10645,7 @@ typedef NativeClang_findIncludesInFile = ffi.Int32 Function(
     CXTranslationUnit TU, CXFile file, CXCursorAndRangeVisitor visitor);
 typedef DartClang_findIncludesInFile = int Function(
     CXTranslationUnit TU, CXFile file, CXCursorAndRangeVisitor visitor);
-typedef CXCursorAndRangeVisitorBlock = ffi.Pointer<ffi.Opaque>;
+typedef CXCursorAndRangeVisitorBlock = ffi.Pointer<ObjCObject>;
 typedef NativeClang_findReferencesInFileWithBlock = ffi.Int32 Function(
     CXCursor arg0, CXFile arg1, CXCursorAndRangeVisitorBlock arg2);
 typedef DartClang_findReferencesInFileWithBlock = int Function(

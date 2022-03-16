@@ -96,7 +96,7 @@ Type getCodeGenType(
       return Type.boolean();
     case clang_types.CXTypeKind.CXType_ObjCObjectPointer:
     case clang_types.CXTypeKind.CXType_BlockPointer:
-      return Type.pointer(Type.importedType(opaqueType));
+      return Type.pointer(Type.struct(objCObjectType));
     default:
       var typeSpellKey =
           clang.clang_getTypeSpelling(cxtype).toStringAndDispose();
@@ -185,9 +185,9 @@ _CreateTypeFromCursorResult _createTypeFromCursor(clang_types.CXType cxtype,
     case clang_types.CXTypeKind.CXType_ObjCId:
     case clang_types.CXTypeKind.CXType_ObjCSel:
       return _CreateTypeFromCursorResult(
-          Type.pointer(Type.importedType(opaqueType)));
+          Type.pointer(Type.struct(objCObjectType)));
     case clang_types.CXTypeKind.CXType_ObjCClass:
-      return _CreateTypeFromCursorResult(Type.importedType(opaqueType));
+      return _CreateTypeFromCursorResult(Type.struct(objCObjectType));
     default:
       throw UnimplementedError(
           'Unknown cursor kind: ${cursor.completeStringRepr()}');
