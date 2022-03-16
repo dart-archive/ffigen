@@ -18,12 +18,14 @@ final _logger = Logger('ffigen.header_parser.compounddecl_parser');
 
 /// Holds temporary information regarding [compound] while parsing.
 class _ParsedCompound {
-  Compound? compound;
+  Compound compound;
   bool unimplementedMemberType = false;
   bool flexibleArrayMember = false;
   bool bitFieldMember = false;
   bool dartHandleMember = false;
   bool incompleteCompoundMember = false;
+
+  _ParsedCompound(this.compound);
 
   bool get isInComplete =>
       unimplementedMemberType ||
@@ -40,32 +42,30 @@ class _ParsedCompound {
   // Stores the maximum alignment from all the children.
   int maxChildAlignment = 0;
   // Alignment of this struct.
-  int allignment = 0;
+  int alignment = 0;
 
   bool get _isPacked {
     if (!hasAttr || isInComplete) return false;
     if (hasPackedAttr) return true;
 
-    return maxChildAlignment > allignment;
+    return maxChildAlignment > alignment;
   }
 
   /// Returns pack value of a struct depending on config, returns null for no
   /// packing.
   int? get packValue {
-    if (compound!.isStruct && _isPacked) {
-      if (strings.packingValuesMap.containsKey(allignment)) {
-        return allignment;
+    if (compound.isStruct && _isPacked) {
+      if (strings.packingValuesMap.containsKey(alignment)) {
+        return alignment;
       } else {
         _logger.warning(
-            'Unsupported pack value "$allignment" for Struct "${compound!.name}".');
+            'Unsupported pack value "$alignment" for Struct "${compound.name}".');
         return null;
       }
     } else {
       return null;
     }
   }
-
-  _ParsedCompound();
 }
 
 final _stack = Stack<_ParsedCompound>();
@@ -83,31 +83,18 @@ Compound? parseCompoundDeclaration(
   /// generate these as opaque if `dependency-only` was set to opaque).
   bool pointerReference = false,
 }) {
-  _stack.push(_ParsedCompound());
-
   // Set includer functions according to compoundType.
   final bool Function(String, String) shouldIncludeDecl;
-  final bool Function(String) isSeenDecl;
-  final Compound? Function(String) getSeenDecl;
-  final void Function(String, Compound) addDeclToSeen;
   final Declaration configDecl;
-  final String className;
+  final String className = _compoundTypeDebugName(compoundType);
   switch (compoundType) {
     case CompoundType.struct:
       shouldIncludeDecl = shouldIncludeStruct;
-      isSeenDecl = bindingsIndex.isSeenStruct;
-      getSeenDecl = bindingsIndex.getSeenStruct;
-      addDeclToSeen = bindingsIndex.addStructToSeen;
       configDecl = config.structDecl;
-      className = 'Struct';
       break;
     case CompoundType.union:
       shouldIncludeDecl = shouldIncludeUnion;
-      isSeenDecl = bindingsIndex.isSeenUnion;
-      getSeenDecl = bindingsIndex.getSeenUnion;
-      addDeclToSeen = bindingsIndex.addUnionToSeen;
       configDecl = config.unionDecl;
-      className = 'Union';
       break;
   }
 
@@ -134,110 +121,110 @@ Compound? parseCompoundDeclaration(
     if (ignoreFilter) {
       // This declaration is defined inside some other declaration and hence
       // must be generated.
-      _stack.top.compound = Compound.fromType(
+      return Compound.fromType(
         type: compoundType,
         name: incrementalNamer.name('Unnamed$className'),
         usr: declUsr,
         dartDoc: getCursorDocComment(cursor),
       );
-      _setMembers(cursor, className);
     } else {
       _logger.finest('unnamed $className declaration');
     }
-  } else if ((ignoreFilter || shouldIncludeDecl(declUsr, declName)) &&
-      (!isSeenDecl(declUsr))) {
+  } else if (ignoreFilter || shouldIncludeDecl(declUsr, declName)) {
     _logger.fine(
         '++++ Adding $className: Name: $declName, ${cursor.completeStringRepr()}');
-    _stack.top.compound = Compound.fromType(
+    return Compound.fromType(
       type: compoundType,
       usr: declUsr,
       originalName: declName,
       name: configDecl.renameUsingConfig(declName),
       dartDoc: getCursorDocComment(cursor),
     );
-    // Adding to seen here to stop recursion if a declaration has itself as a
-    // member, members are updated later.
-    addDeclToSeen(declUsr, _stack.top.compound!);
   }
-
-  if (isSeenDecl(declUsr)) {
-    _stack.top.compound = getSeenDecl(declUsr);
-
-    // Skip dependencies if already seen OR user has specified `dependency-only`
-    // as opaque AND this is a pointer reference AND the declaration was not
-    // included according to config (ignoreFilter).
-    final skipDependencies = _stack.top.compound!.parsedDependencies ||
-        (pointerReference &&
-            ignoreFilter &&
-            ((compoundType == CompoundType.struct &&
-                    config.structDependencies == CompoundDependencies.opaque) ||
-                (compoundType == CompoundType.union &&
-                    config.unionDependencies == CompoundDependencies.opaque)));
-
-    if (!skipDependencies) {
-      // Prevents infinite recursion if struct has a pointer to itself.
-      _stack.top.compound!.parsedDependencies = true;
-      _setMembers(cursor, className);
-    } else if (!_stack.top.compound!.parsedDependencies) {
-      _logger.fine('Skipped dependencies.');
-    }
-  }
-
-  return _stack.pop().compound;
+  return null;
 }
 
-void _setMembers(clang_types.CXCursor cursor, String className) {
-  _stack.top.hasAttr = clang.clang_Cursor_hasAttrs(cursor) != 0;
-  _stack.top.allignment = cursor.type().alignment();
+void fillCompoundMembersIfNeeded(
+  Compound compound,
+  clang_types.CXCursor cursor, {
 
+  /// Option to ignore declaration filter (Useful in case of extracting
+  /// declarations when they are passed/returned by an included function.)
+  bool ignoreFilter = false,
+
+  /// To track if the declaration was used by reference(i.e T*). (Used to only
+  /// generate these as opaque if `dependency-only` was set to opaque).
+  bool pointerReference = false,
+}) {
+  final compoundType = compound.compoundType;
+
+  // Skip dependencies if already seen OR user has specified `dependency-only`
+  // as opaque AND this is a pointer reference AND the declaration was not
+  // included according to config (ignoreFilter).
+  final skipDependencies = compound.parsedDependencies ||
+      (pointerReference &&
+          ignoreFilter &&
+          ((compoundType == CompoundType.struct &&
+                  config.structDependencies == CompoundDependencies.opaque) ||
+              (compoundType == CompoundType.union &&
+                  config.unionDependencies == CompoundDependencies.opaque)));
+  if (skipDependencies) return;
+
+  final parsed = _ParsedCompound(compound);
+  final String className = _compoundTypeDebugName(compoundType);
+  parsed.hasAttr = clang.clang_Cursor_hasAttrs(cursor) != 0;
+  parsed.alignment = cursor.type().alignment();
+  compound.parsedDependencies = true; // Break cycles.
+
+  _stack.push(parsed);
   final resultCode = clang.clang_visitChildren(
     cursor,
     Pointer.fromFunction(_compoundMembersVisitor, exceptional_visitor_return),
     nullptr,
   );
+  _stack.pop();
 
   _logger.finest(
-      'Opaque: ${_stack.top.isInComplete}, HasAttr: ${_stack.top.hasAttr}, AlignValue: ${_stack.top.allignment}, MaxChildAlignValue: ${_stack.top.maxChildAlignment}, PackValue: ${_stack.top.packValue}.');
-  _stack.top.compound!.pack = _stack.top.packValue;
+      'Opaque: ${parsed.isInComplete}, HasAttr: ${parsed.hasAttr}, AlignValue: ${parsed.alignment}, MaxChildAlignValue: ${parsed.maxChildAlignment}, PackValue: ${parsed.packValue}.');
+  compound.pack = parsed.packValue;
 
   visitChildrenResultChecker(resultCode);
 
-  if (_stack.top.unimplementedMemberType) {
+  if (parsed.unimplementedMemberType) {
     _logger.fine(
         '---- Removed $className members, reason: member with unimplementedtype ${cursor.completeStringRepr()}');
     _logger.warning(
-        'Removed All $className Members from ${_stack.top.compound!.name}(${_stack.top.compound!.originalName}), struct member has an unsupported type.');
-  } else if (_stack.top.flexibleArrayMember) {
+        'Removed All $className Members from ${compound.name}(${compound.originalName}), struct member has an unsupported type.');
+  } else if (parsed.flexibleArrayMember) {
     _logger.fine(
         '---- Removed $className members, reason: incomplete array member ${cursor.completeStringRepr()}');
     _logger.warning(
-        'Removed All $className Members from ${_stack.top.compound!.name}(${_stack.top.compound!.originalName}), Flexible array members not supported.');
-  } else if (_stack.top.bitFieldMember) {
+        'Removed All $className Members from ${compound.name}(${compound.originalName}), Flexible array members not supported.');
+  } else if (parsed.bitFieldMember) {
     _logger.fine(
         '---- Removed $className members, reason: bitfield members ${cursor.completeStringRepr()}');
     _logger.warning(
-        'Removed All $className Members from ${_stack.top.compound!.name}(${_stack.top.compound!.originalName}), Bit Field members not supported.');
-  } else if (_stack.top.dartHandleMember && config.useDartHandle) {
+        'Removed All $className Members from ${compound.name}(${compound.originalName}), Bit Field members not supported.');
+  } else if (parsed.dartHandleMember && config.useDartHandle) {
     _logger.fine(
         '---- Removed $className members, reason: Dart_Handle member. ${cursor.completeStringRepr()}');
     _logger.warning(
-        'Removed All $className Members from ${_stack.top.compound!.name}(${_stack.top.compound!.originalName}), Dart_Handle member not supported.');
-  } else if (_stack.top.incompleteCompoundMember) {
+        'Removed All $className Members from ${compound.name}(${compound.originalName}), Dart_Handle member not supported.');
+  } else if (parsed.incompleteCompoundMember) {
     _logger.fine(
         '---- Removed $className members, reason: Incomplete Nested Struct member. ${cursor.completeStringRepr()}');
     _logger.warning(
-        'Removed All $className Members from ${_stack.top.compound!.name}(${_stack.top.compound!.originalName}), Incomplete Nested Struct member not supported.');
+        'Removed All $className Members from ${compound.name}(${compound.originalName}), Incomplete Nested Struct member not supported.');
   }
 
   // Clear all members if declaration is incomplete.
-  if (_stack.top.isInComplete) {
-    _stack.top.compound!.members.clear();
+  if (parsed.isInComplete) {
+    compound.members.clear();
   }
 
   // C allows empty structs/union, but it's undefined behaviour at runtine.
   // So we need to mark a declaration incomplete if it has no members.
-  _stack.top.compound!.isInComplete =
-      _stack.top.isInComplete || _stack.top.compound!.members.isEmpty;
+  compound.isInComplete = parsed.isInComplete || compound.members.isEmpty;
 }
 
 /// Visitor for the struct/union cursor [CXCursorKind.CXCursor_StructDecl]/
@@ -246,36 +233,37 @@ void _setMembers(clang_types.CXCursor cursor, String className) {
 /// Child visitor invoked on struct/union cursor.
 int _compoundMembersVisitor(clang_types.CXCursor cursor,
     clang_types.CXCursor parent, Pointer<Void> clientData) {
+  final parsed = _stack.top;
   try {
     if (cursor.kind == clang_types.CXCursorKind.CXCursor_FieldDecl) {
       _logger.finer('===== member: ${cursor.completeStringRepr()}');
 
       // Set maxChildAlignValue.
       final align = cursor.type().alignment();
-      if (align > _stack.top.maxChildAlignment) {
-        _stack.top.maxChildAlignment = align;
+      if (align > parsed.maxChildAlignment) {
+        parsed.maxChildAlignment = align;
       }
 
       final mt = cursor.type().toCodeGenType();
       if (mt.broadType == BroadType.IncompleteArray) {
         // TODO(68): Structs with flexible Array Members are not supported.
-        _stack.top.flexibleArrayMember = true;
+        parsed.flexibleArrayMember = true;
       }
       if (clang.clang_getFieldDeclBitWidth(cursor) != -1) {
         // TODO(84): Struct with bitfields are not suppoorted.
-        _stack.top.bitFieldMember = true;
+        parsed.bitFieldMember = true;
       }
       if (mt.broadType == BroadType.Handle) {
-        _stack.top.dartHandleMember = true;
+        parsed.dartHandleMember = true;
       }
       if (mt.isIncompleteCompound) {
-        _stack.top.incompleteCompoundMember = true;
+        parsed.incompleteCompoundMember = true;
       }
       if (mt.getBaseType().broadType == BroadType.Unimplemented) {
-        _stack.top.unimplementedMemberType = true;
+        parsed.unimplementedMemberType = true;
       }
 
-      _stack.top.compound!.members.add(
+      parsed.compound.members.add(
         Member(
           dartDoc: getCursorDocComment(
             cursor,
@@ -283,14 +271,14 @@ int _compoundMembersVisitor(clang_types.CXCursor cursor,
           ),
           originalName: cursor.spelling(),
           name: config.structDecl.renameMemberUsingConfig(
-            _stack.top.compound!.originalName,
+            parsed.compound.originalName,
             cursor.spelling(),
           ),
           type: mt,
         ),
       );
     } else if (cursor.kind == clang_types.CXCursorKind.CXCursor_PackedAttr) {
-      _stack.top.hasPackedAttr = true;
+      parsed.hasPackedAttr = true;
     }
   } catch (e, s) {
     _logger.severe(e);
@@ -298,4 +286,8 @@ int _compoundMembersVisitor(clang_types.CXCursor cursor,
     rethrow;
   }
   return clang_types.CXChildVisitResult.CXChildVisit_Continue;
+}
+
+String _compoundTypeDebugName(CompoundType compoundType) {
+  return compoundType == CompoundType.struct ? "Struct" : "Union";
 }
