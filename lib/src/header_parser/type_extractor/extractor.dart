@@ -183,9 +183,11 @@ _CreateTypeFromCursorResult _createTypeFromCursor(clang_types.CXType cxtype,
         return _CreateTypeFromCursorResult(Type.enumClass(enumClass));
       }
     case clang_types.CXTypeKind.CXType_ObjCId:
-    case clang_types.CXTypeKind.CXType_ObjCSel:
       return _CreateTypeFromCursorResult(
           Type.pointer(Type.struct(objCObjectType)));
+    case clang_types.CXTypeKind.CXType_ObjCSel:
+      return _CreateTypeFromCursorResult(
+          Type.pointer(Type.struct(objCSelType)));
     case clang_types.CXTypeKind.CXType_ObjCClass:
       return _CreateTypeFromCursorResult(Type.struct(objCObjectType));
     default:

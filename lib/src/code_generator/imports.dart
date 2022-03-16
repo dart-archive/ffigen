@@ -55,3 +55,4 @@ final sizeType = ImportedType(ffiPkgImport, 'Size', 'int');
 final wCharType = ImportedType(ffiPkgImport, 'WChar', 'int');
 
 final objCObjectType = Struc(name: 'ObjCObject');
+final objCSelType = Struc(name: 'ObjCSel');
