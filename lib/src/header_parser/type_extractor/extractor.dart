@@ -8,6 +8,7 @@ import 'package:ffigen/src/header_parser/sub_parsers/typedefdecl_parser.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
 
+import '../../config_provider/config_types.dart';
 import '../clang_bindings/clang_bindings.dart' as clang_types;
 import '../data.dart';
 import '../sub_parsers/compounddecl_parser.dart';
@@ -35,6 +36,20 @@ Type getCodeGenType(
   if (cxtype.kind == clang_types.CXTypeKind.CXType_Elaborated) {
     return getCodeGenType(clang.clang_Type_getNamedType(cxtype),
         ignoreFilter: ignoreFilter, pointerReference: pointerReference);
+  }
+
+  // Objective C types skip the cache, and are conditional on the language flag.
+  if (config.language == Language.objc) {
+    switch (cxtype.kind) {
+      case clang_types.CXTypeKind.CXType_ObjCObjectPointer:
+      case clang_types.CXTypeKind.CXType_BlockPointer:
+      case clang_types.CXTypeKind.CXType_ObjCId:
+        return Type.pointer(Type.struct(objCObjectType));
+      case clang_types.CXTypeKind.CXType_ObjCSel:
+        return Type.pointer(Type.struct(objCSelType));
+      case clang_types.CXTypeKind.CXType_ObjCClass:
+        return Type.struct(objCObjectType);
+    }
   }
 
   // If the type has a declaration cursor, then use the BindingsIndex to break
@@ -94,9 +109,6 @@ Type getCodeGenType(
       );
     case clang_types.CXTypeKind.CXType_Bool:
       return Type.boolean();
-    case clang_types.CXTypeKind.CXType_ObjCObjectPointer:
-    case clang_types.CXTypeKind.CXType_BlockPointer:
-      return Type.pointer(Type.struct(objCObjectType));
     default:
       var typeSpellKey =
           clang.clang_getTypeSpelling(cxtype).toStringAndDispose();
@@ -182,14 +194,6 @@ _CreateTypeFromCursorResult _createTypeFromCursor(clang_types.CXType cxtype,
       } else {
         return _CreateTypeFromCursorResult(Type.enumClass(enumClass));
       }
-    case clang_types.CXTypeKind.CXType_ObjCId:
-      return _CreateTypeFromCursorResult(
-          Type.pointer(Type.struct(objCObjectType)));
-    case clang_types.CXTypeKind.CXType_ObjCSel:
-      return _CreateTypeFromCursorResult(
-          Type.pointer(Type.struct(objCSelType)));
-    case clang_types.CXTypeKind.CXType_ObjCClass:
-      return _CreateTypeFromCursorResult(Type.struct(objCObjectType));
     default:
       throw UnimplementedError(
           'Unknown cursor kind: ${cursor.completeStringRepr()}');
