@@ -467,8 +467,7 @@ bool languageValidator(List<String> name, dynamic value) {
     if (value == strings.langC || value == strings.langObjC) {
       return true;
     }
-    _logger.severe(
-        "'$name' must be one of the following - "
+    _logger.severe("'$name' must be one of the following - "
         "{${strings.langC}, ${strings.langObjC}}");
     return false;
   }

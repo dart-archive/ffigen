@@ -74,7 +74,7 @@ List<Binding> parseToBindings() {
     }
   }
 
-  _logger.fine('CompilerOpts used: ${compilerOpts}');
+  _logger.fine('CompilerOpts used: $compilerOpts');
   clangCmdArgs = createDynamicStringArray(compilerOpts);
   final cmdLen = compilerOpts.length;
 
