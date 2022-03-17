@@ -34,7 +34,9 @@ class ObjCInterface extends NoLookUpBinding {
     // TODO: Use UniqueNamer.
     // TODO: Extends.
 
-    s.write('class $name {');
+    s.write('class $name ');
+    if (superType != null) s.write('extends ${superType!.name} ');
+    s.write('{\n');
     for (final m in methods) {
       m.toBindingString(w, s);
     }
@@ -54,35 +56,48 @@ class ObjCInterface extends NoLookUpBinding {
   }
 }
 
+enum ObjCMethodKind {
+  instanceMethod,
+  classMethod,
+  propertyGetter,
+  propertySetter,
+}
+
 class ObjCMethod {
   final String? dartDoc;
   final String originalName;
   final String name;
   Type? returnType;
   final params = <ObjCMethodParam>[];
-  final bool propertyGetterOrSetter;
-  final bool isClassMethod;
+  final ObjCMethodKind kind;
 
   ObjCMethod({
-    String? originalName,
-    required this.name,
+    required this.originalName,
     this.dartDoc,
-    this.propertyGetterOrSetter = false,
-    this.isClassMethod = false,
-  }) : originalName = originalName ?? name;
+    required this.kind,
+  }) : name = _getMethodName(originalName);
 
   void toBindingString(Writer w, StringBuffer s) {
-    s.write('  ${returnType!.getDartType(w)} $name(');
-    var first = true;
-    for (final p in params) {
-      if (first) {
-        first = false;
-      } else {
-        s.write(', ');
+    s.write('  ');
+    if (kind == ObjCMethodKind.classMethod) s.write('static ');
+    s.write('${returnType!.getDartType(w)} ');
+    if (kind == ObjCMethodKind.propertyGetter) s.write('get ');
+    if (kind == ObjCMethodKind.propertySetter) s.write('set ');
+    s.write('$name');
+    if (kind != ObjCMethodKind.propertyGetter) {
+      s.write('(');
+      var first = true;
+      for (final p in params) {
+        if (first) {
+          first = false;
+        } else {
+          s.write(', ');
+        }
+        s.write('${p.type.getDartType(w)} ${p.name}');
       }
-      s.write('${p.type.getDartType(w)} ${p.name}');
+      s.write(')');
     }
-    s.write(') {\n');
+    s.write(' {\n');
     // TODO: Implementation.
     s.write('  }\n');
   }
@@ -92,6 +107,17 @@ class ObjCMethod {
     for (final p in params) {
       p.type.addDependencies(dependencies);
     }
+  }
+
+  static String _getMethodName(String originalName) {
+    // Objective C methods can look like:
+    // foo
+    // foo:
+    // foo:someArgName:
+    // We only want the part before the first :, if any.
+    final index = originalName.indexOf(':');
+    if (index == -1) return originalName;
+    return originalName.substring(0, index);
   }
 }
 
