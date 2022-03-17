@@ -13,6 +13,7 @@ import '../clang_bindings/clang_bindings.dart' as clang_types;
 import '../data.dart';
 import '../sub_parsers/compounddecl_parser.dart';
 import '../sub_parsers/enumdecl_parser.dart';
+import '../sub_parsers/objcinterfacedecl_parser.dart';
 import '../type_extractor/cxtypekindmap.dart';
 import '../utils.dart';
 
@@ -38,7 +39,8 @@ Type getCodeGenType(
         ignoreFilter: ignoreFilter, pointerReference: pointerReference);
   }
 
-  // Objective C types skip the cache, and are conditional on the language flag.
+  // These basic Objective C types skip the cache, and are conditional on the
+  // language flag.
   if (config.language == Language.objc) {
     switch (cxtype.kind) {
       case clang_types.CXTypeKind.CXType_ObjCObjectPointer:
@@ -195,9 +197,11 @@ _CreateTypeFromCursorResult _createTypeFromCursor(clang_types.CXType cxtype,
       } else {
         return _CreateTypeFromCursorResult(Type.enumClass(enumClass));
       }
+    case clang_types.CXTypeKind.CXType_ObjCInterface:
+      return _CreateTypeFromCursorResult(parseObjCInterfaceDeclaration(cursor));
     default:
       throw UnimplementedError(
-          'Unknown cursor kind: ${cursor.completeStringRepr()}');
+          'Unknown type: ${cxtype.completeStringRepr()}');
   }
 }
 
@@ -207,6 +211,8 @@ void _fillFromCursorIfNeeded(Type? type, clang_types.CXCursor cursor,
   if (type.compound != null) {
     fillCompoundMembersIfNeeded(type.compound!, cursor,
         ignoreFilter: ignoreFilter, pointerReference: pointerReference);
+  } else if (type.objCInterface != null) {
+    fillObjCInterfaceMethodsIfNeeded(type.objCInterface!, cursor);
   }
 }
 

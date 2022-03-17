@@ -28,7 +28,7 @@ class _ParsedObjCMethod {
 final _interfaceStack = Stack<_ParsedObjCInterface>();
 final _methodStack = Stack<_ParsedObjCMethod>();
 
-ObjCInterface? parseObjCInterfaceDeclaration(clang_types.CXCursor cursor) {
+Type? parseObjCInterfaceDeclaration(clang_types.CXCursor cursor) {
   final itfUsr = cursor.usr();
   final itfName = cursor.spelling();
   if (!shouldIncludeInterface(itfUsr, itfName)) {
@@ -40,18 +40,22 @@ ObjCInterface? parseObjCInterfaceDeclaration(clang_types.CXCursor cursor) {
   // print('      type: ${t.completeStringRepr()}');
   final name = t.spelling();
 
-  _interfaceStack.push(_ParsedObjCInterface(ObjCInterface(
+  return Type.objCInterface(ObjCInterface(
       usr: itfUsr, originalName: name,
-      // name: configDecl.renameUsingConfig(name),
+      // name: config.interfaceDecl.renameUsingConfig(name),
       name: name,
       dartDoc: getCursorDocComment(cursor),
-    )));
+    ));
+}
+
+void fillObjCInterfaceMethodsIfNeeded(ObjCInterface itf, clang_types.CXCursor cursor) {
+  _interfaceStack.push(_ParsedObjCInterface(itf));
 
   clang.clang_visitChildren(cursor,
       Pointer.fromFunction(_parseInterfaceVisitor, exceptional_visitor_return),
       nullptr);
 
-  return _interfaceStack.pop().interface;
+  _interfaceStack.pop();
 }
 
 int _parseInterfaceVisitor(clang_types.CXCursor cursor,

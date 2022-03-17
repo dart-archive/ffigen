@@ -58,7 +58,7 @@ int _rootCursorVisitor(clang_types.CXCursor cursor, clang_types.CXCursor parent,
           addToBindings(parseVarDeclaration(cursor));
           break;
         case clang_types.CXCursorKind.CXCursor_ObjCInterfaceDecl:
-          addToBindings(parseObjCInterfaceDeclaration(cursor));
+          addToBindings(_getCodeGenTypeFromCursor(cursor)?.objCInterface);
           break;
         default:
           _logger.finer('rootCursorVisitor: CursorKind not implemented');
