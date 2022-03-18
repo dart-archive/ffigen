@@ -5,6 +5,8 @@
 /// Utility functions to check whether a binding should be parsed or not
 /// based on filters.
 
+import '../config_provider/config_types.dart';
+import '../strings.dart' as strings;
 import 'data.dart';
 
 bool _shouldIncludeDecl(String usr, String name,
@@ -70,6 +72,12 @@ bool shouldIncludeTypealias(String usr, String name) {
 bool shouldIncludeRootCursor(String sourceFile) {
   // Handle empty string in case of system headers or macros.
   if (sourceFile.isEmpty) {
+    return false;
+  }
+
+  // Objective C has some extra system headers that have a non-empty sourceFile.
+  if (config.language == Language.objc &&
+      sourceFile.startsWith(strings.clangDefaultObjCSystemHeaderPath)) {
     return false;
   }
 
