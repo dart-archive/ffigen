@@ -67,7 +67,7 @@ List<Binding> parseToBindings() {
   /// If the config targets Objective C, add a compiler opt for it.
   if (config.language == Language.objc) {
     compilerOpts.addAll(strings.clangLangObjC);
-    compilerOpts.add(strings.clangDefaultObjCSystemHeaderPath);
+    compilerOpts.add('-I' + strings.clangDefaultObjCSystemHeaderPath);
     for (final sysHdr in strings.clangDefaultObjCSystemHeaders) {
       compilerOpts.add(strings.clangInclude);
       compilerOpts.add(sysHdr);

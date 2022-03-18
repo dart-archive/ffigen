@@ -6,6 +6,8 @@
 /// based on filters.
 
 import 'data.dart';
+import '../config_provider/config_types.dart';
+import '../strings.dart' as strings;
 
 bool _shouldIncludeDecl(String usr, String name,
     bool Function(String) isSeenDecl, bool Function(String) configIncludes) {
@@ -63,6 +65,12 @@ bool shouldIncludeTypealias(String usr, String name) {
 bool shouldIncludeRootCursor(String sourceFile) {
   // Handle empty string in case of system headers or macros.
   if (sourceFile.isEmpty) {
+    return false;
+  }
+
+  // Objective C has some extra system headers that have a non-empty sourceFile.
+  if (config.language == Language.objc &&
+      sourceFile.startsWith(strings.clangDefaultObjCSystemHeaderPath)) {
     return false;
   }
 
