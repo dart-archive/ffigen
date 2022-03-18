@@ -23,9 +23,14 @@ class Config {
   String get libclangDylib => _libclangDylib;
   late String _libclangDylib;
 
-  /// output file name.
+  /// Output file name.
   String get output => _output;
   late String _output;
+
+  /// Language that ffigen is consuming.
+  Language get language => _language;
+  late Language _language;
+
   // Holds headers and filters for header.
   Headers get headers => _headers;
   late Headers _headers;
@@ -219,6 +224,13 @@ class Config {
         validator: outputValidator,
         extractor: outputExtractor,
         extractedResult: (dynamic result) => _output = result as String,
+      ),
+      [strings.language]: Specification<Language>(
+        requirement: Requirement.no,
+        validator: languageValidator,
+        extractor: languageExtractor,
+        defaultValue: () => Language.c,
+        extractedResult: (dynamic result) => _language = result as Language,
       ),
       [strings.headers]: Specification<Headers>(
         requirement: Requirement.yes,

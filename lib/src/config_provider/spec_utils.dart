@@ -453,6 +453,28 @@ String outputExtractor(dynamic value) => _replaceSeparators(value as String);
 bool outputValidator(List<String> name, dynamic value) =>
     checkType<String>(name, value);
 
+Language languageExtractor(dynamic value) {
+  if (value == strings.langC) {
+    return Language.c;
+  } else if (value == strings.langObjC) {
+    return Language.objc;
+  }
+  return Language.c;
+}
+
+bool languageValidator(List<String> name, dynamic value) {
+  if (value is String) {
+    if (value == strings.langC || value == strings.langObjC) {
+      return true;
+    }
+    _logger.severe("'$name' must be one of the following - "
+        "{${strings.langC}, ${strings.langObjC}}");
+    return false;
+  }
+  _logger.severe("Expected value of key '$name' to be a String.");
+  return false;
+}
+
 /// Returns true if [str] is not a full name.
 ///
 /// E.g `abc` is a full name, `abc.*` is not.

@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'struc.dart';
+
 /// A library import which will be written as an import in the generated file.
 class LibraryImport {
   final String name;
@@ -51,3 +53,6 @@ final doubleType = ImportedType(ffiImport, 'Double', 'double');
 
 final sizeType = ImportedType(ffiPkgImport, 'Size', 'int');
 final wCharType = ImportedType(ffiPkgImport, 'WChar', 'int');
+
+final objCObjectType = Struc(name: 'ObjCObject');
+final objCSelType = Struc(name: 'ObjCSel');

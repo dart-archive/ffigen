@@ -9,6 +9,8 @@ import 'package:quiver/pattern.dart' as quiver;
 
 import 'path_finder.dart';
 
+enum Language { c, objc }
+
 class CommentType {
   CommentStyle style;
   CommentLength length;

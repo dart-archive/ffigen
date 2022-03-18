@@ -56,17 +56,27 @@ List<Binding> parseToBindings() {
   final index = clang.clang_createIndex(0, 0);
 
   Pointer<Pointer<Utf8>> clangCmdArgs = nullptr;
-  var cmdLen = 0;
+  final compilerOpts = List<String>.from(config.compilerOpts);
 
   /// Add compiler opt for comment parsing for clang based on config.
   if (config.commentType.length != CommentLength.none &&
       config.commentType.style == CommentStyle.any) {
-    config.compilerOpts.add(strings.fparseAllComments);
+    compilerOpts.add(strings.fparseAllComments);
   }
 
-  _logger.fine('CompilerOpts used: ${config.compilerOpts}');
-  clangCmdArgs = createDynamicStringArray(config.compilerOpts);
-  cmdLen = config.compilerOpts.length;
+  /// If the config targets Objective C, add a compiler opt for it.
+  if (config.language == Language.objc) {
+    compilerOpts.addAll(strings.clangLangObjC);
+    compilerOpts.add('-I' + strings.clangDefaultObjCSystemHeaderPath);
+    for (final sysHdr in strings.clangDefaultObjCSystemHeaders) {
+      compilerOpts.add(strings.clangInclude);
+      compilerOpts.add(sysHdr);
+    }
+  }
+
+  _logger.fine('CompilerOpts used: $compilerOpts');
+  clangCmdArgs = createDynamicStringArray(compilerOpts);
+  final cmdLen = compilerOpts.length;
 
   // Contains all bindings. A set ensures we never have duplicates.
   final bindings = <Binding>{};
@@ -111,7 +121,7 @@ List<Binding> parseToBindings() {
   // Parse all saved macros.
   bindings.addAll(parseSavedMacros()!);
 
-  clangCmdArgs.dispose(config.compilerOpts.length);
+  clangCmdArgs.dispose(cmdLen);
   clang.clang_disposeIndex(index);
   return bindings.toList();
 }
