@@ -5,9 +5,9 @@
 /// Utility functions to check whether a binding should be parsed or not
 /// based on filters.
 
-import 'data.dart';
 import '../config_provider/config_types.dart';
 import '../strings.dart' as strings;
+import 'data.dart';
 
 bool _shouldIncludeDecl(String usr, String name,
     bool Function(String) isSeenDecl, bool Function(String) configIncludes) {
