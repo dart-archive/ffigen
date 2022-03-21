@@ -12,30 +12,49 @@ import 'writer.dart';
 class _ObjCBuiltInFunctions {
   late final _registerNameFunc = Func(
     name: 'sel_registerName',
-    returnType: Type.struct(objCSelType),
+    returnType: Type.pointer(Type.struct(objCSelType)),
     parameters: [
       Parameter(name: 'str', type: Type.pointer(Type.importedType(charType)))
     ],
   );
   late final String registerName;
 
+  late final _getClassFunc = Func(
+    name: 'objc_getClass',
+    returnType: Type.pointer(Type.struct(objCObjectType)),
+    parameters: [
+      Parameter(name: 'str', type: Type.pointer(Type.importedType(charType)))
+    ],
+  );
+  late final String getClass;
+
   bool utilsExist = false;
   void ensureUtilsExist(Writer w, StringBuffer s) {
     if (utilsExist) return;
     utilsExist = true;
 
-    registerName = w.wrapperLevelUniqueNamer.makeUnique('_registerName');
-    final selType = _registerNameFunc.functionType.returnType.getDartType(w);
+    registerName = w.topLevelUniqueNamer.makeUnique('_registerName');
+    final selType = _registerNameFunc.functionType.returnType.getCType(w);
     s.write('\n$selType $registerName(String name) {\n');
     s.write('  final cstr = name.toNativeUtf8();\n');
     s.write('  final sel = ${_registerNameFunc.name}(cstr);\n');
     s.write('  calloc.free(cstr);\n');
     s.write('  return sel;\n');
     s.write('}\n');
+
+    getClass = w.topLevelUniqueNamer.makeUnique('_getClass');
+    final objType = _getClassFunc.functionType.returnType.getCType(w);
+    s.write('\n$objType $getClass(String name) {\n');
+    s.write('  final cstr = name.toNativeUtf8();\n');
+    s.write('  final clazz = ${_getClassFunc.name}(cstr);\n');
+    s.write('  calloc.free(cstr);\n');
+    s.write('  return clazz;\n');
+    s.write('}\n');
   }
 
-  void addDependenciesForMethod(Set<Binding> dependencies) {
+  void addDependencies(Set<Binding> dependencies) {
     _registerNameFunc.addDependencies(dependencies);
+    _getClassFunc.addDependencies(dependencies);
   }
 }
 
@@ -47,7 +66,7 @@ class ObjCInterface extends NoLookUpBinding {
 
   ObjCInterface({
     String? usr,
-    String? originalName,
+    required String originalName,
     required String name,
     String? dartDoc,
   }) : super(
@@ -64,16 +83,33 @@ class ObjCInterface extends NoLookUpBinding {
       s.write(makeDartDoc(dartDoc!));
     }
 
-    final methodNamer = UniqueNamer({name});
+    final uniqueNamer = UniqueNamer({name});
 
     _builtInFunctions.ensureUtilsExist(w, s);
 
+    // Class declaration.
     s.write('class $name ');
-    if (superType != null) s.write('extends ${superType!.name} ');
-    s.write('{\n');
-    for (final m in methods) {
-      m.toBindingString(w, s, methodNamer);
+    if (superType != null) {
+      s.write('extends ${superType!.name} {\n');
+    } else {
+      // Every class needs its id. If it has a super type, it will get it from
+      // there, otherwise we need to insert it here.
+      s.write('{\n');
+      final objcObject =
+          Type.pointer(Type.struct(objCObjectType)).getCType(w);
+      s.write('  final $objcObject _id;');
     }
+
+    // Class object, used to call static methods.
+    final classObject = uniqueNamer.makeUnique('_class');
+    s.write('  static final $classObject = '
+        '${_builtInFunctions.getClass}("$originalName");\n\n');
+
+    // Methods.
+    for (final m in methods) {
+      m.toBindingString(w, s, uniqueNamer);
+    }
+
     s.write('}\n\n');
 
     return BindingString(
@@ -120,9 +156,9 @@ class ObjCMethod {
     required this.kind,
   });
 
-  void toBindingString(Writer w, StringBuffer s, UniqueNamer methodNamer) {
-    final name = _getDartMethodName(methodNamer);
-    final selName = w.wrapperLevelUniqueNamer.makeUnique('_sel_$name');
+  void toBindingString(Writer w, StringBuffer s, UniqueNamer uniqueNamer) {
+    final name = _getDartMethodName(uniqueNamer);
+    final selName = uniqueNamer.makeUnique('_sel_$name');
 
     // SEL object for the method.
     s.write('  static final $selName = '
@@ -160,17 +196,17 @@ class ObjCMethod {
     for (final p in params) {
       p.type.addDependencies(dependencies);
     }
-    _builtInFunctions.addDependenciesForMethod(dependencies);
+    _builtInFunctions.addDependencies(dependencies);
   }
 
-  String _getDartMethodName(UniqueNamer uniqueMethodNamer) {
+  String _getDartMethodName(UniqueNamer uniqueNamer) {
     if (property != null) {
       // A getter and a setter are allowed to have the same name, so we can't
-      // just run the name through uniqueMethodNamer. Instead they need to share
-      // the dartName, which is run through uniqueMethodNamer.
+      // just run the name through uniqueNamer. Instead they need to share
+      // the dartName, which is run through uniqueNamer.
       if (property!.dartName == null) {
         property!.dartName =
-            uniqueMethodNamer.makeUnique(property!.originalName);
+            uniqueNamer.makeUnique(property!.originalName);
       }
       return property!.dartName!;
     }
@@ -182,7 +218,7 @@ class ObjCMethod {
     var name = originalName;
     final index = name.indexOf(':');
     if (index != -1) name = name.substring(0, index);
-    return uniqueMethodNamer.makeUnique(name.replaceAll(':', '_'));
+    return uniqueNamer.makeUnique(name.replaceAll(':', '_'));
   }
 }
 
