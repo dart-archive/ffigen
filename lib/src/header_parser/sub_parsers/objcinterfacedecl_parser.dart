@@ -36,21 +36,23 @@ Type? parseObjCInterfaceDeclaration(clang_types.CXCursor cursor) {
     return null;
   }
 
-  print('    ${cursor.completeStringRepr()}');
+  // print('    ${cursor.completeStringRepr()}');
   final t = cursor.type();
-  print('      type: ${t.completeStringRepr()}');
+  // print('      type: ${t.completeStringRepr()}');
   final name = t.spelling();
 
   return Type.objCInterface(ObjCInterface(
-      usr: itfUsr, originalName: name,
-      name: name,  // TODO: config.interfaceDecl.renameUsingConfig(name),
-      dartDoc: getCursorDocComment(cursor),
-    ));
+    usr: itfUsr, originalName: name,
+    name: name, // TODO: config.interfaceDecl.renameUsingConfig(name),
+    dartDoc: getCursorDocComment(cursor),
+  ));
 }
 
-void fillObjCInterfaceMethodsIfNeeded(ObjCInterface itf, clang_types.CXCursor cursor) {
+void fillObjCInterfaceMethodsIfNeeded(
+    ObjCInterface itf, clang_types.CXCursor cursor) {
   _interfaceStack.push(_ParsedObjCInterface(itf));
-  clang.clang_visitChildren(cursor,
+  clang.clang_visitChildren(
+      cursor,
       Pointer.fromFunction(_parseInterfaceVisitor, exceptional_visitor_return),
       nullptr);
   _interfaceStack.pop();
@@ -74,29 +76,37 @@ int _parseInterfaceVisitor(clang_types.CXCursor cursor,
 }
 
 void _parseSuperType(clang_types.CXCursor cursor) {
-  print('        Super type: ${cursor.type().completeStringRepr()}');
-  _interfaceStack.top.interface.superType = cursor.type().toCodeGenType().objCInterface;
+  // print('        Super type: ${cursor.type().completeStringRepr()}');
+  _interfaceStack.top.interface.superType =
+      cursor.type().toCodeGenType().objCInterface;
 }
 
 void _parseProperty(clang_types.CXCursor cursor) {
-  print('        Member: ${cursor.spelling()}   ${cursor.type().completeStringRepr()}');
-  print('            ${clang.clang_Cursor_getObjCPropertyGetterName(cursor).toStringAndDispose()}');
-  print('            ${clang.clang_Cursor_getObjCPropertySetterName(cursor).toStringAndDispose()}');
+  // print('        Member: ${cursor.spelling()}   ${cursor.type().completeStringRepr()}');
+  // print('            ${clang.clang_Cursor_getObjCPropertyGetterName(cursor).toStringAndDispose()}');
+  // print('            ${clang.clang_Cursor_getObjCPropertySetterName(cursor).toStringAndDispose()}');
   final itf = _interfaceStack.top.interface;
   final fieldName = cursor.spelling();
   final fieldType = cursor.type().toCodeGenType();
   final dartDoc = getCursorDocComment(cursor);
+  final property = ObjCProperty(fieldName);
 
   final getter = ObjCMethod(
-    originalName: fieldName,
+    originalName: clang
+        .clang_Cursor_getObjCPropertyGetterName(cursor)
+        .toStringAndDispose(),
+    property: property,
     dartDoc: dartDoc,
     kind: ObjCMethodKind.propertyGetter,
   );
   getter.returnType = fieldType;
   itf.methods.add(getter);
-  
+
   final setter = ObjCMethod(
-    originalName: fieldName,
+    originalName: clang
+        .clang_Cursor_getObjCPropertySetterName(cursor)
+        .toStringAndDispose(),
+    property: property,
     dartDoc: dartDoc,
     kind: ObjCMethodKind.propertySetter,
   );
@@ -106,16 +116,18 @@ void _parseProperty(clang_types.CXCursor cursor) {
 }
 
 void _parseMethod(clang_types.CXCursor cursor) {
-  print('        Method: ${cursor.spelling()}');
+  // print('        Method: ${cursor.spelling()}');
   final method = ObjCMethod(
-      originalName: cursor.spelling(),
-      dartDoc: getCursorDocComment(cursor),
-      kind: cursor.kind == clang_types.CXCursorKind.CXCursor_ObjCClassMethodDecl ?
-          ObjCMethodKind.classMethod : ObjCMethodKind.instanceMethod,
+    originalName: cursor.spelling(),
+    dartDoc: getCursorDocComment(cursor),
+    kind: cursor.kind == clang_types.CXCursorKind.CXCursor_ObjCClassMethodDecl
+        ? ObjCMethodKind.classMethod
+        : ObjCMethodKind.instanceMethod,
   );
   final parsed = _ParsedObjCMethod(method);
   _methodStack.push(parsed);
-  clang.clang_visitChildren(cursor,
+  clang.clang_visitChildren(
+      cursor,
       Pointer.fromFunction(_parseMethodVisitor, exceptional_visitor_return),
       nullptr);
   _methodStack.pop();
@@ -137,13 +149,13 @@ int _parseMethodVisitor(clang_types.CXCursor cursor,
       _parseMethodParam(cursor);
       break;
     default:
-      print('            !!!UNKNOWN!!!  ${cursor.completeStringRepr()}');
+    // print('            !!!UNKNOWN!!!  ${cursor.completeStringRepr()}');
   }
   return clang_types.CXChildVisitResult.CXChildVisit_Continue;
 }
 
 void _parseMethodReturnType(clang_types.CXCursor cursor) {
-  print('                  Return type: ${cursor.type().completeStringRepr()}');
+  // print('                  Return type: ${cursor.type().completeStringRepr()}');
   final parsed = _methodStack.top;
   if (parsed.method.returnType != null) {
     parsed.hasError = true;
@@ -153,7 +165,7 @@ void _parseMethodReturnType(clang_types.CXCursor cursor) {
 }
 
 void _parseMethodParam(clang_types.CXCursor cursor) {
-  print('                  Param: ${cursor.spelling()}   ${cursor.type().completeStringRepr()}');
-  _methodStack.top.method.params.add(
-      ObjCMethodParam(cursor.type().toCodeGenType(), cursor.spelling()));
+  // print('                  Param: ${cursor.spelling()}   ${cursor.type().completeStringRepr()}');
+  _methodStack.top.method.params
+      .add(ObjCMethodParam(cursor.type().toCodeGenType(), cursor.spelling()));
 }

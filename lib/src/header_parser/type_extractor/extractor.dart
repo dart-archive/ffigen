@@ -200,8 +200,7 @@ _CreateTypeFromCursorResult _createTypeFromCursor(clang_types.CXType cxtype,
     case clang_types.CXTypeKind.CXType_ObjCInterface:
       return _CreateTypeFromCursorResult(parseObjCInterfaceDeclaration(cursor));
     default:
-      throw UnimplementedError(
-          'Unknown type: ${cxtype.completeStringRepr()}');
+      throw UnimplementedError('Unknown type: ${cxtype.completeStringRepr()}');
   }
 }
 
