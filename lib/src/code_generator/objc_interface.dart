@@ -28,6 +28,24 @@ class _ObjCBuiltInFunctions {
   );
   late final String getClass;
 
+  // We need to load a separate instance of objc_msgSend for each signature.
+  final _msgSendFuncs = <String, Func>{};
+  Func getMsgSendFunc(Type returnType, List<ObjCMethodParam> params) {
+    // TODO: These keys don't dedupe sufficiently.
+    var key = returnType.hashCode.toRadixString(36);
+    for (final p in params) key += ' ' + p.type.hashCode.toRadixString(36);
+    _msgSendFuncs[key] ??= Func(
+      name: 'objc_msgSend_${_msgSendFuncs.length}',
+      originalName: 'objc_msgSend',
+      returnType: returnType,
+      parameters: [
+        Parameter(name: 'obj', type: Type.pointer(Type.struct(objCObjectType))),
+        for (final p in params) Parameter(name: p.name, type: p.type),
+      ],
+    );
+    return _msgSendFuncs[key]!;
+  }
+
   bool utilsExist = false;
   void ensureUtilsExist(Writer w, StringBuffer s) {
     if (utilsExist) return;
@@ -55,6 +73,7 @@ class _ObjCBuiltInFunctions {
   void addDependencies(Set<Binding> dependencies) {
     _registerNameFunc.addDependencies(dependencies);
     _getClassFunc.addDependencies(dependencies);
+    for (final func in _msgSendFuncs.values) func.addDependencies(dependencies);
   }
 }
 
@@ -63,6 +82,13 @@ final _builtInFunctions = _ObjCBuiltInFunctions();
 class ObjCInterface extends NoLookUpBinding {
   ObjCInterface? superType;
   final methods = <ObjCMethod>[];
+
+  // Objective C supports overriding class methods, but Dart doesn't support
+  // overriding static methods. So in our generated Dart code, child classes
+  // must explicitly implement all the class methods of their super type. To
+  // help with this, we store the class methods in this map, as well as in the
+  // methods list.
+  final classMethods = <String, ObjCMethod>{};
 
   ObjCInterface({
     String? usr,
@@ -78,6 +104,7 @@ class ObjCInterface extends NoLookUpBinding {
 
   @override
   BindingString toBindingString(Writer w) {
+    // TODO: Print dartdoc.
     final s = StringBuffer();
     if (dartDoc != null) {
       s.write(makeDartDoc(dartDoc!));
@@ -86,18 +113,19 @@ class ObjCInterface extends NoLookUpBinding {
     final uniqueNamer = UniqueNamer({name});
 
     _builtInFunctions.ensureUtilsExist(w, s);
+    final objcObject =
+        Type.pointer(Type.struct(objCObjectType)).getCType(w);
 
     // Class declaration.
     s.write('class $name ');
+    uniqueNamer.markUsed('_id');
     if (superType != null) {
       s.write('extends ${superType!.name} {\n');
     } else {
       // Every class needs its id. If it has a super type, it will get it from
       // there, otherwise we need to insert it here.
       s.write('{\n');
-      final objcObject =
-          Type.pointer(Type.struct(objCObjectType)).getCType(w);
-      s.write('  final $objcObject _id;');
+      s.write('  final $objcObject _id;\n\n');
     }
 
     // Class object, used to call static methods.
@@ -107,7 +135,42 @@ class ObjCInterface extends NoLookUpBinding {
 
     // Methods.
     for (final m in methods) {
-      m.toBindingString(w, s, uniqueNamer);
+      final name = m._getDartMethodName(uniqueNamer);
+      final selName = uniqueNamer.makeUnique('_sel_$name');
+
+      // SEL object for the method.
+      s.write('  static final $selName = '
+          '${_builtInFunctions.registerName}("${m.originalName}");\n');
+
+      // The method declaration.
+      s.write('  ');
+      if (m.kind == ObjCMethodKind.classMethod) s.write('static ');
+      s.write('${m.returnType!.getDartType(w)} ');
+      if (m.kind == ObjCMethodKind.propertyGetter) s.write('get ');
+      if (m.kind == ObjCMethodKind.propertySetter) s.write('set ');
+      s.write('$name');
+      if (m.kind != ObjCMethodKind.propertyGetter) {
+        s.write('(');
+        var first = true;
+        for (final p in m.params) {
+          if (first) {
+            first = false;
+          } else {
+            s.write(', ');
+          }
+          s.write('${p.type.getDartType(w)} ${p.name}');
+        }
+        s.write(')');
+      }
+      s.write(' {\n');
+
+      // Implementation.
+      s.write('    return ${m.msgSend!.name}(');
+      s.write(m.kind == ObjCMethodKind.classMethod ? '_id' : '_class');
+      for (final p in m.params) s.write(', ${p.name}');
+      s.write(');\n');
+
+      s.write('  }\n\n');
     }
 
     s.write('}\n\n');
@@ -119,11 +182,24 @@ class ObjCInterface extends NoLookUpBinding {
   @override
   void addDependencies(Set<Binding> dependencies) {
     if (dependencies.contains(this)) return;
-
-    superType?.addDependencies(dependencies);
     dependencies.add(this);
+
+    if (superType != null) {
+      superType!.addDependencies(dependencies);
+      for (final m in superType!.classMethods.values) addMethod(m);
+    }
+
     for (final m in methods) {
       m.addDependencies(dependencies);
+    }
+
+    _builtInFunctions.addDependencies(dependencies);
+  }
+
+  void addMethod(ObjCMethod method) {
+    methods.add(method);
+    if (method.kind == ObjCMethodKind.classMethod) {
+      classMethods[method.originalName] ??= method;
     }
   }
 }
@@ -148,6 +224,7 @@ class ObjCMethod {
   Type? returnType;
   final params = <ObjCMethodParam>[];
   final ObjCMethodKind kind;
+  Func? msgSend;
 
   ObjCMethod({
     required this.originalName,
@@ -156,47 +233,12 @@ class ObjCMethod {
     required this.kind,
   });
 
-  void toBindingString(Writer w, StringBuffer s, UniqueNamer uniqueNamer) {
-    final name = _getDartMethodName(uniqueNamer);
-    final selName = uniqueNamer.makeUnique('_sel_$name');
-
-    // SEL object for the method.
-    s.write('  static final $selName = '
-        '${_builtInFunctions.registerName}("$originalName");\n');
-
-    // The method declaration.
-    s.write('  ');
-    if (kind == ObjCMethodKind.classMethod) s.write('static ');
-    s.write('${returnType!.getDartType(w)} ');
-    if (kind == ObjCMethodKind.propertyGetter) s.write('get ');
-    if (kind == ObjCMethodKind.propertySetter) s.write('set ');
-    s.write('$name');
-    if (kind != ObjCMethodKind.propertyGetter) {
-      s.write('(');
-      var first = true;
-      for (final p in params) {
-        if (first) {
-          first = false;
-        } else {
-          s.write(', ');
-        }
-        s.write('${p.type.getDartType(w)} ${p.name}');
-      }
-      s.write(')');
-    }
-    s.write(' {\n');
-
-    // TODO: Implementation.
-
-    s.write('  }\n\n');
-  }
-
   void addDependencies(Set<Binding> dependencies) {
     returnType!.addDependencies(dependencies);
     for (final p in params) {
       p.type.addDependencies(dependencies);
     }
-    _builtInFunctions.addDependencies(dependencies);
+    msgSend = _builtInFunctions.getMsgSendFunc(returnType!, params);
   }
 
   String _getDartMethodName(UniqueNamer uniqueNamer) {

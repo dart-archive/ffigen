@@ -100,7 +100,7 @@ void _parseProperty(clang_types.CXCursor cursor) {
     kind: ObjCMethodKind.propertyGetter,
   );
   getter.returnType = fieldType;
-  itf.methods.add(getter);
+  itf.addMethod(getter);
 
   final setter = ObjCMethod(
     originalName: clang
@@ -112,7 +112,7 @@ void _parseProperty(clang_types.CXCursor cursor) {
   );
   setter.returnType = Type.nativeType(SupportedNativeType.Void);
   setter.params.add(ObjCMethodParam(fieldType, 'value'));
-  itf.methods.add(setter);
+  itf.addMethod(setter);
 }
 
 void _parseMethod(clang_types.CXCursor cursor) {
@@ -135,7 +135,7 @@ void _parseMethod(clang_types.CXCursor cursor) {
     // Discard it.
     return;
   }
-  _interfaceStack.top.interface.methods.add(method);
+  _interfaceStack.top.interface.addMethod(method);
 }
 
 int _parseMethodVisitor(clang_types.CXCursor cursor,
