@@ -21,6 +21,8 @@ class Writer {
   final symbolAddressWriter = SymbolAddressWriter();
 
   late String _className;
+  String get className => _className;
+
   final String? classDocComment;
 
   String? _ffiLibraryPrefix;

@@ -111,6 +111,7 @@ class ObjCInterface extends NoLookUpBinding {
     }
 
     final uniqueNamer = UniqueNamer({name});
+    final natLib = w.className;
 
     _builtInFunctions.ensureUtilsExist(w, s);
     final objcObject =
@@ -123,9 +124,11 @@ class ObjCInterface extends NoLookUpBinding {
       s.write('extends ${superType!.name} {\n');
     } else {
       // Every class needs its id. If it has a super type, it will get it from
-      // there, otherwise we need to insert it here.
+      // there, otherwise we need to insert it here. It also needs a reference
+      // to the native library.
       s.write('{\n');
-      s.write('  final $objcObject _id;\n\n');
+      s.write('  final $objcObject _id;\n');
+      s.write('  final $natLib _lib;\n\n');
     }
 
     // Class object, used to call static methods.
@@ -137,6 +140,7 @@ class ObjCInterface extends NoLookUpBinding {
     for (final m in methods) {
       final name = m._getDartMethodName(uniqueNamer);
       final selName = uniqueNamer.makeUnique('_sel_$name');
+      final isStatic = m.kind == ObjCMethodKind.classMethod;
 
       // SEL object for the method.
       s.write('  static final $selName = '
@@ -144,7 +148,7 @@ class ObjCInterface extends NoLookUpBinding {
 
       // The method declaration.
       s.write('  ');
-      if (m.kind == ObjCMethodKind.classMethod) s.write('static ');
+      if (isStatic) s.write('static ');
       s.write('${m.returnType!.getDartType(w)} ');
       if (m.kind == ObjCMethodKind.propertyGetter) s.write('get ');
       if (m.kind == ObjCMethodKind.propertySetter) s.write('set ');
@@ -152,6 +156,10 @@ class ObjCInterface extends NoLookUpBinding {
       if (m.kind != ObjCMethodKind.propertyGetter) {
         s.write('(');
         var first = true;
+        if (isStatic) {
+          first = false;
+          s.write('$natLib _lib');
+        }
         for (final p in m.params) {
           if (first) {
             first = false;
@@ -165,8 +173,8 @@ class ObjCInterface extends NoLookUpBinding {
       s.write(' {\n');
 
       // Implementation.
-      s.write('    return ${m.msgSend!.name}(');
-      s.write(m.kind == ObjCMethodKind.classMethod ? '_id' : '_class');
+      s.write('    return _lib.${m.msgSend!.name}(');
+      s.write(isStatic ? '_id' : '_class');
       for (final p in m.params) s.write(', ${p.name}');
       s.write(');\n');
 
