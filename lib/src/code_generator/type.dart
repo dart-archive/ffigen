@@ -297,7 +297,7 @@ class Type {
       case BroadType.ImportedType:
         return '${importedType!.libraryImport.prefix}.${importedType!.cType}';
       case BroadType.ObjCInterface:
-        return objCInterface!.name;
+        return Type.pointer(Type.struct(objCObjectType)).getCType(w);
       case BroadType.Typealias:
         return typealias!.name;
       case BroadType.Unimplemented:
@@ -336,7 +336,7 @@ class Type {
           return importedType!.dartType;
         }
       case BroadType.ObjCInterface:
-        return objCInterface!.name;
+        return getCType(w);
       case BroadType.Typealias:
         // Typealias cannot be used by name in Dart types unless both the C and
         // Dart type of the underlying types are same.

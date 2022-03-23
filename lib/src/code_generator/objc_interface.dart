@@ -56,8 +56,8 @@ class _ObjCBuiltInFunctions {
     final selType = _registerNameFunc.functionType.returnType.getCType(w);
     s.write('\n$selType $registerName(${w.className} _lib, String name) {\n');
     s.write('  final cstr = name.toNativeUtf8();\n');
-    s.write('  final sel = _lib.${_registerNameFunc.name}(cstr);\n');
-    s.write('  calloc.free(cstr);\n');
+    s.write('  final sel = _lib.${_registerNameFunc.name}(cstr.cast());\n');
+    s.write('  pkg_ffi.calloc.free(cstr);\n');
     s.write('  return sel;\n');
     s.write('}\n');
 
@@ -65,8 +65,8 @@ class _ObjCBuiltInFunctions {
     final objType = _getClassFunc.functionType.returnType.getCType(w);
     s.write('\n$objType $getClass(${w.className} _lib, String name) {\n');
     s.write('  final cstr = name.toNativeUtf8();\n');
-    s.write('  final clazz = _lib.${_getClassFunc.name}(cstr);\n');
-    s.write('  calloc.free(cstr);\n');
+    s.write('  final clazz = _lib.${_getClassFunc.name}(cstr.cast());\n');
+    s.write('  pkg_ffi.calloc.free(cstr);\n');
     s.write('  return clazz;\n');
     s.write('}\n');
   }
@@ -123,6 +123,7 @@ class ObjCInterface extends NoLookUpBinding {
     uniqueNamer.markUsed('_id');
     if (superType != null) {
       s.write('extends ${superType!.name} {\n');
+      s.write('  $name._($objType id, $natLib lib) : super._(id, lib);\n\n');
     } else {
       // Every class needs its id. If it has a super type, it will get it from
       // there, otherwise we need to insert it here. It also needs a reference
@@ -130,6 +131,7 @@ class ObjCInterface extends NoLookUpBinding {
       s.write('{\n');
       s.write('  final $objType _id;\n');
       s.write('  final $natLib _lib;\n\n');
+      s.write('  $name._(this._id, this._lib);\n\n');
     }
 
     // Class object, used to call static methods.
