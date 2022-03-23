@@ -46,11 +46,10 @@ Type getCodeGenType(
       case clang_types.CXTypeKind.CXType_ObjCObjectPointer:
       case clang_types.CXTypeKind.CXType_BlockPointer:
       case clang_types.CXTypeKind.CXType_ObjCId:
+      case clang_types.CXTypeKind.CXType_ObjCClass:
         return Type.pointer(Type.struct(objCObjectType));
       case clang_types.CXTypeKind.CXType_ObjCSel:
         return Type.pointer(Type.struct(objCSelType));
-      case clang_types.CXTypeKind.CXType_ObjCClass:
-        return Type.struct(objCObjectType);
     }
   }
 
