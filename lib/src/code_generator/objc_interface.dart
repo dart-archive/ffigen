@@ -40,6 +40,7 @@ class _ObjCBuiltInFunctions {
       returnType: returnType,
       parameters: [
         Parameter(name: 'obj', type: Type.pointer(Type.struct(objCObjectType))),
+        Parameter(name: 'sel', type: Type.pointer(Type.struct(objCSelType))),
         for (final p in params) Parameter(name: p.name, type: p.type),
       ],
     );
@@ -53,18 +54,18 @@ class _ObjCBuiltInFunctions {
 
     registerName = w.topLevelUniqueNamer.makeUnique('_registerName');
     final selType = _registerNameFunc.functionType.returnType.getCType(w);
-    s.write('\n$selType $registerName(String name) {\n');
+    s.write('\n$selType $registerName(${w.className} _lib, String name) {\n');
     s.write('  final cstr = name.toNativeUtf8();\n');
-    s.write('  final sel = ${_registerNameFunc.name}(cstr);\n');
+    s.write('  final sel = _lib.${_registerNameFunc.name}(cstr);\n');
     s.write('  calloc.free(cstr);\n');
     s.write('  return sel;\n');
     s.write('}\n');
 
     getClass = w.topLevelUniqueNamer.makeUnique('_getClass');
     final objType = _getClassFunc.functionType.returnType.getCType(w);
-    s.write('\n$objType $getClass(String name) {\n');
+    s.write('\n$objType $getClass(${w.className} _lib, String name) {\n');
     s.write('  final cstr = name.toNativeUtf8();\n');
-    s.write('  final clazz = ${_getClassFunc.name}(cstr);\n');
+    s.write('  final clazz = _lib.${_getClassFunc.name}(cstr);\n');
     s.write('  calloc.free(cstr);\n');
     s.write('  return clazz;\n');
     s.write('}\n');
@@ -114,8 +115,8 @@ class ObjCInterface extends NoLookUpBinding {
     final natLib = w.className;
 
     _builtInFunctions.ensureUtilsExist(w, s);
-    final objcObject =
-        Type.pointer(Type.struct(objCObjectType)).getCType(w);
+    final objType = Type.pointer(Type.struct(objCObjectType)).getCType(w);
+    final selType = Type.pointer(Type.struct(objCSelType)).getCType(w);
 
     // Class declaration.
     s.write('class $name ');
@@ -127,14 +128,13 @@ class ObjCInterface extends NoLookUpBinding {
       // there, otherwise we need to insert it here. It also needs a reference
       // to the native library.
       s.write('{\n');
-      s.write('  final $objcObject _id;\n');
+      s.write('  final $objType _id;\n');
       s.write('  final $natLib _lib;\n\n');
     }
 
     // Class object, used to call static methods.
     final classObject = uniqueNamer.makeUnique('_class');
-    s.write('  static final $classObject = '
-        '${_builtInFunctions.getClass}("$originalName");\n\n');
+    s.write('  static $objType? $classObject;\n\n');
 
     // Methods.
     for (final m in methods) {
@@ -143,8 +143,7 @@ class ObjCInterface extends NoLookUpBinding {
       final isStatic = m.kind == ObjCMethodKind.classMethod;
 
       // SEL object for the method.
-      s.write('  static final $selName = '
-          '${_builtInFunctions.registerName}("${m.originalName}");\n');
+      s.write('  static $selType? $selName;');
 
       // The method declaration.
       s.write('  ');
@@ -173,8 +172,15 @@ class ObjCInterface extends NoLookUpBinding {
       s.write(' {\n');
 
       // Implementation.
+      if (isStatic) {
+        s.write('    $classObject ??= '
+            '${_builtInFunctions.getClass}(_lib, "$originalName");\n');
+      }
+      s.write('    $selName ??= '
+          '${_builtInFunctions.registerName}(_lib, "${m.originalName}");\n');
       s.write('    return _lib.${m.msgSend!.name}(');
-      s.write(isStatic ? '_id' : '_class');
+      s.write(isStatic ? '_class!' : '_id');
+      s.write(', $selName!');
       for (final p in m.params) s.write(', ${p.name}');
       s.write(');\n');
 
@@ -255,8 +261,7 @@ class ObjCMethod {
       // just run the name through uniqueNamer. Instead they need to share
       // the dartName, which is run through uniqueNamer.
       if (property!.dartName == null) {
-        property!.dartName =
-            uniqueNamer.makeUnique(property!.originalName);
+        property!.dartName = uniqueNamer.makeUnique(property!.originalName);
       }
       return property!.dartName!;
     }
