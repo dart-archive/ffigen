@@ -41,7 +41,7 @@ class _ObjCBuiltInFunctions {
       parameters: [
         Parameter(name: 'obj', type: Type.pointer(Type.struct(objCObjectType))),
         Parameter(name: 'sel', type: Type.pointer(Type.struct(objCSelType))),
-        for (final p in params) Parameter(name: p.name, type: p.type),
+        for (final p in params) Parameter(name: p.name, type: p.type.type),
       ],
     );
     return _msgSendFuncs[key]!;
@@ -68,6 +68,12 @@ class _ObjCBuiltInFunctions {
     s.write('  final clazz = _lib.${_getClassFunc.name}(cstr.cast());\n');
     s.write('  pkg_ffi.calloc.free(cstr);\n');
     s.write('  return clazz;\n');
+    s.write('}\n');
+
+    s.write('\nclass _ObjCWrapper {\n');
+    s.write('  final $objType _id;\n');
+    s.write('  final ${w.className} _lib;\n');
+    s.write('  _ObjCWrapper._(this._id, this._lib);\n');
     s.write('}\n');
   }
 
@@ -121,27 +127,22 @@ class ObjCInterface extends NoLookUpBinding {
     // Class declaration.
     s.write('class $name ');
     uniqueNamer.markUsed('_id');
-    if (superType != null) {
-      s.write('extends ${superType!.name} {\n');
-      s.write('  $name._($objType id, $natLib lib) : super._(id, lib);\n\n');
-    } else {
-      // Every class needs its id. If it has a super type, it will get it from
-      // there, otherwise we need to insert it here. It also needs a reference
-      // to the native library.
-      s.write('{\n');
-      s.write('  final $objType _id;\n');
-      s.write('  final $natLib _lib;\n\n');
-      s.write('  $name._(this._id, this._lib);\n\n');
-    }
+    s.write('extends ${superType?.name ?? '_ObjCWrapper'} {\n');
+    s.write('  $name._($objType id, $natLib lib) : super._(id, lib);\n\n');
 
     // Class object, used to call static methods.
     final classObject = uniqueNamer.makeUnique('_class');
     s.write('  static $objType? $classObject;\n\n');
 
+    // Cast method.
+    s.write('  static $name castFrom<T extends _ObjCWrapper>(T other) {\n');
+    s.write('    return $name._(other._id, other._lib);\n');
+    s.write('  }\n\n');
+
     // Methods.
     for (final m in methods) {
-      final name = m._getDartMethodName(uniqueNamer);
-      final selName = uniqueNamer.makeUnique('_sel_$name');
+      final methodName = m._getDartMethodName(uniqueNamer);
+      final selName = uniqueNamer.makeUnique('_sel_$methodName');
       final isStatic = m.kind == ObjCMethodKind.classMethod;
 
       // SEL object for the method.
@@ -150,10 +151,10 @@ class ObjCInterface extends NoLookUpBinding {
       // The method declaration.
       s.write('  ');
       if (isStatic) s.write('static ');
-      s.write('${m.returnType!.getDartType(w)} ');
+      s.write('${m.returnType!.getConvertedType(w, name)} ');
       if (m.kind == ObjCMethodKind.propertyGetter) s.write('get ');
       if (m.kind == ObjCMethodKind.propertySetter) s.write('set ');
-      s.write('$name');
+      s.write('$methodName');
       if (m.kind != ObjCMethodKind.propertyGetter) {
         s.write('(');
         var first = true;
@@ -167,7 +168,7 @@ class ObjCInterface extends NoLookUpBinding {
           } else {
             s.write(', ');
           }
-          s.write('${p.type.getDartType(w)} ${p.name}');
+          s.write('${p.type.getConvertedType(w, name)} ${p.name}');
         }
         s.write(')');
       }
@@ -180,11 +181,17 @@ class ObjCInterface extends NoLookUpBinding {
       }
       s.write('    $selName ??= '
           '${_builtInFunctions.registerName}(_lib, "${m.originalName}");\n');
-      s.write('    return _lib.${m.msgSend!.name}(');
+      final convertReturn = m.returnType!.needsConverting;
+      s.write('    ${convertReturn ? 'final _ret = ' : 'return '}');
+      s.write('_lib.${m.msgSend!.name}(');
       s.write(isStatic ? '_class!' : '_id');
       s.write(', $selName!');
-      for (final p in m.params) s.write(', ${p.name}');
+      for (final p in m.params) s.write(', ${p.type.doArgConversion(p.name)}');
       s.write(');\n');
+      if (convertReturn) {
+        s.write(
+            '    return ${m.returnType!.doReturnConversion('_ret', name, '_lib')};');
+      }
 
       s.write('  }\n\n');
     }
@@ -237,7 +244,7 @@ class ObjCMethod {
   final String? dartDoc;
   final String originalName;
   final ObjCProperty? property;
-  Type? returnType;
+  ObjCMethodType? returnType;
   final params = <ObjCMethodParam>[];
   final ObjCMethodKind kind;
   Func? msgSend;
@@ -250,11 +257,11 @@ class ObjCMethod {
   });
 
   void addDependencies(Set<Binding> dependencies) {
-    returnType!.addDependencies(dependencies);
+    returnType!.type.addDependencies(dependencies);
     for (final p in params) {
-      p.type.addDependencies(dependencies);
+      p.type.type.addDependencies(dependencies);
     }
-    msgSend = _builtInFunctions.getMsgSendFunc(returnType!, params);
+    msgSend = _builtInFunctions.getMsgSendFunc(returnType!.type, params);
   }
 
   String _getDartMethodName(UniqueNamer uniqueNamer) {
@@ -280,7 +287,58 @@ class ObjCMethod {
 }
 
 class ObjCMethodParam {
-  final Type type;
+  final ObjCMethodType type;
   final String name;
-  ObjCMethodParam(this.type, this.name);
+  ObjCMethodParam(Type t, this.name) : type = ObjCMethodType(t);
+}
+
+// Wrapper around Type with helper methods for converting between the internal
+// types passed to native code, and the external types visible to the user. For
+// example, ObjCInterfaces are passed to native as Pointer<ObjCObject>, but the
+// user sees the Dart wrapper class.
+class ObjCMethodType {
+  final Type type;
+  ObjCMethodType(this.type);
+
+  bool get isObject {
+    if (type.broadType != BroadType.Pointer) return false;
+    final child = type.child!;
+    if (child.broadType != BroadType.Compound) return false;
+    return child.compound == objCObjectType;
+  }
+
+  bool get isInstanceType {
+    if (type.broadType != BroadType.Typealias) return false;
+    final alias = type.typealias!;
+    if (alias.name != 'instancetype') return false;
+    return ObjCMethodType(alias.type).isObject;
+  }
+
+  bool get isInterface => type.broadType == BroadType.ObjCInterface;
+  bool get isBool => type.broadType == BroadType.Boolean;
+  bool get needsConverting =>
+      isInterface || isBool || isObject || isInstanceType;
+
+  String getConvertedType(Writer w, String enclosingClass) {
+    if (isBool) return 'bool';
+    if (isInterface) return type.objCInterface!.name;
+    if (isObject) return 'NSObject';
+    if (isInstanceType) return enclosingClass;
+    return type.getDartType(w);
+  }
+
+  String doArgConversion(String value) {
+    if (isBool) return '$value ? 1 : 0';
+    if (isInterface || isObject || isInstanceType) return '$value._id';
+    return value;
+  }
+
+  String doReturnConversion(
+      String value, String enclosingClass, String library) {
+    if (isBool) return '$value != 0';
+    if (isInterface) return '${type.objCInterface!.name}._($value, $library)';
+    if (isObject) return 'NSObject._($value, $library)';
+    if (isInstanceType) return '$enclosingClass._($value, $library)';
+    return value;
+  }
 }

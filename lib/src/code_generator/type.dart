@@ -282,13 +282,14 @@ class Type {
         return '${w.ffiLibraryPrefix}.${_primitives[enumNativeType]!.c}';
       case BroadType.NativeFunction:
         return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc!.type.getCType(w)}>';
-      case BroadType
-          .IncompleteArray: // Array parameters are treated as Pointers in C.
+      case BroadType.IncompleteArray:
+        // Array parameters are treated as Pointers in C.
         return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
-      case BroadType
-          .ConstantArray: // Array parameters are treated as Pointers in C.
+      case BroadType.ConstantArray:
+        // Array parameters are treated as Pointers in C.
         return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
-      case BroadType.Boolean: // Booleans are treated as uint8.
+      case BroadType.Boolean:
+        // Booleans are treated as uint8.
         return '${w.ffiLibraryPrefix}.${_primitives[SupportedNativeType.Uint8]!.c}';
       case BroadType.Handle:
         return '${w.ffiLibraryPrefix}.Handle';
@@ -317,13 +318,14 @@ class Type {
         return _primitives[enumNativeType]!.dart;
       case BroadType.NativeFunction:
         return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc!.type.getDartType(w)}>';
-      case BroadType
-          .IncompleteArray: // Array parameters are treated as Pointers in C.
+      case BroadType.IncompleteArray:
+        // Array parameters are treated as Pointers in C.
         return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
-      case BroadType
-          .ConstantArray: // Array parameters are treated as Pointers in C.
+      case BroadType.ConstantArray:
+        // Array parameters are treated as Pointers in C.
         return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
-      case BroadType.Boolean: // Booleans are treated as uint8.
+      case BroadType.Boolean:
+        // Booleans are treated as uint8.
         return _primitives[SupportedNativeType.Uint8]!.dart;
       case BroadType.Handle:
         return 'Object';
