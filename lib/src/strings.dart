@@ -42,6 +42,14 @@ const clangDefaultObjCSystemHeaderPath =
     '/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include';
 const clangDefaultObjCSystemHeaders = ['objc/NSObject.h'];
 
+// Internal objective C directories that are automatically pulled in by clang,
+// and should be excluded from output (unless explicitly used).
+const objCInternalDirectories = [
+  clangDefaultObjCSystemHeaderPath,
+  '/Applications/Xcode.app/Contents/Developer',
+  '/usr/local/opt/llvm/lib',
+];
+
 const headers = 'headers';
 
 // Sub-fields of headers
