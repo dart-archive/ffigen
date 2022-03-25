@@ -6,7 +6,6 @@ import 'package:ffigen/src/code_generator.dart';
 
 import 'binding_string.dart';
 import 'utils.dart';
-import 'imports.dart';
 import 'writer.dart';
 
 class _ObjCBuiltInFunctions {
@@ -31,9 +30,11 @@ class _ObjCBuiltInFunctions {
   // We need to load a separate instance of objc_msgSend for each signature.
   final _msgSendFuncs = <String, Func>{};
   Func getMsgSendFunc(Type returnType, List<ObjCMethodParam> params) {
-    // TODO: These keys don't dedupe sufficiently.
+    // TODO(#279): These keys don't dedupe sufficiently.
     var key = returnType.hashCode.toRadixString(36);
-    for (final p in params) key += ' ' + p.type.hashCode.toRadixString(36);
+    for (final p in params) {
+      key += ' ' + p.type.hashCode.toRadixString(36);
+    }
     _msgSendFuncs[key] ??= Func(
       name: 'objc_msgSend_${_msgSendFuncs.length}',
       originalName: 'objc_msgSend',
@@ -80,7 +81,9 @@ class _ObjCBuiltInFunctions {
   void addDependencies(Set<Binding> dependencies) {
     _registerNameFunc.addDependencies(dependencies);
     _getClassFunc.addDependencies(dependencies);
-    for (final func in _msgSendFuncs.values) func.addDependencies(dependencies);
+    for (final func in _msgSendFuncs.values) {
+      func.addDependencies(dependencies);
+    }
   }
 }
 
@@ -112,7 +115,7 @@ class ObjCInterface extends NoLookUpBinding {
 
   @override
   BindingString toBindingString(Writer w) {
-    // TODO: Print dartdoc.
+    // TODO(#279): Print dartdoc.
     final s = StringBuffer();
     if (dartDoc != null) {
       s.write(makeDartDoc(dartDoc!));
@@ -155,7 +158,7 @@ class ObjCInterface extends NoLookUpBinding {
       s.write('${m.returnType!.getConvertedType(w, name)} ');
       if (m.kind == ObjCMethodKind.propertyGetter) s.write('get ');
       if (m.kind == ObjCMethodKind.propertySetter) s.write('set ');
-      s.write('$methodName');
+      s.write(methodName);
       if (m.kind != ObjCMethodKind.propertyGetter) {
         s.write('(');
         var first = true;
@@ -187,11 +190,13 @@ class ObjCInterface extends NoLookUpBinding {
       s.write('_lib.${m.msgSend!.name}(');
       s.write(isStatic ? '_class!' : '_id');
       s.write(', $selName!');
-      for (final p in m.params) s.write(', ${p.type.doArgConversion(p.name)}');
+      for (final p in m.params) {
+        s.write(', ${p.type.doArgConversion(p.name)}');
+      }
       s.write(');\n');
       if (convertReturn) {
-        s.write(
-            '    return ${m.returnType!.doReturnConversion('_ret', name, '_lib')};');
+        final result = m.returnType!.doReturnConversion('_ret', name, '_lib');
+        s.write('    return $result;');
       }
 
       s.write('  }\n\n');
@@ -210,7 +215,9 @@ class ObjCInterface extends NoLookUpBinding {
 
     if (superType != null) {
       superType!.addDependencies(dependencies);
-      for (final m in superType!.classMethods.values) addMethod(m);
+      for (final m in superType!.classMethods.values) {
+        addMethod(m);
+      }
     }
 
     for (final m in methods) {

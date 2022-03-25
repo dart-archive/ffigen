@@ -5,15 +5,14 @@
 import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/config_provider/config_types.dart';
 import 'package:ffigen/src/header_parser/data.dart';
-import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
 import '../includer.dart';
 import '../utils.dart';
 
-final _logger = Logger('ffigen.header_parser.objcinterfacedecl_parser');
+// TODO(#279): Logging
+// final _logger = Logger('ffigen.header_parser.objcinterfacedecl_parser');
 
 class _ParsedObjCInterface {
   ObjCInterface interface;
@@ -41,7 +40,7 @@ Type? parseObjCInterfaceDeclaration(clang_types.CXCursor cursor) {
 
   return Type.objCInterface(ObjCInterface(
     usr: itfUsr, originalName: name,
-    name: name, // TODO: config.interfaceDecl.renameUsingConfig(name),
+    name: name, // TODO(#279): config.interfaceDecl.renameUsingConfig(name),
     dartDoc: getCursorDocComment(cursor),
   ));
 }
@@ -49,7 +48,7 @@ Type? parseObjCInterfaceDeclaration(clang_types.CXCursor cursor) {
 void fillObjCInterfaceMethodsIfNeeded(
     ObjCInterface itf, clang_types.CXCursor cursor) {
   if (itf.filled) return;
-  itf.filled = true;  // Break cycles.
+  itf.filled = true; // Break cycles.
 
   _interfaceStack.push(_ParsedObjCInterface(itf));
   clang.clang_visitChildren(
