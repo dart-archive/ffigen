@@ -89,6 +89,7 @@ final _builtInFunctions = _ObjCBuiltInFunctions();
 class ObjCInterface extends NoLookUpBinding {
   ObjCInterface? superType;
   final methods = <ObjCMethod>[];
+  bool filled = false;
 
   // Objective C supports overriding class methods, but Dart doesn't support
   // overriding static methods. So in our generated Dart code, child classes

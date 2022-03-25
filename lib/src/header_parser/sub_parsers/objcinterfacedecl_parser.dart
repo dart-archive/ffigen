@@ -48,6 +48,9 @@ Type? parseObjCInterfaceDeclaration(clang_types.CXCursor cursor) {
 
 void fillObjCInterfaceMethodsIfNeeded(
     ObjCInterface itf, clang_types.CXCursor cursor) {
+  if (itf.filled) return;
+  itf.filled = true;  // Break cycles.
+
   _interfaceStack.push(_ParsedObjCInterface(itf));
   clang.clang_visitChildren(
       cursor,
