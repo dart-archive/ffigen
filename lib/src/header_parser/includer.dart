@@ -77,9 +77,6 @@ bool shouldIncludeRootCursor(String sourceFile) {
 
   // Add header to seen if it's not.
   if (!bindingsIndex.isSeenHeader(sourceFile)) {
-    if (config.language == Language.objc) {
-      print('ZZZZZZZZZZZ: ' + sourceFile);
-    }
     bindingsIndex.addHeaderToSeen(
         sourceFile, config.headers.includeFilter.shouldInclude(sourceFile));
   }
