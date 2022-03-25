@@ -69,6 +69,9 @@ bool shouldIncludeRootCursor(String sourceFile) {
   }
 
   // Objective C has some extra system headers that have a non-empty sourceFile.
+  if (config.language == Language.objc) {
+    print('ZZZZZZZZZZZ: ' + sourceFile);
+  }
   if (config.language == Language.objc &&
       sourceFile.startsWith(strings.clangDefaultObjCSystemHeaderPath)) {
     return false;
