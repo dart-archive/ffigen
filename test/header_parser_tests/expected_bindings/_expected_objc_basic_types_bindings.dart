@@ -24,7 +24,3 @@ typedef BOOL = pkg_ffi.SignedChar;
 class ObjCObject extends ffi.Opaque {}
 
 class ObjCSel extends ffi.Opaque {}
-
-const int true1 = 1;
-
-const int false1 = 0;
