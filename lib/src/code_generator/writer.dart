@@ -33,6 +33,14 @@ class Writer {
     return _ffiLibraryPrefix!;
   }
 
+  String? _ffiPkgLibraryPrefix;
+  String get ffiPkgLibraryPrefix {
+    _ffiPkgLibraryPrefix ??= libraryImports
+        .firstWhere((element) => element.name == ffiPkgImport.name)
+        .prefix;
+    return _ffiPkgLibraryPrefix!;
+  }
+
   final Set<LibraryImport> libraryImports;
 
   late String _lookupFuncIdentifier;

@@ -58,7 +58,7 @@ class _ObjCBuiltInFunctions {
     s.write('\n$selType $registerName(${w.className} _lib, String name) {\n');
     s.write('  final cstr = name.toNativeUtf8();\n');
     s.write('  final sel = _lib.${_registerNameFunc.name}(cstr.cast());\n');
-    s.write('  pkg_ffi.calloc.free(cstr);\n');
+    s.write('  ${w.ffiPkgLibraryPrefix}.calloc.free(cstr);\n');
     s.write('  return sel;\n');
     s.write('}\n');
 
@@ -67,7 +67,7 @@ class _ObjCBuiltInFunctions {
     s.write('\n$objType $getClass(${w.className} _lib, String name) {\n');
     s.write('  final cstr = name.toNativeUtf8();\n');
     s.write('  final clazz = _lib.${_getClassFunc.name}(cstr.cast());\n');
-    s.write('  pkg_ffi.calloc.free(cstr);\n');
+    s.write('  ${w.ffiPkgLibraryPrefix}.calloc.free(cstr);\n');
     s.write('  return clazz;\n');
     s.write('}\n');
 
