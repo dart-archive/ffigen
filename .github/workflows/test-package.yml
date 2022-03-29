@@ -59,3 +59,25 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: lcov.info
+
+  mac-test:
+    needs: analyze
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dart-lang/setup-dart@v1.0
+        with:
+          sdk: stable
+      - name: Install dependencies
+        run: dart pub get
+      - name: Build test dylib
+        run: cd test/native_test && dart build_test_dylib.dart && cd ../..
+      - name: Run VM tests
+        run: dart test --platform vm
+      - name: Collect coverage
+        run: ./tool/coverage.sh
+      - name: Upload coverage
+        uses: coverallsapp/github-action@v1.1.2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: lcov.info
