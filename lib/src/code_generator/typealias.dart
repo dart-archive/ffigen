@@ -14,7 +14,7 @@ import 'writer.dart';
 /// typedef $name = $type;
 /// );
 /// ```
-class Typealias extends NoLookUpBinding {
+class Typealias extends BindingType {
   final Type type;
   final bool _useDartType;
 
@@ -56,4 +56,27 @@ class Typealias extends NoLookUpBinding {
     return BindingString(
         type: BindingStringType.typeDef, string: sb.toString());
   }
+
+  @override
+  Type get typealiasType => type.typealiasType;
+
+  @override
+  bool get isIncompleteCompound => type.isIncompleteCompound;
+
+  @override
+  String getCType(Writer w) => name;
+
+  @override
+  String getDartType(Writer w) {
+    // Typealias cannot be used by name in Dart types unless both the C and Dart
+    // type of the underlying types are same.
+    if (sameDartAndCType(type, w)) {
+      return name;
+    } else {
+      return type.getDartType(w);
+    }
+  }
+
+  @override
+  String toString() => name;
 }
