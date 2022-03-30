@@ -19,11 +19,9 @@ void main() {
         EnumClass(name: 'TestEnum'),
         EnumClass(name: 'TestEnum'),
         Func(
-            name: 'testFunc',
-            returnType: NativeType(SupportedNativeType.Void)),
+            name: 'testFunc', returnType: NativeType(SupportedNativeType.Void)),
         Func(
-            name: 'testFunc',
-            returnType: NativeType(SupportedNativeType.Void)),
+            name: 'testFunc', returnType: NativeType(SupportedNativeType.Void)),
         Constant(
           originalName: 'Test_Macro',
           name: 'Test_Macro',
@@ -49,14 +47,11 @@ void main() {
         Constant(name: 'testCrossDecl', rawValue: '0', rawType: 'int'),
         EnumClass(name: 'testCrossDecl'),
         Typealias(
-            name: 'testCrossDecl',
-            type: NativeType(SupportedNativeType.Void)),
+            name: 'testCrossDecl', type: NativeType(SupportedNativeType.Void)),
 
         /// Conflicts with ffi library prefix, name of prefix is changed.
         Struct(name: 'ffi'),
-        Func(
-            name: 'ffi1',
-            returnType: NativeType(SupportedNativeType.Void)),
+        Func(name: 'ffi1', returnType: NativeType(SupportedNativeType.Void)),
       ]);
       final l2 = Library(name: 'Bindings', bindings: [
         Struct(name: 'TestStruct'),
@@ -86,8 +81,7 @@ void main() {
         Typealias(
             name: 'testAlias', type: NativeType(SupportedNativeType.Void)),
         Typealias(
-            name: 'testAlias1',
-            type: NativeType(SupportedNativeType.Void)),
+            name: 'testAlias1', type: NativeType(SupportedNativeType.Void)),
         Struct(name: 'testCrossDecl', originalName: 'testCrossDecl'),
         Func(
             name: 'testCrossDecl1',
@@ -96,12 +90,9 @@ void main() {
         Constant(name: 'testCrossDecl2', rawValue: '0', rawType: 'int'),
         EnumClass(name: 'testCrossDecl3'),
         Typealias(
-            name: 'testCrossDecl4',
-            type: NativeType(SupportedNativeType.Void)),
+            name: 'testCrossDecl4', type: NativeType(SupportedNativeType.Void)),
         Struct(name: 'ffi'),
-        Func(
-            name: 'ffi1',
-            returnType: NativeType(SupportedNativeType.Void)),
+        Func(name: 'ffi1', returnType: NativeType(SupportedNativeType.Void)),
       ]);
 
       expect(l1.generate(), l2.generate());

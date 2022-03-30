@@ -89,11 +89,10 @@ Library expectedLibrary() {
       ),
       Global(
         name: 'globalStruct_from_alias',
-        type:
-          Typealias(
-            name: 'EmptyStruct_Alias',
-            type: globalStruct,
-          ),
+        type: Typealias(
+          name: 'EmptyStruct_Alias',
+          type: globalStruct,
+        ),
         exposeSymbolAddress: true,
       )
     ],

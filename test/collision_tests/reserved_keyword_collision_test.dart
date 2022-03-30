@@ -20,9 +20,7 @@ void main() {
         Struct(name: 'if'),
         EnumClass(name: 'return'),
         EnumClass(name: 'export'),
-        Func(
-            name: 'show',
-            returnType: NativeType(SupportedNativeType.Void)),
+        Func(name: 'show', returnType: NativeType(SupportedNativeType.Void)),
         Func(
             name: 'implements',
             parameters: [
@@ -80,8 +78,7 @@ void main() {
           rawType: 'int',
           rawValue: '0',
         ),
-        Typealias(
-            name: 'var1', type: NativeType(SupportedNativeType.Void)),
+        Typealias(name: 'var1', type: NativeType(SupportedNativeType.Void)),
       ]);
       expect(l1.generate(), l2.generate());
     });

@@ -16,7 +16,8 @@ class FunctionType extends Type {
     required this.parameters,
   });
 
-  String _getTypeString(bool writeArgumentNames, String typeToString(Type)) {
+  String _getTypeString(
+      bool writeArgumentNames, String Function(Type) typeToString) {
     final sb = StringBuffer();
 
     // Write return Type.
@@ -34,14 +35,14 @@ class FunctionType extends Type {
 
   @override
   String getCType(Writer w, {bool writeArgumentNames = true}) =>
-      _getTypeString(writeArgumentNames, (t) => t.getCType(w));
+      _getTypeString(writeArgumentNames, (Type t) => t.getCType(w));
 
   @override
   String getDartType(Writer w, {bool writeArgumentNames = true}) =>
-      _getTypeString(writeArgumentNames, (t) => t.getDartType(w));
+      _getTypeString(writeArgumentNames, (Type t) => t.getDartType(w));
 
   @override
-  String toString() => _getTypeString(false, (t) => t.toString());
+  String toString() => _getTypeString(false, (Type t) => t.toString());
 
   @override
   void addDependencies(Set<Binding> dependencies) {
