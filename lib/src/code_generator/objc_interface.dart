@@ -115,7 +115,6 @@ class ObjCInterface extends NoLookUpBinding {
 
   @override
   BindingString toBindingString(Writer w) {
-    // TODO(#279): Print dartdoc.
     final s = StringBuffer();
     if (dartDoc != null) {
       s.write(makeDartDoc(dartDoc!));
@@ -153,6 +152,9 @@ class ObjCInterface extends NoLookUpBinding {
       s.write('  static $selType? $selName;');
 
       // The method declaration.
+      if (m.dartDoc != null) {
+        s.write(makeDartDoc(m.dartDoc!));
+      }
       s.write('  ');
       if (isStatic) s.write('static ');
       s.write('${m.returnType!.getConvertedType(w, name)} ');

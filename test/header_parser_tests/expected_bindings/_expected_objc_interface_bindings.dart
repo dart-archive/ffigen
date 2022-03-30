@@ -974,7 +974,3 @@ class NSString extends _ObjCWrapper {
     return NSString._(other._id, other._lib);
   }
 }
-
-const int true1 = 1;
-
-const int false1 = 0;
