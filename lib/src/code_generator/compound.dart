@@ -152,7 +152,7 @@ abstract class Compound extends BindingType {
     s.write('}\n\n');
 
     return BindingString(
-        type: isStruct ? BindingStringType.struc : BindingStringType.union,
+        type: isStruct ? BindingStringType.struct : BindingStringType.union,
         string: s.toString());
   }
 

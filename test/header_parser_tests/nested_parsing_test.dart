@@ -61,55 +61,55 @@ ${strings.structs}:
 }
 
 Library expectedLibrary() {
-  final struc2 = Struc(name: 'Struct2', members: [
+  final struct2 = Struct(name: 'Struct2', members: [
     Member(
       name: 'e',
-      type: Type.importedType(intType),
+      type: intType,
     ),
     Member(
       name: 'f',
-      type: Type.importedType(intType),
+      type: intType,
     ),
   ]);
-  final unnamedInternalStruc = Struc(name: 'UnnamedStruct1', members: [
+  final unnamedInternalStruct = Struct(name: 'UnnamedStruct1', members: [
     Member(
       name: 'a',
-      type: Type.importedType(intType),
+      type: intType,
     ),
     Member(
       name: 'b',
-      type: Type.importedType(intType),
+      type: intType,
     ),
   ]);
   return Library(
     name: 'Bindings',
     bindings: [
-      unnamedInternalStruc,
-      struc2,
-      Struc(name: 'Struct1', members: [
+      unnamedInternalStruct,
+      struct2,
+      Struct(name: 'Struct1', members: [
         Member(
           name: 'a',
-          type: Type.importedType(intType),
+          type: intType,
         ),
         Member(
           name: 'b',
-          type: Type.importedType(intType),
+          type: intType,
         ),
-        Member(name: 'struct2', type: Type.pointer(Type.struct(struc2))),
+        Member(name: 'struct2', type: PointerType(struct2)),
       ]),
-      Struc(name: 'Struct3', members: [
+      Struct(name: 'Struct3', members: [
         Member(
           name: 'a',
-          type: Type.importedType(intType),
+          type: intType,
         ),
         Member(
           name: 'b',
-          type: Type.struct(unnamedInternalStruc),
+          type: unnamedInternalStruct,
         ),
       ]),
-      Struc(name: 'EmptyStruct'),
-      Struc(name: 'Struct4'),
-      Struc(name: 'Struct5'),
+      Struct(name: 'EmptyStruct'),
+      Struct(name: 'Struct4'),
+      Struct(name: 'Struct5'),
     ],
   );
 }

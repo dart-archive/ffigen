@@ -12,14 +12,14 @@ typedef void (*Typedef1)(Dart_Handle);
 void func4(Typedef1);
 
 // Dart_Handle isn't supported directly, so all members are removed.
-struct Struc1
+struct Struct1
 {
     Dart_Handle h;
     int a;
 };
 
 // Pointer<Handle> works.
-struct Struc2
+struct Struct2
 {
     Dart_Handle *h;
 };

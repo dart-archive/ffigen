@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-struct Struc
+struct Struct
 {
     void (*unnamed1)(void (*unnamed2)());
 };
@@ -17,6 +17,6 @@ typedef InsideReturnType (*WithTypedefReturnType)();
 void funcWithNativeFunc(WithTypedefReturnType named);
 
 typedef void (*VoidFuncPointer)();
-struct Struc2{
+struct Struct2{
     const VoidFuncPointer constFuncPointer;
 };

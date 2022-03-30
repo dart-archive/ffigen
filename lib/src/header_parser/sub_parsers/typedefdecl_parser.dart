@@ -53,7 +53,7 @@ Typealias? parseTypedefDeclaration(
       bindingsIndex.addUnsupportedTypealiasToSeen(typedefUsr);
       _logger.fine("Skipped Typedef '$typedefName': "
           'Name matches with referred struct/union.');
-    } else if (s is Enum) {
+    } else if (s is EnumClass) {
       // Ignore typedefs to Enum.
       bindingsIndex.addUnsupportedTypealiasToSeen(typedefUsr);
       _logger.fine("Skipped Typedef '$typedefName': typedef to enum.");
