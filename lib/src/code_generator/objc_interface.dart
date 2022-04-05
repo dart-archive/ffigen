@@ -30,7 +30,8 @@ const _excludedNSObjectClassMethods = {
 
 class _ObjCBuiltInFunctions {
   late final _registerNameFunc = Func(
-    name: 'sel_registerName',
+    name: '_sel_registerName',
+    originalName: 'sel_registerName',
     returnType: Type.pointer(Type.struct(objCSelType)),
     parameters: [
       Parameter(name: 'str', type: Type.pointer(Type.importedType(charType)))
@@ -39,7 +40,8 @@ class _ObjCBuiltInFunctions {
   late final String registerName;
 
   late final _getClassFunc = Func(
-    name: 'objc_getClass',
+    name: '_objc_getClass',
+    originalName: 'objc_getClass',
     returnType: Type.pointer(Type.struct(objCObjectType)),
     parameters: [
       Parameter(name: 'str', type: Type.pointer(Type.importedType(charType)))
@@ -56,7 +58,7 @@ class _ObjCBuiltInFunctions {
       key += ' ' + p.type.hashCode.toRadixString(36);
     }
     _msgSendFuncs[key] ??= Func(
-      name: 'objc_msgSend_${_msgSendFuncs.length}',
+      name: '_objc_msgSend_${_msgSendFuncs.length}',
       originalName: 'objc_msgSend',
       returnType: returnType,
       parameters: [

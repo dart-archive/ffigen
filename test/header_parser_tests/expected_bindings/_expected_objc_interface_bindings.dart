@@ -20,500 +20,500 @@ class NativeLibrary {
           lookup)
       : _lookup = lookup;
 
-  ffi.Pointer<ObjCSel> sel_registerName(
+  ffi.Pointer<ObjCSel> _sel_registerName(
     ffi.Pointer<pkg_ffi.Char> str,
   ) {
-    return _sel_registerName(
+    return __sel_registerName(
       str,
     );
   }
 
-  late final _sel_registerNamePtr = _lookup<
+  late final __sel_registerNamePtr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<ObjCSel> Function(
               ffi.Pointer<pkg_ffi.Char>)>>('sel_registerName');
-  late final _sel_registerName = _sel_registerNamePtr
+  late final __sel_registerName = __sel_registerNamePtr
       .asFunction<ffi.Pointer<ObjCSel> Function(ffi.Pointer<pkg_ffi.Char>)>();
 
-  ffi.Pointer<ObjCObject> objc_getClass(
+  ffi.Pointer<ObjCObject> _objc_getClass(
     ffi.Pointer<pkg_ffi.Char> str,
   ) {
-    return _objc_getClass(
+    return __objc_getClass(
       str,
     );
   }
 
-  late final _objc_getClassPtr = _lookup<
+  late final __objc_getClassPtr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<ObjCObject> Function(
               ffi.Pointer<pkg_ffi.Char>)>>('objc_getClass');
-  late final _objc_getClass = _objc_getClassPtr.asFunction<
+  late final __objc_getClass = __objc_getClassPtr.asFunction<
       ffi.Pointer<ObjCObject> Function(ffi.Pointer<pkg_ffi.Char>)>();
 
-  instancetype objc_msgSend_0(
+  instancetype _objc_msgSend_0(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
   ) {
-    return _objc_msgSend_0(
+    return __objc_msgSend_0(
       obj,
       sel,
     );
   }
 
-  late final _objc_msgSend_0Ptr = _lookup<
+  late final __objc_msgSend_0Ptr = _lookup<
       ffi.NativeFunction<
           instancetype Function(
               ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>>('objc_msgSend');
-  late final _objc_msgSend_0 = _objc_msgSend_0Ptr.asFunction<
+  late final __objc_msgSend_0 = __objc_msgSend_0Ptr.asFunction<
       instancetype Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>();
 
-  instancetype objc_msgSend_1(
+  instancetype _objc_msgSend_1(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
     ffi.Pointer<_NSZone> zone,
   ) {
-    return _objc_msgSend_1(
+    return __objc_msgSend_1(
       obj,
       sel,
       zone,
     );
   }
 
-  late final _objc_msgSend_1Ptr = _lookup<
+  late final __objc_msgSend_1Ptr = _lookup<
       ffi.NativeFunction<
           instancetype Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
               ffi.Pointer<_NSZone>)>>('objc_msgSend');
-  late final _objc_msgSend_1 = _objc_msgSend_1Ptr.asFunction<
+  late final __objc_msgSend_1 = __objc_msgSend_1Ptr.asFunction<
       instancetype Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
           ffi.Pointer<_NSZone>)>();
 
-  ffi.Pointer<ObjCObject> objc_msgSend_2(
+  ffi.Pointer<ObjCObject> _objc_msgSend_2(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
   ) {
-    return _objc_msgSend_2(
+    return __objc_msgSend_2(
       obj,
       sel,
     );
   }
 
-  late final _objc_msgSend_2Ptr = _lookup<
+  late final __objc_msgSend_2Ptr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<ObjCObject> Function(
               ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>>('objc_msgSend');
-  late final _objc_msgSend_2 = _objc_msgSend_2Ptr.asFunction<
+  late final __objc_msgSend_2 = __objc_msgSend_2Ptr.asFunction<
       ffi.Pointer<ObjCObject> Function(
           ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>();
 
-  ffi.Pointer<ObjCObject> objc_msgSend_3(
+  ffi.Pointer<ObjCObject> _objc_msgSend_3(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
   ) {
-    return _objc_msgSend_3(
+    return __objc_msgSend_3(
       obj,
       sel,
     );
   }
 
-  late final _objc_msgSend_3Ptr = _lookup<
+  late final __objc_msgSend_3Ptr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<ObjCObject> Function(
               ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>>('objc_msgSend');
-  late final _objc_msgSend_3 = _objc_msgSend_3Ptr.asFunction<
+  late final __objc_msgSend_3 = __objc_msgSend_3Ptr.asFunction<
       ffi.Pointer<ObjCObject> Function(
           ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>();
 
-  ffi.Pointer<ObjCObject> objc_msgSend_4(
+  ffi.Pointer<ObjCObject> _objc_msgSend_4(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
     ffi.Pointer<_NSZone> zone,
   ) {
-    return _objc_msgSend_4(
+    return __objc_msgSend_4(
       obj,
       sel,
       zone,
     );
   }
 
-  late final _objc_msgSend_4Ptr = _lookup<
+  late final __objc_msgSend_4Ptr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
               ffi.Pointer<ObjCSel>, ffi.Pointer<_NSZone>)>>('objc_msgSend');
-  late final _objc_msgSend_4 = _objc_msgSend_4Ptr.asFunction<
+  late final __objc_msgSend_4 = __objc_msgSend_4Ptr.asFunction<
       ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
           ffi.Pointer<ObjCSel>, ffi.Pointer<_NSZone>)>();
 
-  ffi.Pointer<ObjCObject> objc_msgSend_5(
+  ffi.Pointer<ObjCObject> _objc_msgSend_5(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
     ffi.Pointer<_NSZone> zone,
   ) {
-    return _objc_msgSend_5(
+    return __objc_msgSend_5(
       obj,
       sel,
       zone,
     );
   }
 
-  late final _objc_msgSend_5Ptr = _lookup<
+  late final __objc_msgSend_5Ptr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
               ffi.Pointer<ObjCSel>, ffi.Pointer<_NSZone>)>>('objc_msgSend');
-  late final _objc_msgSend_5 = _objc_msgSend_5Ptr.asFunction<
+  late final __objc_msgSend_5 = __objc_msgSend_5Ptr.asFunction<
       ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
           ffi.Pointer<ObjCSel>, ffi.Pointer<_NSZone>)>();
 
-  int objc_msgSend_6(
+  int _objc_msgSend_6(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
     ffi.Pointer<ObjCSel> aSelector,
   ) {
-    return _objc_msgSend_6(
+    return __objc_msgSend_6(
       obj,
       sel,
       aSelector,
     );
   }
 
-  late final _objc_msgSend_6Ptr = _lookup<
+  late final __objc_msgSend_6Ptr = _lookup<
       ffi.NativeFunction<
           BOOL Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
               ffi.Pointer<ObjCSel>)>>('objc_msgSend');
-  late final _objc_msgSend_6 = _objc_msgSend_6Ptr.asFunction<
+  late final __objc_msgSend_6 = __objc_msgSend_6Ptr.asFunction<
       int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
           ffi.Pointer<ObjCSel>)>();
 
-  int objc_msgSend_7(
+  int _objc_msgSend_7(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
     ffi.Pointer<ObjCObject> protocol,
   ) {
-    return _objc_msgSend_7(
+    return __objc_msgSend_7(
       obj,
       sel,
       protocol,
     );
   }
 
-  late final _objc_msgSend_7Ptr = _lookup<
+  late final __objc_msgSend_7Ptr = _lookup<
       ffi.NativeFunction<
           BOOL Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
               ffi.Pointer<ObjCObject>)>>('objc_msgSend');
-  late final _objc_msgSend_7 = _objc_msgSend_7Ptr.asFunction<
+  late final __objc_msgSend_7 = __objc_msgSend_7Ptr.asFunction<
       int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
           ffi.Pointer<ObjCObject>)>();
 
-  IMP objc_msgSend_8(
+  IMP _objc_msgSend_8(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
     ffi.Pointer<ObjCSel> aSelector,
   ) {
-    return _objc_msgSend_8(
+    return __objc_msgSend_8(
       obj,
       sel,
       aSelector,
     );
   }
 
-  late final _objc_msgSend_8Ptr = _lookup<
+  late final __objc_msgSend_8Ptr = _lookup<
       ffi.NativeFunction<
           IMP Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
               ffi.Pointer<ObjCSel>)>>('objc_msgSend');
-  late final _objc_msgSend_8 = _objc_msgSend_8Ptr.asFunction<
+  late final __objc_msgSend_8 = __objc_msgSend_8Ptr.asFunction<
       IMP Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
           ffi.Pointer<ObjCSel>)>();
 
-  IMP objc_msgSend_9(
+  IMP _objc_msgSend_9(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
     ffi.Pointer<ObjCSel> aSelector,
   ) {
-    return _objc_msgSend_9(
+    return __objc_msgSend_9(
       obj,
       sel,
       aSelector,
     );
   }
 
-  late final _objc_msgSend_9Ptr = _lookup<
+  late final __objc_msgSend_9Ptr = _lookup<
       ffi.NativeFunction<
           IMP Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
               ffi.Pointer<ObjCSel>)>>('objc_msgSend');
-  late final _objc_msgSend_9 = _objc_msgSend_9Ptr.asFunction<
+  late final __objc_msgSend_9 = __objc_msgSend_9Ptr.asFunction<
       IMP Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
           ffi.Pointer<ObjCSel>)>();
 
-  ffi.Pointer<ObjCObject> objc_msgSend_10(
+  ffi.Pointer<ObjCObject> _objc_msgSend_10(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
     ffi.Pointer<ObjCSel> aSelector,
   ) {
-    return _objc_msgSend_10(
+    return __objc_msgSend_10(
       obj,
       sel,
       aSelector,
     );
   }
 
-  late final _objc_msgSend_10Ptr = _lookup<
+  late final __objc_msgSend_10Ptr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
               ffi.Pointer<ObjCSel>, ffi.Pointer<ObjCSel>)>>('objc_msgSend');
-  late final _objc_msgSend_10 = _objc_msgSend_10Ptr.asFunction<
+  late final __objc_msgSend_10 = __objc_msgSend_10Ptr.asFunction<
       ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
           ffi.Pointer<ObjCSel>, ffi.Pointer<ObjCSel>)>();
 
-  ffi.Pointer<ObjCObject> objc_msgSend_11(
+  ffi.Pointer<ObjCObject> _objc_msgSend_11(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
     ffi.Pointer<ObjCSel> aSelector,
   ) {
-    return _objc_msgSend_11(
+    return __objc_msgSend_11(
       obj,
       sel,
       aSelector,
     );
   }
 
-  late final _objc_msgSend_11Ptr = _lookup<
+  late final __objc_msgSend_11Ptr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
               ffi.Pointer<ObjCSel>, ffi.Pointer<ObjCSel>)>>('objc_msgSend');
-  late final _objc_msgSend_11 = _objc_msgSend_11Ptr.asFunction<
+  late final __objc_msgSend_11 = __objc_msgSend_11Ptr.asFunction<
       ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
           ffi.Pointer<ObjCSel>, ffi.Pointer<ObjCSel>)>();
 
-  ffi.Pointer<ObjCObject> objc_msgSend_12(
+  ffi.Pointer<ObjCObject> _objc_msgSend_12(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
     ffi.Pointer<ObjCSel> aSelector,
   ) {
-    return _objc_msgSend_12(
+    return __objc_msgSend_12(
       obj,
       sel,
       aSelector,
     );
   }
 
-  late final _objc_msgSend_12Ptr = _lookup<
+  late final __objc_msgSend_12Ptr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
               ffi.Pointer<ObjCSel>, ffi.Pointer<ObjCSel>)>>('objc_msgSend');
-  late final _objc_msgSend_12 = _objc_msgSend_12Ptr.asFunction<
+  late final __objc_msgSend_12 = __objc_msgSend_12Ptr.asFunction<
       ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
           ffi.Pointer<ObjCSel>, ffi.Pointer<ObjCSel>)>();
 
-  int objc_msgSend_13(
+  int _objc_msgSend_13(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
   ) {
-    return _objc_msgSend_13(
+    return __objc_msgSend_13(
       obj,
       sel,
     );
   }
 
-  late final _objc_msgSend_13Ptr = _lookup<
+  late final __objc_msgSend_13Ptr = _lookup<
       ffi.NativeFunction<
           BOOL Function(
               ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>>('objc_msgSend');
-  late final _objc_msgSend_13 = _objc_msgSend_13Ptr.asFunction<
+  late final __objc_msgSend_13 = __objc_msgSend_13Ptr.asFunction<
       int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>();
 
-  int objc_msgSend_14(
+  int _objc_msgSend_14(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
     ffi.Pointer<ObjCObject> aClass,
   ) {
-    return _objc_msgSend_14(
+    return __objc_msgSend_14(
       obj,
       sel,
       aClass,
     );
   }
 
-  late final _objc_msgSend_14Ptr = _lookup<
+  late final __objc_msgSend_14Ptr = _lookup<
       ffi.NativeFunction<
           BOOL Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
               ffi.Pointer<ObjCObject>)>>('objc_msgSend');
-  late final _objc_msgSend_14 = _objc_msgSend_14Ptr.asFunction<
+  late final __objc_msgSend_14 = __objc_msgSend_14Ptr.asFunction<
       int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
           ffi.Pointer<ObjCObject>)>();
 
-  int objc_msgSend_15(
+  int _objc_msgSend_15(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
     ffi.Pointer<ObjCSel> sel1,
   ) {
-    return _objc_msgSend_15(
+    return __objc_msgSend_15(
       obj,
       sel,
       sel1,
     );
   }
 
-  late final _objc_msgSend_15Ptr = _lookup<
+  late final __objc_msgSend_15Ptr = _lookup<
       ffi.NativeFunction<
           BOOL Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
               ffi.Pointer<ObjCSel>)>>('objc_msgSend');
-  late final _objc_msgSend_15 = _objc_msgSend_15Ptr.asFunction<
+  late final __objc_msgSend_15 = __objc_msgSend_15Ptr.asFunction<
       int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
           ffi.Pointer<ObjCSel>)>();
 
-  int objc_msgSend_16(
+  int _objc_msgSend_16(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
     ffi.Pointer<ObjCSel> sel1,
   ) {
-    return _objc_msgSend_16(
+    return __objc_msgSend_16(
       obj,
       sel,
       sel1,
     );
   }
 
-  late final _objc_msgSend_16Ptr = _lookup<
+  late final __objc_msgSend_16Ptr = _lookup<
       ffi.NativeFunction<
           BOOL Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
               ffi.Pointer<ObjCSel>)>>('objc_msgSend');
-  late final _objc_msgSend_16 = _objc_msgSend_16Ptr.asFunction<
+  late final __objc_msgSend_16 = __objc_msgSend_16Ptr.asFunction<
       int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
           ffi.Pointer<ObjCSel>)>();
 
-  int objc_msgSend_17(
+  int _objc_msgSend_17(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
   ) {
-    return _objc_msgSend_17(
+    return __objc_msgSend_17(
       obj,
       sel,
     );
   }
 
-  late final _objc_msgSend_17Ptr = _lookup<
+  late final __objc_msgSend_17Ptr = _lookup<
       ffi.NativeFunction<
           NSUInteger Function(
               ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>>('objc_msgSend');
-  late final _objc_msgSend_17 = _objc_msgSend_17Ptr.asFunction<
+  late final __objc_msgSend_17 = __objc_msgSend_17Ptr.asFunction<
       int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>();
 
-  ffi.Pointer<ObjCObject> objc_msgSend_18(
+  ffi.Pointer<ObjCObject> _objc_msgSend_18(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
   ) {
-    return _objc_msgSend_18(
+    return __objc_msgSend_18(
       obj,
       sel,
     );
   }
 
-  late final _objc_msgSend_18Ptr = _lookup<
+  late final __objc_msgSend_18Ptr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<ObjCObject> Function(
               ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>>('objc_msgSend');
-  late final _objc_msgSend_18 = _objc_msgSend_18Ptr.asFunction<
+  late final __objc_msgSend_18 = __objc_msgSend_18Ptr.asFunction<
       ffi.Pointer<ObjCObject> Function(
           ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>();
 
-  ffi.Pointer<ObjCObject> objc_msgSend_19(
+  ffi.Pointer<ObjCObject> _objc_msgSend_19(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
   ) {
-    return _objc_msgSend_19(
+    return __objc_msgSend_19(
       obj,
       sel,
     );
   }
 
-  late final _objc_msgSend_19Ptr = _lookup<
+  late final __objc_msgSend_19Ptr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<ObjCObject> Function(
               ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>>('objc_msgSend');
-  late final _objc_msgSend_19 = _objc_msgSend_19Ptr.asFunction<
+  late final __objc_msgSend_19 = __objc_msgSend_19Ptr.asFunction<
       ffi.Pointer<ObjCObject> Function(
           ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>();
 
-  ffi.Pointer<ObjCObject> objc_msgSend_20(
+  ffi.Pointer<ObjCObject> _objc_msgSend_20(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
   ) {
-    return _objc_msgSend_20(
+    return __objc_msgSend_20(
       obj,
       sel,
     );
   }
 
-  late final _objc_msgSend_20Ptr = _lookup<
+  late final __objc_msgSend_20Ptr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<ObjCObject> Function(
               ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>>('objc_msgSend');
-  late final _objc_msgSend_20 = _objc_msgSend_20Ptr.asFunction<
+  late final __objc_msgSend_20 = __objc_msgSend_20Ptr.asFunction<
       ffi.Pointer<ObjCObject> Function(
           ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>();
 
-  int objc_msgSend_21(
+  int _objc_msgSend_21(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
   ) {
-    return _objc_msgSend_21(
+    return __objc_msgSend_21(
       obj,
       sel,
     );
   }
 
-  late final _objc_msgSend_21Ptr = _lookup<
+  late final __objc_msgSend_21Ptr = _lookup<
       ffi.NativeFunction<
           ffi.Int32 Function(
               ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>>('objc_msgSend');
-  late final _objc_msgSend_21 = _objc_msgSend_21Ptr.asFunction<
+  late final __objc_msgSend_21 = __objc_msgSend_21Ptr.asFunction<
       int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>();
 
-  void objc_msgSend_22(
+  void _objc_msgSend_22(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
     int value,
   ) {
-    return _objc_msgSend_22(
+    return __objc_msgSend_22(
       obj,
       sel,
       value,
     );
   }
 
-  late final _objc_msgSend_22Ptr = _lookup<
+  late final __objc_msgSend_22Ptr = _lookup<
       ffi.NativeFunction<
           ffi.Void Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
               ffi.Int32)>>('objc_msgSend');
-  late final _objc_msgSend_22 = _objc_msgSend_22Ptr.asFunction<
+  late final __objc_msgSend_22 = __objc_msgSend_22Ptr.asFunction<
       void Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>, int)>();
 
-  ffi.Pointer<ObjCObject> objc_msgSend_23(
+  ffi.Pointer<ObjCObject> _objc_msgSend_23(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
     double someArg,
   ) {
-    return _objc_msgSend_23(
+    return __objc_msgSend_23(
       obj,
       sel,
       someArg,
     );
   }
 
-  late final _objc_msgSend_23Ptr = _lookup<
+  late final __objc_msgSend_23Ptr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
               ffi.Pointer<ObjCSel>, ffi.Double)>>('objc_msgSend');
-  late final _objc_msgSend_23 = _objc_msgSend_23Ptr.asFunction<
+  late final __objc_msgSend_23 = __objc_msgSend_23Ptr.asFunction<
       ffi.Pointer<ObjCObject> Function(
           ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>, double)>();
 
-  int objc_msgSend_24(
+  int _objc_msgSend_24(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
     ffi.Pointer<ObjCObject> someArg,
     ffi.Pointer<ObjCObject> otherArg,
   ) {
-    return _objc_msgSend_24(
+    return __objc_msgSend_24(
       obj,
       sel,
       someArg,
@@ -521,28 +521,28 @@ class NativeLibrary {
     );
   }
 
-  late final _objc_msgSend_24Ptr = _lookup<
+  late final __objc_msgSend_24Ptr = _lookup<
       ffi.NativeFunction<
           ffi.Int32 Function(
               ffi.Pointer<ObjCObject>,
               ffi.Pointer<ObjCSel>,
               ffi.Pointer<ObjCObject>,
               ffi.Pointer<ObjCObject>)>>('objc_msgSend');
-  late final _objc_msgSend_24 = _objc_msgSend_24Ptr.asFunction<
+  late final __objc_msgSend_24 = __objc_msgSend_24Ptr.asFunction<
       int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
           ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCObject>)>();
 }
 
 ffi.Pointer<ObjCSel> _registerName(NativeLibrary _lib, String name) {
   final cstr = name.toNativeUtf8();
-  final sel = _lib.sel_registerName(cstr.cast());
+  final sel = _lib._sel_registerName(cstr.cast());
   pkg_ffi.calloc.free(cstr);
   return sel;
 }
 
 ffi.Pointer<ObjCObject> _getClass(NativeLibrary _lib, String name) {
   final cstr = name.toNativeUtf8();
-  final clazz = _lib.objc_getClass(cstr.cast());
+  final clazz = _lib._objc_getClass(cstr.cast());
   pkg_ffi.calloc.free(cstr);
   return clazz;
 }
@@ -565,20 +565,20 @@ class Foo extends NSObject {
   static ffi.Pointer<ObjCSel>? _sel_someProperty;
   int get someProperty {
     _sel_someProperty ??= _registerName(_lib, "someProperty");
-    return _lib.objc_msgSend_21(_id, _sel_someProperty!);
+    return _lib._objc_msgSend_21(_id, _sel_someProperty!);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_someProperty1;
   void set someProperty(int value) {
     _sel_someProperty1 ??= _registerName(_lib, "setSomeProperty:");
-    return _lib.objc_msgSend_22(_id, _sel_someProperty1!, value);
+    return _lib._objc_msgSend_22(_id, _sel_someProperty1!, value);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_aClassMethod;
   static Foo aClassMethod(NativeLibrary _lib, double someArg) {
     _class ??= _getClass(_lib, "Foo");
     _sel_aClassMethod ??= _registerName(_lib, "aClassMethod:");
-    final _ret = _lib.objc_msgSend_23(_class!, _sel_aClassMethod!, someArg);
+    final _ret = _lib._objc_msgSend_23(_class!, _sel_aClassMethod!, someArg);
     return Foo._(_ret, _lib);
   }
 
@@ -586,7 +586,7 @@ class Foo extends NSObject {
   int anInstanceMethod(NSObject someArg, NSObject otherArg) {
     _sel_anInstanceMethod ??=
         _registerName(_lib, "anInstanceMethod:withOtherArg:");
-    return _lib.objc_msgSend_24(
+    return _lib._objc_msgSend_24(
         _id, _sel_anInstanceMethod!, someArg._id, otherArg._id);
   }
 
@@ -594,7 +594,7 @@ class Foo extends NSObject {
   static Foo new1(NativeLibrary _lib) {
     _class ??= _getClass(_lib, "Foo");
     _sel_new1 ??= _registerName(_lib, "new");
-    final _ret = _lib.objc_msgSend_0(_class!, _sel_new1!);
+    final _ret = _lib._objc_msgSend_0(_class!, _sel_new1!);
     return Foo._(_ret, _lib);
   }
 
@@ -602,7 +602,7 @@ class Foo extends NSObject {
   static Foo alloc(NativeLibrary _lib) {
     _class ??= _getClass(_lib, "Foo");
     _sel_alloc ??= _registerName(_lib, "alloc");
-    final _ret = _lib.objc_msgSend_0(_class!, _sel_alloc!);
+    final _ret = _lib._objc_msgSend_0(_class!, _sel_alloc!);
     return Foo._(_ret, _lib);
   }
 }
@@ -619,7 +619,7 @@ class NSObject extends _ObjCWrapper {
   static ffi.Pointer<ObjCSel>? _sel_init;
   NSObject init() {
     _sel_init ??= _registerName(_lib, "init");
-    final _ret = _lib.objc_msgSend_0(_id, _sel_init!);
+    final _ret = _lib._objc_msgSend_0(_id, _sel_init!);
     return NSObject._(_ret, _lib);
   }
 
@@ -627,7 +627,7 @@ class NSObject extends _ObjCWrapper {
   static NSObject new1(NativeLibrary _lib) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_new1 ??= _registerName(_lib, "new");
-    final _ret = _lib.objc_msgSend_0(_class!, _sel_new1!);
+    final _ret = _lib._objc_msgSend_0(_class!, _sel_new1!);
     return NSObject._(_ret, _lib);
   }
 
@@ -635,7 +635,7 @@ class NSObject extends _ObjCWrapper {
   static NSObject allocWithZone(NativeLibrary _lib, ffi.Pointer<_NSZone> zone) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_allocWithZone ??= _registerName(_lib, "allocWithZone:");
-    final _ret = _lib.objc_msgSend_1(_class!, _sel_allocWithZone!, zone);
+    final _ret = _lib._objc_msgSend_1(_class!, _sel_allocWithZone!, zone);
     return NSObject._(_ret, _lib);
   }
 
@@ -643,21 +643,21 @@ class NSObject extends _ObjCWrapper {
   static NSObject alloc(NativeLibrary _lib) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_alloc ??= _registerName(_lib, "alloc");
-    final _ret = _lib.objc_msgSend_0(_class!, _sel_alloc!);
+    final _ret = _lib._objc_msgSend_0(_class!, _sel_alloc!);
     return NSObject._(_ret, _lib);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_copy;
   NSObject copy() {
     _sel_copy ??= _registerName(_lib, "copy");
-    final _ret = _lib.objc_msgSend_2(_id, _sel_copy!);
+    final _ret = _lib._objc_msgSend_2(_id, _sel_copy!);
     return NSObject._(_ret, _lib);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_mutableCopy;
   NSObject mutableCopy() {
     _sel_mutableCopy ??= _registerName(_lib, "mutableCopy");
-    final _ret = _lib.objc_msgSend_3(_id, _sel_mutableCopy!);
+    final _ret = _lib._objc_msgSend_3(_id, _sel_mutableCopy!);
     return NSObject._(_ret, _lib);
   }
 
@@ -665,7 +665,7 @@ class NSObject extends _ObjCWrapper {
   static NSObject copyWithZone(NativeLibrary _lib, ffi.Pointer<_NSZone> zone) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_copyWithZone ??= _registerName(_lib, "copyWithZone:");
-    final _ret = _lib.objc_msgSend_4(_class!, _sel_copyWithZone!, zone);
+    final _ret = _lib._objc_msgSend_4(_class!, _sel_copyWithZone!, zone);
     return NSObject._(_ret, _lib);
   }
 
@@ -674,7 +674,7 @@ class NSObject extends _ObjCWrapper {
       NativeLibrary _lib, ffi.Pointer<_NSZone> zone) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_mutableCopyWithZone ??= _registerName(_lib, "mutableCopyWithZone:");
-    final _ret = _lib.objc_msgSend_5(_class!, _sel_mutableCopyWithZone!, zone);
+    final _ret = _lib._objc_msgSend_5(_class!, _sel_mutableCopyWithZone!, zone);
     return NSObject._(_ret, _lib);
   }
 
@@ -684,7 +684,7 @@ class NSObject extends _ObjCWrapper {
     _class ??= _getClass(_lib, "NSObject");
     _sel_instancesRespondToSelector ??=
         _registerName(_lib, "instancesRespondToSelector:");
-    return _lib.objc_msgSend_6(
+    return _lib._objc_msgSend_6(
         _class!, _sel_instancesRespondToSelector!, aSelector);
   }
 
@@ -692,13 +692,14 @@ class NSObject extends _ObjCWrapper {
   static int conformsToProtocol(NativeLibrary _lib, NSObject protocol) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_conformsToProtocol ??= _registerName(_lib, "conformsToProtocol:");
-    return _lib.objc_msgSend_7(_class!, _sel_conformsToProtocol!, protocol._id);
+    return _lib._objc_msgSend_7(
+        _class!, _sel_conformsToProtocol!, protocol._id);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_methodForSelector;
   IMP methodForSelector(ffi.Pointer<ObjCSel> aSelector) {
     _sel_methodForSelector ??= _registerName(_lib, "methodForSelector:");
-    return _lib.objc_msgSend_8(_id, _sel_methodForSelector!, aSelector);
+    return _lib._objc_msgSend_8(_id, _sel_methodForSelector!, aSelector);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_instanceMethodForSelector;
@@ -707,7 +708,7 @@ class NSObject extends _ObjCWrapper {
     _class ??= _getClass(_lib, "NSObject");
     _sel_instanceMethodForSelector ??=
         _registerName(_lib, "instanceMethodForSelector:");
-    return _lib.objc_msgSend_9(
+    return _lib._objc_msgSend_9(
         _class!, _sel_instanceMethodForSelector!, aSelector);
   }
 
@@ -715,8 +716,8 @@ class NSObject extends _ObjCWrapper {
   NSObject forwardingTargetForSelector(ffi.Pointer<ObjCSel> aSelector) {
     _sel_forwardingTargetForSelector ??=
         _registerName(_lib, "forwardingTargetForSelector:");
-    final _ret =
-        _lib.objc_msgSend_10(_id, _sel_forwardingTargetForSelector!, aSelector);
+    final _ret = _lib._objc_msgSend_10(
+        _id, _sel_forwardingTargetForSelector!, aSelector);
     return NSObject._(_ret, _lib);
   }
 
@@ -725,7 +726,7 @@ class NSObject extends _ObjCWrapper {
     _sel_methodSignatureForSelector ??=
         _registerName(_lib, "methodSignatureForSelector:");
     final _ret =
-        _lib.objc_msgSend_11(_id, _sel_methodSignatureForSelector!, aSelector);
+        _lib._objc_msgSend_11(_id, _sel_methodSignatureForSelector!, aSelector);
     return NSMethodSignature._(_ret, _lib);
   }
 
@@ -735,7 +736,7 @@ class NSObject extends _ObjCWrapper {
     _class ??= _getClass(_lib, "NSObject");
     _sel_instanceMethodSignatureForSelector ??=
         _registerName(_lib, "instanceMethodSignatureForSelector:");
-    final _ret = _lib.objc_msgSend_12(
+    final _ret = _lib._objc_msgSend_12(
         _class!, _sel_instanceMethodSignatureForSelector!, aSelector);
     return NSMethodSignature._(_ret, _lib);
   }
@@ -743,27 +744,27 @@ class NSObject extends _ObjCWrapper {
   static ffi.Pointer<ObjCSel>? _sel_allowsWeakReference;
   int allowsWeakReference() {
     _sel_allowsWeakReference ??= _registerName(_lib, "allowsWeakReference");
-    return _lib.objc_msgSend_13(_id, _sel_allowsWeakReference!);
+    return _lib._objc_msgSend_13(_id, _sel_allowsWeakReference!);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_retainWeakReference;
   int retainWeakReference() {
     _sel_retainWeakReference ??= _registerName(_lib, "retainWeakReference");
-    return _lib.objc_msgSend_13(_id, _sel_retainWeakReference!);
+    return _lib._objc_msgSend_13(_id, _sel_retainWeakReference!);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_isSubclassOfClass;
   static int isSubclassOfClass(NativeLibrary _lib, NSObject aClass) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_isSubclassOfClass ??= _registerName(_lib, "isSubclassOfClass:");
-    return _lib.objc_msgSend_14(_class!, _sel_isSubclassOfClass!, aClass._id);
+    return _lib._objc_msgSend_14(_class!, _sel_isSubclassOfClass!, aClass._id);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_resolveClassMethod;
   static int resolveClassMethod(NativeLibrary _lib, ffi.Pointer<ObjCSel> sel) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_resolveClassMethod ??= _registerName(_lib, "resolveClassMethod:");
-    return _lib.objc_msgSend_15(_class!, _sel_resolveClassMethod!, sel);
+    return _lib._objc_msgSend_15(_class!, _sel_resolveClassMethod!, sel);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_resolveInstanceMethod;
@@ -772,21 +773,21 @@ class NSObject extends _ObjCWrapper {
     _class ??= _getClass(_lib, "NSObject");
     _sel_resolveInstanceMethod ??=
         _registerName(_lib, "resolveInstanceMethod:");
-    return _lib.objc_msgSend_16(_class!, _sel_resolveInstanceMethod!, sel);
+    return _lib._objc_msgSend_16(_class!, _sel_resolveInstanceMethod!, sel);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_hash;
   static int hash(NativeLibrary _lib) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_hash ??= _registerName(_lib, "hash");
-    return _lib.objc_msgSend_17(_class!, _sel_hash!);
+    return _lib._objc_msgSend_17(_class!, _sel_hash!);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_superclass;
   static NSObject superclass(NativeLibrary _lib) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_superclass ??= _registerName(_lib, "superclass");
-    final _ret = _lib.objc_msgSend_18(_class!, _sel_superclass!);
+    final _ret = _lib._objc_msgSend_18(_class!, _sel_superclass!);
     return NSObject._(_ret, _lib);
   }
 
@@ -794,7 +795,7 @@ class NSObject extends _ObjCWrapper {
   static NSObject class1(NativeLibrary _lib) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_class1 ??= _registerName(_lib, "class");
-    final _ret = _lib.objc_msgSend_19(_class!, _sel_class1!);
+    final _ret = _lib._objc_msgSend_19(_class!, _sel_class1!);
     return NSObject._(_ret, _lib);
   }
 
@@ -802,7 +803,7 @@ class NSObject extends _ObjCWrapper {
   static NSString description(NativeLibrary _lib) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_description ??= _registerName(_lib, "description");
-    final _ret = _lib.objc_msgSend_20(_class!, _sel_description!);
+    final _ret = _lib._objc_msgSend_20(_class!, _sel_description!);
     return NSString._(_ret, _lib);
   }
 
@@ -810,7 +811,7 @@ class NSObject extends _ObjCWrapper {
   static NSString debugDescription(NativeLibrary _lib) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_debugDescription ??= _registerName(_lib, "debugDescription");
-    final _ret = _lib.objc_msgSend_20(_class!, _sel_debugDescription!);
+    final _ret = _lib._objc_msgSend_20(_class!, _sel_debugDescription!);
     return NSString._(_ret, _lib);
   }
 }
