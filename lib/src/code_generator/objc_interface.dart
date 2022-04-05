@@ -8,6 +8,26 @@ import 'binding_string.dart';
 import 'utils.dart';
 import 'writer.dart';
 
+// Class methods defined on NSObject that we don't want to copy to child objects
+// by default.
+const _excludedNSObjectClassMethods = {
+  'allocWithZone:',
+  'copyWithZone:',
+  'mutableCopyWithZone:',
+  'instancesRespondToSelector:',
+  'conformsToProtocol:',
+  'instanceMethodForSelector:',
+  'instanceMethodSignatureForSelector:',
+  'isSubclassOfClass:',
+  'resolveClassMethod:',
+  'resolveInstanceMethod:',
+  'hash',
+  'superclass',
+  'class',
+  'description',
+  'debugDescription',
+};
+
 class _ObjCBuiltInFunctions {
   late final _registerNameFunc = Func(
     name: 'sel_registerName',
@@ -217,8 +237,12 @@ class ObjCInterface extends NoLookUpBinding {
 
     if (superType != null) {
       superType!.addDependencies(dependencies);
+      // Copy class methods from the super type, because Dart classes don't
+      // inherit static methods.
       for (final m in superType!.classMethods.values) {
-        addMethod(m);
+        if (!_excludedNSObjectClassMethods.contains(m.originalName)) {
+          addMethod(m);
+        }
       }
     }
 
