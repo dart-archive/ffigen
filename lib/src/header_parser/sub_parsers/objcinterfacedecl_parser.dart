@@ -38,8 +38,7 @@ Type? parseObjCInterfaceDeclaration(clang_types.CXCursor cursor) {
   final t = cursor.type();
   final name = t.spelling();
 
-  _logger.fine(
-      '++++ Adding ObjC interface: '
+  _logger.fine('++++ Adding ObjC interface: '
       'Name: $name, ${cursor.completeStringRepr()}');
 
   return Type.objCInterface(ObjCInterface(
@@ -54,8 +53,7 @@ void fillObjCInterfaceMethodsIfNeeded(
   if (itf.filled) return;
   itf.filled = true; // Break cycles.
 
-  _logger.fine(
-      '++++ Filling ObjC interface: '
+  _logger.fine('++++ Filling ObjC interface: '
       'Name: ${itf.originalName}, ${cursor.completeStringRepr()}');
 
   _interfaceStack.push(_ParsedObjCInterface(itf));
@@ -65,8 +63,7 @@ void fillObjCInterfaceMethodsIfNeeded(
       nullptr);
   _interfaceStack.pop();
 
-  _logger.fine(
-      '++++ Finished ObjC interface: '
+  _logger.fine('++++ Finished ObjC interface: '
       'Name: ${itf.originalName}, ${cursor.completeStringRepr()}');
 }
 
@@ -89,8 +86,7 @@ int _parseInterfaceVisitor(clang_types.CXCursor cursor,
 
 void _parseSuperType(clang_types.CXCursor cursor) {
   final superType = cursor.type().toCodeGenType();
-  _logger.fine(
-      '       > Super type: '
+  _logger.fine('       > Super type: '
       '$superType ${cursor.completeStringRepr()}');
   _interfaceStack.top.interface.superType = superType.objCInterface;
 }
@@ -101,8 +97,7 @@ void _parseProperty(clang_types.CXCursor cursor) {
   final fieldType = cursor.type().toCodeGenType();
   final dartDoc = getCursorDocComment(cursor);
   final property = ObjCProperty(fieldName);
-  _logger.fine(
-      '       > Property: '
+  _logger.fine('       > Property: '
       '$fieldType $fieldName ${cursor.completeStringRepr()}');
 
   final getter = ObjCMethod(
@@ -130,7 +125,8 @@ void _parseProperty(clang_types.CXCursor cursor) {
 }
 
 void _parseMethod(clang_types.CXCursor cursor) {
-  final isClassMethod = cursor.kind == clang_types.CXCursorKind.CXCursor_ObjCClassMethodDecl;
+  final isClassMethod =
+      cursor.kind == clang_types.CXCursorKind.CXCursor_ObjCClassMethodDecl;
   final method = ObjCMethod(
     originalName: cursor.spelling(),
     dartDoc: getCursorDocComment(cursor),
@@ -139,8 +135,7 @@ void _parseMethod(clang_types.CXCursor cursor) {
         : ObjCMethodKind.instanceMethod,
   );
   final parsed = _ParsedObjCMethod(method);
-  _logger.fine(
-      '       > ${isClassMethod ? 'Class' : 'Instance'} method: '
+  _logger.fine('       > ${isClassMethod ? 'Class' : 'Instance'} method: '
       '${method.originalName} ${cursor.completeStringRepr()}');
   _methodStack.push(parsed);
   clang.clang_visitChildren(
@@ -176,15 +171,12 @@ void _parseMethodReturnType(clang_types.CXCursor cursor) {
     parsed.hasError = true;
     _logger.fine(
         '           >> Extra return type: ${cursor.completeStringRepr()}');
-    _logger.warning(
-        'Method "${parsed.method.originalName}" in instance '
+    _logger.warning('Method "${parsed.method.originalName}" in instance '
         '"${_interfaceStack.top.interface.originalName}" has multiple return '
-        'types.'
-    );
+        'types.');
   } else {
     parsed.method.returnType = ObjCMethodType(cursor.type().toCodeGenType());
-    _logger.fine(
-        '           >> Return type: '
+    _logger.fine('           >> Return type: '
         '${parsed.method.returnType} ${cursor.completeStringRepr()}');
   }
 }
