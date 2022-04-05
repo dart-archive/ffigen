@@ -47,6 +47,7 @@ Type getCodeGenType(
       case clang_types.CXTypeKind.CXType_BlockPointer:
       case clang_types.CXTypeKind.CXType_ObjCId:
       case clang_types.CXTypeKind.CXType_ObjCClass:
+      case clang_types.CXTypeKind.CXType_ObjCTypeParam:
         return Type.pointer(Type.struct(objCObjectType));
       case clang_types.CXTypeKind.CXType_ObjCSel:
         return Type.pointer(Type.struct(objCSelType));
@@ -80,7 +81,6 @@ Type getCodeGenType(
   // cached.
   switch (cxtype.kind) {
     case clang_types.CXTypeKind.CXType_Pointer:
-    case clang_types.CXTypeKind.CXType_ObjCObjectPointer:
       final pt = clang.clang_getPointeeType(cxtype);
       final s = getCodeGenType(pt, pointerReference: true);
 
