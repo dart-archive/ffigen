@@ -6,13 +6,13 @@ import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser/data.dart';
+import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
 import '../includer.dart';
 import '../utils.dart';
 
-// TODO(#279): Logging
-// final _logger = Logger('ffigen.header_parser.objcinterfacedecl_parser');
+final _logger = Logger('ffigen.header_parser.objcinterfacedecl_parser');
 
 class _ParsedObjCInterface {
   ObjCInterface interface;
@@ -38,6 +38,10 @@ Type? parseObjCInterfaceDeclaration(clang_types.CXCursor cursor) {
   final t = cursor.type();
   final name = t.spelling();
 
+  _logger.fine(
+      '++++ Adding ObjC interface: '
+      'Name: $name, ${cursor.completeStringRepr()}');
+
   return Type.objCInterface(ObjCInterface(
     usr: itfUsr, originalName: name,
     name: name, // TODO(#279): config.interfaceDecl.renameUsingConfig(name),
@@ -50,12 +54,20 @@ void fillObjCInterfaceMethodsIfNeeded(
   if (itf.filled) return;
   itf.filled = true; // Break cycles.
 
+  _logger.fine(
+      '++++ Filling ObjC interface: '
+      'Name: ${itf.originalName}, ${cursor.completeStringRepr()}');
+
   _interfaceStack.push(_ParsedObjCInterface(itf));
   clang.clang_visitChildren(
       cursor,
       Pointer.fromFunction(_parseInterfaceVisitor, exceptional_visitor_return),
       nullptr);
   _interfaceStack.pop();
+
+  _logger.fine(
+      '++++ Finished ObjC interface: '
+      'Name: ${itf.originalName}, ${cursor.completeStringRepr()}');
 }
 
 int _parseInterfaceVisitor(clang_types.CXCursor cursor,
@@ -76,8 +88,11 @@ int _parseInterfaceVisitor(clang_types.CXCursor cursor,
 }
 
 void _parseSuperType(clang_types.CXCursor cursor) {
-  _interfaceStack.top.interface.superType =
-      cursor.type().toCodeGenType().objCInterface;
+  final superType = cursor.type().toCodeGenType();
+  _logger.fine(
+      '       > Super type: '
+      '$superType ${cursor.completeStringRepr()}');
+  _interfaceStack.top.interface.superType = superType.objCInterface;
 }
 
 void _parseProperty(clang_types.CXCursor cursor) {
@@ -86,6 +101,9 @@ void _parseProperty(clang_types.CXCursor cursor) {
   final fieldType = cursor.type().toCodeGenType();
   final dartDoc = getCursorDocComment(cursor);
   final property = ObjCProperty(fieldName);
+  _logger.fine(
+      '       > Property: '
+      '$fieldType $fieldName ${cursor.completeStringRepr()}');
 
   final getter = ObjCMethod(
     originalName: clang
@@ -112,14 +130,18 @@ void _parseProperty(clang_types.CXCursor cursor) {
 }
 
 void _parseMethod(clang_types.CXCursor cursor) {
+  final isClassMethod = cursor.kind == clang_types.CXCursorKind.CXCursor_ObjCClassMethodDecl;
   final method = ObjCMethod(
     originalName: cursor.spelling(),
     dartDoc: getCursorDocComment(cursor),
-    kind: cursor.kind == clang_types.CXCursorKind.CXCursor_ObjCClassMethodDecl
+    kind: isClassMethod
         ? ObjCMethodKind.classMethod
         : ObjCMethodKind.instanceMethod,
   );
   final parsed = _ParsedObjCMethod(method);
+  _logger.fine(
+      '       > ${isClassMethod ? 'Class' : 'Instance'} method: '
+      '${method.originalName} ${cursor.completeStringRepr()}');
   _methodStack.push(parsed);
   clang.clang_visitChildren(
       cursor,
@@ -152,12 +174,25 @@ void _parseMethodReturnType(clang_types.CXCursor cursor) {
   final parsed = _methodStack.top;
   if (parsed.method.returnType != null) {
     parsed.hasError = true;
+    _logger.fine(
+        '           >> Extra return type: ${cursor.completeStringRepr()}');
+    _logger.warning(
+        'Method "${parsed.method.originalName}" in instance '
+        '"${_interfaceStack.top.interface.originalName}" has multiple return '
+        'types.'
+    );
   } else {
     parsed.method.returnType = ObjCMethodType(cursor.type().toCodeGenType());
+    _logger.fine(
+        '           >> Return type: '
+        '${parsed.method.returnType} ${cursor.completeStringRepr()}');
   }
 }
 
 void _parseMethodParam(clang_types.CXCursor cursor) {
-  _methodStack.top.method.params
-      .add(ObjCMethodParam(cursor.type().toCodeGenType(), cursor.spelling()));
+  final name = cursor.spelling();
+  final type = cursor.type().toCodeGenType();
+  _logger.fine(
+      '           >> Parameter: $type $name ${cursor.completeStringRepr()}');
+  _methodStack.top.method.params.add(ObjCMethodParam(type, name));
 }
