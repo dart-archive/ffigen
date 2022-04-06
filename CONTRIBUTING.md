@@ -31,4 +31,5 @@ with the info there.
 ## Community Guidelines
 
 This project follows [Google's Open Source Community
-Guidelines](https://opensource.google/conduct/).
+Guidelines](https://opensource.google/conduct/) and the [Dart code of
+conduct](https://dart.dev/code-of-conduct).
