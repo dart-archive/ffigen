@@ -13,6 +13,7 @@ import '../clang_bindings/clang_bindings.dart' as clang_types;
 import '../data.dart';
 import '../sub_parsers/compounddecl_parser.dart';
 import '../sub_parsers/enumdecl_parser.dart';
+import '../sub_parsers/objcinterfacedecl_parser.dart';
 import '../type_extractor/cxtypekindmap.dart';
 import '../utils.dart';
 
@@ -38,17 +39,18 @@ Type getCodeGenType(
         ignoreFilter: ignoreFilter, pointerReference: pointerReference);
   }
 
-  // Objective C types skip the cache, and are conditional on the language flag.
+  // These basic Objective C types skip the cache, and are conditional on the
+  // language flag.
   if (config.language == Language.objc) {
     switch (cxtype.kind) {
       case clang_types.CXTypeKind.CXType_ObjCObjectPointer:
       case clang_types.CXTypeKind.CXType_BlockPointer:
       case clang_types.CXTypeKind.CXType_ObjCId:
+      case clang_types.CXTypeKind.CXType_ObjCTypeParam:
+      case clang_types.CXTypeKind.CXType_ObjCClass:
         return PointerType(objCObjectType);
       case clang_types.CXTypeKind.CXType_ObjCSel:
         return PointerType(objCSelType);
-      case clang_types.CXTypeKind.CXType_ObjCClass:
-        return objCObjectType;
     }
   }
 
@@ -192,9 +194,10 @@ _CreateTypeFromCursorResult _createTypeFromCursor(clang_types.CXType cxtype,
       } else {
         return _CreateTypeFromCursorResult(enumClass);
       }
+    case clang_types.CXTypeKind.CXType_ObjCInterface:
+      return _CreateTypeFromCursorResult(parseObjCInterfaceDeclaration(cursor));
     default:
-      throw UnimplementedError(
-          'Unknown cursor kind: ${cursor.completeStringRepr()}');
+      throw UnimplementedError('Unknown type: ${cxtype.completeStringRepr()}');
   }
 }
 
@@ -204,6 +207,8 @@ void _fillFromCursorIfNeeded(Type? type, clang_types.CXCursor cursor,
   if (type is Compound) {
     fillCompoundMembersIfNeeded(type, cursor,
         ignoreFilter: ignoreFilter, pointerReference: pointerReference);
+  } else if (type is ObjCInterface) {
+    fillObjCInterfaceMethodsIfNeeded(type, cursor);
   }
 }
 

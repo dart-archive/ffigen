@@ -76,7 +76,4 @@ class Typealias extends BindingType {
       return type.getDartType(w);
     }
   }
-
-  @override
-  String toString() => name;
 }

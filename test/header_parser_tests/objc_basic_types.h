@@ -3,6 +3,6 @@ struct Foo {
   id anId;
   SEL selector;
   NSObject* object;
-  Class* clazz;
+  Class clazz;
   int32_t (^blockThatReturnsAnInt)(void);
 };

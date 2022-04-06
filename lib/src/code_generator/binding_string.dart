@@ -23,4 +23,5 @@ enum BindingStringType {
   global,
   enumClass,
   typeDef,
+  objcInterface,
 }

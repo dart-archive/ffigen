@@ -29,6 +29,7 @@ class CommentType {
 }
 
 enum CommentStyle { doxygen, any }
+
 enum CommentLength { none, brief, full }
 
 enum CompoundDependencies { full, opaque }

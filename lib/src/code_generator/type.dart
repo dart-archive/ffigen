@@ -84,6 +84,9 @@ abstract class BindingType extends NoLookUpBinding implements Type {
 
   @override
   String getDartType(Writer w) => getCType(w);
+
+  @override
+  String toString() => originalName;
 }
 
 /// Represents an unimplemented type. Used as a marker, so that declarations

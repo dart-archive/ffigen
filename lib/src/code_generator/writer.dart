@@ -21,6 +21,8 @@ class Writer {
   final symbolAddressWriter = SymbolAddressWriter();
 
   late String _className;
+  String get className => _className;
+
   final String? classDocComment;
 
   String? _ffiLibraryPrefix;
@@ -29,6 +31,14 @@ class Writer {
         .firstWhere((element) => element.name == ffiImport.name)
         .prefix;
     return _ffiLibraryPrefix!;
+  }
+
+  String? _ffiPkgLibraryPrefix;
+  String get ffiPkgLibraryPrefix {
+    _ffiPkgLibraryPrefix ??= libraryImports
+        .firstWhere((element) => element.name == ffiPkgImport.name)
+        .prefix;
+    return _ffiPkgLibraryPrefix!;
   }
 
   final Set<LibraryImport> libraryImports;
