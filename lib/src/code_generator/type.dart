@@ -55,6 +55,9 @@ enum BroadType {
   ConstantArray,
   IncompleteArray,
 
+  /// Represents an Objective C interface.
+  ObjCInterface,
+
   /// Used as a marker, so that declarations having these can exclude them.
   Unimplemented,
 }
@@ -98,6 +101,9 @@ class Type {
   /// Reference to the [ImportedType] this type refers to.
   ImportedType? importedType;
 
+  /// Reference to the [ObjCInterface] this type refers to.
+  ObjCInterface? objCInterface;
+
   /// For providing [SupportedNativeType] only.
   final SupportedNativeType? nativeType;
 
@@ -123,6 +129,7 @@ class Type {
     this.typealias,
     this.functionType,
     this.importedType,
+    this.objCInterface,
     this.length,
     this.unimplementedReason,
   });
@@ -184,6 +191,10 @@ class Type {
   factory Type.handle() {
     return Type._(broadType: BroadType.Handle);
   }
+  factory Type.objCInterface(ObjCInterface objCInterface) {
+    return Type._(
+        broadType: BroadType.ObjCInterface, objCInterface: objCInterface);
+  }
 
   /// Get all dependencies of this type and save them in [dependencies].
   void addDependencies(Set<Binding> dependencies) {
@@ -198,6 +209,8 @@ class Type {
         return typealias!.addDependencies(dependencies);
       case BroadType.Enum:
         return enumClass!.addDependencies(dependencies);
+      case BroadType.ObjCInterface:
+        return objCInterface!.addDependencies(dependencies);
       default:
         if (child != null) {
           return child!.addDependencies(dependencies);
@@ -269,13 +282,14 @@ class Type {
         return '${w.ffiLibraryPrefix}.${_primitives[enumNativeType]!.c}';
       case BroadType.NativeFunction:
         return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc!.type.getCType(w)}>';
-      case BroadType
-          .IncompleteArray: // Array parameters are treated as Pointers in C.
+      case BroadType.IncompleteArray:
+        // Array parameters are treated as Pointers in C.
         return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
-      case BroadType
-          .ConstantArray: // Array parameters are treated as Pointers in C.
+      case BroadType.ConstantArray:
+        // Array parameters are treated as Pointers in C.
         return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
-      case BroadType.Boolean: // Booleans are treated as uint8.
+      case BroadType.Boolean:
+        // Booleans are treated as uint8.
         return '${w.ffiLibraryPrefix}.${_primitives[SupportedNativeType.Uint8]!.c}';
       case BroadType.Handle:
         return '${w.ffiLibraryPrefix}.Handle';
@@ -283,6 +297,8 @@ class Type {
         return functionType!.getCType(w);
       case BroadType.ImportedType:
         return '${importedType!.libraryImport.prefix}.${importedType!.cType}';
+      case BroadType.ObjCInterface:
+        return Type.pointer(Type.struct(objCObjectType)).getCType(w);
       case BroadType.Typealias:
         return typealias!.name;
       case BroadType.Unimplemented:
@@ -302,13 +318,14 @@ class Type {
         return _primitives[enumNativeType]!.dart;
       case BroadType.NativeFunction:
         return '${w.ffiLibraryPrefix}.NativeFunction<${nativeFunc!.type.getDartType(w)}>';
-      case BroadType
-          .IncompleteArray: // Array parameters are treated as Pointers in C.
+      case BroadType.IncompleteArray:
+        // Array parameters are treated as Pointers in C.
         return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
-      case BroadType
-          .ConstantArray: // Array parameters are treated as Pointers in C.
+      case BroadType.ConstantArray:
+        // Array parameters are treated as Pointers in C.
         return '${w.ffiLibraryPrefix}.Pointer<${child!.getCType(w)}>';
-      case BroadType.Boolean: // Booleans are treated as uint8.
+      case BroadType.Boolean:
+        // Booleans are treated as uint8.
         return _primitives[SupportedNativeType.Uint8]!.dart;
       case BroadType.Handle:
         return 'Object';
@@ -320,6 +337,8 @@ class Type {
         } else {
           return importedType!.dartType;
         }
+      case BroadType.ObjCInterface:
+        return getCType(w);
       case BroadType.Typealias:
         // Typealias cannot be used by name in Dart types unless both the C and
         // Dart type of the underlying types are same.

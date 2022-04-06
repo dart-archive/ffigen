@@ -13,6 +13,7 @@ export 'code_generator/func.dart';
 export 'code_generator/global.dart';
 export 'code_generator/imports.dart';
 export 'code_generator/library.dart';
+export 'code_generator/objc_interface.dart';
 export 'code_generator/struc.dart';
 export 'code_generator/type.dart';
 export 'code_generator/typealias.dart';
