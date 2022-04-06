@@ -5,8 +5,6 @@
 import 'package:ffigen/src/code_generator.dart';
 
 import 'binding_string.dart';
-import 'imports.dart';
-import 'pointer.dart';
 import 'utils.dart';
 import 'writer.dart';
 
@@ -263,7 +261,8 @@ class ObjCInterface extends BindingType {
   @override
   String getCType(Writer w) => PointerType(objCObjectType).getCType(w);
 
-  bool _isObject(type) => type is PointerType && type.child == objCObjectType;
+  bool _isObject(Type type) =>
+      type is PointerType && type.child == objCObjectType;
 
   bool _isInstanceType(Type type) =>
       type is Typealias &&
@@ -296,8 +295,8 @@ class ObjCInterface extends BindingType {
     return value;
   }
 
-  String _doReturnConversion(Type type,
-      String value, String enclosingClass, String library) {
+  String _doReturnConversion(
+      Type type, String value, String enclosingClass, String library) {
     if (type is BooleanType) return '$value != 0';
     if (type is ObjCInterface) return '${type.name}._($value, $library)';
     if (_isObject(type)) return 'NSObject._($value, $library)';
