@@ -20,8 +20,8 @@ void main() {
   group('native_objc_test', () {
     setUpAll(() {
       logWarnings();
-      lib = NativeObjCLibrary(
-          DynamicLibrary.open('test/native_objc_test/native_objc_test.dylib'));
+      lib = NativeObjCLibrary(DynamicLibrary.open(
+          File('test/native_objc_test/native_objc_test.dylib').absolute.path));
     });
 
     test('generate_bindings', () {
