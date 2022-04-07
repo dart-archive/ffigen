@@ -483,6 +483,20 @@ type-map:
       'dart-type': 'CustomType3'
 ```
   </td>
+  <tr>
+    <td>language</td>
+    <td>
+      <b>WARNING:</b> Other language support is EXPERIMENTAL. The API may change
+      in a breaking way without notice.
+      <br><br>
+      Choose the input langauge. Must be one of 'c', or 'objc'. Defaults to 'c'.
+    </td>
+    <td>
+
+```yaml
+language: 'objc'
+```
+  </td>
   </tr>
 </tbody>
 </table>
