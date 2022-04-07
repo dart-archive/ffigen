@@ -468,7 +468,7 @@ bool languageValidator(List<String> name, dynamic value) {
       return true;
     }
     if (value == strings.langObjC) {
-      _logger.warning('Objective C support is EXPERIMENTAL. The API may change '
+      _logger.severe('Objective C support is EXPERIMENTAL. The API may change '
           'in a breaking way without notice.');
       return true;
     }
