@@ -19,12 +19,14 @@ abstract class Binding {
   String name;
 
   final String? dartDoc;
+  final bool isInternal;
 
   Binding({
     required this.usr,
     required this.originalName,
     required this.name,
     this.dartDoc,
+    this.isInternal = false,
   });
 
   /// Get all dependencies, including itself and save them in [dependencies].
@@ -44,11 +46,13 @@ abstract class LookUpBinding extends Binding {
     String? originalName,
     required String name,
     String? dartDoc,
+    bool isInternal = false,
   }) : super(
           usr: usr ?? name,
           originalName: originalName ?? name,
           name: name,
           dartDoc: dartDoc,
+          isInternal: isInternal,
         );
 }
 
@@ -59,10 +63,12 @@ abstract class NoLookUpBinding extends Binding {
     String? originalName,
     required String name,
     String? dartDoc,
+    bool isInternal = false,
   }) : super(
           usr: usr ?? name,
           originalName: originalName ?? name,
           name: name,
           dartDoc: dartDoc,
+          isInternal: isInternal,
         );
 }

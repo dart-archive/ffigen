@@ -569,7 +569,7 @@ class Foo extends NSObject {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_someProperty1;
-  void set someProperty(int value) {
+  set someProperty(int value) {
     _sel_someProperty1 ??= _registerName(_lib, "setSomeProperty:");
     return _lib._objc_msgSend_22(_id, _sel_someProperty1!, value);
   }

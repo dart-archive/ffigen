@@ -36,6 +36,7 @@ class _ObjCBuiltInFunctions {
     parameters: [
       Parameter(name: 'str', type: Type.pointer(Type.importedType(charType)))
     ],
+    isInternal: true,
   );
   late final String registerName;
 
@@ -46,6 +47,7 @@ class _ObjCBuiltInFunctions {
     parameters: [
       Parameter(name: 'str', type: Type.pointer(Type.importedType(charType)))
     ],
+    isInternal: true,
   );
   late final String getClass;
 
@@ -66,6 +68,7 @@ class _ObjCBuiltInFunctions {
         Parameter(name: 'sel', type: Type.pointer(Type.struct(objCSelType))),
         for (final p in params) Parameter(name: p.name, type: p.type.type),
       ],
+      isInternal: true,
     );
     return _msgSendFuncs[key]!;
   }
@@ -179,9 +182,12 @@ class ObjCInterface extends NoLookUpBinding {
       }
       s.write('  ');
       if (isStatic) s.write('static ');
-      s.write('${m.returnType!.getConvertedType(w, name)} ');
+      if (m.kind == ObjCMethodKind.propertySetter) {
+        s.write('set ');
+      } else {
+        s.write('${m.returnType!.getConvertedType(w, name)} ');
+      }
       if (m.kind == ObjCMethodKind.propertyGetter) s.write('get ');
-      if (m.kind == ObjCMethodKind.propertySetter) s.write('set ');
       s.write(methodName);
       if (m.kind != ObjCMethodKind.propertyGetter) {
         s.write('(');

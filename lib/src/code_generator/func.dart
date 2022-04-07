@@ -47,6 +47,7 @@ class Func extends LookUpBinding {
     this.exposeSymbolAddress = false,
     this.exposeFunctionTypedefs = false,
     this.isLeaf = false,
+    bool isInternal = false,
   })  : functionType = FunctionType(
           returnType: returnType,
           parameters: parameters ?? const [],
@@ -56,6 +57,7 @@ class Func extends LookUpBinding {
           originalName: originalName,
           name: name,
           dartDoc: dartDoc,
+          isInternal: isInternal,
         ) {
     for (var i = 0; i < functionType.parameters.length; i++) {
       if (functionType.parameters[i].name.trim() == '') {
