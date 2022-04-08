@@ -351,12 +351,9 @@ class ObjCMethodType {
   }
 
   bool get isInterface => type.broadType == BroadType.ObjCInterface;
-  bool get isBool => type.broadType == BroadType.Boolean;
-  bool get needsConverting =>
-      isInterface || isBool || isObject || isInstanceType;
+  bool get needsConverting => isInterface || isObject || isInstanceType;
 
   String getConvertedType(Writer w, String enclosingClass) {
-    if (isBool) return 'bool';
     if (isInterface) return type.objCInterface!.name;
     if (isObject) return 'NSObject';
     if (isInstanceType) return enclosingClass;
@@ -364,14 +361,12 @@ class ObjCMethodType {
   }
 
   String doArgConversion(String value) {
-    if (isBool) return '$value ? 1 : 0';
     if (isInterface || isObject || isInstanceType) return '$value._id';
     return value;
   }
 
   String doReturnConversion(
       String value, String enclosingClass, String library) {
-    if (isBool) return '$value != 0';
     if (isInterface) return '${type.objCInterface!.name}._($value, $library)';
     if (isObject) return 'NSObject._($value, $library)';
     if (isInstanceType) return '$enclosingClass._($value, $library)';
