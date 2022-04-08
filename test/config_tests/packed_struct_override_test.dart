@@ -54,9 +54,9 @@ ${strings.structs}:
 
       final library = parse(config);
 
-      expect((library.getBinding('NormalStruct1') as Struc).pack, 1);
-      expect((library.getBinding('StructWithAttr') as Struc).pack, 2);
-      expect((library.getBinding('PackedAttr') as Struc).pack, null);
+      expect((library.getBinding('NormalStruct1') as Struct).pack, 1);
+      expect((library.getBinding('StructWithAttr') as Struct).pack, 2);
+      expect((library.getBinding('PackedAttr') as Struct).pack, null);
     });
   });
 }

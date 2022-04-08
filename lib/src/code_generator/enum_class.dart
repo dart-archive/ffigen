@@ -4,6 +4,8 @@
 
 import 'binding.dart';
 import 'binding_string.dart';
+import 'native_type.dart';
+import 'type.dart';
 import 'utils.dart';
 import 'writer.dart';
 
@@ -21,7 +23,9 @@ import 'writer.dart';
 ///   static const banana = 10;
 /// }
 /// ```
-class EnumClass extends NoLookUpBinding {
+class EnumClass extends BindingType {
+  static final nativeType = NativeType(SupportedNativeType.Int32);
+
   final List<EnumConstant> enumConstants;
 
   EnumClass({
@@ -75,6 +79,12 @@ class EnumClass extends NoLookUpBinding {
 
     dependencies.add(this);
   }
+
+  @override
+  String getCType(Writer w) => nativeType.getCType(w);
+
+  @override
+  String getDartType(Writer w) => nativeType.getDartType(w);
 }
 
 /// Represents a single value in an enum.

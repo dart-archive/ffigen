@@ -2,7 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'struc.dart';
+import 'struct.dart';
+import 'type.dart';
+import 'writer.dart';
 
 /// A library import which will be written as an import in the generated file.
 class LibraryImport {
@@ -22,12 +24,21 @@ class LibraryImport {
 }
 
 /// An imported type which will be used in the generated code.
-class ImportedType {
+class ImportedType extends Type {
   final LibraryImport libraryImport;
   final String cType;
   final String dartType;
 
   ImportedType(this.libraryImport, this.cType, this.dartType);
+
+  @override
+  String getCType(Writer w) => '${libraryImport.prefix}.$cType';
+
+  @override
+  String getDartType(Writer w) => cType == dartType ? getCType(w) : dartType;
+
+  @override
+  String toString() => '${libraryImport.name}.$cType';
 }
 
 final ffiImport = LibraryImport('ffi', 'dart:ffi');
@@ -54,5 +65,5 @@ final doubleType = ImportedType(ffiImport, 'Double', 'double');
 final sizeType = ImportedType(ffiPkgImport, 'Size', 'int');
 final wCharType = ImportedType(ffiPkgImport, 'WChar', 'int');
 
-final objCObjectType = Struc(name: 'ObjCObject');
-final objCSelType = Struc(name: 'ObjCSel');
+final objCObjectType = Struct(name: 'ObjCObject');
+final objCSelType = Struct(name: 'ObjCSel');

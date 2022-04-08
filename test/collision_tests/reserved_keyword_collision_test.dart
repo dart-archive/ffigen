@@ -15,73 +15,70 @@ void main() {
     });
     test('reserved keyword collision', () {
       final l1 = Library(name: 'Bindings', bindings: [
-        Struc(name: 'abstract'),
-        Struc(name: 'abstract'),
-        Struc(name: 'if'),
+        Struct(name: 'abstract'),
+        Struct(name: 'abstract'),
+        Struct(name: 'if'),
         EnumClass(name: 'return'),
         EnumClass(name: 'export'),
-        Func(
-            name: 'show',
-            returnType: Type.nativeType(SupportedNativeType.Void)),
+        Func(name: 'show', returnType: NativeType(SupportedNativeType.Void)),
         Func(
             name: 'implements',
             parameters: [
               Parameter(
-                type: Type.importedType(intType),
+                type: intType,
                 name: 'if',
               ),
               Parameter(
-                type: Type.importedType(intType),
+                type: intType,
                 name: 'abstract',
               ),
               Parameter(
-                type: Type.importedType(intType),
+                type: intType,
                 name: 'in',
               ),
             ],
-            returnType: Type.nativeType(SupportedNativeType.Void)),
+            returnType: NativeType(SupportedNativeType.Void)),
         Constant(
           name: 'else',
           rawType: 'int',
           rawValue: '0',
         ),
-        Typealias(name: 'var', type: Type.nativeType(SupportedNativeType.Void)),
+        Typealias(name: 'var', type: NativeType(SupportedNativeType.Void)),
       ]);
       final l2 = Library(name: 'Bindings', bindings: [
-        Struc(name: 'abstract1'),
-        Struc(name: 'abstract2'),
-        Struc(name: 'if1'),
+        Struct(name: 'abstract1'),
+        Struct(name: 'abstract2'),
+        Struct(name: 'if1'),
         EnumClass(name: 'return1'),
         EnumClass(name: 'export1'),
         Func(
             name: 'show1',
             originalName: 'show',
-            returnType: Type.nativeType(SupportedNativeType.Void)),
+            returnType: NativeType(SupportedNativeType.Void)),
         Func(
             name: 'implements1',
             originalName: 'implements',
             parameters: [
               Parameter(
-                type: Type.importedType(intType),
+                type: intType,
                 name: 'if1',
               ),
               Parameter(
-                type: Type.importedType(intType),
+                type: intType,
                 name: 'abstract1',
               ),
               Parameter(
-                type: Type.importedType(intType),
+                type: intType,
                 name: 'in1',
               ),
             ],
-            returnType: Type.nativeType(SupportedNativeType.Void)),
+            returnType: NativeType(SupportedNativeType.Void)),
         Constant(
           name: 'else1',
           rawType: 'int',
           rawValue: '0',
         ),
-        Typealias(
-            name: 'var1', type: Type.nativeType(SupportedNativeType.Void)),
+        Typealias(name: 'var1', type: NativeType(SupportedNativeType.Void)),
       ]);
       expect(l1.generate(), l2.generate());
     });

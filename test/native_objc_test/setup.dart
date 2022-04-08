@@ -24,6 +24,7 @@ Future<void> _buildLib(String input, String output) async {
   if (result != 0) {
     throw ProcessException('clang', args, 'Build failed', result);
   }
+  print('Generated file: $output');
 }
 
 Future<void> main(List<String> arguments) async {

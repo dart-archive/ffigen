@@ -4,6 +4,7 @@
 
 import 'binding.dart';
 import 'binding_string.dart';
+import 'compound.dart';
 import 'type.dart';
 import 'utils.dart';
 import 'writer.dart';
@@ -49,9 +50,9 @@ class Global extends LookUpBinding {
 
     s.write(
         "late final ${w.ffiLibraryPrefix}.Pointer<$cType> $pointerName = ${w.lookupFuncIdentifier}<$cType>('$originalName');\n\n");
-    final baseTypealiasType = type.getBaseTypealiasType();
-    if (baseTypealiasType.broadType == BroadType.Compound) {
-      if (baseTypealiasType.compound!.isOpaque) {
+    final baseTypealiasType = type.typealiasType;
+    if (baseTypealiasType is Compound) {
+      if (baseTypealiasType.isOpaque) {
         s.write(
             '${w.ffiLibraryPrefix}.Pointer<$cType> get $globalVarName => $pointerName;\n\n');
       } else {

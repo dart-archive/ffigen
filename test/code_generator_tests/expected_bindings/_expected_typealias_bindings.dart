@@ -20,19 +20,19 @@ class Bindings {
           lookup)
       : _lookup = lookup;
 
-  ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>> WithTypealiasStruc1(
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>> WithTypealiasStruct1(
     Struct3Typealias t,
   ) {
-    return _WithTypealiasStruc1(
+    return _WithTypealiasStruct1(
       t,
     );
   }
 
-  late final _WithTypealiasStruc1Ptr = _lookup<
+  late final _WithTypealiasStruct1Ptr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>> Function(
-              Struct3Typealias)>>('WithTypealiasStruc');
-  late final _WithTypealiasStruc1 = _WithTypealiasStruc1Ptr.asFunction<
+              Struct3Typealias)>>('WithTypealiasStruct');
+  late final _WithTypealiasStruct1 = _WithTypealiasStruct1Ptr.asFunction<
       ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>> Function(
           Struct3Typealias)>();
 }
@@ -41,7 +41,7 @@ typedef RawUnused = Struct1;
 
 class Struct1 extends ffi.Opaque {}
 
-class WithTypealiasStruc extends ffi.Struct {
+class WithTypealiasStruct extends ffi.Struct {
   external Struct2Typealias t;
 }
 

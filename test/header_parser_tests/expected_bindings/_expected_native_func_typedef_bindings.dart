@@ -64,7 +64,7 @@ class NativeLibrary {
       _funcWithNativeFuncPtr.asFunction<void Function(WithTypedefReturnType)>();
 }
 
-class Struc extends ffi.Struct {
+class Struct extends ffi.Struct {
   external ffi.Pointer<
       ffi.NativeFunction<
           ffi.Void Function(
@@ -75,7 +75,7 @@ typedef WithTypedefReturnType
     = ffi.Pointer<ffi.NativeFunction<InsideReturnType Function()>>;
 typedef InsideReturnType = ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>;
 
-class Struc2 extends ffi.Struct {
+class Struct2 extends ffi.Struct {
   external VoidFuncPointer constFuncPointer;
 }
 

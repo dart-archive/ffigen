@@ -27,9 +27,9 @@ Global? parseVarDeclaration(clang_types.CXCursor cursor) {
   _logger.fine('++++ Adding Global: ${cursor.completeStringRepr()}');
 
   final type = cursor.type().toCodeGenType();
-  if (type.getBaseType().broadType == BroadType.Unimplemented) {
-    _logger.fine(
-        '---- Removed Global, reason: unsupported type: ${cursor.completeStringRepr()}');
+  if (type.baseType is UnimplementedType) {
+    _logger.fine('---- Removed Global, reason: unsupported type: '
+        '${cursor.completeStringRepr()}');
     _logger.warning("Skipped global variable '$name', type not supported.");
     return null;
   }
