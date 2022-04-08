@@ -274,13 +274,9 @@ class ObjCInterface extends BindingType {
   // passed to native as Pointer<ObjCObject>, but the user sees the Dart wrapper
   // class. These methods need to be kept in sync.
   bool _needsConverting(Type type) =>
-      type is ObjCInterface ||
-      type is BooleanType ||
-      _isObject(type) ||
-      _isInstanceType(type);
+      type is ObjCInterface || _isObject(type) || _isInstanceType(type);
 
   String _getConvertedType(Type type, Writer w, String enclosingClass) {
-    if (type is BooleanType) return 'bool';
     if (type is ObjCInterface) return type.name;
     if (_isObject(type)) return 'NSObject';
     if (_isInstanceType(type)) return enclosingClass;
@@ -288,7 +284,6 @@ class ObjCInterface extends BindingType {
   }
 
   String _doArgConversion(Type type, String value) {
-    if (type is BooleanType) return '$value ? 1 : 0';
     if (type is ObjCInterface || _isObject(type) || _isInstanceType(type)) {
       return '$value._id';
     }
@@ -297,7 +292,6 @@ class ObjCInterface extends BindingType {
 
   String _doReturnConversion(
       Type type, String value, String enclosingClass, String library) {
-    if (type is BooleanType) return '$value != 0';
     if (type is ObjCInterface) return '${type.name}._($value, $library)';
     if (_isObject(type)) return 'NSObject._($value, $library)';
     if (_isInstanceType(type)) return '$enclosingClass._($value, $library)';
