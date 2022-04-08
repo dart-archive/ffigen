@@ -464,7 +464,12 @@ Language languageExtractor(dynamic value) {
 
 bool languageValidator(List<String> name, dynamic value) {
   if (value is String) {
-    if (value == strings.langC || value == strings.langObjC) {
+    if (value == strings.langC) {
+      return true;
+    }
+    if (value == strings.langObjC) {
+      _logger.severe('Objective C support is EXPERIMENTAL. The API may change '
+          'in a breaking way without notice.');
       return true;
     }
     _logger.severe("'$name' must be one of the following - "
