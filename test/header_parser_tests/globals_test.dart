@@ -66,34 +66,32 @@ ${strings.compilerOpts}: '-Wno-nullability-completeness'
 }
 
 Library expectedLibrary() {
-  final globalStruc = Struc(name: 'EmptyStruct');
+  final globalStruct = Struct(name: 'EmptyStruct');
   return Library(
     name: 'Bindings',
     bindings: [
-      Global(type: Type.boolean(), name: 'coolGlobal'),
+      Global(type: BooleanType(), name: 'coolGlobal'),
       Global(
-        type: Type.nativeType(SupportedNativeType.Int32),
+        type: NativeType(SupportedNativeType.Int32),
         name: 'myInt',
         exposeSymbolAddress: true,
       ),
       Global(
-        type: Type.pointer(Type.nativeType(SupportedNativeType.Int32)),
+        type: PointerType(NativeType(SupportedNativeType.Int32)),
         name: 'aGlobalPointer',
         exposeSymbolAddress: true,
       ),
-      globalStruc,
+      globalStruct,
       Global(
         name: 'globalStruct',
-        type: Type.struct(globalStruc),
+        type: globalStruct,
         exposeSymbolAddress: true,
       ),
       Global(
         name: 'globalStruct_from_alias',
-        type: Type.typealias(
-          Typealias(
-            name: 'EmptyStruct_Alias',
-            type: Type.struct(globalStruc),
-          ),
+        type: Typealias(
+          name: 'EmptyStruct_Alias',
+          type: globalStruct,
         ),
         exposeSymbolAddress: true,
       )

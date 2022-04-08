@@ -46,11 +46,11 @@ Type getCodeGenType(
       case clang_types.CXTypeKind.CXType_ObjCObjectPointer:
       case clang_types.CXTypeKind.CXType_BlockPointer:
       case clang_types.CXTypeKind.CXType_ObjCId:
-      case clang_types.CXTypeKind.CXType_ObjCClass:
       case clang_types.CXTypeKind.CXType_ObjCTypeParam:
-        return Type.pointer(Type.struct(objCObjectType));
+      case clang_types.CXTypeKind.CXType_ObjCClass:
+        return PointerType(objCObjectType);
       case clang_types.CXTypeKind.CXType_ObjCSel:
-        return Type.pointer(Type.struct(objCSelType));
+        return PointerType(objCSelType);
     }
   }
 
@@ -65,8 +65,7 @@ Type getCodeGenType(
           _createTypeFromCursor(cxtype, cursor, ignoreFilter, pointerReference);
       type = result.type;
       if (type == null) {
-        return Type.unimplemented(
-            'Type: ${cxtype.kindSpelling()} not implemented');
+        return UnimplementedType('${cxtype.kindSpelling()} not implemented');
       }
       if (result.addToCache) {
         bindingsIndex.addTypeToSeen(usr, type);
@@ -86,12 +85,12 @@ Type getCodeGenType(
 
       // Replace Pointer<_Dart_Handle> with Handle.
       if (config.useDartHandle &&
-          s.broadType == BroadType.Compound &&
-          s.compound!.compoundType == CompoundType.struct &&
-          s.compound!.usr == strings.dartHandleUsr) {
-        return Type.handle();
+          s is Compound &&
+          s.compoundType == CompoundType.struct &&
+          s.usr == strings.dartHandleUsr) {
+        return HandleType();
       }
-      return Type.pointer(s);
+      return PointerType(s);
     case clang_types.CXTypeKind.CXType_FunctionProto:
       // Primarily used for function pointers.
       return _extractFromFunctionProto(cxtype);
@@ -100,17 +99,17 @@ Type getCodeGenType(
       return _extractFromFunctionProto(cxtype);
     case clang_types.CXTypeKind
         .CXType_ConstantArray: // Primarily used for constant array in struct members.
-      return Type.constantArray(
+      return ConstantArray(
         clang.clang_getNumElements(cxtype),
         clang.clang_getArrayElementType(cxtype).toCodeGenType(),
       );
     case clang_types.CXTypeKind
         .CXType_IncompleteArray: // Primarily used for incomplete array in function parameters.
-      return Type.incompleteArray(
+      return IncompleteArray(
         clang.clang_getArrayElementType(cxtype).toCodeGenType(),
       );
     case clang_types.CXTypeKind.CXType_Bool:
-      return Type.boolean();
+      return BooleanType();
     default:
       var typeSpellKey =
           clang.clang_getTypeSpelling(cxtype).toStringAndDispose();
@@ -119,14 +118,13 @@ Type getCodeGenType(
       }
       if (config.nativeTypeMappings.containsKey(typeSpellKey)) {
         _logger.fine('  Type $typeSpellKey mapped from type-map.');
-        return Type.importedType(config.nativeTypeMappings[typeSpellKey]!);
+        return config.nativeTypeMappings[typeSpellKey]!;
       } else if (cxTypeKindToImportedTypes.containsKey(typeSpellKey)) {
-        return Type.importedType(cxTypeKindToImportedTypes[typeSpellKey]!);
+        return cxTypeKindToImportedTypes[typeSpellKey]!;
       } else {
-        _logger.fine(
-            'typedeclarationCursorVisitor: getCodeGenType: Type Not Implemented, ${cxtype.completeStringRepr()}');
-        return Type.unimplemented(
-            'Type: ${cxtype.kindSpelling()} not implemented');
+        _logger.fine('typedeclarationCursorVisitor: getCodeGenType: Type Not '
+            'Implemented, ${cxtype.completeStringRepr()}');
+        return UnimplementedType('${cxtype.kindSpelling()} not implemented');
       }
   }
 }
@@ -153,18 +151,18 @@ _CreateTypeFromCursorResult _createTypeFromCursor(clang_types.CXType cxtype,
       if (config.typedefTypeMappings.containsKey(spelling)) {
         _logger.fine('  Type $spelling mapped from type-map');
         return _CreateTypeFromCursorResult(
-            Type.importedType(config.typedefTypeMappings[spelling]!));
+            config.typedefTypeMappings[spelling]!);
       }
       // Get name from supported typedef name if config allows.
       if (config.useSupportedTypedefs) {
         if (suportedTypedefToSuportedNativeType.containsKey(spelling)) {
           _logger.fine('  Type Mapped from supported typedef');
           return _CreateTypeFromCursorResult(
-              Type.nativeType(suportedTypedefToSuportedNativeType[spelling]!));
+              NativeType(suportedTypedefToSuportedNativeType[spelling]!));
         } else if (supportedTypedefToImportedType.containsKey(spelling)) {
           _logger.fine('  Type Mapped from supported typedef');
           return _CreateTypeFromCursorResult(
-              Type.importedType(supportedTypedefToImportedType[spelling]!));
+              supportedTypedefToImportedType[spelling]!);
         }
       }
 
@@ -172,7 +170,7 @@ _CreateTypeFromCursorResult _createTypeFromCursor(clang_types.CXType cxtype,
           parseTypedefDeclaration(cursor, pointerReference: pointerReference);
 
       if (typealias != null) {
-        return _CreateTypeFromCursorResult(Type.typealias(typealias));
+        return _CreateTypeFromCursorResult(typealias);
       } else {
         // Use underlying type if typealias couldn't be created or if the user
         // excluded this typedef.
@@ -191,10 +189,10 @@ _CreateTypeFromCursorResult _createTypeFromCursor(clang_types.CXType cxtype,
       );
       if (enumClass == null) {
         // Handle anonymous enum declarations within another declaration.
-        return _CreateTypeFromCursorResult(Type.nativeType(Type.enumNativeType),
+        return _CreateTypeFromCursorResult(EnumClass.nativeType,
             addToCache: false);
       } else {
-        return _CreateTypeFromCursorResult(Type.enumClass(enumClass));
+        return _CreateTypeFromCursorResult(enumClass);
       }
     case clang_types.CXTypeKind.CXType_ObjCInterface:
       return _CreateTypeFromCursorResult(parseObjCInterfaceDeclaration(cursor));
@@ -206,11 +204,11 @@ _CreateTypeFromCursorResult _createTypeFromCursor(clang_types.CXType cxtype,
 void _fillFromCursorIfNeeded(Type? type, clang_types.CXCursor cursor,
     bool ignoreFilter, bool pointerReference) {
   if (type == null) return;
-  if (type.compound != null) {
-    fillCompoundMembersIfNeeded(type.compound!, cursor,
+  if (type is Compound) {
+    fillCompoundMembersIfNeeded(type, cursor,
         ignoreFilter: ignoreFilter, pointerReference: pointerReference);
-  } else if (type.objCInterface != null) {
-    fillObjCInterfaceMethodsIfNeeded(type.objCInterface!, cursor);
+  } else if (type is ObjCInterface) {
+    fillObjCInterfaceMethodsIfNeeded(type, cursor);
   }
 }
 
@@ -244,7 +242,7 @@ Type? _extractfromRecord(clang_types.CXType cxtype, clang_types.CXCursor cursor,
     // TODO(23): Check if we should auto add compound declarations.
     if (compoundTypeMappings.containsKey(declSpelling)) {
       _logger.fine('  Type Mapped from type-map');
-      return Type.importedType(compoundTypeMappings[declSpelling]!);
+      return compoundTypeMappings[declSpelling]!;
     } else {
       final struct = parseCompoundDeclaration(
         cursor,
@@ -252,13 +250,12 @@ Type? _extractfromRecord(clang_types.CXType cxtype, clang_types.CXCursor cursor,
         ignoreFilter: ignoreFilter,
         pointerReference: pointerReference,
       );
-      if (struct == null) return null;
-      return Type.compound(struct);
+      return struct;
     }
   }
-  _logger.fine(
-      'typedeclarationCursorVisitor: _extractfromRecord: Not Implemented, ${cursor.completeStringRepr()}');
-  return Type.unimplemented('Type: ${cxtype.kindSpelling()} not implemented');
+  _logger.fine('typedeclarationCursorVisitor: _extractfromRecord: '
+      'Not Implemented, ${cursor.completeStringRepr()}');
+  return UnimplementedType('${cxtype.kindSpelling()} not implemented');
 }
 
 // Used for function pointer arguments.
@@ -270,10 +267,10 @@ Type _extractFromFunctionProto(clang_types.CXType cxtype) {
     final pt = t.toCodeGenType();
 
     if (pt.isIncompleteCompound) {
-      return Type.unimplemented(
+      return UnimplementedType(
           'Incomplete Struct by value in function parameter.');
-    } else if (pt.getBaseType().broadType == BroadType.Unimplemented) {
-      return Type.unimplemented('Function parameter has an unsupported type.');
+    } else if (pt.baseType is UnimplementedType) {
+      return UnimplementedType('Function parameter has an unsupported type.');
     }
 
     _parameters.add(
@@ -281,8 +278,8 @@ Type _extractFromFunctionProto(clang_types.CXType cxtype) {
     );
   }
 
-  return Type.nativeFunc(NativeFunc.fromFunctionType(FunctionType(
+  return NativeFunc(FunctionType(
     parameters: _parameters,
     returnType: clang.clang_getResultType(cxtype).toCodeGenType(),
-  )));
+  ));
 }

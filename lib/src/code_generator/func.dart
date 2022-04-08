@@ -33,7 +33,8 @@ class Func extends LookUpBinding {
   final bool isLeaf;
 
   /// Contains typealias for function type if [exposeFunctionTypedefs] is true.
-  Typealias? _exposedCFunctionTypealias, _exposedDartFunctionTypealias;
+  Typealias? _exposedCFunctionTypealias;
+  Typealias? _exposedDartFunctionTypealias;
 
   /// [originalName] is looked up in dynamic library, if not
   /// provided, takes the value of [name].
@@ -68,11 +69,11 @@ class Func extends LookUpBinding {
     if (exposeFunctionTypedefs) {
       _exposedCFunctionTypealias = Typealias(
         name: 'Native$upperCaseName',
-        type: Type.functionType(functionType),
+        type: functionType,
       );
       _exposedDartFunctionTypealias = Typealias(
         name: 'Dart$upperCaseName',
-        type: Type.functionType(functionType),
+        type: functionType,
         useDartType: true,
       );
     }
@@ -94,9 +95,7 @@ class Func extends LookUpBinding {
       p.name = paramNamer.makeUnique(p.name);
     }
     // Write enclosing function.
-    if (w.dartBool &&
-        functionType.returnType.getBaseTypealiasType().broadType ==
-            BroadType.Boolean) {
+    if (w.dartBool && functionType.returnType.typealiasType is BooleanType) {
       // Use bool return type in enclosing function.
       s.write('bool $enclosingFuncName(\n');
     } else {
@@ -104,8 +103,7 @@ class Func extends LookUpBinding {
           '${functionType.returnType.getDartType(w)} $enclosingFuncName(\n');
     }
     for (final p in functionType.parameters) {
-      if (w.dartBool &&
-          p.type.getBaseTypealiasType().broadType == BroadType.Boolean) {
+      if (w.dartBool && p.type.typealiasType is BooleanType) {
         // Use bool parameter type in enclosing function.
         s.write('  bool ${p.name},\n');
       } else {
@@ -117,15 +115,14 @@ class Func extends LookUpBinding {
 
     s.write('(\n');
     for (final p in functionType.parameters) {
-      if (w.dartBool &&
-          p.type.getBaseTypealiasType().broadType == BroadType.Boolean) {
+      if (w.dartBool && p.type.typealiasType is BooleanType) {
         // Convert bool parameter to int before calling.
         s.write('    ${p.name}?1:0,\n');
       } else {
         s.write('    ${p.name},\n');
       }
     }
-    if (w.dartBool && functionType.returnType.broadType == BroadType.Boolean) {
+    if (w.dartBool && functionType.returnType.typealiasType is BooleanType) {
       // Convert int return type to bool.
       s.write('  )!=0;\n');
     } else {
@@ -180,9 +177,7 @@ class Parameter {
 
   Parameter({String? originalName, this.name = '', required Type type})
       : originalName = originalName ?? name,
-        // A type with broadtype [BroadType.NativeFunction] is wrapped with a
-        // pointer because this is a shorthand used in C for Pointer to function.
-        type = type.getBaseTypealiasType().broadType == BroadType.NativeFunction
-            ? Type.pointer(type)
-            : type;
+        // A [NativeFunc] is wrapped with a pointer because this is a shorthand
+        // used in C for Pointer to function.
+        type = type.typealiasType is NativeFunc ? PointerType(type) : type;
 }

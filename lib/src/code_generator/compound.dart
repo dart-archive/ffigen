@@ -11,17 +11,18 @@ import 'writer.dart';
 enum CompoundType { struct, union }
 
 /// A binding for Compound type - Struct/Union.
-abstract class Compound extends NoLookUpBinding {
+abstract class Compound extends BindingType {
   /// Marker for if a struct definition is complete.
   ///
   /// A function can be safely pass this struct by value if it's complete.
-  bool isInComplete;
+  bool isIncomplete;
 
   List<Member> members;
 
   bool get isOpaque => members.isEmpty;
 
-  /// Value for `@Packed(X)` annotation. Can be null(no packing), 1, 2, 4, 8, 16.
+  /// Value for `@Packed(X)` annotation. Can be null (no packing), 1, 2, 4, 8,
+  /// or 16.
   ///
   /// Only supported for [CompoundType.struct].
   int? pack;
@@ -38,7 +39,7 @@ abstract class Compound extends NoLookUpBinding {
     String? originalName,
     required String name,
     required this.compoundType,
-    this.isInComplete = false,
+    this.isIncomplete = false,
     this.pack,
     String? dartDoc,
     List<Member>? members,
@@ -55,18 +56,18 @@ abstract class Compound extends NoLookUpBinding {
     String? usr,
     String? originalName,
     required String name,
-    bool isInComplete = false,
+    bool isIncomplete = false,
     int? pack,
     String? dartDoc,
     List<Member>? members,
   }) {
     switch (type) {
       case CompoundType.struct:
-        return Struc(
+        return Struct(
           usr: usr,
           originalName: originalName,
           name: name,
-          isInComplete: isInComplete,
+          isIncomplete: isIncomplete,
           pack: pack,
           dartDoc: dartDoc,
           members: members,
@@ -76,7 +77,7 @@ abstract class Compound extends NoLookUpBinding {
           usr: usr,
           originalName: originalName,
           name: name,
-          isInComplete: isInComplete,
+          isIncomplete: isIncomplete,
           pack: pack,
           dartDoc: dartDoc,
           members: members,
@@ -87,16 +88,17 @@ abstract class Compound extends NoLookUpBinding {
   List<int> _getArrayDimensionLengths(Type type) {
     final array = <int>[];
     var startType = type;
-    while (startType.broadType == BroadType.ConstantArray) {
-      array.add(startType.length!);
-      startType = startType.child!;
+    while (startType is ConstantArray) {
+      array.add(startType.length);
+      startType = startType.child;
     }
     return array;
   }
 
   String _getInlineArrayTypeString(Type type, Writer w) {
-    if (type.broadType == BroadType.ConstantArray) {
-      return '${w.ffiLibraryPrefix}.Array<${_getInlineArrayTypeString(type.child!, w)}>';
+    if (type is ConstantArray) {
+      return '${w.ffiLibraryPrefix}.Array<'
+          '${_getInlineArrayTypeString(type.child, w)}>';
     }
     return type.getCType(w);
   }
@@ -125,23 +127,23 @@ abstract class Compound extends NoLookUpBinding {
     }
     final dartClassName = isStruct ? 'Struct' : 'Union';
     // Write class declaration.
-    s.write(
-        'class $enclosingClassName extends ${w.ffiLibraryPrefix}.${isOpaque ? 'Opaque' : dartClassName}{\n');
+    s.write('class $enclosingClassName extends ');
+    s.write('${w.ffiLibraryPrefix}.${isOpaque ? 'Opaque' : dartClassName}{\n');
     const depth = '  ';
     for (final m in members) {
       final memberName = localUniqueNamer.makeUnique(m.name);
-      if (m.type.broadType == BroadType.ConstantArray) {
-        s.write(
-            '$depth@${w.ffiLibraryPrefix}.Array.multi(${_getArrayDimensionLengths(m.type)})\n');
-        s.write(
-            '${depth}external ${_getInlineArrayTypeString(m.type, w)} $memberName;\n\n');
+      if (m.type is ConstantArray) {
+        s.write('$depth@${w.ffiLibraryPrefix}.Array.multi(');
+        s.write('${_getArrayDimensionLengths(m.type)})\n');
+        s.write('${depth}external ${_getInlineArrayTypeString(m.type, w)} ');
+        s.write('$memberName;\n\n');
       } else {
         if (m.dartDoc != null) {
           s.write(depth + '/// ');
           s.writeAll(m.dartDoc!.split('\n'), '\n' + depth + '/// ');
           s.write('\n');
         }
-        if (!m.type.sameDartAndCType(w)) {
+        if (!sameDartAndCType(m.type, w)) {
           s.write('$depth@${m.type.getCType(w)}()\n');
         }
         s.write('${depth}external ${m.type.getDartType(w)} $memberName;\n\n');
@@ -150,7 +152,7 @@ abstract class Compound extends NoLookUpBinding {
     s.write('}\n\n');
 
     return BindingString(
-        type: isStruct ? BindingStringType.struc : BindingStringType.union,
+        type: isStruct ? BindingStringType.struct : BindingStringType.union,
         string: s.toString());
   }
 
@@ -163,6 +165,12 @@ abstract class Compound extends NoLookUpBinding {
       m.type.addDependencies(dependencies);
     }
   }
+
+  @override
+  bool get isIncompleteCompound => isIncomplete;
+
+  @override
+  String getCType(Writer w) => name;
 }
 
 class Member {

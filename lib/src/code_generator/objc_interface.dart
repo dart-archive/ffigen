@@ -32,20 +32,16 @@ class _ObjCBuiltInFunctions {
   late final _registerNameFunc = Func(
     name: '_sel_registerName',
     originalName: 'sel_registerName',
-    returnType: Type.pointer(Type.struct(objCSelType)),
-    parameters: [
-      Parameter(name: 'str', type: Type.pointer(Type.importedType(charType)))
-    ],
+    returnType: PointerType(objCSelType),
+    parameters: [Parameter(name: 'str', type: PointerType(charType))],
   );
   late final String registerName;
 
   late final _getClassFunc = Func(
     name: '_objc_getClass',
     originalName: 'objc_getClass',
-    returnType: Type.pointer(Type.struct(objCObjectType)),
-    parameters: [
-      Parameter(name: 'str', type: Type.pointer(Type.importedType(charType)))
-    ],
+    returnType: PointerType(objCObjectType),
+    parameters: [Parameter(name: 'str', type: PointerType(charType))],
   );
   late final String getClass;
 
@@ -62,9 +58,9 @@ class _ObjCBuiltInFunctions {
       originalName: 'objc_msgSend',
       returnType: returnType,
       parameters: [
-        Parameter(name: 'obj', type: Type.pointer(Type.struct(objCObjectType))),
-        Parameter(name: 'sel', type: Type.pointer(Type.struct(objCSelType))),
-        for (final p in params) Parameter(name: p.name, type: p.type.type),
+        Parameter(name: 'obj', type: PointerType(objCObjectType)),
+        Parameter(name: 'sel', type: PointerType(objCSelType)),
+        for (final p in params) Parameter(name: p.name, type: p.type),
       ],
     );
     return _msgSendFuncs[key]!;
@@ -111,7 +107,7 @@ class _ObjCBuiltInFunctions {
 
 final _builtInFunctions = _ObjCBuiltInFunctions();
 
-class ObjCInterface extends NoLookUpBinding {
+class ObjCInterface extends BindingType {
   ObjCInterface? superType;
   final methods = <ObjCMethod>[];
   bool filled = false;
@@ -146,8 +142,8 @@ class ObjCInterface extends NoLookUpBinding {
     final natLib = w.className;
 
     _builtInFunctions.ensureUtilsExist(w, s);
-    final objType = Type.pointer(Type.struct(objCObjectType)).getCType(w);
-    final selType = Type.pointer(Type.struct(objCSelType)).getCType(w);
+    final objType = PointerType(objCObjectType).getCType(w);
+    final selType = PointerType(objCSelType).getCType(w);
 
     // Class declaration.
     s.write('class $name ');
@@ -179,7 +175,7 @@ class ObjCInterface extends NoLookUpBinding {
       }
       s.write('  ');
       if (isStatic) s.write('static ');
-      s.write('${m.returnType!.getConvertedType(w, name)} ');
+      s.write('${_getConvertedType(m.returnType!, w, name)} ');
       if (m.kind == ObjCMethodKind.propertyGetter) s.write('get ');
       if (m.kind == ObjCMethodKind.propertySetter) s.write('set ');
       s.write(methodName);
@@ -196,7 +192,7 @@ class ObjCInterface extends NoLookUpBinding {
           } else {
             s.write(', ');
           }
-          s.write('${p.type.getConvertedType(w, name)} ${p.name}');
+          s.write('${_getConvertedType(p.type, w, name)} ${p.name}');
         }
         s.write(')');
       }
@@ -209,17 +205,17 @@ class ObjCInterface extends NoLookUpBinding {
       }
       s.write('    $selName ??= '
           '${_builtInFunctions.registerName}(_lib, "${m.originalName}");\n');
-      final convertReturn = m.returnType!.needsConverting;
+      final convertReturn = _needsConverting(m.returnType!);
       s.write('    ${convertReturn ? 'final _ret = ' : 'return '}');
       s.write('_lib.${m.msgSend!.name}(');
       s.write(isStatic ? '_class!' : '_id');
       s.write(', $selName!');
       for (final p in m.params) {
-        s.write(', ${p.type.doArgConversion(p.name)}');
+        s.write(', ${_doArgConversion(p.type, p.name)}');
       }
       s.write(');\n');
       if (convertReturn) {
-        final result = m.returnType!.doReturnConversion('_ret', name, '_lib');
+        final result = _doReturnConversion(m.returnType!, '_ret', name, '_lib');
         s.write('    return $result;');
       }
 
@@ -261,6 +257,46 @@ class ObjCInterface extends NoLookUpBinding {
       classMethods[method.originalName] ??= method;
     }
   }
+
+  @override
+  String getCType(Writer w) => PointerType(objCObjectType).getCType(w);
+
+  bool _isObject(Type type) =>
+      type is PointerType && type.child == objCObjectType;
+
+  bool _isInstanceType(Type type) =>
+      type is Typealias &&
+      type.originalName == 'instancetype' &&
+      _isObject(type.type);
+
+  // Utils for converting between the internal types passed to native code, and
+  // the external types visible to the user. For example, ObjCInterfaces are
+  // passed to native as Pointer<ObjCObject>, but the user sees the Dart wrapper
+  // class. These methods need to be kept in sync.
+  bool _needsConverting(Type type) =>
+      type is ObjCInterface || _isObject(type) || _isInstanceType(type);
+
+  String _getConvertedType(Type type, Writer w, String enclosingClass) {
+    if (type is ObjCInterface) return type.name;
+    if (_isObject(type)) return 'NSObject';
+    if (_isInstanceType(type)) return enclosingClass;
+    return type.getDartType(w);
+  }
+
+  String _doArgConversion(Type type, String value) {
+    if (type is ObjCInterface || _isObject(type) || _isInstanceType(type)) {
+      return '$value._id';
+    }
+    return value;
+  }
+
+  String _doReturnConversion(
+      Type type, String value, String enclosingClass, String library) {
+    if (type is ObjCInterface) return '${type.name}._($value, $library)';
+    if (_isObject(type)) return 'NSObject._($value, $library)';
+    if (_isInstanceType(type)) return '$enclosingClass._($value, $library)';
+    return value;
+  }
 }
 
 enum ObjCMethodKind {
@@ -280,7 +316,7 @@ class ObjCMethod {
   final String? dartDoc;
   final String originalName;
   final ObjCProperty? property;
-  ObjCMethodType? returnType;
+  Type? returnType;
   final params = <ObjCMethodParam>[];
   final ObjCMethodKind kind;
   Func? msgSend;
@@ -293,11 +329,11 @@ class ObjCMethod {
   });
 
   void addDependencies(Set<Binding> dependencies) {
-    returnType!.type.addDependencies(dependencies);
+    returnType!.addDependencies(dependencies);
     for (final p in params) {
-      p.type.type.addDependencies(dependencies);
+      p.type.addDependencies(dependencies);
     }
-    msgSend = _builtInFunctions.getMsgSendFunc(returnType!.type, params);
+    msgSend = _builtInFunctions.getMsgSendFunc(returnType!, params);
   }
 
   String _getDartMethodName(UniqueNamer uniqueNamer) {
@@ -323,53 +359,7 @@ class ObjCMethod {
 }
 
 class ObjCMethodParam {
-  final ObjCMethodType type;
-  final String name;
-  ObjCMethodParam(Type t, this.name) : type = ObjCMethodType(t);
-}
-
-// Wrapper around Type with helper methods for converting between the internal
-// types passed to native code, and the external types visible to the user. For
-// example, ObjCInterfaces are passed to native as Pointer<ObjCObject>, but the
-// user sees the Dart wrapper class.
-class ObjCMethodType {
   final Type type;
-  ObjCMethodType(this.type);
-
-  bool get isObject {
-    if (type.broadType != BroadType.Pointer) return false;
-    final child = type.child!;
-    if (child.broadType != BroadType.Compound) return false;
-    return child.compound == objCObjectType;
-  }
-
-  bool get isInstanceType {
-    if (type.broadType != BroadType.Typealias) return false;
-    final alias = type.typealias!;
-    if (alias.name != 'instancetype') return false;
-    return ObjCMethodType(alias.type).isObject;
-  }
-
-  bool get isInterface => type.broadType == BroadType.ObjCInterface;
-  bool get needsConverting => isInterface || isObject || isInstanceType;
-
-  String getConvertedType(Writer w, String enclosingClass) {
-    if (isInterface) return type.objCInterface!.name;
-    if (isObject) return 'NSObject';
-    if (isInstanceType) return enclosingClass;
-    return type.getDartType(w);
-  }
-
-  String doArgConversion(String value) {
-    if (isInterface || isObject || isInstanceType) return '$value._id';
-    return value;
-  }
-
-  String doReturnConversion(
-      String value, String enclosingClass, String library) {
-    if (isInterface) return '${type.objCInterface!.name}._($value, $library)';
-    if (isObject) return 'NSObject._($value, $library)';
-    if (isInstanceType) return '$enclosingClass._($value, $library)';
-    return value;
-  }
+  final String name;
+  ObjCMethodParam(this.type, this.name);
 }
