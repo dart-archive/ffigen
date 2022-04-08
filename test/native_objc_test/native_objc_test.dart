@@ -58,5 +58,20 @@ void main() {
       expect(foo1.multiply(0, foo2), 8);
       expect(foo1.multiply(1, foo2), 200);
     });
+
+    test('NSString manipulations', () {
+      final str1 = NSString(lib, "Hello");
+      final str2 = NSString(lib, "World!");
+
+      expect(str1.length, 5);
+      expect(str2.length, 6);
+
+      expect(str1.toString(), "Hello");
+      expect(str2.toString(), "World!");
+
+      final str3 = StringUtil.strConcat(lib, str1, str2);
+      expect(str3.length, 11);
+      expect(str3.toString(), "HelloWorld!");
+    });
   });
 }
