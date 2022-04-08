@@ -509,9 +509,8 @@ language: 'objc'
 2. Run `dart run ffigen`.
 
 ## Running Tests
-1. Dynamic library for some tests need to be built before running the examples.
-  1. `cd test/native_test`.
-  2. Run `dart build_test_dylib.dart`.
+Dynamic library for some tests need to be built before running the examples.
+Run `dart test/setup.dart` to build the libraries.
 
 Run tests from the root of the package with `dart run test`.
 > Note: If llvm is not installed in one of the default locations, tests may fail.

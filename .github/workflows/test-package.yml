@@ -49,7 +49,7 @@ jobs:
       - name: Install libclang-10-dev
         run: sudo apt-get install libclang-10-dev
       - name: Build test dylib
-        run: cd test/native_test && dart build_test_dylib.dart && cd ../..
+        run: dart test/setup.dart
       - name: Run VM tests
         run: dart test --platform vm
       - name: Collect coverage
@@ -71,7 +71,7 @@ jobs:
       - name: Install dependencies
         run: dart pub get
       - name: Build test dylib
-        run: cd test/native_test && dart build_test_dylib.dart && cd ../..
+        run: dart test/setup.dart
       - name: Run VM tests
         run: dart test --platform vm
       - name: Collect coverage

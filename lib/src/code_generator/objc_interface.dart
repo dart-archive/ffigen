@@ -34,6 +34,7 @@ class _ObjCBuiltInFunctions {
     originalName: 'sel_registerName',
     returnType: PointerType(objCSelType),
     parameters: [Parameter(name: 'str', type: PointerType(charType))],
+    isInternal: true,
   );
   late final String registerName;
 
@@ -42,6 +43,7 @@ class _ObjCBuiltInFunctions {
     originalName: 'objc_getClass',
     returnType: PointerType(objCObjectType),
     parameters: [Parameter(name: 'str', type: PointerType(charType))],
+    isInternal: true,
   );
   late final String getClass;
 
@@ -62,6 +64,7 @@ class _ObjCBuiltInFunctions {
         Parameter(name: 'sel', type: PointerType(objCSelType)),
         for (final p in params) Parameter(name: p.name, type: p.type),
       ],
+      isInternal: true,
     );
     return _msgSendFuncs[key]!;
   }
@@ -175,9 +178,12 @@ class ObjCInterface extends BindingType {
       }
       s.write('  ');
       if (isStatic) s.write('static ');
-      s.write('${_getConvertedType(m.returnType!, w, name)} ');
+      if (m.kind == ObjCMethodKind.propertySetter) {
+        s.write('set ');
+      } else {
+        s.write('${_getConvertedType(m.returnType!, w, name)} ');
+      }
       if (m.kind == ObjCMethodKind.propertyGetter) s.write('get ');
-      if (m.kind == ObjCMethodKind.propertySetter) s.write('set ');
       s.write(methodName);
       if (m.kind != ObjCMethodKind.propertyGetter) {
         s.write('(');
