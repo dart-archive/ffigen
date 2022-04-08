@@ -41,11 +41,11 @@ Type? parseObjCInterfaceDeclaration(clang_types.CXCursor cursor) {
   _logger.fine('++++ Adding ObjC interface: '
       'Name: $name, ${cursor.completeStringRepr()}');
 
-  return Type.objCInterface(ObjCInterface(
+  return ObjCInterface(
     usr: itfUsr, originalName: name,
     name: name, // TODO(#279): config.interfaceDecl.renameUsingConfig(name),
     dartDoc: getCursorDocComment(cursor),
-  ));
+  );
 }
 
 void fillObjCInterfaceMethodsIfNeeded(
@@ -88,7 +88,13 @@ void _parseSuperType(clang_types.CXCursor cursor) {
   final superType = cursor.type().toCodeGenType();
   _logger.fine('       > Super type: '
       '$superType ${cursor.completeStringRepr()}');
-  _interfaceStack.top.interface.superType = superType.objCInterface;
+  final itf = _interfaceStack.top.interface;
+  if (superType is ObjCInterface) {
+    itf.superType = superType;
+  } else {
+    _logger.severe(
+        'Super type of $itf is $superType, which is not a valid interface.');
+  }
 }
 
 void _parseProperty(clang_types.CXCursor cursor) {
@@ -108,7 +114,7 @@ void _parseProperty(clang_types.CXCursor cursor) {
     dartDoc: dartDoc,
     kind: ObjCMethodKind.propertyGetter,
   );
-  getter.returnType = ObjCMethodType(fieldType);
+  getter.returnType = fieldType;
   itf.addMethod(getter);
 
   final setter = ObjCMethod(
@@ -119,7 +125,7 @@ void _parseProperty(clang_types.CXCursor cursor) {
     dartDoc: dartDoc,
     kind: ObjCMethodKind.propertySetter,
   );
-  setter.returnType = ObjCMethodType(Type.nativeType(SupportedNativeType.Void));
+  setter.returnType = NativeType(SupportedNativeType.Void);
   setter.params.add(ObjCMethodParam(fieldType, 'value'));
   itf.addMethod(setter);
 }
@@ -175,7 +181,7 @@ void _parseMethodReturnType(clang_types.CXCursor cursor) {
         '"${_interfaceStack.top.interface.originalName}" has multiple return '
         'types.');
   } else {
-    parsed.method.returnType = ObjCMethodType(cursor.type().toCodeGenType());
+    parsed.method.returnType = cursor.type().toCodeGenType();
     _logger.fine('           >> Return type: '
         '${parsed.method.returnType} ${cursor.completeStringRepr()}');
   }

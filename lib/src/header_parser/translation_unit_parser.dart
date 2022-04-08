@@ -46,10 +46,8 @@ int _rootCursorVisitor(clang_types.CXCursor cursor, clang_types.CXCursor parent,
           break;
         case clang_types.CXCursorKind.CXCursor_StructDecl:
         case clang_types.CXCursorKind.CXCursor_UnionDecl:
-          addToBindings(_getCodeGenTypeFromCursor(cursor)?.compound);
-          break;
         case clang_types.CXCursorKind.CXCursor_EnumDecl:
-          addToBindings(_getCodeGenTypeFromCursor(cursor)?.enumClass);
+          addToBindings(_getCodeGenTypeFromCursor(cursor));
           break;
         case clang_types.CXCursorKind.CXCursor_MacroDefinition:
           saveMacroDefinition(cursor);
@@ -58,7 +56,7 @@ int _rootCursorVisitor(clang_types.CXCursor cursor, clang_types.CXCursor parent,
           addToBindings(parseVarDeclaration(cursor));
           break;
         case clang_types.CXCursorKind.CXCursor_ObjCInterfaceDecl:
-          addToBindings(_getCodeGenTypeFromCursor(cursor)?.objCInterface);
+          addToBindings(_getCodeGenTypeFromCursor(cursor));
           break;
         default:
           _logger.finer('rootCursorVisitor: CursorKind not implemented');
@@ -83,6 +81,7 @@ void addToBindings(Binding? b) {
   }
 }
 
-Type? _getCodeGenTypeFromCursor(clang_types.CXCursor cursor) {
-  return getCodeGenType(cursor.type(), ignoreFilter: false);
+BindingType? _getCodeGenTypeFromCursor(clang_types.CXCursor cursor) {
+  final t = getCodeGenType(cursor.type(), ignoreFilter: false);
+  return t is BindingType ? t : null;
 }

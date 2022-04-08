@@ -18,8 +18,8 @@ class Bindings {
           lookup)
       : _lookup = lookup;
 
-  ffi.Pointer<SomeStruc> someFunc(
-    ffi.Pointer<ffi.Pointer<SomeStruc>> some,
+  ffi.Pointer<SomeStruct> someFunc(
+    ffi.Pointer<ffi.Pointer<SomeStruct>> some,
   ) {
     return _someFunc(
       some,
@@ -28,13 +28,13 @@ class Bindings {
 
   late final _someFuncPtr = _lookup<
       ffi.NativeFunction<
-          ffi.Pointer<SomeStruc> Function(
-              ffi.Pointer<ffi.Pointer<SomeStruc>>)>>('someFunc');
+          ffi.Pointer<SomeStruct> Function(
+              ffi.Pointer<ffi.Pointer<SomeStruct>>)>>('someFunc');
   late final _someFunc = _someFuncPtr.asFunction<
-      ffi.Pointer<SomeStruc> Function(ffi.Pointer<ffi.Pointer<SomeStruc>>)>();
+      ffi.Pointer<SomeStruct> Function(ffi.Pointer<ffi.Pointer<SomeStruct>>)>();
 }
 
-class SomeStruc extends ffi.Struct {
+class SomeStruct extends ffi.Struct {
   @ffi.Int32()
   external int a;
 

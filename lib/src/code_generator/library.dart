@@ -11,7 +11,7 @@ import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 import 'binding.dart';
 import 'imports.dart';
-import 'struc.dart';
+import 'struct.dart';
 import 'utils.dart';
 import 'writer.dart';
 
@@ -59,7 +59,7 @@ class Library {
     // conflicts have been handled so that users can target the generated names.
     if (packingOverride != null) {
       for (final b in this.bindings) {
-        if (b is Struc && packingOverride.isOverriden(b.name)) {
+        if (b is Struct && packingOverride.isOverriden(b.name)) {
           b.pack = packingOverride.getOverridenPackValue(b.name);
         }
       }

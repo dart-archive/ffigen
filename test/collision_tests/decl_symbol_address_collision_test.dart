@@ -17,18 +17,18 @@ void main() {
         header:
             '// ignore_for_file: unused_element, camel_case_types, non_constant_identifier_names\n',
         bindings: [
-          Struc(name: 'addresses'),
-          Struc(name: '_SymbolAddresses'),
+          Struct(name: 'addresses'),
+          Struct(name: '_SymbolAddresses'),
           EnumClass(name: 'Bindings'),
           Func(
             name: '_library',
-            returnType: Type.nativeType(SupportedNativeType.Void),
+            returnType: NativeType(SupportedNativeType.Void),
             exposeSymbolAddress: true,
             exposeFunctionTypedefs: true,
           ),
           Func(
             name: '_SymbolAddresses_1',
-            returnType: Type.nativeType(SupportedNativeType.Void),
+            returnType: NativeType(SupportedNativeType.Void),
             exposeSymbolAddress: true,
           ),
         ],

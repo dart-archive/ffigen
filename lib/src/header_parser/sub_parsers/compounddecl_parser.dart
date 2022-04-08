@@ -27,7 +27,7 @@ class _ParsedCompound {
 
   _ParsedCompound(this.compound);
 
-  bool get isInComplete =>
+  bool get isIncomplete =>
       unimplementedMemberType ||
       flexibleArrayMember ||
       bitFieldMember ||
@@ -45,7 +45,7 @@ class _ParsedCompound {
   int alignment = 0;
 
   bool get _isPacked {
-    if (!hasAttr || isInComplete) return false;
+    if (!hasAttr || isIncomplete) return false;
     if (hasPackedAttr) return true;
 
     return maxChildAlignment > alignment;
@@ -185,7 +185,7 @@ void fillCompoundMembersIfNeeded(
   _stack.pop();
 
   _logger.finest(
-      'Opaque: ${parsed.isInComplete}, HasAttr: ${parsed.hasAttr}, AlignValue: ${parsed.alignment}, MaxChildAlignValue: ${parsed.maxChildAlignment}, PackValue: ${parsed.packValue}.');
+      'Opaque: ${parsed.isIncomplete}, HasAttr: ${parsed.hasAttr}, AlignValue: ${parsed.alignment}, MaxChildAlignValue: ${parsed.maxChildAlignment}, PackValue: ${parsed.packValue}.');
   compound.pack = parsed.packValue;
 
   visitChildrenResultChecker(resultCode);
@@ -218,13 +218,13 @@ void fillCompoundMembersIfNeeded(
   }
 
   // Clear all members if declaration is incomplete.
-  if (parsed.isInComplete) {
+  if (parsed.isIncomplete) {
     compound.members.clear();
   }
 
   // C allows empty structs/union, but it's undefined behaviour at runtine.
   // So we need to mark a declaration incomplete if it has no members.
-  compound.isInComplete = parsed.isInComplete || compound.members.isEmpty;
+  compound.isIncomplete = parsed.isIncomplete || compound.members.isEmpty;
 }
 
 /// Visitor for the struct/union cursor [CXCursorKind.CXCursor_StructDecl]/
@@ -245,7 +245,7 @@ int _compoundMembersVisitor(clang_types.CXCursor cursor,
       }
 
       final mt = cursor.type().toCodeGenType();
-      if (mt.broadType == BroadType.IncompleteArray) {
+      if (mt is IncompleteArray) {
         // TODO(68): Structs with flexible Array Members are not supported.
         parsed.flexibleArrayMember = true;
       }
@@ -253,13 +253,13 @@ int _compoundMembersVisitor(clang_types.CXCursor cursor,
         // TODO(84): Struct with bitfields are not suppoorted.
         parsed.bitFieldMember = true;
       }
-      if (mt.broadType == BroadType.Handle) {
+      if (mt is HandleType) {
         parsed.dartHandleMember = true;
       }
       if (mt.isIncompleteCompound) {
         parsed.incompleteCompoundMember = true;
       }
-      if (mt.getBaseType().broadType == BroadType.Unimplemented) {
+      if (mt.baseType is UnimplementedType) {
         parsed.unimplementedMemberType = true;
       }
 
