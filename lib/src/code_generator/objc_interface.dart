@@ -108,6 +108,30 @@ class _ObjCBuiltInFunctions {
       func.addDependencies(dependencies);
     }
   }
+
+  void generateNSStringUtils(Writer w, StringBuffer s) {
+    // Generate a constructor that wraps stringWithCString.
+    s.write('  factory NSString(${w.className} _lib, String str) {\n');
+    s.write('    final cstr = str.toNativeUtf8();\n');
+    s.write('    final nsstr = stringWithCString('
+        '_lib, cstr.cast(), 4 /* UTF8 */);\n');
+    s.write('    ${w.ffiPkgLibraryPrefix}.calloc.free(cstr);\n');
+    s.write('    return nsstr;\n');
+    s.write('  }\n\n');
+
+    // Generate a toString method that wraps UTF8String.
+    s.write('  @override\n');
+    s.write('  String toString() => UTF8String().cast<'
+        '${w.ffiPkgLibraryPrefix}.Utf8>().toDartString();\n\n');
+  }
+
+  void generateStringUtils(Writer w, StringBuffer s) {
+    // Generate an extension on String to convert to NSString
+    s.write('extension StringToNSString on String {\n');
+    s.write('  NSString toNSString(${w.className} lib) => '
+        'NSString(lib, this);\n');
+    s.write('}\n\n');
+  }
 }
 
 final _builtInFunctions = _ObjCBuiltInFunctions();
@@ -135,6 +159,8 @@ class ObjCInterface extends BindingType {
           name: name,
           dartDoc: dartDoc,
         );
+
+  bool get isNSString => name == "NSString";
 
   @override
   BindingString toBindingString(Writer w) {
@@ -165,6 +191,10 @@ class ObjCInterface extends BindingType {
     s.write('    return $name._(other._id, other._lib);\n');
     s.write('  }\n\n');
 
+    if (isNSString) {
+      _builtInFunctions.generateNSStringUtils(w, s);
+    }
+
     // Methods.
     for (final m in methods) {
       final methodName = m._getDartMethodName(uniqueNamer);
@@ -178,6 +208,9 @@ class ObjCInterface extends BindingType {
       // The method declaration.
       if (m.dartDoc != null) {
         s.write(makeDartDoc(m.dartDoc!));
+      }
+      if (!isStatic && (superType?.hasMethod(m) ?? false)) {
+        s.write('  @override\n');
       }
       s.write('  ');
       if (isStatic) s.write('static ');
@@ -233,6 +266,10 @@ class ObjCInterface extends BindingType {
 
     s.write('}\n\n');
 
+    if (isNSString) {
+      _builtInFunctions.generateStringUtils(w, s);
+    }
+
     return BindingString(
         type: BindingStringType.objcInterface, string: s.toString());
   }
@@ -241,6 +278,10 @@ class ObjCInterface extends BindingType {
   void addDependencies(Set<Binding> dependencies) {
     if (dependencies.contains(this)) return;
     dependencies.add(this);
+
+    if (isNSString) {
+      _addNSStringMethods();
+    }
 
     _filterPropertyMethods();
 
@@ -282,6 +323,35 @@ class ObjCInterface extends BindingType {
     if (method.kind == ObjCMethodKind.classMethod) {
       classMethods[method.originalName] ??= method;
     }
+  }
+
+  bool hasMethod(ObjCMethod method) {
+    return methods.any(
+        (m) => m.originalName == method.originalName && m.kind == method.kind);
+  }
+
+  void addMethodIfMissing(ObjCMethod method) {
+    if (!hasMethod(method)) {
+      addMethod(method);
+    }
+  }
+
+  void _addNSStringMethods() {
+    addMethodIfMissing(ObjCMethod(
+      originalName: 'stringWithCString:encoding:',
+      kind: ObjCMethodKind.classMethod,
+      returnType: this,
+      params_: [
+        ObjCMethodParam(PointerType(charType), 'cString'),
+        ObjCMethodParam(unsignedIntType, 'enc'),
+      ],
+    ));
+    addMethodIfMissing(ObjCMethod(
+      originalName: 'UTF8String',
+      kind: ObjCMethodKind.instanceMethod,
+      returnType: PointerType(charType),
+      params_: [],
+    ));
   }
 
   @override
@@ -343,7 +413,7 @@ class ObjCMethod {
   final String originalName;
   final ObjCProperty? property;
   Type? returnType;
-  final params = <ObjCMethodParam>[];
+  final List<ObjCMethodParam> params;
   final ObjCMethodKind kind;
   Func? msgSend;
 
@@ -352,7 +422,9 @@ class ObjCMethod {
     this.property,
     this.dartDoc,
     required this.kind,
-  });
+    this.returnType,
+    List<ObjCMethodParam>? params_,
+  }) : params = params_ ?? [];
 
   bool get isProperty =>
       kind == ObjCMethodKind.propertyGetter ||
