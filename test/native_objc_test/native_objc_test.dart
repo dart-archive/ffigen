@@ -61,7 +61,7 @@ void main() {
 
     test('NSString manipulations', () {
       final str1 = NSString(lib, "Hello");
-      final str2 = NSString(lib, "World!");
+      final str2 = "World!".toNSString(lib);
 
       expect(str1.length, 5);
       expect(str2.length, 6);

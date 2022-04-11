@@ -4562,6 +4562,10 @@ class NSString extends NSObject {
   }
 }
 
+extension StringToNSString on String {
+  NSString toNSString(NativeObjCLibrary lib) => NSString(lib, this);
+}
+
 typedef unichar = pkg_ffi.UnsignedShort;
 
 class NSNumber extends NSValue {

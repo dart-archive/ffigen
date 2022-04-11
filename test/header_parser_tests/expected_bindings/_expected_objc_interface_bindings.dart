@@ -920,3 +920,7 @@ class NSString extends _ObjCWrapper {
     return _lib._objc_msgSend_21(_id, _sel_UTF8String!);
   }
 }
+
+extension StringToNSString on String {
+  NSString toNSString(NativeLibrary lib) => NSString(lib, this);
+}

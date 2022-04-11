@@ -122,6 +122,14 @@ class _ObjCBuiltInFunctions {
     s.write('  String toString() => UTF8String().cast<'
         '${w.ffiPkgLibraryPrefix}.Utf8>().toDartString();\n\n');
   }
+
+  void generateStringUtils(Writer w, StringBuffer s) {
+    // Generate an extension on String to convert to NSString
+    s.write('extension StringToNSString on String {\n');
+    s.write('  NSString toNSString(${w.className} lib) => '
+        'NSString(lib, this);\n');
+    s.write('}\n\n');
+  }
 }
 
 final _builtInFunctions = _ObjCBuiltInFunctions();
@@ -254,6 +262,10 @@ class ObjCInterface extends BindingType {
     }
 
     s.write('}\n\n');
+
+    if (isNSString) {
+      _builtInFunctions.generateStringUtils(w, s);
+    }
 
     return BindingString(
         type: BindingStringType.objcInterface, string: s.toString());
