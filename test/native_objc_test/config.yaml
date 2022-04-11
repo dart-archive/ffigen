@@ -9,6 +9,7 @@
 name: NativeObjCLibrary
 description: 'Native Objective C test'
 language: objc
+objc-bool: true
 output: 'test/native_objc_test/native_objc_test_bindings.dart'
 headers:
   entry-points:

@@ -105,6 +105,11 @@ bool booleanExtractor(dynamic value) => value as bool;
 bool booleanValidator(List<String> name, dynamic value) =>
     checkType<bool>(name, value);
 
+bool? nullableBooleanExtractor(dynamic value) => value as bool?;
+
+bool nullableBooleanValidator(List<String> name, dynamic value) =>
+    checkType<bool?>(name, value);
+
 Map<String, LibraryImport> libraryImportsExtractor(dynamic yamlConfig) {
   final resultMap = <String, LibraryImport>{};
   final typeMap = yamlConfig as YamlMap?;

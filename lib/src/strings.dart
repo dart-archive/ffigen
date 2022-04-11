@@ -37,6 +37,7 @@ const langObjC = 'objc';
 
 // Clang command line args for Objective C.
 const clangLangObjC = ['-x', 'objective-c'];
+const clangObjCBoolDefine = '__OBJC_BOOL_IS_BOOL';
 const clangInclude = '-include';
 const clangDefaultObjCSystemHeaderPath =
     '/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include';
@@ -169,6 +170,9 @@ const sort = 'sort';
 const useSupportedTypedefs = 'use-supported-typedefs';
 const dartBool = 'dart-bool';
 const useDartHandle = 'use-dart-handle';
+
+// Objective C config options.
+const objcBool = 'objc-bool';
 
 const comments = 'comments';
 // Sub-fields of comments.

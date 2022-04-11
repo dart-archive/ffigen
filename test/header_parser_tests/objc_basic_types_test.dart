@@ -26,6 +26,7 @@ ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'ObjC Basic Types Test'
 ${strings.output}: 'unused'
 ${strings.language}: '${strings.langObjC}'
+${strings.objcBool}: true
 ${strings.headers}:
   ${strings.entryPoints}:
     - 'test/header_parser_tests/objc_basic_types.h'
