@@ -4,6 +4,8 @@
   double doubleVal;
 }
 
+@property (class, readonly) int32_t classProperty;
+
 @property int32_t intVal;
 
 + (Foo*)makeFoo:(double)x;
@@ -13,6 +15,10 @@
 @end
 
 @implementation Foo
+
++ (int32_t)classProperty {
+  return 42;
+}
 
 + (Foo*)makeFoo:(double)x {
   Foo* foo = [Foo new];
