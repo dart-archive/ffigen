@@ -32,6 +32,11 @@ ${strings.headers}:
 ${strings.objcInterfaces}:
   ${strings.include}:
     - 'Foo'
+${strings.objcMethods}:
+  ${strings.exclude}:
+    - 'excludedMethod'
+    - 'excludedProperty'
+    - 'setExcludedProperty:'
 ''') as yaml.YamlMap),
       );
     });

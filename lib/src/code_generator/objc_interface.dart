@@ -426,7 +426,8 @@ class ObjCMethod {
     required this.kind,
     this.returnType,
     List<ObjCMethodParam>? params_,
-  }) : dartName = name ?? originalName, params = params_ ?? [];
+  })  : dartName = name ?? originalName,
+        params = params_ ?? [];
 
   bool get isProperty =>
       kind == ObjCMethodKind.propertyGetter ||

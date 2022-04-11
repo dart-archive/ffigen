@@ -13,4 +13,10 @@
 // This is an instance method, so becomes a regular method.
 - (int32_t)anInstanceMethod:(NSString*)someArg withOtherArg:(Foo*)otherArg;
 
+// This method should be exluded from the generated code.
++ (int32_t)excludedMethod;
+
+// This property's setter and getter should be exluded from the generated code.
+@property int32_t excludedProperty;
+
 @end

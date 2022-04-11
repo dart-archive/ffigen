@@ -29,7 +29,8 @@ final _interfaceStack = Stack<_ParsedObjCInterface>();
 final _methodStack = Stack<_ParsedObjCMethod>();
 
 Type? parseObjCInterfaceDeclaration(
-    clang_types.CXCursor cursor, {
+  clang_types.CXCursor cursor, {
+
   /// Option to ignore declaration filter (Useful in case of extracting
   /// declarations when they are passed/returned by an included function.)
   bool ignoreFilter = false,
@@ -47,7 +48,8 @@ Type? parseObjCInterfaceDeclaration(
       'Name: $name, ${cursor.completeStringRepr()}');
 
   return ObjCInterface(
-    usr: itfUsr, originalName: name,
+    usr: itfUsr,
+    originalName: name,
     name: config.objcInterfaces.renameUsingConfig(name),
     dartDoc: getCursorDocComment(cursor),
   );
@@ -111,9 +113,8 @@ void _parseProperty(clang_types.CXCursor cursor) {
   _logger.fine('       > Property: '
       '$fieldType $fieldName ${cursor.completeStringRepr()}');
 
-  final getterName = clang
-      .clang_Cursor_getObjCPropertyGetterName(cursor)
-      .toStringAndDispose();
+  final getterName =
+      clang.clang_Cursor_getObjCPropertyGetterName(cursor).toStringAndDispose();
   if (config.objcMethods.shouldInclude(getterName)) {
     final getter = ObjCMethod(
       originalName: getterName,
@@ -126,9 +127,8 @@ void _parseProperty(clang_types.CXCursor cursor) {
     itf.addMethod(getter);
   }
 
-  final setterName = clang
-      .clang_Cursor_getObjCPropertySetterName(cursor)
-      .toStringAndDispose();
+  final setterName =
+      clang.clang_Cursor_getObjCPropertySetterName(cursor).toStringAndDispose();
   if (config.objcMethods.shouldInclude(setterName)) {
     final setter = ObjCMethod(
       originalName: setterName,
