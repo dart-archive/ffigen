@@ -102,7 +102,18 @@ void _parseProperty(clang_types.CXCursor cursor) {
   final fieldName = cursor.spelling();
   final fieldType = cursor.type().toCodeGenType();
   final dartDoc = getCursorDocComment(cursor);
-  final property = ObjCProperty(fieldName);
+
+  final propertyAttributes =
+      clang.clang_Cursor_getObjCPropertyAttributes(cursor, 0);
+
+  final property = ObjCProperty(fieldName,
+      isReadOnly: propertyAttributes &
+              clang_types.CXObjCPropertyAttrKind.CXObjCPropertyAttr_readonly >
+          0,
+      isClass: propertyAttributes &
+              clang_types.CXObjCPropertyAttrKind.CXObjCPropertyAttr_class >
+          0);
+
   _logger.fine('       > Property: '
       '$fieldType $fieldName ${cursor.completeStringRepr()}');
 

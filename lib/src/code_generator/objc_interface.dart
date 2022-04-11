@@ -405,7 +405,17 @@ enum ObjCMethodKind {
 class ObjCProperty {
   final String originalName;
   String? dartName;
-  ObjCProperty(this.originalName);
+  final bool isReadOnly;
+  final bool isClass;
+
+  ObjCProperty(this.originalName,
+      {required this.isReadOnly, required this.isClass});
+
+  @override
+  String toString() {
+    return 'ObjCProperty($originalName, '
+        'isReadOnly: $isReadOnly isClass: $isClass';
+  }
 }
 
 class ObjCMethod {

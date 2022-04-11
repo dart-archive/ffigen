@@ -1002,6 +1002,29 @@ class Clang {
       _clang_getCursorDefinitionPtr.asFunction<CXCursor Function(CXCursor)>();
 
   /// Given a cursor that represents a property declaration, return the
+  /// associated property attributes. The bits are formed from
+  /// \c CXObjCPropertyAttrKind.
+  ///
+  /// \param reserved Reserved for future use, pass 0.
+  int clang_Cursor_getObjCPropertyAttributes(
+    CXCursor C,
+    int reserved,
+  ) {
+    return _clang_Cursor_getObjCPropertyAttributes(
+      C,
+      reserved,
+    );
+  }
+
+  late final _clang_Cursor_getObjCPropertyAttributesPtr = _lookup<
+      ffi.NativeFunction<
+          pkg_ffi.UnsignedInt Function(CXCursor,
+              pkg_ffi.UnsignedInt)>>('clang_Cursor_getObjCPropertyAttributes');
+  late final _clang_Cursor_getObjCPropertyAttributes =
+      _clang_Cursor_getObjCPropertyAttributesPtr
+          .asFunction<int Function(CXCursor, int)>();
+
+  /// Given a cursor that represents a property declaration, return the
   /// name of the method that implements the getter.
   CXString clang_Cursor_getObjCPropertyGetterName(
     CXCursor C,
@@ -2459,6 +2482,24 @@ typedef CXCursorVisitor = ffi.Pointer<
 /// Opaque pointer representing client data that will be passed through
 /// to various callbacks and visitors.
 typedef CXClientData = ffi.Pointer<ffi.Void>;
+
+/// Property attributes for a \c CXCursor_ObjCPropertyDecl.
+abstract class CXObjCPropertyAttrKind {
+  static const int CXObjCPropertyAttr_noattr = 0;
+  static const int CXObjCPropertyAttr_readonly = 1;
+  static const int CXObjCPropertyAttr_getter = 2;
+  static const int CXObjCPropertyAttr_assign = 4;
+  static const int CXObjCPropertyAttr_readwrite = 8;
+  static const int CXObjCPropertyAttr_retain = 16;
+  static const int CXObjCPropertyAttr_copy = 32;
+  static const int CXObjCPropertyAttr_nonatomic = 64;
+  static const int CXObjCPropertyAttr_setter = 128;
+  static const int CXObjCPropertyAttr_atomic = 256;
+  static const int CXObjCPropertyAttr_weak = 512;
+  static const int CXObjCPropertyAttr_strong = 1024;
+  static const int CXObjCPropertyAttr_unsafe_unretained = 2048;
+  static const int CXObjCPropertyAttr_class = 4096;
+}
 
 abstract class CXEvalResultKind {
   static const int CXEval_Int = 1;
