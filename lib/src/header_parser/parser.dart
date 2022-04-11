@@ -72,10 +72,6 @@ List<Binding> parseToBindings() {
       compilerOpts.add(strings.clangInclude);
       compilerOpts.add(sysHdr);
     }
-    final objcBool = config.objcBool;
-    if (objcBool != null) {
-      compilerOpts.add('-D${strings.clangObjCBoolDefine}=${objcBool ? 1 : 0}');
-    }
   }
 
   _logger.fine('CompilerOpts used: $compilerOpts');

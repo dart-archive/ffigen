@@ -141,11 +141,6 @@ class Config {
   Includer get leafFunctions => _leafFunctions;
   late Includer _leafFunctions;
 
-  /// Controls how ObjC's BOOL is handled. true: force it to be bool, false:
-  /// force it to be int8, null: leave it as the platform default.
-  bool? get objcBool => _objcBool;
-  bool? _objcBool;
-
   Config._();
 
   /// Create config from Yaml map.
@@ -480,12 +475,6 @@ class Config {
         defaultValue: () => Includer.excludeByDefault(),
         extractedResult: (dynamic result) =>
             _leafFunctions = result as Includer,
-      ),
-      [strings.objcBool]: Specification<bool?>(
-        requirement: Requirement.no,
-        validator: nullableBooleanValidator,
-        extractor: nullableBooleanExtractor,
-        extractedResult: (dynamic result) => _objcBool = result as bool?,
       ),
     };
   }

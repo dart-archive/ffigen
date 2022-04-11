@@ -42,6 +42,7 @@ const clangInclude = '-include';
 const clangDefaultObjCSystemHeaderPath =
     '/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include';
 const clangDefaultObjCSystemHeaders = ['objc/NSObject.h'];
+const objcBOOL = 'BOOL';
 
 // Internal objective C directories that are automatically pulled in by clang,
 // and should be excluded from output (unless explicitly used).
@@ -170,9 +171,6 @@ const sort = 'sort';
 const useSupportedTypedefs = 'use-supported-typedefs';
 const dartBool = 'dart-bool';
 const useDartHandle = 'use-dart-handle';
-
-// Objective C config options.
-const objcBool = 'objc-bool';
 
 const comments = 'comments';
 // Sub-fields of comments.
