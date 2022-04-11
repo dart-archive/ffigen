@@ -12,20 +12,22 @@ import 'writer.dart';
 // by default.
 const _excludedNSObjectClassMethods = {
   'allocWithZone:',
-  'copyWithZone:',
-  'mutableCopyWithZone:',
-  'instancesRespondToSelector:',
+  'class',
   'conformsToProtocol:',
+  'copyWithZone:',
+  'debugDescription',
+  'description',
+  'hash',
+  'initialize',
   'instanceMethodForSelector:',
   'instanceMethodSignatureForSelector:',
+  'instancesRespondToSelector:',
   'isSubclassOfClass:',
+  'load',
+  'mutableCopyWithZone:',
   'resolveClassMethod:',
   'resolveInstanceMethod:',
-  'hash',
   'superclass',
-  'class',
-  'description',
-  'debugDescription',
 };
 
 class _ObjCBuiltInFunctions {
@@ -168,6 +170,7 @@ class ObjCInterface extends BindingType {
       final methodName = m._getDartMethodName(uniqueNamer);
       final selName = uniqueNamer.makeUnique('_sel_$methodName');
       final isStatic = m.kind == ObjCMethodKind.classMethod;
+      final returnType = m.returnType!;
 
       // SEL object for the method.
       s.write('  static $selType? $selName;');
@@ -181,7 +184,7 @@ class ObjCInterface extends BindingType {
       if (m.kind == ObjCMethodKind.propertySetter) {
         s.write('set ');
       } else {
-        s.write('${_getConvertedType(m.returnType!, w, name)} ');
+        s.write('${_getConvertedType(returnType, w, name)} ');
       }
       if (m.kind == ObjCMethodKind.propertyGetter) s.write('get ');
       s.write(methodName);
@@ -211,7 +214,7 @@ class ObjCInterface extends BindingType {
       }
       s.write('    $selName ??= '
           '${_builtInFunctions.registerName}(_lib, "${m.originalName}");\n');
-      final convertReturn = _needsConverting(m.returnType!);
+      final convertReturn = _needsConverting(returnType);
       s.write('    ${convertReturn ? 'final _ret = ' : 'return '}');
       s.write('_lib.${m.msgSend!.name}(');
       s.write(isStatic ? '_class!' : '_id');
@@ -221,7 +224,7 @@ class ObjCInterface extends BindingType {
       }
       s.write(');\n');
       if (convertReturn) {
-        final result = _doReturnConversion(m.returnType!, '_ret', name, '_lib');
+        final result = _doReturnConversion(returnType, '_ret', name, '_lib');
         s.write('    return $result;');
       }
 
@@ -239,15 +242,11 @@ class ObjCInterface extends BindingType {
     if (dependencies.contains(this)) return;
     dependencies.add(this);
 
+    _filterPropertyMethods();
+
     if (superType != null) {
       superType!.addDependencies(dependencies);
-      // Copy class methods from the super type, because Dart classes don't
-      // inherit static methods.
-      for (final m in superType!.classMethods.values) {
-        if (!_excludedNSObjectClassMethods.contains(m.originalName)) {
-          addMethod(m);
-        }
-      }
+      _copyClassMethodsFromSuperType();
     }
 
     for (final m in methods) {
@@ -255,6 +254,27 @@ class ObjCInterface extends BindingType {
     }
 
     _builtInFunctions.addDependencies(dependencies);
+  }
+
+  void _filterPropertyMethods() {
+    // Properties setters and getters are duplicated in the AST. One copy is
+    // marked it with ObjCMethodKind.propertyGetter/Setter. The other copy is
+    // missing important information, and is a plain old instanceMethod. So we
+    // need to discard the second copy.
+    final properties = Set<String>.from(
+        methods.where((m) => m.isProperty).map((m) => m.originalName));
+    methods.removeWhere(
+        (m) => !m.isProperty && properties.contains(m.originalName));
+  }
+
+  void _copyClassMethodsFromSuperType() {
+    // Copy class methods from the super type, because Dart classes don't
+    // inherit static methods.
+    for (final m in superType!.classMethods.values) {
+      if (!_excludedNSObjectClassMethods.contains(m.originalName)) {
+        addMethod(m);
+      }
+    }
   }
 
   void addMethod(ObjCMethod method) {
@@ -334,7 +354,12 @@ class ObjCMethod {
     required this.kind,
   });
 
+  bool get isProperty =>
+      kind == ObjCMethodKind.propertyGetter ||
+      kind == ObjCMethodKind.propertySetter;
+
   void addDependencies(Set<Binding> dependencies) {
+    returnType ??= NativeType(SupportedNativeType.Void);
     returnType!.addDependencies(dependencies);
     for (final p in params) {
       p.type.addDependencies(dependencies);
