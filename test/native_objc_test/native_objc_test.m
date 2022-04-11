@@ -11,6 +11,8 @@
 
 - (int32_t)multiply:(BOOL)useIntVals withOtherFoo:(Foo*)other;
 
+- (void)setDoubleVal:(double)x;
+
 @end
 
 @implementation Foo
@@ -28,6 +30,10 @@
   } else {
     return (int32_t)(self->doubleVal * other->doubleVal);
   }
+}
+
+- (void)setDoubleVal:(double)x {
+  self->doubleVal = x;
 }
 
 @end

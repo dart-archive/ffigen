@@ -149,7 +149,7 @@ void _parseMethod(clang_types.CXCursor cursor) {
       Pointer.fromFunction(_parseMethodVisitor, exceptional_visitor_return),
       nullptr);
   _methodStack.pop();
-  if (parsed.hasError || method.returnType == null) {
+  if (parsed.hasError) {
     // Discard it.
     return;
   }
