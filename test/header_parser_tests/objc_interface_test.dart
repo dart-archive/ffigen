@@ -29,6 +29,9 @@ ${strings.language}: '${strings.langObjC}'
 ${strings.headers}:
   ${strings.entryPoints}:
     - 'test/header_parser_tests/objc_interface.h'
+${strings.objcInterfaces}:
+  ${strings.include}:
+    - 'Foo'
 ''') as yaml.YamlMap),
       );
     });

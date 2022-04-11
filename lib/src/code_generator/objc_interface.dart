@@ -411,6 +411,7 @@ class ObjCProperty {
 class ObjCMethod {
   final String? dartDoc;
   final String originalName;
+  final String dartName;
   final ObjCProperty? property;
   Type? returnType;
   final List<ObjCMethodParam> params;
@@ -419,12 +420,13 @@ class ObjCMethod {
 
   ObjCMethod({
     required this.originalName,
+    String? name,
     this.property,
     this.dartDoc,
     required this.kind,
     this.returnType,
     List<ObjCMethodParam>? params_,
-  }) : params = params_ ?? [];
+  }) : dartName = name ?? originalName, params = params_ ?? [];
 
   bool get isProperty =>
       kind == ObjCMethodKind.propertyGetter ||
@@ -454,7 +456,7 @@ class ObjCMethod {
     // foo:
     // foo:someArgName:
     // If there is a trailing ':', omit it. Replace all other ':' with '_'.
-    var name = originalName;
+    var name = dartName;
     final index = name.indexOf(':');
     if (index != -1) name = name.substring(0, index);
     return uniqueNamer.makeUnique(name.replaceAll(':', '_'));

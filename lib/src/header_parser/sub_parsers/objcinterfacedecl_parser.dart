@@ -28,10 +28,15 @@ class _ParsedObjCMethod {
 final _interfaceStack = Stack<_ParsedObjCInterface>();
 final _methodStack = Stack<_ParsedObjCMethod>();
 
-Type? parseObjCInterfaceDeclaration(clang_types.CXCursor cursor) {
+Type? parseObjCInterfaceDeclaration(
+    clang_types.CXCursor cursor, {
+  /// Option to ignore declaration filter (Useful in case of extracting
+  /// declarations when they are passed/returned by an included function.)
+  bool ignoreFilter = false,
+}) {
   final itfUsr = cursor.usr();
   final itfName = cursor.spelling();
-  if (!shouldIncludeInterface(itfUsr, itfName)) {
+  if (!ignoreFilter && !shouldIncludeObjCInterface(itfUsr, itfName)) {
     return null;
   }
 
@@ -43,7 +48,7 @@ Type? parseObjCInterfaceDeclaration(clang_types.CXCursor cursor) {
 
   return ObjCInterface(
     usr: itfUsr, originalName: name,
-    name: name, // TODO(#279): config.interfaceDecl.renameUsingConfig(name),
+    name: config.objcInterfaces.renameUsingConfig(name),
     dartDoc: getCursorDocComment(cursor),
   );
 }
@@ -106,35 +111,48 @@ void _parseProperty(clang_types.CXCursor cursor) {
   _logger.fine('       > Property: '
       '$fieldType $fieldName ${cursor.completeStringRepr()}');
 
-  final getter = ObjCMethod(
-    originalName: clang
-        .clang_Cursor_getObjCPropertyGetterName(cursor)
-        .toStringAndDispose(),
-    property: property,
-    dartDoc: dartDoc,
-    kind: ObjCMethodKind.propertyGetter,
-  );
-  getter.returnType = fieldType;
-  itf.addMethod(getter);
+  final getterName = clang
+      .clang_Cursor_getObjCPropertyGetterName(cursor)
+      .toStringAndDispose();
+  if (config.objcMethods.shouldInclude(getterName)) {
+    final getter = ObjCMethod(
+      originalName: getterName,
+      name: config.objcMethods.renameUsingConfig(getterName),
+      property: property,
+      dartDoc: dartDoc,
+      kind: ObjCMethodKind.propertyGetter,
+    );
+    getter.returnType = fieldType;
+    itf.addMethod(getter);
+  }
 
-  final setter = ObjCMethod(
-    originalName: clang
-        .clang_Cursor_getObjCPropertySetterName(cursor)
-        .toStringAndDispose(),
-    property: property,
-    dartDoc: dartDoc,
-    kind: ObjCMethodKind.propertySetter,
-  );
-  setter.returnType = NativeType(SupportedNativeType.Void);
-  setter.params.add(ObjCMethodParam(fieldType, 'value'));
-  itf.addMethod(setter);
+  final setterName = clang
+      .clang_Cursor_getObjCPropertySetterName(cursor)
+      .toStringAndDispose();
+  if (config.objcMethods.shouldInclude(setterName)) {
+    final setter = ObjCMethod(
+      originalName: setterName,
+      name: config.objcMethods.renameUsingConfig(setterName),
+      property: property,
+      dartDoc: dartDoc,
+      kind: ObjCMethodKind.propertySetter,
+    );
+    setter.returnType = NativeType(SupportedNativeType.Void);
+    setter.params.add(ObjCMethodParam(fieldType, 'value'));
+    itf.addMethod(setter);
+  }
 }
 
 void _parseMethod(clang_types.CXCursor cursor) {
+  final methodName = cursor.spelling();
+  if (!config.objcMethods.shouldInclude(methodName)) {
+    return;
+  }
   final isClassMethod =
       cursor.kind == clang_types.CXCursorKind.CXCursor_ObjCClassMethodDecl;
   final method = ObjCMethod(
-    originalName: cursor.spelling(),
+    originalName: methodName,
+    name: config.objcMethods.renameUsingConfig(methodName),
     dartDoc: getCursorDocComment(cursor),
     kind: isClassMethod
         ? ObjCMethodKind.classMethod
