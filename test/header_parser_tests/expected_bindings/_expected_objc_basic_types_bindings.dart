@@ -5,7 +5,7 @@ import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart' as pkg_ffi;
 
 class Foo extends ffi.Struct {
-  @BOOL()
+  @ffi.Uint8()
   external int someBool;
 
   external ffi.Pointer<ObjCObject> anId;
@@ -18,8 +18,6 @@ class Foo extends ffi.Struct {
 
   external ffi.Pointer<ObjCObject> blockThatReturnsAnInt;
 }
-
-typedef BOOL = pkg_ffi.SignedChar;
 
 class ObjCObject extends ffi.Opaque {}
 

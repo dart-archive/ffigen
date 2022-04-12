@@ -373,6 +373,7 @@ class ObjCInterface extends BindingType {
       type is ObjCInterface || _isObject(type) || _isInstanceType(type);
 
   String _getConvertedType(Type type, Writer w, String enclosingClass) {
+    if (type is BooleanType) return 'bool';
     if (type is ObjCInterface) return type.name;
     if (_isObject(type)) return 'NSObject';
     if (_isInstanceType(type)) return enclosingClass;

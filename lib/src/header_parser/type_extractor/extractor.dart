@@ -148,6 +148,12 @@ _CreateTypeFromCursorResult _createTypeFromCursor(clang_types.CXType cxtype,
   switch (cxtype.kind) {
     case clang_types.CXTypeKind.CXType_Typedef:
       final spelling = clang.clang_getTypedefName(cxtype).toStringAndDispose();
+      if (config.language == Language.objc && spelling == strings.objcBOOL) {
+        // Objective C's BOOL type can be either bool or signed char, depending
+        // on the platform. We want to present a consistent API to the user, and
+        // those two types are ABI compatible, so just return bool regardless.
+        return _CreateTypeFromCursorResult(BooleanType());
+      }
       if (config.typedefTypeMappings.containsKey(spelling)) {
         _logger.fine('  Type $spelling mapped from type-map');
         return _CreateTypeFromCursorResult(

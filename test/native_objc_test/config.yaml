@@ -14,6 +14,9 @@ objcInterfaces:
   include:
     - 'Foo'
     - 'StringUtil'
+functions:
+  exclude:
+    - '.*'
 headers:
   entry-points:
     - 'test/native_objc_test/native_objc_test.m'
