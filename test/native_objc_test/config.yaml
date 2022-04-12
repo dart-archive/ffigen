@@ -10,6 +10,9 @@ name: NativeObjCLibrary
 description: 'Native Objective C test'
 language: objc
 output: 'test/native_objc_test/native_objc_test_bindings.dart'
+functions:
+  exclude:
+    - '.*'
 headers:
   entry-points:
     - 'test/native_objc_test/native_objc_test.m'
