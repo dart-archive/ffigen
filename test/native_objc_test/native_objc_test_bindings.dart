@@ -4988,7 +4988,7 @@ class NSItemProvider extends NSObject {
   static ffi.Pointer<ObjCSel>? _sel_suggestedName1;
   set suggestedName(NSObject value) {
     _sel_suggestedName1 ??= _registerName(_lib, "setSuggestedName:");
-    return _lib._objc_msgSend_119(_id, _sel_suggestedName1!, value._id);
+    _lib._objc_msgSend_119(_id, _sel_suggestedName1!, value._id);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_initWithObject;
@@ -5277,7 +5277,7 @@ class Foo extends NSObject {
   static ffi.Pointer<ObjCSel>? _sel_intVal1;
   set intVal(int value) {
     _sel_intVal1 ??= _registerName(_lib, "setIntVal:");
-    return _lib._objc_msgSend_131(_id, _sel_intVal1!, value);
+    _lib._objc_msgSend_131(_id, _sel_intVal1!, value);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_readOnlyProperty;
@@ -5306,8 +5306,7 @@ class Foo extends NSObject {
     _class ??= _getClass(_lib, "Foo");
     _sel_classReadWriteProperty1 ??=
         _registerName(_lib, "setClassReadWriteProperty:");
-    return _lib._objc_msgSend_131(
-        _class!, _sel_classReadWriteProperty1!, value);
+    _lib._objc_msgSend_131(_class!, _sel_classReadWriteProperty1!, value);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_makeFoo;

@@ -280,8 +280,12 @@ class ObjCInterface extends BindingType {
       }
       s.write('    $selName ??= '
           '${_builtInFunctions.registerName}(_lib, "${m.originalName}");\n');
-      final convertReturn = _needsConverting(returnType);
-      s.write('    ${convertReturn ? 'final _ret = ' : 'return '}');
+      final convertReturn = m.kind != ObjCMethodKind.propertySetter &&
+          _needsConverting(returnType);
+
+      if (m.kind != ObjCMethodKind.propertySetter) {
+        s.write('    ${convertReturn ? 'final _ret = ' : 'return '}');
+      }
       s.write('_lib.${m.msgSend!.name}(');
       s.write(isStatic ? '_class!' : '_id');
       s.write(', $selName!');

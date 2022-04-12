@@ -677,7 +677,7 @@ class Foo extends NSObject {
   static ffi.Pointer<ObjCSel>? _sel_someProperty1;
   set someProperty(int value) {
     _sel_someProperty1 ??= _registerName(_lib, "setSomeProperty:");
-    return _lib._objc_msgSend_27(_id, _sel_someProperty1!, value);
+    _lib._objc_msgSend_27(_id, _sel_someProperty1!, value);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_readOnlyProperty;
@@ -706,7 +706,7 @@ class Foo extends NSObject {
     _class ??= _getClass(_lib, "Foo");
     _sel_classReadWriteProperty1 ??=
         _registerName(_lib, "setClassReadWriteProperty:");
-    return _lib._objc_msgSend_27(_class!, _sel_classReadWriteProperty1!, value);
+    _lib._objc_msgSend_27(_class!, _sel_classReadWriteProperty1!, value);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_aClassMethod;
