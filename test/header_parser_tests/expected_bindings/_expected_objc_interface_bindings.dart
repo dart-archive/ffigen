@@ -702,7 +702,7 @@ class Foo extends NSObject {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_classReadWriteProperty1;
-  static setClassReadWriteProperty(NativeLibrary _lib, int value) {
+  static void setClassReadWriteProperty(NativeLibrary _lib, int value) {
     _class ??= _getClass(_lib, "Foo");
     _sel_classReadWriteProperty1 ??=
         _registerName(_lib, "setClassReadWriteProperty:");

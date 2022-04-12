@@ -241,8 +241,8 @@ class ObjCInterface extends BindingType {
             s.write(paramsToString([], isStatic: true));
             break;
           case ObjCMethodKind.propertySetter:
-            // static setMethodName(NativeLibrary _lib, ...)
-            s.write(' set');
+            // static void setMethodName(NativeLibrary _lib, ...)
+            s.write(' void set');
             s.write(methodName[0].toUpperCase() + methodName.substring(1));
             s.write(paramsToString(m.params, isStatic: true));
             break;
