@@ -221,11 +221,8 @@ class ObjCInterface extends BindingType {
       if (m.dartDoc != null) {
         s.write(makeDartDoc(m.dartDoc!));
       }
-      if (!isStatic && (superType?.hasMethod(m) ?? false)) {
-        s.write('  @override\n');
-      }
-      s.write('  ');
 
+      s.write('  ');
       if (isStatic) {
         s.write('static ');
 
@@ -251,6 +248,9 @@ class ObjCInterface extends BindingType {
             break;
         }
       } else {
+        if (superType?.hasMethod(m) ?? false) {
+          s.write('  @override\n  ');
+        }
         switch (m.kind) {
           case ObjCMethodKind.method:
             // returnType methodName(...)
@@ -458,8 +458,8 @@ class ObjCMethod {
     this.property,
     this.dartDoc,
     required this.kind,
-    this.returnType,
     required this.isClass,
+    this.returnType,
     List<ObjCMethodParam>? params_,
   }) : params = params_ ?? [];
 

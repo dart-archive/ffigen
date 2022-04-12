@@ -94,4 +94,17 @@ void main() {
     Foo.setClassReadWriteProperty(lib, 101);
     expect(Foo.getClassReadWriteProperty(lib), 101);
   });
+
+  test('Class read-only property', () {
+    expect(Foo.makeFoo(lib, 42).readOnlyProperty, 7);
+  });
+
+  test('Class read-only property', () {
+    expect(Foo.getClassReadOnlyProperty(lib), 42);
+  });
+
+  test('Class read-write property', () {
+    Foo.setClassReadWriteProperty(lib, 101);
+    expect(Foo.getClassReadWriteProperty(lib), 101);
+  });
 }
