@@ -680,6 +680,35 @@ class Foo extends NSObject {
     return _lib._objc_msgSend_27(_id, _sel_someProperty1!, value);
   }
 
+  static ffi.Pointer<ObjCSel>? _sel_readOnlyProperty;
+  int get readOnlyProperty {
+    _sel_readOnlyProperty ??= _registerName(_lib, "readOnlyProperty");
+    return _lib._objc_msgSend_26(_id, _sel_readOnlyProperty!);
+  }
+
+  static ffi.Pointer<ObjCSel>? _sel_classReadOnlyProperty;
+  static int getClassReadOnlyProperty(NativeLibrary _lib) {
+    _class ??= _getClass(_lib, "Foo");
+    _sel_classReadOnlyProperty ??= _registerName(_lib, "classReadOnlyProperty");
+    return _lib._objc_msgSend_26(_class!, _sel_classReadOnlyProperty!);
+  }
+
+  static ffi.Pointer<ObjCSel>? _sel_classReadWriteProperty;
+  static int getClassReadWriteProperty(NativeLibrary _lib) {
+    _class ??= _getClass(_lib, "Foo");
+    _sel_classReadWriteProperty ??=
+        _registerName(_lib, "classReadWriteProperty");
+    return _lib._objc_msgSend_26(_class!, _sel_classReadWriteProperty!);
+  }
+
+  static ffi.Pointer<ObjCSel>? _sel_classReadWriteProperty1;
+  static setClassReadWriteProperty(NativeLibrary _lib, int value) {
+    _class ??= _getClass(_lib, "Foo");
+    _sel_classReadWriteProperty1 ??=
+        _registerName(_lib, "setClassReadWriteProperty:");
+    return _lib._objc_msgSend_27(_class!, _sel_classReadWriteProperty1!, value);
+  }
+
   static ffi.Pointer<ObjCSel>? _sel_aClassMethod;
   static Foo aClassMethod(NativeLibrary _lib, double someArg) {
     _class ??= _getClass(_lib, "Foo");

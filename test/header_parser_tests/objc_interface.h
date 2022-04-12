@@ -7,6 +7,15 @@
 // This is a property. We generate getters and setters for them.
 @property int32_t someProperty;
 
+// This should only generate a getter.
+@property (readonly) int32_t readOnlyProperty;
+
+// This should only generate a getter static function.
+@property (class, readonly) int32_t classReadOnlyProperty;
+
+// This should generate getter and setter static functions.
+@property (class) int32_t classReadWriteProperty;
+
 // This is a class method, so becomes a static function.
 + (Foo*)aClassMethod:(double)someArg;
 
