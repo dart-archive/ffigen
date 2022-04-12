@@ -105,14 +105,14 @@ void _parseProperty(clang_types.CXCursor cursor) {
 
   final propertyAttributes =
       clang.clang_Cursor_getObjCPropertyAttributes(cursor, 0);
+  final isClass = propertyAttributes &
+          clang_types.CXObjCPropertyAttrKind.CXObjCPropertyAttr_class >
+      0;
+  final isReadOnly = propertyAttributes &
+          clang_types.CXObjCPropertyAttrKind.CXObjCPropertyAttr_readonly >
+      0;
 
-  final property = ObjCProperty(fieldName,
-      isReadOnly: propertyAttributes &
-              clang_types.CXObjCPropertyAttrKind.CXObjCPropertyAttr_readonly >
-          0,
-      isClass: propertyAttributes &
-              clang_types.CXObjCPropertyAttrKind.CXObjCPropertyAttr_class >
-          0);
+  final property = ObjCProperty(fieldName);
 
   _logger.fine('       > Property: '
       '$fieldType $fieldName ${cursor.completeStringRepr()}');
@@ -124,21 +124,24 @@ void _parseProperty(clang_types.CXCursor cursor) {
     property: property,
     dartDoc: dartDoc,
     kind: ObjCMethodKind.propertyGetter,
+    isClass: isClass,
   );
   getter.returnType = fieldType;
   itf.addMethod(getter);
 
-  final setter = ObjCMethod(
-    originalName: clang
-        .clang_Cursor_getObjCPropertySetterName(cursor)
-        .toStringAndDispose(),
-    property: property,
-    dartDoc: dartDoc,
-    kind: ObjCMethodKind.propertySetter,
-  );
-  setter.returnType = NativeType(SupportedNativeType.Void);
-  setter.params.add(ObjCMethodParam(fieldType, 'value'));
-  itf.addMethod(setter);
+  if (!isReadOnly) {
+    final setter = ObjCMethod(
+        originalName: clang
+            .clang_Cursor_getObjCPropertySetterName(cursor)
+            .toStringAndDispose(),
+        property: property,
+        dartDoc: dartDoc,
+        kind: ObjCMethodKind.propertySetter,
+        isClass: isClass);
+    setter.returnType = NativeType(SupportedNativeType.Void);
+    setter.params.add(ObjCMethodParam(fieldType, 'value'));
+    itf.addMethod(setter);
+  }
 }
 
 void _parseMethod(clang_types.CXCursor cursor) {
@@ -147,9 +150,8 @@ void _parseMethod(clang_types.CXCursor cursor) {
   final method = ObjCMethod(
     originalName: cursor.spelling(),
     dartDoc: getCursorDocComment(cursor),
-    kind: isClassMethod
-        ? ObjCMethodKind.classMethod
-        : ObjCMethodKind.instanceMethod,
+    kind: ObjCMethodKind.method,
+    isClass: isClassMethod,
   );
   final parsed = _ParsedObjCMethod(method);
   _logger.fine('       > ${isClassMethod ? 'Class' : 'Instance'} method: '

@@ -138,6 +138,18 @@ class ObjCInterface extends BindingType {
 
   @override
   BindingString toBindingString(Writer w) {
+    String paramsToString(List<ObjCMethodParam> params,
+        {required bool isStatic}) {
+      final List<String> stringParams = [];
+
+      if (isStatic) {
+        stringParams.add('${w.className} _lib');
+      }
+      stringParams.addAll(
+          params.map((p) => '${_getConvertedType(p.type, w, name)} ${p.name}'));
+      return '(' + stringParams.join(", ") + ')';
+    }
+
     final s = StringBuffer();
     if (dartDoc != null) {
       s.write(makeDartDoc(dartDoc!));
@@ -169,7 +181,7 @@ class ObjCInterface extends BindingType {
     for (final m in methods) {
       final methodName = m._getDartMethodName(uniqueNamer);
       final selName = uniqueNamer.makeUnique('_sel_$methodName');
-      final isStatic = m.kind == ObjCMethodKind.classMethod;
+      final isStatic = m.isClass;
       final returnType = m.returnType!;
 
       // SEL object for the method.
@@ -180,31 +192,52 @@ class ObjCInterface extends BindingType {
         s.write(makeDartDoc(m.dartDoc!));
       }
       s.write('  ');
-      if (isStatic) s.write('static ');
-      if (m.kind == ObjCMethodKind.propertySetter) {
-        s.write('set ');
+
+      if (isStatic) {
+        s.write('static ');
+
+        switch (m.kind) {
+          case ObjCMethodKind.method:
+            // static returnType methodName(NativeLibrary _lib, ...)
+            s.write(_getConvertedType(returnType, w, name));
+            s.write(' $methodName');
+            s.write(paramsToString(m.params, isStatic: true));
+            break;
+          case ObjCMethodKind.propertyGetter:
+            // static returnType getMethodName(NativeLibrary _lib)
+            s.write(_getConvertedType(returnType, w, name));
+            s.write(' get');
+            s.write(methodName[0].toUpperCase() + methodName.substring(1));
+            s.write(paramsToString([], isStatic: true));
+            break;
+          case ObjCMethodKind.propertySetter:
+            // static setMethodName(NativeLibrary _lib, ...)
+            s.write(' set');
+            s.write(methodName[0].toUpperCase() + methodName.substring(1));
+            s.write(paramsToString(m.params, isStatic: true));
+            break;
+        }
       } else {
-        s.write('${_getConvertedType(returnType, w, name)} ');
-      }
-      if (m.kind == ObjCMethodKind.propertyGetter) s.write('get ');
-      s.write(methodName);
-      if (m.kind != ObjCMethodKind.propertyGetter) {
-        s.write('(');
-        var first = true;
-        if (isStatic) {
-          first = false;
-          s.write('$natLib _lib');
+        switch (m.kind) {
+          case ObjCMethodKind.method:
+            // returnType methodName(...)
+            s.write(_getConvertedType(returnType, w, name));
+            s.write(' $methodName');
+            s.write(paramsToString(m.params, isStatic: false));
+            break;
+          case ObjCMethodKind.propertyGetter:
+            // returnType get methodName
+            s.write(_getConvertedType(returnType, w, name));
+            s.write(' get $methodName');
+            break;
+          case ObjCMethodKind.propertySetter:
+            // set methodName(...)
+            s.write('set $methodName');
+            s.write(paramsToString(m.params, isStatic: false));
+            break;
         }
-        for (final p in m.params) {
-          if (first) {
-            first = false;
-          } else {
-            s.write(', ');
-          }
-          s.write('${_getConvertedType(p.type, w, name)} ${p.name}');
-        }
-        s.write(')');
       }
+
       s.write(' {\n');
 
       // Implementation.
@@ -279,7 +312,7 @@ class ObjCInterface extends BindingType {
 
   void addMethod(ObjCMethod method) {
     methods.add(method);
-    if (method.kind == ObjCMethodKind.classMethod) {
+    if (method.kind == ObjCMethodKind.method && method.isClass) {
       classMethods[method.originalName] ??= method;
     }
   }
@@ -326,8 +359,7 @@ class ObjCInterface extends BindingType {
 }
 
 enum ObjCMethodKind {
-  instanceMethod,
-  classMethod,
+  method,
   propertyGetter,
   propertySetter,
 }
@@ -335,17 +367,8 @@ enum ObjCMethodKind {
 class ObjCProperty {
   final String originalName;
   String? dartName;
-  final bool isReadOnly;
-  final bool isClass;
 
-  ObjCProperty(this.originalName,
-      {required this.isReadOnly, required this.isClass});
-
-  @override
-  String toString() {
-    return 'ObjCProperty($originalName, '
-        'isReadOnly: $isReadOnly isClass: $isClass';
-  }
+  ObjCProperty(this.originalName);
 }
 
 class ObjCMethod {
@@ -355,6 +378,7 @@ class ObjCMethod {
   Type? returnType;
   final params = <ObjCMethodParam>[];
   final ObjCMethodKind kind;
+  final bool isClass;
   Func? msgSend;
 
   ObjCMethod({
@@ -362,6 +386,7 @@ class ObjCMethod {
     this.property,
     this.dartDoc,
     required this.kind,
+    required this.isClass,
   });
 
   bool get isProperty =>
