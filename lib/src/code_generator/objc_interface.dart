@@ -249,7 +249,7 @@ class ObjCInterface extends BindingType {
         }
       } else {
         if (superType?.hasMethod(m) ?? false) {
-          s.write('  @override\n  ');
+          s.write('@override\n  ');
         }
         switch (m.kind) {
           case ObjCMethodKind.method:
