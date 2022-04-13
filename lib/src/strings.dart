@@ -76,7 +76,6 @@ const globals = 'globals';
 const macros = 'macros';
 const typedefs = 'typedefs';
 const objcInterfaces = 'objc-interfaces';
-const objcMethods = 'objc-methods';
 
 // Sub-fields of Declarations.
 const include = 'include';

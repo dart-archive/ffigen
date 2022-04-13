@@ -75,10 +75,6 @@ class Config {
   Declaration get objcInterfaces => _objcInterfaces;
   late Declaration _objcInterfaces;
 
-  /// Declaration config for Objective C methods.
-  Declaration get objcMethods => _objcMethods;
-  late Declaration _objcMethods;
-
   /// If generated bindings should be sorted alphabetically.
   bool get sort => _sort;
   late bool _sort;
@@ -341,15 +337,6 @@ class Config {
         defaultValue: () => Declaration(),
         extractedResult: (dynamic result) {
           _objcInterfaces = result as Declaration;
-        },
-      ),
-      [strings.objcMethods]: Specification<Declaration>(
-        requirement: Requirement.no,
-        validator: declarationConfigValidator,
-        extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
-        extractedResult: (dynamic result) {
-          _objcMethods = result as Declaration;
         },
       ),
       [strings.libraryImports]: Specification<Map<String, LibraryImport>>(

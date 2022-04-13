@@ -115,44 +115,37 @@ void _parseProperty(clang_types.CXCursor cursor) {
 
   final getterName =
       clang.clang_Cursor_getObjCPropertyGetterName(cursor).toStringAndDispose();
-  if (config.objcMethods.shouldInclude(getterName)) {
-    final getter = ObjCMethod(
-      originalName: getterName,
-      name: config.objcMethods.renameUsingConfig(getterName),
-      property: property,
-      dartDoc: dartDoc,
-      kind: ObjCMethodKind.propertyGetter,
-    );
-    getter.returnType = fieldType;
-    itf.addMethod(getter);
-  }
+  final getter = ObjCMethod(
+    originalName: getterName,
+    name: getterName,
+    property: property,
+    dartDoc: dartDoc,
+    kind: ObjCMethodKind.propertyGetter,
+  );
+  getter.returnType = fieldType;
+  itf.addMethod(getter);
 
   final setterName =
       clang.clang_Cursor_getObjCPropertySetterName(cursor).toStringAndDispose();
-  if (config.objcMethods.shouldInclude(setterName)) {
-    final setter = ObjCMethod(
-      originalName: setterName,
-      name: config.objcMethods.renameUsingConfig(setterName),
-      property: property,
-      dartDoc: dartDoc,
-      kind: ObjCMethodKind.propertySetter,
-    );
-    setter.returnType = NativeType(SupportedNativeType.Void);
-    setter.params.add(ObjCMethodParam(fieldType, 'value'));
-    itf.addMethod(setter);
-  }
+  final setter = ObjCMethod(
+    originalName: setterName,
+    name: setterName,
+    property: property,
+    dartDoc: dartDoc,
+    kind: ObjCMethodKind.propertySetter,
+  );
+  setter.returnType = NativeType(SupportedNativeType.Void);
+  setter.params.add(ObjCMethodParam(fieldType, 'value'));
+  itf.addMethod(setter);
 }
 
 void _parseMethod(clang_types.CXCursor cursor) {
   final methodName = cursor.spelling();
-  if (!config.objcMethods.shouldInclude(methodName)) {
-    return;
-  }
   final isClassMethod =
       cursor.kind == clang_types.CXCursorKind.CXCursor_ObjCClassMethodDecl;
   final method = ObjCMethod(
     originalName: methodName,
-    name: config.objcMethods.renameUsingConfig(methodName),
+    name: methodName,
     dartDoc: getCursorDocComment(cursor),
     kind: isClassMethod
         ? ObjCMethodKind.classMethod

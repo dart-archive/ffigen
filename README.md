@@ -184,12 +184,15 @@ compiler-opts-automatic:
   </td>
   </tr>
   <tr>
-    <td>functions<br><br>structs<br><br>unions<br><br>enums<br><br>unnamed-enums<br><br>macros<br><br>globals</td>
+    <td>
+      functions<br><br>structs<br><br>unions<br><br>enums<br><br>
+      unnamed-enums<br><br>macros<br><br>globals<br><br>objcInterfaces
+    </td>
     <td>Filters for declarations.<br><b>Default: all are included.</b><br><br>
     Options -<br>
     - Include/Exclude declarations.<br>
     - Rename declarations.<br>
-    - Rename enum and struct members.<br>
+    - Rename enum and struct members, and ObjC interface methods.<br>
     - Expose symbol-address for functions and globals.<br>
     </td>
     <td>

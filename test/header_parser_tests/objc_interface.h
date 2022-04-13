@@ -1,3 +1,7 @@
+// Copyright (c) 2022, the Dart project authors. Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 // This is the Foo interface.
 @interface Foo : NSObject {
   // This is an instance variable. They are private, so are ignored.
@@ -12,11 +16,5 @@
 
 // This is an instance method, so becomes a regular method.
 - (int32_t)anInstanceMethod:(NSString*)someArg withOtherArg:(Foo*)otherArg;
-
-// This method should be exluded from the generated code.
-+ (int32_t)excludedMethod;
-
-// This property's setter and getter should be exluded from the generated code.
-@property int32_t excludedProperty;
 
 @end

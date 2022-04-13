@@ -2,11 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-struct Foo {
-  BOOL someBool;
-  id anId;
-  SEL selector;
-  NSObject* object;
-  Class clazz;
-  int32_t (^blockThatReturnsAnInt)(void);
-};
+@interface Foo : NSObject {}
+@end
+
+@interface Excluded : NSObject {}
+@end
+
+@interface _Renamed : NSObject {}
+@end
