@@ -113,7 +113,7 @@ class _ObjCBuiltInFunctions {
     // Generate a constructor that wraps stringWithCString.
     s.write('  factory NSString(${w.className} _lib, String str) {\n');
     s.write('    final cstr = str.toNativeUtf8();\n');
-    s.write('    final nsstr = stringWithCString('
+    s.write('    final nsstr = stringWithCString_encoding('
         '_lib, cstr.cast(), 4 /* UTF8 */);\n');
     s.write('    ${w.ffiPkgLibraryPrefix}.calloc.free(cstr);\n');
     s.write('    return nsstr;\n');
@@ -493,10 +493,9 @@ class ObjCMethod {
     // foo:
     // foo:someArgName:
     // If there is a trailing ':', omit it. Replace all other ':' with '_'.
-    var name = originalName;
-    final index = name.indexOf(':');
-    if (index != -1) name = name.substring(0, index);
-    return uniqueNamer.makeUnique(name.replaceAll(':', '_'));
+    final name =
+        originalName.replaceAll(RegExp(r":$"), "").replaceAll(":", "_");
+    return uniqueNamer.makeUnique(name);
   }
 }
 

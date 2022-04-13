@@ -3416,10 +3416,10 @@ class NSValue extends NSObject {
     return NSValue._(other._id, other._lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_getValue;
-  void getValue(ffi.Pointer<ffi.Void> value, int size) {
-    _sel_getValue ??= _registerName(_lib, "getValue:size:");
-    _lib._objc_msgSend_28(_id, _sel_getValue!, value, size);
+  static ffi.Pointer<ObjCSel>? _sel_getValue_size;
+  void getValue_size(ffi.Pointer<ffi.Void> value, int size) {
+    _sel_getValue_size ??= _registerName(_lib, "getValue:size:");
+    _lib._objc_msgSend_28(_id, _sel_getValue_size!, value, size);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_objCType;
@@ -3428,11 +3428,13 @@ class NSValue extends NSObject {
     return _lib._objc_msgSend_29(_id, _sel_objCType!);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_initWithBytes;
-  NSValue initWithBytes(
+  static ffi.Pointer<ObjCSel>? _sel_initWithBytes_objCType;
+  NSValue initWithBytes_objCType(
       ffi.Pointer<ffi.Void> value, ffi.Pointer<pkg_ffi.Char> type) {
-    _sel_initWithBytes ??= _registerName(_lib, "initWithBytes:objCType:");
-    final _ret = _lib._objc_msgSend_30(_id, _sel_initWithBytes!, value, type);
+    _sel_initWithBytes_objCType ??=
+        _registerName(_lib, "initWithBytes:objCType:");
+    final _ret =
+        _lib._objc_msgSend_30(_id, _sel_initWithBytes_objCType!, value, type);
     return NSValue._(_ret, _lib);
   }
 
@@ -3747,7 +3749,7 @@ class NSString extends NSObject {
 
   factory NSString(NativeObjCLibrary _lib, String str) {
     final cstr = str.toNativeUtf8();
-    final nsstr = stringWithCString(_lib, cstr.cast(), 4 /* UTF8 */);
+    final nsstr = stringWithCString_encoding(_lib, cstr.cast(), 4 /* UTF8 */);
     pkg_ffi.calloc.free(cstr);
     return nsstr;
   }
@@ -3782,14 +3784,14 @@ class NSString extends NSObject {
     return NSString._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_stringWithCString;
-  static NSString stringWithCString(
+  static ffi.Pointer<ObjCSel>? _sel_stringWithCString_encoding;
+  static NSString stringWithCString_encoding(
       NativeObjCLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
     _class ??= _getClass(_lib, "NSString");
-    _sel_stringWithCString ??=
+    _sel_stringWithCString_encoding ??=
         _registerName(_lib, "stringWithCString:encoding:");
-    final _ret =
-        _lib._objc_msgSend_25(_class!, _sel_stringWithCString!, cString, enc);
+    final _ret = _lib._objc_msgSend_25(
+        _class!, _sel_stringWithCString_encoding!, cString, enc);
     return NSString._(_ret, _lib);
   }
 
@@ -4187,22 +4189,28 @@ class NSOrderedCollectionChange extends NSObject {
     return NSObject._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_initWithObject;
-  NSOrderedCollectionChange initWithObject(
+  static ffi.Pointer<ObjCSel>? _sel_initWithObject_type_index;
+  NSOrderedCollectionChange initWithObject_type_index(
       NSObject anObject, int type, int index) {
-    _sel_initWithObject ??= _registerName(_lib, "initWithObject:type:index:");
+    _sel_initWithObject_type_index ??=
+        _registerName(_lib, "initWithObject:type:index:");
     final _ret = _lib._objc_msgSend_69(
-        _id, _sel_initWithObject!, anObject._id, type, index);
+        _id, _sel_initWithObject_type_index!, anObject._id, type, index);
     return NSOrderedCollectionChange._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_initWithObject1;
-  NSOrderedCollectionChange initWithObject1(
+  static ffi.Pointer<ObjCSel>? _sel_initWithObject_type_index_associatedIndex;
+  NSOrderedCollectionChange initWithObject_type_index_associatedIndex(
       NSObject anObject, int type, int index, int associatedIndex) {
-    _sel_initWithObject1 ??=
+    _sel_initWithObject_type_index_associatedIndex ??=
         _registerName(_lib, "initWithObject:type:index:associatedIndex:");
     final _ret = _lib._objc_msgSend_70(
-        _id, _sel_initWithObject1!, anObject._id, type, index, associatedIndex);
+        _id,
+        _sel_initWithObject_type_index_associatedIndex!,
+        anObject._id,
+        type,
+        index,
+        associatedIndex);
     return NSOrderedCollectionChange._(_ret, _lib);
   }
 
@@ -4336,13 +4344,13 @@ class NSIndexSet extends NSObject {
     return _lib._objc_msgSend_75(_id, _sel_indexLessThanOrEqualToIndex!, value);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_getIndexes;
-  int getIndexes(ffi.Pointer<NSUInteger> indexBuffer, int bufferSize,
-      NSRangePointer range) {
-    _sel_getIndexes ??=
+  static ffi.Pointer<ObjCSel>? _sel_getIndexes_maxCount_inIndexRange;
+  int getIndexes_maxCount_inIndexRange(ffi.Pointer<NSUInteger> indexBuffer,
+      int bufferSize, NSRangePointer range) {
+    _sel_getIndexes_maxCount_inIndexRange ??=
         _registerName(_lib, "getIndexes:maxCount:inIndexRange:");
-    return _lib._objc_msgSend_76(
-        _id, _sel_getIndexes!, indexBuffer, bufferSize, range);
+    return _lib._objc_msgSend_76(_id, _sel_getIndexes_maxCount_inIndexRange!,
+        indexBuffer, bufferSize, range);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_countOfIndexesInRange;
@@ -4385,20 +4393,21 @@ class NSIndexSet extends NSObject {
     _lib._objc_msgSend_81(_id, _sel_enumerateIndexesUsingBlock!, block._id);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_enumerateIndexesWithOptions;
-  void enumerateIndexesWithOptions(int opts, NSObject block) {
-    _sel_enumerateIndexesWithOptions ??=
+  static ffi.Pointer<ObjCSel>? _sel_enumerateIndexesWithOptions_usingBlock;
+  void enumerateIndexesWithOptions_usingBlock(int opts, NSObject block) {
+    _sel_enumerateIndexesWithOptions_usingBlock ??=
         _registerName(_lib, "enumerateIndexesWithOptions:usingBlock:");
     _lib._objc_msgSend_82(
-        _id, _sel_enumerateIndexesWithOptions!, opts, block._id);
+        _id, _sel_enumerateIndexesWithOptions_usingBlock!, opts, block._id);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_enumerateIndexesInRange;
-  void enumerateIndexesInRange(NSRange range, int opts, NSObject block) {
-    _sel_enumerateIndexesInRange ??=
+  static ffi.Pointer<ObjCSel>? _sel_enumerateIndexesInRange_options_usingBlock;
+  void enumerateIndexesInRange_options_usingBlock(
+      NSRange range, int opts, NSObject block) {
+    _sel_enumerateIndexesInRange_options_usingBlock ??=
         _registerName(_lib, "enumerateIndexesInRange:options:usingBlock:");
-    _lib._objc_msgSend_83(
-        _id, _sel_enumerateIndexesInRange!, range, opts, block._id);
+    _lib._objc_msgSend_83(_id, _sel_enumerateIndexesInRange_options_usingBlock!,
+        range, opts, block._id);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_indexPassingTest;
@@ -4407,20 +4416,21 @@ class NSIndexSet extends NSObject {
     return _lib._objc_msgSend_84(_id, _sel_indexPassingTest!, predicate._id);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_indexWithOptions;
-  int indexWithOptions(int opts, NSObject predicate) {
-    _sel_indexWithOptions ??=
+  static ffi.Pointer<ObjCSel>? _sel_indexWithOptions_passingTest;
+  int indexWithOptions_passingTest(int opts, NSObject predicate) {
+    _sel_indexWithOptions_passingTest ??=
         _registerName(_lib, "indexWithOptions:passingTest:");
     return _lib._objc_msgSend_85(
-        _id, _sel_indexWithOptions!, opts, predicate._id);
+        _id, _sel_indexWithOptions_passingTest!, opts, predicate._id);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_indexInRange;
-  int indexInRange(NSRange range, int opts, NSObject predicate) {
-    _sel_indexInRange ??=
+  static ffi.Pointer<ObjCSel>? _sel_indexInRange_options_passingTest;
+  int indexInRange_options_passingTest(
+      NSRange range, int opts, NSObject predicate) {
+    _sel_indexInRange_options_passingTest ??=
         _registerName(_lib, "indexInRange:options:passingTest:");
-    return _lib._objc_msgSend_86(
-        _id, _sel_indexInRange!, range, opts, predicate._id);
+    return _lib._objc_msgSend_86(_id, _sel_indexInRange_options_passingTest!,
+        range, opts, predicate._id);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_indexesPassingTest;
@@ -4431,21 +4441,22 @@ class NSIndexSet extends NSObject {
     return NSIndexSet._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_indexesWithOptions;
-  NSIndexSet indexesWithOptions(int opts, NSObject predicate) {
-    _sel_indexesWithOptions ??=
+  static ffi.Pointer<ObjCSel>? _sel_indexesWithOptions_passingTest;
+  NSIndexSet indexesWithOptions_passingTest(int opts, NSObject predicate) {
+    _sel_indexesWithOptions_passingTest ??=
         _registerName(_lib, "indexesWithOptions:passingTest:");
     final _ret = _lib._objc_msgSend_88(
-        _id, _sel_indexesWithOptions!, opts, predicate._id);
+        _id, _sel_indexesWithOptions_passingTest!, opts, predicate._id);
     return NSIndexSet._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_indexesInRange;
-  NSIndexSet indexesInRange(NSRange range, int opts, NSObject predicate) {
-    _sel_indexesInRange ??=
+  static ffi.Pointer<ObjCSel>? _sel_indexesInRange_options_passingTest;
+  NSIndexSet indexesInRange_options_passingTest(
+      NSRange range, int opts, NSObject predicate) {
+    _sel_indexesInRange_options_passingTest ??=
         _registerName(_lib, "indexesInRange:options:passingTest:");
-    final _ret = _lib._objc_msgSend_89(
-        _id, _sel_indexesInRange!, range, opts, predicate._id);
+    final _ret = _lib._objc_msgSend_89(_id,
+        _sel_indexesInRange_options_passingTest!, range, opts, predicate._id);
     return NSIndexSet._(_ret, _lib);
   }
 
@@ -4456,20 +4467,21 @@ class NSIndexSet extends NSObject {
     _lib._objc_msgSend_90(_id, _sel_enumerateRangesUsingBlock!, block._id);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_enumerateRangesWithOptions;
-  void enumerateRangesWithOptions(int opts, NSObject block) {
-    _sel_enumerateRangesWithOptions ??=
+  static ffi.Pointer<ObjCSel>? _sel_enumerateRangesWithOptions_usingBlock;
+  void enumerateRangesWithOptions_usingBlock(int opts, NSObject block) {
+    _sel_enumerateRangesWithOptions_usingBlock ??=
         _registerName(_lib, "enumerateRangesWithOptions:usingBlock:");
     _lib._objc_msgSend_91(
-        _id, _sel_enumerateRangesWithOptions!, opts, block._id);
+        _id, _sel_enumerateRangesWithOptions_usingBlock!, opts, block._id);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_enumerateRangesInRange;
-  void enumerateRangesInRange(NSRange range, int opts, NSObject block) {
-    _sel_enumerateRangesInRange ??=
+  static ffi.Pointer<ObjCSel>? _sel_enumerateRangesInRange_options_usingBlock;
+  void enumerateRangesInRange_options_usingBlock(
+      NSRange range, int opts, NSObject block) {
+    _sel_enumerateRangesInRange_options_usingBlock ??=
         _registerName(_lib, "enumerateRangesInRange:options:usingBlock:");
-    _lib._objc_msgSend_92(
-        _id, _sel_enumerateRangesInRange!, range, opts, block._id);
+    _lib._objc_msgSend_92(_id, _sel_enumerateRangesInRange_options_usingBlock!,
+        range, opts, block._id);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_new1;
@@ -4544,11 +4556,12 @@ class NSMutableIndexSet extends NSIndexSet {
     _lib._objc_msgSend_96(_id, _sel_removeIndexesInRange!, range);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_shiftIndexesStartingAtIndex;
-  void shiftIndexesStartingAtIndex(int index, int delta) {
-    _sel_shiftIndexesStartingAtIndex ??=
+  static ffi.Pointer<ObjCSel>? _sel_shiftIndexesStartingAtIndex_by;
+  void shiftIndexesStartingAtIndex_by(int index, int delta) {
+    _sel_shiftIndexesStartingAtIndex_by ??=
         _registerName(_lib, "shiftIndexesStartingAtIndex:by:");
-    _lib._objc_msgSend_97(_id, _sel_shiftIndexesStartingAtIndex!, index, delta);
+    _lib._objc_msgSend_97(
+        _id, _sel_shiftIndexesStartingAtIndex_by!, index, delta);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_indexSet;
@@ -4623,18 +4636,21 @@ class NSOrderedCollectionDifference extends NSObject {
     return NSOrderedCollectionDifference._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_initWithInsertIndexes;
-  NSOrderedCollectionDifference initWithInsertIndexes(
-      NSObject inserts,
-      NSObject insertedObjects,
-      NSObject removes,
-      NSObject removedObjects,
-      NSObject changes) {
-    _sel_initWithInsertIndexes ??= _registerName(_lib,
-        "initWithInsertIndexes:insertedObjects:removeIndexes:removedObjects:additionalChanges:");
+  static ffi.Pointer<ObjCSel>?
+      _sel_initWithInsertIndexes_insertedObjects_removeIndexes_removedObjects_additionalChanges;
+  NSOrderedCollectionDifference
+      initWithInsertIndexes_insertedObjects_removeIndexes_removedObjects_additionalChanges(
+          NSObject inserts,
+          NSObject insertedObjects,
+          NSObject removes,
+          NSObject removedObjects,
+          NSObject changes) {
+    _sel_initWithInsertIndexes_insertedObjects_removeIndexes_removedObjects_additionalChanges ??=
+        _registerName(_lib,
+            "initWithInsertIndexes:insertedObjects:removeIndexes:removedObjects:additionalChanges:");
     final _ret = _lib._objc_msgSend_99(
         _id,
-        _sel_initWithInsertIndexes!,
+        _sel_initWithInsertIndexes_insertedObjects_removeIndexes_removedObjects_additionalChanges!,
         inserts._id,
         insertedObjects._id,
         removes._id,
@@ -4643,13 +4659,24 @@ class NSOrderedCollectionDifference extends NSObject {
     return NSOrderedCollectionDifference._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_initWithInsertIndexes1;
-  NSOrderedCollectionDifference initWithInsertIndexes1(NSObject inserts,
-      NSObject insertedObjects, NSObject removes, NSObject removedObjects) {
-    _sel_initWithInsertIndexes1 ??= _registerName(_lib,
-        "initWithInsertIndexes:insertedObjects:removeIndexes:removedObjects:");
-    final _ret = _lib._objc_msgSend_100(_id, _sel_initWithInsertIndexes1!,
-        inserts._id, insertedObjects._id, removes._id, removedObjects._id);
+  static ffi.Pointer<ObjCSel>?
+      _sel_initWithInsertIndexes_insertedObjects_removeIndexes_removedObjects;
+  NSOrderedCollectionDifference
+      initWithInsertIndexes_insertedObjects_removeIndexes_removedObjects(
+          NSObject inserts,
+          NSObject insertedObjects,
+          NSObject removes,
+          NSObject removedObjects) {
+    _sel_initWithInsertIndexes_insertedObjects_removeIndexes_removedObjects ??=
+        _registerName(_lib,
+            "initWithInsertIndexes:insertedObjects:removeIndexes:removedObjects:");
+    final _ret = _lib._objc_msgSend_100(
+        _id,
+        _sel_initWithInsertIndexes_insertedObjects_removeIndexes_removedObjects!,
+        inserts._id,
+        insertedObjects._id,
+        removes._id,
+        removedObjects._id);
     return NSOrderedCollectionDifference._(_ret, _lib);
   }
 
@@ -4728,12 +4755,13 @@ class NSArray extends NSObject {
     return NSArray._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_initWithObjects;
-  NSArray initWithObjects(
+  static ffi.Pointer<ObjCSel>? _sel_initWithObjects_count;
+  NSArray initWithObjects_count(
       ffi.Pointer<ffi.Pointer<ObjCObject>> objects, int cnt) {
-    _sel_initWithObjects ??= _registerName(_lib, "initWithObjects:count:");
+    _sel_initWithObjects_count ??=
+        _registerName(_lib, "initWithObjects:count:");
     final _ret =
-        _lib._objc_msgSend_104(_id, _sel_initWithObjects!, objects, cnt);
+        _lib._objc_msgSend_104(_id, _sel_initWithObjects_count!, objects, cnt);
     return NSArray._(_ret, _lib);
   }
 
@@ -4783,10 +4811,11 @@ class NSMutableArray extends NSArray {
     _lib._objc_msgSend_106(_id, _sel_addObject!, anObject._id);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_insertObject;
-  void insertObject(NSObject anObject, int index) {
-    _sel_insertObject ??= _registerName(_lib, "insertObject:atIndex:");
-    _lib._objc_msgSend_107(_id, _sel_insertObject!, anObject._id, index);
+  static ffi.Pointer<ObjCSel>? _sel_insertObject_atIndex;
+  void insertObject_atIndex(NSObject anObject, int index) {
+    _sel_insertObject_atIndex ??= _registerName(_lib, "insertObject:atIndex:");
+    _lib._objc_msgSend_107(
+        _id, _sel_insertObject_atIndex!, anObject._id, index);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_removeLastObject;
@@ -4801,12 +4830,12 @@ class NSMutableArray extends NSArray {
     _lib._objc_msgSend_95(_id, _sel_removeObjectAtIndex!, index);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_replaceObjectAtIndex;
-  void replaceObjectAtIndex(int index, NSObject anObject) {
-    _sel_replaceObjectAtIndex ??=
+  static ffi.Pointer<ObjCSel>? _sel_replaceObjectAtIndex_withObject;
+  void replaceObjectAtIndex_withObject(int index, NSObject anObject) {
+    _sel_replaceObjectAtIndex_withObject ??=
         _registerName(_lib, "replaceObjectAtIndex:withObject:");
     _lib._objc_msgSend_108(
-        _id, _sel_replaceObjectAtIndex!, index, anObject._id);
+        _id, _sel_replaceObjectAtIndex_withObject!, index, anObject._id);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_init;
@@ -4878,27 +4907,35 @@ class NSItemProvider extends NSObject {
     return NSItemProvider._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_registerDataRepresentationForTypeIdentifier;
-  void registerDataRepresentationForTypeIdentifier(
+  static ffi.Pointer<ObjCSel>?
+      _sel_registerDataRepresentationForTypeIdentifier_visibility_loadHandler;
+  void registerDataRepresentationForTypeIdentifier_visibility_loadHandler(
       NSObject typeIdentifier, int visibility, NSObject loadHandler) {
-    _sel_registerDataRepresentationForTypeIdentifier ??= _registerName(_lib,
-        "registerDataRepresentationForTypeIdentifier:visibility:loadHandler:");
+    _sel_registerDataRepresentationForTypeIdentifier_visibility_loadHandler ??=
+        _registerName(_lib,
+            "registerDataRepresentationForTypeIdentifier:visibility:loadHandler:");
     _lib._objc_msgSend_110(
         _id,
-        _sel_registerDataRepresentationForTypeIdentifier!,
+        _sel_registerDataRepresentationForTypeIdentifier_visibility_loadHandler!,
         typeIdentifier._id,
         visibility,
         loadHandler._id);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_registerFileRepresentationForTypeIdentifier;
-  void registerFileRepresentationForTypeIdentifier(NSObject typeIdentifier,
-      int fileOptions, int visibility, NSObject loadHandler) {
-    _sel_registerFileRepresentationForTypeIdentifier ??= _registerName(_lib,
-        "registerFileRepresentationForTypeIdentifier:fileOptions:visibility:loadHandler:");
+  static ffi.Pointer<ObjCSel>?
+      _sel_registerFileRepresentationForTypeIdentifier_fileOptions_visibility_loadHandler;
+  void
+      registerFileRepresentationForTypeIdentifier_fileOptions_visibility_loadHandler(
+          NSObject typeIdentifier,
+          int fileOptions,
+          int visibility,
+          NSObject loadHandler) {
+    _sel_registerFileRepresentationForTypeIdentifier_fileOptions_visibility_loadHandler ??=
+        _registerName(_lib,
+            "registerFileRepresentationForTypeIdentifier:fileOptions:visibility:loadHandler:");
     _lib._objc_msgSend_111(
         _id,
-        _sel_registerFileRepresentationForTypeIdentifier!,
+        _sel_registerFileRepresentationForTypeIdentifier_fileOptions_visibility_loadHandler!,
         typeIdentifier._id,
         fileOptions,
         visibility,
@@ -4921,53 +4958,60 @@ class NSItemProvider extends NSObject {
         _id, _sel_hasItemConformingToTypeIdentifier!, typeIdentifier._id);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_hasRepresentationConformingToTypeIdentifier;
-  bool hasRepresentationConformingToTypeIdentifier(
+  static ffi.Pointer<ObjCSel>?
+      _sel_hasRepresentationConformingToTypeIdentifier_fileOptions;
+  bool hasRepresentationConformingToTypeIdentifier_fileOptions(
       NSObject typeIdentifier, int fileOptions) {
-    _sel_hasRepresentationConformingToTypeIdentifier ??= _registerName(
-        _lib, "hasRepresentationConformingToTypeIdentifier:fileOptions:");
+    _sel_hasRepresentationConformingToTypeIdentifier_fileOptions ??=
+        _registerName(
+            _lib, "hasRepresentationConformingToTypeIdentifier:fileOptions:");
     return _lib._objc_msgSend_114(
         _id,
-        _sel_hasRepresentationConformingToTypeIdentifier!,
+        _sel_hasRepresentationConformingToTypeIdentifier_fileOptions!,
         typeIdentifier._id,
         fileOptions);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_loadDataRepresentationForTypeIdentifier;
-  NSProgress loadDataRepresentationForTypeIdentifier(
+  static ffi.Pointer<ObjCSel>?
+      _sel_loadDataRepresentationForTypeIdentifier_completionHandler;
+  NSProgress loadDataRepresentationForTypeIdentifier_completionHandler(
       NSObject typeIdentifier, NSObject completionHandler) {
-    _sel_loadDataRepresentationForTypeIdentifier ??= _registerName(
-        _lib, "loadDataRepresentationForTypeIdentifier:completionHandler:");
+    _sel_loadDataRepresentationForTypeIdentifier_completionHandler ??=
+        _registerName(
+            _lib, "loadDataRepresentationForTypeIdentifier:completionHandler:");
     final _ret = _lib._objc_msgSend_115(
         _id,
-        _sel_loadDataRepresentationForTypeIdentifier!,
-        typeIdentifier._id,
-        completionHandler._id);
-    return NSProgress._(_ret, _lib);
-  }
-
-  static ffi.Pointer<ObjCSel>? _sel_loadFileRepresentationForTypeIdentifier;
-  NSProgress loadFileRepresentationForTypeIdentifier(
-      NSObject typeIdentifier, NSObject completionHandler) {
-    _sel_loadFileRepresentationForTypeIdentifier ??= _registerName(
-        _lib, "loadFileRepresentationForTypeIdentifier:completionHandler:");
-    final _ret = _lib._objc_msgSend_116(
-        _id,
-        _sel_loadFileRepresentationForTypeIdentifier!,
+        _sel_loadDataRepresentationForTypeIdentifier_completionHandler!,
         typeIdentifier._id,
         completionHandler._id);
     return NSProgress._(_ret, _lib);
   }
 
   static ffi.Pointer<ObjCSel>?
-      _sel_loadInPlaceFileRepresentationForTypeIdentifier;
-  NSProgress loadInPlaceFileRepresentationForTypeIdentifier(
+      _sel_loadFileRepresentationForTypeIdentifier_completionHandler;
+  NSProgress loadFileRepresentationForTypeIdentifier_completionHandler(
       NSObject typeIdentifier, NSObject completionHandler) {
-    _sel_loadInPlaceFileRepresentationForTypeIdentifier ??= _registerName(_lib,
-        "loadInPlaceFileRepresentationForTypeIdentifier:completionHandler:");
+    _sel_loadFileRepresentationForTypeIdentifier_completionHandler ??=
+        _registerName(
+            _lib, "loadFileRepresentationForTypeIdentifier:completionHandler:");
+    final _ret = _lib._objc_msgSend_116(
+        _id,
+        _sel_loadFileRepresentationForTypeIdentifier_completionHandler!,
+        typeIdentifier._id,
+        completionHandler._id);
+    return NSProgress._(_ret, _lib);
+  }
+
+  static ffi.Pointer<ObjCSel>?
+      _sel_loadInPlaceFileRepresentationForTypeIdentifier_completionHandler;
+  NSProgress loadInPlaceFileRepresentationForTypeIdentifier_completionHandler(
+      NSObject typeIdentifier, NSObject completionHandler) {
+    _sel_loadInPlaceFileRepresentationForTypeIdentifier_completionHandler ??=
+        _registerName(_lib,
+            "loadInPlaceFileRepresentationForTypeIdentifier:completionHandler:");
     final _ret = _lib._objc_msgSend_117(
         _id,
-        _sel_loadInPlaceFileRepresentationForTypeIdentifier!,
+        _sel_loadInPlaceFileRepresentationForTypeIdentifier_completionHandler!,
         typeIdentifier._id,
         completionHandler._id);
     return NSProgress._(_ret, _lib);
@@ -4993,19 +5037,26 @@ class NSItemProvider extends NSObject {
     return NSItemProvider._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_registerObject;
-  void registerObject(NSObject object, int visibility) {
-    _sel_registerObject ??= _registerName(_lib, "registerObject:visibility:");
-    _lib._objc_msgSend_121(_id, _sel_registerObject!, object._id, visibility);
+  static ffi.Pointer<ObjCSel>? _sel_registerObject_visibility;
+  void registerObject_visibility(NSObject object, int visibility) {
+    _sel_registerObject_visibility ??=
+        _registerName(_lib, "registerObject:visibility:");
+    _lib._objc_msgSend_121(
+        _id, _sel_registerObject_visibility!, object._id, visibility);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_registerObjectOfClass;
-  void registerObjectOfClass(
+  static ffi.Pointer<ObjCSel>?
+      _sel_registerObjectOfClass_visibility_loadHandler;
+  void registerObjectOfClass_visibility_loadHandler(
       NSObject aClass, int visibility, NSObject loadHandler) {
-    _sel_registerObjectOfClass ??=
+    _sel_registerObjectOfClass_visibility_loadHandler ??=
         _registerName(_lib, "registerObjectOfClass:visibility:loadHandler:");
-    _lib._objc_msgSend_122(_id, _sel_registerObjectOfClass!, aClass._id,
-        visibility, loadHandler._id);
+    _lib._objc_msgSend_122(
+        _id,
+        _sel_registerObjectOfClass_visibility_loadHandler!,
+        aClass._id,
+        visibility,
+        loadHandler._id);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_canLoadObjectOfClass;
@@ -5014,20 +5065,26 @@ class NSItemProvider extends NSObject {
     return _lib._objc_msgSend_123(_id, _sel_canLoadObjectOfClass!, aClass._id);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_loadObjectOfClass;
-  NSProgress loadObjectOfClass(NSObject aClass, NSObject completionHandler) {
-    _sel_loadObjectOfClass ??=
+  static ffi.Pointer<ObjCSel>? _sel_loadObjectOfClass_completionHandler;
+  NSProgress loadObjectOfClass_completionHandler(
+      NSObject aClass, NSObject completionHandler) {
+    _sel_loadObjectOfClass_completionHandler ??=
         _registerName(_lib, "loadObjectOfClass:completionHandler:");
     final _ret = _lib._objc_msgSend_124(
-        _id, _sel_loadObjectOfClass!, aClass._id, completionHandler._id);
+        _id,
+        _sel_loadObjectOfClass_completionHandler!,
+        aClass._id,
+        completionHandler._id);
     return NSProgress._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_initWithItem;
-  NSItemProvider initWithItem(NSObject item, NSObject typeIdentifier) {
-    _sel_initWithItem ??= _registerName(_lib, "initWithItem:typeIdentifier:");
+  static ffi.Pointer<ObjCSel>? _sel_initWithItem_typeIdentifier;
+  NSItemProvider initWithItem_typeIdentifier(
+      NSObject item, NSObject typeIdentifier) {
+    _sel_initWithItem_typeIdentifier ??=
+        _registerName(_lib, "initWithItem:typeIdentifier:");
     final _ret = _lib._objc_msgSend_125(
-        _id, _sel_initWithItem!, item._id, typeIdentifier._id);
+        _id, _sel_initWithItem_typeIdentifier!, item._id, typeIdentifier._id);
     return NSItemProvider._(_ret, _lib);
   }
 
@@ -5040,22 +5097,29 @@ class NSItemProvider extends NSObject {
     return NSItemProvider._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_registerItemForTypeIdentifier;
-  void registerItemForTypeIdentifier(
+  static ffi.Pointer<ObjCSel>? _sel_registerItemForTypeIdentifier_loadHandler;
+  void registerItemForTypeIdentifier_loadHandler(
       NSObject typeIdentifier, NSItemProviderLoadHandler loadHandler) {
-    _sel_registerItemForTypeIdentifier ??=
+    _sel_registerItemForTypeIdentifier_loadHandler ??=
         _registerName(_lib, "registerItemForTypeIdentifier:loadHandler:");
-    _lib._objc_msgSend_127(_id, _sel_registerItemForTypeIdentifier!,
+    _lib._objc_msgSend_127(_id, _sel_registerItemForTypeIdentifier_loadHandler!,
         typeIdentifier._id, loadHandler);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_loadItemForTypeIdentifier;
-  void loadItemForTypeIdentifier(NSObject typeIdentifier, NSObject options,
+  static ffi.Pointer<ObjCSel>?
+      _sel_loadItemForTypeIdentifier_options_completionHandler;
+  void loadItemForTypeIdentifier_options_completionHandler(
+      NSObject typeIdentifier,
+      NSObject options,
       NSItemProviderCompletionHandler completionHandler) {
-    _sel_loadItemForTypeIdentifier ??= _registerName(
+    _sel_loadItemForTypeIdentifier_options_completionHandler ??= _registerName(
         _lib, "loadItemForTypeIdentifier:options:completionHandler:");
-    _lib._objc_msgSend_128(_id, _sel_loadItemForTypeIdentifier!,
-        typeIdentifier._id, options._id, completionHandler);
+    _lib._objc_msgSend_128(
+        _id,
+        _sel_loadItemForTypeIdentifier_options_completionHandler!,
+        typeIdentifier._id,
+        options._id,
+        completionHandler);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_new1;
@@ -5139,22 +5203,22 @@ class NSMutableString extends NSString {
     return NSMutableString._(other._id, other._lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_replaceCharactersInRange;
-  void replaceCharactersInRange(NSRange range, NSObject aString) {
-    _sel_replaceCharactersInRange ??=
+  static ffi.Pointer<ObjCSel>? _sel_replaceCharactersInRange_withString;
+  void replaceCharactersInRange_withString(NSRange range, NSObject aString) {
+    _sel_replaceCharactersInRange_withString ??=
         _registerName(_lib, "replaceCharactersInRange:withString:");
     _lib._objc_msgSend_129(
-        _id, _sel_replaceCharactersInRange!, range, aString._id);
+        _id, _sel_replaceCharactersInRange_withString!, range, aString._id);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_stringWithCString;
-  static NSString stringWithCString(
+  static ffi.Pointer<ObjCSel>? _sel_stringWithCString_encoding;
+  static NSString stringWithCString_encoding(
       NativeObjCLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
     _class ??= _getClass(_lib, "NSMutableString");
-    _sel_stringWithCString ??=
+    _sel_stringWithCString_encoding ??=
         _registerName(_lib, "stringWithCString:encoding:");
-    final _ret =
-        _lib._objc_msgSend_25(_class!, _sel_stringWithCString!, cString, enc);
+    final _ret = _lib._objc_msgSend_25(
+        _class!, _sel_stringWithCString_encoding!, cString, enc);
     return NSString._(_ret, _lib);
   }
 
@@ -5187,14 +5251,14 @@ class NSSimpleCString extends NSString {
     return NSSimpleCString._(other._id, other._lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_stringWithCString;
-  static NSString stringWithCString(
+  static ffi.Pointer<ObjCSel>? _sel_stringWithCString_encoding;
+  static NSString stringWithCString_encoding(
       NativeObjCLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
     _class ??= _getClass(_lib, "NSSimpleCString");
-    _sel_stringWithCString ??=
+    _sel_stringWithCString_encoding ??=
         _registerName(_lib, "stringWithCString:encoding:");
-    final _ret =
-        _lib._objc_msgSend_25(_class!, _sel_stringWithCString!, cString, enc);
+    final _ret = _lib._objc_msgSend_25(
+        _class!, _sel_stringWithCString_encoding!, cString, enc);
     return NSString._(_ret, _lib);
   }
 
@@ -5225,14 +5289,14 @@ class NSConstantString extends NSSimpleCString {
     return NSConstantString._(other._id, other._lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_stringWithCString;
-  static NSString stringWithCString(
+  static ffi.Pointer<ObjCSel>? _sel_stringWithCString_encoding;
+  static NSString stringWithCString_encoding(
       NativeObjCLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
     _class ??= _getClass(_lib, "NSConstantString");
-    _sel_stringWithCString ??=
+    _sel_stringWithCString_encoding ??=
         _registerName(_lib, "stringWithCString:encoding:");
-    final _ret =
-        _lib._objc_msgSend_25(_class!, _sel_stringWithCString!, cString, enc);
+    final _ret = _lib._objc_msgSend_25(
+        _class!, _sel_stringWithCString_encoding!, cString, enc);
     return NSString._(_ret, _lib);
   }
 
@@ -5311,10 +5375,12 @@ class Foo extends NSObject {
     return Foo._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_multiply;
-  int multiply(bool useIntVals, NSObject other) {
-    _sel_multiply ??= _registerName(_lib, "multiply:withOtherFoo:");
-    return _lib._objc_msgSend_133(_id, _sel_multiply!, useIntVals, other._id);
+  static ffi.Pointer<ObjCSel>? _sel_multiply_withOtherFoo;
+  int multiply_withOtherFoo(bool useIntVals, NSObject other) {
+    _sel_multiply_withOtherFoo ??=
+        _registerName(_lib, "multiply:withOtherFoo:");
+    return _lib._objc_msgSend_133(
+        _id, _sel_multiply_withOtherFoo!, useIntVals, other._id);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_setDoubleVal;
@@ -5350,11 +5416,13 @@ class StringUtil extends NSObject {
     return StringUtil._(other._id, other._lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_strConcat;
-  static NSString strConcat(NativeObjCLibrary _lib, NSObject a, NSObject b) {
+  static ffi.Pointer<ObjCSel>? _sel_strConcat_with;
+  static NSString strConcat_with(
+      NativeObjCLibrary _lib, NSObject a, NSObject b) {
     _class ??= _getClass(_lib, "StringUtil");
-    _sel_strConcat ??= _registerName(_lib, "strConcat:with:");
-    final _ret = _lib._objc_msgSend_135(_class!, _sel_strConcat!, a._id, b._id);
+    _sel_strConcat_with ??= _registerName(_lib, "strConcat:with:");
+    final _ret =
+        _lib._objc_msgSend_135(_class!, _sel_strConcat_with!, a._id, b._id);
     return NSString._(_ret, _lib);
   }
 

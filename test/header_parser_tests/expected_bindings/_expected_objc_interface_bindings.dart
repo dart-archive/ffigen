@@ -717,12 +717,12 @@ class Foo extends NSObject {
     return Foo._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_anInstanceMethod;
-  int anInstanceMethod(NSObject someArg, NSObject otherArg) {
-    _sel_anInstanceMethod ??=
+  static ffi.Pointer<ObjCSel>? _sel_anInstanceMethod_withOtherArg;
+  int anInstanceMethod_withOtherArg(NSObject someArg, NSObject otherArg) {
+    _sel_anInstanceMethod_withOtherArg ??=
         _registerName(_lib, "anInstanceMethod:withOtherArg:");
     return _lib._objc_msgSend_29(
-        _id, _sel_anInstanceMethod!, someArg._id, otherArg._id);
+        _id, _sel_anInstanceMethod_withOtherArg!, someArg._id, otherArg._id);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_new1;
@@ -1024,7 +1024,7 @@ class NSString extends _ObjCWrapper {
 
   factory NSString(NativeLibrary _lib, String str) {
     final cstr = str.toNativeUtf8();
-    final nsstr = stringWithCString(_lib, cstr.cast(), 4 /* UTF8 */);
+    final nsstr = stringWithCString_encoding(_lib, cstr.cast(), 4 /* UTF8 */);
     pkg_ffi.calloc.free(cstr);
     return nsstr;
   }
@@ -1032,14 +1032,14 @@ class NSString extends _ObjCWrapper {
   @override
   String toString() => UTF8String().cast<pkg_ffi.Utf8>().toDartString();
 
-  static ffi.Pointer<ObjCSel>? _sel_stringWithCString;
-  static NSString stringWithCString(
+  static ffi.Pointer<ObjCSel>? _sel_stringWithCString_encoding;
+  static NSString stringWithCString_encoding(
       NativeLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
     _class ??= _getClass(_lib, "NSString");
-    _sel_stringWithCString ??=
+    _sel_stringWithCString_encoding ??=
         _registerName(_lib, "stringWithCString:encoding:");
-    final _ret =
-        _lib._objc_msgSend_23(_class!, _sel_stringWithCString!, cString, enc);
+    final _ret = _lib._objc_msgSend_23(
+        _class!, _sel_stringWithCString_encoding!, cString, enc);
     return NSString._(_ret, _lib);
   }
 
