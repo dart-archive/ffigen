@@ -20,11 +20,8 @@ void main() {
   group('native_objc_test', () {
     setUpAll(() {
       logWarnings();
-      final dynlib = File('test/native_objc_test/native_objc_test.dylib');
-      if (!dynlib.existsSync()) {
-        throw Exception("");
-      }
-      lib = NativeObjCLibrary(DynamicLibrary.open(dynlib.absolute.path));
+      lib = NativeObjCLibrary(DynamicLibrary.open(
+          File('test/native_objc_test/native_objc_test.dylib').absolute.path));
     });
 
     test('generate_bindings', () {
