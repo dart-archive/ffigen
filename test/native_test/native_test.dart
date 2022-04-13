@@ -24,8 +24,9 @@ void main() {
       } else if (Platform.isWindows) {
         dylibName = r'test\native_test\native_test.dll';
       }
-      bindings =
-          NativeLibrary(DynamicLibrary.open(File(dylibName).absolute.path));
+      final dylib = File(dylibName);
+      verifySetupFile(dylib);
+      bindings = NativeLibrary(DynamicLibrary.open(dylib.absolute.path));
     });
 
     test('generate_bindings', () {
