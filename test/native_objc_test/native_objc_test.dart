@@ -54,16 +54,16 @@ void main() {
       expect(foo1.intVal, 3);
       expect(foo2.intVal, 2);
 
-      expect(foo1.multiply(false, foo2), 8);
-      expect(foo1.multiply(true, foo2), 6);
+      expect(foo1.multiply_withOtherFoo(false, foo2), 8);
+      expect(foo1.multiply_withOtherFoo(true, foo2), 6);
 
       foo1.intVal = 100;
-      expect(foo1.multiply(false, foo2), 8);
-      expect(foo1.multiply(true, foo2), 200);
+      expect(foo1.multiply_withOtherFoo(false, foo2), 8);
+      expect(foo1.multiply_withOtherFoo(true, foo2), 200);
 
       foo2.setDoubleVal(1.61803);
-      expect(foo1.multiply(false, foo2), 5);
-      expect(foo1.multiply(true, foo2), 200);
+      expect(foo1.multiply_withOtherFoo(false, foo2), 5);
+      expect(foo1.multiply_withOtherFoo(true, foo2), 200);
     });
 
     test('NSString manipulations', () {
@@ -76,7 +76,7 @@ void main() {
       expect(str1.toString(), "Hello");
       expect(str2.toString(), "World!");
 
-      final str3 = StringUtil.strConcat(lib, str1, str2);
+      final str3 = StringUtil.strConcat_with(lib, str1, str2);
       expect(str3.length, 11);
       expect(str3.toString(), "HelloWorld!");
     });
