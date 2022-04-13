@@ -225,28 +225,25 @@ class ObjCInterface extends BindingType {
       s.write('  ');
       if (isStatic) {
         s.write('static ');
+        s.write(_getConvertedType(returnType, w, name));
 
         switch (m.kind) {
           case ObjCMethodKind.method:
             // static returnType methodName(NativeLibrary _lib, ...)
-            s.write(_getConvertedType(returnType, w, name));
             s.write(' $methodName');
-            s.write(paramsToString(m.params, isStatic: true));
             break;
           case ObjCMethodKind.propertyGetter:
             // static returnType getMethodName(NativeLibrary _lib)
-            s.write(_getConvertedType(returnType, w, name));
             s.write(' get');
             s.write(methodName[0].toUpperCase() + methodName.substring(1));
-            s.write(paramsToString([], isStatic: true));
             break;
           case ObjCMethodKind.propertySetter:
             // static void setMethodName(NativeLibrary _lib, ...)
-            s.write(' void set');
+            s.write(' set');
             s.write(methodName[0].toUpperCase() + methodName.substring(1));
-            s.write(paramsToString(m.params, isStatic: true));
             break;
         }
+        s.write(paramsToString(m.params, isStatic: true));
       } else {
         if (superType?.hasMethod(m) ?? false) {
           s.write('@override\n  ');
@@ -283,7 +280,7 @@ class ObjCInterface extends BindingType {
       final convertReturn = m.kind != ObjCMethodKind.propertySetter &&
           _needsConverting(returnType);
 
-      if (m.kind != ObjCMethodKind.propertySetter) {
+      if (returnType != NativeType(SupportedNativeType.Void)) {
         s.write('    ${convertReturn ? 'final _ret = ' : 'return '}');
       }
       s.write('_lib.${m.msgSend!.name}(');
