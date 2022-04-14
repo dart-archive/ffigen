@@ -463,7 +463,7 @@ class ObjCMethod {
     required this.isClass,
     this.returnType,
     List<ObjCMethodParam>? params_,
-  })  : params = params_ ?? [];
+  }) : params = params_ ?? [];
 
   bool get isProperty =>
       kind == ObjCMethodKind.propertyGetter ||

@@ -137,8 +137,9 @@ void _parseProperty(clang_types.CXCursor cursor) {
   itf.addMethod(getter);
 
   if (!isReadOnly) {
-    final setterName =
-      clang.clang_Cursor_getObjCPropertySetterName(cursor).toStringAndDispose();
+    final setterName = clang
+        .clang_Cursor_getObjCPropertySetterName(cursor)
+        .toStringAndDispose();
     final setter = ObjCMethod(
         originalName: setterName,
         property: property,
