@@ -677,7 +677,36 @@ class Foo extends NSObject {
   static ffi.Pointer<ObjCSel>? _sel_someProperty1;
   set someProperty(int value) {
     _sel_someProperty1 ??= _registerName(_lib, "setSomeProperty:");
-    return _lib._objc_msgSend_27(_id, _sel_someProperty1!, value);
+    _lib._objc_msgSend_27(_id, _sel_someProperty1!, value);
+  }
+
+  static ffi.Pointer<ObjCSel>? _sel_readOnlyProperty;
+  int get readOnlyProperty {
+    _sel_readOnlyProperty ??= _registerName(_lib, "readOnlyProperty");
+    return _lib._objc_msgSend_26(_id, _sel_readOnlyProperty!);
+  }
+
+  static ffi.Pointer<ObjCSel>? _sel_classReadOnlyProperty;
+  static int getClassReadOnlyProperty(NativeLibrary _lib) {
+    _class ??= _getClass(_lib, "Foo");
+    _sel_classReadOnlyProperty ??= _registerName(_lib, "classReadOnlyProperty");
+    return _lib._objc_msgSend_26(_class!, _sel_classReadOnlyProperty!);
+  }
+
+  static ffi.Pointer<ObjCSel>? _sel_classReadWriteProperty;
+  static int getClassReadWriteProperty(NativeLibrary _lib) {
+    _class ??= _getClass(_lib, "Foo");
+    _sel_classReadWriteProperty ??=
+        _registerName(_lib, "classReadWriteProperty");
+    return _lib._objc_msgSend_26(_class!, _sel_classReadWriteProperty!);
+  }
+
+  static ffi.Pointer<ObjCSel>? _sel_classReadWriteProperty1;
+  static void setClassReadWriteProperty(NativeLibrary _lib, int value) {
+    _class ??= _getClass(_lib, "Foo");
+    _sel_classReadWriteProperty1 ??=
+        _registerName(_lib, "setClassReadWriteProperty:");
+    _lib._objc_msgSend_27(_class!, _sel_classReadWriteProperty1!, value);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_aClassMethod;
@@ -688,12 +717,12 @@ class Foo extends NSObject {
     return Foo._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_anInstanceMethod;
-  int anInstanceMethod(NSObject someArg, NSObject otherArg) {
-    _sel_anInstanceMethod ??=
+  static ffi.Pointer<ObjCSel>? _sel_anInstanceMethod_withOtherArg;
+  int anInstanceMethod_withOtherArg(NSObject someArg, NSObject otherArg) {
+    _sel_anInstanceMethod_withOtherArg ??=
         _registerName(_lib, "anInstanceMethod:withOtherArg:");
     return _lib._objc_msgSend_29(
-        _id, _sel_anInstanceMethod!, someArg._id, otherArg._id);
+        _id, _sel_anInstanceMethod_withOtherArg!, someArg._id, otherArg._id);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_new1;
@@ -726,14 +755,14 @@ class NSObject extends _ObjCWrapper {
   static void load(NativeLibrary _lib) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_load ??= _registerName(_lib, "load");
-    return _lib._objc_msgSend_0(_class!, _sel_load!);
+    _lib._objc_msgSend_0(_class!, _sel_load!);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_initialize;
   static void initialize(NativeLibrary _lib) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_initialize ??= _registerName(_lib, "initialize");
-    return _lib._objc_msgSend_0(_class!, _sel_initialize!);
+    _lib._objc_msgSend_0(_class!, _sel_initialize!);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_init;
@@ -770,13 +799,13 @@ class NSObject extends _ObjCWrapper {
   static ffi.Pointer<ObjCSel>? _sel_dealloc;
   void dealloc() {
     _sel_dealloc ??= _registerName(_lib, "dealloc");
-    return _lib._objc_msgSend_0(_id, _sel_dealloc!);
+    _lib._objc_msgSend_0(_id, _sel_dealloc!);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_finalize;
   void finalize() {
     _sel_finalize ??= _registerName(_lib, "finalize");
-    return _lib._objc_msgSend_0(_id, _sel_finalize!);
+    _lib._objc_msgSend_0(_id, _sel_finalize!);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_copy;
@@ -848,8 +877,7 @@ class NSObject extends _ObjCWrapper {
   void doesNotRecognizeSelector(ffi.Pointer<ObjCSel> aSelector) {
     _sel_doesNotRecognizeSelector ??=
         _registerName(_lib, "doesNotRecognizeSelector:");
-    return _lib._objc_msgSend_11(
-        _id, _sel_doesNotRecognizeSelector!, aSelector);
+    _lib._objc_msgSend_11(_id, _sel_doesNotRecognizeSelector!, aSelector);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_forwardingTargetForSelector;
@@ -864,8 +892,7 @@ class NSObject extends _ObjCWrapper {
   static ffi.Pointer<ObjCSel>? _sel_forwardInvocation;
   void forwardInvocation(NSObject anInvocation) {
     _sel_forwardInvocation ??= _registerName(_lib, "forwardInvocation:");
-    return _lib._objc_msgSend_13(
-        _id, _sel_forwardInvocation!, anInvocation._id);
+    _lib._objc_msgSend_13(_id, _sel_forwardInvocation!, anInvocation._id);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_methodSignatureForSelector;
@@ -997,7 +1024,7 @@ class NSString extends _ObjCWrapper {
 
   factory NSString(NativeLibrary _lib, String str) {
     final cstr = str.toNativeUtf8();
-    final nsstr = stringWithCString(_lib, cstr.cast(), 4 /* UTF8 */);
+    final nsstr = stringWithCString_encoding(_lib, cstr.cast(), 4 /* UTF8 */);
     pkg_ffi.calloc.free(cstr);
     return nsstr;
   }
@@ -1005,14 +1032,14 @@ class NSString extends _ObjCWrapper {
   @override
   String toString() => UTF8String().cast<pkg_ffi.Utf8>().toDartString();
 
-  static ffi.Pointer<ObjCSel>? _sel_stringWithCString;
-  static NSString stringWithCString(
+  static ffi.Pointer<ObjCSel>? _sel_stringWithCString_encoding;
+  static NSString stringWithCString_encoding(
       NativeLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
     _class ??= _getClass(_lib, "NSString");
-    _sel_stringWithCString ??=
+    _sel_stringWithCString_encoding ??=
         _registerName(_lib, "stringWithCString:encoding:");
-    final _ret =
-        _lib._objc_msgSend_23(_class!, _sel_stringWithCString!, cString, enc);
+    final _ret = _lib._objc_msgSend_23(
+        _class!, _sel_stringWithCString_encoding!, cString, enc);
     return NSString._(_ret, _lib);
   }
 

@@ -43,7 +43,7 @@ class NativeLibrary {
 ```
 ## Using this package
 - Add `ffigen` under `dev_dependencies` in your `pubspec.yaml` (run `dart pub add -d ffigen`).
-- Add `package:ffi` under `dependencies` in your `pubspec.yaml` (run `dart pub add ffigen`).
+- Add `package:ffi` under `dependencies` in your `pubspec.yaml` (run `dart pub add ffi`).
 - Install LLVM (see [Installing LLVM](#installing-llvm)).
 - Configurations must be provided in `pubspec.yaml` or in a custom YAML file (see [configurations](#configurations)).
 - Run the tool- `dart run ffigen`.
