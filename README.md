@@ -192,7 +192,7 @@ compiler-opts-automatic:
     Options -<br>
     - Include/Exclude declarations.<br>
     - Rename declarations.<br>
-    - Rename enum and struct members, and ObjC interface methods.<br>
+    - Rename enum and struct members.<br>
     - Expose symbol-address for functions and globals.<br>
     </td>
     <td>
