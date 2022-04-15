@@ -44,13 +44,14 @@ Type getCodeGenType(
   if (config.language == Language.objc) {
     switch (cxtype.kind) {
       case clang_types.CXTypeKind.CXType_ObjCObjectPointer:
-      case clang_types.CXTypeKind.CXType_BlockPointer:
       case clang_types.CXTypeKind.CXType_ObjCId:
       case clang_types.CXTypeKind.CXType_ObjCTypeParam:
       case clang_types.CXTypeKind.CXType_ObjCClass:
         return PointerType(objCObjectType);
       case clang_types.CXTypeKind.CXType_ObjCSel:
         return PointerType(objCSelType);
+      case clang_types.CXTypeKind.CXType_BlockPointer:
+        return _getOrCreateBlockType(cxtype);
     }
   }
 
@@ -127,6 +128,17 @@ Type getCodeGenType(
         return UnimplementedType('${cxtype.kindSpelling()} not implemented');
       }
   }
+}
+
+Type _getOrCreateBlockType(clang_types.CXType cxtype) {
+  final block = parseObjCBlockDeclaration(cxtype);
+  final key = block.cacheKey;
+  final oldBlock = bindingsIndex.getSeenObjCBlock(key);
+  if (oldBlock != null) {
+    return oldBlock;
+  }
+  bindingsIndex.addObjCBlockToSeen(key, block);
+  return block;
 }
 
 class _CreateTypeFromCursorResult {

@@ -3288,6 +3288,82 @@ class NativeObjCLibrary {
           ffi.Pointer<ObjCSel>,
           ffi.Pointer<ObjCObject>,
           ffi.Pointer<ObjCObject>)>();
+
+  ffi.Pointer<ObjCObject> _objc_msgSend_136(
+    ffi.Pointer<ObjCObject> obj,
+    ffi.Pointer<ObjCSel> sel,
+    IntBlock block,
+  ) {
+    return __objc_msgSend_136(
+      obj,
+      sel,
+      block,
+    );
+  }
+
+  late final __objc_msgSend_136Ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
+              ffi.Pointer<ObjCSel>, IntBlock)>>('objc_msgSend');
+  late final __objc_msgSend_136 = __objc_msgSend_136Ptr.asFunction<
+      ffi.Pointer<ObjCObject> Function(
+          ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>, IntBlock)>();
+
+  ffi.Pointer<ObjCObject> _objc_msgSend_137(
+    ffi.Pointer<ObjCObject> obj,
+    ffi.Pointer<ObjCSel> sel,
+    int mult,
+  ) {
+    return __objc_msgSend_137(
+      obj,
+      sel,
+      mult,
+    );
+  }
+
+  late final __objc_msgSend_137Ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
+              ffi.Pointer<ObjCSel>, ffi.Int32)>>('objc_msgSend');
+  late final __objc_msgSend_137 = __objc_msgSend_137Ptr.asFunction<
+      ffi.Pointer<ObjCObject> Function(
+          ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>, int)>();
+
+  int _objc_msgSend_138(
+    ffi.Pointer<ObjCObject> obj,
+    ffi.Pointer<ObjCSel> sel,
+    int x,
+  ) {
+    return __objc_msgSend_138(
+      obj,
+      sel,
+      x,
+    );
+  }
+
+  late final __objc_msgSend_138Ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
+              ffi.Int32)>>('objc_msgSend');
+  late final __objc_msgSend_138 = __objc_msgSend_138Ptr.asFunction<
+      int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>, int)>();
+
+  IntBlock _objc_msgSend_139(
+    ffi.Pointer<ObjCObject> obj,
+    ffi.Pointer<ObjCSel> sel,
+  ) {
+    return __objc_msgSend_139(
+      obj,
+      sel,
+    );
+  }
+
+  late final __objc_msgSend_139Ptr = _lookup<
+      ffi.NativeFunction<
+          IntBlock Function(
+              ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>>('objc_msgSend');
+  late final __objc_msgSend_139 = __objc_msgSend_139Ptr.asFunction<
+      IntBlock Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>();
 }
 
 abstract class NSComparisonResult {
@@ -5442,6 +5518,64 @@ class StringUtil extends NSObject {
     return StringUtil._(_ret, _lib);
   }
 }
+
+class BlockTester extends NSObject {
+  BlockTester._(ffi.Pointer<ObjCObject> id, NativeObjCLibrary lib)
+      : super._(id, lib);
+
+  static ffi.Pointer<ObjCObject>? _class;
+
+  static BlockTester castFrom<T extends _ObjCWrapper>(T other) {
+    return BlockTester._(other._id, other._lib);
+  }
+
+  static ffi.Pointer<ObjCSel>? _sel_makeFromBlock;
+  static BlockTester makeFromBlock(NativeObjCLibrary _lib, IntBlock block) {
+    _class ??= _getClass(_lib, "BlockTester");
+    _sel_makeFromBlock ??= _registerName(_lib, "makeFromBlock:");
+    final _ret = _lib._objc_msgSend_136(_class!, _sel_makeFromBlock!, block);
+    return BlockTester._(_ret, _lib);
+  }
+
+  static ffi.Pointer<ObjCSel>? _sel_makeFromMultiplier;
+  static BlockTester makeFromMultiplier(NativeObjCLibrary _lib, int mult) {
+    _class ??= _getClass(_lib, "BlockTester");
+    _sel_makeFromMultiplier ??= _registerName(_lib, "makeFromMultiplier:");
+    final _ret =
+        _lib._objc_msgSend_137(_class!, _sel_makeFromMultiplier!, mult);
+    return BlockTester._(_ret, _lib);
+  }
+
+  static ffi.Pointer<ObjCSel>? _sel_call;
+  int call(int x) {
+    _sel_call ??= _registerName(_lib, "call:");
+    return _lib._objc_msgSend_138(_id, _sel_call!, x);
+  }
+
+  static ffi.Pointer<ObjCSel>? _sel_getBlock;
+  IntBlock getBlock() {
+    _sel_getBlock ??= _registerName(_lib, "getBlock");
+    return _lib._objc_msgSend_139(_id, _sel_getBlock!);
+  }
+
+  static ffi.Pointer<ObjCSel>? _sel_new1;
+  static BlockTester new1(NativeObjCLibrary _lib) {
+    _class ??= _getClass(_lib, "BlockTester");
+    _sel_new1 ??= _registerName(_lib, "new");
+    final _ret = _lib._objc_msgSend_1(_class!, _sel_new1!);
+    return BlockTester._(_ret, _lib);
+  }
+
+  static ffi.Pointer<ObjCSel>? _sel_alloc;
+  static BlockTester alloc(NativeObjCLibrary _lib) {
+    _class ??= _getClass(_lib, "BlockTester");
+    _sel_alloc ??= _registerName(_lib, "alloc");
+    final _ret = _lib._objc_msgSend_1(_class!, _sel_alloc!);
+    return BlockTester._(_ret, _lib);
+  }
+}
+
+typedef IntBlock = ffi.Pointer<ObjCObject>;
 
 const int NSScannedOption = 1;
 
