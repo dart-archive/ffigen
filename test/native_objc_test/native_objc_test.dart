@@ -20,8 +20,9 @@ void main() {
   group('native_objc_test', () {
     setUpAll(() {
       logWarnings();
-      lib = NativeObjCLibrary(DynamicLibrary.open(
-          File('test/native_objc_test/native_objc_test.dylib').absolute.path));
+      final dylib = File('test/native_objc_test/native_objc_test.dylib');
+      verifySetupFile(dylib);
+      lib = NativeObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
     });
 
     test('generate_bindings', () {
@@ -80,18 +81,18 @@ void main() {
       expect(str3.length, 11);
       expect(str3.toString(), "HelloWorld!");
     });
-  });
 
-  test('Instance read-only property', () {
-    expect(Foo.makeFoo(lib, 42).readOnlyProperty, 7);
-  });
+    test('Instance read-only property', () {
+      expect(Foo.makeFoo(lib, 42).readOnlyProperty, 7);
+    });
 
-  test('Class read-only property', () {
-    expect(Foo.getClassReadOnlyProperty(lib), 42);
-  });
+    test('Class read-only property', () {
+      expect(Foo.getClassReadOnlyProperty(lib), 42);
+    });
 
-  test('Class read-write property', () {
-    Foo.setClassReadWriteProperty(lib, 101);
-    expect(Foo.getClassReadWriteProperty(lib), 101);
+    test('Class read-write property', () {
+      Foo.setClassReadWriteProperty(lib, 101);
+      expect(Foo.getClassReadWriteProperty(lib), 101);
+    });
   });
 }
