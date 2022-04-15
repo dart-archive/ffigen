@@ -45,6 +45,7 @@ Type? parseObjCInterfaceDeclaration(clang_types.CXCursor cursor) {
     usr: itfUsr, originalName: name,
     name: name, // TODO(#279): config.interfaceDecl.renameUsingConfig(name),
     dartDoc: getCursorDocComment(cursor),
+    builtInFunctions: objCBuiltInFunctions,
   );
 }
 
