@@ -13,6 +13,7 @@ import '../clang_bindings/clang_bindings.dart' as clang_types;
 import '../data.dart';
 import '../sub_parsers/compounddecl_parser.dart';
 import '../sub_parsers/enumdecl_parser.dart';
+import '../sub_parsers/objc_block_parser.dart';
 import '../sub_parsers/objcinterfacedecl_parser.dart';
 import '../type_extractor/cxtypekindmap.dart';
 import '../utils.dart';
@@ -131,8 +132,8 @@ Type getCodeGenType(
 }
 
 Type _getOrCreateBlockType(clang_types.CXType cxtype) {
-  final block = parseObjCBlockDeclaration(cxtype);
-  final key = block.cacheKey;
+  final block = parseObjCBlock(cxtype);
+  final key = block.usr;
   final oldBlock = bindingsIndex.getSeenObjCBlock(key);
   if (oldBlock != null) {
     return oldBlock;

@@ -9,13 +9,26 @@ import 'utils.dart';
 import 'writer.dart';
 
 class ObjCBlock extends BindingType {
-  ObjCBlock();
+  final Type returnType;
+  final List<Type> argTypes;
 
-  String get cacheKey {
-  }
+  ObjCBlock({
+    required String usr,
+    required String name,
+    required this.returnType,
+    required this.argTypes,
+  }) : super(
+          usr: usr,
+          originalName: name,
+          name: name,
+        );
 
   @override
   BindingString toBindingString(Writer w) {
+    final s = StringBuffer();
+
+    return BindingString(
+        type: BindingStringType.objcBlock, string: s.toString());
   }
 
   @override
@@ -26,4 +39,9 @@ class ObjCBlock extends BindingType {
 
   @override
   String getCType(Writer w) => PointerType(objCObjectType).getCType(w);
+
+  @override
+  String toString() {
+    return 'block';
+  }
 }
