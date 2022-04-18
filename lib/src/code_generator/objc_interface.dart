@@ -368,7 +368,8 @@ class ObjCMethod {
     }
     selObject ??= builtInFunctions.getSelObject(originalName)
       ..addDependencies(dependencies);
-    msgSend ??= builtInFunctions.getMsgSendFunc(returnType!, params);
+    msgSend ??= builtInFunctions.getMsgSendFunc(returnType!, params)
+      ..addDependencies(dependencies);
   }
 
   String _getDartMethodName(UniqueNamer uniqueNamer) {

@@ -72,7 +72,7 @@ class ObjCBuiltInFunctions {
     return _selObjects[methodName] ??= ObjCInternalGlobal(
         PointerType(objCSelType),
         '_sel_${methodName.replaceAll(":", "_")}',
-        () => '${registerName.name}(this, "$methodName")');
+        () => '${registerName.name}("$methodName")');
   }
 
   bool utilsExist = false;
@@ -131,7 +131,7 @@ class ObjCInternalFunction extends LookUpBinding {
   String name;
 
   ObjCInternalFunction(this.name, this._wrappedFunction, this._toBindingString)
-      : super(originalName: name, name: name);
+      : super(originalName: name, name: name, isInternal: true);
 
   @override
   BindingString toBindingString(Writer w) {
@@ -153,7 +153,7 @@ class ObjCInternalGlobal extends LookUpBinding {
   final String Function() makeValue;
 
   ObjCInternalGlobal(this.type, String name, this.makeValue)
-      : super(originalName: name, name: name);
+      : super(originalName: name, name: name, isInternal: true);
 
   @override
   BindingString toBindingString(Writer w) {
