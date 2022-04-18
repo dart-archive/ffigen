@@ -16,7 +16,8 @@ class ObjCBuiltInFunctions {
     parameters: [Parameter(name: 'str', type: PointerType(charType))],
     isInternal: true,
   );
-  late final registerName = ObjCInternalFunction('_registerName', _registerNameFunc, (Writer w, String name) {
+  late final registerName = ObjCInternalFunction(
+      '_registerName', _registerNameFunc, (Writer w, String name) {
     final s = StringBuffer();
     final selType = _registerNameFunc.functionType.returnType.getCType(w);
     s.write('\n$selType $name(String name) {\n');
@@ -35,7 +36,8 @@ class ObjCBuiltInFunctions {
     parameters: [Parameter(name: 'str', type: PointerType(charType))],
     isInternal: true,
   );
-  late final getClass = ObjCInternalFunction('_getClass', _getClassFunc, (Writer w, String name) {
+  late final getClass =
+      ObjCInternalFunction('_getClass', _getClassFunc, (Writer w, String name) {
     final s = StringBuffer();
     final objType = _getClassFunc.functionType.returnType.getCType(w);
     s.write('\n$objType $name(String name) {\n');
@@ -128,15 +130,16 @@ class ObjCBuiltInFunctions {
 class ObjCInternalFunction extends LookUpBinding {
   final Func _wrappedFunction;
   final String Function(Writer, String) _toBindingString;
-  String name;
 
-  ObjCInternalFunction(this.name, this._wrappedFunction, this._toBindingString)
+  ObjCInternalFunction(
+      String name, this._wrappedFunction, this._toBindingString)
       : super(originalName: name, name: name, isInternal: true);
 
   @override
   BindingString toBindingString(Writer w) {
     name = w.wrapperLevelUniqueNamer.makeUnique(name);
-    return BindingString(type: BindingStringType.func, string: _toBindingString(w, name));
+    return BindingString(
+        type: BindingStringType.func, string: _toBindingString(w, name));
   }
 
   @override

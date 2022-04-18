@@ -84,7 +84,6 @@ class ObjCInterface extends BindingType {
 
     builtInFunctions.ensureUtilsExist(w, s);
     final objType = PointerType(objCObjectType).getCType(w);
-    final selType = PointerType(objCSelType).getCType(w);
 
     // Class declaration.
     s.write('class $name ');
