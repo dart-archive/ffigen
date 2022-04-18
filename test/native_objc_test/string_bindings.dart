@@ -6,18 +6,18 @@
 import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart' as pkg_ffi;
 
-/// Native Objective C test
-class NativeObjCLibrary {
+/// Tests calling Objective-C string methods
+class StringTestObjCLibrary {
   /// Holds the symbol lookup function.
   final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
       _lookup;
 
   /// The symbols are looked up in [dynamicLibrary].
-  NativeObjCLibrary(ffi.DynamicLibrary dynamicLibrary)
+  StringTestObjCLibrary(ffi.DynamicLibrary dynamicLibrary)
       : _lookup = dynamicLibrary.lookup;
 
   /// The symbols are looked up with [lookup].
-  NativeObjCLibrary.fromLookup(
+  StringTestObjCLibrary.fromLookup(
       ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
           lookup)
       : _lookup = lookup;
@@ -2142,102 +2142,33 @@ class NativeObjCLibrary {
   set NSParseErrorException(NSExceptionName value) =>
       _NSParseErrorException.value = value;
 
-  int _objc_msgSend_80(
+  ffi.Pointer<ObjCObject> _objc_msgSend_80(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
+    ffi.Pointer<ObjCObject> a,
+    ffi.Pointer<ObjCObject> b,
   ) {
     return __objc_msgSend_80(
       obj,
       sel,
+      a,
+      b,
     );
   }
 
   late final __objc_msgSend_80Ptr = _lookup<
       ffi.NativeFunction<
-          ffi.Int32 Function(
-              ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>>('objc_msgSend');
+          ffi.Pointer<ObjCObject> Function(
+              ffi.Pointer<ObjCObject>,
+              ffi.Pointer<ObjCSel>,
+              ffi.Pointer<ObjCObject>,
+              ffi.Pointer<ObjCObject>)>>('objc_msgSend');
   late final __objc_msgSend_80 = __objc_msgSend_80Ptr.asFunction<
-      int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>();
-
-  void _objc_msgSend_81(
-    ffi.Pointer<ObjCObject> obj,
-    ffi.Pointer<ObjCSel> sel,
-    int value,
-  ) {
-    return __objc_msgSend_81(
-      obj,
-      sel,
-      value,
-    );
-  }
-
-  late final __objc_msgSend_81Ptr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
-              ffi.Int32)>>('objc_msgSend');
-  late final __objc_msgSend_81 = __objc_msgSend_81Ptr.asFunction<
-      void Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>, int)>();
-
-  ffi.Pointer<ObjCObject> _objc_msgSend_82(
-    ffi.Pointer<ObjCObject> obj,
-    ffi.Pointer<ObjCSel> sel,
-    double x,
-  ) {
-    return __objc_msgSend_82(
-      obj,
-      sel,
-      x,
-    );
-  }
-
-  late final __objc_msgSend_82Ptr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
-              ffi.Pointer<ObjCSel>, ffi.Double)>>('objc_msgSend');
-  late final __objc_msgSend_82 = __objc_msgSend_82Ptr.asFunction<
       ffi.Pointer<ObjCObject> Function(
-          ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>, double)>();
-
-  int _objc_msgSend_83(
-    ffi.Pointer<ObjCObject> obj,
-    ffi.Pointer<ObjCSel> sel,
-    bool useIntVals,
-    ffi.Pointer<ObjCObject> other,
-  ) {
-    return __objc_msgSend_83(
-      obj,
-      sel,
-      useIntVals ? 1 : 0,
-      other,
-    );
-  }
-
-  late final __objc_msgSend_83Ptr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int32 Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
-              ffi.Uint8, ffi.Pointer<ObjCObject>)>>('objc_msgSend');
-  late final __objc_msgSend_83 = __objc_msgSend_83Ptr.asFunction<
-      int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>, int,
+          ffi.Pointer<ObjCObject>,
+          ffi.Pointer<ObjCSel>,
+          ffi.Pointer<ObjCObject>,
           ffi.Pointer<ObjCObject>)>();
-
-  void _objc_msgSend_84(
-    ffi.Pointer<ObjCObject> obj,
-    ffi.Pointer<ObjCSel> sel,
-    double x,
-  ) {
-    return __objc_msgSend_84(
-      obj,
-      sel,
-      x,
-    );
-  }
-
-  late final __objc_msgSend_84Ptr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
-              ffi.Double)>>('objc_msgSend');
-  late final __objc_msgSend_84 = __objc_msgSend_84Ptr.asFunction<
-      void Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>, double)>();
 }
 
 abstract class NSComparisonResult {
@@ -2336,14 +2267,14 @@ typedef CFAllocatorPreferredSizeCallBack = ffi.Pointer<
     ffi.NativeFunction<
         CFIndex Function(CFIndex, CFOptionFlags, ffi.Pointer<ffi.Void>)>>;
 
-ffi.Pointer<ObjCSel> _registerName(NativeObjCLibrary _lib, String name) {
+ffi.Pointer<ObjCSel> _registerName(StringTestObjCLibrary _lib, String name) {
   final cstr = name.toNativeUtf8();
   final sel = _lib._sel_registerName(cstr.cast());
   pkg_ffi.calloc.free(cstr);
   return sel;
 }
 
-ffi.Pointer<ObjCObject> _getClass(NativeObjCLibrary _lib, String name) {
+ffi.Pointer<ObjCObject> _getClass(StringTestObjCLibrary _lib, String name) {
   final cstr = name.toNativeUtf8();
   final clazz = _lib._objc_getClass(cstr.cast());
   pkg_ffi.calloc.free(cstr);
@@ -2352,12 +2283,12 @@ ffi.Pointer<ObjCObject> _getClass(NativeObjCLibrary _lib, String name) {
 
 class _ObjCWrapper {
   final ffi.Pointer<ObjCObject> _id;
-  final NativeObjCLibrary _lib;
+  final StringTestObjCLibrary _lib;
   _ObjCWrapper._(this._id, this._lib);
 }
 
 class NSValue extends NSObject {
-  NSValue._(ffi.Pointer<ObjCObject> id, NativeObjCLibrary lib)
+  NSValue._(ffi.Pointer<ObjCObject> id, StringTestObjCLibrary lib)
       : super._(id, lib);
 
   static ffi.Pointer<ObjCObject>? _class;
@@ -2396,7 +2327,7 @@ class NSValue extends NSObject {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_new1;
-  static NSValue new1(NativeObjCLibrary _lib) {
+  static NSValue new1(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSValue");
     _sel_new1 ??= _registerName(_lib, "new");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_new1!);
@@ -2404,7 +2335,7 @@ class NSValue extends NSObject {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_alloc;
-  static NSValue alloc(NativeObjCLibrary _lib) {
+  static NSValue alloc(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSValue");
     _sel_alloc ??= _registerName(_lib, "alloc");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_alloc!);
@@ -2413,7 +2344,7 @@ class NSValue extends NSObject {
 }
 
 class NSObject extends _ObjCWrapper {
-  NSObject._(ffi.Pointer<ObjCObject> id, NativeObjCLibrary lib)
+  NSObject._(ffi.Pointer<ObjCObject> id, StringTestObjCLibrary lib)
       : super._(id, lib);
 
   static ffi.Pointer<ObjCObject>? _class;
@@ -2423,14 +2354,14 @@ class NSObject extends _ObjCWrapper {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_load;
-  static void load(NativeObjCLibrary _lib) {
+  static void load(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_load ??= _registerName(_lib, "load");
     _lib._objc_msgSend_0(_class!, _sel_load!);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_initialize;
-  static void initialize(NativeObjCLibrary _lib) {
+  static void initialize(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_initialize ??= _registerName(_lib, "initialize");
     _lib._objc_msgSend_0(_class!, _sel_initialize!);
@@ -2444,7 +2375,7 @@ class NSObject extends _ObjCWrapper {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_new1;
-  static NSObject new1(NativeObjCLibrary _lib) {
+  static NSObject new1(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_new1 ??= _registerName(_lib, "new");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_new1!);
@@ -2453,7 +2384,7 @@ class NSObject extends _ObjCWrapper {
 
   static ffi.Pointer<ObjCSel>? _sel_allocWithZone;
   static NSObject allocWithZone(
-      NativeObjCLibrary _lib, ffi.Pointer<_NSZone> zone) {
+      StringTestObjCLibrary _lib, ffi.Pointer<_NSZone> zone) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_allocWithZone ??= _registerName(_lib, "allocWithZone:");
     final _ret = _lib._objc_msgSend_2(_class!, _sel_allocWithZone!, zone);
@@ -2461,7 +2392,7 @@ class NSObject extends _ObjCWrapper {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_alloc;
-  static NSObject alloc(NativeObjCLibrary _lib) {
+  static NSObject alloc(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_alloc ??= _registerName(_lib, "alloc");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_alloc!);
@@ -2496,7 +2427,7 @@ class NSObject extends _ObjCWrapper {
 
   static ffi.Pointer<ObjCSel>? _sel_copyWithZone;
   static NSObject copyWithZone(
-      NativeObjCLibrary _lib, ffi.Pointer<_NSZone> zone) {
+      StringTestObjCLibrary _lib, ffi.Pointer<_NSZone> zone) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_copyWithZone ??= _registerName(_lib, "copyWithZone:");
     final _ret = _lib._objc_msgSend_2(_class!, _sel_copyWithZone!, zone);
@@ -2505,7 +2436,7 @@ class NSObject extends _ObjCWrapper {
 
   static ffi.Pointer<ObjCSel>? _sel_mutableCopyWithZone;
   static NSObject mutableCopyWithZone(
-      NativeObjCLibrary _lib, ffi.Pointer<_NSZone> zone) {
+      StringTestObjCLibrary _lib, ffi.Pointer<_NSZone> zone) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_mutableCopyWithZone ??= _registerName(_lib, "mutableCopyWithZone:");
     final _ret = _lib._objc_msgSend_2(_class!, _sel_mutableCopyWithZone!, zone);
@@ -2514,7 +2445,7 @@ class NSObject extends _ObjCWrapper {
 
   static ffi.Pointer<ObjCSel>? _sel_instancesRespondToSelector;
   static bool instancesRespondToSelector(
-      NativeObjCLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
+      StringTestObjCLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_instancesRespondToSelector ??=
         _registerName(_lib, "instancesRespondToSelector:");
@@ -2523,7 +2454,8 @@ class NSObject extends _ObjCWrapper {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_conformsToProtocol;
-  static bool conformsToProtocol(NativeObjCLibrary _lib, NSObject protocol) {
+  static bool conformsToProtocol(
+      StringTestObjCLibrary _lib, NSObject protocol) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_conformsToProtocol ??= _registerName(_lib, "conformsToProtocol:");
     return _lib._objc_msgSend_4(
@@ -2538,7 +2470,7 @@ class NSObject extends _ObjCWrapper {
 
   static ffi.Pointer<ObjCSel>? _sel_instanceMethodForSelector;
   static IMP instanceMethodForSelector(
-      NativeObjCLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
+      StringTestObjCLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_instanceMethodForSelector ??=
         _registerName(_lib, "instanceMethodForSelector:");
@@ -2579,7 +2511,7 @@ class NSObject extends _ObjCWrapper {
 
   static ffi.Pointer<ObjCSel>? _sel_instanceMethodSignatureForSelector;
   static NSMethodSignature instanceMethodSignatureForSelector(
-      NativeObjCLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
+      StringTestObjCLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_instanceMethodSignatureForSelector ??=
         _registerName(_lib, "instanceMethodSignatureForSelector:");
@@ -2601,7 +2533,7 @@ class NSObject extends _ObjCWrapper {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_isSubclassOfClass;
-  static bool isSubclassOfClass(NativeObjCLibrary _lib, NSObject aClass) {
+  static bool isSubclassOfClass(StringTestObjCLibrary _lib, NSObject aClass) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_isSubclassOfClass ??= _registerName(_lib, "isSubclassOfClass:");
     return _lib._objc_msgSend_4(_class!, _sel_isSubclassOfClass!, aClass._id);
@@ -2609,7 +2541,7 @@ class NSObject extends _ObjCWrapper {
 
   static ffi.Pointer<ObjCSel>? _sel_resolveClassMethod;
   static bool resolveClassMethod(
-      NativeObjCLibrary _lib, ffi.Pointer<ObjCSel> sel) {
+      StringTestObjCLibrary _lib, ffi.Pointer<ObjCSel> sel) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_resolveClassMethod ??= _registerName(_lib, "resolveClassMethod:");
     return _lib._objc_msgSend_3(_class!, _sel_resolveClassMethod!, sel);
@@ -2617,7 +2549,7 @@ class NSObject extends _ObjCWrapper {
 
   static ffi.Pointer<ObjCSel>? _sel_resolveInstanceMethod;
   static bool resolveInstanceMethod(
-      NativeObjCLibrary _lib, ffi.Pointer<ObjCSel> sel) {
+      StringTestObjCLibrary _lib, ffi.Pointer<ObjCSel> sel) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_resolveInstanceMethod ??=
         _registerName(_lib, "resolveInstanceMethod:");
@@ -2625,14 +2557,14 @@ class NSObject extends _ObjCWrapper {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_hash;
-  static int hash(NativeObjCLibrary _lib) {
+  static int hash(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_hash ??= _registerName(_lib, "hash");
     return _lib._objc_msgSend_11(_class!, _sel_hash!);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_superclass;
-  static NSObject superclass(NativeObjCLibrary _lib) {
+  static NSObject superclass(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_superclass ??= _registerName(_lib, "superclass");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_superclass!);
@@ -2640,7 +2572,7 @@ class NSObject extends _ObjCWrapper {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_class1;
-  static NSObject class1(NativeObjCLibrary _lib) {
+  static NSObject class1(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_class1 ??= _registerName(_lib, "class");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_class1!);
@@ -2648,7 +2580,7 @@ class NSObject extends _ObjCWrapper {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_description;
-  static NSString description(NativeObjCLibrary _lib) {
+  static NSString description(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_description ??= _registerName(_lib, "description");
     final _ret = _lib._objc_msgSend_16(_class!, _sel_description!);
@@ -2656,7 +2588,7 @@ class NSObject extends _ObjCWrapper {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_debugDescription;
-  static NSString debugDescription(NativeObjCLibrary _lib) {
+  static NSString debugDescription(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSObject");
     _sel_debugDescription ??= _registerName(_lib, "debugDescription");
     final _ret = _lib._objc_msgSend_16(_class!, _sel_debugDescription!);
@@ -2675,7 +2607,7 @@ class ObjCSel extends ffi.Opaque {}
 typedef IMP = ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>;
 
 class NSMethodSignature extends _ObjCWrapper {
-  NSMethodSignature._(ffi.Pointer<ObjCObject> id, NativeObjCLibrary lib)
+  NSMethodSignature._(ffi.Pointer<ObjCObject> id, StringTestObjCLibrary lib)
       : super._(id, lib);
 
   static ffi.Pointer<ObjCObject>? _class;
@@ -2688,7 +2620,7 @@ class NSMethodSignature extends _ObjCWrapper {
 typedef NSUInteger = pkg_ffi.UnsignedLong;
 
 class NSString extends NSObject {
-  NSString._(ffi.Pointer<ObjCObject> id, NativeObjCLibrary lib)
+  NSString._(ffi.Pointer<ObjCObject> id, StringTestObjCLibrary lib)
       : super._(id, lib);
 
   static ffi.Pointer<ObjCObject>? _class;
@@ -2697,7 +2629,7 @@ class NSString extends NSObject {
     return NSString._(other._id, other._lib);
   }
 
-  factory NSString(NativeObjCLibrary _lib, String str) {
+  factory NSString(StringTestObjCLibrary _lib, String str) {
     final cstr = str.toNativeUtf8();
     final nsstr = stringWithCString_encoding(_lib, cstr.cast(), 4 /* UTF8 */);
     pkg_ffi.calloc.free(cstr);
@@ -2736,7 +2668,7 @@ class NSString extends NSObject {
 
   static ffi.Pointer<ObjCSel>? _sel_stringWithCString_encoding;
   static NSString stringWithCString_encoding(
-      NativeObjCLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
+      StringTestObjCLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
     _class ??= _getClass(_lib, "NSString");
     _sel_stringWithCString_encoding ??=
         _registerName(_lib, "stringWithCString:encoding:");
@@ -2752,7 +2684,7 @@ class NSString extends NSObject {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_new1;
-  static NSString new1(NativeObjCLibrary _lib) {
+  static NSString new1(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSString");
     _sel_new1 ??= _registerName(_lib, "new");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_new1!);
@@ -2760,7 +2692,7 @@ class NSString extends NSObject {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_alloc;
-  static NSString alloc(NativeObjCLibrary _lib) {
+  static NSString alloc(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSString");
     _sel_alloc ??= _registerName(_lib, "alloc");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_alloc!);
@@ -2769,13 +2701,13 @@ class NSString extends NSObject {
 }
 
 extension StringToNSString on String {
-  NSString toNSString(NativeObjCLibrary lib) => NSString(lib, this);
+  NSString toNSString(StringTestObjCLibrary lib) => NSString(lib, this);
 }
 
 typedef unichar = pkg_ffi.UnsignedShort;
 
 class NSNumber extends NSValue {
-  NSNumber._(ffi.Pointer<ObjCObject> id, NativeObjCLibrary lib)
+  NSNumber._(ffi.Pointer<ObjCObject> id, StringTestObjCLibrary lib)
       : super._(id, lib);
 
   static ffi.Pointer<ObjCObject>? _class;
@@ -3021,7 +2953,7 @@ class NSNumber extends NSValue {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_new1;
-  static NSNumber new1(NativeObjCLibrary _lib) {
+  static NSNumber new1(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSNumber");
     _sel_new1 ??= _registerName(_lib, "new");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_new1!);
@@ -3029,7 +2961,7 @@ class NSNumber extends NSValue {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_alloc;
-  static NSNumber alloc(NativeObjCLibrary _lib) {
+  static NSNumber alloc(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSNumber");
     _sel_alloc ??= _registerName(_lib, "alloc");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_alloc!);
@@ -3058,7 +2990,7 @@ class NSFastEnumerationState extends ffi.Struct {
 }
 
 class NSEnumerator extends NSObject {
-  NSEnumerator._(ffi.Pointer<ObjCObject> id, NativeObjCLibrary lib)
+  NSEnumerator._(ffi.Pointer<ObjCObject> id, StringTestObjCLibrary lib)
       : super._(id, lib);
 
   static ffi.Pointer<ObjCObject>? _class;
@@ -3075,7 +3007,7 @@ class NSEnumerator extends NSObject {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_new1;
-  static NSEnumerator new1(NativeObjCLibrary _lib) {
+  static NSEnumerator new1(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSEnumerator");
     _sel_new1 ??= _registerName(_lib, "new");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_new1!);
@@ -3083,7 +3015,7 @@ class NSEnumerator extends NSObject {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_alloc;
-  static NSEnumerator alloc(NativeObjCLibrary _lib) {
+  static NSEnumerator alloc(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSEnumerator");
     _sel_alloc ??= _registerName(_lib, "alloc");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_alloc!);
@@ -3097,7 +3029,8 @@ abstract class NSCollectionChangeType {
 }
 
 class NSOrderedCollectionChange extends NSObject {
-  NSOrderedCollectionChange._(ffi.Pointer<ObjCObject> id, NativeObjCLibrary lib)
+  NSOrderedCollectionChange._(
+      ffi.Pointer<ObjCObject> id, StringTestObjCLibrary lib)
       : super._(id, lib);
 
   static ffi.Pointer<ObjCObject>? _class;
@@ -3165,7 +3098,7 @@ class NSOrderedCollectionChange extends NSObject {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_new1;
-  static NSOrderedCollectionChange new1(NativeObjCLibrary _lib) {
+  static NSOrderedCollectionChange new1(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSOrderedCollectionChange");
     _sel_new1 ??= _registerName(_lib, "new");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_new1!);
@@ -3173,7 +3106,7 @@ class NSOrderedCollectionChange extends NSObject {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_alloc;
-  static NSOrderedCollectionChange alloc(NativeObjCLibrary _lib) {
+  static NSOrderedCollectionChange alloc(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSOrderedCollectionChange");
     _sel_alloc ??= _registerName(_lib, "alloc");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_alloc!);
@@ -3182,7 +3115,7 @@ class NSOrderedCollectionChange extends NSObject {
 }
 
 class NSIndexSet extends NSObject {
-  NSIndexSet._(ffi.Pointer<ObjCObject> id, NativeObjCLibrary lib)
+  NSIndexSet._(ffi.Pointer<ObjCObject> id, StringTestObjCLibrary lib)
       : super._(id, lib);
 
   static ffi.Pointer<ObjCObject>? _class;
@@ -3192,7 +3125,7 @@ class NSIndexSet extends NSObject {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_indexSet;
-  static NSIndexSet indexSet(NativeObjCLibrary _lib) {
+  static NSIndexSet indexSet(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSIndexSet");
     _sel_indexSet ??= _registerName(_lib, "indexSet");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_indexSet!);
@@ -3200,7 +3133,7 @@ class NSIndexSet extends NSObject {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_indexSetWithIndex;
-  static NSIndexSet indexSetWithIndex(NativeObjCLibrary _lib, int value) {
+  static NSIndexSet indexSetWithIndex(StringTestObjCLibrary _lib, int value) {
     _class ??= _getClass(_lib, "NSIndexSet");
     _sel_indexSetWithIndex ??= _registerName(_lib, "indexSetWithIndex:");
     final _ret = _lib._objc_msgSend_48(_class!, _sel_indexSetWithIndex!, value);
@@ -3209,7 +3142,7 @@ class NSIndexSet extends NSObject {
 
   static ffi.Pointer<ObjCSel>? _sel_indexSetWithIndexesInRange;
   static NSIndexSet indexSetWithIndexesInRange(
-      NativeObjCLibrary _lib, NSRange range) {
+      StringTestObjCLibrary _lib, NSRange range) {
     _class ??= _getClass(_lib, "NSIndexSet");
     _sel_indexSetWithIndexesInRange ??=
         _registerName(_lib, "indexSetWithIndexesInRange:");
@@ -3435,7 +3368,7 @@ class NSIndexSet extends NSObject {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_new1;
-  static NSIndexSet new1(NativeObjCLibrary _lib) {
+  static NSIndexSet new1(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSIndexSet");
     _sel_new1 ??= _registerName(_lib, "new");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_new1!);
@@ -3443,7 +3376,7 @@ class NSIndexSet extends NSObject {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_alloc;
-  static NSIndexSet alloc(NativeObjCLibrary _lib) {
+  static NSIndexSet alloc(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSIndexSet");
     _sel_alloc ??= _registerName(_lib, "alloc");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_alloc!);
@@ -3455,7 +3388,7 @@ typedef NSRange = _NSRange;
 typedef NSRangePointer = ffi.Pointer<NSRange>;
 
 class NSMutableIndexSet extends NSIndexSet {
-  NSMutableIndexSet._(ffi.Pointer<ObjCObject> id, NativeObjCLibrary lib)
+  NSMutableIndexSet._(ffi.Pointer<ObjCObject> id, StringTestObjCLibrary lib)
       : super._(id, lib);
 
   static ffi.Pointer<ObjCObject>? _class;
@@ -3515,7 +3448,7 @@ class NSMutableIndexSet extends NSIndexSet {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_indexSet;
-  static NSMutableIndexSet indexSet(NativeObjCLibrary _lib) {
+  static NSMutableIndexSet indexSet(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSMutableIndexSet");
     _sel_indexSet ??= _registerName(_lib, "indexSet");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_indexSet!);
@@ -3524,7 +3457,7 @@ class NSMutableIndexSet extends NSIndexSet {
 
   static ffi.Pointer<ObjCSel>? _sel_indexSetWithIndex;
   static NSMutableIndexSet indexSetWithIndex(
-      NativeObjCLibrary _lib, int value) {
+      StringTestObjCLibrary _lib, int value) {
     _class ??= _getClass(_lib, "NSMutableIndexSet");
     _sel_indexSetWithIndex ??= _registerName(_lib, "indexSetWithIndex:");
     final _ret = _lib._objc_msgSend_48(_class!, _sel_indexSetWithIndex!, value);
@@ -3533,7 +3466,7 @@ class NSMutableIndexSet extends NSIndexSet {
 
   static ffi.Pointer<ObjCSel>? _sel_indexSetWithIndexesInRange;
   static NSMutableIndexSet indexSetWithIndexesInRange(
-      NativeObjCLibrary _lib, NSRange range) {
+      StringTestObjCLibrary _lib, NSRange range) {
     _class ??= _getClass(_lib, "NSMutableIndexSet");
     _sel_indexSetWithIndexesInRange ??=
         _registerName(_lib, "indexSetWithIndexesInRange:");
@@ -3543,7 +3476,7 @@ class NSMutableIndexSet extends NSIndexSet {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_new1;
-  static NSMutableIndexSet new1(NativeObjCLibrary _lib) {
+  static NSMutableIndexSet new1(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSMutableIndexSet");
     _sel_new1 ??= _registerName(_lib, "new");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_new1!);
@@ -3551,7 +3484,7 @@ class NSMutableIndexSet extends NSIndexSet {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_alloc;
-  static NSMutableIndexSet alloc(NativeObjCLibrary _lib) {
+  static NSMutableIndexSet alloc(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSMutableIndexSet");
     _sel_alloc ??= _registerName(_lib, "alloc");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_alloc!);
@@ -3569,7 +3502,7 @@ abstract class NSOrderedCollectionDifferenceCalculationOptions {
 
 class NSOrderedCollectionDifference extends NSObject {
   NSOrderedCollectionDifference._(
-      ffi.Pointer<ObjCObject> id, NativeObjCLibrary lib)
+      ffi.Pointer<ObjCObject> id, StringTestObjCLibrary lib)
       : super._(id, lib);
 
   static ffi.Pointer<ObjCObject>? _class;
@@ -3658,7 +3591,7 @@ class NSOrderedCollectionDifference extends NSObject {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_new1;
-  static NSOrderedCollectionDifference new1(NativeObjCLibrary _lib) {
+  static NSOrderedCollectionDifference new1(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSOrderedCollectionDifference");
     _sel_new1 ??= _registerName(_lib, "new");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_new1!);
@@ -3666,7 +3599,7 @@ class NSOrderedCollectionDifference extends NSObject {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_alloc;
-  static NSOrderedCollectionDifference alloc(NativeObjCLibrary _lib) {
+  static NSOrderedCollectionDifference alloc(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSOrderedCollectionDifference");
     _sel_alloc ??= _registerName(_lib, "alloc");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_alloc!);
@@ -3675,7 +3608,7 @@ class NSOrderedCollectionDifference extends NSObject {
 }
 
 class NSArray extends NSObject {
-  NSArray._(ffi.Pointer<ObjCObject> id, NativeObjCLibrary lib)
+  NSArray._(ffi.Pointer<ObjCObject> id, StringTestObjCLibrary lib)
       : super._(id, lib);
 
   static ffi.Pointer<ObjCObject>? _class;
@@ -3723,7 +3656,7 @@ class NSArray extends NSObject {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_new1;
-  static NSArray new1(NativeObjCLibrary _lib) {
+  static NSArray new1(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSArray");
     _sel_new1 ??= _registerName(_lib, "new");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_new1!);
@@ -3731,7 +3664,7 @@ class NSArray extends NSObject {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_alloc;
-  static NSArray alloc(NativeObjCLibrary _lib) {
+  static NSArray alloc(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSArray");
     _sel_alloc ??= _registerName(_lib, "alloc");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_alloc!);
@@ -3746,7 +3679,7 @@ abstract class NSBinarySearchingOptions {
 }
 
 class NSMutableArray extends NSArray {
-  NSMutableArray._(ffi.Pointer<ObjCObject> id, NativeObjCLibrary lib)
+  NSMutableArray._(ffi.Pointer<ObjCObject> id, StringTestObjCLibrary lib)
       : super._(id, lib);
 
   static ffi.Pointer<ObjCObject>? _class;
@@ -3811,7 +3744,7 @@ class NSMutableArray extends NSArray {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_new1;
-  static NSMutableArray new1(NativeObjCLibrary _lib) {
+  static NSMutableArray new1(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSMutableArray");
     _sel_new1 ??= _registerName(_lib, "new");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_new1!);
@@ -3819,7 +3752,7 @@ class NSMutableArray extends NSArray {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_alloc;
-  static NSMutableArray alloc(NativeObjCLibrary _lib) {
+  static NSMutableArray alloc(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSMutableArray");
     _sel_alloc ??= _registerName(_lib, "alloc");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_alloc!);
@@ -3839,7 +3772,7 @@ abstract class NSItemProviderFileOptions {
 }
 
 class NSItemProvider extends NSObject {
-  NSItemProvider._(ffi.Pointer<ObjCObject> id, NativeObjCLibrary lib)
+  NSItemProvider._(ffi.Pointer<ObjCObject> id, StringTestObjCLibrary lib)
       : super._(id, lib);
 
   static ffi.Pointer<ObjCObject>? _class;
@@ -4072,7 +4005,7 @@ class NSItemProvider extends NSObject {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_new1;
-  static NSItemProvider new1(NativeObjCLibrary _lib) {
+  static NSItemProvider new1(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSItemProvider");
     _sel_new1 ??= _registerName(_lib, "new");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_new1!);
@@ -4080,7 +4013,7 @@ class NSItemProvider extends NSObject {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_alloc;
-  static NSItemProvider alloc(NativeObjCLibrary _lib) {
+  static NSItemProvider alloc(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSItemProvider");
     _sel_alloc ??= _registerName(_lib, "alloc");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_alloc!);
@@ -4089,7 +4022,7 @@ class NSItemProvider extends NSObject {
 }
 
 class NSProgress extends _ObjCWrapper {
-  NSProgress._(ffi.Pointer<ObjCObject> id, NativeObjCLibrary lib)
+  NSProgress._(ffi.Pointer<ObjCObject> id, StringTestObjCLibrary lib)
       : super._(id, lib);
 
   static ffi.Pointer<ObjCObject>? _class;
@@ -4143,7 +4076,7 @@ typedef NSStringTransform = ffi.Pointer<ObjCObject>;
 typedef NSStringEncodingDetectionOptionsKey = ffi.Pointer<ObjCObject>;
 
 class NSMutableString extends NSString {
-  NSMutableString._(ffi.Pointer<ObjCObject> id, NativeObjCLibrary lib)
+  NSMutableString._(ffi.Pointer<ObjCObject> id, StringTestObjCLibrary lib)
       : super._(id, lib);
 
   static ffi.Pointer<ObjCObject>? _class;
@@ -4162,7 +4095,7 @@ class NSMutableString extends NSString {
 
   static ffi.Pointer<ObjCSel>? _sel_stringWithCString_encoding;
   static NSString stringWithCString_encoding(
-      NativeObjCLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
+      StringTestObjCLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
     _class ??= _getClass(_lib, "NSMutableString");
     _sel_stringWithCString_encoding ??=
         _registerName(_lib, "stringWithCString:encoding:");
@@ -4172,7 +4105,7 @@ class NSMutableString extends NSString {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_new1;
-  static NSMutableString new1(NativeObjCLibrary _lib) {
+  static NSMutableString new1(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSMutableString");
     _sel_new1 ??= _registerName(_lib, "new");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_new1!);
@@ -4180,7 +4113,7 @@ class NSMutableString extends NSString {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_alloc;
-  static NSMutableString alloc(NativeObjCLibrary _lib) {
+  static NSMutableString alloc(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSMutableString");
     _sel_alloc ??= _registerName(_lib, "alloc");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_alloc!);
@@ -4191,7 +4124,7 @@ class NSMutableString extends NSString {
 typedef NSExceptionName = ffi.Pointer<ObjCObject>;
 
 class NSSimpleCString extends NSString {
-  NSSimpleCString._(ffi.Pointer<ObjCObject> id, NativeObjCLibrary lib)
+  NSSimpleCString._(ffi.Pointer<ObjCObject> id, StringTestObjCLibrary lib)
       : super._(id, lib);
 
   static ffi.Pointer<ObjCObject>? _class;
@@ -4202,7 +4135,7 @@ class NSSimpleCString extends NSString {
 
   static ffi.Pointer<ObjCSel>? _sel_stringWithCString_encoding;
   static NSString stringWithCString_encoding(
-      NativeObjCLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
+      StringTestObjCLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
     _class ??= _getClass(_lib, "NSSimpleCString");
     _sel_stringWithCString_encoding ??=
         _registerName(_lib, "stringWithCString:encoding:");
@@ -4212,7 +4145,7 @@ class NSSimpleCString extends NSString {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_new1;
-  static NSSimpleCString new1(NativeObjCLibrary _lib) {
+  static NSSimpleCString new1(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSSimpleCString");
     _sel_new1 ??= _registerName(_lib, "new");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_new1!);
@@ -4220,7 +4153,7 @@ class NSSimpleCString extends NSString {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_alloc;
-  static NSSimpleCString alloc(NativeObjCLibrary _lib) {
+  static NSSimpleCString alloc(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSSimpleCString");
     _sel_alloc ??= _registerName(_lib, "alloc");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_alloc!);
@@ -4229,7 +4162,7 @@ class NSSimpleCString extends NSString {
 }
 
 class NSConstantString extends NSSimpleCString {
-  NSConstantString._(ffi.Pointer<ObjCObject> id, NativeObjCLibrary lib)
+  NSConstantString._(ffi.Pointer<ObjCObject> id, StringTestObjCLibrary lib)
       : super._(id, lib);
 
   static ffi.Pointer<ObjCObject>? _class;
@@ -4240,7 +4173,7 @@ class NSConstantString extends NSSimpleCString {
 
   static ffi.Pointer<ObjCSel>? _sel_stringWithCString_encoding;
   static NSString stringWithCString_encoding(
-      NativeObjCLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
+      StringTestObjCLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
     _class ??= _getClass(_lib, "NSConstantString");
     _sel_stringWithCString_encoding ??=
         _registerName(_lib, "stringWithCString:encoding:");
@@ -4250,7 +4183,7 @@ class NSConstantString extends NSSimpleCString {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_new1;
-  static NSConstantString new1(NativeObjCLibrary _lib) {
+  static NSConstantString new1(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSConstantString");
     _sel_new1 ??= _registerName(_lib, "new");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_new1!);
@@ -4258,7 +4191,7 @@ class NSConstantString extends NSSimpleCString {
   }
 
   static ffi.Pointer<ObjCSel>? _sel_alloc;
-  static NSConstantString alloc(NativeObjCLibrary _lib) {
+  static NSConstantString alloc(StringTestObjCLibrary _lib) {
     _class ??= _getClass(_lib, "NSConstantString");
     _sel_alloc ??= _registerName(_lib, "alloc");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_alloc!);
@@ -4266,63 +4199,40 @@ class NSConstantString extends NSSimpleCString {
   }
 }
 
-class Foo extends NSObject {
-  Foo._(ffi.Pointer<ObjCObject> id, NativeObjCLibrary lib) : super._(id, lib);
+class StringUtil extends NSObject {
+  StringUtil._(ffi.Pointer<ObjCObject> id, StringTestObjCLibrary lib)
+      : super._(id, lib);
 
   static ffi.Pointer<ObjCObject>? _class;
 
-  static Foo castFrom<T extends _ObjCWrapper>(T other) {
-    return Foo._(other._id, other._lib);
+  static StringUtil castFrom<T extends _ObjCWrapper>(T other) {
+    return StringUtil._(other._id, other._lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_intVal;
-  int get intVal {
-    _sel_intVal ??= _registerName(_lib, "intVal");
-    return _lib._objc_msgSend_80(_id, _sel_intVal!);
-  }
-
-  static ffi.Pointer<ObjCSel>? _sel_intVal1;
-  set intVal(int value) {
-    _sel_intVal1 ??= _registerName(_lib, "setIntVal:");
-    _lib._objc_msgSend_81(_id, _sel_intVal1!, value);
-  }
-
-  static ffi.Pointer<ObjCSel>? _sel_makeFoo;
-  static Foo makeFoo(NativeObjCLibrary _lib, double x) {
-    _class ??= _getClass(_lib, "Foo");
-    _sel_makeFoo ??= _registerName(_lib, "makeFoo:");
-    final _ret = _lib._objc_msgSend_82(_class!, _sel_makeFoo!, x);
-    return Foo._(_ret, _lib);
-  }
-
-  static ffi.Pointer<ObjCSel>? _sel_multiply_withOtherFoo;
-  int multiply_withOtherFoo(bool useIntVals, NSObject other) {
-    _sel_multiply_withOtherFoo ??=
-        _registerName(_lib, "multiply:withOtherFoo:");
-    return _lib._objc_msgSend_83(
-        _id, _sel_multiply_withOtherFoo!, useIntVals, other._id);
-  }
-
-  static ffi.Pointer<ObjCSel>? _sel_setDoubleVal;
-  void setDoubleVal(double x) {
-    _sel_setDoubleVal ??= _registerName(_lib, "setDoubleVal:");
-    _lib._objc_msgSend_84(_id, _sel_setDoubleVal!, x);
+  static ffi.Pointer<ObjCSel>? _sel_strConcat_with;
+  static NSString strConcat_with(
+      StringTestObjCLibrary _lib, NSObject a, NSObject b) {
+    _class ??= _getClass(_lib, "StringUtil");
+    _sel_strConcat_with ??= _registerName(_lib, "strConcat:with:");
+    final _ret =
+        _lib._objc_msgSend_80(_class!, _sel_strConcat_with!, a._id, b._id);
+    return NSString._(_ret, _lib);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_new1;
-  static Foo new1(NativeObjCLibrary _lib) {
-    _class ??= _getClass(_lib, "Foo");
+  static StringUtil new1(StringTestObjCLibrary _lib) {
+    _class ??= _getClass(_lib, "StringUtil");
     _sel_new1 ??= _registerName(_lib, "new");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_new1!);
-    return Foo._(_ret, _lib);
+    return StringUtil._(_ret, _lib);
   }
 
   static ffi.Pointer<ObjCSel>? _sel_alloc;
-  static Foo alloc(NativeObjCLibrary _lib) {
-    _class ??= _getClass(_lib, "Foo");
+  static StringUtil alloc(StringTestObjCLibrary _lib) {
+    _class ??= _getClass(_lib, "StringUtil");
     _sel_alloc ??= _registerName(_lib, "alloc");
     final _ret = _lib._objc_msgSend_1(_class!, _sel_alloc!);
-    return Foo._(_ret, _lib);
+    return StringUtil._(_ret, _lib);
   }
 }
 

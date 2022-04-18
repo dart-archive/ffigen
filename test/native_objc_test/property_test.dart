@@ -13,25 +13,28 @@ import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 import '../test_utils.dart';
-import 'native_objc_test_bindings.dart';
+import 'property_bindings.dart';
 
 void main() {
-  late NativeObjCLibrary lib;
-  group('native_objc_test', () {
+  late PropertyInterface testInstance;
+  late PropertyTestObjCLibrary lib;
+
+  group('properties', () {
     setUpAll(() {
       logWarnings();
-      final dylib = File('test/native_objc_test/native_objc_test.dylib');
+      final dylib = File('test/native_objc_test/property_test.dylib');
       verifySetupFile(dylib);
-      lib = NativeObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
+      lib = PropertyTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
+      testInstance = PropertyInterface.new1(lib);
     });
 
     test('generate_bindings', () {
       final config = Config.fromYaml(loadYaml(
-          File(path.join('test', 'native_objc_test', 'config.yaml'))
+          File(path.join('test', 'native_objc_test', 'property_config.yaml'))
               .readAsStringSync()) as YamlMap);
       final library = parse(config);
       final file = File(
-        path.join('test', 'debug_generated', 'native_objc_test_bindings.dart'),
+        path.join('test', 'debug_generated', 'property_test.dart'),
       );
       library.generateFile(file);
 
@@ -48,23 +51,26 @@ void main() {
       }
     });
 
-    test('Interface basics, with Foo', () {
-      final foo1 = Foo.makeFoo(lib, 3.14159);
-      final foo2 = Foo.makeFoo(lib, 2.71828);
+    group('instance properties', () {
+      test('read-only property', () {
+        expect(testInstance.readOnlyProperty, 7);
+      });
 
-      expect(foo1.intVal, 3);
-      expect(foo2.intVal, 2);
+      test('read-write property', () {
+        testInstance.readWriteProperty = 23;
+        expect(testInstance.readWriteProperty, 23);
+      });
+    });
 
-      expect(foo1.multiply_withOtherFoo(false, foo2), 8);
-      expect(foo1.multiply_withOtherFoo(true, foo2), 6);
+    group('class properties', () {
+      test('read-only property', () {
+        expect(PropertyInterface.getClassReadOnlyProperty(lib), 42);
+      });
 
-      foo1.intVal = 100;
-      expect(foo1.multiply_withOtherFoo(false, foo2), 8);
-      expect(foo1.multiply_withOtherFoo(true, foo2), 200);
-
-      foo2.setDoubleVal(1.61803);
-      expect(foo1.multiply_withOtherFoo(false, foo2), 5);
-      expect(foo1.multiply_withOtherFoo(true, foo2), 200);
+      test('read-write property', () {
+        PropertyInterface.setClassReadWriteProperty(lib, 101);
+        expect(PropertyInterface.getClassReadWriteProperty(lib), 101);
+      });
     });
   });
 }
