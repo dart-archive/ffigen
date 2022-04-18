@@ -16,7 +16,17 @@ class ObjCBuiltInFunctions {
     parameters: [Parameter(name: 'str', type: PointerType(charType))],
     isInternal: true,
   );
-  late final String registerName;
+  late final registerName = ObjCInternalFunction('_registerName', _registerNameFunc, (Writer w, String name) {
+    final s = StringBuffer();
+    final selType = _registerNameFunc.functionType.returnType.getCType(w);
+    s.write('\n$selType $name(String name) {\n');
+    s.write('  final cstr = name.toNativeUtf8();\n');
+    s.write('  final sel = ${_registerNameFunc.name}(cstr.cast());\n');
+    s.write('  ${w.ffiPkgLibraryPrefix}.calloc.free(cstr);\n');
+    s.write('  return sel;\n');
+    s.write('}\n');
+    return s.toString();
+  });
 
   late final _getClassFunc = Func(
     name: '_objc_getClass',
@@ -25,7 +35,17 @@ class ObjCBuiltInFunctions {
     parameters: [Parameter(name: 'str', type: PointerType(charType))],
     isInternal: true,
   );
-  late final String getClass;
+  late final getClass = ObjCInternalFunction('_getClass', _getClassFunc, (Writer w, String name) {
+    final s = StringBuffer();
+    final objType = _getClassFunc.functionType.returnType.getCType(w);
+    s.write('\n$objType $name(String name) {\n');
+    s.write('  final cstr = name.toNativeUtf8();\n');
+    s.write('  final clazz = ${_getClassFunc.name}(cstr.cast());\n');
+    s.write('  ${w.ffiPkgLibraryPrefix}.calloc.free(cstr);\n');
+    s.write('  return clazz;\n');
+    s.write('}\n');
+    return s.toString();
+  });
 
   // We need to load a separate instance of objc_msgSend for each signature.
   final _msgSendFuncs = <String, Func>{};
@@ -34,7 +54,7 @@ class ObjCBuiltInFunctions {
     for (final p in params) {
       key += ' ' + p.type.cacheKey();
     }
-    _msgSendFuncs[key] ??= Func(
+    return _msgSendFuncs[key] ??= Func(
       name: '_objc_msgSend_${_msgSendFuncs.length}',
       originalName: 'objc_msgSend',
       returnType: returnType,
@@ -45,7 +65,6 @@ class ObjCBuiltInFunctions {
       ],
       isInternal: true,
     );
-    return _msgSendFuncs[key]!;
   }
 
   final _selObjects = <String, ObjCInternalGlobal>{};
@@ -53,7 +72,7 @@ class ObjCBuiltInFunctions {
     return _selObjects[methodName] ??= ObjCInternalGlobal(
         PointerType(objCSelType),
         '_sel_${methodName.replaceAll(":", "_")}',
-        () => '$registerName(this, "$methodName")');
+        () => '${registerName.name}(this, "$methodName")');
   }
 
   bool utilsExist = false;
@@ -61,24 +80,7 @@ class ObjCBuiltInFunctions {
     if (utilsExist) return;
     utilsExist = true;
 
-    registerName = w.topLevelUniqueNamer.makeUnique('_registerName');
-    final selType = _registerNameFunc.functionType.returnType.getCType(w);
-    s.write('\n$selType $registerName(${w.className} _lib, String name) {\n');
-    s.write('  final cstr = name.toNativeUtf8();\n');
-    s.write('  final sel = _lib.${_registerNameFunc.name}(cstr.cast());\n');
-    s.write('  ${w.ffiPkgLibraryPrefix}.calloc.free(cstr);\n');
-    s.write('  return sel;\n');
-    s.write('}\n');
-
-    getClass = w.topLevelUniqueNamer.makeUnique('_getClass');
-    final objType = _getClassFunc.functionType.returnType.getCType(w);
-    s.write('\n$objType $getClass(${w.className} _lib, String name) {\n');
-    s.write('  final cstr = name.toNativeUtf8();\n');
-    s.write('  final clazz = _lib.${_getClassFunc.name}(cstr.cast());\n');
-    s.write('  ${w.ffiPkgLibraryPrefix}.calloc.free(cstr);\n');
-    s.write('  return clazz;\n');
-    s.write('}\n');
-
+    final objType = PointerType(objCObjectType).getCType(w);
     s.write('\nclass _ObjCWrapper {\n');
     s.write('  final $objType _id;\n');
     s.write('  final ${w.className} _lib;\n');
@@ -87,8 +89,8 @@ class ObjCBuiltInFunctions {
   }
 
   void addDependencies(Set<Binding> dependencies) {
-    _registerNameFunc.addDependencies(dependencies);
-    _getClassFunc.addDependencies(dependencies);
+    registerName.addDependencies(dependencies);
+    getClass.addDependencies(dependencies);
     for (final func in _msgSendFuncs.values) {
       func.addDependencies(dependencies);
     }
@@ -122,6 +124,29 @@ class ObjCBuiltInFunctions {
   }
 }
 
+/// Functions only used internally by ObjC bindings, such as getClass.
+class ObjCInternalFunction extends LookUpBinding {
+  final Func _wrappedFunction;
+  final String Function(Writer, String) _toBindingString;
+  String name;
+
+  ObjCInternalFunction(this.name, this._wrappedFunction, this._toBindingString)
+      : super(originalName: name, name: name);
+
+  @override
+  BindingString toBindingString(Writer w) {
+    name = w.wrapperLevelUniqueNamer.makeUnique(name);
+    return BindingString(type: BindingStringType.func, string: _toBindingString(w, name));
+  }
+
+  @override
+  void addDependencies(Set<Binding> dependencies) {
+    if (dependencies.contains(this)) return;
+    dependencies.add(this);
+    _wrappedFunction.addDependencies(dependencies);
+  }
+}
+
 /// Globals only used internally by ObjC bindings, such as classes and SELs.
 class ObjCInternalGlobal extends LookUpBinding {
   final Type type;
@@ -143,23 +168,5 @@ class ObjCInternalGlobal extends LookUpBinding {
     if (dependencies.contains(this)) return;
     dependencies.add(this);
     type.addDependencies(dependencies);
-  }
-}
-
-/// Functions only used internally by ObjC bindings, such as getClass.
-class ObjCInternalFunction extends LookUpBinding {
-  final Func _wrapped;
-  final BindingString Function(Writer) _toBindingString;
-
-  ObjCInternalFunction(this._wrapped, this._toBindingString);
-
-  @override
-  BindingString toBindingString(Writer w) => _toBindingString(w);
-
-  @override
-  void addDependencies(Set<Binding> dependencies) {
-    if (dependencies.contains(this)) return;
-    dependencies.add(this);
-    _wrapped.addDependencies(dependencies);
   }
 }

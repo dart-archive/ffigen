@@ -201,7 +201,7 @@ class ObjCInterface extends BindingType {
     _classObject = ObjCInternalGlobal(
         PointerType(objCObjectType),
         '_class_$originalName',
-        () => '${builtInFunctions.getClass}(this, "$originalName")')
+        () => '${builtInFunctions.getClass.name}("$originalName")')
       ..addDependencies(dependencies);
 
     if (isNSString) {
