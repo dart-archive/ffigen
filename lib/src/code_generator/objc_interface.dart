@@ -43,6 +43,7 @@ class ObjCInterface extends BindingType {
   final classMethods = <String, ObjCMethod>{};
 
   final ObjCBuiltInFunctions builtInFunctions;
+  late final ObjCInternalGlobal _classObject;
 
   ObjCInterface({
     String? usr,
@@ -91,10 +92,6 @@ class ObjCInterface extends BindingType {
     s.write('extends ${superType?.name ?? '_ObjCWrapper'} {\n');
     s.write('  $name._($objType id, $natLib lib) : super._(id, lib);\n\n');
 
-    // Class object, used to call static methods.
-    final classObject = uniqueNamer.makeUnique('_class');
-    s.write('  static $objType? $classObject;\n\n');
-
     // Cast method.
     s.write('  static $name castFrom<T extends _ObjCWrapper>(T other) {\n');
     s.write('    return $name._(other._id, other._lib);\n');
@@ -107,12 +104,8 @@ class ObjCInterface extends BindingType {
     // Methods.
     for (final m in methods) {
       final methodName = m._getDartMethodName(uniqueNamer);
-      final selName = uniqueNamer.makeUnique('_sel_$methodName');
       final isStatic = m.isClass;
       final returnType = m.returnType!;
-
-      // SEL object for the method.
-      s.write('  static $selType? $selName;');
 
       // The method declaration.
       if (m.dartDoc != null) {
@@ -168,12 +161,6 @@ class ObjCInterface extends BindingType {
       s.write(' {\n');
 
       // Implementation.
-      if (isStatic) {
-        s.write('    $classObject ??= '
-            '${builtInFunctions.getClass}(_lib, "$originalName");\n');
-      }
-      s.write('    $selName ??= '
-          '${builtInFunctions.registerName}(_lib, "${m.originalName}");\n');
       final convertReturn = m.kind != ObjCMethodKind.propertySetter &&
           _needsConverting(returnType);
 
@@ -181,8 +168,8 @@ class ObjCInterface extends BindingType {
         s.write('    ${convertReturn ? 'final _ret = ' : 'return '}');
       }
       s.write('_lib.${m.msgSend!.name}(');
-      s.write(isStatic ? '_class!' : '_id');
-      s.write(', $selName!');
+      s.write(isStatic ? '_lib.${_classObject.name}' : '_id');
+      s.write(', _lib.${m.selObject!.name}');
       for (final p in m.params) {
         s.write(', ${_doArgConversion(p.type, p.name)}');
       }
@@ -209,6 +196,13 @@ class ObjCInterface extends BindingType {
   void addDependencies(Set<Binding> dependencies) {
     if (dependencies.contains(this)) return;
     dependencies.add(this);
+    builtInFunctions.addDependencies(dependencies);
+
+    _classObject = ObjCInternalGlobal(
+        PointerType(objCObjectType),
+        '_class_$originalName',
+        () => '${builtInFunctions.getClass}(this, "$originalName")')
+      ..addDependencies(dependencies);
 
     if (isNSString) {
       _addNSStringMethods();
@@ -224,8 +218,6 @@ class ObjCInterface extends BindingType {
     for (final m in methods) {
       m.addDependencies(dependencies, builtInFunctions);
     }
-
-    builtInFunctions.addDependencies(dependencies);
   }
 
   void _filterPropertyMethods() {
@@ -350,6 +342,7 @@ class ObjCMethod {
   final List<ObjCMethodParam> params;
   final ObjCMethodKind kind;
   final bool isClass;
+  ObjCInternalGlobal? selObject;
   Func? msgSend;
 
   ObjCMethod({
@@ -373,7 +366,9 @@ class ObjCMethod {
     for (final p in params) {
       p.type.addDependencies(dependencies);
     }
-    msgSend = builtInFunctions.getMsgSendFunc(returnType!, params);
+    selObject ??= builtInFunctions.getSelObject(originalName)
+      ..addDependencies(dependencies);
+    msgSend ??= builtInFunctions.getMsgSendFunc(returnType!, params);
   }
 
   String _getDartMethodName(UniqueNamer uniqueNamer) {

@@ -4,6 +4,7 @@
 
 import 'package:ffigen/src/code_generator.dart';
 
+import 'binding_string.dart';
 import 'writer.dart';
 
 /// Built in functions used by the Objective C bindings.
@@ -47,6 +48,14 @@ class ObjCBuiltInFunctions {
     return _msgSendFuncs[key]!;
   }
 
+  final _selObjects = <String, ObjCInternalGlobal>{};
+  ObjCInternalGlobal getSelObject(String methodName) {
+    return _selObjects[methodName] ??= ObjCInternalGlobal(
+        PointerType(objCSelType),
+        '_sel_${methodName.replaceAll(":", "_")}',
+        () => '$registerName(this, "$methodName")');
+  }
+
   bool utilsExist = false;
   void ensureUtilsExist(Writer w, StringBuffer s) {
     if (utilsExist) return;
@@ -83,6 +92,9 @@ class ObjCBuiltInFunctions {
     for (final func in _msgSendFuncs.values) {
       func.addDependencies(dependencies);
     }
+    for (final sel in _selObjects.values) {
+      sel.addDependencies(dependencies);
+    }
   }
 
   void generateNSStringUtils(Writer w, StringBuffer s) {
@@ -107,5 +119,47 @@ class ObjCBuiltInFunctions {
     s.write('  NSString toNSString(${w.className} lib) => '
         'NSString(lib, this);\n');
     s.write('}\n\n');
+  }
+}
+
+/// Globals only used internally by ObjC bindings, such as classes and SELs.
+class ObjCInternalGlobal extends LookUpBinding {
+  final Type type;
+  final String Function() makeValue;
+
+  ObjCInternalGlobal(this.type, String name, this.makeValue)
+      : super(originalName: name, name: name);
+
+  @override
+  BindingString toBindingString(Writer w) {
+    final s = StringBuffer();
+    name = w.wrapperLevelUniqueNamer.makeUnique(name);
+    s.write('late final ${type.getCType(w)} $name = ${makeValue()};');
+    return BindingString(type: BindingStringType.global, string: s.toString());
+  }
+
+  @override
+  void addDependencies(Set<Binding> dependencies) {
+    if (dependencies.contains(this)) return;
+    dependencies.add(this);
+    type.addDependencies(dependencies);
+  }
+}
+
+/// Functions only used internally by ObjC bindings, such as getClass.
+class ObjCInternalFunction extends LookUpBinding {
+  final Func _wrapped;
+  final BindingString Function(Writer) _toBindingString;
+
+  ObjCInternalFunction(this._wrapped, this._toBindingString);
+
+  @override
+  BindingString toBindingString(Writer w) => _toBindingString(w);
+
+  @override
+  void addDependencies(Set<Binding> dependencies) {
+    if (dependencies.contains(this)) return;
+    dependencies.add(this);
+    _wrapped.addDependencies(dependencies);
   }
 }
