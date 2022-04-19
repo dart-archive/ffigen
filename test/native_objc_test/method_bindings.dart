@@ -107,6 +107,13 @@ class MethodTestObjCLibrary {
   set kCFAllocatorUseContext(CFAllocatorRef value) =>
       _kCFAllocatorUseContext.value = value;
 
+  ffi.Pointer<ObjCSel> _registerName1(String name) {
+    final cstr = name.toNativeUtf8();
+    final sel = _sel_registerName(cstr.cast());
+    pkg_ffi.calloc.free(cstr);
+    return sel;
+  }
+
   ffi.Pointer<ObjCSel> _sel_registerName(
     ffi.Pointer<pkg_ffi.Char> str,
   ) {
@@ -121,6 +128,13 @@ class MethodTestObjCLibrary {
               ffi.Pointer<pkg_ffi.Char>)>>('sel_registerName');
   late final __sel_registerName = __sel_registerNamePtr
       .asFunction<ffi.Pointer<ObjCSel> Function(ffi.Pointer<pkg_ffi.Char>)>();
+
+  ffi.Pointer<ObjCObject> _getClass1(String name) {
+    final cstr = name.toNativeUtf8();
+    final clazz = _objc_getClass(cstr.cast());
+    pkg_ffi.calloc.free(cstr);
+    return clazz;
+  }
 
   ffi.Pointer<ObjCObject> _objc_getClass(
     ffi.Pointer<pkg_ffi.Char> str,
@@ -137,6 +151,10 @@ class MethodTestObjCLibrary {
   late final __objc_getClass = __objc_getClassPtr.asFunction<
       ffi.Pointer<ObjCObject> Function(ffi.Pointer<pkg_ffi.Char>)>();
 
+  late final ffi.Pointer<ObjCObject> _class_MethodInterface1 =
+      _getClass1("MethodInterface");
+  late final ffi.Pointer<ObjCObject> _class_NSObject1 = _getClass1("NSObject");
+  late final ffi.Pointer<ObjCSel> _sel_load1 = _registerName1("load");
   void _objc_msgSend_0(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
@@ -154,6 +172,9 @@ class MethodTestObjCLibrary {
   late final __objc_msgSend_0 = __objc_msgSend_0Ptr.asFunction<
       void Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>();
 
+  late final ffi.Pointer<ObjCSel> _sel_initialize1 =
+      _registerName1("initialize");
+  late final ffi.Pointer<ObjCSel> _sel_init1 = _registerName1("init");
   instancetype _objc_msgSend_1(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
@@ -171,6 +192,9 @@ class MethodTestObjCLibrary {
   late final __objc_msgSend_1 = __objc_msgSend_1Ptr.asFunction<
       instancetype Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>();
 
+  late final ffi.Pointer<ObjCSel> _sel_new1 = _registerName1("new");
+  late final ffi.Pointer<ObjCSel> _sel_allocWithZone_1 =
+      _registerName1("allocWithZone:");
   instancetype _objc_msgSend_2(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
@@ -191,6 +215,18 @@ class MethodTestObjCLibrary {
       instancetype Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
           ffi.Pointer<_NSZone>)>();
 
+  late final ffi.Pointer<ObjCSel> _sel_alloc1 = _registerName1("alloc");
+  late final ffi.Pointer<ObjCSel> _sel_dealloc1 = _registerName1("dealloc");
+  late final ffi.Pointer<ObjCSel> _sel_finalize1 = _registerName1("finalize");
+  late final ffi.Pointer<ObjCSel> _sel_copy1 = _registerName1("copy");
+  late final ffi.Pointer<ObjCSel> _sel_mutableCopy1 =
+      _registerName1("mutableCopy");
+  late final ffi.Pointer<ObjCSel> _sel_copyWithZone_1 =
+      _registerName1("copyWithZone:");
+  late final ffi.Pointer<ObjCSel> _sel_mutableCopyWithZone_1 =
+      _registerName1("mutableCopyWithZone:");
+  late final ffi.Pointer<ObjCSel> _sel_instancesRespondToSelector_1 =
+      _registerName1("instancesRespondToSelector:");
   bool _objc_msgSend_3(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
@@ -212,6 +248,8 @@ class MethodTestObjCLibrary {
       int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
           ffi.Pointer<ObjCSel>)>();
 
+  late final ffi.Pointer<ObjCSel> _sel_conformsToProtocol_1 =
+      _registerName1("conformsToProtocol:");
   bool _objc_msgSend_4(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
@@ -233,6 +271,8 @@ class MethodTestObjCLibrary {
       int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
           ffi.Pointer<ObjCObject>)>();
 
+  late final ffi.Pointer<ObjCSel> _sel_methodForSelector_1 =
+      _registerName1("methodForSelector:");
   IMP _objc_msgSend_5(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
@@ -253,6 +293,10 @@ class MethodTestObjCLibrary {
       IMP Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
           ffi.Pointer<ObjCSel>)>();
 
+  late final ffi.Pointer<ObjCSel> _sel_instanceMethodForSelector_1 =
+      _registerName1("instanceMethodForSelector:");
+  late final ffi.Pointer<ObjCSel> _sel_doesNotRecognizeSelector_1 =
+      _registerName1("doesNotRecognizeSelector:");
   void _objc_msgSend_6(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
@@ -273,6 +317,8 @@ class MethodTestObjCLibrary {
       void Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
           ffi.Pointer<ObjCSel>)>();
 
+  late final ffi.Pointer<ObjCSel> _sel_forwardingTargetForSelector_1 =
+      _registerName1("forwardingTargetForSelector:");
   ffi.Pointer<ObjCObject> _objc_msgSend_7(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
@@ -293,6 +339,8 @@ class MethodTestObjCLibrary {
       ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
           ffi.Pointer<ObjCSel>, ffi.Pointer<ObjCSel>)>();
 
+  late final ffi.Pointer<ObjCSel> _sel_forwardInvocation_1 =
+      _registerName1("forwardInvocation:");
   void _objc_msgSend_8(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
@@ -313,6 +361,10 @@ class MethodTestObjCLibrary {
       void Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
           ffi.Pointer<ObjCObject>)>();
 
+  late final ffi.Pointer<ObjCObject> _class_NSMethodSignature1 =
+      _getClass1("NSMethodSignature");
+  late final ffi.Pointer<ObjCSel> _sel_methodSignatureForSelector_1 =
+      _registerName1("methodSignatureForSelector:");
   ffi.Pointer<ObjCObject> _objc_msgSend_9(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
@@ -333,6 +385,10 @@ class MethodTestObjCLibrary {
       ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
           ffi.Pointer<ObjCSel>, ffi.Pointer<ObjCSel>)>();
 
+  late final ffi.Pointer<ObjCSel> _sel_instanceMethodSignatureForSelector_1 =
+      _registerName1("instanceMethodSignatureForSelector:");
+  late final ffi.Pointer<ObjCSel> _sel_allowsWeakReference1 =
+      _registerName1("allowsWeakReference");
   bool _objc_msgSend_10(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
@@ -351,6 +407,15 @@ class MethodTestObjCLibrary {
   late final __objc_msgSend_10 = __objc_msgSend_10Ptr.asFunction<
       int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>();
 
+  late final ffi.Pointer<ObjCSel> _sel_retainWeakReference1 =
+      _registerName1("retainWeakReference");
+  late final ffi.Pointer<ObjCSel> _sel_isSubclassOfClass_1 =
+      _registerName1("isSubclassOfClass:");
+  late final ffi.Pointer<ObjCSel> _sel_resolveClassMethod_1 =
+      _registerName1("resolveClassMethod:");
+  late final ffi.Pointer<ObjCSel> _sel_resolveInstanceMethod_1 =
+      _registerName1("resolveInstanceMethod:");
+  late final ffi.Pointer<ObjCSel> _sel_hash1 = _registerName1("hash");
   int _objc_msgSend_11(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
@@ -368,6 +433,12 @@ class MethodTestObjCLibrary {
   late final __objc_msgSend_11 = __objc_msgSend_11Ptr.asFunction<
       int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>();
 
+  late final ffi.Pointer<ObjCSel> _sel_superclass1 =
+      _registerName1("superclass");
+  late final ffi.Pointer<ObjCSel> _sel_class1 = _registerName1("class");
+  late final ffi.Pointer<ObjCObject> _class_NSString1 = _getClass1("NSString");
+  late final ffi.Pointer<ObjCSel> _sel_stringWithCString_encoding_1 =
+      _registerName1("stringWithCString:encoding:");
   ffi.Pointer<ObjCObject> _objc_msgSend_12(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
@@ -393,6 +464,8 @@ class MethodTestObjCLibrary {
       ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
           ffi.Pointer<ObjCSel>, ffi.Pointer<pkg_ffi.Char>, int)>();
 
+  late final ffi.Pointer<ObjCSel> _sel_UTF8String1 =
+      _registerName1("UTF8String");
   ffi.Pointer<pkg_ffi.Char> _objc_msgSend_13(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
@@ -411,6 +484,8 @@ class MethodTestObjCLibrary {
       ffi.Pointer<pkg_ffi.Char> Function(
           ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>();
 
+  late final ffi.Pointer<ObjCSel> _sel_description1 =
+      _registerName1("description");
   ffi.Pointer<ObjCObject> _objc_msgSend_14(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
@@ -429,6 +504,9 @@ class MethodTestObjCLibrary {
       ffi.Pointer<ObjCObject> Function(
           ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>();
 
+  late final ffi.Pointer<ObjCSel> _sel_debugDescription1 =
+      _registerName1("debugDescription");
+  late final ffi.Pointer<ObjCSel> _sel_add1 = _registerName1("add");
   int _objc_msgSend_15(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
@@ -446,6 +524,7 @@ class MethodTestObjCLibrary {
   late final __objc_msgSend_15 = __objc_msgSend_15Ptr.asFunction<
       int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>();
 
+  late final ffi.Pointer<ObjCSel> _sel_add_1 = _registerName1("add:");
   int _objc_msgSend_16(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
@@ -465,6 +544,7 @@ class MethodTestObjCLibrary {
   late final __objc_msgSend_16 = __objc_msgSend_16Ptr.asFunction<
       int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>, int)>();
 
+  late final ffi.Pointer<ObjCSel> _sel_add_Y_1 = _registerName1("add:Y:");
   int _objc_msgSend_17(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
@@ -486,6 +566,7 @@ class MethodTestObjCLibrary {
   late final __objc_msgSend_17 = __objc_msgSend_17Ptr.asFunction<
       int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>, int, int)>();
 
+  late final ffi.Pointer<ObjCSel> _sel_add_Y_Z_1 = _registerName1("add:Y:Z:");
   int _objc_msgSend_18(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
@@ -509,6 +590,11 @@ class MethodTestObjCLibrary {
   late final __objc_msgSend_18 = __objc_msgSend_18Ptr.asFunction<
       int Function(
           ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>, int, int, int)>();
+
+  late final ffi.Pointer<ObjCSel> _sel_sub1 = _registerName1("sub");
+  late final ffi.Pointer<ObjCSel> _sel_sub_1 = _registerName1("sub:");
+  late final ffi.Pointer<ObjCSel> _sel_sub_Y_1 = _registerName1("sub:Y:");
+  late final ffi.Pointer<ObjCSel> _sel_sub_Y_Z_1 = _registerName1("sub:Y:Z:");
 }
 
 abstract class NSComparisonResult {
@@ -607,20 +693,6 @@ typedef CFAllocatorPreferredSizeCallBack = ffi.Pointer<
     ffi.NativeFunction<
         CFIndex Function(CFIndex, CFOptionFlags, ffi.Pointer<ffi.Void>)>>;
 
-ffi.Pointer<ObjCSel> _registerName(MethodTestObjCLibrary _lib, String name) {
-  final cstr = name.toNativeUtf8();
-  final sel = _lib._sel_registerName(cstr.cast());
-  pkg_ffi.calloc.free(cstr);
-  return sel;
-}
-
-ffi.Pointer<ObjCObject> _getClass(MethodTestObjCLibrary _lib, String name) {
-  final cstr = name.toNativeUtf8();
-  final clazz = _lib._objc_getClass(cstr.cast());
-  pkg_ffi.calloc.free(cstr);
-  return clazz;
-}
-
 class _ObjCWrapper {
   final ffi.Pointer<ObjCObject> _id;
   final MethodTestObjCLibrary _lib;
@@ -631,349 +703,243 @@ class MethodInterface extends NSObject {
   MethodInterface._(ffi.Pointer<ObjCObject> id, MethodTestObjCLibrary lib)
       : super._(id, lib);
 
-  static ffi.Pointer<ObjCObject>? _class;
-
   static MethodInterface castFrom<T extends _ObjCWrapper>(T other) {
     return MethodInterface._(other._id, other._lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_add;
   int add() {
-    _sel_add ??= _registerName(_lib, "add");
-    return _lib._objc_msgSend_15(_id, _sel_add!);
+    return _lib._objc_msgSend_15(_id, _lib._sel_add1);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_add1;
   int add1(int x) {
-    _sel_add1 ??= _registerName(_lib, "add:");
-    return _lib._objc_msgSend_16(_id, _sel_add1!, x);
+    return _lib._objc_msgSend_16(_id, _lib._sel_add_1, x);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_add_Y;
   int add_Y(int x, int y) {
-    _sel_add_Y ??= _registerName(_lib, "add:Y:");
-    return _lib._objc_msgSend_17(_id, _sel_add_Y!, x, y);
+    return _lib._objc_msgSend_17(_id, _lib._sel_add_Y_1, x, y);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_add_Y_Z;
   int add_Y_Z(int x, int y, int z) {
-    _sel_add_Y_Z ??= _registerName(_lib, "add:Y:Z:");
-    return _lib._objc_msgSend_18(_id, _sel_add_Y_Z!, x, y, z);
+    return _lib._objc_msgSend_18(_id, _lib._sel_add_Y_Z_1, x, y, z);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_sub;
   static int sub(MethodTestObjCLibrary _lib) {
-    _class ??= _getClass(_lib, "MethodInterface");
-    _sel_sub ??= _registerName(_lib, "sub");
-    return _lib._objc_msgSend_15(_class!, _sel_sub!);
+    return _lib._objc_msgSend_15(_lib._class_MethodInterface1, _lib._sel_sub1);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_sub1;
   static int sub1(MethodTestObjCLibrary _lib, int x) {
-    _class ??= _getClass(_lib, "MethodInterface");
-    _sel_sub1 ??= _registerName(_lib, "sub:");
-    return _lib._objc_msgSend_16(_class!, _sel_sub1!, x);
+    return _lib._objc_msgSend_16(
+        _lib._class_MethodInterface1, _lib._sel_sub_1, x);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_sub_Y;
   static int sub_Y(MethodTestObjCLibrary _lib, int x, int y) {
-    _class ??= _getClass(_lib, "MethodInterface");
-    _sel_sub_Y ??= _registerName(_lib, "sub:Y:");
-    return _lib._objc_msgSend_17(_class!, _sel_sub_Y!, x, y);
+    return _lib._objc_msgSend_17(
+        _lib._class_MethodInterface1, _lib._sel_sub_Y_1, x, y);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_sub_Y_Z;
   static int sub_Y_Z(MethodTestObjCLibrary _lib, int x, int y, int z) {
-    _class ??= _getClass(_lib, "MethodInterface");
-    _sel_sub_Y_Z ??= _registerName(_lib, "sub:Y:Z:");
-    return _lib._objc_msgSend_18(_class!, _sel_sub_Y_Z!, x, y, z);
+    return _lib._objc_msgSend_18(
+        _lib._class_MethodInterface1, _lib._sel_sub_Y_Z_1, x, y, z);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_new1;
   static MethodInterface new1(MethodTestObjCLibrary _lib) {
-    _class ??= _getClass(_lib, "MethodInterface");
-    _sel_new1 ??= _registerName(_lib, "new");
-    final _ret = _lib._objc_msgSend_1(_class!, _sel_new1!);
+    final _ret =
+        _lib._objc_msgSend_1(_lib._class_MethodInterface1, _lib._sel_new1);
     return MethodInterface._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_alloc;
   static MethodInterface alloc(MethodTestObjCLibrary _lib) {
-    _class ??= _getClass(_lib, "MethodInterface");
-    _sel_alloc ??= _registerName(_lib, "alloc");
-    final _ret = _lib._objc_msgSend_1(_class!, _sel_alloc!);
+    final _ret =
+        _lib._objc_msgSend_1(_lib._class_MethodInterface1, _lib._sel_alloc1);
     return MethodInterface._(_ret, _lib);
   }
 }
+
+class ObjCSel extends ffi.Opaque {}
+
+class ObjCObject extends ffi.Opaque {}
 
 class NSObject extends _ObjCWrapper {
   NSObject._(ffi.Pointer<ObjCObject> id, MethodTestObjCLibrary lib)
       : super._(id, lib);
 
-  static ffi.Pointer<ObjCObject>? _class;
-
   static NSObject castFrom<T extends _ObjCWrapper>(T other) {
     return NSObject._(other._id, other._lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_load;
   static void load(MethodTestObjCLibrary _lib) {
-    _class ??= _getClass(_lib, "NSObject");
-    _sel_load ??= _registerName(_lib, "load");
-    _lib._objc_msgSend_0(_class!, _sel_load!);
+    _lib._objc_msgSend_0(_lib._class_NSObject1, _lib._sel_load1);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_initialize;
   static void initialize(MethodTestObjCLibrary _lib) {
-    _class ??= _getClass(_lib, "NSObject");
-    _sel_initialize ??= _registerName(_lib, "initialize");
-    _lib._objc_msgSend_0(_class!, _sel_initialize!);
+    _lib._objc_msgSend_0(_lib._class_NSObject1, _lib._sel_initialize1);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_init;
   NSObject init() {
-    _sel_init ??= _registerName(_lib, "init");
-    final _ret = _lib._objc_msgSend_1(_id, _sel_init!);
+    final _ret = _lib._objc_msgSend_1(_id, _lib._sel_init1);
     return NSObject._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_new1;
   static NSObject new1(MethodTestObjCLibrary _lib) {
-    _class ??= _getClass(_lib, "NSObject");
-    _sel_new1 ??= _registerName(_lib, "new");
-    final _ret = _lib._objc_msgSend_1(_class!, _sel_new1!);
+    final _ret = _lib._objc_msgSend_1(_lib._class_NSObject1, _lib._sel_new1);
     return NSObject._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_allocWithZone;
   static NSObject allocWithZone(
       MethodTestObjCLibrary _lib, ffi.Pointer<_NSZone> zone) {
-    _class ??= _getClass(_lib, "NSObject");
-    _sel_allocWithZone ??= _registerName(_lib, "allocWithZone:");
-    final _ret = _lib._objc_msgSend_2(_class!, _sel_allocWithZone!, zone);
+    final _ret = _lib._objc_msgSend_2(
+        _lib._class_NSObject1, _lib._sel_allocWithZone_1, zone);
     return NSObject._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_alloc;
   static NSObject alloc(MethodTestObjCLibrary _lib) {
-    _class ??= _getClass(_lib, "NSObject");
-    _sel_alloc ??= _registerName(_lib, "alloc");
-    final _ret = _lib._objc_msgSend_1(_class!, _sel_alloc!);
+    final _ret = _lib._objc_msgSend_1(_lib._class_NSObject1, _lib._sel_alloc1);
     return NSObject._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_dealloc;
   void dealloc() {
-    _sel_dealloc ??= _registerName(_lib, "dealloc");
-    _lib._objc_msgSend_0(_id, _sel_dealloc!);
+    _lib._objc_msgSend_0(_id, _lib._sel_dealloc1);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_finalize;
   void finalize() {
-    _sel_finalize ??= _registerName(_lib, "finalize");
-    _lib._objc_msgSend_0(_id, _sel_finalize!);
+    _lib._objc_msgSend_0(_id, _lib._sel_finalize1);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_copy;
   NSObject copy() {
-    _sel_copy ??= _registerName(_lib, "copy");
-    final _ret = _lib._objc_msgSend_1(_id, _sel_copy!);
+    final _ret = _lib._objc_msgSend_1(_id, _lib._sel_copy1);
     return NSObject._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_mutableCopy;
   NSObject mutableCopy() {
-    _sel_mutableCopy ??= _registerName(_lib, "mutableCopy");
-    final _ret = _lib._objc_msgSend_1(_id, _sel_mutableCopy!);
+    final _ret = _lib._objc_msgSend_1(_id, _lib._sel_mutableCopy1);
     return NSObject._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_copyWithZone;
   static NSObject copyWithZone(
       MethodTestObjCLibrary _lib, ffi.Pointer<_NSZone> zone) {
-    _class ??= _getClass(_lib, "NSObject");
-    _sel_copyWithZone ??= _registerName(_lib, "copyWithZone:");
-    final _ret = _lib._objc_msgSend_2(_class!, _sel_copyWithZone!, zone);
+    final _ret = _lib._objc_msgSend_2(
+        _lib._class_NSObject1, _lib._sel_copyWithZone_1, zone);
     return NSObject._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_mutableCopyWithZone;
   static NSObject mutableCopyWithZone(
       MethodTestObjCLibrary _lib, ffi.Pointer<_NSZone> zone) {
-    _class ??= _getClass(_lib, "NSObject");
-    _sel_mutableCopyWithZone ??= _registerName(_lib, "mutableCopyWithZone:");
-    final _ret = _lib._objc_msgSend_2(_class!, _sel_mutableCopyWithZone!, zone);
+    final _ret = _lib._objc_msgSend_2(
+        _lib._class_NSObject1, _lib._sel_mutableCopyWithZone_1, zone);
     return NSObject._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_instancesRespondToSelector;
   static bool instancesRespondToSelector(
       MethodTestObjCLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
-    _class ??= _getClass(_lib, "NSObject");
-    _sel_instancesRespondToSelector ??=
-        _registerName(_lib, "instancesRespondToSelector:");
-    return _lib._objc_msgSend_3(
-        _class!, _sel_instancesRespondToSelector!, aSelector);
+    return _lib._objc_msgSend_3(_lib._class_NSObject1,
+        _lib._sel_instancesRespondToSelector_1, aSelector);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_conformsToProtocol;
   static bool conformsToProtocol(
       MethodTestObjCLibrary _lib, NSObject protocol) {
-    _class ??= _getClass(_lib, "NSObject");
-    _sel_conformsToProtocol ??= _registerName(_lib, "conformsToProtocol:");
     return _lib._objc_msgSend_4(
-        _class!, _sel_conformsToProtocol!, protocol._id);
+        _lib._class_NSObject1, _lib._sel_conformsToProtocol_1, protocol._id);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_methodForSelector;
   IMP methodForSelector(ffi.Pointer<ObjCSel> aSelector) {
-    _sel_methodForSelector ??= _registerName(_lib, "methodForSelector:");
-    return _lib._objc_msgSend_5(_id, _sel_methodForSelector!, aSelector);
+    return _lib._objc_msgSend_5(_id, _lib._sel_methodForSelector_1, aSelector);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_instanceMethodForSelector;
   static IMP instanceMethodForSelector(
       MethodTestObjCLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
-    _class ??= _getClass(_lib, "NSObject");
-    _sel_instanceMethodForSelector ??=
-        _registerName(_lib, "instanceMethodForSelector:");
-    return _lib._objc_msgSend_5(
-        _class!, _sel_instanceMethodForSelector!, aSelector);
+    return _lib._objc_msgSend_5(_lib._class_NSObject1,
+        _lib._sel_instanceMethodForSelector_1, aSelector);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_doesNotRecognizeSelector;
   void doesNotRecognizeSelector(ffi.Pointer<ObjCSel> aSelector) {
-    _sel_doesNotRecognizeSelector ??=
-        _registerName(_lib, "doesNotRecognizeSelector:");
-    _lib._objc_msgSend_6(_id, _sel_doesNotRecognizeSelector!, aSelector);
+    _lib._objc_msgSend_6(_id, _lib._sel_doesNotRecognizeSelector_1, aSelector);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_forwardingTargetForSelector;
   NSObject forwardingTargetForSelector(ffi.Pointer<ObjCSel> aSelector) {
-    _sel_forwardingTargetForSelector ??=
-        _registerName(_lib, "forwardingTargetForSelector:");
-    final _ret =
-        _lib._objc_msgSend_7(_id, _sel_forwardingTargetForSelector!, aSelector);
+    final _ret = _lib._objc_msgSend_7(
+        _id, _lib._sel_forwardingTargetForSelector_1, aSelector);
     return NSObject._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_forwardInvocation;
   void forwardInvocation(NSObject anInvocation) {
-    _sel_forwardInvocation ??= _registerName(_lib, "forwardInvocation:");
-    _lib._objc_msgSend_8(_id, _sel_forwardInvocation!, anInvocation._id);
+    _lib._objc_msgSend_8(_id, _lib._sel_forwardInvocation_1, anInvocation._id);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_methodSignatureForSelector;
   NSMethodSignature methodSignatureForSelector(ffi.Pointer<ObjCSel> aSelector) {
-    _sel_methodSignatureForSelector ??=
-        _registerName(_lib, "methodSignatureForSelector:");
-    final _ret =
-        _lib._objc_msgSend_9(_id, _sel_methodSignatureForSelector!, aSelector);
+    final _ret = _lib._objc_msgSend_9(
+        _id, _lib._sel_methodSignatureForSelector_1, aSelector);
     return NSMethodSignature._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_instanceMethodSignatureForSelector;
   static NSMethodSignature instanceMethodSignatureForSelector(
       MethodTestObjCLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
-    _class ??= _getClass(_lib, "NSObject");
-    _sel_instanceMethodSignatureForSelector ??=
-        _registerName(_lib, "instanceMethodSignatureForSelector:");
-    final _ret = _lib._objc_msgSend_9(
-        _class!, _sel_instanceMethodSignatureForSelector!, aSelector);
+    final _ret = _lib._objc_msgSend_9(_lib._class_NSObject1,
+        _lib._sel_instanceMethodSignatureForSelector_1, aSelector);
     return NSMethodSignature._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_allowsWeakReference;
   bool allowsWeakReference() {
-    _sel_allowsWeakReference ??= _registerName(_lib, "allowsWeakReference");
-    return _lib._objc_msgSend_10(_id, _sel_allowsWeakReference!);
+    return _lib._objc_msgSend_10(_id, _lib._sel_allowsWeakReference1);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_retainWeakReference;
   bool retainWeakReference() {
-    _sel_retainWeakReference ??= _registerName(_lib, "retainWeakReference");
-    return _lib._objc_msgSend_10(_id, _sel_retainWeakReference!);
+    return _lib._objc_msgSend_10(_id, _lib._sel_retainWeakReference1);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_isSubclassOfClass;
   static bool isSubclassOfClass(MethodTestObjCLibrary _lib, NSObject aClass) {
-    _class ??= _getClass(_lib, "NSObject");
-    _sel_isSubclassOfClass ??= _registerName(_lib, "isSubclassOfClass:");
-    return _lib._objc_msgSend_4(_class!, _sel_isSubclassOfClass!, aClass._id);
+    return _lib._objc_msgSend_4(
+        _lib._class_NSObject1, _lib._sel_isSubclassOfClass_1, aClass._id);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_resolveClassMethod;
   static bool resolveClassMethod(
       MethodTestObjCLibrary _lib, ffi.Pointer<ObjCSel> sel) {
-    _class ??= _getClass(_lib, "NSObject");
-    _sel_resolveClassMethod ??= _registerName(_lib, "resolveClassMethod:");
-    return _lib._objc_msgSend_3(_class!, _sel_resolveClassMethod!, sel);
+    return _lib._objc_msgSend_3(
+        _lib._class_NSObject1, _lib._sel_resolveClassMethod_1, sel);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_resolveInstanceMethod;
   static bool resolveInstanceMethod(
       MethodTestObjCLibrary _lib, ffi.Pointer<ObjCSel> sel) {
-    _class ??= _getClass(_lib, "NSObject");
-    _sel_resolveInstanceMethod ??=
-        _registerName(_lib, "resolveInstanceMethod:");
-    return _lib._objc_msgSend_3(_class!, _sel_resolveInstanceMethod!, sel);
+    return _lib._objc_msgSend_3(
+        _lib._class_NSObject1, _lib._sel_resolveInstanceMethod_1, sel);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_hash;
   static int hash(MethodTestObjCLibrary _lib) {
-    _class ??= _getClass(_lib, "NSObject");
-    _sel_hash ??= _registerName(_lib, "hash");
-    return _lib._objc_msgSend_11(_class!, _sel_hash!);
+    return _lib._objc_msgSend_11(_lib._class_NSObject1, _lib._sel_hash1);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_superclass;
   static NSObject superclass(MethodTestObjCLibrary _lib) {
-    _class ??= _getClass(_lib, "NSObject");
-    _sel_superclass ??= _registerName(_lib, "superclass");
-    final _ret = _lib._objc_msgSend_1(_class!, _sel_superclass!);
+    final _ret =
+        _lib._objc_msgSend_1(_lib._class_NSObject1, _lib._sel_superclass1);
     return NSObject._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_class1;
   static NSObject class1(MethodTestObjCLibrary _lib) {
-    _class ??= _getClass(_lib, "NSObject");
-    _sel_class1 ??= _registerName(_lib, "class");
-    final _ret = _lib._objc_msgSend_1(_class!, _sel_class1!);
+    final _ret = _lib._objc_msgSend_1(_lib._class_NSObject1, _lib._sel_class1);
     return NSObject._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_description;
   static NSString description(MethodTestObjCLibrary _lib) {
-    _class ??= _getClass(_lib, "NSObject");
-    _sel_description ??= _registerName(_lib, "description");
-    final _ret = _lib._objc_msgSend_14(_class!, _sel_description!);
+    final _ret =
+        _lib._objc_msgSend_14(_lib._class_NSObject1, _lib._sel_description1);
     return NSString._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_debugDescription;
   static NSString debugDescription(MethodTestObjCLibrary _lib) {
-    _class ??= _getClass(_lib, "NSObject");
-    _sel_debugDescription ??= _registerName(_lib, "debugDescription");
-    final _ret = _lib._objc_msgSend_14(_class!, _sel_debugDescription!);
+    final _ret = _lib._objc_msgSend_14(
+        _lib._class_NSObject1, _lib._sel_debugDescription1);
     return NSString._(_ret, _lib);
   }
 }
 
 typedef instancetype = ffi.Pointer<ObjCObject>;
 
-class ObjCObject extends ffi.Opaque {}
-
 class _NSZone extends ffi.Opaque {}
-
-class ObjCSel extends ffi.Opaque {}
 
 typedef IMP = ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>;
 
 class NSMethodSignature extends _ObjCWrapper {
   NSMethodSignature._(ffi.Pointer<ObjCObject> id, MethodTestObjCLibrary lib)
       : super._(id, lib);
-
-  static ffi.Pointer<ObjCObject>? _class;
 
   static NSMethodSignature castFrom<T extends _ObjCWrapper>(T other) {
     return NSMethodSignature._(other._id, other._lib);
@@ -985,8 +951,6 @@ typedef NSUInteger = pkg_ffi.UnsignedLong;
 class NSString extends _ObjCWrapper {
   NSString._(ffi.Pointer<ObjCObject> id, MethodTestObjCLibrary lib)
       : super._(id, lib);
-
-  static ffi.Pointer<ObjCObject>? _class;
 
   static NSString castFrom<T extends _ObjCWrapper>(T other) {
     return NSString._(other._id, other._lib);
@@ -1002,21 +966,15 @@ class NSString extends _ObjCWrapper {
   @override
   String toString() => UTF8String().cast<pkg_ffi.Utf8>().toDartString();
 
-  static ffi.Pointer<ObjCSel>? _sel_stringWithCString_encoding;
   static NSString stringWithCString_encoding(
       MethodTestObjCLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
-    _class ??= _getClass(_lib, "NSString");
-    _sel_stringWithCString_encoding ??=
-        _registerName(_lib, "stringWithCString:encoding:");
-    final _ret = _lib._objc_msgSend_12(
-        _class!, _sel_stringWithCString_encoding!, cString, enc);
+    final _ret = _lib._objc_msgSend_12(_lib._class_NSString1,
+        _lib._sel_stringWithCString_encoding_1, cString, enc);
     return NSString._(_ret, _lib);
   }
 
-  static ffi.Pointer<ObjCSel>? _sel_UTF8String;
   ffi.Pointer<pkg_ffi.Char> UTF8String() {
-    _sel_UTF8String ??= _registerName(_lib, "UTF8String");
-    return _lib._objc_msgSend_13(_id, _sel_UTF8String!);
+    return _lib._objc_msgSend_13(_id, _lib._sel_UTF8String1);
   }
 }
 
