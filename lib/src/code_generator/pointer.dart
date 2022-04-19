@@ -24,7 +24,10 @@ class PointerType extends Type {
       '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
 
   @override
-  String toString() => '*$child';
+  String toString() => '$child*';
+
+  @override
+  String cacheKey() => '${child.cacheKey()}*';
 }
 
 /// Represents a constant array, which has a fixed size.
@@ -40,6 +43,9 @@ class ConstantArray extends PointerType {
 
   @override
   String toString() => '$child[$length]';
+
+  @override
+  String cacheKey() => '${child.cacheKey()}[$length]';
 }
 
 /// Represents an incomplete array, which has an unknown size.
@@ -51,4 +57,7 @@ class IncompleteArray extends PointerType {
 
   @override
   String toString() => '$child[]';
+
+  @override
+  String cacheKey() => '${child.cacheKey()}[]';
 }

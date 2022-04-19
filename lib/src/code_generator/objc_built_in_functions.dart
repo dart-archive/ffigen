@@ -29,10 +29,9 @@ class ObjCBuiltInFunctions {
   // We need to load a separate instance of objc_msgSend for each signature.
   final _msgSendFuncs = <String, Func>{};
   Func getMsgSendFunc(Type returnType, List<ObjCMethodParam> params) {
-    // TODO(#279): These keys don't dedupe sufficiently.
-    var key = returnType.hashCode.toRadixString(36);
+    var key = returnType.cacheKey();
     for (final p in params) {
-      key += ' ' + p.type.hashCode.toRadixString(36);
+      key += ' ' + p.type.cacheKey();
     }
     _msgSendFuncs[key] ??= Func(
       name: '_objc_msgSend_${_msgSendFuncs.length}',
