@@ -4,8 +4,8 @@
 
 name: ffigen
 version: 5.0.0-dev.1
-homepage: https://github.com/dart-lang/ffigen
 description: Generator for FFI bindings, using LibClang to parse C header files.
+repository: https://github.com/dart-lang/ffigen
 
 environment:
   sdk: '>=2.16.0-124.0.dev <3.0.0'
