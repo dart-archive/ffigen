@@ -71,6 +71,10 @@ class Config {
   Declaration get typedefs => _typedefs;
   late Declaration _typedefs;
 
+  /// Declaration config for Objective C interfaces.
+  Declaration get objcInterfaces => _objcInterfaces;
+  late Declaration _objcInterfaces;
+
   /// If generated bindings should be sorted alphabetically.
   bool get sort => _sort;
   late bool _sort;
@@ -324,6 +328,15 @@ class Config {
         defaultValue: () => Declaration(),
         extractedResult: (dynamic result) {
           _typedefs = result as Declaration;
+        },
+      ),
+      [strings.objcInterfaces]: Specification<Declaration>(
+        requirement: Requirement.no,
+        validator: declarationConfigValidator,
+        extractor: declarationConfigExtractor,
+        defaultValue: () => Declaration(),
+        extractedResult: (dynamic result) {
+          _objcInterfaces = result as Declaration;
         },
       ),
       [strings.libraryImports]: Specification<Map<String, LibraryImport>>(

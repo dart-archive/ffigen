@@ -52,6 +52,7 @@ abstract class Type {
   /// the hash of the Type, but in many cases this does not dedupe sufficiently.
   /// So Types that may be duplicated should override this to return a more
   /// specific key. Types that are already deduped don't need to override this.
+  /// toString() is not a valid cache key as there may be name collisions.
   String cacheKey() => hashCode.toRadixString(36);
 }
 

@@ -75,6 +75,7 @@ const unnamedEnums = 'unnamed-enums';
 const globals = 'globals';
 const macros = 'macros';
 const typedefs = 'typedefs';
+const objcInterfaces = 'objc-interfaces';
 
 // Sub-fields of Declarations.
 const include = 'include';
