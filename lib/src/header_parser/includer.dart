@@ -35,11 +35,6 @@ bool shouldIncludeFunc(String usr, String name) {
       usr, name, bindingsIndex.isSeenType, config.functionDecl.shouldInclude);
 }
 
-bool shouldIncludeInterface(String usr, String name) {
-  // TODO(#279): Check config YAML.
-  return true;
-}
-
 bool shouldIncludeEnumClass(String usr, String name) {
   return _shouldIncludeDecl(
       usr, name, bindingsIndex.isSeenType, config.enumClassDecl.shouldInclude);
@@ -63,6 +58,11 @@ bool shouldIncludeMacro(String usr, String name) {
 bool shouldIncludeTypealias(String usr, String name) {
   return _shouldIncludeDecl(
       usr, name, bindingsIndex.isSeenType, config.typedefs.shouldInclude);
+}
+
+bool shouldIncludeObjCInterface(String usr, String name) {
+  return _shouldIncludeDecl(
+      usr, name, bindingsIndex.isSeenType, config.objcInterfaces.shouldInclude);
 }
 
 /// True if a cursor should be included based on headers config, used on root

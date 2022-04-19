@@ -33,4 +33,7 @@ Future<void> main(List<String> arguments) async {
   }
   print('Building Dynamic Library for Objective C Native Tests...');
   await _buildLib('native_objc_test.m', 'native_objc_test.dylib');
+  await _buildLib('method_test.m', 'method_test.dylib');
+  await _buildLib('property_test.m', 'property_test.dylib');
+  await _buildLib('string_test.m', 'string_test.dylib');
 }

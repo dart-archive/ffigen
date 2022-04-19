@@ -55,6 +55,9 @@ class NativeType extends Type {
 
   @override
   String toString() => _cType;
+
+  @override
+  String cacheKey() => _cType;
 }
 
 class BooleanType extends NativeType {
@@ -65,4 +68,7 @@ class BooleanType extends NativeType {
 
   @override
   String toString() => 'bool';
+
+  @override
+  String cacheKey() => 'bool';
 }

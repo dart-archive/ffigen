@@ -47,6 +47,13 @@ abstract class Type {
   /// only. This string should not be printed as generated code.
   @override
   String toString();
+
+  /// Cache key used in various places to dedupe Types. By default this is just
+  /// the hash of the Type, but in many cases this does not dedupe sufficiently.
+  /// So Types that may be duplicated should override this to return a more
+  /// specific key. Types that are already deduped don't need to override this.
+  /// toString() is not a valid cache key as there may be name collisions.
+  String cacheKey() => hashCode.toRadixString(36);
 }
 
 /// Function to check if the dart and C type string are same.
@@ -87,6 +94,9 @@ abstract class BindingType extends NoLookUpBinding implements Type {
 
   @override
   String toString() => originalName;
+
+  @override
+  String cacheKey() => hashCode.toRadixString(36);
 }
 
 /// Represents an unimplemented type. Used as a marker, so that declarations

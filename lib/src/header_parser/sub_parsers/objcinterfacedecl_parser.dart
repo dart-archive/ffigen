@@ -28,10 +28,16 @@ class _ParsedObjCMethod {
 final _interfaceStack = Stack<_ParsedObjCInterface>();
 final _methodStack = Stack<_ParsedObjCMethod>();
 
-Type? parseObjCInterfaceDeclaration(clang_types.CXCursor cursor) {
+Type? parseObjCInterfaceDeclaration(
+  clang_types.CXCursor cursor, {
+
+  /// Option to ignore declaration filter (Useful in case of extracting
+  /// declarations when they are passed/returned by an included function.)
+  bool ignoreFilter = false,
+}) {
   final itfUsr = cursor.usr();
   final itfName = cursor.spelling();
-  if (!shouldIncludeInterface(itfUsr, itfName)) {
+  if (!ignoreFilter && !shouldIncludeObjCInterface(itfUsr, itfName)) {
     return null;
   }
 
@@ -42,8 +48,9 @@ Type? parseObjCInterfaceDeclaration(clang_types.CXCursor cursor) {
       'Name: $name, ${cursor.completeStringRepr()}');
 
   return ObjCInterface(
-    usr: itfUsr, originalName: name,
-    name: name, // TODO(#279): config.interfaceDecl.renameUsingConfig(name),
+    usr: itfUsr,
+    originalName: name,
+    name: config.objcInterfaces.renameUsingConfig(name),
     dartDoc: getCursorDocComment(cursor),
     builtInFunctions: objCBuiltInFunctions,
   );
@@ -118,10 +125,10 @@ void _parseProperty(clang_types.CXCursor cursor) {
   _logger.fine('       > Property: '
       '$fieldType $fieldName ${cursor.completeStringRepr()}');
 
+  final getterName =
+      clang.clang_Cursor_getObjCPropertyGetterName(cursor).toStringAndDispose();
   final getter = ObjCMethod(
-    originalName: clang
-        .clang_Cursor_getObjCPropertyGetterName(cursor)
-        .toStringAndDispose(),
+    originalName: getterName,
     property: property,
     dartDoc: dartDoc,
     kind: ObjCMethodKind.propertyGetter,
@@ -131,10 +138,11 @@ void _parseProperty(clang_types.CXCursor cursor) {
   itf.addMethod(getter);
 
   if (!isReadOnly) {
+    final setterName = clang
+        .clang_Cursor_getObjCPropertySetterName(cursor)
+        .toStringAndDispose();
     final setter = ObjCMethod(
-        originalName: clang
-            .clang_Cursor_getObjCPropertySetterName(cursor)
-            .toStringAndDispose(),
+        originalName: setterName,
         property: property,
         dartDoc: dartDoc,
         kind: ObjCMethodKind.propertySetter,
@@ -146,10 +154,11 @@ void _parseProperty(clang_types.CXCursor cursor) {
 }
 
 void _parseMethod(clang_types.CXCursor cursor) {
+  final methodName = cursor.spelling();
   final isClassMethod =
       cursor.kind == clang_types.CXCursorKind.CXCursor_ObjCClassMethodDecl;
   final method = ObjCMethod(
-    originalName: cursor.spelling(),
+    originalName: methodName,
     dartDoc: getCursorDocComment(cursor),
     kind: ObjCMethodKind.method,
     isClass: isClassMethod,

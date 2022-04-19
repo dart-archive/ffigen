@@ -1,3 +1,7 @@
+// Copyright (c) 2022, the Dart project authors. Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 #import <Foundation/NSObject.h>
 #import <Foundation/NSString.h>
 
@@ -6,9 +10,6 @@
 }
 
 @property int32_t intVal;
-@property (readonly) int32_t readOnlyProperty;
-@property (class, readonly) int32_t classReadOnlyProperty;
-@property (class) int32_t classReadWriteProperty;
 
 + (Foo*)makeFoo:(double)x;
 
@@ -19,24 +20,6 @@
 @end
 
 @implementation Foo
-
-static int32_t _classReadWriteProperty = 0;
-
-- (int32_t)readOnlyProperty {
-  return 7;
-}
-
-+ (int32_t)classReadOnlyProperty {
-  return 42;
-}
-
-+ (int32_t)classReadWriteProperty {
-  return _classReadWriteProperty;
-}
-
-+ (void)setClassReadWriteProperty:(int32_t)x {
-  _classReadWriteProperty = x;
-}
 
 + (Foo*)makeFoo:(double)x {
   Foo* foo = [Foo new];
@@ -57,17 +40,6 @@ static int32_t _classReadWriteProperty = 0;
   self->doubleVal = x;
 }
 
-@end
-
-// TODO(#309): strConcat should just be a static function.
-@interface StringUtil : NSObject {}
-+ (NSString*)strConcat:(NSString*)a with:(NSString*)b;
-@end
-
-@implementation StringUtil
-+ (NSString*)strConcat:(NSString*)a with:(NSString*)b {
-  return [a stringByAppendingString:b];
-}
 @end
 
 typedef int32_t (^IntBlock)(int32_t);

@@ -45,6 +45,9 @@ class FunctionType extends Type {
   String toString() => _getTypeString(false, (Type t) => t.toString());
 
   @override
+  String cacheKey() => _getTypeString(false, (Type t) => t.cacheKey());
+
+  @override
   void addDependencies(Set<Binding> dependencies) {
     returnType.addDependencies(dependencies);
     for (final p in parameters) {
@@ -74,4 +77,7 @@ class NativeFunc extends Type {
 
   @override
   String toString() => 'NativeFunction<${type.toString()}>';
+
+  @override
+  String cacheKey() => 'NatFn(${type.cacheKey()})';
 }

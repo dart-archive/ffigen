@@ -17,21 +17,25 @@ import '../test_utils.dart';
 
 late Library actual;
 void main() {
-  group('objc_interface_test', () {
+  group('objc_config_test', () {
     setUpAll(() {
       logWarnings(Level.SEVERE);
       actual = parser.parse(
         Config.fromYaml(yaml.loadYaml('''
 ${strings.name}: 'NativeLibrary'
-${strings.description}: 'ObjC Interface Test'
+${strings.description}: 'ObjC Config Test'
 ${strings.output}: 'unused'
 ${strings.language}: '${strings.langObjC}'
 ${strings.headers}:
   ${strings.entryPoints}:
-    - 'test/header_parser_tests/objc_interface.h'
+    - 'test/header_parser_tests/objc_config.h'
 ${strings.objcInterfaces}:
   ${strings.include}:
     - 'Foo'
+  ${strings.exclude}:
+    - 'Excluded'
+  ${strings.rename}:
+    '_(.*)': '\$1'
 ''') as yaml.YamlMap),
       );
     });
@@ -39,12 +43,12 @@ ${strings.objcInterfaces}:
       matchLibraryWithExpected(actual, [
         'test',
         'debug_generated',
-        'header_parser_objc_interface_test_output.dart'
+        'header_parser_objc_config_test_output.dart'
       ], [
         'test',
         'header_parser_tests',
         'expected_bindings',
-        '_expected_objc_interface_bindings.dart'
+        '_expected_objc_config_bindings.dart'
       ]);
     });
   });

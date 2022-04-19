@@ -184,7 +184,10 @@ compiler-opts-automatic:
   </td>
   </tr>
   <tr>
-    <td>functions<br><br>structs<br><br>unions<br><br>enums<br><br>unnamed-enums<br><br>macros<br><br>globals</td>
+    <td>
+      functions<br><br>structs<br><br>unions<br><br>enums<br><br>
+      unnamed-enums<br><br>macros<br><br>globals<br><br>objcInterfaces
+    </td>
     <td>Filters for declarations.<br><b>Default: all are included.</b><br><br>
     Options -<br>
     - Include/Exclude declarations.<br>
@@ -509,11 +512,9 @@ language: 'objc'
 2. Run `dart run ffigen`.
 
 ## Running Tests
-Dynamic library for some tests need to be built before running the examples.
-Run `dart test/setup.dart` to build the libraries.
 
-Run tests from the root of the package with `dart run test`.
-> Note: If llvm is not installed in one of the default locations, tests may fail.
+See [test/README.md](test/README.md)
+
 ## FAQ
 ### Can ffigen be used for removing underscores or renaming declarations?
 Ffigen supports **regexp based renaming**, the regexp must be a

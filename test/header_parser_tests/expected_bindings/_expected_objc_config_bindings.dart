@@ -4,7 +4,7 @@
 import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart' as pkg_ffi;
 
-/// ObjC Interface Test
+/// ObjC Config Test
 class NativeLibrary {
   /// Holds the symbol lookup function.
   final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
@@ -418,102 +418,6 @@ class NativeLibrary {
 
   late final ffi.Pointer<ObjCSel> _sel_debugDescription1 =
       _registerName1("debugDescription");
-  late final ffi.Pointer<ObjCSel> _sel_someProperty1 =
-      _registerName1("someProperty");
-  int _objc_msgSend_15(
-    ffi.Pointer<ObjCObject> obj,
-    ffi.Pointer<ObjCSel> sel,
-  ) {
-    return __objc_msgSend_15(
-      obj,
-      sel,
-    );
-  }
-
-  late final __objc_msgSend_15Ptr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int32 Function(
-              ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>>('objc_msgSend');
-  late final __objc_msgSend_15 = __objc_msgSend_15Ptr.asFunction<
-      int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>();
-
-  late final ffi.Pointer<ObjCSel> _sel_setSomeProperty_1 =
-      _registerName1("setSomeProperty:");
-  void _objc_msgSend_16(
-    ffi.Pointer<ObjCObject> obj,
-    ffi.Pointer<ObjCSel> sel,
-    int value,
-  ) {
-    return __objc_msgSend_16(
-      obj,
-      sel,
-      value,
-    );
-  }
-
-  late final __objc_msgSend_16Ptr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
-              ffi.Int32)>>('objc_msgSend');
-  late final __objc_msgSend_16 = __objc_msgSend_16Ptr.asFunction<
-      void Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>, int)>();
-
-  late final ffi.Pointer<ObjCSel> _sel_readOnlyProperty1 =
-      _registerName1("readOnlyProperty");
-  late final ffi.Pointer<ObjCSel> _sel_classReadOnlyProperty1 =
-      _registerName1("classReadOnlyProperty");
-  late final ffi.Pointer<ObjCSel> _sel_classReadWriteProperty1 =
-      _registerName1("classReadWriteProperty");
-  late final ffi.Pointer<ObjCSel> _sel_setClassReadWriteProperty_1 =
-      _registerName1("setClassReadWriteProperty:");
-  late final ffi.Pointer<ObjCSel> _sel_aClassMethod_1 =
-      _registerName1("aClassMethod:");
-  ffi.Pointer<ObjCObject> _objc_msgSend_17(
-    ffi.Pointer<ObjCObject> obj,
-    ffi.Pointer<ObjCSel> sel,
-    double someArg,
-  ) {
-    return __objc_msgSend_17(
-      obj,
-      sel,
-      someArg,
-    );
-  }
-
-  late final __objc_msgSend_17Ptr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
-              ffi.Pointer<ObjCSel>, ffi.Double)>>('objc_msgSend');
-  late final __objc_msgSend_17 = __objc_msgSend_17Ptr.asFunction<
-      ffi.Pointer<ObjCObject> Function(
-          ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>, double)>();
-
-  late final ffi.Pointer<ObjCSel> _sel_anInstanceMethod_withOtherArg_1 =
-      _registerName1("anInstanceMethod:withOtherArg:");
-  int _objc_msgSend_18(
-    ffi.Pointer<ObjCObject> obj,
-    ffi.Pointer<ObjCSel> sel,
-    ffi.Pointer<ObjCObject> someArg,
-    ffi.Pointer<ObjCObject> otherArg,
-  ) {
-    return __objc_msgSend_18(
-      obj,
-      sel,
-      someArg,
-      otherArg,
-    );
-  }
-
-  late final __objc_msgSend_18Ptr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int32 Function(
-              ffi.Pointer<ObjCObject>,
-              ffi.Pointer<ObjCSel>,
-              ffi.Pointer<ObjCObject>,
-              ffi.Pointer<ObjCObject>)>>('objc_msgSend');
-  late final __objc_msgSend_18 = __objc_msgSend_18Ptr.asFunction<
-      int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
-          ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCObject>)>();
 }
 
 class _ObjCWrapper {
@@ -527,44 +431,6 @@ class Foo extends NSObject {
 
   static Foo castFrom<T extends _ObjCWrapper>(T other) {
     return Foo._(other._id, other._lib);
-  }
-
-  int get someProperty {
-    return _lib._objc_msgSend_15(_id, _lib._sel_someProperty1);
-  }
-
-  set someProperty(int value) {
-    _lib._objc_msgSend_16(_id, _lib._sel_setSomeProperty_1, value);
-  }
-
-  int get readOnlyProperty {
-    return _lib._objc_msgSend_15(_id, _lib._sel_readOnlyProperty1);
-  }
-
-  static int getClassReadOnlyProperty(NativeLibrary _lib) {
-    return _lib._objc_msgSend_15(
-        _lib._class_Foo1, _lib._sel_classReadOnlyProperty1);
-  }
-
-  static int getClassReadWriteProperty(NativeLibrary _lib) {
-    return _lib._objc_msgSend_15(
-        _lib._class_Foo1, _lib._sel_classReadWriteProperty1);
-  }
-
-  static void setClassReadWriteProperty(NativeLibrary _lib, int value) {
-    _lib._objc_msgSend_16(
-        _lib._class_Foo1, _lib._sel_setClassReadWriteProperty_1, value);
-  }
-
-  static Foo aClassMethod(NativeLibrary _lib, double someArg) {
-    final _ret = _lib._objc_msgSend_17(
-        _lib._class_Foo1, _lib._sel_aClassMethod_1, someArg);
-    return Foo._(_ret, _lib);
-  }
-
-  int anInstanceMethod_withOtherArg(NSObject someArg, NSObject otherArg) {
-    return _lib._objc_msgSend_18(_id, _lib._sel_anInstanceMethod_withOtherArg_1,
-        someArg._id, otherArg._id);
   }
 
   static Foo new1(NativeLibrary _lib) {
