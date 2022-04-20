@@ -22,10 +22,9 @@ ObjCBlock parseObjCBlock(clang_types.CXType cxtype) {
 
   // Create a fake USR code for the block. This code is used to dedupe blocks
   // with the same signature.
-  // TODO(#279): These keys don't dedupe sufficiently.
-  var usr = 'objcBlock: ' + returnType.hashCode.toRadixString(36);
+  var usr = 'objcBlock: ' + returnType.cacheKey();
   for (final type in argTypes) {
-    usr += ' ' + type.hashCode.toRadixString(36);
+    usr += ' ' + type.cacheKey();
   }
 
   return ObjCBlock(
@@ -33,5 +32,6 @@ ObjCBlock parseObjCBlock(clang_types.CXType cxtype) {
     name: 'ObjCBlock',
     returnType: returnType,
     argTypes: argTypes,
+    builtInFunctions: objCBuiltInFunctions,
   );
 }
