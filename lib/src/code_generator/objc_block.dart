@@ -35,21 +35,25 @@ class ObjCBlock extends BindingType {
     }
 
     final isVoid = returnType == NativeType(SupportedNativeType.Void);
-    final blockPtr = PointerType(builtInFunctions.blockStruct).getCType(w);
+    final blockPtr = PointerType(builtInFunctions.blockStruct);
     final funcType = FunctionType(returnType: returnType, parameters: params);
-    final natFnPtr = PointerType(NativeFunc(funcType)).getCType(w);
+    final natFnType = NativeFunc(funcType);
+    final natFnPtr = PointerType(natFnType).getCType(w);
     final funcPtrTrampoline =
         w.topLevelUniqueNamer.makeUnique('_${name}_fnPtrTrampoline');
+    final trampFuncType = FunctionType(returnType: returnType, parameters: [
+      Parameter(type: blockPtr, name: 'block'),
+      ...params]);
 
     // Write the function pointer based trampoline function.
-    s.write(returnType.getCType(w));
-    s.write(' $funcPtrTrampoline($blockPtr block');
+    s.write(returnType.getDartType(w));
+    s.write(' $funcPtrTrampoline(${blockPtr.getCType(w)} block');
     for (int i = 0; i < params.length; ++i) {
-      s.write(', ${params[i].type.getCType(w)} ${params[i].name}');
+      s.write(', ${params[i].type.getDartType(w)} ${params[i].name}');
     }
     s.write(') {\n');
-    s.write('  ${isVoid ? '' : 'return '}block.target.asFunction<'
-        '${funcType.getCType(w)}>(');
+    s.write('  ${isVoid ? '' : 'return '}block.ref.target.cast<'
+        '${natFnType.getDartType(w)}>().asFunction<${funcType.getDartType(w)}>()(');
     for (int i = 0; i < params.length; ++i) {
       s.write('${i == 0 ? '' : ', '}${params[i].name}');
     }
@@ -59,16 +63,15 @@ class ObjCBlock extends BindingType {
     // Write the wrapper class.
     s.write('class $name {\n');
 
-    s.write('  final $blockPtr _impl;\n');
+    s.write('  final ${blockPtr.getCType(w)} _impl;\n');
     s.write('  final ${w.className} _lib;\n');
 
     // Constructor from a function pointer.
     s.write('\n');
-    s.write('  $name.fromFunctionPointer(this._lib, $natFnPtr ptr, '
-        '[Object? exceptionalReturn])');
+    s.write('  $name.fromFunctionPointer(this._lib, $natFnPtr ptr)');
     s.write(' : _impl =  _lib.${builtInFunctions.newBlock.name}('
-        'Pointer.fromFunction($funcPtrTrampoline, exceptionalReturn), '
-        'ptr){}\n');
+        '${w.ffiLibraryPrefix}.Pointer.fromFunction<${trampFuncType.getCType(w)}>($funcPtrTrampoline, '
+        'exceptionalReturn).cast(), ptr.cast()){}\n');
     
     s.write('}\n');
     return BindingString(
@@ -85,9 +88,9 @@ class ObjCBlock extends BindingType {
       t.addDependencies(dependencies);
     }
 
-    builtInFunctions.blockStruct.addDependencies(dependencies);
-    builtInFunctions.blockDescSingleton.addDependencies(dependencies);
     builtInFunctions.newBlockDesc.addDependencies(dependencies);
+    builtInFunctions.blockDescSingleton.addDependencies(dependencies);
+    builtInFunctions.blockStruct.addDependencies(dependencies);
     builtInFunctions.newBlock.addDependencies(dependencies);
   }
 
