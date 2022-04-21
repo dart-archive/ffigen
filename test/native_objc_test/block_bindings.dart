@@ -990,9 +990,8 @@ class ObjCBlock {
       ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(ffi.Int32 arg0)>> ptr)
       : _impl = _lib._newBlock1(
             ffi.Pointer.fromFunction<
-                        ffi.Int32 Function(
-                            ffi.Pointer<_ObjCBlock> block, ffi.Int32 arg0)>(
-                    _ObjCBlock_fnPtrTrampoline, 123)
+                    ffi.Int32 Function(ffi.Pointer<_ObjCBlock> block,
+                        ffi.Int32 arg0)>(_ObjCBlock_fnPtrTrampoline, 0)
                 .cast(),
             ptr.cast()) {}
   ffi.Pointer<_ObjCBlock> get pointer => _impl;

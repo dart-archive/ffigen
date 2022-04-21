@@ -281,6 +281,10 @@ class ObjCInterface extends BindingType {
   @override
   String getCType(Writer w) => PointerType(objCObjectType).getCType(w);
 
+  @override
+  String getDefaultValue(Writer w, String nativeLib) =>
+      '$name._(${w.ffiLibraryPrefix}.nullptr, $nativeLib)';
+
   bool _isObject(Type type) =>
       type is PointerType && type.child == objCObjectType;
 
