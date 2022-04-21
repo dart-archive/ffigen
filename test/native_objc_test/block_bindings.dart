@@ -974,7 +974,7 @@ extension StringToNSString on String {
   NSString toNSString(BlockTestObjCLibrary lib) => NSString(lib, this);
 }
 
-typedef IntBlock = ffi.Pointer<ObjCObject>;
+typedef IntBlock = ffi.Pointer<_ObjCBlock>;
 int _ObjCBlock_fnPtrTrampoline(ffi.Pointer<_ObjCBlock> block, int arg0) {
   return block.ref.target
       .cast<ffi.NativeFunction<ffi.Int32 Function(ffi.Int32 arg0)>>()
@@ -984,6 +984,7 @@ int _ObjCBlock_fnPtrTrampoline(ffi.Pointer<_ObjCBlock> block, int arg0) {
 class ObjCBlock {
   final ffi.Pointer<_ObjCBlock> _impl;
   final BlockTestObjCLibrary _lib;
+  ObjCBlock._(this._impl, this._lib);
 
   ObjCBlock.fromFunctionPointer(this._lib,
       ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(ffi.Int32 arg0)>> ptr)
@@ -994,8 +995,7 @@ class ObjCBlock {
                     _ObjCBlock_fnPtrTrampoline, 123)
                 .cast(),
             ptr.cast()) {}
-
-  ffi.Pointer<ObjCObject> id() { return _impl.cast(); }
+  ffi.Pointer<_ObjCBlock> get pointer => _impl;
 }
 
 class _ObjCBlockDesc extends ffi.Struct {

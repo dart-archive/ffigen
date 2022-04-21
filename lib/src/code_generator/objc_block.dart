@@ -62,9 +62,9 @@ class ObjCBlock extends BindingType {
 
     // Write the wrapper class.
     s.write('class $name {\n');
-
     s.write('  final ${blockPtr.getCType(w)} _impl;\n');
     s.write('  final ${w.className} _lib;\n');
+    s.write('  $name._(this._impl, this._lib);\n');
 
     // Constructor from a function pointer.
     s.write('\n');
@@ -72,6 +72,9 @@ class ObjCBlock extends BindingType {
     s.write(' : _impl =  _lib.${builtInFunctions.newBlock.name}('
         '${w.ffiLibraryPrefix}.Pointer.fromFunction<${trampFuncType.getCType(w)}>($funcPtrTrampoline, '
         'exceptionalReturn).cast(), ptr.cast()){}\n');
+
+    // Get the pointer to the underlying block.
+    s.write('  ${blockPtr.getCType(w)} get pointer => _impl;\n');
     
     s.write('}\n');
     return BindingString(
@@ -95,7 +98,8 @@ class ObjCBlock extends BindingType {
   }
 
   @override
-  String getCType(Writer w) => PointerType(objCObjectType).getCType(w);
+  String getCType(Writer w) =>
+      PointerType(builtInFunctions.blockStruct).getCType(w);
 
   @override
   String toString() {
