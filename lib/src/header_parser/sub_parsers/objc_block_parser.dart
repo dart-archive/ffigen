@@ -2,14 +2,14 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:ffi';
-
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser/data.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
 import '../utils.dart';
+
+final _logger = Logger('ffigen.header_parser.objc_block_parser');
 
 ObjCBlock parseObjCBlock(clang_types.CXType cxtype) {
   final blk = clang.clang_getPointeeType(cxtype);
@@ -26,6 +26,9 @@ ObjCBlock parseObjCBlock(clang_types.CXType cxtype) {
   for (final type in argTypes) {
     usr += ' ' + type.cacheKey();
   }
+
+  _logger.fine('++++ Adding ObjC block: '
+      '${cxtype.completeStringRepr()}, syntheticUsr: $usr');
 
   return ObjCBlock(
     usr: usr.toString(),

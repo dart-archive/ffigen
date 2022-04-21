@@ -3599,7 +3599,7 @@ class ObjCBlock {
                             NSUInteger arg0, ffi.Pointer<ffi.Uint8> arg1)>(
                     _ObjCBlock_fnPtrTrampoline)
                 .cast(),
-            ptr.cast()) {}
+            ptr.cast());
   ffi.Pointer<_ObjCBlock> get pointer => _impl;
 }
 
@@ -3662,7 +3662,7 @@ class ObjCBlock1 {
                             NSUInteger arg0, ffi.Pointer<ffi.Uint8> arg1)>(
                     _ObjCBlock1_fnPtrTrampoline, 0)
                 .cast(),
-            ptr.cast()) {}
+            ptr.cast());
   ffi.Pointer<_ObjCBlock> get pointer => _impl;
 }
 
@@ -3694,7 +3694,7 @@ class ObjCBlock2 {
                             NSRange arg0, ffi.Pointer<ffi.Uint8> arg1)>(
                     _ObjCBlock2_fnPtrTrampoline)
                 .cast(),
-            ptr.cast()) {}
+            ptr.cast());
   ffi.Pointer<_ObjCBlock> get pointer => _impl;
 }
 
@@ -4199,7 +4199,7 @@ class ObjCBlock3 {
                             ffi.Pointer<_ObjCBlock> arg0)>(
                     _ObjCBlock3_fnPtrTrampoline)
                 .cast(),
-            ptr.cast()) {}
+            ptr.cast());
   ffi.Pointer<_ObjCBlock> get pointer => _impl;
 }
 
@@ -4235,7 +4235,7 @@ class ObjCBlock4 {
                             ffi.Pointer<ObjCObject> arg1)>(
                     _ObjCBlock4_fnPtrTrampoline)
                 .cast(),
-            ptr.cast()) {}
+            ptr.cast());
   ffi.Pointer<_ObjCBlock> get pointer => _impl;
 }
 
@@ -4269,7 +4269,7 @@ class ObjCBlock5 {
                             ffi.Pointer<_ObjCBlock> arg0)>(
                     _ObjCBlock5_fnPtrTrampoline)
                 .cast(),
-            ptr.cast()) {}
+            ptr.cast());
   ffi.Pointer<_ObjCBlock> get pointer => _impl;
 }
 
@@ -4306,7 +4306,7 @@ class ObjCBlock6 {
                             ffi.Pointer<ObjCObject> arg2)>(
                     _ObjCBlock6_fnPtrTrampoline)
                 .cast(),
-            ptr.cast()) {}
+            ptr.cast());
   ffi.Pointer<_ObjCBlock> get pointer => _impl;
 }
 
@@ -4362,7 +4362,7 @@ class ObjCBlock7 {
                             ffi.Pointer<ObjCObject> arg2)>(
                     _ObjCBlock7_fnPtrTrampoline)
                 .cast(),
-            ptr.cast()) {}
+            ptr.cast());
   ffi.Pointer<_ObjCBlock> get pointer => _impl;
 }
 

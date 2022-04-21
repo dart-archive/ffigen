@@ -294,7 +294,10 @@ class ObjCInterface extends BindingType {
   // passed to native as Pointer<ObjCObject>, but the user sees the Dart wrapper
   // class. These methods need to be kept in sync.
   bool _needsConverting(Type type) =>
-      type is ObjCInterface || type is ObjCBlock || _isObject(type) || _isInstanceType(type);
+      type is ObjCInterface ||
+      type is ObjCBlock ||
+      _isObject(type) ||
+      _isInstanceType(type);
 
   String _getConvertedType(Type type, Writer w, String enclosingClass) {
     if (type is BooleanType) return 'bool';

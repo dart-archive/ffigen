@@ -60,7 +60,8 @@ void main() {
     });
 
     test('Block from function pointer', () {
-      final block = ObjCBlock.fromFunctionPointer(lib, Pointer.fromFunction(_add100, 999));
+      final block = ObjCBlock.fromFunctionPointer(
+          lib, Pointer.fromFunction(_add100, 999));
       final blockTester = BlockTester.makeFromBlock(lib, block.pointer);
       expect(blockTester.call(123), 223);
     });

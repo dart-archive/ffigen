@@ -30,8 +30,8 @@ class ImportedType extends Type {
   final String dartType;
   final String? defaultValue;
 
-  ImportedType(
-      this.libraryImport, this.cType, this.dartType, [this.defaultValue]);
+  ImportedType(this.libraryImport, this.cType, this.dartType,
+      [this.defaultValue]);
 
   @override
   String getCType(Writer w) => '${libraryImport.prefix}.$cType';

@@ -5,7 +5,6 @@
 import 'package:ffigen/src/code_generator.dart';
 
 import 'binding_string.dart';
-import 'imports.dart';
 import 'writer.dart';
 
 /// Built in functions used by the Objective C bindings.

@@ -993,7 +993,7 @@ class ObjCBlock {
                     ffi.Int32 Function(ffi.Pointer<_ObjCBlock> block,
                         ffi.Int32 arg0)>(_ObjCBlock_fnPtrTrampoline, 0)
                 .cast(),
-            ptr.cast()) {}
+            ptr.cast());
   ffi.Pointer<_ObjCBlock> get pointer => _impl;
 }
 

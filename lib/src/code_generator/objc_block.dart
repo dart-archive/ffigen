@@ -5,7 +5,6 @@
 import 'package:ffigen/src/code_generator.dart';
 
 import 'binding_string.dart';
-import 'utils.dart';
 import 'writer.dart';
 
 class ObjCBlock extends BindingType {
@@ -41,9 +40,9 @@ class ObjCBlock extends BindingType {
     final natFnPtr = PointerType(natFnType).getCType(w);
     final funcPtrTrampoline =
         w.topLevelUniqueNamer.makeUnique('_${name}_fnPtrTrampoline');
-    final trampFuncType = FunctionType(returnType: returnType, parameters: [
-      Parameter(type: blockPtr, name: 'block'),
-      ...params]);
+    final trampFuncType = FunctionType(
+        returnType: returnType,
+        parameters: [Parameter(type: blockPtr, name: 'block'), ...params]);
 
     // Write the function pointer based trampoline function.
     s.write(returnType.getDartType(w));
@@ -53,7 +52,8 @@ class ObjCBlock extends BindingType {
     }
     s.write(') {\n');
     s.write('  ${isVoid ? '' : 'return '}block.ref.target.cast<'
-        '${natFnType.getDartType(w)}>().asFunction<${funcType.getDartType(w)}>()(');
+        '${natFnType.getDartType(w)}>().asFunction<'
+        '${funcType.getDartType(w)}>()(');
     for (int i = 0; i < params.length; ++i) {
       s.write('${i == 0 ? '' : ', '}${params[i].name}');
     }
@@ -72,12 +72,13 @@ class ObjCBlock extends BindingType {
     s.write('\n');
     s.write('  $name.fromFunctionPointer(this._lib, $natFnPtr ptr)');
     s.write(' : _impl =  _lib.${builtInFunctions.newBlock.name}('
-        '${w.ffiLibraryPrefix}.Pointer.fromFunction<${trampFuncType.getCType(w)}>($funcPtrTrampoline'
-        '$exceptionalReturn).cast(), ptr.cast()){}\n');
+        '${w.ffiLibraryPrefix}.Pointer.fromFunction<'
+        '${trampFuncType.getCType(w)}>($funcPtrTrampoline'
+        '$exceptionalReturn).cast(), ptr.cast());\n');
 
     // Get the pointer to the underlying block.
     s.write('  ${blockPtr.getCType(w)} get pointer => _impl;\n');
-    
+
     s.write('}\n');
     return BindingString(
         type: BindingStringType.objcBlock, string: s.toString());
