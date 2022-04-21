@@ -28,10 +28,6 @@ class PointerType extends Type {
 
   @override
   String cacheKey() => '${child.cacheKey()}*';
-
-  @override
-  String getDefaultValue(Writer w, String nativeLib) =>
-      '${w.ffiLibraryPrefix}.nullptr';
 }
 
 /// Represents a constant array, which has a fixed size.

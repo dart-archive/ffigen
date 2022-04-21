@@ -67,11 +67,13 @@ class ObjCBlock extends BindingType {
     s.write('  $name._(this._impl, this._lib);\n');
 
     // Constructor from a function pointer.
+    final defaultValue = returnType.getDefaultValue(w, '_lib');
+    final exceptionalReturn = defaultValue == null ? '' : ', $defaultValue';
     s.write('\n');
     s.write('  $name.fromFunctionPointer(this._lib, $natFnPtr ptr)');
     s.write(' : _impl =  _lib.${builtInFunctions.newBlock.name}('
-        '${w.ffiLibraryPrefix}.Pointer.fromFunction<${trampFuncType.getCType(w)}>($funcPtrTrampoline, '
-        '${returnType.getDefaultValue(w, '_lib')}).cast(), ptr.cast()){}\n');
+        '${w.ffiLibraryPrefix}.Pointer.fromFunction<${trampFuncType.getCType(w)}>($funcPtrTrampoline'
+        '$exceptionalReturn).cast(), ptr.cast()){}\n');
 
     // Get the pointer to the underlying block.
     s.write('  ${blockPtr.getCType(w)} get pointer => _impl;\n');
@@ -103,8 +105,4 @@ class ObjCBlock extends BindingType {
 
   @override
   String toString() => '($returnType (^)(${argTypes.join(', ')}))';
-
-  @override
-  String getDefaultValue(Writer w, String nativeLib) =>
-      '$name._(${w.ffiLibraryPrefix}.nullptr, $nativeLib)';
 }

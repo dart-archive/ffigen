@@ -3590,15 +3590,14 @@ class ObjCBlock {
       this._lib,
       ffi.Pointer<
               ffi.NativeFunction<
-                  ffi
-                          .Void
-                      Function(NSUInteger arg0, ffi.Pointer<ffi.Uint8> arg1)>>
+                  ffi.Void Function(
+                      NSUInteger arg0, ffi.Pointer<ffi.Uint8> arg1)>>
           ptr)
       : _impl = _lib._newBlock1(
             ffi.Pointer.fromFunction<
                         ffi.Void Function(ffi.Pointer<_ObjCBlock> block,
                             NSUInteger arg0, ffi.Pointer<ffi.Uint8> arg1)>(
-                    _ObjCBlock_fnPtrTrampoline, null)
+                    _ObjCBlock_fnPtrTrampoline)
                 .cast(),
             ptr.cast()) {}
   ffi.Pointer<_ObjCBlock> get pointer => _impl;
@@ -3661,7 +3660,7 @@ class ObjCBlock1 {
             ffi.Pointer.fromFunction<
                         ffi.Uint8 Function(ffi.Pointer<_ObjCBlock> block,
                             NSUInteger arg0, ffi.Pointer<ffi.Uint8> arg1)>(
-                    _ObjCBlock1_fnPtrTrampoline, false)
+                    _ObjCBlock1_fnPtrTrampoline, 0)
                 .cast(),
             ptr.cast()) {}
   ffi.Pointer<_ObjCBlock> get pointer => _impl;
@@ -3693,7 +3692,7 @@ class ObjCBlock2 {
             ffi.Pointer.fromFunction<
                         ffi.Void Function(ffi.Pointer<_ObjCBlock> block,
                             NSRange arg0, ffi.Pointer<ffi.Uint8> arg1)>(
-                    _ObjCBlock2_fnPtrTrampoline, null)
+                    _ObjCBlock2_fnPtrTrampoline)
                 .cast(),
             ptr.cast()) {}
   ffi.Pointer<_ObjCBlock> get pointer => _impl;
@@ -4198,7 +4197,7 @@ class ObjCBlock3 {
                         ffi.Pointer<ObjCObject> Function(
                             ffi.Pointer<_ObjCBlock> block,
                             ffi.Pointer<_ObjCBlock> arg0)>(
-                    _ObjCBlock3_fnPtrTrampoline, ffi.nullptr)
+                    _ObjCBlock3_fnPtrTrampoline)
                 .cast(),
             ptr.cast()) {}
   ffi.Pointer<_ObjCBlock> get pointer => _impl;
@@ -4234,7 +4233,7 @@ class ObjCBlock4 {
                             ffi.Pointer<_ObjCBlock> block,
                             ffi.Pointer<ObjCObject> arg0,
                             ffi.Pointer<ObjCObject> arg1)>(
-                    _ObjCBlock4_fnPtrTrampoline, null)
+                    _ObjCBlock4_fnPtrTrampoline)
                 .cast(),
             ptr.cast()) {}
   ffi.Pointer<_ObjCBlock> get pointer => _impl;
@@ -4268,7 +4267,7 @@ class ObjCBlock5 {
                         ffi.Pointer<ObjCObject> Function(
                             ffi.Pointer<_ObjCBlock> block,
                             ffi.Pointer<_ObjCBlock> arg0)>(
-                    _ObjCBlock5_fnPtrTrampoline, ffi.nullptr)
+                    _ObjCBlock5_fnPtrTrampoline)
                 .cast(),
             ptr.cast()) {}
   ffi.Pointer<_ObjCBlock> get pointer => _impl;
@@ -4305,7 +4304,7 @@ class ObjCBlock6 {
                             ffi.Pointer<ObjCObject> arg0,
                             ffi.Uint8 arg1,
                             ffi.Pointer<ObjCObject> arg2)>(
-                    _ObjCBlock6_fnPtrTrampoline, null)
+                    _ObjCBlock6_fnPtrTrampoline)
                 .cast(),
             ptr.cast()) {}
   ffi.Pointer<_ObjCBlock> get pointer => _impl;
@@ -4361,7 +4360,7 @@ class ObjCBlock7 {
                             NSItemProviderCompletionHandler arg0,
                             ffi.Pointer<ObjCObject> arg1,
                             ffi.Pointer<ObjCObject> arg2)>(
-                    _ObjCBlock7_fnPtrTrampoline, null)
+                    _ObjCBlock7_fnPtrTrampoline)
                 .cast(),
             ptr.cast()) {}
   ffi.Pointer<_ObjCBlock> get pointer => _impl;

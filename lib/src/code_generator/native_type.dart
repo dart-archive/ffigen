@@ -25,7 +25,7 @@ enum SupportedNativeType {
 /// Represents a primitive native type, such as float.
 class NativeType extends Type {
   static const _primitives = <SupportedNativeType, NativeType>{
-    SupportedNativeType.Void: NativeType._('Void', 'void', 'null'),
+    SupportedNativeType.Void: NativeType._('Void', 'void', null),
     SupportedNativeType.Char: NativeType._('Uint8', 'int', '0'),
     SupportedNativeType.Int8: NativeType._('Int8', 'int', '0'),
     SupportedNativeType.Int16: NativeType._('Int16', 'int', '0'),
@@ -42,7 +42,7 @@ class NativeType extends Type {
 
   final String _cType;
   final String _dartType;
-  final String _defaultValue;
+  final String? _defaultValue;
 
   const NativeType._(this._cType, this._dartType, this._defaultValue);
 
@@ -61,12 +61,12 @@ class NativeType extends Type {
   String cacheKey() => _cType;
 
   @override
-  String getDefaultValue(Writer w, String nativeLib) => _defaultValue;
+  String? getDefaultValue(Writer w, String nativeLib) => _defaultValue;
 }
 
 class BooleanType extends NativeType {
   // Booleans are treated as uint8.
-  const BooleanType._() : super._('Uint8', 'int', 'false');
+  const BooleanType._() : super._('Uint8', 'int', '0');
   static const _boolean = BooleanType._();
   factory BooleanType() => _boolean;
 

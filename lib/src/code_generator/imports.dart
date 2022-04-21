@@ -43,19 +43,13 @@ class ImportedType extends Type {
   String toString() => '${libraryImport.name}.$cType';
 
   @override
-  String getDefaultValue(Writer w, String nativeLib) {
-    if (defaultValue == null) {
-      throw UnsupportedError("Default values aren't supported for type $this. "
-          'Please file a bug explaining your use case.');
-    }
-    return defaultValue!;
-  }
+  String? getDefaultValue(Writer w, String nativeLib) => defaultValue;
 }
 
 final ffiImport = LibraryImport('ffi', 'dart:ffi');
 final ffiPkgImport = LibraryImport('pkg_ffi', 'package:ffi/ffi.dart');
 
-final voidType = ImportedType(ffiImport, 'Void', 'void', 'null');
+final voidType = ImportedType(ffiImport, 'Void', 'void');
 
 final unsignedCharType = ImportedType(ffiPkgImport, 'UnsignedChar', 'int', '0');
 final signedCharType = ImportedType(ffiPkgImport, 'SignedChar', 'int', '0');

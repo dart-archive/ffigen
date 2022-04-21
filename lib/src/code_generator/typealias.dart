@@ -81,6 +81,6 @@ class Typealias extends BindingType {
   String cacheKey() => type.cacheKey();
 
   @override
-  String getDefaultValue(Writer w, String nativeLib) =>
+  String? getDefaultValue(Writer w, String nativeLib) =>
       type.getDefaultValue(w, nativeLib);
 }

@@ -4,6 +4,40 @@
 import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart' as pkg_ffi;
 
+/// ObjC Basic Types Test
+class NativeLibrary {
+  /// Holds the symbol lookup function.
+  final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
+      _lookup;
+
+  /// The symbols are looked up in [dynamicLibrary].
+  NativeLibrary(ffi.DynamicLibrary dynamicLibrary)
+      : _lookup = dynamicLibrary.lookup;
+
+  /// The symbols are looked up with [lookup].
+  NativeLibrary.fromLookup(
+      ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
+          lookup)
+      : _lookup = lookup;
+
+  ffi.Pointer<_ObjCBlockDesc> _newBlockDesc1() {
+    final d =
+        pkg_ffi.calloc.allocate<_ObjCBlockDesc>(ffi.sizeOf<_ObjCBlockDesc>());
+    d.ref.size = ffi.sizeOf<_ObjCBlock>();
+    return d;
+  }
+
+  late final ffi.Pointer<_ObjCBlockDesc> _objc_block_desc1 = _newBlockDesc1();
+  ffi.Pointer<_ObjCBlock> _newBlock1(
+      ffi.Pointer<ffi.Void> invoke, ffi.Pointer<ffi.Void> target) {
+    final b = pkg_ffi.calloc.allocate<_ObjCBlock>(ffi.sizeOf<_ObjCBlock>());
+    b.ref.invoke = invoke;
+    b.ref.target = target;
+    b.ref.descriptor = _objc_block_desc1;
+    return b;
+  }
+}
+
 class Foo extends ffi.Struct {
   @ffi.Uint8()
   external int someBool;
@@ -16,9 +50,61 @@ class Foo extends ffi.Struct {
 
   external ffi.Pointer<ObjCObject> clazz;
 
-  external ffi.Pointer<ObjCObject> blockThatReturnsAnInt;
+  external ffi.Pointer<_ObjCBlock> blockThatReturnsAnInt;
 }
 
 class ObjCObject extends ffi.Opaque {}
 
 class ObjCSel extends ffi.Opaque {}
+
+int _ObjCBlock_fnPtrTrampoline(ffi.Pointer<_ObjCBlock> block) {
+  return block.ref.target
+      .cast<ffi.NativeFunction<ffi.Int32 Function()>>()
+      .asFunction<int Function()>()();
+}
+
+class ObjCBlock {
+  final ffi.Pointer<_ObjCBlock> _impl;
+  final NativeLibrary _lib;
+  ObjCBlock._(this._impl, this._lib);
+
+  ObjCBlock.fromFunctionPointer(
+      this._lib, ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function()>> ptr)
+      : _impl = _lib._newBlock1(
+            ffi.Pointer.fromFunction<
+                        ffi.Int32 Function(ffi.Pointer<_ObjCBlock> block)>(
+                    _ObjCBlock_fnPtrTrampoline, 0)
+                .cast(),
+            ptr.cast()) {}
+  ffi.Pointer<_ObjCBlock> get pointer => _impl;
+}
+
+class _ObjCBlockDesc extends ffi.Struct {
+  @pkg_ffi.UnsignedLong()
+  external int reserved;
+
+  @pkg_ffi.UnsignedLong()
+  external int size;
+
+  external ffi.Pointer<ffi.Void> copy_helper;
+
+  external ffi.Pointer<ffi.Void> dispose_helper;
+
+  external ffi.Pointer<pkg_ffi.Char> signature;
+}
+
+class _ObjCBlock extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> isa;
+
+  @pkg_ffi.Int()
+  external int flags;
+
+  @pkg_ffi.Int()
+  external int reserved;
+
+  external ffi.Pointer<ffi.Void> invoke;
+
+  external ffi.Pointer<_ObjCBlockDesc> descriptor;
+
+  external ffi.Pointer<ffi.Void> target;
+}
