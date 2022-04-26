@@ -40,6 +40,7 @@ enums:
     - CXTranslationUnit_Flags
     - CXEvalResultKind
     - CXObjCPropertyAttrKind
+    - CXTypeNullabilityKind
 
 structs:
   include:
@@ -114,3 +115,4 @@ functions:
     - clang_Cursor_getObjCPropertyAttributes
     - clang_Cursor_getObjCPropertyGetterName
     - clang_Cursor_getObjCPropertySetterName
+    - clang_Type_getNullability

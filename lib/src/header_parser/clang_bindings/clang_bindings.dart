@@ -829,6 +829,21 @@ class Clang {
   late final _clang_Type_getNamedType =
       _clang_Type_getNamedTypePtr.asFunction<CXType Function(CXType)>();
 
+  /// Retrieve the nullability kind of a pointer type.
+  int clang_Type_getNullability(
+    CXType T,
+  ) {
+    return _clang_Type_getNullability(
+      T,
+    );
+  }
+
+  late final _clang_Type_getNullabilityPtr =
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXType)>>(
+          'clang_Type_getNullability');
+  late final _clang_Type_getNullability =
+      _clang_Type_getNullabilityPtr.asFunction<int Function(CXType)>();
+
   /// Return the alignment of a type in bytes as per C++[expr.alignof]
   /// standard.
   ///
@@ -2446,6 +2461,23 @@ class CXType extends ffi.Struct {
 
   @ffi.Array.multi([2])
   external ffi.Array<ffi.Pointer<ffi.Void>> data;
+}
+
+abstract class CXTypeNullabilityKind {
+  /// Values of this type can never be null.
+  static const int CXTypeNullability_NonNull = 0;
+
+  /// Values of this type can be null.
+  static const int CXTypeNullability_Nullable = 1;
+
+  /// Whether values of this type can be null is (explicitly)
+  /// unspecified. This captures a (fairly rare) case where we
+  /// can't conclude anything about the nullability of the type even
+  /// though it has been considered.
+  static const int CXTypeNullability_Unspecified = 2;
+
+  /// Nullability is not applicable to this type.
+  static const int CXTypeNullability_Invalid = 3;
 }
 
 /// Describes how the traversal of the children of a particular
