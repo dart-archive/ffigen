@@ -69,8 +69,10 @@ class ObjCInterface extends BindingType {
       if (isStatic) {
         stringParams.add('${w.className} _lib');
       }
-      stringParams.addAll(
-          params.map((p) => '${_getConvertedType(p.type, w, name)} ${p.name}'));
+      stringParams.addAll(params.map((p) =>
+          (_getConvertedType(p.type, w, name) +
+              (p.isNullable ? "? " : " ") +
+              p.name)));
       return '(' + stringParams.join(", ") + ')';
     }
 
@@ -170,7 +172,7 @@ class ObjCInterface extends BindingType {
       s.write(isStatic ? '_lib.${_classObject.name}' : '_id');
       s.write(', _lib.${m.selObject!.name}');
       for (final p in m.params) {
-        s.write(', ${_doArgConversion(p.type, p.name)}');
+        s.write(', ${_doArgConversion(p)}');
       }
       s.write(');\n');
       if (convertReturn) {
@@ -304,11 +306,17 @@ class ObjCInterface extends BindingType {
     return type.getDartType(w);
   }
 
-  String _doArgConversion(Type type, String value) {
-    if (type is ObjCInterface || _isObject(type) || _isInstanceType(type)) {
-      return '$value._id';
+  String _doArgConversion(ObjCMethodParam arg) {
+    if (arg.type is ObjCInterface ||
+        _isObject(arg.type) ||
+        _isInstanceType(arg.type)) {
+      if (arg.isNullable) {
+        return '${arg.name}?._id ?? ffi.nullptr';
+      } else {
+        return '${arg.name}._id';
+      }
     }
-    return value;
+    return arg.name;
   }
 
   String _doReturnConversion(
@@ -395,5 +403,6 @@ class ObjCMethod {
 class ObjCMethodParam {
   final Type type;
   final String name;
-  ObjCMethodParam(this.type, this.name);
+  final bool isNullable;
+  ObjCMethodParam(this.type, this.name, {this.isNullable = false});
 }

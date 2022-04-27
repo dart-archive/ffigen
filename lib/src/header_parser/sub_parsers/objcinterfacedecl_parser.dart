@@ -211,9 +211,25 @@ void _parseMethodReturnType(clang_types.CXCursor cursor) {
 }
 
 void _parseMethodParam(clang_types.CXCursor cursor) {
+  /*
+  TODO(#334): Change this to use:
+  
+  clang.clang_Type_getNullability(cursor.type()) ==
+      clang_types.CXTypeNullabilityKind.CXTypeNullability_Nullable;
+
+  NOTE: This will only work with the
+
+    clang_types
+      .CXTranslationUnit_Flags.CXTranslationUnit_IncludeAttributedTypes
+
+  option set.
+  */
+  final isNullable =
+      cursor.type().kind == clang_types.CXTypeKind.CXType_ObjCObjectPointer;
   final name = cursor.spelling();
   final type = cursor.type().toCodeGenType();
   _logger.fine(
       '           >> Parameter: $type $name ${cursor.completeStringRepr()}');
-  _methodStack.top.method.params.add(ObjCMethodParam(type, name));
+  _methodStack.top.method.params
+      .add(ObjCMethodParam(type, name, isNullable: isNullable));
 }

@@ -562,9 +562,9 @@ class Foo extends NSObject {
     return Foo._(_ret, _lib);
   }
 
-  int anInstanceMethod_withOtherArg(NSObject someArg, NSObject otherArg) {
+  int anInstanceMethod_withOtherArg(NSObject? someArg, NSObject? otherArg) {
     return _lib._objc_msgSend_18(_id, _lib._sel_anInstanceMethod_withOtherArg_1,
-        someArg._id, otherArg._id);
+        someArg?._id ?? ffi.nullptr, otherArg?._id ?? ffi.nullptr);
   }
 
   static Foo new1(NativeLibrary _lib) {
@@ -655,9 +655,9 @@ class NSObject extends _ObjCWrapper {
         _lib._sel_instancesRespondToSelector_1, aSelector);
   }
 
-  static bool conformsToProtocol(NativeLibrary _lib, NSObject protocol) {
-    return _lib._objc_msgSend_4(
-        _lib._class_NSObject1, _lib._sel_conformsToProtocol_1, protocol._id);
+  static bool conformsToProtocol(NativeLibrary _lib, NSObject? protocol) {
+    return _lib._objc_msgSend_4(_lib._class_NSObject1,
+        _lib._sel_conformsToProtocol_1, protocol?._id ?? ffi.nullptr);
   }
 
   IMP methodForSelector(ffi.Pointer<ObjCSel> aSelector) {
@@ -680,8 +680,9 @@ class NSObject extends _ObjCWrapper {
     return NSObject._(_ret, _lib);
   }
 
-  void forwardInvocation(NSObject anInvocation) {
-    _lib._objc_msgSend_8(_id, _lib._sel_forwardInvocation_1, anInvocation._id);
+  void forwardInvocation(NSObject? anInvocation) {
+    _lib._objc_msgSend_8(
+        _id, _lib._sel_forwardInvocation_1, anInvocation?._id ?? ffi.nullptr);
   }
 
   NSMethodSignature methodSignatureForSelector(ffi.Pointer<ObjCSel> aSelector) {
