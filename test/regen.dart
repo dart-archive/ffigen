@@ -80,6 +80,11 @@ Future<void> main(List<String> args) async {
   );
 
   await _regenConfig(
+    File('test/native_objc_test/nullable_config.yaml'),
+    File('test/native_objc_test/nullable_bindings.dart'),
+  );
+
+  await _regenConfig(
     File('test/native_objc_test/property_config.yaml'),
     File('test/native_objc_test/property_bindings.dart'),
   );

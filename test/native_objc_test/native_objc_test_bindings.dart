@@ -1170,9 +1170,9 @@ class Foo extends NSObject {
     return Foo._(_ret, _lib);
   }
 
-  int multiply_withOtherFoo(bool useIntVals, NSObject other) {
-    return _lib._objc_msgSend_20(
-        _id, _lib._sel_multiply_withOtherFoo_1, useIntVals, other._id);
+  int multiply_withOtherFoo(bool useIntVals, NSObject? other) {
+    return _lib._objc_msgSend_20(_id, _lib._sel_multiply_withOtherFoo_1,
+        useIntVals, other?._id ?? ffi.nullptr);
   }
 
   void setDoubleVal(double x) {
@@ -1268,9 +1268,9 @@ class NSObject extends _ObjCWrapper {
         _lib._sel_instancesRespondToSelector_1, aSelector);
   }
 
-  static bool conformsToProtocol(NativeObjCLibrary _lib, NSObject protocol) {
-    return _lib._objc_msgSend_4(
-        _lib._class_NSObject1, _lib._sel_conformsToProtocol_1, protocol._id);
+  static bool conformsToProtocol(NativeObjCLibrary _lib, NSObject? protocol) {
+    return _lib._objc_msgSend_4(_lib._class_NSObject1,
+        _lib._sel_conformsToProtocol_1, protocol?._id ?? ffi.nullptr);
   }
 
   IMP methodForSelector(ffi.Pointer<ObjCSel> aSelector) {
@@ -1293,8 +1293,9 @@ class NSObject extends _ObjCWrapper {
     return NSObject._(_ret, _lib);
   }
 
-  void forwardInvocation(NSObject anInvocation) {
-    _lib._objc_msgSend_8(_id, _lib._sel_forwardInvocation_1, anInvocation._id);
+  void forwardInvocation(NSObject? anInvocation) {
+    _lib._objc_msgSend_8(
+        _id, _lib._sel_forwardInvocation_1, anInvocation?._id ?? ffi.nullptr);
   }
 
   NSMethodSignature methodSignatureForSelector(ffi.Pointer<ObjCSel> aSelector) {
@@ -1410,9 +1411,9 @@ class NSString extends NSObject {
     return NSString._(_ret, _lib);
   }
 
-  NSString initWithCoder(NSObject coder) {
-    final _ret =
-        _lib._objc_msgSend_13(_id, _lib._sel_initWithCoder_1, coder._id);
+  NSString initWithCoder(NSObject? coder) {
+    final _ret = _lib._objc_msgSend_13(
+        _id, _lib._sel_initWithCoder_1, coder?._id ?? ffi.nullptr);
     return NSString._(_ret, _lib);
   }
 
