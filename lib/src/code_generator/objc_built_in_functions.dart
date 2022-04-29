@@ -96,7 +96,7 @@ class _ObjCWrapper {
   }
 
   @override
-  int get hashCode => this._id.hashCode;
+  int get hashCode => _id.hashCode;
 }
 ''');
   }
