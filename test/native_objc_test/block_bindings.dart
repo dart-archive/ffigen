@@ -716,6 +716,11 @@ class BlockTester extends NSObject {
     return BlockTester._(other._id, other._lib);
   }
 
+  static BlockTester castFromPointer(
+      BlockTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return BlockTester._(other, lib);
+  }
+
   static BlockTester makeFromBlock(BlockTestObjCLibrary _lib, IntBlock block) {
     final _ret = _lib._objc_msgSend_15(
         _lib._class_BlockTester1, _lib._sel_makeFromBlock_1, block);
@@ -758,6 +763,11 @@ class NSObject extends _ObjCWrapper {
 
   static NSObject castFrom<T extends _ObjCWrapper>(T other) {
     return NSObject._(other._id, other._lib);
+  }
+
+  static NSObject castFromPointer(
+      BlockTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSObject._(other, lib);
   }
 
   static void load(BlockTestObjCLibrary _lib) {
@@ -938,6 +948,11 @@ class NSMethodSignature extends _ObjCWrapper {
   static NSMethodSignature castFrom<T extends _ObjCWrapper>(T other) {
     return NSMethodSignature._(other._id, other._lib);
   }
+
+  static NSMethodSignature castFromPointer(
+      BlockTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSMethodSignature._(other, lib);
+  }
 }
 
 typedef NSUInteger = pkg_ffi.UnsignedLong;
@@ -948,6 +963,11 @@ class NSString extends _ObjCWrapper {
 
   static NSString castFrom<T extends _ObjCWrapper>(T other) {
     return NSString._(other._id, other._lib);
+  }
+
+  static NSString castFromPointer(
+      BlockTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSString._(other, lib);
   }
 
   factory NSString(BlockTestObjCLibrary _lib, String str) {
