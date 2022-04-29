@@ -118,6 +118,26 @@ extension CXCursorExt on clang_types.CXCursor {
     calloc.free(offset);
     return s;
   }
+
+  /// Recursively print the AST, for debugging.
+  void printAst([int maxDepth = 3]) {
+    _printAstVisitor_maxDepth = maxDepth;
+    _printAstVisitor(this, this, Pointer<Void>.fromAddress(0));
+  }
+}
+
+int _printAstVisitor_maxDepth = 0;
+int _printAstVisitor(clang_types.CXCursor cursor,
+    clang_types.CXCursor parent, Pointer<Void> clientData) {
+  int depth = clientData.address;
+  if (depth <= _printAstVisitor_maxDepth) {
+    print(('  ' * depth) + cursor.completeStringRepr());
+    clang.clang_visitChildren(
+        cursor,
+        Pointer.fromFunction(_printAstVisitor, exceptional_visitor_return),
+        Pointer<Void>.fromAddress(depth + 1));
+  }
+  return clang_types.CXChildVisitResult.CXChildVisit_Continue;
 }
 
 const commentPrefix = '/// ';
