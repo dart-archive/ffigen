@@ -2627,7 +2627,16 @@ typedef CFAllocatorPreferredSizeCallBack = ffi.Pointer<
 class _ObjCWrapper {
   final ffi.Pointer<ObjCObject> _id;
   final StringTestObjCLibrary _lib;
+
   _ObjCWrapper._(this._id, this._lib);
+
+  @override
+  bool operator ==(Object other) {
+    return other is _ObjCWrapper && _id == other._id;
+  }
+
+  @override
+  int get hashCode => _id.hashCode;
 }
 
 class NSValue extends NSObject {
@@ -3112,9 +3121,9 @@ class NSNumber extends NSValue {
     return _lib._objc_msgSend_11(_id, _lib._sel_unsignedIntegerValue1);
   }
 
-  NSObject get stringValue {
+  NSObject? get stringValue {
     final _ret = _lib._objc_msgSend_1(_id, _lib._sel_stringValue1);
-    return NSObject._(_ret, _lib);
+    return _ret.address == 0 ? null : NSObject._(_ret, _lib);
   }
 
   int compare(NSObject? otherNumber) {
@@ -3627,14 +3636,14 @@ class NSOrderedCollectionDifference extends NSObject {
     return NSOrderedCollectionDifference._(_ret, _lib);
   }
 
-  NSObject get insertions {
+  NSObject? get insertions {
     final _ret = _lib._objc_msgSend_1(_id, _lib._sel_insertions1);
-    return NSObject._(_ret, _lib);
+    return _ret.address == 0 ? null : NSObject._(_ret, _lib);
   }
 
-  NSObject get removals {
+  NSObject? get removals {
     final _ret = _lib._objc_msgSend_1(_id, _lib._sel_removals1);
-    return NSObject._(_ret, _lib);
+    return _ret.address == 0 ? null : NSObject._(_ret, _lib);
   }
 
   bool get hasChanges {
@@ -3839,10 +3848,10 @@ class NSItemProvider extends NSObject {
         loadHandler._id);
   }
 
-  NSObject get registeredTypeIdentifiers {
+  NSObject? get registeredTypeIdentifiers {
     final _ret =
         _lib._objc_msgSend_1(_id, _lib._sel_registeredTypeIdentifiers1);
-    return NSObject._(_ret, _lib);
+    return _ret.address == 0 ? null : NSObject._(_ret, _lib);
   }
 
   bool hasItemConformingToTypeIdentifier(NSObject? typeIdentifier) {
@@ -3891,13 +3900,14 @@ class NSItemProvider extends NSObject {
     return NSProgress._(_ret, _lib);
   }
 
-  NSObject get suggestedName {
+  NSObject? get suggestedName {
     final _ret = _lib._objc_msgSend_1(_id, _lib._sel_suggestedName1);
-    return NSObject._(_ret, _lib);
+    return _ret.address == 0 ? null : NSObject._(_ret, _lib);
   }
 
-  set suggestedName(NSObject value) {
-    _lib._objc_msgSend_8(_id, _lib._sel_setSuggestedName_1, value._id);
+  set suggestedName(NSObject? value) {
+    _lib._objc_msgSend_8(
+        _id, _lib._sel_setSuggestedName_1, value?._id ?? ffi.nullptr);
   }
 
   NSItemProvider initWithObject(NSObject? object) {

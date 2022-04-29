@@ -510,6 +510,32 @@ class NullableTestObjCLibrary {
       _registerName1("isNullWithNullableNSObjectArg:");
   late final ffi.Pointer<ObjCSel> _sel_isNullWithNotNullableNSObjectPtrArg_1 =
       _registerName1("isNullWithNotNullableNSObjectPtrArg:");
+  late final ffi.Pointer<ObjCSel> _sel_returnNil_1 =
+      _registerName1("returnNil:");
+  ffi.Pointer<ObjCObject> _objc_msgSend_15(
+    ffi.Pointer<ObjCObject> obj,
+    ffi.Pointer<ObjCSel> sel,
+    bool r,
+  ) {
+    return __objc_msgSend_15(
+      obj,
+      sel,
+      r ? 1 : 0,
+    );
+  }
+
+  late final __objc_msgSend_15Ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
+              ffi.Pointer<ObjCSel>, ffi.Uint8)>>('objc_msgSend');
+  late final __objc_msgSend_15 = __objc_msgSend_15Ptr.asFunction<
+      ffi.Pointer<ObjCObject> Function(
+          ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>, int)>();
+
+  late final ffi.Pointer<ObjCSel> _sel_nullableObjectProperty1 =
+      _registerName1("nullableObjectProperty");
+  late final ffi.Pointer<ObjCSel> _sel_setNullableObjectProperty_1 =
+      _registerName1("setNullableObjectProperty:");
 }
 
 abstract class NSComparisonResult {
@@ -611,7 +637,16 @@ typedef CFAllocatorPreferredSizeCallBack = ffi.Pointer<
 class _ObjCWrapper {
   final ffi.Pointer<ObjCObject> _id;
   final NullableTestObjCLibrary _lib;
+
   _ObjCWrapper._(this._id, this._lib);
+
+  @override
+  bool operator ==(Object other) {
+    return other is _ObjCWrapper && _id == other._id;
+  }
+
+  @override
+  int get hashCode => _id.hashCode;
 }
 
 class NullableInterface extends NSObject {
@@ -637,6 +672,22 @@ class NullableInterface extends NSObject {
       NullableTestObjCLibrary _lib, NSObject? x) {
     return _lib._objc_msgSend_4(_lib._class_NullableInterface1,
         _lib._sel_isNullWithNotNullableNSObjectPtrArg_1, x?._id ?? ffi.nullptr);
+  }
+
+  static NSObject returnNil(NullableTestObjCLibrary _lib, bool r) {
+    final _ret = _lib._objc_msgSend_15(
+        _lib._class_NullableInterface1, _lib._sel_returnNil_1, r);
+    return NSObject._(_ret, _lib);
+  }
+
+  NSObject? get nullableObjectProperty {
+    final _ret = _lib._objc_msgSend_1(_id, _lib._sel_nullableObjectProperty1);
+    return _ret.address == 0 ? null : NSObject._(_ret, _lib);
+  }
+
+  set nullableObjectProperty(NSObject? value) {
+    _lib._objc_msgSend_8(
+        _id, _lib._sel_setNullableObjectProperty_1, value?._id ?? ffi.nullptr);
   }
 
   static NullableInterface new1(NullableTestObjCLibrary _lib) {
