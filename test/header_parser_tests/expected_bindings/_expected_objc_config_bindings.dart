@@ -64,7 +64,6 @@ class NativeLibrary {
   late final __objc_getClass = __objc_getClassPtr.asFunction<
       ffi.Pointer<ObjCObject> Function(ffi.Pointer<pkg_ffi.Char>)>();
 
-  late final ffi.Pointer<ObjCObject> _class_Foo1 = _getClass1("Foo");
   late final ffi.Pointer<ObjCObject> _class_NSObject1 = _getClass1("NSObject");
   late final ffi.Pointer<ObjCSel> _sel_load1 = _registerName1("load");
   void _objc_msgSend_0(
@@ -487,6 +486,7 @@ class NativeLibrary {
       _registerName1("poseAsClass:");
   late final ffi.Pointer<ObjCSel> _sel_autoContentAccessingProxy1 =
       _registerName1("autoContentAccessingProxy");
+  late final ffi.Pointer<ObjCObject> _class_Foo1 = _getClass1("Foo");
 }
 
 class _ObjCWrapper {
@@ -503,32 +503,6 @@ class _ObjCWrapper {
   @override
   int get hashCode => _id.hashCode;
 }
-
-class Foo extends NSObject {
-  Foo._(ffi.Pointer<ObjCObject> id, NativeLibrary lib) : super._(id, lib);
-
-  static Foo castFrom<T extends _ObjCWrapper>(T other) {
-    return Foo._(other._id, other._lib);
-  }
-
-  static Foo castFromPointer(NativeLibrary lib, ffi.Pointer<ObjCObject> other) {
-    return Foo._(other, lib);
-  }
-
-  static Foo new1(NativeLibrary _lib) {
-    final _ret = _lib._objc_msgSend_1(_lib._class_Foo1, _lib._sel_new1);
-    return Foo._(_ret, _lib);
-  }
-
-  static Foo alloc(NativeLibrary _lib) {
-    final _ret = _lib._objc_msgSend_1(_lib._class_Foo1, _lib._sel_alloc1);
-    return Foo._(_ret, _lib);
-  }
-}
-
-class ObjCSel extends ffi.Opaque {}
-
-class ObjCObject extends ffi.Opaque {}
 
 class NSObject extends _ObjCWrapper {
   NSObject._(ffi.Pointer<ObjCObject> id, NativeLibrary lib) : super._(id, lib);
@@ -740,6 +714,10 @@ class NSObject extends _ObjCWrapper {
   }
 }
 
+class ObjCSel extends ffi.Opaque {}
+
+class ObjCObject extends ffi.Opaque {}
+
 typedef instancetype = ffi.Pointer<ObjCObject>;
 
 class _NSZone extends ffi.Opaque {}
@@ -782,7 +760,7 @@ class NSString extends _ObjCWrapper {
   }
 
   @override
-  String toString() => UTF8String().cast<pkg_ffi.Utf8>().toDartString();
+  String toString() => (UTF8String).cast<pkg_ffi.Utf8>().toDartString();
 
   static NSString stringWithCString_encoding(
       NativeLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
@@ -801,3 +779,25 @@ extension StringToNSString on String {
 }
 
 typedef NSInteger = pkg_ffi.Long;
+
+class Foo extends NSObject {
+  Foo._(ffi.Pointer<ObjCObject> id, NativeLibrary lib) : super._(id, lib);
+
+  static Foo castFrom<T extends _ObjCWrapper>(T other) {
+    return Foo._(other._id, other._lib);
+  }
+
+  static Foo castFromPointer(NativeLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return Foo._(other, lib);
+  }
+
+  static Foo new1(NativeLibrary _lib) {
+    final _ret = _lib._objc_msgSend_1(_lib._class_Foo1, _lib._sel_new1);
+    return Foo._(_ret, _lib);
+  }
+
+  static Foo alloc(NativeLibrary _lib) {
+    final _ret = _lib._objc_msgSend_1(_lib._class_Foo1, _lib._sel_alloc1);
+    return Foo._(_ret, _lib);
+  }
+}

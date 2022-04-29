@@ -285,7 +285,7 @@ class ObjCInterface extends BindingType {
     ));
     addMethodIfMissing(ObjCMethod(
       originalName: 'UTF8String',
-      kind: ObjCMethodKind.method,
+      kind: ObjCMethodKind.propertyGetter,
       isClass: false,
       returnType: PointerType(charType),
       params_: [],

@@ -151,7 +151,6 @@ class CastTestObjCLibrary {
   late final __objc_getClass = __objc_getClassPtr.asFunction<
       ffi.Pointer<ObjCObject> Function(ffi.Pointer<pkg_ffi.Char>)>();
 
-  late final ffi.Pointer<ObjCObject> _class_Castaway1 = _getClass1("Castaway");
   late final ffi.Pointer<ObjCObject> _class_NSObject1 = _getClass1("NSObject");
   late final ffi.Pointer<ObjCSel> _sel_load1 = _registerName1("load");
   void _objc_msgSend_0(
@@ -574,6 +573,7 @@ class CastTestObjCLibrary {
       _registerName1("poseAsClass:");
   late final ffi.Pointer<ObjCSel> _sel_autoContentAccessingProxy1 =
       _registerName1("autoContentAccessingProxy");
+  late final ffi.Pointer<ObjCObject> _class_Castaway1 = _getClass1("Castaway");
   late final ffi.Pointer<ObjCSel> _sel_meAsNSObject1 =
       _registerName1("meAsNSObject");
   ffi.Pointer<ObjCObject> _objc_msgSend_18(
@@ -723,43 +723,6 @@ class _ObjCWrapper {
   @override
   int get hashCode => _id.hashCode;
 }
-
-class Castaway extends NSObject {
-  Castaway._(ffi.Pointer<ObjCObject> id, CastTestObjCLibrary lib)
-      : super._(id, lib);
-
-  static Castaway castFrom<T extends _ObjCWrapper>(T other) {
-    return Castaway._(other._id, other._lib);
-  }
-
-  static Castaway castFromPointer(
-      CastTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
-    return Castaway._(other, lib);
-  }
-
-  NSObject meAsNSObject() {
-    final _ret = _lib._objc_msgSend_18(_id, _lib._sel_meAsNSObject1);
-    return NSObject._(_ret, _lib);
-  }
-
-  int meAsInt() {
-    return _lib._objc_msgSend_19(_id, _lib._sel_meAsInt1);
-  }
-
-  static Castaway new1(CastTestObjCLibrary _lib) {
-    final _ret = _lib._objc_msgSend_1(_lib._class_Castaway1, _lib._sel_new1);
-    return Castaway._(_ret, _lib);
-  }
-
-  static Castaway alloc(CastTestObjCLibrary _lib) {
-    final _ret = _lib._objc_msgSend_1(_lib._class_Castaway1, _lib._sel_alloc1);
-    return Castaway._(_ret, _lib);
-  }
-}
-
-class ObjCSel extends ffi.Opaque {}
-
-class ObjCObject extends ffi.Opaque {}
 
 class NSObject extends _ObjCWrapper {
   NSObject._(ffi.Pointer<ObjCObject> id, CastTestObjCLibrary lib)
@@ -975,6 +938,10 @@ class NSObject extends _ObjCWrapper {
   }
 }
 
+class ObjCSel extends ffi.Opaque {}
+
+class ObjCObject extends ffi.Opaque {}
+
 typedef instancetype = ffi.Pointer<ObjCObject>;
 
 class _NSZone extends ffi.Opaque {}
@@ -1018,7 +985,7 @@ class NSString extends _ObjCWrapper {
   }
 
   @override
-  String toString() => UTF8String().cast<pkg_ffi.Utf8>().toDartString();
+  String toString() => (UTF8String).cast<pkg_ffi.Utf8>().toDartString();
 
   static NSString stringWithCString_encoding(
       CastTestObjCLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
@@ -1027,13 +994,46 @@ class NSString extends _ObjCWrapper {
     return NSString._(_ret, _lib);
   }
 
-  ffi.Pointer<pkg_ffi.Char> UTF8String() {
+  ffi.Pointer<pkg_ffi.Char> get UTF8String {
     return _lib._objc_msgSend_13(_id, _lib._sel_UTF8String1);
   }
 }
 
 extension StringToNSString on String {
   NSString toNSString(CastTestObjCLibrary lib) => NSString(lib, this);
+}
+
+class Castaway extends NSObject {
+  Castaway._(ffi.Pointer<ObjCObject> id, CastTestObjCLibrary lib)
+      : super._(id, lib);
+
+  static Castaway castFrom<T extends _ObjCWrapper>(T other) {
+    return Castaway._(other._id, other._lib);
+  }
+
+  static Castaway castFromPointer(
+      CastTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return Castaway._(other, lib);
+  }
+
+  NSObject meAsNSObject() {
+    final _ret = _lib._objc_msgSend_18(_id, _lib._sel_meAsNSObject1);
+    return NSObject._(_ret, _lib);
+  }
+
+  int meAsInt() {
+    return _lib._objc_msgSend_19(_id, _lib._sel_meAsInt1);
+  }
+
+  static Castaway new1(CastTestObjCLibrary _lib) {
+    final _ret = _lib._objc_msgSend_1(_lib._class_Castaway1, _lib._sel_new1);
+    return Castaway._(_ret, _lib);
+  }
+
+  static Castaway alloc(CastTestObjCLibrary _lib) {
+    final _ret = _lib._objc_msgSend_1(_lib._class_Castaway1, _lib._sel_alloc1);
+    return Castaway._(_ret, _lib);
+  }
 }
 
 const int NSScannedOption = 1;

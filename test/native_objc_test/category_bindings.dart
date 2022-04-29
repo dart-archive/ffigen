@@ -151,7 +151,6 @@ class CategoryTestObjCLibrary {
   late final __objc_getClass = __objc_getClassPtr.asFunction<
       ffi.Pointer<ObjCObject> Function(ffi.Pointer<pkg_ffi.Char>)>();
 
-  late final ffi.Pointer<ObjCObject> _class_Foo1 = _getClass1("Foo");
   late final ffi.Pointer<ObjCObject> _class_NSObject1 = _getClass1("NSObject");
   late final ffi.Pointer<ObjCSel> _sel_load1 = _registerName1("load");
   void _objc_msgSend_0(
@@ -574,6 +573,7 @@ class CategoryTestObjCLibrary {
       _registerName1("poseAsClass:");
   late final ffi.Pointer<ObjCSel> _sel_autoContentAccessingProxy1 =
       _registerName1("autoContentAccessingProxy");
+  late final ffi.Pointer<ObjCObject> _class_Foo1 = _getClass1("Foo");
   late final ffi.Pointer<ObjCSel> _sel_add_Y_1 = _registerName1("add:Y:");
   int _objc_msgSend_18(
     ffi.Pointer<ObjCObject> obj,
@@ -709,42 +709,6 @@ class _ObjCWrapper {
   @override
   int get hashCode => _id.hashCode;
 }
-
-class Foo extends NSObject {
-  Foo._(ffi.Pointer<ObjCObject> id, CategoryTestObjCLibrary lib)
-      : super._(id, lib);
-
-  static Foo castFrom<T extends _ObjCWrapper>(T other) {
-    return Foo._(other._id, other._lib);
-  }
-
-  static Foo castFromPointer(
-      CategoryTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
-    return Foo._(other, lib);
-  }
-
-  int add_Y(int x, int y) {
-    return _lib._objc_msgSend_18(_id, _lib._sel_add_Y_1, x, y);
-  }
-
-  int sub_Y(int x, int y) {
-    return _lib._objc_msgSend_18(_id, _lib._sel_sub_Y_1, x, y);
-  }
-
-  static Foo new1(CategoryTestObjCLibrary _lib) {
-    final _ret = _lib._objc_msgSend_1(_lib._class_Foo1, _lib._sel_new1);
-    return Foo._(_ret, _lib);
-  }
-
-  static Foo alloc(CategoryTestObjCLibrary _lib) {
-    final _ret = _lib._objc_msgSend_1(_lib._class_Foo1, _lib._sel_alloc1);
-    return Foo._(_ret, _lib);
-  }
-}
-
-class ObjCSel extends ffi.Opaque {}
-
-class ObjCObject extends ffi.Opaque {}
 
 class NSObject extends _ObjCWrapper {
   NSObject._(ffi.Pointer<ObjCObject> id, CategoryTestObjCLibrary lib)
@@ -961,6 +925,10 @@ class NSObject extends _ObjCWrapper {
   }
 }
 
+class ObjCSel extends ffi.Opaque {}
+
+class ObjCObject extends ffi.Opaque {}
+
 typedef instancetype = ffi.Pointer<ObjCObject>;
 
 class _NSZone extends ffi.Opaque {}
@@ -1004,7 +972,7 @@ class NSString extends _ObjCWrapper {
   }
 
   @override
-  String toString() => UTF8String().cast<pkg_ffi.Utf8>().toDartString();
+  String toString() => (UTF8String).cast<pkg_ffi.Utf8>().toDartString();
 
   static NSString stringWithCString_encoding(CategoryTestObjCLibrary _lib,
       ffi.Pointer<pkg_ffi.Char> cString, int enc) {
@@ -1013,13 +981,45 @@ class NSString extends _ObjCWrapper {
     return NSString._(_ret, _lib);
   }
 
-  ffi.Pointer<pkg_ffi.Char> UTF8String() {
+  ffi.Pointer<pkg_ffi.Char> get UTF8String {
     return _lib._objc_msgSend_13(_id, _lib._sel_UTF8String1);
   }
 }
 
 extension StringToNSString on String {
   NSString toNSString(CategoryTestObjCLibrary lib) => NSString(lib, this);
+}
+
+class Foo extends NSObject {
+  Foo._(ffi.Pointer<ObjCObject> id, CategoryTestObjCLibrary lib)
+      : super._(id, lib);
+
+  static Foo castFrom<T extends _ObjCWrapper>(T other) {
+    return Foo._(other._id, other._lib);
+  }
+
+  static Foo castFromPointer(
+      CategoryTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return Foo._(other, lib);
+  }
+
+  int add_Y(int x, int y) {
+    return _lib._objc_msgSend_18(_id, _lib._sel_add_Y_1, x, y);
+  }
+
+  int sub_Y(int x, int y) {
+    return _lib._objc_msgSend_18(_id, _lib._sel_sub_Y_1, x, y);
+  }
+
+  static Foo new1(CategoryTestObjCLibrary _lib) {
+    final _ret = _lib._objc_msgSend_1(_lib._class_Foo1, _lib._sel_new1);
+    return Foo._(_ret, _lib);
+  }
+
+  static Foo alloc(CategoryTestObjCLibrary _lib) {
+    final _ret = _lib._objc_msgSend_1(_lib._class_Foo1, _lib._sel_alloc1);
+    return Foo._(_ret, _lib);
+  }
 }
 
 const int NSScannedOption = 1;

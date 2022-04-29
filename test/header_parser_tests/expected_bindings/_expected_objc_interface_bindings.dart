@@ -64,7 +64,6 @@ class NativeLibrary {
   late final __objc_getClass = __objc_getClassPtr.asFunction<
       ffi.Pointer<ObjCObject> Function(ffi.Pointer<pkg_ffi.Char>)>();
 
-  late final ffi.Pointer<ObjCObject> _class_Foo1 = _getClass1("Foo");
   late final ffi.Pointer<ObjCObject> _class_NSObject1 = _getClass1("NSObject");
   late final ffi.Pointer<ObjCSel> _sel_load1 = _registerName1("load");
   void _objc_msgSend_0(
@@ -487,6 +486,7 @@ class NativeLibrary {
       _registerName1("poseAsClass:");
   late final ffi.Pointer<ObjCSel> _sel_autoContentAccessingProxy1 =
       _registerName1("autoContentAccessingProxy");
+  late final ffi.Pointer<ObjCObject> _class_Foo1 = _getClass1("Foo");
   late final ffi.Pointer<ObjCSel> _sel_someProperty1 =
       _registerName1("someProperty");
   int _objc_msgSend_18(
@@ -599,70 +599,6 @@ class _ObjCWrapper {
   @override
   int get hashCode => _id.hashCode;
 }
-
-class Foo extends NSObject {
-  Foo._(ffi.Pointer<ObjCObject> id, NativeLibrary lib) : super._(id, lib);
-
-  static Foo castFrom<T extends _ObjCWrapper>(T other) {
-    return Foo._(other._id, other._lib);
-  }
-
-  static Foo castFromPointer(NativeLibrary lib, ffi.Pointer<ObjCObject> other) {
-    return Foo._(other, lib);
-  }
-
-  int get someProperty {
-    return _lib._objc_msgSend_18(_id, _lib._sel_someProperty1);
-  }
-
-  set someProperty(int value) {
-    _lib._objc_msgSend_19(_id, _lib._sel_setSomeProperty_1, value);
-  }
-
-  int get readOnlyProperty {
-    return _lib._objc_msgSend_18(_id, _lib._sel_readOnlyProperty1);
-  }
-
-  static int getClassReadOnlyProperty(NativeLibrary _lib) {
-    return _lib._objc_msgSend_18(
-        _lib._class_Foo1, _lib._sel_classReadOnlyProperty1);
-  }
-
-  static int getClassReadWriteProperty(NativeLibrary _lib) {
-    return _lib._objc_msgSend_18(
-        _lib._class_Foo1, _lib._sel_classReadWriteProperty1);
-  }
-
-  static void setClassReadWriteProperty(NativeLibrary _lib, int value) {
-    _lib._objc_msgSend_19(
-        _lib._class_Foo1, _lib._sel_setClassReadWriteProperty_1, value);
-  }
-
-  static Foo aClassMethod(NativeLibrary _lib, double someArg) {
-    final _ret = _lib._objc_msgSend_20(
-        _lib._class_Foo1, _lib._sel_aClassMethod_1, someArg);
-    return Foo._(_ret, _lib);
-  }
-
-  int anInstanceMethod_withOtherArg(NSObject? someArg, NSObject? otherArg) {
-    return _lib._objc_msgSend_21(_id, _lib._sel_anInstanceMethod_withOtherArg_1,
-        someArg?._id ?? ffi.nullptr, otherArg?._id ?? ffi.nullptr);
-  }
-
-  static Foo new1(NativeLibrary _lib) {
-    final _ret = _lib._objc_msgSend_1(_lib._class_Foo1, _lib._sel_new1);
-    return Foo._(_ret, _lib);
-  }
-
-  static Foo alloc(NativeLibrary _lib) {
-    final _ret = _lib._objc_msgSend_1(_lib._class_Foo1, _lib._sel_alloc1);
-    return Foo._(_ret, _lib);
-  }
-}
-
-class ObjCSel extends ffi.Opaque {}
-
-class ObjCObject extends ffi.Opaque {}
 
 class NSObject extends _ObjCWrapper {
   NSObject._(ffi.Pointer<ObjCObject> id, NativeLibrary lib) : super._(id, lib);
@@ -874,6 +810,10 @@ class NSObject extends _ObjCWrapper {
   }
 }
 
+class ObjCSel extends ffi.Opaque {}
+
+class ObjCObject extends ffi.Opaque {}
+
 typedef instancetype = ffi.Pointer<ObjCObject>;
 
 class _NSZone extends ffi.Opaque {}
@@ -916,7 +856,7 @@ class NSString extends _ObjCWrapper {
   }
 
   @override
-  String toString() => UTF8String().cast<pkg_ffi.Utf8>().toDartString();
+  String toString() => (UTF8String).cast<pkg_ffi.Utf8>().toDartString();
 
   static NSString stringWithCString_encoding(
       NativeLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
@@ -935,3 +875,63 @@ extension StringToNSString on String {
 }
 
 typedef NSInteger = pkg_ffi.Long;
+
+class Foo extends NSObject {
+  Foo._(ffi.Pointer<ObjCObject> id, NativeLibrary lib) : super._(id, lib);
+
+  static Foo castFrom<T extends _ObjCWrapper>(T other) {
+    return Foo._(other._id, other._lib);
+  }
+
+  static Foo castFromPointer(NativeLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return Foo._(other, lib);
+  }
+
+  int get someProperty {
+    return _lib._objc_msgSend_18(_id, _lib._sel_someProperty1);
+  }
+
+  set someProperty(int value) {
+    _lib._objc_msgSend_19(_id, _lib._sel_setSomeProperty_1, value);
+  }
+
+  int get readOnlyProperty {
+    return _lib._objc_msgSend_18(_id, _lib._sel_readOnlyProperty1);
+  }
+
+  static int getClassReadOnlyProperty(NativeLibrary _lib) {
+    return _lib._objc_msgSend_18(
+        _lib._class_Foo1, _lib._sel_classReadOnlyProperty1);
+  }
+
+  static int getClassReadWriteProperty(NativeLibrary _lib) {
+    return _lib._objc_msgSend_18(
+        _lib._class_Foo1, _lib._sel_classReadWriteProperty1);
+  }
+
+  static void setClassReadWriteProperty(NativeLibrary _lib, int value) {
+    _lib._objc_msgSend_19(
+        _lib._class_Foo1, _lib._sel_setClassReadWriteProperty_1, value);
+  }
+
+  static Foo aClassMethod(NativeLibrary _lib, double someArg) {
+    final _ret = _lib._objc_msgSend_20(
+        _lib._class_Foo1, _lib._sel_aClassMethod_1, someArg);
+    return Foo._(_ret, _lib);
+  }
+
+  int anInstanceMethod_withOtherArg(NSObject? someArg, NSObject? otherArg) {
+    return _lib._objc_msgSend_21(_id, _lib._sel_anInstanceMethod_withOtherArg_1,
+        someArg?._id ?? ffi.nullptr, otherArg?._id ?? ffi.nullptr);
+  }
+
+  static Foo new1(NativeLibrary _lib) {
+    final _ret = _lib._objc_msgSend_1(_lib._class_Foo1, _lib._sel_new1);
+    return Foo._(_ret, _lib);
+  }
+
+  static Foo alloc(NativeLibrary _lib) {
+    final _ret = _lib._objc_msgSend_1(_lib._class_Foo1, _lib._sel_alloc1);
+    return Foo._(_ret, _lib);
+  }
+}

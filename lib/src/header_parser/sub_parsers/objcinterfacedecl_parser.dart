@@ -254,7 +254,8 @@ BindingType? parseObjCCategoryDeclaration(clang_types.CXCursor cursor) {
   _findCategoryInterfaceVisitor_result = null;
   clang.clang_visitChildren(
       cursor,
-      Pointer.fromFunction(_findCategoryInterfaceVisitor, exceptional_visitor_return),
+      Pointer.fromFunction(
+          _findCategoryInterfaceVisitor, exceptional_visitor_return),
       nullptr);
   final itfCursor = _findCategoryInterfaceVisitor_result;
   if (itfCursor == null) {
@@ -279,6 +280,8 @@ BindingType? parseObjCCategoryDeclaration(clang_types.CXCursor cursor) {
 
   _logger.fine('++++ Finished ObjC category: '
       'Name: $name, ${cursor.completeStringRepr()}');
+
+  return itf;
 }
 
 clang_types.CXCursor? _findCategoryInterfaceVisitor_result;

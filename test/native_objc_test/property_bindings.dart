@@ -151,8 +151,6 @@ class PropertyTestObjCLibrary {
   late final __objc_getClass = __objc_getClassPtr.asFunction<
       ffi.Pointer<ObjCObject> Function(ffi.Pointer<pkg_ffi.Char>)>();
 
-  late final ffi.Pointer<ObjCObject> _class_PropertyInterface1 =
-      _getClass1("PropertyInterface");
   late final ffi.Pointer<ObjCObject> _class_NSObject1 = _getClass1("NSObject");
   late final ffi.Pointer<ObjCSel> _sel_load1 = _registerName1("load");
   void _objc_msgSend_0(
@@ -575,6 +573,8 @@ class PropertyTestObjCLibrary {
       _registerName1("poseAsClass:");
   late final ffi.Pointer<ObjCSel> _sel_autoContentAccessingProxy1 =
       _registerName1("autoContentAccessingProxy");
+  late final ffi.Pointer<ObjCObject> _class_PropertyInterface1 =
+      _getClass1("PropertyInterface");
   late final ffi.Pointer<ObjCSel> _sel_readOnlyProperty1 =
       _registerName1("readOnlyProperty");
   int _objc_msgSend_18(
@@ -742,64 +742,6 @@ class _ObjCWrapper {
   @override
   int get hashCode => _id.hashCode;
 }
-
-class PropertyInterface extends NSObject {
-  PropertyInterface._(ffi.Pointer<ObjCObject> id, PropertyTestObjCLibrary lib)
-      : super._(id, lib);
-
-  static PropertyInterface castFrom<T extends _ObjCWrapper>(T other) {
-    return PropertyInterface._(other._id, other._lib);
-  }
-
-  static PropertyInterface castFromPointer(
-      PropertyTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
-    return PropertyInterface._(other, lib);
-  }
-
-  int get readOnlyProperty {
-    return _lib._objc_msgSend_18(_id, _lib._sel_readOnlyProperty1);
-  }
-
-  int get readWriteProperty {
-    return _lib._objc_msgSend_18(_id, _lib._sel_readWriteProperty1);
-  }
-
-  set readWriteProperty(int value) {
-    _lib._objc_msgSend_19(_id, _lib._sel_setReadWriteProperty_1, value);
-  }
-
-  static int getClassReadOnlyProperty(PropertyTestObjCLibrary _lib) {
-    return _lib._objc_msgSend_18(
-        _lib._class_PropertyInterface1, _lib._sel_classReadOnlyProperty1);
-  }
-
-  static int getClassReadWriteProperty(PropertyTestObjCLibrary _lib) {
-    return _lib._objc_msgSend_18(
-        _lib._class_PropertyInterface1, _lib._sel_classReadWriteProperty1);
-  }
-
-  static void setClassReadWriteProperty(
-      PropertyTestObjCLibrary _lib, int value) {
-    _lib._objc_msgSend_19(_lib._class_PropertyInterface1,
-        _lib._sel_setClassReadWriteProperty_1, value);
-  }
-
-  static PropertyInterface new1(PropertyTestObjCLibrary _lib) {
-    final _ret =
-        _lib._objc_msgSend_1(_lib._class_PropertyInterface1, _lib._sel_new1);
-    return PropertyInterface._(_ret, _lib);
-  }
-
-  static PropertyInterface alloc(PropertyTestObjCLibrary _lib) {
-    final _ret =
-        _lib._objc_msgSend_1(_lib._class_PropertyInterface1, _lib._sel_alloc1);
-    return PropertyInterface._(_ret, _lib);
-  }
-}
-
-class ObjCSel extends ffi.Opaque {}
-
-class ObjCObject extends ffi.Opaque {}
 
 class NSObject extends _ObjCWrapper {
   NSObject._(ffi.Pointer<ObjCObject> id, PropertyTestObjCLibrary lib)
@@ -1016,6 +958,10 @@ class NSObject extends _ObjCWrapper {
   }
 }
 
+class ObjCSel extends ffi.Opaque {}
+
+class ObjCObject extends ffi.Opaque {}
+
 typedef instancetype = ffi.Pointer<ObjCObject>;
 
 class _NSZone extends ffi.Opaque {}
@@ -1059,7 +1005,7 @@ class NSString extends _ObjCWrapper {
   }
 
   @override
-  String toString() => UTF8String().cast<pkg_ffi.Utf8>().toDartString();
+  String toString() => (UTF8String).cast<pkg_ffi.Utf8>().toDartString();
 
   static NSString stringWithCString_encoding(PropertyTestObjCLibrary _lib,
       ffi.Pointer<pkg_ffi.Char> cString, int enc) {
@@ -1068,13 +1014,67 @@ class NSString extends _ObjCWrapper {
     return NSString._(_ret, _lib);
   }
 
-  ffi.Pointer<pkg_ffi.Char> UTF8String() {
+  ffi.Pointer<pkg_ffi.Char> get UTF8String {
     return _lib._objc_msgSend_13(_id, _lib._sel_UTF8String1);
   }
 }
 
 extension StringToNSString on String {
   NSString toNSString(PropertyTestObjCLibrary lib) => NSString(lib, this);
+}
+
+class PropertyInterface extends NSObject {
+  PropertyInterface._(ffi.Pointer<ObjCObject> id, PropertyTestObjCLibrary lib)
+      : super._(id, lib);
+
+  static PropertyInterface castFrom<T extends _ObjCWrapper>(T other) {
+    return PropertyInterface._(other._id, other._lib);
+  }
+
+  static PropertyInterface castFromPointer(
+      PropertyTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return PropertyInterface._(other, lib);
+  }
+
+  int get readOnlyProperty {
+    return _lib._objc_msgSend_18(_id, _lib._sel_readOnlyProperty1);
+  }
+
+  int get readWriteProperty {
+    return _lib._objc_msgSend_18(_id, _lib._sel_readWriteProperty1);
+  }
+
+  set readWriteProperty(int value) {
+    _lib._objc_msgSend_19(_id, _lib._sel_setReadWriteProperty_1, value);
+  }
+
+  static int getClassReadOnlyProperty(PropertyTestObjCLibrary _lib) {
+    return _lib._objc_msgSend_18(
+        _lib._class_PropertyInterface1, _lib._sel_classReadOnlyProperty1);
+  }
+
+  static int getClassReadWriteProperty(PropertyTestObjCLibrary _lib) {
+    return _lib._objc_msgSend_18(
+        _lib._class_PropertyInterface1, _lib._sel_classReadWriteProperty1);
+  }
+
+  static void setClassReadWriteProperty(
+      PropertyTestObjCLibrary _lib, int value) {
+    _lib._objc_msgSend_19(_lib._class_PropertyInterface1,
+        _lib._sel_setClassReadWriteProperty_1, value);
+  }
+
+  static PropertyInterface new1(PropertyTestObjCLibrary _lib) {
+    final _ret =
+        _lib._objc_msgSend_1(_lib._class_PropertyInterface1, _lib._sel_new1);
+    return PropertyInterface._(_ret, _lib);
+  }
+
+  static PropertyInterface alloc(PropertyTestObjCLibrary _lib) {
+    final _ret =
+        _lib._objc_msgSend_1(_lib._class_PropertyInterface1, _lib._sel_alloc1);
+    return PropertyInterface._(_ret, _lib);
+  }
 }
 
 const int NSScannedOption = 1;

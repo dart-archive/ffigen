@@ -127,8 +127,8 @@ extension CXCursorExt on clang_types.CXCursor {
 }
 
 int _printAstVisitor_maxDepth = 0;
-int _printAstVisitor(clang_types.CXCursor cursor,
-    clang_types.CXCursor parent, Pointer<Void> clientData) {
+int _printAstVisitor(clang_types.CXCursor cursor, clang_types.CXCursor parent,
+    Pointer<Void> clientData) {
   int depth = clientData.address;
   if (depth > _printAstVisitor_maxDepth) {
     return clang_types.CXChildVisitResult.CXChildVisit_Break;

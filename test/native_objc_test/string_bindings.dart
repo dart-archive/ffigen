@@ -151,7 +151,6 @@ class StringTestObjCLibrary {
   late final __objc_getClass = __objc_getClassPtr.asFunction<
       ffi.Pointer<ObjCObject> Function(ffi.Pointer<pkg_ffi.Char>)>();
 
-  late final ffi.Pointer<ObjCObject> _class_NSValue1 = _getClass1("NSValue");
   late final ffi.Pointer<ObjCObject> _class_NSObject1 = _getClass1("NSObject");
   late final ffi.Pointer<ObjCSel> _sel_load1 = _registerName1("load");
   void _objc_msgSend_0(
@@ -2297,6 +2296,7 @@ class StringTestObjCLibrary {
       _registerName1("poseAsClass:");
   late final ffi.Pointer<ObjCSel> _sel_autoContentAccessingProxy1 =
       _registerName1("autoContentAccessingProxy");
+  late final ffi.Pointer<ObjCObject> _class_NSValue1 = _getClass1("NSValue");
   late final ffi.Pointer<ObjCSel> _sel_getValue_size_1 =
       _registerName1("getValue:size:");
   void _objc_msgSend_76(
@@ -4993,111 +4993,6 @@ class _ObjCWrapper {
   int get hashCode => _id.hashCode;
 }
 
-class NSValue extends NSObject {
-  NSValue._(ffi.Pointer<ObjCObject> id, StringTestObjCLibrary lib)
-      : super._(id, lib);
-
-  static NSValue castFrom<T extends _ObjCWrapper>(T other) {
-    return NSValue._(other._id, other._lib);
-  }
-
-  static NSValue castFromPointer(
-      StringTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
-    return NSValue._(other, lib);
-  }
-
-  void getValue_size(ffi.Pointer<ffi.Void> value, int size) {
-    _lib._objc_msgSend_76(_id, _lib._sel_getValue_size_1, value, size);
-  }
-
-  ffi.Pointer<pkg_ffi.Char> get objCType {
-    return _lib._objc_msgSend_36(_id, _lib._sel_objCType1);
-  }
-
-  NSValue initWithBytes_objCType(
-      ffi.Pointer<ffi.Void> value, ffi.Pointer<pkg_ffi.Char> type) {
-    final _ret = _lib._objc_msgSend_77(
-        _id, _lib._sel_initWithBytes_objCType_1, value, type);
-    return NSValue._(_ret, _lib);
-  }
-
-  NSValue initWithCoder(NSObject? coder) {
-    final _ret = _lib._objc_msgSend_13(
-        _id, _lib._sel_initWithCoder_1, coder?._id ?? ffi.nullptr);
-    return NSValue._(_ret, _lib);
-  }
-
-  static NSValue valueWithBytes_objCType(StringTestObjCLibrary _lib,
-      ffi.Pointer<ffi.Void> value, ffi.Pointer<pkg_ffi.Char> type) {
-    final _ret = _lib._objc_msgSend_78(
-        _lib._class_NSValue1, _lib._sel_valueWithBytes_objCType_1, value, type);
-    return NSValue._(_ret, _lib);
-  }
-
-  static NSValue value_withObjCType(StringTestObjCLibrary _lib,
-      ffi.Pointer<ffi.Void> value, ffi.Pointer<pkg_ffi.Char> type) {
-    final _ret = _lib._objc_msgSend_78(
-        _lib._class_NSValue1, _lib._sel_value_withObjCType_1, value, type);
-    return NSValue._(_ret, _lib);
-  }
-
-  static NSValue valueWithNonretainedObject(
-      StringTestObjCLibrary _lib, NSObject anObject) {
-    final _ret = _lib._objc_msgSend_79(_lib._class_NSValue1,
-        _lib._sel_valueWithNonretainedObject_1, anObject._id);
-    return NSValue._(_ret, _lib);
-  }
-
-  NSObject get nonretainedObjectValue {
-    final _ret = _lib._objc_msgSend_1(_id, _lib._sel_nonretainedObjectValue1);
-    return NSObject._(_ret, _lib);
-  }
-
-  static NSValue valueWithPointer(
-      StringTestObjCLibrary _lib, ffi.Pointer<ffi.Void> pointer) {
-    final _ret = _lib._objc_msgSend_80(
-        _lib._class_NSValue1, _lib._sel_valueWithPointer_1, pointer);
-    return NSValue._(_ret, _lib);
-  }
-
-  ffi.Pointer<ffi.Void> get pointerValue {
-    return _lib._objc_msgSend_81(_id, _lib._sel_pointerValue1);
-  }
-
-  bool isEqualToValue(NSObject? value) {
-    return _lib._objc_msgSend_4(
-        _id, _lib._sel_isEqualToValue_1, value?._id ?? ffi.nullptr);
-  }
-
-  void getValue(ffi.Pointer<ffi.Void> value) {
-    _lib._objc_msgSend_82(_id, _lib._sel_getValue_1, value);
-  }
-
-  static NSValue valueWithRange(StringTestObjCLibrary _lib, NSRange range) {
-    final _ret = _lib._objc_msgSend_83(
-        _lib._class_NSValue1, _lib._sel_valueWithRange_1, range);
-    return NSValue._(_ret, _lib);
-  }
-
-  NSRange get rangeValue {
-    return _lib._objc_msgSend_84(_id, _lib._sel_rangeValue1);
-  }
-
-  static NSValue new1(StringTestObjCLibrary _lib) {
-    final _ret = _lib._objc_msgSend_1(_lib._class_NSValue1, _lib._sel_new1);
-    return NSValue._(_ret, _lib);
-  }
-
-  static NSValue alloc(StringTestObjCLibrary _lib) {
-    final _ret = _lib._objc_msgSend_1(_lib._class_NSValue1, _lib._sel_alloc1);
-    return NSValue._(_ret, _lib);
-  }
-}
-
-class ObjCSel extends ffi.Opaque {}
-
-class ObjCObject extends ffi.Opaque {}
-
 class NSObject extends _ObjCWrapper {
   NSObject._(ffi.Pointer<ObjCObject> id, StringTestObjCLibrary lib)
       : super._(id, lib);
@@ -5313,6 +5208,10 @@ class NSObject extends _ObjCWrapper {
   }
 }
 
+class ObjCSel extends ffi.Opaque {}
+
+class ObjCObject extends ffi.Opaque {}
+
 typedef instancetype = ffi.Pointer<ObjCObject>;
 
 class _NSZone extends ffi.Opaque {}
@@ -5356,7 +5255,7 @@ class NSString extends NSObject {
   }
 
   @override
-  String toString() => UTF8String().cast<pkg_ffi.Utf8>().toDartString();
+  String toString() => (UTF8String).cast<pkg_ffi.Utf8>().toDartString();
 
   int get length {
     return _lib._objc_msgSend_11(_id, _lib._sel_length1);
@@ -6409,6 +6308,107 @@ class NSDictionary extends _ObjCWrapper {
   static NSDictionary castFromPointer(
       StringTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
     return NSDictionary._(other, lib);
+  }
+}
+
+class NSValue extends NSObject {
+  NSValue._(ffi.Pointer<ObjCObject> id, StringTestObjCLibrary lib)
+      : super._(id, lib);
+
+  static NSValue castFrom<T extends _ObjCWrapper>(T other) {
+    return NSValue._(other._id, other._lib);
+  }
+
+  static NSValue castFromPointer(
+      StringTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSValue._(other, lib);
+  }
+
+  void getValue_size(ffi.Pointer<ffi.Void> value, int size) {
+    _lib._objc_msgSend_76(_id, _lib._sel_getValue_size_1, value, size);
+  }
+
+  ffi.Pointer<pkg_ffi.Char> get objCType {
+    return _lib._objc_msgSend_36(_id, _lib._sel_objCType1);
+  }
+
+  NSValue initWithBytes_objCType(
+      ffi.Pointer<ffi.Void> value, ffi.Pointer<pkg_ffi.Char> type) {
+    final _ret = _lib._objc_msgSend_77(
+        _id, _lib._sel_initWithBytes_objCType_1, value, type);
+    return NSValue._(_ret, _lib);
+  }
+
+  NSValue initWithCoder(NSObject? coder) {
+    final _ret = _lib._objc_msgSend_13(
+        _id, _lib._sel_initWithCoder_1, coder?._id ?? ffi.nullptr);
+    return NSValue._(_ret, _lib);
+  }
+
+  static NSValue valueWithBytes_objCType(StringTestObjCLibrary _lib,
+      ffi.Pointer<ffi.Void> value, ffi.Pointer<pkg_ffi.Char> type) {
+    final _ret = _lib._objc_msgSend_78(
+        _lib._class_NSValue1, _lib._sel_valueWithBytes_objCType_1, value, type);
+    return NSValue._(_ret, _lib);
+  }
+
+  static NSValue value_withObjCType(StringTestObjCLibrary _lib,
+      ffi.Pointer<ffi.Void> value, ffi.Pointer<pkg_ffi.Char> type) {
+    final _ret = _lib._objc_msgSend_78(
+        _lib._class_NSValue1, _lib._sel_value_withObjCType_1, value, type);
+    return NSValue._(_ret, _lib);
+  }
+
+  static NSValue valueWithNonretainedObject(
+      StringTestObjCLibrary _lib, NSObject anObject) {
+    final _ret = _lib._objc_msgSend_79(_lib._class_NSValue1,
+        _lib._sel_valueWithNonretainedObject_1, anObject._id);
+    return NSValue._(_ret, _lib);
+  }
+
+  NSObject get nonretainedObjectValue {
+    final _ret = _lib._objc_msgSend_1(_id, _lib._sel_nonretainedObjectValue1);
+    return NSObject._(_ret, _lib);
+  }
+
+  static NSValue valueWithPointer(
+      StringTestObjCLibrary _lib, ffi.Pointer<ffi.Void> pointer) {
+    final _ret = _lib._objc_msgSend_80(
+        _lib._class_NSValue1, _lib._sel_valueWithPointer_1, pointer);
+    return NSValue._(_ret, _lib);
+  }
+
+  ffi.Pointer<ffi.Void> get pointerValue {
+    return _lib._objc_msgSend_81(_id, _lib._sel_pointerValue1);
+  }
+
+  bool isEqualToValue(NSObject? value) {
+    return _lib._objc_msgSend_4(
+        _id, _lib._sel_isEqualToValue_1, value?._id ?? ffi.nullptr);
+  }
+
+  void getValue(ffi.Pointer<ffi.Void> value) {
+    _lib._objc_msgSend_82(_id, _lib._sel_getValue_1, value);
+  }
+
+  static NSValue valueWithRange(StringTestObjCLibrary _lib, NSRange range) {
+    final _ret = _lib._objc_msgSend_83(
+        _lib._class_NSValue1, _lib._sel_valueWithRange_1, range);
+    return NSValue._(_ret, _lib);
+  }
+
+  NSRange get rangeValue {
+    return _lib._objc_msgSend_84(_id, _lib._sel_rangeValue1);
+  }
+
+  static NSValue new1(StringTestObjCLibrary _lib) {
+    final _ret = _lib._objc_msgSend_1(_lib._class_NSValue1, _lib._sel_new1);
+    return NSValue._(_ret, _lib);
+  }
+
+  static NSValue alloc(StringTestObjCLibrary _lib) {
+    final _ret = _lib._objc_msgSend_1(_lib._class_NSValue1, _lib._sel_alloc1);
+    return NSValue._(_ret, _lib);
   }
 }
 
