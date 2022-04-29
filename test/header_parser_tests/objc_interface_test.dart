@@ -32,6 +32,27 @@ ${strings.headers}:
 ${strings.objcInterfaces}:
   ${strings.include}:
     - 'Foo'
+${strings.functions}:
+  ${strings.exclude}:
+    - '.*'
+${strings.structs}:
+  ${strings.exclude}:
+    - '.*'
+${strings.unions}:
+  ${strings.exclude}:
+    - '.*'
+${strings.enums}:
+  ${strings.exclude}:
+    - '.*'
+${strings.unnamedEnums}:
+  ${strings.exclude}:
+    - '.*'
+${strings.macros}:
+  ${strings.exclude}:
+    - '.*'
+${strings.globals}:
+  ${strings.exclude}:
+    - '.*'
 ''') as yaml.YamlMap),
       );
     });

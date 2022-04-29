@@ -4,11 +4,22 @@
 
 #import <Foundation/NSObject.h>
 
-@interface Foo : NSObject {}
+@interface Castaway : NSObject {
+}
+
+- (NSObject *) meAsNSObject;
+- (int64_t) meAsInt;
+
 @end
 
-@interface Excluded : NSObject {}
-@end
+@implementation Castaway
 
-@interface _Renamed : NSObject {}
+- (NSObject *) meAsNSObject {
+  return self;
+}
+
+- (int64_t) meAsInt {
+  return (int64_t) self;
+}
+
 @end

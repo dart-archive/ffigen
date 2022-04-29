@@ -529,6 +529,10 @@ class Foo extends NSObject {
     return Foo._(other._id, other._lib);
   }
 
+  static Foo castFromPointer(NativeLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return Foo._(other, lib);
+  }
+
   int get someProperty {
     return _lib._objc_msgSend_15(_id, _lib._sel_someProperty1);
   }
@@ -587,6 +591,11 @@ class NSObject extends _ObjCWrapper {
 
   static NSObject castFrom<T extends _ObjCWrapper>(T other) {
     return NSObject._(other._id, other._lib);
+  }
+
+  static NSObject castFromPointer(
+      NativeLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSObject._(other, lib);
   }
 
   static void load(NativeLibrary _lib) {
@@ -763,6 +772,11 @@ class NSMethodSignature extends _ObjCWrapper {
   static NSMethodSignature castFrom<T extends _ObjCWrapper>(T other) {
     return NSMethodSignature._(other._id, other._lib);
   }
+
+  static NSMethodSignature castFromPointer(
+      NativeLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSMethodSignature._(other, lib);
+  }
 }
 
 typedef NSUInteger = pkg_ffi.UnsignedLong;
@@ -772,6 +786,11 @@ class NSString extends _ObjCWrapper {
 
   static NSString castFrom<T extends _ObjCWrapper>(T other) {
     return NSString._(other._id, other._lib);
+  }
+
+  static NSString castFromPointer(
+      NativeLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSString._(other, lib);
   }
 
   factory NSString(NativeLibrary _lib, String str) {
