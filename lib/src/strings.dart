@@ -39,15 +39,12 @@ const langObjC = 'objc';
 const clangLangObjC = ['-x', 'objective-c'];
 const clangObjCBoolDefine = '__OBJC_BOOL_IS_BOOL';
 const clangInclude = '-include';
-const clangDefaultObjCSystemHeaderPath =
-    '/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include';
-const clangDefaultObjCSystemHeaders = ['objc/NSObject.h'];
 const objcBOOL = 'BOOL';
 
 // Internal objective C directories that are automatically pulled in by clang,
 // and should be excluded from output (unless explicitly used).
 const objCInternalDirectories = [
-  clangDefaultObjCSystemHeaderPath,
+  '/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include',
   '/Applications/Xcode.app/Contents/Developer',
   '/usr/local/opt/llvm/lib',
 ];
