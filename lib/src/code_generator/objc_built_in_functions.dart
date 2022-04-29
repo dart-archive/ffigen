@@ -101,6 +101,11 @@ class ObjCBuiltInFunctions {
     }
   }
 
+  final _interfaceRegistry = <String, ObjCInterface>{};
+  void registerInterface(ObjCInterface interface) {
+    _interfaceRegistry[interface.originalName] = interface;
+  }
+
   void generateNSStringUtils(Writer w, StringBuffer s) {
     // Generate a constructor that wraps stringWithCString.
     s.write('  factory NSString(${w.className} _lib, String str) {\n');

@@ -47,12 +47,16 @@ Type? parseObjCInterfaceDeclaration(
   _logger.fine('++++ Adding ObjC interface: '
       'Name: $name, ${cursor.completeStringRepr()}');
 
+  final location = clang.clang_getCursorLocation(cursor);
+  final isBuiltIn = clang.clang_Location_isInSystemHeader(location) != 0;
+
   return ObjCInterface(
     usr: itfUsr,
     originalName: name,
     name: config.objcInterfaces.renameUsingConfig(name),
     dartDoc: getCursorDocComment(cursor),
     builtInFunctions: objCBuiltInFunctions,
+    isBuiltIn: isBuiltIn,
   );
 }
 
