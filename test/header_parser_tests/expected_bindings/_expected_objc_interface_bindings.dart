@@ -526,6 +526,9 @@ class _ObjCWrapper {
   bool operator ==(Object other) {
     return other is _ObjCWrapper && _id == other._id;
   }
+
+  @override
+  int get hashCode => this._id.hashCode;
 }
 
 class Foo extends NSObject {
