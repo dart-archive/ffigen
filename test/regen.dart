@@ -69,48 +69,48 @@ Future<void> main(List<String> args) async {
     print('${record.level.name}: ${record.time}: ${record.message}');
   });
 
-  // await _regenConfig(
-  //   File('test/native_objc_test/config.yaml'),
-  //   File('test/native_objc_test/native_objc_test_bindings.dart'),
-  // );
+  await _regenConfig(
+    File('test/native_objc_test/config.yaml'),
+    File('test/native_objc_test/native_objc_test_bindings.dart'),
+  );
 
   await _regenConfig(
     File('test/native_objc_test/category_config.yaml'),
     File('test/native_objc_test/category_bindings.dart'),
   );
 
-  // await _regenConfig(
-  //   File('test/native_objc_test/method_config.yaml'),
-  //   File('test/native_objc_test/method_bindings.dart'),
-  // );
+  await _regenConfig(
+    File('test/native_objc_test/method_config.yaml'),
+    File('test/native_objc_test/method_bindings.dart'),
+  );
 
-  // await _regenConfig(
-  //   File('test/native_objc_test/nullable_config.yaml'),
-  //   File('test/native_objc_test/nullable_bindings.dart'),
-  // );
+  await _regenConfig(
+    File('test/native_objc_test/nullable_config.yaml'),
+    File('test/native_objc_test/nullable_bindings.dart'),
+  );
 
-  // await _regenConfig(
-  //   File('test/native_objc_test/property_config.yaml'),
-  //   File('test/native_objc_test/property_bindings.dart'),
-  // );
+  await _regenConfig(
+    File('test/native_objc_test/property_config.yaml'),
+    File('test/native_objc_test/property_bindings.dart'),
+  );
 
-  // await _regenConfig(
-  //   File('test/native_objc_test/string_config.yaml'),
-  //   File('test/native_objc_test/string_bindings.dart'),
-  // );
+  await _regenConfig(
+    File('test/native_objc_test/string_config.yaml'),
+    File('test/native_objc_test/string_bindings.dart'),
+  );
 
-  // await _regenConfig(File('test/native_test/config.yaml'),
-  //     File('test/native_test/native_test_bindings.dart'));
+  await _regenConfig(File('test/native_test/config.yaml'),
+      File('test/native_test/native_test_bindings.dart'));
 
-  // await _regenConfig(File('example/libclang-example/pubspec.yaml'),
-  //     File('example/libclang-example/generated_bindings.dart'),
-  //     chDir: true);
+  await _regenConfig(File('example/libclang-example/pubspec.yaml'),
+      File('example/libclang-example/generated_bindings.dart'),
+      chDir: true);
 
-  // await _regenConfig(File('example/simple/pubspec.yaml'),
-  //     File('example/simple/generated_bindings.dart'),
-  //     chDir: true);
+  await _regenConfig(File('example/simple/pubspec.yaml'),
+      File('example/simple/generated_bindings.dart'),
+      chDir: true);
 
-  // await _regenConfig(File('example/c_json/pubspec.yaml'),
-  //     File('example/c_json/cjson_generated_bindings.dart'),
-  //     chDir: true);
+  await _regenConfig(File('example/c_json/pubspec.yaml'),
+      File('example/c_json/cjson_generated_bindings.dart'),
+      chDir: true);
 }

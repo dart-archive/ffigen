@@ -130,13 +130,14 @@ int _printAstVisitor_maxDepth = 0;
 int _printAstVisitor(clang_types.CXCursor cursor,
     clang_types.CXCursor parent, Pointer<Void> clientData) {
   int depth = clientData.address;
-  if (depth <= _printAstVisitor_maxDepth) {
-    print(('  ' * depth) + cursor.completeStringRepr());
-    clang.clang_visitChildren(
-        cursor,
-        Pointer.fromFunction(_printAstVisitor, exceptional_visitor_return),
-        Pointer<Void>.fromAddress(depth + 1));
+  if (depth > _printAstVisitor_maxDepth) {
+    return clang_types.CXChildVisitResult.CXChildVisit_Break;
   }
+  print(('  ' * depth) + cursor.completeStringRepr());
+  clang.clang_visitChildren(
+      cursor,
+      Pointer.fromFunction(_printAstVisitor, exceptional_visitor_return),
+      Pointer<Void>.fromAddress(depth + 1));
   return clang_types.CXChildVisitResult.CXChildVisit_Continue;
 }
 

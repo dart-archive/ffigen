@@ -25,9 +25,12 @@ const _excludedNSObjectClassMethods = {
   'isSubclassOfClass:',
   'load',
   'mutableCopyWithZone:',
+  'poseAsClass:',
   'resolveClassMethod:',
   'resolveInstanceMethod:',
+  'setVersion:',
   'superclass',
+  'version',
 };
 
 class ObjCInterface extends BindingType {
