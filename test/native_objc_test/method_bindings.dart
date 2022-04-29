@@ -707,6 +707,11 @@ class MethodInterface extends NSObject {
     return MethodInterface._(other._id, other._lib);
   }
 
+  static MethodInterface castFromPointer(
+      MethodTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return MethodInterface._(other, lib);
+  }
+
   int add() {
     return _lib._objc_msgSend_15(_id, _lib._sel_add1);
   }
@@ -765,6 +770,11 @@ class NSObject extends _ObjCWrapper {
 
   static NSObject castFrom<T extends _ObjCWrapper>(T other) {
     return NSObject._(other._id, other._lib);
+  }
+
+  static NSObject castFromPointer(
+      MethodTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSObject._(other, lib);
   }
 
   static void load(MethodTestObjCLibrary _lib) {
@@ -945,6 +955,11 @@ class NSMethodSignature extends _ObjCWrapper {
   static NSMethodSignature castFrom<T extends _ObjCWrapper>(T other) {
     return NSMethodSignature._(other._id, other._lib);
   }
+
+  static NSMethodSignature castFromPointer(
+      MethodTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSMethodSignature._(other, lib);
+  }
 }
 
 typedef NSUInteger = pkg_ffi.UnsignedLong;
@@ -955,6 +970,11 @@ class NSString extends _ObjCWrapper {
 
   static NSString castFrom<T extends _ObjCWrapper>(T other) {
     return NSString._(other._id, other._lib);
+  }
+
+  static NSString castFromPointer(
+      MethodTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSString._(other, lib);
   }
 
   factory NSString(MethodTestObjCLibrary _lib, String str) {
