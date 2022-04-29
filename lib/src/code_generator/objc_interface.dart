@@ -121,7 +121,8 @@ class ObjCInterface extends BindingType {
       s.write('  ');
       if (isStatic) {
         s.write('static ');
-        s.write(_getConvertedType(returnType, w, name));
+        s.write(
+            _getConvertedReturnType(returnType, w, name, m.isNullableReturn));
 
         switch (m.kind) {
           case ObjCMethodKind.method:
@@ -147,18 +148,20 @@ class ObjCInterface extends BindingType {
         switch (m.kind) {
           case ObjCMethodKind.method:
             // returnType methodName(...)
-            s.write(_getConvertedType(returnType, w, name));
+            s.write(_getConvertedReturnType(
+                returnType, w, name, m.isNullableReturn));
             s.write(' $methodName');
             s.write(paramsToString(m.params, isStatic: false));
             break;
           case ObjCMethodKind.propertyGetter:
             // returnType get methodName
-            s.write(_getConvertedType(returnType, w, name));
+            s.write(_getConvertedReturnType(
+                returnType, w, name, m.isNullableReturn));
             s.write(' get $methodName');
             break;
           case ObjCMethodKind.propertySetter:
             // set methodName(...)
-            s.write('set $methodName');
+            s.write(' set $methodName');
             s.write(paramsToString(m.params, isStatic: false));
             break;
         }
@@ -181,7 +184,8 @@ class ObjCInterface extends BindingType {
       }
       s.write(');\n');
       if (convertReturn) {
-        final result = _doReturnConversion(returnType, '_ret', name, '_lib');
+        final result = _doReturnConversion(
+            returnType, '_ret', name, '_lib', m.isNullableReturn);
         s.write('    return $result;');
       }
 
@@ -311,6 +315,15 @@ class ObjCInterface extends BindingType {
     return type.getDartType(w);
   }
 
+  String _getConvertedReturnType(
+      Type type, Writer w, String enclosingClass, bool isNullableReturn) {
+    final result = _getConvertedType(type, w, enclosingClass);
+    if (isNullableReturn) {
+      return result + "?";
+    }
+    return result;
+  }
+
   String _doArgConversion(ObjCMethodParam arg) {
     if (arg.type is ObjCInterface ||
         _isObject(arg.type) ||
@@ -324,12 +337,22 @@ class ObjCInterface extends BindingType {
     return arg.name;
   }
 
-  String _doReturnConversion(
-      Type type, String value, String enclosingClass, String library) {
-    if (type is ObjCInterface) return '${type.name}._($value, $library)';
-    if (_isObject(type)) return 'NSObject._($value, $library)';
-    if (_isInstanceType(type)) return '$enclosingClass._($value, $library)';
-    return value;
+  String _doReturnConversion(Type type, String value, String enclosingClass,
+      String library, bool isNullable) {
+    String prefix = "";
+    if (isNullable) {
+      prefix += "$value.address == 0 ? null : ";
+    }
+    if (type is ObjCInterface) {
+      return prefix + '${type.name}._($value, $library)';
+    }
+    if (_isObject(type)) {
+      return prefix + 'NSObject._($value, $library)';
+    }
+    if (_isInstanceType(type)) {
+      return prefix + '$enclosingClass._($value, $library)';
+    }
+    return prefix + value;
   }
 }
 
@@ -351,6 +374,7 @@ class ObjCMethod {
   final String originalName;
   final ObjCProperty? property;
   Type? returnType;
+  final bool isNullableReturn;
   final List<ObjCMethodParam> params;
   final ObjCMethodKind kind;
   final bool isClass;
@@ -364,6 +388,7 @@ class ObjCMethod {
     required this.kind,
     required this.isClass,
     this.returnType,
+    this.isNullableReturn = false,
     List<ObjCMethodParam>? params_,
   }) : params = params_ ?? [];
 

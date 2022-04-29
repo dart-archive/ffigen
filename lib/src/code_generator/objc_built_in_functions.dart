@@ -83,11 +83,19 @@ class ObjCBuiltInFunctions {
     utilsExist = true;
 
     final objType = PointerType(objCObjectType).getCType(w);
-    s.write('\nclass _ObjCWrapper {\n');
-    s.write('  final $objType _id;\n');
-    s.write('  final ${w.className} _lib;\n');
-    s.write('  _ObjCWrapper._(this._id, this._lib);\n');
-    s.write('}\n');
+    s.write('''
+class _ObjCWrapper {
+  final $objType _id;
+  final ${w.className} _lib;
+
+  _ObjCWrapper._(this._id, this._lib);
+
+  @override
+  bool operator ==(Object other) {
+    return other is _ObjCWrapper && _id == other._id;
+  }
+}
+''');
   }
 
   void addDependencies(Set<Binding> dependencies) {

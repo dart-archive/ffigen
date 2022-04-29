@@ -119,6 +119,9 @@ void _parseProperty(clang_types.CXCursor cursor) {
   final isReadOnly = propertyAttributes &
           clang_types.CXObjCPropertyAttrKind.CXObjCPropertyAttr_readonly >
       0;
+  // TODO(#334): Use the nullable attribute to decide this.
+  final isNullable =
+      cursor.type().kind == clang_types.CXTypeKind.CXType_ObjCObjectPointer;
 
   final property = ObjCProperty(fieldName);
 
@@ -133,8 +136,9 @@ void _parseProperty(clang_types.CXCursor cursor) {
     dartDoc: dartDoc,
     kind: ObjCMethodKind.propertyGetter,
     isClass: isClass,
+    returnType: fieldType,
+    isNullableReturn: isNullable,
   );
-  getter.returnType = fieldType;
   itf.addMethod(getter);
 
   if (!isReadOnly) {
@@ -148,7 +152,8 @@ void _parseProperty(clang_types.CXCursor cursor) {
         kind: ObjCMethodKind.propertySetter,
         isClass: isClass);
     setter.returnType = NativeType(SupportedNativeType.Void);
-    setter.params.add(ObjCMethodParam(fieldType, 'value'));
+    setter.params
+        .add(ObjCMethodParam(fieldType, 'value', isNullable: isNullable));
     itf.addMethod(setter);
   }
 }

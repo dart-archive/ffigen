@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 // Objective C support is only available on mac.
+
 @TestOn('mac-os')
 
 import 'dart:ffi';
@@ -52,17 +53,29 @@ void main() {
     });
 
     test('castFrom', () {
-      final meAsInt = testInstance.meAsInt();
-      expect(Castaway.castFrom(testInstance.meAsNSObject()).meAsInt(), meAsInt);
+      final fromCast = Castaway.castFrom(testInstance.meAsNSObject());
+      expect(fromCast, testInstance);
     });
 
     test('castFromPointer', () {
       final meAsInt = testInstance.meAsInt();
-      expect(
-          Castaway.castFromPointer(
-                  lib, Pointer<ObjCObject>.fromAddress(meAsInt))
-              .meAsInt(),
-          meAsInt);
+      final fromCast = Castaway.castFromPointer(
+          lib, Pointer<ObjCObject>.fromAddress(meAsInt));
+      expect(fromCast, testInstance);
+    });
+
+    test('equality equals', () {
+      final meAsInt = testInstance.meAsInt();
+      final fromCast = Castaway.castFromPointer(
+          lib, Pointer<ObjCObject>.fromAddress(meAsInt));
+      expect(fromCast, testInstance);
+    });
+
+    test('equality not equals', () {
+      final meAsInt = testInstance.meAsInt();
+      final fromCast = Castaway.castFromPointer(
+          lib, Pointer<ObjCObject>.fromAddress(meAsInt));
+      expect(fromCast, isNot(equals(NSObject.new1(lib))));
     });
   });
 }
