@@ -2877,7 +2877,16 @@ abstract class NSStringEncodingConversionOptions {
 class _ObjCWrapper {
   final ffi.Pointer<ObjCObject> _id;
   final NativeObjCLibrary _lib;
+
   _ObjCWrapper._(this._id, this._lib);
+
+  @override
+  bool operator ==(Object other) {
+    return other is _ObjCWrapper && _id == other._id;
+  }
+
+  @override
+  int get hashCode => _id.hashCode;
 }
 
 class NSString extends NSObject {
@@ -2886,6 +2895,11 @@ class NSString extends NSObject {
 
   static NSString castFrom<T extends _ObjCWrapper>(T other) {
     return NSString._(other._id, other._lib);
+  }
+
+  static NSString castFromPointer(
+      NativeObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSString._(other, lib);
   }
 
   factory NSString(NativeObjCLibrary _lib, String str) {
@@ -3125,35 +3139,35 @@ class NSString extends NSObject {
     return _lib._objc_msgSend_10(_id, _lib._sel_boolValue1);
   }
 
-  NSObject get uppercaseString {
+  NSObject? get uppercaseString {
     final _ret = _lib._objc_msgSend_1(_id, _lib._sel_uppercaseString1);
-    return NSObject._(_ret, _lib);
+    return _ret.address == 0 ? null : NSObject._(_ret, _lib);
   }
 
-  NSObject get lowercaseString {
+  NSObject? get lowercaseString {
     final _ret = _lib._objc_msgSend_1(_id, _lib._sel_lowercaseString1);
-    return NSObject._(_ret, _lib);
+    return _ret.address == 0 ? null : NSObject._(_ret, _lib);
   }
 
-  NSObject get capitalizedString {
+  NSObject? get capitalizedString {
     final _ret = _lib._objc_msgSend_1(_id, _lib._sel_capitalizedString1);
-    return NSObject._(_ret, _lib);
+    return _ret.address == 0 ? null : NSObject._(_ret, _lib);
   }
 
-  NSObject get localizedUppercaseString {
+  NSObject? get localizedUppercaseString {
     final _ret = _lib._objc_msgSend_1(_id, _lib._sel_localizedUppercaseString1);
-    return NSObject._(_ret, _lib);
+    return _ret.address == 0 ? null : NSObject._(_ret, _lib);
   }
 
-  NSObject get localizedLowercaseString {
+  NSObject? get localizedLowercaseString {
     final _ret = _lib._objc_msgSend_1(_id, _lib._sel_localizedLowercaseString1);
-    return NSObject._(_ret, _lib);
+    return _ret.address == 0 ? null : NSObject._(_ret, _lib);
   }
 
-  NSObject get localizedCapitalizedString {
+  NSObject? get localizedCapitalizedString {
     final _ret =
         _lib._objc_msgSend_1(_id, _lib._sel_localizedCapitalizedString1);
-    return NSObject._(_ret, _lib);
+    return _ret.address == 0 ? null : NSObject._(_ret, _lib);
   }
 
   NSString uppercaseStringWithLocale(NSObject? locale) {
@@ -3312,28 +3326,28 @@ class NSString extends NSObject {
         _lib._class_NSString1, _lib._sel_defaultCStringEncoding1);
   }
 
-  NSObject get decomposedStringWithCanonicalMapping {
+  NSObject? get decomposedStringWithCanonicalMapping {
     final _ret = _lib._objc_msgSend_1(
         _id, _lib._sel_decomposedStringWithCanonicalMapping1);
-    return NSObject._(_ret, _lib);
+    return _ret.address == 0 ? null : NSObject._(_ret, _lib);
   }
 
-  NSObject get precomposedStringWithCanonicalMapping {
+  NSObject? get precomposedStringWithCanonicalMapping {
     final _ret = _lib._objc_msgSend_1(
         _id, _lib._sel_precomposedStringWithCanonicalMapping1);
-    return NSObject._(_ret, _lib);
+    return _ret.address == 0 ? null : NSObject._(_ret, _lib);
   }
 
-  NSObject get decomposedStringWithCompatibilityMapping {
+  NSObject? get decomposedStringWithCompatibilityMapping {
     final _ret = _lib._objc_msgSend_1(
         _id, _lib._sel_decomposedStringWithCompatibilityMapping1);
-    return NSObject._(_ret, _lib);
+    return _ret.address == 0 ? null : NSObject._(_ret, _lib);
   }
 
-  NSObject get precomposedStringWithCompatibilityMapping {
+  NSObject? get precomposedStringWithCompatibilityMapping {
     final _ret = _lib._objc_msgSend_1(
         _id, _lib._sel_precomposedStringWithCompatibilityMapping1);
-    return NSObject._(_ret, _lib);
+    return _ret.address == 0 ? null : NSObject._(_ret, _lib);
   }
 
   NSString stringByTrimmingCharactersInSet(NSObject? set) {
@@ -3432,9 +3446,9 @@ class NSString extends NSObject {
         error);
   }
 
-  NSObject get description {
+  NSObject? get description {
     final _ret = _lib._objc_msgSend_1(_id, _lib._sel_description1);
-    return NSObject._(_ret, _lib);
+    return _ret.address == 0 ? null : NSObject._(_ret, _lib);
   }
 
   int get hash {
@@ -3871,6 +3885,11 @@ class NSObject extends _ObjCWrapper {
     return NSObject._(other._id, other._lib);
   }
 
+  static NSObject castFromPointer(
+      NativeObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSObject._(other, lib);
+  }
+
   static void load(NativeObjCLibrary _lib) {
     _lib._objc_msgSend_0(_lib._class_NSObject1, _lib._sel_load1);
   }
@@ -4085,6 +4104,11 @@ class NSMethodSignature extends _ObjCWrapper {
   static NSMethodSignature castFrom<T extends _ObjCWrapper>(T other) {
     return NSMethodSignature._(other._id, other._lib);
   }
+
+  static NSMethodSignature castFromPointer(
+      NativeObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSMethodSignature._(other, lib);
+  }
 }
 
 typedef unichar = pkg_ffi.UnsignedShort;
@@ -4112,6 +4136,11 @@ class NSData extends _ObjCWrapper {
   static NSData castFrom<T extends _ObjCWrapper>(T other) {
     return NSData._(other._id, other._lib);
   }
+
+  static NSData castFromPointer(
+      NativeObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSData._(other, lib);
+  }
 }
 
 typedef NSRangePointer = ffi.Pointer<NSRange>;
@@ -4136,6 +4165,11 @@ class NSDictionary extends _ObjCWrapper {
   static NSDictionary castFrom<T extends _ObjCWrapper>(T other) {
     return NSDictionary._(other._id, other._lib);
   }
+
+  static NSDictionary castFromPointer(
+      NativeObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSDictionary._(other, lib);
+  }
 }
 
 typedef NSStringEncodingDetectionOptionsKey = ffi.Pointer<ObjCObject>;
@@ -4146,6 +4180,11 @@ class Foo extends NSObject {
 
   static Foo castFrom<T extends _ObjCWrapper>(T other) {
     return Foo._(other._id, other._lib);
+  }
+
+  static Foo castFromPointer(
+      NativeObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return Foo._(other, lib);
   }
 
   int get intVal {

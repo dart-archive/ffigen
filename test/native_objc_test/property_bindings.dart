@@ -731,7 +731,16 @@ typedef CFAllocatorPreferredSizeCallBack = ffi.Pointer<
 class _ObjCWrapper {
   final ffi.Pointer<ObjCObject> _id;
   final PropertyTestObjCLibrary _lib;
+
   _ObjCWrapper._(this._id, this._lib);
+
+  @override
+  bool operator ==(Object other) {
+    return other is _ObjCWrapper && _id == other._id;
+  }
+
+  @override
+  int get hashCode => _id.hashCode;
 }
 
 class PropertyInterface extends NSObject {
@@ -740,6 +749,11 @@ class PropertyInterface extends NSObject {
 
   static PropertyInterface castFrom<T extends _ObjCWrapper>(T other) {
     return PropertyInterface._(other._id, other._lib);
+  }
+
+  static PropertyInterface castFromPointer(
+      PropertyTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return PropertyInterface._(other, lib);
   }
 
   int get readOnlyProperty {
@@ -793,6 +807,11 @@ class NSObject extends _ObjCWrapper {
 
   static NSObject castFrom<T extends _ObjCWrapper>(T other) {
     return NSObject._(other._id, other._lib);
+  }
+
+  static NSObject castFromPointer(
+      PropertyTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSObject._(other, lib);
   }
 
   static void load(PropertyTestObjCLibrary _lib) {
@@ -1010,6 +1029,11 @@ class NSMethodSignature extends _ObjCWrapper {
   static NSMethodSignature castFrom<T extends _ObjCWrapper>(T other) {
     return NSMethodSignature._(other._id, other._lib);
   }
+
+  static NSMethodSignature castFromPointer(
+      PropertyTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSMethodSignature._(other, lib);
+  }
 }
 
 typedef NSUInteger = pkg_ffi.UnsignedLong;
@@ -1020,6 +1044,11 @@ class NSString extends _ObjCWrapper {
 
   static NSString castFrom<T extends _ObjCWrapper>(T other) {
     return NSString._(other._id, other._lib);
+  }
+
+  static NSString castFromPointer(
+      PropertyTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSString._(other, lib);
   }
 
   factory NSString(PropertyTestObjCLibrary _lib, String str) {
