@@ -251,13 +251,13 @@ BindingType? parseObjCCategoryDeclaration(clang_types.CXCursor cursor) {
   _logger.fine('++++ Adding ObjC category: '
       'Name: $name, ${cursor.completeStringRepr()}');
 
-  _findCategoryInterfaceVisitor_result = null;
+  _findCategoryInterfaceVisitorResult = null;
   clang.clang_visitChildren(
       cursor,
       Pointer.fromFunction(
           _findCategoryInterfaceVisitor, exceptional_visitor_return),
       nullptr);
-  final itfCursor = _findCategoryInterfaceVisitor_result;
+  final itfCursor = _findCategoryInterfaceVisitorResult;
   if (itfCursor == null) {
     _logger.severe('Category $name has no interface.');
     return null;
@@ -284,11 +284,11 @@ BindingType? parseObjCCategoryDeclaration(clang_types.CXCursor cursor) {
   return itf;
 }
 
-clang_types.CXCursor? _findCategoryInterfaceVisitor_result;
+clang_types.CXCursor? _findCategoryInterfaceVisitorResult;
 int _findCategoryInterfaceVisitor(clang_types.CXCursor cursor,
     clang_types.CXCursor parent, Pointer<Void> clientData) {
   if (cursor.kind == clang_types.CXCursorKind.CXCursor_ObjCClassRef) {
-    _findCategoryInterfaceVisitor_result = cursor;
+    _findCategoryInterfaceVisitorResult = cursor;
     return clang_types.CXChildVisitResult.CXChildVisit_Break;
   }
   return clang_types.CXChildVisitResult.CXChildVisit_Continue;

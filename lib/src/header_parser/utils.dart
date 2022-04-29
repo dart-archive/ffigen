@@ -121,16 +121,16 @@ extension CXCursorExt on clang_types.CXCursor {
 
   /// Recursively print the AST, for debugging.
   void printAst([int maxDepth = 3]) {
-    _printAstVisitor_maxDepth = maxDepth;
+    _printAstVisitorMaxDepth = maxDepth;
     _printAstVisitor(this, this, Pointer<Void>.fromAddress(0));
   }
 }
 
-int _printAstVisitor_maxDepth = 0;
+int _printAstVisitorMaxDepth = 0;
 int _printAstVisitor(clang_types.CXCursor cursor, clang_types.CXCursor parent,
     Pointer<Void> clientData) {
-  int depth = clientData.address;
-  if (depth > _printAstVisitor_maxDepth) {
+  final depth = clientData.address;
+  if (depth > _printAstVisitorMaxDepth) {
     return clang_types.CXChildVisitResult.CXChildVisit_Break;
   }
   print(('  ' * depth) + cursor.completeStringRepr());

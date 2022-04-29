@@ -6,8 +6,8 @@ import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser/sub_parsers/macro_parser.dart';
-import 'package:ffigen/src/header_parser/sub_parsers/var_parser.dart';
 import 'package:ffigen/src/header_parser/sub_parsers/objcinterfacedecl_parser.dart';
+import 'package:ffigen/src/header_parser/sub_parsers/var_parser.dart';
 import 'package:logging/logging.dart';
 
 import 'clang_bindings/clang_bindings.dart' as clang_types;
