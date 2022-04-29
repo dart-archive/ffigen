@@ -1156,6 +1156,11 @@ class Foo extends NSObject {
     return Foo._(other._id, other._lib);
   }
 
+  static Foo castFromPointer(
+      NativeObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return Foo._(other, lib);
+  }
+
   int get intVal {
     return _lib._objc_msgSend_17(_id, _lib._sel_intVal1);
   }
@@ -1198,6 +1203,11 @@ class NSObject extends _ObjCWrapper {
 
   static NSObject castFrom<T extends _ObjCWrapper>(T other) {
     return NSObject._(other._id, other._lib);
+  }
+
+  static NSObject castFromPointer(
+      NativeObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSObject._(other, lib);
   }
 
   static void load(NativeObjCLibrary _lib) {
@@ -1377,6 +1387,11 @@ class NSMethodSignature extends _ObjCWrapper {
   static NSMethodSignature castFrom<T extends _ObjCWrapper>(T other) {
     return NSMethodSignature._(other._id, other._lib);
   }
+
+  static NSMethodSignature castFromPointer(
+      NativeObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSMethodSignature._(other, lib);
+  }
 }
 
 class NSString extends NSObject {
@@ -1385,6 +1400,11 @@ class NSString extends NSObject {
 
   static NSString castFrom<T extends _ObjCWrapper>(T other) {
     return NSString._(other._id, other._lib);
+  }
+
+  static NSString castFromPointer(
+      NativeObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSString._(other, lib);
   }
 
   factory NSString(NativeObjCLibrary _lib, String str) {

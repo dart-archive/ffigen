@@ -622,6 +622,11 @@ class NullableInterface extends NSObject {
     return NullableInterface._(other._id, other._lib);
   }
 
+  static NullableInterface castFromPointer(
+      NullableTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NullableInterface._(other, lib);
+  }
+
   static bool isNullWithNullableNSObjectArg(
       NullableTestObjCLibrary _lib, NSObject? x) {
     return _lib._objc_msgSend_4(_lib._class_NullableInterface1,
@@ -657,6 +662,11 @@ class NSObject extends _ObjCWrapper {
 
   static NSObject castFrom<T extends _ObjCWrapper>(T other) {
     return NSObject._(other._id, other._lib);
+  }
+
+  static NSObject castFromPointer(
+      NullableTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSObject._(other, lib);
   }
 
   static void load(NullableTestObjCLibrary _lib) {
@@ -837,6 +847,11 @@ class NSMethodSignature extends _ObjCWrapper {
   static NSMethodSignature castFrom<T extends _ObjCWrapper>(T other) {
     return NSMethodSignature._(other._id, other._lib);
   }
+
+  static NSMethodSignature castFromPointer(
+      NullableTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSMethodSignature._(other, lib);
+  }
 }
 
 typedef NSUInteger = pkg_ffi.UnsignedLong;
@@ -847,6 +862,11 @@ class NSString extends _ObjCWrapper {
 
   static NSString castFrom<T extends _ObjCWrapper>(T other) {
     return NSString._(other._id, other._lib);
+  }
+
+  static NSString castFromPointer(
+      NullableTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSString._(other, lib);
   }
 
   factory NSString(NullableTestObjCLibrary _lib, String str) {

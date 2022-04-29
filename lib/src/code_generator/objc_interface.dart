@@ -98,6 +98,11 @@ class ObjCInterface extends BindingType {
     s.write('    return $name._(other._id, other._lib);\n');
     s.write('  }\n\n');
 
+    s.write(
+        '  static $name castFromPointer($natLib lib, ffi.Pointer<ObjCObject> other) {\n');
+    s.write('    return $name._(other, lib);\n');
+    s.write('  }\n\n');
+
     if (isNSString) {
       builtInFunctions.generateNSStringUtils(w, s);
     }

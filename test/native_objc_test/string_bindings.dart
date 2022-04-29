@@ -2638,6 +2638,11 @@ class NSValue extends NSObject {
     return NSValue._(other._id, other._lib);
   }
 
+  static NSValue castFromPointer(
+      StringTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSValue._(other, lib);
+  }
+
   void getValue_size(ffi.Pointer<ffi.Void> value, int size) {
     _lib._objc_msgSend_17(_id, _lib._sel_getValue_size_1, value, size);
   }
@@ -2680,6 +2685,11 @@ class NSObject extends _ObjCWrapper {
 
   static NSObject castFrom<T extends _ObjCWrapper>(T other) {
     return NSObject._(other._id, other._lib);
+  }
+
+  static NSObject castFromPointer(
+      StringTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSObject._(other, lib);
   }
 
   static void load(StringTestObjCLibrary _lib) {
@@ -2860,6 +2870,11 @@ class NSMethodSignature extends _ObjCWrapper {
   static NSMethodSignature castFrom<T extends _ObjCWrapper>(T other) {
     return NSMethodSignature._(other._id, other._lib);
   }
+
+  static NSMethodSignature castFromPointer(
+      StringTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSMethodSignature._(other, lib);
+  }
 }
 
 typedef NSUInteger = pkg_ffi.UnsignedLong;
@@ -2870,6 +2885,11 @@ class NSString extends NSObject {
 
   static NSString castFrom<T extends _ObjCWrapper>(T other) {
     return NSString._(other._id, other._lib);
+  }
+
+  static NSString castFromPointer(
+      StringTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSString._(other, lib);
   }
 
   factory NSString(StringTestObjCLibrary _lib, String str) {
@@ -2936,6 +2956,11 @@ class NSNumber extends NSValue {
 
   static NSNumber castFrom<T extends _ObjCWrapper>(T other) {
     return NSNumber._(other._id, other._lib);
+  }
+
+  static NSNumber castFromPointer(
+      StringTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSNumber._(other, lib);
   }
 
   @override
@@ -3147,6 +3172,11 @@ class NSEnumerator extends NSObject {
     return NSEnumerator._(other._id, other._lib);
   }
 
+  static NSEnumerator castFromPointer(
+      StringTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSEnumerator._(other, lib);
+  }
+
   NSObject nextObject() {
     final _ret = _lib._objc_msgSend_1(_id, _lib._sel_nextObject1);
     return NSObject._(_ret, _lib);
@@ -3177,6 +3207,11 @@ class NSOrderedCollectionChange extends NSObject {
 
   static NSOrderedCollectionChange castFrom<T extends _ObjCWrapper>(T other) {
     return NSOrderedCollectionChange._(other._id, other._lib);
+  }
+
+  static NSOrderedCollectionChange castFromPointer(
+      StringTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSOrderedCollectionChange._(other, lib);
   }
 
   NSObject get object {
@@ -3240,6 +3275,11 @@ class NSIndexSet extends NSObject {
 
   static NSIndexSet castFrom<T extends _ObjCWrapper>(T other) {
     return NSIndexSet._(other._id, other._lib);
+  }
+
+  static NSIndexSet castFromPointer(
+      StringTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSIndexSet._(other, lib);
   }
 
   static NSIndexSet indexSet(StringTestObjCLibrary _lib) {
@@ -3451,6 +3491,11 @@ class NSMutableIndexSet extends NSIndexSet {
     return NSMutableIndexSet._(other._id, other._lib);
   }
 
+  static NSMutableIndexSet castFromPointer(
+      StringTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSMutableIndexSet._(other, lib);
+  }
+
   void addIndexes(NSObject? indexSet) {
     _lib._objc_msgSend_8(
         _id, _lib._sel_addIndexes_1, indexSet?._id ?? ffi.nullptr);
@@ -3537,6 +3582,11 @@ class NSOrderedCollectionDifference extends NSObject {
     return NSOrderedCollectionDifference._(other._id, other._lib);
   }
 
+  static NSOrderedCollectionDifference castFromPointer(
+      StringTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSOrderedCollectionDifference._(other, lib);
+  }
+
   NSOrderedCollectionDifference initWithChanges(NSObject? changes) {
     final _ret = _lib._objc_msgSend_13(
         _id, _lib._sel_initWithChanges_1, changes?._id ?? ffi.nullptr);
@@ -3617,6 +3667,11 @@ class NSArray extends NSObject {
     return NSArray._(other._id, other._lib);
   }
 
+  static NSArray castFromPointer(
+      StringTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSArray._(other, lib);
+  }
+
   int get count {
     return _lib._objc_msgSend_11(_id, _lib._sel_count1);
   }
@@ -3668,6 +3723,11 @@ class NSMutableArray extends NSArray {
 
   static NSMutableArray castFrom<T extends _ObjCWrapper>(T other) {
     return NSMutableArray._(other._id, other._lib);
+  }
+
+  static NSMutableArray castFromPointer(
+      StringTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSMutableArray._(other, lib);
   }
 
   void addObject(NSObject anObject) {
@@ -3741,6 +3801,11 @@ class NSItemProvider extends NSObject {
 
   static NSItemProvider castFrom<T extends _ObjCWrapper>(T other) {
     return NSItemProvider._(other._id, other._lib);
+  }
+
+  static NSItemProvider castFromPointer(
+      StringTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSItemProvider._(other, lib);
   }
 
   @override
@@ -3928,6 +3993,11 @@ class NSProgress extends _ObjCWrapper {
   static NSProgress castFrom<T extends _ObjCWrapper>(T other) {
     return NSProgress._(other._id, other._lib);
   }
+
+  static NSProgress castFromPointer(
+      StringTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSProgress._(other, lib);
+  }
 }
 
 typedef NSItemProviderLoadHandler = ffi.Pointer<ObjCObject>;
@@ -3981,6 +4051,11 @@ class NSMutableString extends NSString {
     return NSMutableString._(other._id, other._lib);
   }
 
+  static NSMutableString castFromPointer(
+      StringTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSMutableString._(other, lib);
+  }
+
   void replaceCharactersInRange_withString(NSRange range, NSObject? aString) {
     _lib._objc_msgSend_79(_id, _lib._sel_replaceCharactersInRange_withString_1,
         range, aString?._id ?? ffi.nullptr);
@@ -4016,6 +4091,11 @@ class NSSimpleCString extends NSString {
     return NSSimpleCString._(other._id, other._lib);
   }
 
+  static NSSimpleCString castFromPointer(
+      StringTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSSimpleCString._(other, lib);
+  }
+
   static NSString stringWithCString_encoding(
       StringTestObjCLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
     final _ret = _lib._objc_msgSend_14(_lib._class_NSSimpleCString1,
@@ -4044,6 +4124,11 @@ class NSConstantString extends NSSimpleCString {
     return NSConstantString._(other._id, other._lib);
   }
 
+  static NSConstantString castFromPointer(
+      StringTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSConstantString._(other, lib);
+  }
+
   static NSString stringWithCString_encoding(
       StringTestObjCLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
     final _ret = _lib._objc_msgSend_14(_lib._class_NSConstantString1,
@@ -4070,6 +4155,11 @@ class StringUtil extends NSObject {
 
   static StringUtil castFrom<T extends _ObjCWrapper>(T other) {
     return StringUtil._(other._id, other._lib);
+  }
+
+  static StringUtil castFromPointer(
+      StringTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return StringUtil._(other, lib);
   }
 
   static NSString strConcat_with(
