@@ -124,7 +124,7 @@ class _ObjCWrapper {
 
     // Generate a toString method that wraps UTF8String.
     s.write('  @override\n');
-    s.write('  String toString() => UTF8String().cast<'
+    s.write('  String toString() => (UTF8String).cast<'
         '${w.ffiPkgLibraryPrefix}.Utf8>().toDartString();\n\n');
   }
 
