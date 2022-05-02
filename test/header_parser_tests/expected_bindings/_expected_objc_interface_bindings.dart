@@ -865,7 +865,7 @@ class NSString extends _ObjCWrapper {
     return NSString._(_ret, _lib);
   }
 
-  ffi.Pointer<pkg_ffi.Char> UTF8String() {
+  ffi.Pointer<pkg_ffi.Char> get UTF8String {
     return _lib._objc_msgSend_13(_id, _lib._sel_UTF8String1);
   }
 }

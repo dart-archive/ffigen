@@ -16,7 +16,7 @@ import '../test_utils.dart';
 import 'category_bindings.dart';
 
 void main() {
-  late Foo testInstance;
+  late Thing testInstance;
   late CategoryTestObjCLibrary lib;
 
   group('categories', () {
@@ -25,7 +25,7 @@ void main() {
       final dylib = File('test/native_objc_test/category_test.dylib');
       verifySetupFile(dylib);
       lib = CategoryTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
-      testInstance = Foo.new1(lib);
+      testInstance = Thing.new1(lib);
     });
 
     test('generate_bindings', () {

@@ -573,7 +573,7 @@ class CategoryTestObjCLibrary {
       _registerName1("poseAsClass:");
   late final ffi.Pointer<ObjCSel> _sel_autoContentAccessingProxy1 =
       _registerName1("autoContentAccessingProxy");
-  late final ffi.Pointer<ObjCObject> _class_Foo1 = _getClass1("Foo");
+  late final ffi.Pointer<ObjCObject> _class_Thing1 = _getClass1("Thing");
   late final ffi.Pointer<ObjCSel> _sel_add_Y_1 = _registerName1("add:Y:");
   int _objc_msgSend_18(
     ffi.Pointer<ObjCObject> obj,
@@ -990,17 +990,17 @@ extension StringToNSString on String {
   NSString toNSString(CategoryTestObjCLibrary lib) => NSString(lib, this);
 }
 
-class Foo extends NSObject {
-  Foo._(ffi.Pointer<ObjCObject> id, CategoryTestObjCLibrary lib)
+class Thing extends NSObject {
+  Thing._(ffi.Pointer<ObjCObject> id, CategoryTestObjCLibrary lib)
       : super._(id, lib);
 
-  static Foo castFrom<T extends _ObjCWrapper>(T other) {
-    return Foo._(other._id, other._lib);
+  static Thing castFrom<T extends _ObjCWrapper>(T other) {
+    return Thing._(other._id, other._lib);
   }
 
-  static Foo castFromPointer(
+  static Thing castFromPointer(
       CategoryTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
-    return Foo._(other, lib);
+    return Thing._(other, lib);
   }
 
   int add_Y(int x, int y) {
@@ -1011,14 +1011,14 @@ class Foo extends NSObject {
     return _lib._objc_msgSend_18(_id, _lib._sel_sub_Y_1, x, y);
   }
 
-  static Foo new1(CategoryTestObjCLibrary _lib) {
-    final _ret = _lib._objc_msgSend_1(_lib._class_Foo1, _lib._sel_new1);
-    return Foo._(_ret, _lib);
+  static Thing new1(CategoryTestObjCLibrary _lib) {
+    final _ret = _lib._objc_msgSend_1(_lib._class_Thing1, _lib._sel_new1);
+    return Thing._(_ret, _lib);
   }
 
-  static Foo alloc(CategoryTestObjCLibrary _lib) {
-    final _ret = _lib._objc_msgSend_1(_lib._class_Foo1, _lib._sel_alloc1);
-    return Foo._(_ret, _lib);
+  static Thing alloc(CategoryTestObjCLibrary _lib) {
+    final _ret = _lib._objc_msgSend_1(_lib._class_Thing1, _lib._sel_alloc1);
+    return Thing._(_ret, _lib);
   }
 }
 
