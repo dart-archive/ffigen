@@ -519,7 +519,16 @@ class NativeLibrary {
 class _ObjCWrapper {
   final ffi.Pointer<ObjCObject> _id;
   final NativeLibrary _lib;
+
   _ObjCWrapper._(this._id, this._lib);
+
+  @override
+  bool operator ==(Object other) {
+    return other is _ObjCWrapper && _id == other._id;
+  }
+
+  @override
+  int get hashCode => _id.hashCode;
 }
 
 class Foo extends NSObject {
