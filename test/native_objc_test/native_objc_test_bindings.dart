@@ -6078,11 +6078,13 @@ class NSString extends NSObject {
         error);
   }
 
+  @override
   NSObject? get description {
     final _ret = _lib._objc_msgSend_1(_id, _lib._sel_description1);
     return _ret.address == 0 ? null : NSObject._(_ret, _lib);
   }
 
+  @override
   int get hash {
     return _lib._objc_msgSend_11(_id, _lib._sel_hash1);
   }
@@ -7302,6 +7304,7 @@ class NSArray extends NSObject {
     return _lib._objc_msgSend_4(_id, _lib._sel_containsObject_1, anObject._id);
   }
 
+  @override
   NSObject? get description {
     final _ret = _lib._objc_msgSend_1(_id, _lib._sel_description1);
     return _ret.address == 0 ? null : NSObject._(_ret, _lib);
@@ -8718,11 +8721,22 @@ class NSMutableString extends NSString {
     return NSMutableString._(_ret, _lib);
   }
 
+  static ffi.Pointer<NSStringEncoding> getAvailableStringEncodings(
+      NativeObjCLibrary _lib) {
+    return _lib._objc_msgSend_45(
+        _lib._class_NSMutableString1, _lib._sel_availableStringEncodings1);
+  }
+
   static NSString localizedNameOfStringEncoding(
       NativeObjCLibrary _lib, int encoding) {
     final _ret = _lib._objc_msgSend_14(_lib._class_NSMutableString1,
         _lib._sel_localizedNameOfStringEncoding_1, encoding);
     return NSString._(_ret, _lib);
+  }
+
+  static int getDefaultCStringEncoding(NativeObjCLibrary _lib) {
+    return _lib._objc_msgSend_11(
+        _lib._class_NSMutableString1, _lib._sel_defaultCStringEncoding1);
   }
 
   static NSMutableString string(NativeObjCLibrary _lib) {
@@ -8827,16 +8841,6 @@ class NSMutableString extends NSString {
         enc,
         error);
     return NSMutableString._(_ret, _lib);
-  }
-
-  static void availableStringEncodings(NativeObjCLibrary _lib) {
-    _lib._objc_msgSend_0(
-        _lib._class_NSMutableString1, _lib._sel_availableStringEncodings1);
-  }
-
-  static void defaultCStringEncoding(NativeObjCLibrary _lib) {
-    _lib._objc_msgSend_0(
-        _lib._class_NSMutableString1, _lib._sel_defaultCStringEncoding1);
   }
 
   static int
