@@ -38,6 +38,6 @@ Future<void> main(List<String> arguments) async {
   await _buildLib('method_test.m', 'method_test.dylib');
   await _buildLib('nullable_test.m', 'nullable_test.dylib');
   await _buildLib('property_test.m', 'property_test.dylib');
-  await _buildLib('regress_345_test.m', 'regress_345_test.dylib');
+  await _buildLib('forward_decl_test.m', 'forward_decl_test.dylib');
   await _buildLib('string_test.m', 'string_test.dylib');
 }

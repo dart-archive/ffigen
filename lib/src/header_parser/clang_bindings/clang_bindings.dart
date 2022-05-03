@@ -410,6 +410,21 @@ class Clang {
   late final _clang_getCursorKind =
       _clang_getCursorKindPtr.asFunction<int Function(CXCursor)>();
 
+  /// Determine whether the given cursor kind represents a declaration.
+  int clang_isDeclaration(
+    int arg0,
+  ) {
+    return _clang_isDeclaration(
+      arg0,
+    );
+  }
+
+  late final _clang_isDeclarationPtr =
+      _lookup<ffi.NativeFunction<pkg_ffi.UnsignedInt Function(ffi.Int32)>>(
+          'clang_isDeclaration');
+  late final _clang_isDeclaration =
+      _clang_isDeclarationPtr.asFunction<int Function(int)>();
+
   /// Determine whether the given cursor has any attributes.
   int clang_Cursor_hasAttrs(
     CXCursor C,

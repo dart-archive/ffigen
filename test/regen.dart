@@ -100,8 +100,8 @@ Future<void> main(List<String> args) async {
   );
 
   await _regenConfig(
-    File('test/native_objc_test/regress_345_config.yaml'),
-    File('test/native_objc_test/regress_345_bindings.dart'),
+    File('test/native_objc_test/forward_decl_config.yaml'),
+    File('test/native_objc_test/forward_decl_bindings.dart'),
   );
 
   await _regenConfig(

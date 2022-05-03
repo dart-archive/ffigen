@@ -13,28 +13,26 @@ import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 import '../test_utils.dart';
-import 'regress_345_bindings.dart';
+import 'forward_decl_bindings.dart';
 
 void main() {
-  // late Regress345Interface testInstance;
-  late Regress345TestObjCLibrary lib;
+  late ForwardDeclTestObjCLibrary lib;
 
-  group('properties', () {
+  group('forward decl', () {
     setUpAll(() {
       logWarnings();
-      final dylib = File('test/native_objc_test/regress_345_test.dylib');
+      final dylib = File('test/native_objc_test/forward_decl_test.dylib');
       verifySetupFile(dylib);
-      lib = Regress345TestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
-      // testInstance = Regress345Interface.new1(lib);
+      lib = ForwardDeclTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
     });
 
     test('generate_bindings', () {
       final config = Config.fromYaml(loadYaml(
-          File(path.join('test', 'native_objc_test', 'regress_345_config.yaml'))
+          File(path.join('test', 'native_objc_test', 'forward_decl_config.yaml'))
               .readAsStringSync()) as YamlMap);
       final library = parse(config);
       final file = File(
-        path.join('test', 'debug_generated', 'regress_345_test.dart'),
+        path.join('test', 'debug_generated', 'forward_decl_test.dart'),
       );
       library.generateFile(file);
 
@@ -51,7 +49,8 @@ void main() {
       }
     });
 
-    test('Regress 345', () {
+    test('Forward declared class', () {
+      expect(ForwardDeclaredClass.get123(lib), 123);
     });
   });
 }
