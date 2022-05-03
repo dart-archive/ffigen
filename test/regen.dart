@@ -95,6 +95,11 @@ Future<void> main(List<String> args) async {
   );
 
   await _regenConfig(
+    File('test/native_objc_test/regress_345_config.yaml'),
+    File('test/native_objc_test/regress_345_bindings.dart'),
+  );
+
+  await _regenConfig(
     File('test/native_objc_test/string_config.yaml'),
     File('test/native_objc_test/string_bindings.dart'),
   );
