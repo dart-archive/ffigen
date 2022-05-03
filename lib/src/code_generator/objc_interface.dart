@@ -308,11 +308,15 @@ class ObjCInterface extends BindingType {
   // passed to native as Pointer<ObjCObject>, but the user sees the Dart wrapper
   // class. These methods need to be kept in sync.
   bool _needsConverting(Type type) =>
-      type is ObjCInterface || _isObject(type) || _isInstanceType(type);
+      type is ObjCInterface ||
+      type is ObjCBlock ||
+      _isObject(type) ||
+      _isInstanceType(type);
 
   String _getConvertedType(Type type, Writer w, String enclosingClass) {
     if (type is BooleanType) return 'bool';
     if (type is ObjCInterface) return type.name;
+    if (type is ObjCBlock) return type.name;
     if (_isObject(type)) return 'NSObject';
     if (_isInstanceType(type)) return enclosingClass;
     return type.getDartType(w);
@@ -330,11 +334,13 @@ class ObjCInterface extends BindingType {
   String _doArgConversion(ObjCMethodParam arg) {
     if (arg.type is ObjCInterface ||
         _isObject(arg.type) ||
-        _isInstanceType(arg.type)) {
+        _isInstanceType(arg.type) ||
+        arg.type is ObjCBlock) {
+      final field = arg.type is ObjCBlock ? '_impl' : '_id';
       if (arg.isNullable) {
-        return '${arg.name}?._id ?? ffi.nullptr';
+        return '${arg.name}?.$field ?? ffi.nullptr';
       } else {
-        return '${arg.name}._id';
+        return '${arg.name}.$field';
       }
     }
     return arg.name;
@@ -347,6 +353,9 @@ class ObjCInterface extends BindingType {
       prefix += "$value.address == 0 ? null : ";
     }
     if (type is ObjCInterface) {
+      return prefix + '${type.name}._($value, $library)';
+    }
+    if (type is ObjCBlock) {
       return prefix + '${type.name}._($value, $library)';
     }
     if (_isObject(type)) {

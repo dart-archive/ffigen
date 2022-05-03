@@ -85,6 +85,9 @@ class EnumClass extends BindingType {
 
   @override
   String getDartType(Writer w) => nativeType.getDartType(w);
+
+  @override
+  String? getDefaultValue(Writer w, String nativeLib) => '0';
 }
 
 /// Represents a single value in an enum.

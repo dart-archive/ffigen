@@ -355,6 +355,7 @@ class BindingsIndex {
   final Map<String, Constant> _unnamedEnumConstants = {};
   final Map<String, String> _macros = {};
   final Map<String, Global> _globals = {};
+  final Map<String, ObjCBlock> _objcBlocks = {};
 
   /// Contains usr for typedefs which cannot be generated.
   final Set<String> _unsupportedTypealiases = {};
@@ -388,4 +389,6 @@ class BindingsIndex {
   void addHeaderToSeen(String source, bool includeStatus) =>
       _headerCache[source] = includeStatus;
   bool? getSeenHeaderStatus(String source) => _headerCache[source];
+  void addObjCBlockToSeen(String key, ObjCBlock t) => _objcBlocks[key] = t;
+  ObjCBlock? getSeenObjCBlock(String key) => _objcBlocks[key];
 }

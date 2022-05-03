@@ -77,6 +77,66 @@ class ObjCBuiltInFunctions {
         () => '${registerName.name}("$methodName")');
   }
 
+  // See https://clang.llvm.org/docs/Block-ABI-Apple.html
+  late final blockStruct = Struct(
+    name: '_ObjCBlock',
+    isInternal: true,
+    members: [
+      Member(name: 'isa', type: PointerType(voidType)),
+      Member(name: 'flags', type: intType),
+      Member(name: 'reserved', type: intType),
+      Member(name: 'invoke', type: PointerType(voidType)),
+      Member(name: 'descriptor', type: PointerType(blockDescStruct)),
+      Member(name: 'target', type: PointerType(voidType)),
+    ],
+  );
+  late final blockDescStruct = Struct(
+    name: '_ObjCBlockDesc',
+    isInternal: true,
+    members: [
+      Member(name: 'reserved', type: unsignedLongType),
+      Member(name: 'size', type: unsignedLongType),
+      Member(name: 'copy_helper', type: PointerType(voidType)),
+      Member(name: 'dispose_helper', type: PointerType(voidType)),
+      Member(name: 'signature', type: PointerType(charType)),
+    ],
+  );
+  late final newBlockDesc =
+      ObjCInternalFunction('_newBlockDesc', null, (Writer w, String name) {
+    final s = StringBuffer();
+    final blockType = blockStruct.getCType(w);
+    final descType = blockDescStruct.getCType(w);
+    final descPtr = PointerType(blockDescStruct).getCType(w);
+    s.write('\n$descPtr $name() {\n');
+    s.write('  final d = ${w.ffiPkgLibraryPrefix}.calloc.allocate<$descType>('
+        '${w.ffiLibraryPrefix}.sizeOf<$descType>());\n');
+    s.write('  d.ref.size = ${w.ffiLibraryPrefix}.sizeOf<$blockType>();\n');
+    s.write('  return d;\n');
+    s.write('}\n');
+    return s.toString();
+  });
+  late final blockDescSingleton = ObjCInternalGlobal(
+    PointerType(blockDescStruct),
+    '_objc_block_desc',
+    () => '${newBlockDesc.name}()',
+  );
+  late final newBlock =
+      ObjCInternalFunction('_newBlock', null, (Writer w, String name) {
+    final s = StringBuffer();
+    final blockType = blockStruct.getCType(w);
+    final blockPtr = PointerType(blockStruct).getCType(w);
+    final voidPtr = PointerType(voidType).getCType(w);
+    s.write('\n$blockPtr $name($voidPtr invoke, $voidPtr target) {\n');
+    s.write('  final b = ${w.ffiPkgLibraryPrefix}.calloc.allocate<$blockType>('
+        '${w.ffiLibraryPrefix}.sizeOf<$blockType>());\n');
+    s.write('  b.ref.invoke = invoke;\n');
+    s.write('  b.ref.target = target;\n');
+    s.write('  b.ref.descriptor = ${blockDescSingleton.name};\n');
+    s.write('  return b;\n');
+    s.write('}\n');
+    return s.toString();
+  });
+
   bool utilsExist = false;
   void ensureUtilsExist(Writer w, StringBuffer s) {
     if (utilsExist) return;
@@ -137,9 +197,10 @@ class _ObjCWrapper {
   }
 }
 
-/// Functions only used internally by ObjC bindings, such as getClass.
+/// Functions only used internally by ObjC bindings, which may or may not wrap a
+/// native function, such as getClass.
 class ObjCInternalFunction extends LookUpBinding {
-  final Func _wrappedFunction;
+  final Func? _wrappedFunction;
   final String Function(Writer, String) _toBindingString;
 
   ObjCInternalFunction(
@@ -157,7 +218,7 @@ class ObjCInternalFunction extends LookUpBinding {
   void addDependencies(Set<Binding> dependencies) {
     if (dependencies.contains(this)) return;
     dependencies.add(this);
-    _wrappedFunction.addDependencies(dependencies);
+    _wrappedFunction?.addDependencies(dependencies);
   }
 }
 

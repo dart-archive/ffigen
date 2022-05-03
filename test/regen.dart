@@ -104,6 +104,11 @@ Future<void> main(List<String> args) async {
     File('test/native_objc_test/string_bindings.dart'),
   );
 
+  await _regenConfig(
+    File('test/native_objc_test/block_config.yaml'),
+    File('test/native_objc_test/block_bindings.dart'),
+  );
+
   await _regenConfig(File('test/native_test/config.yaml'),
       File('test/native_test/native_test_bindings.dart'));
 

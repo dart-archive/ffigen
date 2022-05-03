@@ -39,4 +39,5 @@ Future<void> main(List<String> arguments) async {
   await _buildLib('nullable_test.m', 'nullable_test.dylib');
   await _buildLib('property_test.m', 'property_test.dylib');
   await _buildLib('string_test.m', 'string_test.dylib');
+  await _buildLib('block_test.m', 'block_test.dylib');
 }
