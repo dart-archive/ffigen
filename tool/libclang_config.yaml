@@ -116,4 +116,3 @@ functions:
     - clang_Cursor_getObjCPropertyGetterName
     - clang_Cursor_getObjCPropertySetterName
     - clang_Type_getNullability
-    - clang_isDeclaration
