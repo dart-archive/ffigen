@@ -23,13 +23,14 @@ void main() {
       logWarnings();
       final dylib = File('test/native_objc_test/forward_decl_test.dylib');
       verifySetupFile(dylib);
-      lib = ForwardDeclTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
+      lib =
+          ForwardDeclTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
     });
 
     test('generate_bindings', () {
-      final config = Config.fromYaml(loadYaml(
-          File(path.join('test', 'native_objc_test', 'forward_decl_config.yaml'))
-              .readAsStringSync()) as YamlMap);
+      final config = Config.fromYaml(loadYaml(File(
+              path.join('test', 'native_objc_test', 'forward_decl_config.yaml'))
+          .readAsStringSync()) as YamlMap);
       final library = parse(config);
       final file = File(
         path.join('test', 'debug_generated', 'forward_decl_test.dart'),

@@ -86,9 +86,10 @@ bool _isClassDeclaration(clang_types.CXCursor cursor) {
   // It's a class declaration if it has no children other than ObjCClassRef.
   _isClassDeclarationResult = true;
   clang.clang_visitChildren(
-    cursor,
-    Pointer.fromFunction(_isClassDeclarationVisitor, exceptional_visitor_return),
-    nullptr);
+      cursor,
+      Pointer.fromFunction(
+          _isClassDeclarationVisitor, exceptional_visitor_return),
+      nullptr);
   return _isClassDeclarationResult;
 }
 
