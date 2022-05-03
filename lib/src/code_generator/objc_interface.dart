@@ -249,6 +249,9 @@ class ObjCInterface extends BindingType {
       // override it.
       if (method.isProperty && !oldMethod.isProperty) {
         // Fallthrough.
+      } else if (!method.isProperty && oldMethod.isProperty) {
+        // Don't override, but also skip the same method check below.
+        return;
       } else {
         // Check duplicate is the same method.
         if (!method.sameAs(oldMethod)) {
