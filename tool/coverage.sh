@@ -8,12 +8,8 @@
 set -e
 
 # Gather coverage.
-dart pub global activate remove_from_coverage
 dart pub global activate coverage
 # Generate coverage report.
-dart --pause-isolates-on-exit --disable-service-auth-codes --enable-vm-service=3000 test/test_coverage.dart &
-dart pub global run coverage:collect_coverage --wait-paused --uri=http://127.0.0.1:3000/ -o coverage.json --resume-isolates
-dart pub global run coverage:format_coverage --lcov -i coverage.json -o lcov.info
-
-# Remove extra files from coverage report.
-dart pub global run remove_from_coverage -f lcov.info -r ".pub-cache"
+dart run --pause-isolates-on-exit --disable-service-auth-codes --enable-vm-service=3000 test &
+dart pub global run coverage:collect_coverage --wait-paused --uri=http://127.0.0.1:3000/ -o coverage.json --resume-isolates --scope-output=ffigen
+dart pub global run coverage:format_coverage --packages=.dart_tool/package_config.json --lcov -i coverage.json -o lcov.info
