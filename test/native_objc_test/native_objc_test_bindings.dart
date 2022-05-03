@@ -6078,13 +6078,11 @@ class NSString extends NSObject {
         error);
   }
 
-  @override
   NSObject? get description {
     final _ret = _lib._objc_msgSend_1(_id, _lib._sel_description1);
     return _ret.address == 0 ? null : NSObject._(_ret, _lib);
   }
 
-  @override
   int get hash {
     return _lib._objc_msgSend_11(_id, _lib._sel_hash1);
   }
@@ -7304,7 +7302,6 @@ class NSArray extends NSObject {
     return _lib._objc_msgSend_4(_id, _lib._sel_containsObject_1, anObject._id);
   }
 
-  @override
   NSObject? get description {
     final _ret = _lib._objc_msgSend_1(_id, _lib._sel_description1);
     return _ret.address == 0 ? null : NSObject._(_ret, _lib);

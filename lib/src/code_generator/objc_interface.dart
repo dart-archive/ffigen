@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator.dart';
+import 'package:logging/logging.dart';
 
 import 'binding_string.dart';
 import 'utils.dart';
@@ -32,6 +33,8 @@ const _excludedNSObjectClassMethods = {
   'superclass',
   'version',
 };
+
+final _logger = Logger('ffigen.code_generator.objc_interface');
 
 class ObjCInterface extends BindingType {
   ObjCInterface? superType;
@@ -138,7 +141,7 @@ class ObjCInterface extends BindingType {
         }
         s.write(paramsToString(m.params, isStatic: true));
       } else {
-        if (superType?.hasMethod(m) ?? false) {
+        if (superType?.methods[m.originalName]?.sameAs(m) ?? false) {
           s.write('@override\n  ');
         }
         switch (m.kind) {
@@ -228,7 +231,8 @@ class ObjCInterface extends BindingType {
     // Copy class methods from the super type, because Dart classes don't
     // inherit static methods.
     for (final m in superType!.methods.values) {
-      if (m.isClass && !_excludedNSObjectClassMethods.contains(m.originalName)) {
+      if (m.isClass &&
+          !_excludedNSObjectClassMethods.contains(m.originalName)) {
         addMethod(m);
       }
     }
@@ -246,14 +250,15 @@ class ObjCInterface extends BindingType {
       if (method.isProperty && !oldMethod.isProperty) {
         // Fallthrough.
       } else {
+        // Check duplicate is the same method.
+        if (!method.sameAs(oldMethod)) {
+          _logger.severe('Duplicate methods with different signatures: '
+              '$originalName.${method.originalName}');
+        }
         return;
       }
     }
     methods[method.originalName] = method;
-  }
-
-  bool hasMethod(ObjCMethod method) {
-    return methods.containsKey(method.originalName);
   }
 
   void _addNSStringMethods() {
@@ -423,6 +428,15 @@ class ObjCMethod {
     final name =
         originalName.replaceAll(RegExp(r":$"), "").replaceAll(":", "_");
     return uniqueNamer.makeUnique(name);
+  }
+
+  bool sameAs(ObjCMethod other) {
+    if (originalName != other.originalName) return false;
+    if (isNullableReturn != other.isNullableReturn) return false;
+    if (kind != other.kind) return false;
+    if (isClass != other.isClass) return false;
+    // msgSend is deduped by signature, so this check covers the signature.
+    return msgSend == other.msgSend;
   }
 }
 
