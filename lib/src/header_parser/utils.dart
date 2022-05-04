@@ -101,6 +101,7 @@ extension CXCursorExt on clang_types.CXCursor {
     return clang.clang_getResultType(type());
   }
 
+  /// Returns the file name of the file that the cursor is inside.
   String sourceFileName() {
     final cxsource = clang.clang_getCursorLocation(this);
     final cxfilePtr = calloc<Pointer<Void>>();
@@ -111,6 +112,12 @@ extension CXCursorExt on clang_types.CXCursor {
 
     calloc.free(cxfilePtr);
     return s;
+  }
+
+  /// Returns whether the file that the cursor is inside is a system header.
+  bool isInSystemHeader() {
+    final location = clang.clang_getCursorLocation(this);
+    return clang.clang_Location_isInSystemHeader(location) != 0;
   }
 
   /// Recursively print the AST, for debugging.
