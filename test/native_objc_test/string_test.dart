@@ -40,7 +40,7 @@ void main() {
       final str1 = 'Hello'.toNSString(lib);
       final str2 = 'World!'.toNSString(lib);
 
-      final str3 = StringUtil.strConcat_with(lib, str1, str2);
+      final str3 = StringUtil.strConcat_with_(lib, str1, str2);
       expect(str3.length, 11);
       expect(str3.toString(), "HelloWorld!");
     });

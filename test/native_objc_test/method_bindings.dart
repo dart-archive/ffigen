@@ -808,7 +808,7 @@ class NSObject extends _ObjCWrapper {
     return NSObject._(_ret, _lib);
   }
 
-  static NSObject allocWithZone(
+  static NSObject allocWithZone_(
       MethodTestObjCLibrary _lib, ffi.Pointer<_NSZone> zone) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSObject1, _lib._sel_allocWithZone_1, zone);
@@ -838,64 +838,65 @@ class NSObject extends _ObjCWrapper {
     return NSObject._(_ret, _lib);
   }
 
-  static NSObject copyWithZone(
+  static NSObject copyWithZone_(
       MethodTestObjCLibrary _lib, ffi.Pointer<_NSZone> zone) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSObject1, _lib._sel_copyWithZone_1, zone);
     return NSObject._(_ret, _lib);
   }
 
-  static NSObject mutableCopyWithZone(
+  static NSObject mutableCopyWithZone_(
       MethodTestObjCLibrary _lib, ffi.Pointer<_NSZone> zone) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSObject1, _lib._sel_mutableCopyWithZone_1, zone);
     return NSObject._(_ret, _lib);
   }
 
-  static bool instancesRespondToSelector(
+  static bool instancesRespondToSelector_(
       MethodTestObjCLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
     return _lib._objc_msgSend_3(_lib._class_NSObject1,
         _lib._sel_instancesRespondToSelector_1, aSelector);
   }
 
-  static bool conformsToProtocol(
+  static bool conformsToProtocol_(
       MethodTestObjCLibrary _lib, NSObject? protocol) {
     return _lib._objc_msgSend_4(_lib._class_NSObject1,
         _lib._sel_conformsToProtocol_1, protocol?._id ?? ffi.nullptr);
   }
 
-  IMP methodForSelector(ffi.Pointer<ObjCSel> aSelector) {
+  IMP methodForSelector_(ffi.Pointer<ObjCSel> aSelector) {
     return _lib._objc_msgSend_5(_id, _lib._sel_methodForSelector_1, aSelector);
   }
 
-  static IMP instanceMethodForSelector(
+  static IMP instanceMethodForSelector_(
       MethodTestObjCLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
     return _lib._objc_msgSend_5(_lib._class_NSObject1,
         _lib._sel_instanceMethodForSelector_1, aSelector);
   }
 
-  void doesNotRecognizeSelector(ffi.Pointer<ObjCSel> aSelector) {
+  void doesNotRecognizeSelector_(ffi.Pointer<ObjCSel> aSelector) {
     _lib._objc_msgSend_6(_id, _lib._sel_doesNotRecognizeSelector_1, aSelector);
   }
 
-  NSObject forwardingTargetForSelector(ffi.Pointer<ObjCSel> aSelector) {
+  NSObject forwardingTargetForSelector_(ffi.Pointer<ObjCSel> aSelector) {
     final _ret = _lib._objc_msgSend_7(
         _id, _lib._sel_forwardingTargetForSelector_1, aSelector);
     return NSObject._(_ret, _lib);
   }
 
-  void forwardInvocation(NSObject? anInvocation) {
+  void forwardInvocation_(NSObject? anInvocation) {
     _lib._objc_msgSend_8(
         _id, _lib._sel_forwardInvocation_1, anInvocation?._id ?? ffi.nullptr);
   }
 
-  NSMethodSignature methodSignatureForSelector(ffi.Pointer<ObjCSel> aSelector) {
+  NSMethodSignature methodSignatureForSelector_(
+      ffi.Pointer<ObjCSel> aSelector) {
     final _ret = _lib._objc_msgSend_9(
         _id, _lib._sel_methodSignatureForSelector_1, aSelector);
     return NSMethodSignature._(_ret, _lib);
   }
 
-  static NSMethodSignature instanceMethodSignatureForSelector(
+  static NSMethodSignature instanceMethodSignatureForSelector_(
       MethodTestObjCLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
     final _ret = _lib._objc_msgSend_9(_lib._class_NSObject1,
         _lib._sel_instanceMethodSignatureForSelector_1, aSelector);
@@ -910,18 +911,18 @@ class NSObject extends _ObjCWrapper {
     return _lib._objc_msgSend_10(_id, _lib._sel_retainWeakReference1);
   }
 
-  static bool isSubclassOfClass(MethodTestObjCLibrary _lib, NSObject aClass) {
+  static bool isSubclassOfClass_(MethodTestObjCLibrary _lib, NSObject aClass) {
     return _lib._objc_msgSend_4(
         _lib._class_NSObject1, _lib._sel_isSubclassOfClass_1, aClass._id);
   }
 
-  static bool resolveClassMethod(
+  static bool resolveClassMethod_(
       MethodTestObjCLibrary _lib, ffi.Pointer<ObjCSel> sel) {
     return _lib._objc_msgSend_3(
         _lib._class_NSObject1, _lib._sel_resolveClassMethod_1, sel);
   }
 
-  static bool resolveInstanceMethod(
+  static bool resolveInstanceMethod_(
       MethodTestObjCLibrary _lib, ffi.Pointer<ObjCSel> sel) {
     return _lib._objc_msgSend_3(
         _lib._class_NSObject1, _lib._sel_resolveInstanceMethod_1, sel);
@@ -958,7 +959,7 @@ class NSObject extends _ObjCWrapper {
     return _lib._objc_msgSend_15(_lib._class_NSObject1, _lib._sel_version1);
   }
 
-  static void setVersion(MethodTestObjCLibrary _lib, int aVersion) {
+  static void setVersion_(MethodTestObjCLibrary _lib, int aVersion) {
     _lib._objc_msgSend_16(
         _lib._class_NSObject1, _lib._sel_setVersion_1, aVersion);
   }
@@ -968,19 +969,19 @@ class NSObject extends _ObjCWrapper {
     return NSObject._(_ret, _lib);
   }
 
-  NSObject replacementObjectForCoder(NSObject? coder) {
+  NSObject replacementObjectForCoder_(NSObject? coder) {
     final _ret = _lib._objc_msgSend_17(
         _id, _lib._sel_replacementObjectForCoder_1, coder?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib);
   }
 
-  NSObject awakeAfterUsingCoder(NSObject? coder) {
+  NSObject awakeAfterUsingCoder_(NSObject? coder) {
     final _ret = _lib._objc_msgSend_17(
         _id, _lib._sel_awakeAfterUsingCoder_1, coder?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib);
   }
 
-  static void poseAsClass(MethodTestObjCLibrary _lib, NSObject aClass) {
+  static void poseAsClass_(MethodTestObjCLibrary _lib, NSObject aClass) {
     _lib._objc_msgSend_8(
         _lib._class_NSObject1, _lib._sel_poseAsClass_1, aClass._id);
   }
@@ -1033,7 +1034,7 @@ class NSString extends _ObjCWrapper {
 
   factory NSString(MethodTestObjCLibrary _lib, String str) {
     final cstr = str.toNativeUtf8();
-    final nsstr = stringWithCString_encoding(_lib, cstr.cast(), 4 /* UTF8 */);
+    final nsstr = stringWithCString_encoding_(_lib, cstr.cast(), 4 /* UTF8 */);
     pkg_ffi.calloc.free(cstr);
     return nsstr;
   }
@@ -1041,7 +1042,7 @@ class NSString extends _ObjCWrapper {
   @override
   String toString() => (UTF8String).cast<pkg_ffi.Utf8>().toDartString();
 
-  static NSString stringWithCString_encoding(
+  static NSString stringWithCString_encoding_(
       MethodTestObjCLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
     final _ret = _lib._objc_msgSend_12(_lib._class_NSString1,
         _lib._sel_stringWithCString_encoding_1, cString, enc);
@@ -1074,15 +1075,15 @@ class MethodInterface extends NSObject {
     return _lib._objc_msgSend_18(_id, _lib._sel_add1);
   }
 
-  int add1(int x) {
+  int add_(int x) {
     return _lib._objc_msgSend_19(_id, _lib._sel_add_1, x);
   }
 
-  int add_Y(int x, int y) {
+  int add_Y_(int x, int y) {
     return _lib._objc_msgSend_20(_id, _lib._sel_add_Y_1, x, y);
   }
 
-  int add_Y_Z(int x, int y, int z) {
+  int add_Y_Z_(int x, int y, int z) {
     return _lib._objc_msgSend_21(_id, _lib._sel_add_Y_Z_1, x, y, z);
   }
 
@@ -1090,17 +1091,17 @@ class MethodInterface extends NSObject {
     return _lib._objc_msgSend_18(_lib._class_MethodInterface1, _lib._sel_sub1);
   }
 
-  static int sub1(MethodTestObjCLibrary _lib, int x) {
+  static int sub_(MethodTestObjCLibrary _lib, int x) {
     return _lib._objc_msgSend_19(
         _lib._class_MethodInterface1, _lib._sel_sub_1, x);
   }
 
-  static int sub_Y(MethodTestObjCLibrary _lib, int x, int y) {
+  static int sub_Y_(MethodTestObjCLibrary _lib, int x, int y) {
     return _lib._objc_msgSend_20(
         _lib._class_MethodInterface1, _lib._sel_sub_Y_1, x, y);
   }
 
-  static int sub_Y_Z(MethodTestObjCLibrary _lib, int x, int y, int z) {
+  static int sub_Y_Z_(MethodTestObjCLibrary _lib, int x, int y, int z) {
     return _lib._objc_msgSend_21(
         _lib._class_MethodInterface1, _lib._sel_sub_Y_Z_1, x, y, z);
   }

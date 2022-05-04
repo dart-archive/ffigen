@@ -427,10 +427,8 @@ class ObjCMethod {
     // foo
     // foo:
     // foo:someArgName:
-    // If there is a trailing ':', omit it. Replace all other ':' with '_'.
-    final name =
-        originalName.replaceAll(RegExp(r":$"), "").replaceAll(":", "_");
-    return uniqueNamer.makeUnique(name);
+    // So replace all ':' with '_'.
+    return uniqueNamer.makeUnique(originalName.replaceAll(":", "_"));
   }
 
   bool sameAs(ObjCMethod other) {

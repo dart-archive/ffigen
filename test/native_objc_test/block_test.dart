@@ -52,18 +52,18 @@ void main() {
     test('BlockTester is working', () {
       // This doesn't test any Block functionality, just that the BlockTester
       // itself is working correctly.
-      final blockTester = BlockTester.makeFromMultiplier(lib, 10);
-      expect(blockTester.call(123), 1230);
+      final blockTester = BlockTester.makeFromMultiplier_(lib, 10);
+      expect(blockTester.call_(123), 1230);
       final intBlock = blockTester.getBlock();
-      final blockTester2 = BlockTester.makeFromBlock(lib, intBlock);
-      expect(blockTester2.call(456), 4560);
+      final blockTester2 = BlockTester.makeFromBlock_(lib, intBlock);
+      expect(blockTester2.call_(456), 4560);
     });
 
     test('Block from function pointer', () {
       final block = ObjCBlock.fromFunctionPointer(
           lib, Pointer.fromFunction(_add100, 999));
-      final blockTester = BlockTester.makeFromBlock(lib, block.pointer);
-      expect(blockTester.call(123), 223);
+      final blockTester = BlockTester.makeFromBlock_(lib, block.pointer);
+      expect(blockTester.call_(123), 223);
     });
   });
 }
