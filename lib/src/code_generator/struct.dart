@@ -37,6 +37,7 @@ class Struct extends Compound {
     int? pack,
     String? dartDoc,
     List<Member>? members,
+    bool isInternal = false,
   }) : super(
           usr: usr,
           originalName: originalName,
@@ -46,5 +47,6 @@ class Struct extends Compound {
           members: members,
           pack: pack,
           compoundType: CompoundType.struct,
+          isInternal: isInternal,
         );
 }

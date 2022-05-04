@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator.dart';
+import 'package:logging/logging.dart';
 
 import 'binding_string.dart';
 import 'utils.dart';
@@ -25,22 +26,20 @@ const _excludedNSObjectClassMethods = {
   'isSubclassOfClass:',
   'load',
   'mutableCopyWithZone:',
+  'poseAsClass:',
   'resolveClassMethod:',
   'resolveInstanceMethod:',
+  'setVersion:',
   'superclass',
+  'version',
 };
+
+final _logger = Logger('ffigen.code_generator.objc_interface');
 
 class ObjCInterface extends BindingType {
   ObjCInterface? superType;
-  final methods = <ObjCMethod>[];
+  final methods = <String, ObjCMethod>{};
   bool filled = false;
-
-  // Objective C supports overriding class methods, but Dart doesn't support
-  // overriding static methods. So in our generated Dart code, child classes
-  // must explicitly implement all the class methods of their super type. To
-  // help with this, we store the class methods in this map, as well as in the
-  // methods list.
-  final classMethods = <String, ObjCMethod>{};
 
   final ObjCBuiltInFunctions builtInFunctions;
   final bool isBuiltIn;
@@ -100,12 +99,17 @@ class ObjCInterface extends BindingType {
     s.write('    return $name._(other._id, other._lib);\n');
     s.write('  }\n\n');
 
+    s.write(
+        '  static $name castFromPointer($natLib lib, ffi.Pointer<ObjCObject> other) {\n');
+    s.write('    return $name._(other, lib);\n');
+    s.write('  }\n\n');
+
     if (isNSString) {
       builtInFunctions.generateNSStringUtils(w, s);
     }
 
     // Methods.
-    for (final m in methods) {
+    for (final m in methods.values) {
       final methodName = m._getDartMethodName(uniqueNamer);
       final isStatic = m.isClass;
       final returnType = m.returnType!;
@@ -118,7 +122,8 @@ class ObjCInterface extends BindingType {
       s.write('  ');
       if (isStatic) {
         s.write('static ');
-        s.write(_getConvertedType(returnType, w, name));
+        s.write(
+            _getConvertedReturnType(returnType, w, name, m.isNullableReturn));
 
         switch (m.kind) {
           case ObjCMethodKind.method:
@@ -138,24 +143,26 @@ class ObjCInterface extends BindingType {
         }
         s.write(paramsToString(m.params, isStatic: true));
       } else {
-        if (superType?.hasMethod(m) ?? false) {
+        if (superType?.methods[m.originalName]?.sameAs(m) ?? false) {
           s.write('@override\n  ');
         }
         switch (m.kind) {
           case ObjCMethodKind.method:
             // returnType methodName(...)
-            s.write(_getConvertedType(returnType, w, name));
+            s.write(_getConvertedReturnType(
+                returnType, w, name, m.isNullableReturn));
             s.write(' $methodName');
             s.write(paramsToString(m.params, isStatic: false));
             break;
           case ObjCMethodKind.propertyGetter:
             // returnType get methodName
-            s.write(_getConvertedType(returnType, w, name));
+            s.write(_getConvertedReturnType(
+                returnType, w, name, m.isNullableReturn));
             s.write(' get $methodName');
             break;
           case ObjCMethodKind.propertySetter:
             // set methodName(...)
-            s.write('set $methodName');
+            s.write(' set $methodName');
             s.write(paramsToString(m.params, isStatic: false));
             break;
         }
@@ -178,7 +185,8 @@ class ObjCInterface extends BindingType {
       }
       s.write(');\n');
       if (convertReturn) {
-        final result = _doReturnConversion(returnType, '_ret', name, '_lib');
+        final result = _doReturnConversion(
+            returnType, '_ret', name, '_lib', m.isNullableReturn);
         s.write('    return $result;');
       }
 
@@ -215,59 +223,55 @@ class ObjCInterface extends BindingType {
       _addNSStringMethods();
     }
 
-    _filterPropertyMethods();
-
     if (superType != null) {
       superType!.addDependencies(dependencies);
       _copyClassMethodsFromSuperType();
     }
 
-    for (final m in methods) {
+    for (final m in methods.values) {
       m.addDependencies(dependencies, builtInFunctions);
     }
-  }
-
-  void _filterPropertyMethods() {
-    // Properties setters and getters are duplicated in the AST. One copy is
-    // marked it with ObjCMethodKind.propertyGetter/Setter. The other copy is
-    // missing important information, and is a plain old instanceMethod. So we
-    // need to discard the second copy.
-    final properties = Set<String>.from(
-        methods.where((m) => m.isProperty).map((m) => m.originalName));
-    methods.removeWhere(
-        (m) => !m.isProperty && properties.contains(m.originalName));
   }
 
   void _copyClassMethodsFromSuperType() {
     // Copy class methods from the super type, because Dart classes don't
     // inherit static methods.
-    for (final m in superType!.classMethods.values) {
-      if (!_excludedNSObjectClassMethods.contains(m.originalName)) {
+    for (final m in superType!.methods.values) {
+      if (m.isClass &&
+          !_excludedNSObjectClassMethods.contains(m.originalName)) {
         addMethod(m);
       }
     }
   }
 
   void addMethod(ObjCMethod method) {
-    methods.add(method);
-    if (method.kind == ObjCMethodKind.method && method.isClass) {
-      classMethods[method.originalName] ??= method;
+    final oldMethod = methods[method.originalName];
+    if (oldMethod != null) {
+      // Typically we ignore duplicate methods. However, property setters and
+      // getters are duplicated in the AST. One copy is marked with
+      // ObjCMethodKind.propertyGetter/Setter. The other copy is missing
+      // important information, and is a plain old instanceMethod. So if the
+      // existing method is an instanceMethod, and the new one is a property,
+      // override it.
+      if (method.isProperty && !oldMethod.isProperty) {
+        // Fallthrough.
+      } else if (!method.isProperty && oldMethod.isProperty) {
+        // Don't override, but also skip the same method check below.
+        return;
+      } else {
+        // Check duplicate is the same method.
+        if (!method.sameAs(oldMethod)) {
+          _logger.severe('Duplicate methods with different signatures: '
+              '$originalName.${method.originalName}');
+        }
+        return;
+      }
     }
-  }
-
-  bool hasMethod(ObjCMethod method) {
-    return methods.any(
-        (m) => m.originalName == method.originalName && m.kind == method.kind);
-  }
-
-  void addMethodIfMissing(ObjCMethod method) {
-    if (!hasMethod(method)) {
-      addMethod(method);
-    }
+    methods[method.originalName] = method;
   }
 
   void _addNSStringMethods() {
-    addMethodIfMissing(ObjCMethod(
+    addMethod(ObjCMethod(
       originalName: 'stringWithCString:encoding:',
       kind: ObjCMethodKind.method,
       isClass: true,
@@ -277,9 +281,9 @@ class ObjCInterface extends BindingType {
         ObjCMethodParam(unsignedIntType, 'enc'),
       ],
     ));
-    addMethodIfMissing(ObjCMethod(
+    addMethod(ObjCMethod(
       originalName: 'UTF8String',
-      kind: ObjCMethodKind.method,
+      kind: ObjCMethodKind.propertyGetter,
       isClass: false,
       returnType: PointerType(charType),
       params_: [],
@@ -302,35 +306,63 @@ class ObjCInterface extends BindingType {
   // passed to native as Pointer<ObjCObject>, but the user sees the Dart wrapper
   // class. These methods need to be kept in sync.
   bool _needsConverting(Type type) =>
-      type is ObjCInterface || _isObject(type) || _isInstanceType(type);
+      type is ObjCInterface ||
+      type is ObjCBlock ||
+      _isObject(type) ||
+      _isInstanceType(type);
 
   String _getConvertedType(Type type, Writer w, String enclosingClass) {
     if (type is BooleanType) return 'bool';
     if (type is ObjCInterface) return type.name;
+    if (type is ObjCBlock) return type.name;
     if (_isObject(type)) return 'NSObject';
     if (_isInstanceType(type)) return enclosingClass;
     return type.getDartType(w);
   }
 
+  String _getConvertedReturnType(
+      Type type, Writer w, String enclosingClass, bool isNullableReturn) {
+    final result = _getConvertedType(type, w, enclosingClass);
+    if (isNullableReturn) {
+      return result + "?";
+    }
+    return result;
+  }
+
   String _doArgConversion(ObjCMethodParam arg) {
     if (arg.type is ObjCInterface ||
         _isObject(arg.type) ||
-        _isInstanceType(arg.type)) {
+        _isInstanceType(arg.type) ||
+        arg.type is ObjCBlock) {
+      final field = arg.type is ObjCBlock ? '_impl' : '_id';
       if (arg.isNullable) {
-        return '${arg.name}?._id ?? ffi.nullptr';
+        return '${arg.name}?.$field ?? ffi.nullptr';
       } else {
-        return '${arg.name}._id';
+        return '${arg.name}.$field';
       }
     }
     return arg.name;
   }
 
-  String _doReturnConversion(
-      Type type, String value, String enclosingClass, String library) {
-    if (type is ObjCInterface) return '${type.name}._($value, $library)';
-    if (_isObject(type)) return 'NSObject._($value, $library)';
-    if (_isInstanceType(type)) return '$enclosingClass._($value, $library)';
-    return value;
+  String _doReturnConversion(Type type, String value, String enclosingClass,
+      String library, bool isNullable) {
+    String prefix = "";
+    if (isNullable) {
+      prefix += "$value.address == 0 ? null : ";
+    }
+    if (type is ObjCInterface) {
+      return prefix + '${type.name}._($value, $library)';
+    }
+    if (type is ObjCBlock) {
+      return prefix + '${type.name}._($value, $library)';
+    }
+    if (_isObject(type)) {
+      return prefix + 'NSObject._($value, $library)';
+    }
+    if (_isInstanceType(type)) {
+      return prefix + '$enclosingClass._($value, $library)';
+    }
+    return prefix + value;
   }
 }
 
@@ -352,6 +384,7 @@ class ObjCMethod {
   final String originalName;
   final ObjCProperty? property;
   Type? returnType;
+  final bool isNullableReturn;
   final List<ObjCMethodParam> params;
   final ObjCMethodKind kind;
   final bool isClass;
@@ -365,6 +398,7 @@ class ObjCMethod {
     required this.kind,
     required this.isClass,
     this.returnType,
+    this.isNullableReturn = false,
     List<ObjCMethodParam>? params_,
   }) : params = params_ ?? [];
 
@@ -403,6 +437,15 @@ class ObjCMethod {
     final name =
         originalName.replaceAll(RegExp(r":$"), "").replaceAll(":", "_");
     return uniqueNamer.makeUnique(name);
+  }
+
+  bool sameAs(ObjCMethod other) {
+    if (originalName != other.originalName) return false;
+    if (isNullableReturn != other.isNullableReturn) return false;
+    if (kind != other.kind) return false;
+    if (isClass != other.isClass) return false;
+    // msgSend is deduped by signature, so this check covers the signature.
+    return msgSend == other.msgSend;
   }
 }
 

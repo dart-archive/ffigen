@@ -54,6 +54,11 @@ abstract class Type {
   /// specific key. Types that are already deduped don't need to override this.
   /// toString() is not a valid cache key as there may be name collisions.
   String cacheKey() => hashCode.toRadixString(36);
+
+  /// Returns a string of code that creates a default value for this type. For
+  /// example, for int types this returns the string '0'. A null return means
+  /// that default values aren't supported for this type, eg void.
+  String? getDefaultValue(Writer w, String nativeLib) => null;
 }
 
 /// Function to check if the dart and C type string are same.
@@ -70,11 +75,13 @@ abstract class BindingType extends NoLookUpBinding implements Type {
     String? originalName,
     required String name,
     String? dartDoc,
+    bool isInternal = false,
   }) : super(
           usr: usr,
           originalName: originalName,
           name: name,
           dartDoc: dartDoc,
+          isInternal: isInternal,
         );
 
   @override
@@ -97,6 +104,9 @@ abstract class BindingType extends NoLookUpBinding implements Type {
 
   @override
   String cacheKey() => hashCode.toRadixString(36);
+
+  @override
+  String? getDefaultValue(Writer w, String nativeLib) => null;
 }
 
 /// Represents an unimplemented type. Used as a marker, so that declarations

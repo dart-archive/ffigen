@@ -75,6 +75,16 @@ Future<void> main(List<String> args) async {
   );
 
   await _regenConfig(
+    File('test/native_objc_test/cast_config.yaml'),
+    File('test/native_objc_test/cast_bindings.dart'),
+  );
+
+  await _regenConfig(
+    File('test/native_objc_test/category_config.yaml'),
+    File('test/native_objc_test/category_bindings.dart'),
+  );
+
+  await _regenConfig(
     File('test/native_objc_test/method_config.yaml'),
     File('test/native_objc_test/method_bindings.dart'),
   );
@@ -92,6 +102,11 @@ Future<void> main(List<String> args) async {
   await _regenConfig(
     File('test/native_objc_test/string_config.yaml'),
     File('test/native_objc_test/string_bindings.dart'),
+  );
+
+  await _regenConfig(
+    File('test/native_objc_test/block_config.yaml'),
+    File('test/native_objc_test/block_bindings.dart'),
   );
 
   await _regenConfig(File('test/native_test/config.yaml'),

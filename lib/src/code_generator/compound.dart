@@ -43,12 +43,14 @@ abstract class Compound extends BindingType {
     this.pack,
     String? dartDoc,
     List<Member>? members,
+    bool isInternal = false,
   })  : members = members ?? [],
         super(
           usr: usr,
           originalName: originalName,
           name: name,
           dartDoc: dartDoc,
+          isInternal: isInternal,
         );
 
   factory Compound.fromType({

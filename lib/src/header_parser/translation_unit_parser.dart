@@ -6,6 +6,7 @@ import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser/sub_parsers/macro_parser.dart';
+import 'package:ffigen/src/header_parser/sub_parsers/objcinterfacedecl_parser.dart';
 import 'package:ffigen/src/header_parser/sub_parsers/var_parser.dart';
 import 'package:logging/logging.dart';
 
@@ -47,16 +48,17 @@ int _rootCursorVisitor(clang_types.CXCursor cursor, clang_types.CXCursor parent,
         case clang_types.CXCursorKind.CXCursor_StructDecl:
         case clang_types.CXCursorKind.CXCursor_UnionDecl:
         case clang_types.CXCursorKind.CXCursor_EnumDecl:
+        case clang_types.CXCursorKind.CXCursor_ObjCInterfaceDecl:
           addToBindings(_getCodeGenTypeFromCursor(cursor));
+          break;
+        case clang_types.CXCursorKind.CXCursor_ObjCCategoryDecl:
+          addToBindings(parseObjCCategoryDeclaration(cursor));
           break;
         case clang_types.CXCursorKind.CXCursor_MacroDefinition:
           saveMacroDefinition(cursor);
           break;
         case clang_types.CXCursorKind.CXCursor_VarDecl:
           addToBindings(parseVarDeclaration(cursor));
-          break;
-        case clang_types.CXCursorKind.CXCursor_ObjCInterfaceDecl:
-          addToBindings(_getCodeGenTypeFromCursor(cursor));
           break;
         default:
           _logger.finer('rootCursorVisitor: CursorKind not implemented');

@@ -151,8 +151,6 @@ class MethodTestObjCLibrary {
   late final __objc_getClass = __objc_getClassPtr.asFunction<
       ffi.Pointer<ObjCObject> Function(ffi.Pointer<pkg_ffi.Char>)>();
 
-  late final ffi.Pointer<ObjCObject> _class_MethodInterface1 =
-      _getClass1("MethodInterface");
   late final ffi.Pointer<ObjCObject> _class_NSObject1 = _getClass1("NSObject");
   late final ffi.Pointer<ObjCSel> _sel_load1 = _registerName1("load");
   void _objc_msgSend_0(
@@ -506,7 +504,7 @@ class MethodTestObjCLibrary {
 
   late final ffi.Pointer<ObjCSel> _sel_debugDescription1 =
       _registerName1("debugDescription");
-  late final ffi.Pointer<ObjCSel> _sel_add1 = _registerName1("add");
+  late final ffi.Pointer<ObjCSel> _sel_version1 = _registerName1("version");
   int _objc_msgSend_15(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
@@ -519,39 +517,110 @@ class MethodTestObjCLibrary {
 
   late final __objc_msgSend_15Ptr = _lookup<
       ffi.NativeFunction<
-          ffi.Int32 Function(
+          NSInteger Function(
               ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>>('objc_msgSend');
   late final __objc_msgSend_15 = __objc_msgSend_15Ptr.asFunction<
       int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>();
 
+  late final ffi.Pointer<ObjCSel> _sel_setVersion_1 =
+      _registerName1("setVersion:");
+  void _objc_msgSend_16(
+    ffi.Pointer<ObjCObject> obj,
+    ffi.Pointer<ObjCSel> sel,
+    int aVersion,
+  ) {
+    return __objc_msgSend_16(
+      obj,
+      sel,
+      aVersion,
+    );
+  }
+
+  late final __objc_msgSend_16Ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
+              NSInteger)>>('objc_msgSend');
+  late final __objc_msgSend_16 = __objc_msgSend_16Ptr.asFunction<
+      void Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>, int)>();
+
+  late final ffi.Pointer<ObjCSel> _sel_classForCoder1 =
+      _registerName1("classForCoder");
+  late final ffi.Pointer<ObjCSel> _sel_replacementObjectForCoder_1 =
+      _registerName1("replacementObjectForCoder:");
+  ffi.Pointer<ObjCObject> _objc_msgSend_17(
+    ffi.Pointer<ObjCObject> obj,
+    ffi.Pointer<ObjCSel> sel,
+    ffi.Pointer<ObjCObject> coder,
+  ) {
+    return __objc_msgSend_17(
+      obj,
+      sel,
+      coder,
+    );
+  }
+
+  late final __objc_msgSend_17Ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
+              ffi.Pointer<ObjCSel>, ffi.Pointer<ObjCObject>)>>('objc_msgSend');
+  late final __objc_msgSend_17 = __objc_msgSend_17Ptr.asFunction<
+      ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
+          ffi.Pointer<ObjCSel>, ffi.Pointer<ObjCObject>)>();
+
+  late final ffi.Pointer<ObjCSel> _sel_awakeAfterUsingCoder_1 =
+      _registerName1("awakeAfterUsingCoder:");
+  late final ffi.Pointer<ObjCSel> _sel_poseAsClass_1 =
+      _registerName1("poseAsClass:");
+  late final ffi.Pointer<ObjCSel> _sel_autoContentAccessingProxy1 =
+      _registerName1("autoContentAccessingProxy");
+  late final ffi.Pointer<ObjCObject> _class_MethodInterface1 =
+      _getClass1("MethodInterface");
+  late final ffi.Pointer<ObjCSel> _sel_add1 = _registerName1("add");
+  int _objc_msgSend_18(
+    ffi.Pointer<ObjCObject> obj,
+    ffi.Pointer<ObjCSel> sel,
+  ) {
+    return __objc_msgSend_18(
+      obj,
+      sel,
+    );
+  }
+
+  late final __objc_msgSend_18Ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(
+              ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>>('objc_msgSend');
+  late final __objc_msgSend_18 = __objc_msgSend_18Ptr.asFunction<
+      int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>();
+
   late final ffi.Pointer<ObjCSel> _sel_add_1 = _registerName1("add:");
-  int _objc_msgSend_16(
+  int _objc_msgSend_19(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
     int x,
   ) {
-    return __objc_msgSend_16(
+    return __objc_msgSend_19(
       obj,
       sel,
       x,
     );
   }
 
-  late final __objc_msgSend_16Ptr = _lookup<
+  late final __objc_msgSend_19Ptr = _lookup<
       ffi.NativeFunction<
           ffi.Int32 Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
               ffi.Int32)>>('objc_msgSend');
-  late final __objc_msgSend_16 = __objc_msgSend_16Ptr.asFunction<
+  late final __objc_msgSend_19 = __objc_msgSend_19Ptr.asFunction<
       int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>, int)>();
 
   late final ffi.Pointer<ObjCSel> _sel_add_Y_1 = _registerName1("add:Y:");
-  int _objc_msgSend_17(
+  int _objc_msgSend_20(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
     int x,
     int y,
   ) {
-    return __objc_msgSend_17(
+    return __objc_msgSend_20(
       obj,
       sel,
       x,
@@ -559,22 +628,22 @@ class MethodTestObjCLibrary {
     );
   }
 
-  late final __objc_msgSend_17Ptr = _lookup<
+  late final __objc_msgSend_20Ptr = _lookup<
       ffi.NativeFunction<
           ffi.Int32 Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
               ffi.Int32, ffi.Int32)>>('objc_msgSend');
-  late final __objc_msgSend_17 = __objc_msgSend_17Ptr.asFunction<
+  late final __objc_msgSend_20 = __objc_msgSend_20Ptr.asFunction<
       int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>, int, int)>();
 
   late final ffi.Pointer<ObjCSel> _sel_add_Y_Z_1 = _registerName1("add:Y:Z:");
-  int _objc_msgSend_18(
+  int _objc_msgSend_21(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
     int x,
     int y,
     int z,
   ) {
-    return __objc_msgSend_18(
+    return __objc_msgSend_21(
       obj,
       sel,
       x,
@@ -583,11 +652,11 @@ class MethodTestObjCLibrary {
     );
   }
 
-  late final __objc_msgSend_18Ptr = _lookup<
+  late final __objc_msgSend_21Ptr = _lookup<
       ffi.NativeFunction<
           ffi.Int32 Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
               ffi.Int32, ffi.Int32, ffi.Int32)>>('objc_msgSend');
-  late final __objc_msgSend_18 = __objc_msgSend_18Ptr.asFunction<
+  late final __objc_msgSend_21 = __objc_msgSend_21Ptr.asFunction<
       int Function(
           ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>, int, int, int)>();
 
@@ -696,68 +765,17 @@ typedef CFAllocatorPreferredSizeCallBack = ffi.Pointer<
 class _ObjCWrapper {
   final ffi.Pointer<ObjCObject> _id;
   final MethodTestObjCLibrary _lib;
+
   _ObjCWrapper._(this._id, this._lib);
+
+  @override
+  bool operator ==(Object other) {
+    return other is _ObjCWrapper && _id == other._id;
+  }
+
+  @override
+  int get hashCode => _id.hashCode;
 }
-
-class MethodInterface extends NSObject {
-  MethodInterface._(ffi.Pointer<ObjCObject> id, MethodTestObjCLibrary lib)
-      : super._(id, lib);
-
-  static MethodInterface castFrom<T extends _ObjCWrapper>(T other) {
-    return MethodInterface._(other._id, other._lib);
-  }
-
-  int add() {
-    return _lib._objc_msgSend_15(_id, _lib._sel_add1);
-  }
-
-  int add1(int x) {
-    return _lib._objc_msgSend_16(_id, _lib._sel_add_1, x);
-  }
-
-  int add_Y(int x, int y) {
-    return _lib._objc_msgSend_17(_id, _lib._sel_add_Y_1, x, y);
-  }
-
-  int add_Y_Z(int x, int y, int z) {
-    return _lib._objc_msgSend_18(_id, _lib._sel_add_Y_Z_1, x, y, z);
-  }
-
-  static int sub(MethodTestObjCLibrary _lib) {
-    return _lib._objc_msgSend_15(_lib._class_MethodInterface1, _lib._sel_sub1);
-  }
-
-  static int sub1(MethodTestObjCLibrary _lib, int x) {
-    return _lib._objc_msgSend_16(
-        _lib._class_MethodInterface1, _lib._sel_sub_1, x);
-  }
-
-  static int sub_Y(MethodTestObjCLibrary _lib, int x, int y) {
-    return _lib._objc_msgSend_17(
-        _lib._class_MethodInterface1, _lib._sel_sub_Y_1, x, y);
-  }
-
-  static int sub_Y_Z(MethodTestObjCLibrary _lib, int x, int y, int z) {
-    return _lib._objc_msgSend_18(
-        _lib._class_MethodInterface1, _lib._sel_sub_Y_Z_1, x, y, z);
-  }
-
-  static MethodInterface new1(MethodTestObjCLibrary _lib) {
-    final _ret =
-        _lib._objc_msgSend_1(_lib._class_MethodInterface1, _lib._sel_new1);
-    return MethodInterface._(_ret, _lib);
-  }
-
-  static MethodInterface alloc(MethodTestObjCLibrary _lib) {
-    final _ret =
-        _lib._objc_msgSend_1(_lib._class_MethodInterface1, _lib._sel_alloc1);
-    return MethodInterface._(_ret, _lib);
-  }
-}
-
-class ObjCSel extends ffi.Opaque {}
-
-class ObjCObject extends ffi.Opaque {}
 
 class NSObject extends _ObjCWrapper {
   NSObject._(ffi.Pointer<ObjCObject> id, MethodTestObjCLibrary lib)
@@ -765,6 +783,11 @@ class NSObject extends _ObjCWrapper {
 
   static NSObject castFrom<T extends _ObjCWrapper>(T other) {
     return NSObject._(other._id, other._lib);
+  }
+
+  static NSObject castFromPointer(
+      MethodTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSObject._(other, lib);
   }
 
   static void load(MethodTestObjCLibrary _lib) {
@@ -930,7 +953,48 @@ class NSObject extends _ObjCWrapper {
         _lib._class_NSObject1, _lib._sel_debugDescription1);
     return NSString._(_ret, _lib);
   }
+
+  static int version(MethodTestObjCLibrary _lib) {
+    return _lib._objc_msgSend_15(_lib._class_NSObject1, _lib._sel_version1);
+  }
+
+  static void setVersion(MethodTestObjCLibrary _lib, int aVersion) {
+    _lib._objc_msgSend_16(
+        _lib._class_NSObject1, _lib._sel_setVersion_1, aVersion);
+  }
+
+  NSObject get classForCoder {
+    final _ret = _lib._objc_msgSend_1(_id, _lib._sel_classForCoder1);
+    return NSObject._(_ret, _lib);
+  }
+
+  NSObject replacementObjectForCoder(NSObject? coder) {
+    final _ret = _lib._objc_msgSend_17(
+        _id, _lib._sel_replacementObjectForCoder_1, coder?._id ?? ffi.nullptr);
+    return NSObject._(_ret, _lib);
+  }
+
+  NSObject awakeAfterUsingCoder(NSObject? coder) {
+    final _ret = _lib._objc_msgSend_17(
+        _id, _lib._sel_awakeAfterUsingCoder_1, coder?._id ?? ffi.nullptr);
+    return NSObject._(_ret, _lib);
+  }
+
+  static void poseAsClass(MethodTestObjCLibrary _lib, NSObject aClass) {
+    _lib._objc_msgSend_8(
+        _lib._class_NSObject1, _lib._sel_poseAsClass_1, aClass._id);
+  }
+
+  NSObject get autoContentAccessingProxy {
+    final _ret =
+        _lib._objc_msgSend_1(_id, _lib._sel_autoContentAccessingProxy1);
+    return NSObject._(_ret, _lib);
+  }
 }
+
+class ObjCSel extends ffi.Opaque {}
+
+class ObjCObject extends ffi.Opaque {}
 
 typedef instancetype = ffi.Pointer<ObjCObject>;
 
@@ -945,6 +1009,11 @@ class NSMethodSignature extends _ObjCWrapper {
   static NSMethodSignature castFrom<T extends _ObjCWrapper>(T other) {
     return NSMethodSignature._(other._id, other._lib);
   }
+
+  static NSMethodSignature castFromPointer(
+      MethodTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSMethodSignature._(other, lib);
+  }
 }
 
 typedef NSUInteger = pkg_ffi.UnsignedLong;
@@ -957,6 +1026,11 @@ class NSString extends _ObjCWrapper {
     return NSString._(other._id, other._lib);
   }
 
+  static NSString castFromPointer(
+      MethodTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return NSString._(other, lib);
+  }
+
   factory NSString(MethodTestObjCLibrary _lib, String str) {
     final cstr = str.toNativeUtf8();
     final nsstr = stringWithCString_encoding(_lib, cstr.cast(), 4 /* UTF8 */);
@@ -965,7 +1039,7 @@ class NSString extends _ObjCWrapper {
   }
 
   @override
-  String toString() => UTF8String().cast<pkg_ffi.Utf8>().toDartString();
+  String toString() => (UTF8String).cast<pkg_ffi.Utf8>().toDartString();
 
   static NSString stringWithCString_encoding(
       MethodTestObjCLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
@@ -974,13 +1048,74 @@ class NSString extends _ObjCWrapper {
     return NSString._(_ret, _lib);
   }
 
-  ffi.Pointer<pkg_ffi.Char> UTF8String() {
+  ffi.Pointer<pkg_ffi.Char> get UTF8String {
     return _lib._objc_msgSend_13(_id, _lib._sel_UTF8String1);
   }
 }
 
 extension StringToNSString on String {
   NSString toNSString(MethodTestObjCLibrary lib) => NSString(lib, this);
+}
+
+class MethodInterface extends NSObject {
+  MethodInterface._(ffi.Pointer<ObjCObject> id, MethodTestObjCLibrary lib)
+      : super._(id, lib);
+
+  static MethodInterface castFrom<T extends _ObjCWrapper>(T other) {
+    return MethodInterface._(other._id, other._lib);
+  }
+
+  static MethodInterface castFromPointer(
+      MethodTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return MethodInterface._(other, lib);
+  }
+
+  int add() {
+    return _lib._objc_msgSend_18(_id, _lib._sel_add1);
+  }
+
+  int add1(int x) {
+    return _lib._objc_msgSend_19(_id, _lib._sel_add_1, x);
+  }
+
+  int add_Y(int x, int y) {
+    return _lib._objc_msgSend_20(_id, _lib._sel_add_Y_1, x, y);
+  }
+
+  int add_Y_Z(int x, int y, int z) {
+    return _lib._objc_msgSend_21(_id, _lib._sel_add_Y_Z_1, x, y, z);
+  }
+
+  static int sub(MethodTestObjCLibrary _lib) {
+    return _lib._objc_msgSend_18(_lib._class_MethodInterface1, _lib._sel_sub1);
+  }
+
+  static int sub1(MethodTestObjCLibrary _lib, int x) {
+    return _lib._objc_msgSend_19(
+        _lib._class_MethodInterface1, _lib._sel_sub_1, x);
+  }
+
+  static int sub_Y(MethodTestObjCLibrary _lib, int x, int y) {
+    return _lib._objc_msgSend_20(
+        _lib._class_MethodInterface1, _lib._sel_sub_Y_1, x, y);
+  }
+
+  static int sub_Y_Z(MethodTestObjCLibrary _lib, int x, int y, int z) {
+    return _lib._objc_msgSend_21(
+        _lib._class_MethodInterface1, _lib._sel_sub_Y_Z_1, x, y, z);
+  }
+
+  static MethodInterface new1(MethodTestObjCLibrary _lib) {
+    final _ret =
+        _lib._objc_msgSend_1(_lib._class_MethodInterface1, _lib._sel_new1);
+    return MethodInterface._(_ret, _lib);
+  }
+
+  static MethodInterface alloc(MethodTestObjCLibrary _lib) {
+    final _ret =
+        _lib._objc_msgSend_1(_lib._class_MethodInterface1, _lib._sel_alloc1);
+    return MethodInterface._(_ret, _lib);
+  }
 }
 
 const int NSScannedOption = 1;

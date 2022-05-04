@@ -6,18 +6,18 @@
 import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart' as pkg_ffi;
 
-/// Tests calling Objective-C properties i.e. getters and setters
-class PropertyTestObjCLibrary {
+/// Tests calling Objective-C blocks
+class BlockTestObjCLibrary {
   /// Holds the symbol lookup function.
   final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
       _lookup;
 
   /// The symbols are looked up in [dynamicLibrary].
-  PropertyTestObjCLibrary(ffi.DynamicLibrary dynamicLibrary)
+  BlockTestObjCLibrary(ffi.DynamicLibrary dynamicLibrary)
       : _lookup = dynamicLibrary.lookup;
 
   /// The symbols are looked up with [lookup].
-  PropertyTestObjCLibrary.fromLookup(
+  BlockTestObjCLibrary.fromLookup(
       ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
           lookup)
       : _lookup = lookup;
@@ -573,63 +573,106 @@ class PropertyTestObjCLibrary {
       _registerName1("poseAsClass:");
   late final ffi.Pointer<ObjCSel> _sel_autoContentAccessingProxy1 =
       _registerName1("autoContentAccessingProxy");
-  late final ffi.Pointer<ObjCObject> _class_PropertyInterface1 =
-      _getClass1("PropertyInterface");
-  late final ffi.Pointer<ObjCSel> _sel_readOnlyProperty1 =
-      _registerName1("readOnlyProperty");
-  int _objc_msgSend_18(
+  late final ffi.Pointer<ObjCObject> _class_BlockTester1 =
+      _getClass1("BlockTester");
+  ffi.Pointer<_ObjCBlockDesc> _newBlockDesc1() {
+    final d =
+        pkg_ffi.calloc.allocate<_ObjCBlockDesc>(ffi.sizeOf<_ObjCBlockDesc>());
+    d.ref.size = ffi.sizeOf<_ObjCBlock>();
+    return d;
+  }
+
+  late final ffi.Pointer<_ObjCBlockDesc> _objc_block_desc1 = _newBlockDesc1();
+  ffi.Pointer<_ObjCBlock> _newBlock1(
+      ffi.Pointer<ffi.Void> invoke, ffi.Pointer<ffi.Void> target) {
+    final b = pkg_ffi.calloc.allocate<_ObjCBlock>(ffi.sizeOf<_ObjCBlock>());
+    b.ref.invoke = invoke;
+    b.ref.target = target;
+    b.ref.descriptor = _objc_block_desc1;
+    return b;
+  }
+
+  late final ffi.Pointer<ObjCSel> _sel_makeFromBlock_1 =
+      _registerName1("makeFromBlock:");
+  ffi.Pointer<ObjCObject> _objc_msgSend_18(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
+    IntBlock block,
   ) {
     return __objc_msgSend_18(
       obj,
       sel,
+      block,
     );
   }
 
   late final __objc_msgSend_18Ptr = _lookup<
       ffi.NativeFunction<
-          ffi.Int32 Function(
-              ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>>('objc_msgSend');
+          ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
+              ffi.Pointer<ObjCSel>, IntBlock)>>('objc_msgSend');
   late final __objc_msgSend_18 = __objc_msgSend_18Ptr.asFunction<
-      int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>();
+      ffi.Pointer<ObjCObject> Function(
+          ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>, IntBlock)>();
 
-  late final ffi.Pointer<ObjCSel> _sel_readWriteProperty1 =
-      _registerName1("readWriteProperty");
-  late final ffi.Pointer<ObjCSel> _sel_setReadWriteProperty_1 =
-      _registerName1("setReadWriteProperty:");
-  void _objc_msgSend_19(
+  late final ffi.Pointer<ObjCSel> _sel_makeFromMultiplier_1 =
+      _registerName1("makeFromMultiplier:");
+  ffi.Pointer<ObjCObject> _objc_msgSend_19(
     ffi.Pointer<ObjCObject> obj,
     ffi.Pointer<ObjCSel> sel,
-    int value,
+    int mult,
   ) {
     return __objc_msgSend_19(
       obj,
       sel,
-      value,
+      mult,
     );
   }
 
   late final __objc_msgSend_19Ptr = _lookup<
       ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
-              ffi.Int32)>>('objc_msgSend');
+          ffi.Pointer<ObjCObject> Function(ffi.Pointer<ObjCObject>,
+              ffi.Pointer<ObjCSel>, ffi.Int32)>>('objc_msgSend');
   late final __objc_msgSend_19 = __objc_msgSend_19Ptr.asFunction<
-      void Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>, int)>();
+      ffi.Pointer<ObjCObject> Function(
+          ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>, int)>();
 
-  late final ffi.Pointer<ObjCSel> _sel_classReadOnlyProperty1 =
-      _registerName1("classReadOnlyProperty");
-  late final ffi.Pointer<ObjCSel> _sel_classReadWriteProperty1 =
-      _registerName1("classReadWriteProperty");
-  late final ffi.Pointer<ObjCSel> _sel_setClassReadWriteProperty_1 =
-      _registerName1("setClassReadWriteProperty:");
-  late final ffi.Pointer<ffi.Int32> __classReadWriteProperty =
-      _lookup<ffi.Int32>('_classReadWriteProperty');
+  late final ffi.Pointer<ObjCSel> _sel_call_1 = _registerName1("call:");
+  int _objc_msgSend_20(
+    ffi.Pointer<ObjCObject> obj,
+    ffi.Pointer<ObjCSel> sel,
+    int x,
+  ) {
+    return __objc_msgSend_20(
+      obj,
+      sel,
+      x,
+    );
+  }
 
-  int get _classReadWriteProperty => __classReadWriteProperty.value;
+  late final __objc_msgSend_20Ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int32 Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>,
+              ffi.Int32)>>('objc_msgSend');
+  late final __objc_msgSend_20 = __objc_msgSend_20Ptr.asFunction<
+      int Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>, int)>();
 
-  set _classReadWriteProperty(int value) =>
-      __classReadWriteProperty.value = value;
+  late final ffi.Pointer<ObjCSel> _sel_getBlock1 = _registerName1("getBlock");
+  IntBlock _objc_msgSend_21(
+    ffi.Pointer<ObjCObject> obj,
+    ffi.Pointer<ObjCSel> sel,
+  ) {
+    return __objc_msgSend_21(
+      obj,
+      sel,
+    );
+  }
+
+  late final __objc_msgSend_21Ptr = _lookup<
+      ffi.NativeFunction<
+          IntBlock Function(
+              ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>>('objc_msgSend');
+  late final __objc_msgSend_21 = __objc_msgSend_21Ptr.asFunction<
+      IntBlock Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>();
 }
 
 abstract class NSComparisonResult {
@@ -730,7 +773,7 @@ typedef CFAllocatorPreferredSizeCallBack = ffi.Pointer<
 
 class _ObjCWrapper {
   final ffi.Pointer<ObjCObject> _id;
-  final PropertyTestObjCLibrary _lib;
+  final BlockTestObjCLibrary _lib;
 
   _ObjCWrapper._(this._id, this._lib);
 
@@ -744,7 +787,7 @@ class _ObjCWrapper {
 }
 
 class NSObject extends _ObjCWrapper {
-  NSObject._(ffi.Pointer<ObjCObject> id, PropertyTestObjCLibrary lib)
+  NSObject._(ffi.Pointer<ObjCObject> id, BlockTestObjCLibrary lib)
       : super._(id, lib);
 
   static NSObject castFrom<T extends _ObjCWrapper>(T other) {
@@ -752,15 +795,15 @@ class NSObject extends _ObjCWrapper {
   }
 
   static NSObject castFromPointer(
-      PropertyTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+      BlockTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
     return NSObject._(other, lib);
   }
 
-  static void load(PropertyTestObjCLibrary _lib) {
+  static void load(BlockTestObjCLibrary _lib) {
     _lib._objc_msgSend_0(_lib._class_NSObject1, _lib._sel_load1);
   }
 
-  static void initialize(PropertyTestObjCLibrary _lib) {
+  static void initialize(BlockTestObjCLibrary _lib) {
     _lib._objc_msgSend_0(_lib._class_NSObject1, _lib._sel_initialize1);
   }
 
@@ -769,19 +812,19 @@ class NSObject extends _ObjCWrapper {
     return NSObject._(_ret, _lib);
   }
 
-  static NSObject new1(PropertyTestObjCLibrary _lib) {
+  static NSObject new1(BlockTestObjCLibrary _lib) {
     final _ret = _lib._objc_msgSend_1(_lib._class_NSObject1, _lib._sel_new1);
     return NSObject._(_ret, _lib);
   }
 
   static NSObject allocWithZone(
-      PropertyTestObjCLibrary _lib, ffi.Pointer<_NSZone> zone) {
+      BlockTestObjCLibrary _lib, ffi.Pointer<_NSZone> zone) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSObject1, _lib._sel_allocWithZone_1, zone);
     return NSObject._(_ret, _lib);
   }
 
-  static NSObject alloc(PropertyTestObjCLibrary _lib) {
+  static NSObject alloc(BlockTestObjCLibrary _lib) {
     final _ret = _lib._objc_msgSend_1(_lib._class_NSObject1, _lib._sel_alloc1);
     return NSObject._(_ret, _lib);
   }
@@ -805,27 +848,27 @@ class NSObject extends _ObjCWrapper {
   }
 
   static NSObject copyWithZone(
-      PropertyTestObjCLibrary _lib, ffi.Pointer<_NSZone> zone) {
+      BlockTestObjCLibrary _lib, ffi.Pointer<_NSZone> zone) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSObject1, _lib._sel_copyWithZone_1, zone);
     return NSObject._(_ret, _lib);
   }
 
   static NSObject mutableCopyWithZone(
-      PropertyTestObjCLibrary _lib, ffi.Pointer<_NSZone> zone) {
+      BlockTestObjCLibrary _lib, ffi.Pointer<_NSZone> zone) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSObject1, _lib._sel_mutableCopyWithZone_1, zone);
     return NSObject._(_ret, _lib);
   }
 
   static bool instancesRespondToSelector(
-      PropertyTestObjCLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
+      BlockTestObjCLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
     return _lib._objc_msgSend_3(_lib._class_NSObject1,
         _lib._sel_instancesRespondToSelector_1, aSelector);
   }
 
   static bool conformsToProtocol(
-      PropertyTestObjCLibrary _lib, NSObject? protocol) {
+      BlockTestObjCLibrary _lib, NSObject? protocol) {
     return _lib._objc_msgSend_4(_lib._class_NSObject1,
         _lib._sel_conformsToProtocol_1, protocol?._id ?? ffi.nullptr);
   }
@@ -835,7 +878,7 @@ class NSObject extends _ObjCWrapper {
   }
 
   static IMP instanceMethodForSelector(
-      PropertyTestObjCLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
+      BlockTestObjCLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
     return _lib._objc_msgSend_5(_lib._class_NSObject1,
         _lib._sel_instanceMethodForSelector_1, aSelector);
   }
@@ -862,7 +905,7 @@ class NSObject extends _ObjCWrapper {
   }
 
   static NSMethodSignature instanceMethodSignatureForSelector(
-      PropertyTestObjCLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
+      BlockTestObjCLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
     final _ret = _lib._objc_msgSend_9(_lib._class_NSObject1,
         _lib._sel_instanceMethodSignatureForSelector_1, aSelector);
     return NSMethodSignature._(_ret, _lib);
@@ -876,55 +919,55 @@ class NSObject extends _ObjCWrapper {
     return _lib._objc_msgSend_10(_id, _lib._sel_retainWeakReference1);
   }
 
-  static bool isSubclassOfClass(PropertyTestObjCLibrary _lib, NSObject aClass) {
+  static bool isSubclassOfClass(BlockTestObjCLibrary _lib, NSObject aClass) {
     return _lib._objc_msgSend_4(
         _lib._class_NSObject1, _lib._sel_isSubclassOfClass_1, aClass._id);
   }
 
   static bool resolveClassMethod(
-      PropertyTestObjCLibrary _lib, ffi.Pointer<ObjCSel> sel) {
+      BlockTestObjCLibrary _lib, ffi.Pointer<ObjCSel> sel) {
     return _lib._objc_msgSend_3(
         _lib._class_NSObject1, _lib._sel_resolveClassMethod_1, sel);
   }
 
   static bool resolveInstanceMethod(
-      PropertyTestObjCLibrary _lib, ffi.Pointer<ObjCSel> sel) {
+      BlockTestObjCLibrary _lib, ffi.Pointer<ObjCSel> sel) {
     return _lib._objc_msgSend_3(
         _lib._class_NSObject1, _lib._sel_resolveInstanceMethod_1, sel);
   }
 
-  static int hash(PropertyTestObjCLibrary _lib) {
+  static int hash(BlockTestObjCLibrary _lib) {
     return _lib._objc_msgSend_11(_lib._class_NSObject1, _lib._sel_hash1);
   }
 
-  static NSObject superclass(PropertyTestObjCLibrary _lib) {
+  static NSObject superclass(BlockTestObjCLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_1(_lib._class_NSObject1, _lib._sel_superclass1);
     return NSObject._(_ret, _lib);
   }
 
-  static NSObject class1(PropertyTestObjCLibrary _lib) {
+  static NSObject class1(BlockTestObjCLibrary _lib) {
     final _ret = _lib._objc_msgSend_1(_lib._class_NSObject1, _lib._sel_class1);
     return NSObject._(_ret, _lib);
   }
 
-  static NSString description(PropertyTestObjCLibrary _lib) {
+  static NSString description(BlockTestObjCLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_14(_lib._class_NSObject1, _lib._sel_description1);
     return NSString._(_ret, _lib);
   }
 
-  static NSString debugDescription(PropertyTestObjCLibrary _lib) {
+  static NSString debugDescription(BlockTestObjCLibrary _lib) {
     final _ret = _lib._objc_msgSend_14(
         _lib._class_NSObject1, _lib._sel_debugDescription1);
     return NSString._(_ret, _lib);
   }
 
-  static int version(PropertyTestObjCLibrary _lib) {
+  static int version(BlockTestObjCLibrary _lib) {
     return _lib._objc_msgSend_15(_lib._class_NSObject1, _lib._sel_version1);
   }
 
-  static void setVersion(PropertyTestObjCLibrary _lib, int aVersion) {
+  static void setVersion(BlockTestObjCLibrary _lib, int aVersion) {
     _lib._objc_msgSend_16(
         _lib._class_NSObject1, _lib._sel_setVersion_1, aVersion);
   }
@@ -946,7 +989,7 @@ class NSObject extends _ObjCWrapper {
     return NSObject._(_ret, _lib);
   }
 
-  static void poseAsClass(PropertyTestObjCLibrary _lib, NSObject aClass) {
+  static void poseAsClass(BlockTestObjCLibrary _lib, NSObject aClass) {
     _lib._objc_msgSend_8(
         _lib._class_NSObject1, _lib._sel_poseAsClass_1, aClass._id);
   }
@@ -969,7 +1012,7 @@ class _NSZone extends ffi.Opaque {}
 typedef IMP = ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>;
 
 class NSMethodSignature extends _ObjCWrapper {
-  NSMethodSignature._(ffi.Pointer<ObjCObject> id, PropertyTestObjCLibrary lib)
+  NSMethodSignature._(ffi.Pointer<ObjCObject> id, BlockTestObjCLibrary lib)
       : super._(id, lib);
 
   static NSMethodSignature castFrom<T extends _ObjCWrapper>(T other) {
@@ -977,7 +1020,7 @@ class NSMethodSignature extends _ObjCWrapper {
   }
 
   static NSMethodSignature castFromPointer(
-      PropertyTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+      BlockTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
     return NSMethodSignature._(other, lib);
   }
 }
@@ -985,7 +1028,7 @@ class NSMethodSignature extends _ObjCWrapper {
 typedef NSUInteger = pkg_ffi.UnsignedLong;
 
 class NSString extends _ObjCWrapper {
-  NSString._(ffi.Pointer<ObjCObject> id, PropertyTestObjCLibrary lib)
+  NSString._(ffi.Pointer<ObjCObject> id, BlockTestObjCLibrary lib)
       : super._(id, lib);
 
   static NSString castFrom<T extends _ObjCWrapper>(T other) {
@@ -993,11 +1036,11 @@ class NSString extends _ObjCWrapper {
   }
 
   static NSString castFromPointer(
-      PropertyTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+      BlockTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
     return NSString._(other, lib);
   }
 
-  factory NSString(PropertyTestObjCLibrary _lib, String str) {
+  factory NSString(BlockTestObjCLibrary _lib, String str) {
     final cstr = str.toNativeUtf8();
     final nsstr = stringWithCString_encoding(_lib, cstr.cast(), 4 /* UTF8 */);
     pkg_ffi.calloc.free(cstr);
@@ -1007,8 +1050,8 @@ class NSString extends _ObjCWrapper {
   @override
   String toString() => (UTF8String).cast<pkg_ffi.Utf8>().toDartString();
 
-  static NSString stringWithCString_encoding(PropertyTestObjCLibrary _lib,
-      ffi.Pointer<pkg_ffi.Char> cString, int enc) {
+  static NSString stringWithCString_encoding(
+      BlockTestObjCLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
     final _ret = _lib._objc_msgSend_12(_lib._class_NSString1,
         _lib._sel_stringWithCString_encoding_1, cString, enc);
     return NSString._(_ret, _lib);
@@ -1020,61 +1063,105 @@ class NSString extends _ObjCWrapper {
 }
 
 extension StringToNSString on String {
-  NSString toNSString(PropertyTestObjCLibrary lib) => NSString(lib, this);
+  NSString toNSString(BlockTestObjCLibrary lib) => NSString(lib, this);
 }
 
-class PropertyInterface extends NSObject {
-  PropertyInterface._(ffi.Pointer<ObjCObject> id, PropertyTestObjCLibrary lib)
+class BlockTester extends NSObject {
+  BlockTester._(ffi.Pointer<ObjCObject> id, BlockTestObjCLibrary lib)
       : super._(id, lib);
 
-  static PropertyInterface castFrom<T extends _ObjCWrapper>(T other) {
-    return PropertyInterface._(other._id, other._lib);
+  static BlockTester castFrom<T extends _ObjCWrapper>(T other) {
+    return BlockTester._(other._id, other._lib);
   }
 
-  static PropertyInterface castFromPointer(
-      PropertyTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
-    return PropertyInterface._(other, lib);
+  static BlockTester castFromPointer(
+      BlockTestObjCLibrary lib, ffi.Pointer<ObjCObject> other) {
+    return BlockTester._(other, lib);
   }
 
-  int get readOnlyProperty {
-    return _lib._objc_msgSend_18(_id, _lib._sel_readOnlyProperty1);
+  static BlockTester makeFromBlock(BlockTestObjCLibrary _lib, IntBlock block) {
+    final _ret = _lib._objc_msgSend_18(
+        _lib._class_BlockTester1, _lib._sel_makeFromBlock_1, block);
+    return BlockTester._(_ret, _lib);
   }
 
-  int get readWriteProperty {
-    return _lib._objc_msgSend_18(_id, _lib._sel_readWriteProperty1);
+  static BlockTester makeFromMultiplier(BlockTestObjCLibrary _lib, int mult) {
+    final _ret = _lib._objc_msgSend_19(
+        _lib._class_BlockTester1, _lib._sel_makeFromMultiplier_1, mult);
+    return BlockTester._(_ret, _lib);
   }
 
-  set readWriteProperty(int value) {
-    _lib._objc_msgSend_19(_id, _lib._sel_setReadWriteProperty_1, value);
+  int call(int x) {
+    return _lib._objc_msgSend_20(_id, _lib._sel_call_1, x);
   }
 
-  static int getClassReadOnlyProperty(PropertyTestObjCLibrary _lib) {
-    return _lib._objc_msgSend_18(
-        _lib._class_PropertyInterface1, _lib._sel_classReadOnlyProperty1);
+  IntBlock getBlock() {
+    return _lib._objc_msgSend_21(_id, _lib._sel_getBlock1);
   }
 
-  static int getClassReadWriteProperty(PropertyTestObjCLibrary _lib) {
-    return _lib._objc_msgSend_18(
-        _lib._class_PropertyInterface1, _lib._sel_classReadWriteProperty1);
+  static BlockTester new1(BlockTestObjCLibrary _lib) {
+    final _ret = _lib._objc_msgSend_1(_lib._class_BlockTester1, _lib._sel_new1);
+    return BlockTester._(_ret, _lib);
   }
 
-  static void setClassReadWriteProperty(
-      PropertyTestObjCLibrary _lib, int value) {
-    _lib._objc_msgSend_19(_lib._class_PropertyInterface1,
-        _lib._sel_setClassReadWriteProperty_1, value);
-  }
-
-  static PropertyInterface new1(PropertyTestObjCLibrary _lib) {
+  static BlockTester alloc(BlockTestObjCLibrary _lib) {
     final _ret =
-        _lib._objc_msgSend_1(_lib._class_PropertyInterface1, _lib._sel_new1);
-    return PropertyInterface._(_ret, _lib);
+        _lib._objc_msgSend_1(_lib._class_BlockTester1, _lib._sel_alloc1);
+    return BlockTester._(_ret, _lib);
   }
+}
 
-  static PropertyInterface alloc(PropertyTestObjCLibrary _lib) {
-    final _ret =
-        _lib._objc_msgSend_1(_lib._class_PropertyInterface1, _lib._sel_alloc1);
-    return PropertyInterface._(_ret, _lib);
-  }
+typedef IntBlock = ffi.Pointer<_ObjCBlock>;
+int _ObjCBlock_fnPtrTrampoline(ffi.Pointer<_ObjCBlock> block, int arg0) {
+  return block.ref.target
+      .cast<ffi.NativeFunction<ffi.Int32 Function(ffi.Int32 arg0)>>()
+      .asFunction<int Function(int arg0)>()(arg0);
+}
+
+class ObjCBlock {
+  final ffi.Pointer<_ObjCBlock> _impl;
+  final BlockTestObjCLibrary _lib;
+  ObjCBlock._(this._impl, this._lib);
+
+  ObjCBlock.fromFunctionPointer(this._lib,
+      ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(ffi.Int32 arg0)>> ptr)
+      : _impl = _lib._newBlock1(
+            ffi.Pointer.fromFunction<
+                    ffi.Int32 Function(ffi.Pointer<_ObjCBlock> block,
+                        ffi.Int32 arg0)>(_ObjCBlock_fnPtrTrampoline, 0)
+                .cast(),
+            ptr.cast());
+  ffi.Pointer<_ObjCBlock> get pointer => _impl;
+}
+
+class _ObjCBlockDesc extends ffi.Struct {
+  @pkg_ffi.UnsignedLong()
+  external int reserved;
+
+  @pkg_ffi.UnsignedLong()
+  external int size;
+
+  external ffi.Pointer<ffi.Void> copy_helper;
+
+  external ffi.Pointer<ffi.Void> dispose_helper;
+
+  external ffi.Pointer<pkg_ffi.Char> signature;
+}
+
+class _ObjCBlock extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> isa;
+
+  @pkg_ffi.Int()
+  external int flags;
+
+  @pkg_ffi.Int()
+  external int reserved;
+
+  external ffi.Pointer<ffi.Void> invoke;
+
+  external ffi.Pointer<_ObjCBlockDesc> descriptor;
+
+  external ffi.Pointer<ffi.Void> target;
 }
 
 const int NSScannedOption = 1;

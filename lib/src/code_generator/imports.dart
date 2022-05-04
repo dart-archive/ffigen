@@ -28,8 +28,10 @@ class ImportedType extends Type {
   final LibraryImport libraryImport;
   final String cType;
   final String dartType;
+  final String? defaultValue;
 
-  ImportedType(this.libraryImport, this.cType, this.dartType);
+  ImportedType(this.libraryImport, this.cType, this.dartType,
+      [this.defaultValue]);
 
   @override
   String getCType(Writer w) => '${libraryImport.prefix}.$cType';
@@ -39,6 +41,9 @@ class ImportedType extends Type {
 
   @override
   String toString() => '${libraryImport.name}.$cType';
+
+  @override
+  String? getDefaultValue(Writer w, String nativeLib) => defaultValue;
 }
 
 final ffiImport = LibraryImport('ffi', 'dart:ffi');
@@ -46,24 +51,25 @@ final ffiPkgImport = LibraryImport('pkg_ffi', 'package:ffi/ffi.dart');
 
 final voidType = ImportedType(ffiImport, 'Void', 'void');
 
-final unsignedCharType = ImportedType(ffiPkgImport, 'UnsignedChar', 'int');
-final signedCharType = ImportedType(ffiPkgImport, 'SignedChar', 'int');
-final charType = ImportedType(ffiPkgImport, 'Char', 'int');
-final unsignedShortType = ImportedType(ffiPkgImport, 'UnsignedShort', 'int');
-final shortType = ImportedType(ffiPkgImport, 'Short', 'int');
-final unsignedIntType = ImportedType(ffiPkgImport, 'UnsignedInt', 'int');
-final intType = ImportedType(ffiPkgImport, 'Int', 'int');
-final unsignedLongType = ImportedType(ffiPkgImport, 'UnsignedLong', 'int');
-final longType = ImportedType(ffiPkgImport, 'Long', 'int');
+final unsignedCharType = ImportedType(ffiPkgImport, 'UnsignedChar', 'int', '0');
+final signedCharType = ImportedType(ffiPkgImport, 'SignedChar', 'int', '0');
+final charType = ImportedType(ffiPkgImport, 'Char', 'int', '0');
+final unsignedShortType =
+    ImportedType(ffiPkgImport, 'UnsignedShort', 'int', '0');
+final shortType = ImportedType(ffiPkgImport, 'Short', 'int', '0');
+final unsignedIntType = ImportedType(ffiPkgImport, 'UnsignedInt', 'int', '0');
+final intType = ImportedType(ffiPkgImport, 'Int', 'int', '0');
+final unsignedLongType = ImportedType(ffiPkgImport, 'UnsignedLong', 'int', '0');
+final longType = ImportedType(ffiPkgImport, 'Long', 'int', '0');
 final unsignedLongLongType =
-    ImportedType(ffiPkgImport, 'UnsignedLongLong', 'int');
-final longLongType = ImportedType(ffiPkgImport, 'LongLong', 'int');
+    ImportedType(ffiPkgImport, 'UnsignedLongLong', 'int', '0');
+final longLongType = ImportedType(ffiPkgImport, 'LongLong', 'int', '0');
 
-final floatType = ImportedType(ffiImport, 'Float', 'double');
-final doubleType = ImportedType(ffiImport, 'Double', 'double');
+final floatType = ImportedType(ffiImport, 'Float', 'double', '0');
+final doubleType = ImportedType(ffiImport, 'Double', 'double', '0');
 
-final sizeType = ImportedType(ffiPkgImport, 'Size', 'int');
-final wCharType = ImportedType(ffiPkgImport, 'WChar', 'int');
+final sizeType = ImportedType(ffiPkgImport, 'Size', 'int', '0');
+final wCharType = ImportedType(ffiPkgImport, 'WChar', 'int', '0');
 
 final objCObjectType = Struct(name: 'ObjCObject');
 final objCSelType = Struct(name: 'ObjCSel');

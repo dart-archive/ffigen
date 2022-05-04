@@ -123,6 +123,9 @@ void _parseProperty(clang_types.CXCursor cursor) {
   final isReadOnly = propertyAttributes &
           clang_types.CXObjCPropertyAttrKind.CXObjCPropertyAttr_readonly >
       0;
+  // TODO(#334): Use the nullable attribute to decide this.
+  final isNullable =
+      cursor.type().kind == clang_types.CXTypeKind.CXType_ObjCObjectPointer;
 
   final property = ObjCProperty(fieldName);
 
@@ -137,8 +140,9 @@ void _parseProperty(clang_types.CXCursor cursor) {
     dartDoc: dartDoc,
     kind: ObjCMethodKind.propertyGetter,
     isClass: isClass,
+    returnType: fieldType,
+    isNullableReturn: isNullable,
   );
-  getter.returnType = fieldType;
   itf.addMethod(getter);
 
   if (!isReadOnly) {
@@ -152,7 +156,8 @@ void _parseProperty(clang_types.CXCursor cursor) {
         kind: ObjCMethodKind.propertySetter,
         isClass: isClass);
     setter.returnType = NativeType(SupportedNativeType.Void);
-    setter.params.add(ObjCMethodParam(fieldType, 'value'));
+    setter.params
+        .add(ObjCMethodParam(fieldType, 'value', isNullable: isNullable));
     itf.addMethod(setter);
   }
 }
@@ -236,4 +241,59 @@ void _parseMethodParam(clang_types.CXCursor cursor) {
       '           >> Parameter: $type $name ${cursor.completeStringRepr()}');
   _methodStack.top.method.params
       .add(ObjCMethodParam(type, name, isNullable: isNullable));
+}
+
+BindingType? parseObjCCategoryDeclaration(clang_types.CXCursor cursor) {
+  // Categories add methods to an existing interface, so first we run a visitor
+  // to find the interface, then we fully parse that interface, then we run the
+  // _parseInterfaceVisitor over the category to add its methods etc. Reusing
+  // the interface visitor relies on the fact that the structure of the category
+  // AST looks exactly the same as the interface AST, and that the category's
+  // interface is a different kind of node to the interface's super type (so is
+  // ignored by _parseInterfaceVisitor).
+  final name = cursor.spelling();
+  _logger.fine('++++ Adding ObjC category: '
+      'Name: $name, ${cursor.completeStringRepr()}');
+
+  _findCategoryInterfaceVisitorResult = null;
+  clang.clang_visitChildren(
+      cursor,
+      Pointer.fromFunction(
+          _findCategoryInterfaceVisitor, exceptional_visitor_return),
+      nullptr);
+  final itfCursor = _findCategoryInterfaceVisitorResult;
+  if (itfCursor == null) {
+    _logger.severe('Category $name has no interface.');
+    return null;
+  }
+
+  // TODO(#347): Currently any interface with a category bypasses the filters.
+  final itf = itfCursor.type().toCodeGenType();
+  if (itf is! ObjCInterface) {
+    _logger.severe(
+        'Interface of category $name is $itf, which is not a valid interface.');
+    return null;
+  }
+
+  _interfaceStack.push(_ParsedObjCInterface(itf));
+  clang.clang_visitChildren(
+      cursor,
+      Pointer.fromFunction(_parseInterfaceVisitor, exceptional_visitor_return),
+      nullptr);
+  _interfaceStack.pop();
+
+  _logger.fine('++++ Finished ObjC category: '
+      'Name: $name, ${cursor.completeStringRepr()}');
+
+  return itf;
+}
+
+clang_types.CXCursor? _findCategoryInterfaceVisitorResult;
+int _findCategoryInterfaceVisitor(clang_types.CXCursor cursor,
+    clang_types.CXCursor parent, Pointer<Void> clientData) {
+  if (cursor.kind == clang_types.CXCursorKind.CXCursor_ObjCClassRef) {
+    _findCategoryInterfaceVisitorResult = cursor;
+    return clang_types.CXChildVisitResult.CXChildVisit_Break;
+  }
+  return clang_types.CXChildVisitResult.CXChildVisit_Continue;
 }

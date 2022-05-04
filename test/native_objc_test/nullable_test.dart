@@ -17,6 +17,7 @@ import 'nullable_bindings.dart';
 
 void main() {
   late NullableTestObjCLibrary lib;
+  late NullableInterface nullableInterface;
   late NSObject obj;
   group('method calls', () {
     setUpAll(() {
@@ -24,6 +25,7 @@ void main() {
       final dylib = File('test/native_objc_test/nullable_test.dylib');
       verifySetupFile(dylib);
       lib = NullableTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
+      nullableInterface = NullableInterface.new1(lib);
       obj = NSObject.new1(lib);
     });
 
@@ -49,6 +51,26 @@ void main() {
         rethrow;
       }
     });
+
+    group('Nullable property', () {
+      test('Not null', () {
+        nullableInterface.nullableObjectProperty = obj;
+        expect(nullableInterface.nullableObjectProperty, obj);
+      });
+      test('Null', () {
+        nullableInterface.nullableObjectProperty = null;
+        expect(nullableInterface.nullableObjectProperty, null);
+      });
+    });
+
+    group('Nullable return', () {
+      test('Not null', () {
+        expect(NullableInterface.returnNil(lib, false), isA<NSObject>());
+      });
+      test('Null', () {
+        expect(NullableInterface.returnNil(lib, true), null);
+      });
+    }, skip: "TODO(#334): enable this test");
 
     group('Nullable arguments', () {
       test('Not null', () {

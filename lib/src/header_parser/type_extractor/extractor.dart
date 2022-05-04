@@ -13,6 +13,7 @@ import '../clang_bindings/clang_bindings.dart' as clang_types;
 import '../data.dart';
 import '../sub_parsers/compounddecl_parser.dart';
 import '../sub_parsers/enumdecl_parser.dart';
+import '../sub_parsers/objc_block_parser.dart';
 import '../sub_parsers/objcinterfacedecl_parser.dart';
 import '../type_extractor/cxtypekindmap.dart';
 import '../utils.dart';
@@ -44,13 +45,14 @@ Type getCodeGenType(
   if (config.language == Language.objc) {
     switch (cxtype.kind) {
       case clang_types.CXTypeKind.CXType_ObjCObjectPointer:
-      case clang_types.CXTypeKind.CXType_BlockPointer:
       case clang_types.CXTypeKind.CXType_ObjCId:
       case clang_types.CXTypeKind.CXType_ObjCTypeParam:
       case clang_types.CXTypeKind.CXType_ObjCClass:
         return PointerType(objCObjectType);
       case clang_types.CXTypeKind.CXType_ObjCSel:
         return PointerType(objCSelType);
+      case clang_types.CXTypeKind.CXType_BlockPointer:
+        return _getOrCreateBlockType(cxtype);
     }
   }
 
@@ -127,6 +129,17 @@ Type getCodeGenType(
         return UnimplementedType('${cxtype.kindSpelling()} not implemented');
       }
   }
+}
+
+Type _getOrCreateBlockType(clang_types.CXType cxtype) {
+  final block = parseObjCBlock(cxtype);
+  final key = block.usr;
+  final oldBlock = bindingsIndex.getSeenObjCBlock(key);
+  if (oldBlock != null) {
+    return oldBlock;
+  }
+  bindingsIndex.addObjCBlockToSeen(key, block);
+  return block;
 }
 
 class _CreateTypeFromCursorResult {
