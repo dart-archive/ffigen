@@ -8,5 +8,7 @@ functions:
 headers:
   entry-points:
     - 'test/native_objc_test/category_test.m'
+    # Include it twice, as a regression test for #353
+    - 'test/native_objc_test/category_test.m'
 preamble: |
   // ignore_for_file: camel_case_types, non_constant_identifier_names, unused_element, unused_field

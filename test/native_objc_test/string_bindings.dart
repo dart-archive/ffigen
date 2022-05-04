@@ -9088,11 +9088,22 @@ class NSMutableString extends NSString {
     return NSMutableString._(_ret, _lib);
   }
 
+  static ffi.Pointer<NSStringEncoding> getAvailableStringEncodings(
+      StringTestObjCLibrary _lib) {
+    return _lib._objc_msgSend_45(
+        _lib._class_NSMutableString1, _lib._sel_availableStringEncodings1);
+  }
+
   static NSString localizedNameOfStringEncoding(
       StringTestObjCLibrary _lib, int encoding) {
     final _ret = _lib._objc_msgSend_14(_lib._class_NSMutableString1,
         _lib._sel_localizedNameOfStringEncoding_1, encoding);
     return NSString._(_ret, _lib);
+  }
+
+  static int getDefaultCStringEncoding(StringTestObjCLibrary _lib) {
+    return _lib._objc_msgSend_11(
+        _lib._class_NSMutableString1, _lib._sel_defaultCStringEncoding1);
   }
 
   static NSMutableString string(StringTestObjCLibrary _lib) {
@@ -9199,16 +9210,6 @@ class NSMutableString extends NSString {
     return NSMutableString._(_ret, _lib);
   }
 
-  static void availableStringEncodings(StringTestObjCLibrary _lib) {
-    _lib._objc_msgSend_0(
-        _lib._class_NSMutableString1, _lib._sel_availableStringEncodings1);
-  }
-
-  static void defaultCStringEncoding(StringTestObjCLibrary _lib) {
-    _lib._objc_msgSend_0(
-        _lib._class_NSMutableString1, _lib._sel_defaultCStringEncoding1);
-  }
-
   static int
       stringEncodingForData_encodingOptions_convertedString_usedLossyConversion(
           StringTestObjCLibrary _lib,
@@ -9281,11 +9282,22 @@ class NSSimpleCString extends NSString {
     return NSSimpleCString._(other, lib);
   }
 
+  static ffi.Pointer<NSStringEncoding> getAvailableStringEncodings(
+      StringTestObjCLibrary _lib) {
+    return _lib._objc_msgSend_45(
+        _lib._class_NSSimpleCString1, _lib._sel_availableStringEncodings1);
+  }
+
   static NSString localizedNameOfStringEncoding(
       StringTestObjCLibrary _lib, int encoding) {
     final _ret = _lib._objc_msgSend_14(_lib._class_NSSimpleCString1,
         _lib._sel_localizedNameOfStringEncoding_1, encoding);
     return NSString._(_ret, _lib);
+  }
+
+  static int getDefaultCStringEncoding(StringTestObjCLibrary _lib) {
+    return _lib._objc_msgSend_11(
+        _lib._class_NSSimpleCString1, _lib._sel_defaultCStringEncoding1);
   }
 
   static NSSimpleCString string(StringTestObjCLibrary _lib) {
@@ -9392,16 +9404,6 @@ class NSSimpleCString extends NSString {
     return NSSimpleCString._(_ret, _lib);
   }
 
-  static void availableStringEncodings(StringTestObjCLibrary _lib) {
-    _lib._objc_msgSend_0(
-        _lib._class_NSSimpleCString1, _lib._sel_availableStringEncodings1);
-  }
-
-  static void defaultCStringEncoding(StringTestObjCLibrary _lib) {
-    _lib._objc_msgSend_0(
-        _lib._class_NSSimpleCString1, _lib._sel_defaultCStringEncoding1);
-  }
-
   static int
       stringEncodingForData_encodingOptions_convertedString_usedLossyConversion(
           StringTestObjCLibrary _lib,
@@ -9472,11 +9474,22 @@ class NSConstantString extends NSSimpleCString {
     return NSConstantString._(other, lib);
   }
 
+  static ffi.Pointer<NSStringEncoding> getAvailableStringEncodings(
+      StringTestObjCLibrary _lib) {
+    return _lib._objc_msgSend_45(
+        _lib._class_NSConstantString1, _lib._sel_availableStringEncodings1);
+  }
+
   static NSString localizedNameOfStringEncoding(
       StringTestObjCLibrary _lib, int encoding) {
     final _ret = _lib._objc_msgSend_14(_lib._class_NSConstantString1,
         _lib._sel_localizedNameOfStringEncoding_1, encoding);
     return NSString._(_ret, _lib);
+  }
+
+  static int getDefaultCStringEncoding(StringTestObjCLibrary _lib) {
+    return _lib._objc_msgSend_11(
+        _lib._class_NSConstantString1, _lib._sel_defaultCStringEncoding1);
   }
 
   static NSConstantString string(StringTestObjCLibrary _lib) {
@@ -9581,16 +9594,6 @@ class NSConstantString extends NSSimpleCString {
         enc,
         error);
     return NSConstantString._(_ret, _lib);
-  }
-
-  static void availableStringEncodings(StringTestObjCLibrary _lib) {
-    _lib._objc_msgSend_0(
-        _lib._class_NSConstantString1, _lib._sel_availableStringEncodings1);
-  }
-
-  static void defaultCStringEncoding(StringTestObjCLibrary _lib) {
-    _lib._objc_msgSend_0(
-        _lib._class_NSConstantString1, _lib._sel_defaultCStringEncoding1);
   }
 
   static int

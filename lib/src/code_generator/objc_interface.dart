@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator.dart';
+import 'package:logging/logging.dart';
 
 import 'binding_string.dart';
 import 'utils.dart';
@@ -33,17 +34,12 @@ const _excludedNSObjectClassMethods = {
   'version',
 };
 
+final _logger = Logger('ffigen.code_generator.objc_interface');
+
 class ObjCInterface extends BindingType {
   ObjCInterface? superType;
-  final methods = <ObjCMethod>[];
+  final methods = <String, ObjCMethod>{};
   bool filled = false;
-
-  // Objective C supports overriding class methods, but Dart doesn't support
-  // overriding static methods. So in our generated Dart code, child classes
-  // must explicitly implement all the class methods of their super type. To
-  // help with this, we store the class methods in this map, as well as in the
-  // methods list.
-  final classMethods = <String, ObjCMethod>{};
 
   final ObjCBuiltInFunctions builtInFunctions;
   late final ObjCInternalGlobal _classObject;
@@ -111,7 +107,7 @@ class ObjCInterface extends BindingType {
     }
 
     // Methods.
-    for (final m in methods) {
+    for (final m in methods.values) {
       final methodName = m._getDartMethodName(uniqueNamer);
       final isStatic = m.isClass;
       final returnType = m.returnType!;
@@ -145,7 +141,7 @@ class ObjCInterface extends BindingType {
         }
         s.write(paramsToString(m.params, isStatic: true));
       } else {
-        if (superType?.hasMethod(m) ?? false) {
+        if (superType?.methods[m.originalName]?.sameAs(m) ?? false) {
           s.write('@override\n  ');
         }
         switch (m.kind) {
@@ -221,59 +217,55 @@ class ObjCInterface extends BindingType {
       _addNSStringMethods();
     }
 
-    _filterPropertyMethods();
-
     if (superType != null) {
       superType!.addDependencies(dependencies);
       _copyClassMethodsFromSuperType();
     }
 
-    for (final m in methods) {
+    for (final m in methods.values) {
       m.addDependencies(dependencies, builtInFunctions);
     }
-  }
-
-  void _filterPropertyMethods() {
-    // Properties setters and getters are duplicated in the AST. One copy is
-    // marked it with ObjCMethodKind.propertyGetter/Setter. The other copy is
-    // missing important information, and is a plain old instanceMethod. So we
-    // need to discard the second copy.
-    final properties = Set<String>.from(
-        methods.where((m) => m.isProperty).map((m) => m.originalName));
-    methods.removeWhere(
-        (m) => !m.isProperty && properties.contains(m.originalName));
   }
 
   void _copyClassMethodsFromSuperType() {
     // Copy class methods from the super type, because Dart classes don't
     // inherit static methods.
-    for (final m in superType!.classMethods.values) {
-      if (!_excludedNSObjectClassMethods.contains(m.originalName)) {
+    for (final m in superType!.methods.values) {
+      if (m.isClass &&
+          !_excludedNSObjectClassMethods.contains(m.originalName)) {
         addMethod(m);
       }
     }
   }
 
   void addMethod(ObjCMethod method) {
-    methods.add(method);
-    if (method.kind == ObjCMethodKind.method && method.isClass) {
-      classMethods[method.originalName] ??= method;
+    final oldMethod = methods[method.originalName];
+    if (oldMethod != null) {
+      // Typically we ignore duplicate methods. However, property setters and
+      // getters are duplicated in the AST. One copy is marked with
+      // ObjCMethodKind.propertyGetter/Setter. The other copy is missing
+      // important information, and is a plain old instanceMethod. So if the
+      // existing method is an instanceMethod, and the new one is a property,
+      // override it.
+      if (method.isProperty && !oldMethod.isProperty) {
+        // Fallthrough.
+      } else if (!method.isProperty && oldMethod.isProperty) {
+        // Don't override, but also skip the same method check below.
+        return;
+      } else {
+        // Check duplicate is the same method.
+        if (!method.sameAs(oldMethod)) {
+          _logger.severe('Duplicate methods with different signatures: '
+              '$originalName.${method.originalName}');
+        }
+        return;
+      }
     }
-  }
-
-  bool hasMethod(ObjCMethod method) {
-    return methods.any(
-        (m) => m.originalName == method.originalName && m.kind == method.kind);
-  }
-
-  void addMethodIfMissing(ObjCMethod method) {
-    if (!hasMethod(method)) {
-      addMethod(method);
-    }
+    methods[method.originalName] = method;
   }
 
   void _addNSStringMethods() {
-    addMethodIfMissing(ObjCMethod(
+    addMethod(ObjCMethod(
       originalName: 'stringWithCString:encoding:',
       kind: ObjCMethodKind.method,
       isClass: true,
@@ -283,7 +275,7 @@ class ObjCInterface extends BindingType {
         ObjCMethodParam(unsignedIntType, 'enc'),
       ],
     ));
-    addMethodIfMissing(ObjCMethod(
+    addMethod(ObjCMethod(
       originalName: 'UTF8String',
       kind: ObjCMethodKind.propertyGetter,
       isClass: false,
@@ -439,6 +431,15 @@ class ObjCMethod {
     final name =
         originalName.replaceAll(RegExp(r":$"), "").replaceAll(":", "_");
     return uniqueNamer.makeUnique(name);
+  }
+
+  bool sameAs(ObjCMethod other) {
+    if (originalName != other.originalName) return false;
+    if (isNullableReturn != other.isNullableReturn) return false;
+    if (kind != other.kind) return false;
+    if (isClass != other.isClass) return false;
+    // msgSend is deduped by signature, so this check covers the signature.
+    return msgSend == other.msgSend;
   }
 }
 
