@@ -176,7 +176,7 @@ class _ObjCWrapper {
     // Generate a constructor that wraps stringWithCString.
     s.write('  factory NSString(${w.className} _lib, String str) {\n');
     s.write('    final cstr = str.toNativeUtf8();\n');
-    s.write('    final nsstr = stringWithCString_encoding('
+    s.write('    final nsstr = stringWithCString_encoding_('
         '_lib, cstr.cast(), 4 /* UTF8 */);\n');
     s.write('    ${w.ffiPkgLibraryPrefix}.calloc.free(cstr);\n');
     s.write('    return nsstr;\n');

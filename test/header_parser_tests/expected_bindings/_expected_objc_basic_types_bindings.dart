@@ -549,7 +549,8 @@ class NSObject extends _ObjCWrapper {
     return NSObject._(_ret, _lib);
   }
 
-  static NSObject allocWithZone(NativeLibrary _lib, ffi.Pointer<_NSZone> zone) {
+  static NSObject allocWithZone_(
+      NativeLibrary _lib, ffi.Pointer<_NSZone> zone) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSObject1, _lib._sel_allocWithZone_1, zone);
     return NSObject._(_ret, _lib);
@@ -578,62 +579,63 @@ class NSObject extends _ObjCWrapper {
     return NSObject._(_ret, _lib);
   }
 
-  static NSObject copyWithZone(NativeLibrary _lib, ffi.Pointer<_NSZone> zone) {
+  static NSObject copyWithZone_(NativeLibrary _lib, ffi.Pointer<_NSZone> zone) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSObject1, _lib._sel_copyWithZone_1, zone);
     return NSObject._(_ret, _lib);
   }
 
-  static NSObject mutableCopyWithZone(
+  static NSObject mutableCopyWithZone_(
       NativeLibrary _lib, ffi.Pointer<_NSZone> zone) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSObject1, _lib._sel_mutableCopyWithZone_1, zone);
     return NSObject._(_ret, _lib);
   }
 
-  static bool instancesRespondToSelector(
+  static bool instancesRespondToSelector_(
       NativeLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
     return _lib._objc_msgSend_3(_lib._class_NSObject1,
         _lib._sel_instancesRespondToSelector_1, aSelector);
   }
 
-  static bool conformsToProtocol(NativeLibrary _lib, NSObject? protocol) {
+  static bool conformsToProtocol_(NativeLibrary _lib, NSObject? protocol) {
     return _lib._objc_msgSend_4(_lib._class_NSObject1,
         _lib._sel_conformsToProtocol_1, protocol?._id ?? ffi.nullptr);
   }
 
-  IMP methodForSelector(ffi.Pointer<ObjCSel> aSelector) {
+  IMP methodForSelector_(ffi.Pointer<ObjCSel> aSelector) {
     return _lib._objc_msgSend_5(_id, _lib._sel_methodForSelector_1, aSelector);
   }
 
-  static IMP instanceMethodForSelector(
+  static IMP instanceMethodForSelector_(
       NativeLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
     return _lib._objc_msgSend_5(_lib._class_NSObject1,
         _lib._sel_instanceMethodForSelector_1, aSelector);
   }
 
-  void doesNotRecognizeSelector(ffi.Pointer<ObjCSel> aSelector) {
+  void doesNotRecognizeSelector_(ffi.Pointer<ObjCSel> aSelector) {
     _lib._objc_msgSend_6(_id, _lib._sel_doesNotRecognizeSelector_1, aSelector);
   }
 
-  NSObject forwardingTargetForSelector(ffi.Pointer<ObjCSel> aSelector) {
+  NSObject forwardingTargetForSelector_(ffi.Pointer<ObjCSel> aSelector) {
     final _ret = _lib._objc_msgSend_7(
         _id, _lib._sel_forwardingTargetForSelector_1, aSelector);
     return NSObject._(_ret, _lib);
   }
 
-  void forwardInvocation(NSObject? anInvocation) {
+  void forwardInvocation_(NSObject? anInvocation) {
     _lib._objc_msgSend_8(
         _id, _lib._sel_forwardInvocation_1, anInvocation?._id ?? ffi.nullptr);
   }
 
-  NSMethodSignature methodSignatureForSelector(ffi.Pointer<ObjCSel> aSelector) {
+  NSMethodSignature methodSignatureForSelector_(
+      ffi.Pointer<ObjCSel> aSelector) {
     final _ret = _lib._objc_msgSend_9(
         _id, _lib._sel_methodSignatureForSelector_1, aSelector);
     return NSMethodSignature._(_ret, _lib);
   }
 
-  static NSMethodSignature instanceMethodSignatureForSelector(
+  static NSMethodSignature instanceMethodSignatureForSelector_(
       NativeLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
     final _ret = _lib._objc_msgSend_9(_lib._class_NSObject1,
         _lib._sel_instanceMethodSignatureForSelector_1, aSelector);
@@ -648,17 +650,18 @@ class NSObject extends _ObjCWrapper {
     return _lib._objc_msgSend_10(_id, _lib._sel_retainWeakReference1);
   }
 
-  static bool isSubclassOfClass(NativeLibrary _lib, NSObject aClass) {
+  static bool isSubclassOfClass_(NativeLibrary _lib, NSObject aClass) {
     return _lib._objc_msgSend_4(
         _lib._class_NSObject1, _lib._sel_isSubclassOfClass_1, aClass._id);
   }
 
-  static bool resolveClassMethod(NativeLibrary _lib, ffi.Pointer<ObjCSel> sel) {
+  static bool resolveClassMethod_(
+      NativeLibrary _lib, ffi.Pointer<ObjCSel> sel) {
     return _lib._objc_msgSend_3(
         _lib._class_NSObject1, _lib._sel_resolveClassMethod_1, sel);
   }
 
-  static bool resolveInstanceMethod(
+  static bool resolveInstanceMethod_(
       NativeLibrary _lib, ffi.Pointer<ObjCSel> sel) {
     return _lib._objc_msgSend_3(
         _lib._class_NSObject1, _lib._sel_resolveInstanceMethod_1, sel);
@@ -695,7 +698,7 @@ class NSObject extends _ObjCWrapper {
     return _lib._objc_msgSend_15(_lib._class_NSObject1, _lib._sel_version1);
   }
 
-  static void setVersion(NativeLibrary _lib, int aVersion) {
+  static void setVersion_(NativeLibrary _lib, int aVersion) {
     _lib._objc_msgSend_16(
         _lib._class_NSObject1, _lib._sel_setVersion_1, aVersion);
   }
@@ -705,19 +708,19 @@ class NSObject extends _ObjCWrapper {
     return NSObject._(_ret, _lib);
   }
 
-  NSObject replacementObjectForCoder(NSObject? coder) {
+  NSObject replacementObjectForCoder_(NSObject? coder) {
     final _ret = _lib._objc_msgSend_17(
         _id, _lib._sel_replacementObjectForCoder_1, coder?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib);
   }
 
-  NSObject awakeAfterUsingCoder(NSObject? coder) {
+  NSObject awakeAfterUsingCoder_(NSObject? coder) {
     final _ret = _lib._objc_msgSend_17(
         _id, _lib._sel_awakeAfterUsingCoder_1, coder?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib);
   }
 
-  static void poseAsClass(NativeLibrary _lib, NSObject aClass) {
+  static void poseAsClass_(NativeLibrary _lib, NSObject aClass) {
     _lib._objc_msgSend_8(
         _lib._class_NSObject1, _lib._sel_poseAsClass_1, aClass._id);
   }
@@ -769,7 +772,7 @@ class NSString extends _ObjCWrapper {
 
   factory NSString(NativeLibrary _lib, String str) {
     final cstr = str.toNativeUtf8();
-    final nsstr = stringWithCString_encoding(_lib, cstr.cast(), 4 /* UTF8 */);
+    final nsstr = stringWithCString_encoding_(_lib, cstr.cast(), 4 /* UTF8 */);
     pkg_ffi.calloc.free(cstr);
     return nsstr;
   }
@@ -777,7 +780,7 @@ class NSString extends _ObjCWrapper {
   @override
   String toString() => (UTF8String).cast<pkg_ffi.Utf8>().toDartString();
 
-  static NSString stringWithCString_encoding(
+  static NSString stringWithCString_encoding_(
       NativeLibrary _lib, ffi.Pointer<pkg_ffi.Char> cString, int enc) {
     final _ret = _lib._objc_msgSend_12(_lib._class_NSString1,
         _lib._sel_stringWithCString_encoding_1, cString, enc);
