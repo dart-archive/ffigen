@@ -8,10 +8,7 @@
 import 'dart:ffi';
 import 'dart:io';
 
-import 'package:ffigen/ffigen.dart';
-import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
-import 'package:yaml/yaml.dart';
 import '../test_utils.dart';
 import 'rename_test_bindings.dart';
 
