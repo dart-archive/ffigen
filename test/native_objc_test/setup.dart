@@ -27,6 +27,23 @@ Future<void> _buildLib(String input, String output) async {
   print('Generated file: $output');
 }
 
+Future<void> _generateBindings(String config) async {
+  final args = [
+    'run',
+    'ffigen',
+    '--config',
+    'test/native_objc_test/$config',
+  ];
+  final process = await Process.start(Platform.executable, args, workingDirectory: '../..');
+  unawaited(stdout.addStream(process.stdout));
+  unawaited(stderr.addStream(process.stderr));
+  final result = await process.exitCode;
+  if (result != 0) {
+    throw ProcessException('dart', args, 'Generating bindings', result);
+  }
+  print('Generated bindings for: $config');
+}
+
 Future<void> main(List<String> arguments) async {
   if (!Platform.isMacOS) {
     throw OSError('Objective C tests are only supported on MacOS');
@@ -42,6 +59,7 @@ Future<void> main(List<String> arguments) async {
   await _buildLib('forward_decl_test.m', 'forward_decl_test.dylib');
   await _buildLib('string_test.m', 'string_test.dylib');
   await _buildLib('block_test.m', 'block_test.dylib');
+  await _buildLib('rename_test.m', 'rename_test.dylib');
 
   print('Generating Bindings for Objective C Native Tests...');
   await _generateBindings('native_objc_config.yaml');
@@ -53,4 +71,5 @@ Future<void> main(List<String> arguments) async {
   await _generateBindings('forward_decl_config.yaml');
   await _generateBindings('string_config.yaml');
   await _generateBindings('block_config.yaml');
+  await _generateBindings('rename_config.yaml');
 }

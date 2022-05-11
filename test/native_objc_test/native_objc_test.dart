@@ -25,6 +25,26 @@ void main() {
       lib = NativeObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
     });
 
+    test('Basic types', () {
+      final foo = Foo.new1(lib);
+      final obj = NSObject.new1(lib);
+
+      foo.intVal = 123;
+      expect(foo.intVal, 123);
+
+      foo.boolVal = true;
+      expect(foo.boolVal, true);
+
+      foo.idVal = obj;
+      expect(foo.idVal, obj);
+
+      foo.selVal = Pointer<ObjCSel>.fromAddress(456);
+      expect(foo.selVal.address, 456);
+
+      foo.classVal = obj;
+      expect(foo.classVal, obj);
+    });
+
     test('Interface basics, with Foo', () {
       final foo1 = Foo.makeFoo_(lib, 3.14159);
       final foo2 = Foo.makeFoo_(lib, 2.71828);
