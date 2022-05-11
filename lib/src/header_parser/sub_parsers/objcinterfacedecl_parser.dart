@@ -58,6 +58,12 @@ Type? parseObjCInterfaceDeclaration(
 
 void fillObjCInterfaceMethodsIfNeeded(
     ObjCInterface itf, clang_types.CXCursor cursor) {
+  if (_isClassDeclaration(cursor)) {
+    // @class declarations are ObjC's way of forward declaring classes. In that
+    // case there's nothing to fill yet.
+    return;
+  }
+
   if (itf.filled) return;
   itf.filled = true; // Break cycles.
 
@@ -73,6 +79,27 @@ void fillObjCInterfaceMethodsIfNeeded(
 
   _logger.fine('++++ Finished ObjC interface: '
       'Name: ${itf.originalName}, ${cursor.completeStringRepr()}');
+}
+
+bool _isClassDeclarationResult = false;
+bool _isClassDeclaration(clang_types.CXCursor cursor) {
+  // It's a class declaration if it has no children other than ObjCClassRef.
+  _isClassDeclarationResult = true;
+  clang.clang_visitChildren(
+      cursor,
+      Pointer.fromFunction(
+          _isClassDeclarationVisitor, exceptional_visitor_return),
+      nullptr);
+  return _isClassDeclarationResult;
+}
+
+int _isClassDeclarationVisitor(clang_types.CXCursor cursor,
+    clang_types.CXCursor parent, Pointer<Void> clientData) {
+  if (cursor.kind == clang_types.CXCursorKind.CXCursor_ObjCClassRef) {
+    return clang_types.CXChildVisitResult.CXChildVisit_Continue;
+  }
+  _isClassDeclarationResult = false;
+  return clang_types.CXChildVisitResult.CXChildVisit_Break;
 }
 
 int _parseInterfaceVisitor(clang_types.CXCursor cursor,
