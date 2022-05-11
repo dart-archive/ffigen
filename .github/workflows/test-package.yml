@@ -13,9 +13,9 @@ env:
   PUB_ENVIRONMENT: bot.github
 
 jobs:
-  # Check code formatting and static analysis on a single OS (linux).
+  # Check code formatting and static analysis on a single OS (macos).
   analyze:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     strategy:
       fail-fast: false
       matrix:
