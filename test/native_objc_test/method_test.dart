@@ -57,15 +57,15 @@ void main() {
       });
 
       test('One argument', () {
-        expect(testInstance.add1(23), 23);
+        expect(testInstance.add_(23), 23);
       });
 
       test('Two arguments', () {
-        expect(testInstance.add_Y(23, 17), 40);
+        expect(testInstance.add_Y_(23, 17), 40);
       });
 
       test('Three arguments', () {
-        expect(testInstance.add_Y_Z(23, 17, 60), 100);
+        expect(testInstance.add_Y_Z_(23, 17, 60), 100);
       });
     });
 
@@ -75,15 +75,15 @@ void main() {
       });
 
       test('One argument', () {
-        expect(MethodInterface.sub1(lib, 7), -7);
+        expect(MethodInterface.sub_(lib, 7), -7);
       });
 
       test('Two arguments', () {
-        expect(MethodInterface.sub_Y(lib, 7, 3), -10);
+        expect(MethodInterface.sub_Y_(lib, 7, 3), -10);
       });
 
       test('Three arguments', () {
-        expect(MethodInterface.sub_Y_Z(lib, 10, 7, 3), -20);
+        expect(MethodInterface.sub_Y_Z_(lib, 10, 7, 3), -20);
       });
     });
   });

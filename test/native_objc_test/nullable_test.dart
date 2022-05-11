@@ -65,27 +65,27 @@ void main() {
 
     group('Nullable return', () {
       test('Not null', () {
-        expect(NullableInterface.returnNil(lib, false), isA<NSObject>());
+        expect(NullableInterface.returnNil_(lib, false), isA<NSObject>());
       });
       test('Null', () {
-        expect(NullableInterface.returnNil(lib, true), null);
+        expect(NullableInterface.returnNil_(lib, true), null);
       });
     }, skip: "TODO(#334): enable this test");
 
     group('Nullable arguments', () {
       test('Not null', () {
         expect(
-            NullableInterface.isNullWithNullableNSObjectArg(lib, obj), false);
+            NullableInterface.isNullWithNullableNSObjectArg_(lib, obj), false);
       });
       test('Null', () {
         expect(
-            NullableInterface.isNullWithNullableNSObjectArg(lib, null), true);
+            NullableInterface.isNullWithNullableNSObjectArg_(lib, null), true);
       });
     });
 
     group('Not-nullable arguments', () {
       test('Not null', () {
-        expect(NullableInterface.isNullWithNotNullableNSObjectPtrArg(lib, obj),
+        expect(NullableInterface.isNullWithNotNullableNSObjectPtrArg_(lib, obj),
             false);
       });
     });

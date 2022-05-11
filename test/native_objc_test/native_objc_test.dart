@@ -49,22 +49,22 @@ void main() {
     });
 
     test('Interface basics, with Foo', () {
-      final foo1 = Foo.makeFoo(lib, 3.14159);
-      final foo2 = Foo.makeFoo(lib, 2.71828);
+      final foo1 = Foo.makeFoo_(lib, 3.14159);
+      final foo2 = Foo.makeFoo_(lib, 2.71828);
 
       expect(foo1.intVal, 3);
       expect(foo2.intVal, 2);
 
-      expect(foo1.multiply_withOtherFoo(false, foo2), 8);
-      expect(foo1.multiply_withOtherFoo(true, foo2), 6);
+      expect(foo1.multiply_withOtherFoo_(false, foo2), 8);
+      expect(foo1.multiply_withOtherFoo_(true, foo2), 6);
 
       foo1.intVal = 100;
-      expect(foo1.multiply_withOtherFoo(false, foo2), 8);
-      expect(foo1.multiply_withOtherFoo(true, foo2), 200);
+      expect(foo1.multiply_withOtherFoo_(false, foo2), 8);
+      expect(foo1.multiply_withOtherFoo_(true, foo2), 200);
 
-      foo2.setDoubleVal(1.61803);
-      expect(foo1.multiply_withOtherFoo(false, foo2), 5);
-      expect(foo1.multiply_withOtherFoo(true, foo2), 200);
+      foo2.setDoubleVal_(1.61803);
+      expect(foo1.multiply_withOtherFoo_(false, foo2), 5);
+      expect(foo1.multiply_withOtherFoo_(true, foo2), 200);
     });
   });
 }

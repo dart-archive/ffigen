@@ -13,28 +13,27 @@ import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 import '../test_utils.dart';
-import 'category_bindings.dart';
+import 'forward_decl_bindings.dart';
 
 void main() {
-  late Thing testInstance;
-  late CategoryTestObjCLibrary lib;
+  late ForwardDeclTestObjCLibrary lib;
 
-  group('categories', () {
+  group('forward decl', () {
     setUpAll(() {
       logWarnings();
-      final dylib = File('test/native_objc_test/category_test.dylib');
+      final dylib = File('test/native_objc_test/forward_decl_test.dylib');
       verifySetupFile(dylib);
-      lib = CategoryTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
-      testInstance = Thing.new1(lib);
+      lib =
+          ForwardDeclTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
     });
 
     test('generate_bindings', () {
-      final config = Config.fromYaml(loadYaml(
-          File(path.join('test', 'native_objc_test', 'category_config.yaml'))
-              .readAsStringSync()) as YamlMap);
+      final config = Config.fromYaml(loadYaml(File(
+              path.join('test', 'native_objc_test', 'forward_decl_config.yaml'))
+          .readAsStringSync()) as YamlMap);
       final library = parse(config);
       final file = File(
-        path.join('test', 'debug_generated', 'category_test.dart'),
+        path.join('test', 'debug_generated', 'forward_decl_test.dart'),
       );
       library.generateFile(file);
 
@@ -51,9 +50,8 @@ void main() {
       }
     });
 
-    test('Category method', () {
-      expect(testInstance.add_Y_(1000, 234), 1234);
-      expect(testInstance.sub_Y_(1234, 1000), 234);
+    test('Forward declared class', () {
+      expect(ForwardDeclaredClass.get123(lib), 123);
     });
   });
 }
