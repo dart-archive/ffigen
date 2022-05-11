@@ -10,6 +10,11 @@
 }
 
 @property int32_t intVal;
+@property BOOL boolVal;
+@property id idVal;
+@property SEL selVal;
+@property NSObject* objVal;
+@property Class classVal;
 
 + (Foo*)makeFoo:(double)x;
 

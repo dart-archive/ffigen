@@ -28,29 +28,6 @@ void main() {
       testInstance = MethodInterface.new1(lib);
     });
 
-    test('generate_bindings', () {
-      final config = Config.fromYaml(loadYaml(
-          File(path.join('test', 'native_objc_test', 'method_config.yaml'))
-              .readAsStringSync()) as YamlMap);
-      final library = parse(config);
-      final file = File(
-        path.join('test', 'debug_generated', 'method_test.dart'),
-      );
-      library.generateFile(file);
-
-      try {
-        final actual = file.readAsStringSync();
-        final expected = File(path.join(config.output)).readAsStringSync();
-        expect(actual, expected);
-        if (file.existsSync()) {
-          file.delete();
-        }
-      } catch (e) {
-        print('Failed test: Debug generated file: ${file.absolute.path}');
-        rethrow;
-      }
-    });
-
     group('Instance methods', () {
       test('No arguments', () {
         expect(testInstance.add(), 5);

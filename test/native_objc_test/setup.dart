@@ -31,6 +31,7 @@ Future<void> main(List<String> arguments) async {
   if (!Platform.isMacOS) {
     throw OSError('Objective C tests are only supported on MacOS');
   }
+
   print('Building Dynamic Library for Objective C Native Tests...');
   await _buildLib('native_objc_test.m', 'native_objc_test.dylib');
   await _buildLib('cast_test.m', 'cast_test.dylib');
@@ -41,4 +42,15 @@ Future<void> main(List<String> arguments) async {
   await _buildLib('forward_decl_test.m', 'forward_decl_test.dylib');
   await _buildLib('string_test.m', 'string_test.dylib');
   await _buildLib('block_test.m', 'block_test.dylib');
+
+  print('Generating Bindings for Objective C Native Tests...');
+  await _generateBindings('native_objc_config.yaml');
+  await _generateBindings('cast_config.yaml');
+  await _generateBindings('category_config.yaml');
+  await _generateBindings('method_config.yaml');
+  await _generateBindings('nullable_config.yaml');
+  await _generateBindings('property_config.yaml');
+  await _generateBindings('forward_decl_config.yaml');
+  await _generateBindings('string_config.yaml');
+  await _generateBindings('block_config.yaml');
 }

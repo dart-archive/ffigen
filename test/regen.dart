@@ -69,51 +69,6 @@ Future<void> main(List<String> args) async {
     print('${record.level.name}: ${record.time}: ${record.message}');
   });
 
-  await _regenConfig(
-    File('test/native_objc_test/config.yaml'),
-    File('test/native_objc_test/native_objc_test_bindings.dart'),
-  );
-
-  await _regenConfig(
-    File('test/native_objc_test/cast_config.yaml'),
-    File('test/native_objc_test/cast_bindings.dart'),
-  );
-
-  await _regenConfig(
-    File('test/native_objc_test/category_config.yaml'),
-    File('test/native_objc_test/category_bindings.dart'),
-  );
-
-  await _regenConfig(
-    File('test/native_objc_test/method_config.yaml'),
-    File('test/native_objc_test/method_bindings.dart'),
-  );
-
-  await _regenConfig(
-    File('test/native_objc_test/nullable_config.yaml'),
-    File('test/native_objc_test/nullable_bindings.dart'),
-  );
-
-  await _regenConfig(
-    File('test/native_objc_test/property_config.yaml'),
-    File('test/native_objc_test/property_bindings.dart'),
-  );
-
-  await _regenConfig(
-    File('test/native_objc_test/forward_decl_config.yaml'),
-    File('test/native_objc_test/forward_decl_bindings.dart'),
-  );
-
-  await _regenConfig(
-    File('test/native_objc_test/string_config.yaml'),
-    File('test/native_objc_test/string_bindings.dart'),
-  );
-
-  await _regenConfig(
-    File('test/native_objc_test/block_config.yaml'),
-    File('test/native_objc_test/block_bindings.dart'),
-  );
-
   await _regenConfig(File('test/native_test/config.yaml'),
       File('test/native_test/native_test_bindings.dart'));
 

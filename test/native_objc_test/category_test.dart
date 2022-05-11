@@ -28,29 +28,6 @@ void main() {
       testInstance = Thing.new1(lib);
     });
 
-    test('generate_bindings', () {
-      final config = Config.fromYaml(loadYaml(
-          File(path.join('test', 'native_objc_test', 'category_config.yaml'))
-              .readAsStringSync()) as YamlMap);
-      final library = parse(config);
-      final file = File(
-        path.join('test', 'debug_generated', 'category_test.dart'),
-      );
-      library.generateFile(file);
-
-      try {
-        final actual = file.readAsStringSync();
-        final expected = File(path.join(config.output)).readAsStringSync();
-        expect(actual, expected);
-        if (file.existsSync()) {
-          file.delete();
-        }
-      } catch (e) {
-        print('Failed test: Debug generated file: ${file.absolute.path}');
-        rethrow;
-      }
-    });
-
     test('Category method', () {
       expect(testInstance.add_Y_(1000, 234), 1234);
       expect(testInstance.sub_Y_(1234, 1000), 234);
