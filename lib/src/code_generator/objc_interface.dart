@@ -42,6 +42,7 @@ class ObjCInterface extends BindingType {
   bool filled = false;
 
   final ObjCBuiltInFunctions builtInFunctions;
+  final bool isBuiltIn;
   late final ObjCInternalGlobal _classObject;
 
   ObjCInterface({
@@ -50,6 +51,7 @@ class ObjCInterface extends BindingType {
     required String name,
     String? dartDoc,
     required this.builtInFunctions,
+    required this.isBuiltIn,
   }) : super(
           usr: usr,
           originalName: originalName,
@@ -57,7 +59,7 @@ class ObjCInterface extends BindingType {
           dartDoc: dartDoc,
         );
 
-  bool get isNSString => name == "NSString";
+  bool get isNSString => isBuiltIn && originalName == "NSString";
 
   @override
   BindingString toBindingString(Writer w) {
@@ -206,6 +208,10 @@ class ObjCInterface extends BindingType {
     if (dependencies.contains(this)) return;
     dependencies.add(this);
     builtInFunctions.addDependencies(dependencies);
+
+    if (isBuiltIn) {
+      builtInFunctions.registerInterface(this);
+    }
 
     _classObject = ObjCInternalGlobal(
         PointerType(objCObjectType),

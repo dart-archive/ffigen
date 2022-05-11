@@ -143,6 +143,22 @@ class Clang {
   late final _clang_getFileName =
       _clang_getFileNamePtr.asFunction<CXString Function(CXFile)>();
 
+  /// Returns non-zero if the given source location is in a system header.
+  int clang_Location_isInSystemHeader(
+    CXSourceLocation location,
+  ) {
+    return _clang_Location_isInSystemHeader(
+      location,
+    );
+  }
+
+  late final _clang_Location_isInSystemHeaderPtr =
+      _lookup<ffi.NativeFunction<pkg_ffi.Int Function(CXSourceLocation)>>(
+          'clang_Location_isInSystemHeader');
+  late final _clang_Location_isInSystemHeader =
+      _clang_Location_isInSystemHeaderPtr
+          .asFunction<int Function(CXSourceLocation)>();
+
   /// Determine whether two ranges are equivalent.
   ///
   /// \returns non-zero if the ranges are the same, zero if they differ.

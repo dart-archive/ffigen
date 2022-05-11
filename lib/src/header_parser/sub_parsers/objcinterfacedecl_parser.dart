@@ -53,6 +53,7 @@ Type? parseObjCInterfaceDeclaration(
     name: config.objcInterfaces.renameUsingConfig(name),
     dartDoc: getCursorDocComment(cursor),
     builtInFunctions: objCBuiltInFunctions,
+    isBuiltIn: cursor.isInSystemHeader(),
   );
 }
 
