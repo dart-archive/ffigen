@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sdk: [2.16.0-124.0.dev] # TODO(#262)
+        sdk: [stable]
     steps:
       - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v1.0
@@ -45,7 +45,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v1.0
         with:
-          sdk: 2.16.0-124.0.dev # TODO(#262)
+          sdk: stable
       - name: Install dependencies
         run: dart pub get
       - name: Install libclang-10-dev
