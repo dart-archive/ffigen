@@ -11,6 +11,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import '../test_utils.dart';
 import 'category_bindings.dart';
+import 'util.dart';
 
 void main() {
   late Thing testInstance;
@@ -23,6 +24,7 @@ void main() {
       verifySetupFile(dylib);
       lib = CategoryTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
       testInstance = Thing.new1(lib);
+      generateBindingsForCoverage('category');
     });
 
     test('Category method', () {

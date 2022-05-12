@@ -11,6 +11,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import '../test_utils.dart';
 import 'rename_test_bindings.dart';
+import 'util.dart';
 
 void main() {
   late RenameLibrary lib;
@@ -20,6 +21,7 @@ void main() {
       final dylib = File('test/native_objc_test/rename_test.dylib');
       verifySetupFile(dylib);
       lib = RenameLibrary(DynamicLibrary.open(dylib.absolute.path));
+      generateBindingsForCoverage('rename');
     });
 
     test('Renamed class', () {

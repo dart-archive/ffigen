@@ -11,6 +11,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import '../test_utils.dart';
 import 'string_bindings.dart';
+import 'util.dart';
 
 void main() {
   late StringTestObjCLibrary lib;
@@ -21,6 +22,7 @@ void main() {
       final dylib = File('test/native_objc_test/string_test.dylib');
       verifySetupFile(dylib);
       lib = StringTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
+      generateBindingsForCoverage('string');
     });
 
     // TODO(#329): Add 'Embedded\u0000Null'.
