@@ -4,11 +4,9 @@
 
 #import <Foundation/NSObject.h>
 
-@interface Foo : NSObject {}
+@interface _Renamed : NSObject
+@property int32_t property;
 @end
 
-@interface Excluded : NSObject {}
-@end
-
-@interface _Renamed : NSObject {}
+@implementation _Renamed
 @end

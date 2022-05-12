@@ -10,22 +10,22 @@ import 'dart:io';
 
 import 'package:test/test.dart';
 import '../test_utils.dart';
-import 'forward_decl_bindings.dart';
+import 'rename_test_bindings.dart';
 
 void main() {
-  late ForwardDeclTestObjCLibrary lib;
-
-  group('forward decl', () {
+  late RenameLibrary lib;
+  group('rename_test', () {
     setUpAll(() {
       logWarnings();
-      final dylib = File('test/native_objc_test/forward_decl_test.dylib');
+      final dylib = File('test/native_objc_test/rename_test.dylib');
       verifySetupFile(dylib);
-      lib =
-          ForwardDeclTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
+      lib = RenameLibrary(DynamicLibrary.open(dylib.absolute.path));
     });
 
-    test('Forward declared class', () {
-      expect(ForwardDeclaredClass.get123(lib), 123);
+    test('Renamed class', () {
+      final renamed = Renamed.new1(lib);
+      renamed.property = 123;
+      expect(renamed.property, 123);
     });
   });
 }

@@ -8,10 +8,7 @@
 import 'dart:ffi';
 import 'dart:io';
 
-import 'package:ffigen/ffigen.dart';
-import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
-import 'package:yaml/yaml.dart';
 import '../test_utils.dart';
 import 'native_objc_test_bindings.dart';
 
@@ -25,27 +22,24 @@ void main() {
       lib = NativeObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
     });
 
-    test('generate_bindings', () {
-      final config = Config.fromYaml(loadYaml(
-          File(path.join('test', 'native_objc_test', 'config.yaml'))
-              .readAsStringSync()) as YamlMap);
-      final library = parse(config);
-      final file = File(
-        path.join('test', 'debug_generated', 'native_objc_test_bindings.dart'),
-      );
-      library.generateFile(file);
+    test('Basic types', () {
+      final foo = Foo.new1(lib);
+      final obj = NSObject.new1(lib);
 
-      try {
-        final actual = file.readAsStringSync();
-        final expected = File(path.join(config.output)).readAsStringSync();
-        expect(actual, expected);
-        if (file.existsSync()) {
-          file.delete();
-        }
-      } catch (e) {
-        print('Failed test: Debug generated file: ${file.absolute.path}');
-        rethrow;
-      }
+      foo.intVal = 123;
+      expect(foo.intVal, 123);
+
+      foo.boolVal = true;
+      expect(foo.boolVal, true);
+
+      foo.idVal = obj;
+      expect(foo.idVal, obj);
+
+      foo.selVal = Pointer<ObjCSel>.fromAddress(456);
+      expect(foo.selVal.address, 456);
+
+      foo.classVal = obj;
+      expect(foo.classVal, obj);
     });
 
     test('Interface basics, with Foo', () {
