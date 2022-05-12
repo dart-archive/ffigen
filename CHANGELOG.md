@@ -1,3 +1,7 @@
+## 5.0.0
+
+- Stable release targeting Dart 2.17, supporting ABI-specific integer types.
+
 # 5.0.0-dev.1
 - Fixed invalid default dart types being generated for `size_t` and `wchar_t`.
 

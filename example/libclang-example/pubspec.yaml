@@ -59,18 +59,9 @@ ffigen:
   # These can be used to map any typedef to a specific native type.
   type-map:
     typedefs:
-      'size_t':
-        lib: 'pkg_ffi'
-        c-type: 'Size'
-        dart-type: 'int'
       'time_t':
         lib: 'ffi'
         c-type: 'Int64'
-        dart-type: 'int'
-    native-types:
-      'unsigned long':
-        lib: 'custom_import'
-        c-type: 'UnsignedLong'
         dart-type: 'int'
     structs:
       'CXCursorSetImpl':

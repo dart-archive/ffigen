@@ -6,7 +6,6 @@ import 'dart:io';
 
 import 'package:cli_util/cli_util.dart';
 import 'package:ffigen/src/config_provider/config_types.dart';
-import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 import 'binding.dart';
@@ -70,13 +69,6 @@ class Library {
     final noLookUpBindings =
         this.bindings.whereType<NoLookUpBinding>().toList();
 
-    // Add predefined imports.
-    final _libraryImports = <LibraryImport>{};
-    _libraryImports.addAll(strings.predefinedLibraryImports.values);
-    if (libraryImports != null) {
-      _libraryImports.addAll(libraryImports);
-    }
-
     _writer = Writer(
       lookUpBindings: lookUpBindings,
       noLookUpBindings: noLookUpBindings,
@@ -84,7 +76,7 @@ class Library {
       classDocComment: description,
       header: header,
       dartBool: dartBool,
-      libraryImports: _libraryImports,
+      additionalImports: libraryImports,
     );
   }
 
