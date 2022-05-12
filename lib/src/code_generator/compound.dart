@@ -133,12 +133,12 @@ abstract class Compound extends BindingType {
     s.write('${w.ffiLibraryPrefix}.${isOpaque ? 'Opaque' : dartClassName}{\n');
     const depth = '  ';
     for (final m in members) {
-      final memberName = localUniqueNamer.makeUnique(m.name);
+      m.name = localUniqueNamer.makeUnique(m.name);
       if (m.type is ConstantArray) {
         s.write('$depth@${w.ffiLibraryPrefix}.Array.multi(');
         s.write('${_getArrayDimensionLengths(m.type)})\n');
         s.write('${depth}external ${_getInlineArrayTypeString(m.type, w)} ');
-        s.write('$memberName;\n\n');
+        s.write('${m.name};\n\n');
       } else {
         if (m.dartDoc != null) {
           s.write(depth + '/// ');
@@ -148,7 +148,7 @@ abstract class Compound extends BindingType {
         if (!sameDartAndCType(m.type, w)) {
           s.write('$depth@${m.type.getCType(w)}()\n');
         }
-        s.write('${depth}external ${m.type.getDartType(w)} $memberName;\n\n');
+        s.write('${depth}external ${m.type.getDartType(w)} ${m.name};\n\n');
       }
     }
     s.write('}\n\n');
@@ -178,10 +178,10 @@ abstract class Compound extends BindingType {
 class Member {
   final String? dartDoc;
   final String originalName;
-  final String name;
+  String name;
   final Type type;
 
-  const Member({
+  Member({
     String? originalName,
     required this.name,
     required this.type,
