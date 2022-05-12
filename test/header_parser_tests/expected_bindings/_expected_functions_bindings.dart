@@ -115,8 +115,7 @@ class NativeLibrary {
 
   late final _diffCharsPtr = _lookup<
       ffi.NativeFunction<
-          pkg_ffi.Char Function(
-              pkg_ffi.UnsignedChar, pkg_ffi.SignedChar)>>('diffChars');
+          ffi.Char Function(ffi.UnsignedChar, ffi.SignedChar)>>('diffChars');
   late final _diffChars = _diffCharsPtr.asFunction<int Function(int, int)>();
 
   late final addresses = _SymbolAddresses(this);

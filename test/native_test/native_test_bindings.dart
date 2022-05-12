@@ -32,7 +32,8 @@ class NativeLibrary {
   }
 
   late final _Function1BoolPtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int)>>('Function1Bool');
+      _lookup<ffi.NativeFunction<ffi.Uint8 Function(ffi.Uint8)>>(
+          'Function1Bool');
   late final _Function1Bool = _Function1BoolPtr.asFunction<int Function(int)>();
 
   int Function1Uint8(

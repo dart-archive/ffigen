@@ -317,7 +317,7 @@ class LibClang {
   ffi.Pointer<ffi.Char> clang_getFileContents(
     CXTranslationUnit tu,
     CXFile file,
-    ffi.Pointer<ffi.Int> size,
+    ffi.Pointer<pkg_ffi.Size> size,
   ) {
     return _clang_getFileContents(
       tu,
@@ -7789,9 +7789,9 @@ typedef NativeClang_getFile = CXFile Function(
 typedef DartClang_getFile = CXFile Function(
     CXTranslationUnit tu, ffi.Pointer<ffi.Char> file_name);
 typedef NativeClang_getFileContents = ffi.Pointer<ffi.Char> Function(
-    CXTranslationUnit tu, CXFile file, ffi.Pointer<ffi.Int> size);
+    CXTranslationUnit tu, CXFile file, ffi.Pointer<pkg_ffi.Size> size);
 typedef DartClang_getFileContents = ffi.Pointer<ffi.Char> Function(
-    CXTranslationUnit tu, CXFile file, ffi.Pointer<ffi.Int> size);
+    CXTranslationUnit tu, CXFile file, ffi.Pointer<pkg_ffi.Size> size);
 typedef NativeClang_File_isEqual = ffi.Int Function(CXFile file1, CXFile file2);
 typedef DartClang_File_isEqual = int Function(CXFile file1, CXFile file2);
 typedef NativeClang_File_tryGetRealPathName = CXString Function(CXFile file);

@@ -1215,7 +1215,7 @@ class CJson {
   }
 
   late final _cJSON_mallocPtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Int)>>(
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Size)>>(
           'cJSON_malloc');
   late final _cJSON_malloc =
       _cJSON_mallocPtr.asFunction<ffi.Pointer<ffi.Void> Function(int)>();
@@ -1258,7 +1258,7 @@ class cJSON extends ffi.Struct {
 
 class cJSON_Hooks extends ffi.Struct {
   external ffi
-          .Pointer<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Int)>>
+          .Pointer<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Size)>>
       malloc_fn;
 
   external ffi

@@ -50,7 +50,7 @@ class NativeLibrary {
 }
 
 class Union1 extends ffi.Union {
-  @pkg_ffi.Int()
+  @ffi.Int()
   external int a;
 }
 

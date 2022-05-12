@@ -64,7 +64,7 @@ class E extends ffi.Struct {
 class C extends ffi.Opaque {}
 
 class D extends ffi.Struct {
-  @pkg_ffi.Int()
+  @ffi.Int()
   external int a;
 }
 
@@ -81,6 +81,6 @@ class UE extends ffi.Union {
 class UC extends ffi.Opaque {}
 
 class UD extends ffi.Union {
-  @pkg_ffi.Int()
+  @ffi.Int()
   external int a;
 }

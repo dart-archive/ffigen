@@ -5,22 +5,22 @@ import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart' as pkg_ffi;
 
 class Struct1 extends ffi.Struct {
-  @pkg_ffi.Char()
+  @ffi.Char()
   external int a;
 }
 
 class Union1 extends ffi.Union {
-  @pkg_ffi.Char()
+  @ffi.Char()
   external int a;
 }
 
 class EmptyUnion extends ffi.Opaque {}
 
 class Primitives extends ffi.Union {
-  @pkg_ffi.Char()
+  @ffi.Char()
   external int a;
 
-  @pkg_ffi.Int()
+  @ffi.Int()
   external int b;
 
   @ffi.Float()
@@ -31,7 +31,7 @@ class Primitives extends ffi.Union {
 }
 
 class PrimitivesWithPointers extends ffi.Union {
-  @pkg_ffi.Char()
+  @ffi.Char()
   external int a;
 
   @ffi.Float()
@@ -46,7 +46,7 @@ class PrimitivesWithPointers extends ffi.Union {
 
 class WithArray extends ffi.Union {
   @ffi.Array.multi([10])
-  external ffi.Array<pkg_ffi.Char> a;
+  external ffi.Array<ffi.Char> a;
 
   @ffi.Array.multi([10])
   external ffi.Array<Union1> b;

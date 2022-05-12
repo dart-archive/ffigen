@@ -55,7 +55,7 @@ class NativeLibrary {
 class Com4 extends ffi.Struct {
   /// Muli-line test comment for struct field
   /// With multiple line and both // and ///.
-  @pkg_ffi.Int()
+  @ffi.Int()
   external int a;
 
   /// Single line field comment.

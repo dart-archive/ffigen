@@ -37,10 +37,10 @@ class NativeLibrary {
 }
 
 class A extends ffi.Struct {
-  @pkg_ffi.Int()
+  @ffi.Int()
   external int a;
 
-  @pkg_ffi.Int()
+  @ffi.Int()
   external int b;
 }
 

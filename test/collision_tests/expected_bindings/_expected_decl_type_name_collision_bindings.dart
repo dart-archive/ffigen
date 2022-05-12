@@ -7,15 +7,15 @@ import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart' as pkg_ffi;
 
 class A extends ffi.Struct {
-  @pkg_ffi.Int()
+  @ffi.Int()
   external int a;
 }
 
 class B extends ffi.Struct {
-  @pkg_ffi.Int()
+  @ffi.Int()
   external int B1;
 
-  @pkg_ffi.Int()
+  @ffi.Int()
   external int A;
 }
 
