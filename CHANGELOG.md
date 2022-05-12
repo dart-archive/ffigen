@@ -1,6 +1,8 @@
 ## 5.0.0
 
 - Stable release targeting Dart 2.17, supporting ABI-specific integer types.
+- _EXPERIMENTAL_ support for ObjectiveC on MacOS hosts. The API and output
+  might change at any point. Feel free to report bugs if encountered.
 
 # 5.0.0-dev.1
 - Fixed invalid default dart types being generated for `size_t` and `wchar_t`.
