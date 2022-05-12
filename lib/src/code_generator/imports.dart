@@ -34,7 +34,10 @@ class ImportedType extends Type {
       [this.defaultValue]);
 
   @override
-  String getCType(Writer w) => '${libraryImport.prefix}.$cType';
+  String getCType(Writer w) {
+    w.markImportUsed(libraryImport);
+    return '${libraryImport.prefix}.$cType';
+  }
 
   @override
   String getDartType(Writer w) => cType == dartType ? getCType(w) : dartType;

@@ -70,8 +70,9 @@ List<Binding> parseToBindings() {
   }
 
   _logger.fine('CompilerOpts used: $compilerOpts');
-  clangCmdArgs = createDynamicStringArray(compilerOpts);
-  final cmdLen = compilerOpts.length;
+  clangCmdArgs = createDynamicStringArray(
+      [...compilerOpts, '-I', '/usr/lib/clang/13.0.1/include/']);
+  final cmdLen = compilerOpts.length + 2;
 
   // Contains all bindings. A set ensures we never have duplicates.
   final bindings = <Binding>{};
