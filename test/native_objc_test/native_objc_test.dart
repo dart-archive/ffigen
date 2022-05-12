@@ -11,6 +11,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import '../test_utils.dart';
 import 'native_objc_test_bindings.dart';
+import 'util.dart';
 
 void main() {
   late NativeObjCLibrary lib;
@@ -20,6 +21,7 @@ void main() {
       final dylib = File('test/native_objc_test/native_objc_test.dylib');
       verifySetupFile(dylib);
       lib = NativeObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
+      generateBindingsForCoverage('native_objc');
     });
 
     test('Basic types', () {

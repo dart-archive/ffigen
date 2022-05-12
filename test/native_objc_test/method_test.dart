@@ -11,6 +11,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import '../test_utils.dart';
 import 'method_bindings.dart';
+import 'util.dart';
 
 void main() {
   late MethodInterface testInstance;
@@ -23,6 +24,7 @@ void main() {
       verifySetupFile(dylib);
       lib = MethodTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
       testInstance = MethodInterface.new1(lib);
+      generateBindingsForCoverage('method');
     });
 
     group('Instance methods', () {

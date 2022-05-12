@@ -11,6 +11,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import '../test_utils.dart';
 import 'block_bindings.dart';
+import 'util.dart';
 
 void main() {
   late BlockTestObjCLibrary lib;
@@ -21,6 +22,7 @@ void main() {
       final dylib = File('test/native_objc_test/block_test.dylib');
       verifySetupFile(dylib);
       lib = BlockTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
+      generateBindingsForCoverage('block');
     });
 
     test('BlockTester is working', () {

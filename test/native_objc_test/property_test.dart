@@ -11,6 +11,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import '../test_utils.dart';
 import 'property_bindings.dart';
+import 'util.dart';
 
 void main() {
   late PropertyInterface testInstance;
@@ -23,6 +24,7 @@ void main() {
       verifySetupFile(dylib);
       lib = PropertyTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
       testInstance = PropertyInterface.new1(lib);
+      generateBindingsForCoverage('property');
     });
 
     group('instance properties', () {

@@ -12,6 +12,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import '../test_utils.dart';
 import 'cast_bindings.dart';
+import 'util.dart';
 
 void main() {
   late Castaway testInstance;
@@ -24,6 +25,7 @@ void main() {
       verifySetupFile(dylib);
       lib = CastTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
       testInstance = Castaway.new1(lib);
+      generateBindingsForCoverage('cast');
     });
 
     test('castFrom', () {
