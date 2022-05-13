@@ -186,8 +186,8 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
       }
       s.write(');\n');
       if (convertReturn) {
-        final result = _doReturnConversion(
-            returnType, '_ret', name, '_lib', m.isNullableReturn, m.isOwnedReturn);
+        final result = _doReturnConversion(returnType, '_ret', name, '_lib',
+            m.isNullableReturn, m.isOwnedReturn);
         s.write('    return $result;');
       }
 
@@ -445,10 +445,7 @@ class ObjCMethod {
     return msgSend == other.msgSend;
   }
 
-  bool get isOwnedReturn =>
-      originalName.startsWith('init') ||
-      originalName == 'new' ||
-      originalName == 'alloc';
+  bool get isOwnedReturn => originalName == 'new' || originalName == 'alloc';
 }
 
 class ObjCMethodParam {
