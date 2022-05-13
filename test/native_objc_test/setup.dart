@@ -46,6 +46,7 @@ Future<void> _generateBindings(String config) async {
 }
 
 const testNames = [
+  'arc',
   'block',
   'cast',
   'category',

@@ -66,7 +66,7 @@ class ObjCBuiltInFunctions {
   late final _releaseFinalizer = ObjCInternalGlobal(
     '_objc_releaseFinalizer',
     (Writer w) => '${w.ffiLibraryPrefix}.NativeFinalizer('
-      '${_releaseFunc.funcPointerName}.cast())',
+        '${_releaseFunc.funcPointerName}.cast())',
     _releaseFunc,
   );
 

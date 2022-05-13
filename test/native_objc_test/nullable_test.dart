@@ -61,7 +61,8 @@ void main() {
 
     group('Not-nullable arguments', () {
       test('Not null', () {
-        expect(NullableInterface.isNullWithNotNullableNSObjectPtrArg_(lib, obj!),
+        expect(
+            NullableInterface.isNullWithNotNullableNSObjectPtrArg_(lib, obj!),
             false);
       });
     });
