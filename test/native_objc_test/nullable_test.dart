@@ -11,6 +11,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import '../test_utils.dart';
 import 'nullable_bindings.dart';
+import 'util.dart';
 
 void main() {
   late NullableTestObjCLibrary lib;
@@ -24,6 +25,7 @@ void main() {
       lib = NullableTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
       nullableInterface = NullableInterface.new1(lib);
       obj = NSObject.new1(lib);
+      generateBindingsForCoverage('nullable');
     });
 
     group('Nullable property', () {

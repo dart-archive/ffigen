@@ -11,6 +11,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import '../test_utils.dart';
 import 'forward_decl_bindings.dart';
+import 'util.dart';
 
 void main() {
   late ForwardDeclTestObjCLibrary lib;
@@ -22,6 +23,7 @@ void main() {
       verifySetupFile(dylib);
       lib =
           ForwardDeclTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
+      generateBindingsForCoverage('forward_decl');
     });
 
     test('Forward declared class', () {
