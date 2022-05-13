@@ -13,7 +13,7 @@ import '../test_utils.dart';
 import 'category_bindings.dart';
 
 void main() {
-  late Thing testInstance;
+  Thing? testInstance;
   late CategoryTestObjCLibrary lib;
 
   group('categories', () {
@@ -26,8 +26,8 @@ void main() {
     });
 
     test('Category method', () {
-      expect(testInstance.add_Y_(1000, 234), 1234);
-      expect(testInstance.sub_Y_(1234, 1000), 234);
+      expect(testInstance!.add_Y_(1000, 234), 1234);
+      expect(testInstance!.sub_Y_(1234, 1000), 234);
     });
   });
 }

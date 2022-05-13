@@ -14,7 +14,7 @@ import '../test_utils.dart';
 import 'cast_bindings.dart';
 
 void main() {
-  late Castaway testInstance;
+  Castaway? testInstance;
   late CastTestObjCLibrary lib;
 
   group('cast', () {
@@ -27,26 +27,26 @@ void main() {
     });
 
     test('castFrom', () {
-      final fromCast = Castaway.castFrom(testInstance.meAsNSObject());
-      expect(fromCast, testInstance);
+      final fromCast = Castaway.castFrom(testInstance!.meAsNSObject());
+      expect(fromCast, testInstance!);
     });
 
     test('castFromPointer', () {
-      final meAsInt = testInstance.meAsInt();
+      final meAsInt = testInstance!.meAsInt();
       final fromCast = Castaway.castFromPointer(
           lib, Pointer<ObjCObject>.fromAddress(meAsInt));
-      expect(fromCast, testInstance);
+      expect(fromCast, testInstance!);
     });
 
     test('equality equals', () {
-      final meAsInt = testInstance.meAsInt();
+      final meAsInt = testInstance!.meAsInt();
       final fromCast = Castaway.castFromPointer(
           lib, Pointer<ObjCObject>.fromAddress(meAsInt));
-      expect(fromCast, testInstance);
+      expect(fromCast, testInstance!);
     });
 
     test('equality not equals', () {
-      final meAsInt = testInstance.meAsInt();
+      final meAsInt = testInstance!.meAsInt();
       final fromCast = Castaway.castFromPointer(
           lib, Pointer<ObjCObject>.fromAddress(meAsInt));
       expect(fromCast, isNot(equals(NSObject.new1(lib))));

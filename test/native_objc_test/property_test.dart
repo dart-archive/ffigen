@@ -13,7 +13,7 @@ import '../test_utils.dart';
 import 'property_bindings.dart';
 
 void main() {
-  late PropertyInterface testInstance;
+  PropertyInterface? testInstance;
   late PropertyTestObjCLibrary lib;
 
   group('properties', () {
@@ -27,12 +27,12 @@ void main() {
 
     group('instance properties', () {
       test('read-only property', () {
-        expect(testInstance.readOnlyProperty, 7);
+        expect(testInstance!.readOnlyProperty, 7);
       });
 
       test('read-write property', () {
-        testInstance.readWriteProperty = 23;
-        expect(testInstance.readWriteProperty, 23);
+        testInstance!.readWriteProperty = 23;
+        expect(testInstance!.readWriteProperty, 23);
       });
     });
 
