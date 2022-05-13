@@ -39,15 +39,17 @@ void main() {
       calloc.free(gcNow);
     }
 
+    makeSomeObjects() {
+      final obj1 = ArcTestObject.new1(lib);
+      expect(ArcTestObject.getTotalObjects(lib), 1);
+      final obj2 = ArcTestObject.new1(lib);
+      expect(ArcTestObject.getTotalObjects(lib), 2);
+      final obj3 = ArcTestObject.new1(lib);
+      expect(ArcTestObject.getTotalObjects(lib), 3);
+    }
+
     test('Verify ref counts', () {
-      {
-        final obj1 = ArcTestObject.new1(lib);
-        expect(ArcTestObject.getTotalObjects(lib), 1);
-        final obj2 = ArcTestObject.new1(lib);
-        expect(ArcTestObject.getTotalObjects(lib), 2);
-        final obj3 = ArcTestObject.new1(lib);
-        expect(ArcTestObject.getTotalObjects(lib), 3);
-      }
+      makeSomeObjects();
       doGC();
       expect(ArcTestObject.getTotalObjects(lib), 0);
     });
