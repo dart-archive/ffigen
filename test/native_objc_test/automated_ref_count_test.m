@@ -11,6 +11,7 @@ int32_t totalObjects = 0;
 + (int32_t)getTotalObjects;
 - (instancetype)init;
 - (void)dealloc;
+- (ArcTestObject*)unownedReference;
 
 @end
 
@@ -28,6 +29,10 @@ int32_t totalObjects = 0;
 - (void)dealloc {
   --totalObjects;
   [super dealloc];
+}
+
+- (ArcTestObject*)unownedReference {
+  return self;
 }
 
 @end

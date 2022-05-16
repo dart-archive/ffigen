@@ -39,7 +39,7 @@ void main() {
       calloc.free(gcNow);
     }
 
-    makeSomeObjects() {
+    verifyRefCountsInner() {
       final obj1 = ArcTestObject.new1(lib);
       expect(ArcTestObject.getTotalObjects(lib), 1);
       final obj2 = ArcTestObject.new1(lib);
@@ -49,7 +49,9 @@ void main() {
     }
 
     test('Verify ref counts', () {
-      makeSomeObjects();
+      // To get the GC to work correctly, the references to the objects all have
+      // to be in a separate function.
+      verifyRefCountsInner();
       doGC();
       expect(ArcTestObject.getTotalObjects(lib), 0);
     });
@@ -70,6 +72,40 @@ void main() {
       expect(ArcTestObject.getTotalObjects(lib), 0);
 
       expect(() => obj1.release(), throwsStateError);
+    });
+
+    ArcTestObject unownedReferenceInner2() {
+      final obj1 = ArcTestObject.new1(lib);
+      expect(ArcTestObject.getTotalObjects(lib), 1);
+      final obj1b = obj1.unownedReference();
+      expect(ArcTestObject.getTotalObjects(lib), 1);
+
+      // Make a second object so that the getTotalObjects check in
+      // unownedReferenceInner sees some sort of change. Otherwise this test
+      // could pass just by the GC not working correctly.
+      final obj2 = ArcTestObject.new1(lib);
+      expect(ArcTestObject.getTotalObjects(lib), 2);
+
+      return obj1b;
+    }
+
+    unownedReferenceInner() {
+      final obj1b = unownedReferenceInner2();
+      doGC();  // Collect obj1 and obj2.
+      // The underlying object obj1 and obj1b points to still exists, because
+      // obj1b took a reference to it. So we still have 1 object.
+      expect(ArcTestObject.getTotalObjects(lib), 1);
+    }
+
+    test("Method that returns a reference we don't own", () {
+      // Most ObjC API methods return us a reference without incrementing the
+      // ref count (ie, returns us a reference we don't own). So the wrapper
+      // object has to take ownership by calling retain. This test verifies that
+      // is working correctly by holding a reference to an object returned by a
+      // method, after the original wrapper object is gone.
+      unownedReferenceInner();
+      doGC();
+      expect(ArcTestObject.getTotalObjects(lib), 0);
     });
   });
 }
