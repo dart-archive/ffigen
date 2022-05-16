@@ -21,9 +21,11 @@ void main() {
   group('Automatic reference counting', () {
     setUpAll(() {
       logWarnings();
-      final dylib = File('test/native_objc_test/automated_ref_count_test.dylib');
+      final dylib =
+          File('test/native_objc_test/automated_ref_count_test.dylib');
       verifySetupFile(dylib);
-      lib = AutomatedRefCountTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
+      lib = AutomatedRefCountTestObjCLibrary(
+          DynamicLibrary.open(dylib.absolute.path));
 
       executeInternalCommand = DynamicLibrary.process().lookupFunction<
           Void Function(Pointer<Char>, Pointer<Void>),
@@ -91,7 +93,7 @@ void main() {
 
     unownedReferenceInner() {
       final obj1b = unownedReferenceInner2();
-      doGC();  // Collect obj1 and obj2.
+      doGC(); // Collect obj1 and obj2.
       // The underlying object obj1 and obj1b points to still exists, because
       // obj1b took a reference to it. So we still have 1 object.
       expect(ArcTestObject.getTotalObjects(lib), 1);
