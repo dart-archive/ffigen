@@ -53,5 +53,23 @@ void main() {
       doGC();
       expect(ArcTestObject.getTotalObjects(lib), 0);
     });
+
+    test('Manual release', () {
+      final obj1 = ArcTestObject.new1(lib);
+      expect(ArcTestObject.getTotalObjects(lib), 1);
+      final obj2 = ArcTestObject.new1(lib);
+      expect(ArcTestObject.getTotalObjects(lib), 2);
+      final obj3 = ArcTestObject.new1(lib);
+      expect(ArcTestObject.getTotalObjects(lib), 3);
+
+      obj1.release();
+      expect(ArcTestObject.getTotalObjects(lib), 2);
+      obj2.release();
+      expect(ArcTestObject.getTotalObjects(lib), 1);
+      obj3.release();
+      expect(ArcTestObject.getTotalObjects(lib), 0);
+
+      expect(() => obj1.release(), throwsStateError);
+    });
   });
 }

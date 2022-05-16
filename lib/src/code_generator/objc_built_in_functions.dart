@@ -169,14 +169,26 @@ class ObjCBuiltInFunctions {
 class _ObjCWrapper implements ${w.ffiLibraryPrefix}.Finalizable {
   final $objType _id;
   final ${w.className} _lib;
+  bool _pendingRelease;
 
   _ObjCWrapper._(this._id, this._lib,
-      {bool retain = false, bool release = false}) {
+      {bool retain = false, bool release = false}) : _pendingRelease = release {
     if (retain) {
       _lib.${_retainFunc.name}(_id);
     }
     if (release) {
-      _lib.${_releaseFinalizer.name}.attach(this, _id.cast());
+      _lib.${_releaseFinalizer.name}.attach(this, _id.cast(), detach: this);
+    }
+  }
+
+  void release() {
+    if (_pendingRelease) {
+      _pendingRelease = false;
+      _lib.${_releaseFunc.name}(_id);
+      _lib.${_releaseFinalizer.name}.detach(this);
+    } else {
+      throw StateError(
+          'Released an ObjC object that was unowned or already released.');
     }
   }
 
