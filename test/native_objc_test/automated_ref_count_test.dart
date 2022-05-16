@@ -11,26 +11,26 @@ import 'dart:io';
 import 'package:test/test.dart';
 import 'package:ffi/ffi.dart';
 import '../test_utils.dart';
-import 'arc_bindings.dart';
+import 'automated_ref_count_bindings.dart';
 import 'util.dart';
 
 void main() {
-  late ArcTestObjCLibrary lib;
+  late AutomatedRefCountTestObjCLibrary lib;
   late void Function(Pointer<Char>, Pointer<Void>) executeInternalCommand;
 
   group('Automatic reference counting', () {
     setUpAll(() {
       logWarnings();
-      final dylib = File('test/native_objc_test/arc_test.dylib');
+      final dylib = File('test/native_objc_test/automated_ref_count_test.dylib');
       verifySetupFile(dylib);
-      lib = ArcTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
+      lib = AutomatedRefCountTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
 
       executeInternalCommand = DynamicLibrary.process().lookupFunction<
           Void Function(Pointer<Char>, Pointer<Void>),
           void Function(
               Pointer<Char>, Pointer<Void>)>('Dart_ExecuteInternalCommand');
 
-      generateBindingsForCoverage('arc');
+      generateBindingsForCoverage('automated_ref_count');
     });
 
     doGC() {
