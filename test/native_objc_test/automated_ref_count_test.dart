@@ -41,62 +41,69 @@ void main() {
       calloc.free(gcNow);
     }
 
-    verifyRefCountsInner() {
-      final obj1 = ArcTestObject.new1(lib);
-      expect(ArcTestObject.getTotalObjects(lib), 1);
-      final obj2 = ArcTestObject.new1(lib);
-      expect(ArcTestObject.getTotalObjects(lib), 2);
-      final obj3 = ArcTestObject.new1(lib);
-      expect(ArcTestObject.getTotalObjects(lib), 3);
+    verifyRefCountsInner(Pointer<Int32> counter) {
+      final obj1 = ArcTestObject.alloc(lib).initWithCounter_(counter);
+      expect(counter.value, 1);
+      final obj2 = ArcTestObject.alloc(lib).initWithCounter_(counter);
+      expect(counter.value, 2);
+      final obj3 = ArcTestObject.alloc(lib).initWithCounter_(counter);
+      expect(counter.value, 3);
     }
 
     test('Verify ref counts', () {
       // To get the GC to work correctly, the references to the objects all have
       // to be in a separate function.
-      verifyRefCountsInner();
+      final counter = calloc<Int32>();
+      verifyRefCountsInner(counter);
       doGC();
-      expect(ArcTestObject.getTotalObjects(lib), 0);
+      expect(counter.value, 0);
+      calloc.free(counter);
     });
 
     test('Manual release', () {
-      final obj1 = ArcTestObject.new1(lib);
-      expect(ArcTestObject.getTotalObjects(lib), 1);
-      final obj2 = ArcTestObject.new1(lib);
-      expect(ArcTestObject.getTotalObjects(lib), 2);
-      final obj3 = ArcTestObject.new1(lib);
-      expect(ArcTestObject.getTotalObjects(lib), 3);
+      final counter = calloc<Int32>();
+      final obj1 = ArcTestObject.alloc(lib).initWithCounter_(counter);
+      expect(counter.value, 1);
+      final obj2 = ArcTestObject.alloc(lib).initWithCounter_(counter);
+      expect(counter.value, 2);
+      final obj3 = ArcTestObject.alloc(lib).initWithCounter_(counter);
+      expect(counter.value, 3);
+
+      // GC to clean up temporaries created between alloc and initWithCounter_.
+      doGC();
 
       obj1.release();
-      expect(ArcTestObject.getTotalObjects(lib), 2);
+      expect(counter.value, 2);
       obj2.release();
-      expect(ArcTestObject.getTotalObjects(lib), 1);
+      expect(counter.value, 1);
       obj3.release();
-      expect(ArcTestObject.getTotalObjects(lib), 0);
+      expect(counter.value, 0);
 
       expect(() => obj1.release(), throwsStateError);
+      calloc.free(counter);
     });
 
-    ArcTestObject unownedReferenceInner2() {
-      final obj1 = ArcTestObject.new1(lib);
-      expect(ArcTestObject.getTotalObjects(lib), 1);
+    ArcTestObject unownedReferenceInner2(Pointer<Int32> counter) {
+      final obj1 = ArcTestObject.alloc(lib).initWithCounter_(counter);
+      expect(counter.value, 1);
       final obj1b = obj1.unownedReference();
-      expect(ArcTestObject.getTotalObjects(lib), 1);
+      expect(counter.value, 1);
 
-      // Make a second object so that the getTotalObjects check in
-      // unownedReferenceInner sees some sort of change. Otherwise this test
-      // could pass just by the GC not working correctly.
-      final obj2 = ArcTestObject.new1(lib);
-      expect(ArcTestObject.getTotalObjects(lib), 2);
+      // Make a second object so that the counter check in unownedReferenceInner
+      // sees some sort of change. Otherwise this test could pass just by the GC
+      // not working correctly.
+      final obj2 = ArcTestObject.alloc(lib).initWithCounter_(counter);
+      expect(counter.value, 2);
 
       return obj1b;
     }
 
-    unownedReferenceInner() {
-      final obj1b = unownedReferenceInner2();
+    unownedReferenceInner(Pointer<Int32> counter) {
+      final obj1b = unownedReferenceInner2(counter);
       doGC(); // Collect obj1 and obj2.
       // The underlying object obj1 and obj1b points to still exists, because
       // obj1b took a reference to it. So we still have 1 object.
-      expect(ArcTestObject.getTotalObjects(lib), 1);
+      expect(counter.value, 1);
     }
 
     test("Method that returns a reference we don't own", () {
@@ -105,9 +112,11 @@ void main() {
       // object has to take ownership by calling retain. This test verifies that
       // is working correctly by holding a reference to an object returned by a
       // method, after the original wrapper object is gone.
-      unownedReferenceInner();
+      final counter = calloc<Int32>();
+      unownedReferenceInner(counter);
       doGC();
-      expect(ArcTestObject.getTotalObjects(lib), 0);
+      expect(counter.value, 0);
+      calloc.free(counter);
     });
   });
 }

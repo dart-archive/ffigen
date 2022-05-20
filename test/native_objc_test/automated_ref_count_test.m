@@ -4,12 +4,11 @@
 
 #import <Foundation/NSObject.h>
 
-int32_t totalObjects = 0;
+@interface ArcTestObject : NSObject {
+  int32_t* counter;
+}
 
-@interface ArcTestObject : NSObject {}
-
-+ (int32_t)getTotalObjects;
-- (instancetype)init;
+- (instancetype)initWithCounter:(int32_t*) _counter;
 - (void)dealloc;
 - (ArcTestObject*)unownedReference;
 
@@ -17,17 +16,14 @@ int32_t totalObjects = 0;
 
 @implementation ArcTestObject
 
-+ (int32_t)getTotalObjects {
-  return totalObjects;
-}
-
-- (instancetype)init {
-  ++totalObjects;
+- (instancetype)initWithCounter:(int32_t*) _counter {
+  counter = _counter;
+  ++*counter;
   return [super init];
 }
 
 - (void)dealloc {
-  --totalObjects;
+  --*counter;
   [super dealloc];
 }
 
