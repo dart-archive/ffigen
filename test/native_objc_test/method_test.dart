@@ -14,7 +14,7 @@ import 'method_bindings.dart';
 import 'util.dart';
 
 void main() {
-  late MethodInterface testInstance;
+  MethodInterface? testInstance;
   late MethodTestObjCLibrary lib;
 
   group('method calls', () {
@@ -29,19 +29,19 @@ void main() {
 
     group('Instance methods', () {
       test('No arguments', () {
-        expect(testInstance.add(), 5);
+        expect(testInstance!.add(), 5);
       });
 
       test('One argument', () {
-        expect(testInstance.add_(23), 23);
+        expect(testInstance!.add_(23), 23);
       });
 
       test('Two arguments', () {
-        expect(testInstance.add_Y_(23, 17), 40);
+        expect(testInstance!.add_Y_(23, 17), 40);
       });
 
       test('Three arguments', () {
-        expect(testInstance.add_Y_Z_(23, 17, 60), 100);
+        expect(testInstance!.add_Y_Z_(23, 17, 60), 100);
       });
     });
 

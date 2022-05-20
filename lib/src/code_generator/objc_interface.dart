@@ -82,27 +82,28 @@ class ObjCInterface extends BindingType {
       s.write(makeDartDoc(dartDoc!));
     }
 
-    final uniqueNamer = UniqueNamer({name});
+    final uniqueNamer = UniqueNamer({name, '_id', '_lib'});
     final natLib = w.className;
 
     builtInFunctions.ensureUtilsExist(w, s);
     final objType = PointerType(objCObjectType).getCType(w);
 
     // Class declaration.
-    s.write('class $name ');
-    uniqueNamer.markUsed('_id');
-    s.write('extends ${superType?.name ?? '_ObjCWrapper'} {\n');
-    s.write('  $name._($objType id, $natLib lib) : super._(id, lib);\n\n');
+    s.write('''
+class $name extends ${superType?.name ?? '_ObjCWrapper'} {
+  $name._($objType id, $natLib lib,
+      {bool retain = false, bool release = false}) :
+          super._(id, lib, retain: retain, release: release);
 
-    // Cast method.
-    s.write('  static $name castFrom<T extends _ObjCWrapper>(T other) {\n');
-    s.write('    return $name._(other._id, other._lib);\n');
-    s.write('  }\n\n');
+  static $name castFrom<T extends _ObjCWrapper>(T other) {
+    return $name._(other._id, other._lib, retain: true, release: true);
+  }
 
-    s.write(
-        '  static $name castFromPointer($natLib lib, ffi.Pointer<ObjCObject> other) {\n');
-    s.write('    return $name._(other, lib);\n');
-    s.write('  }\n\n');
+  static $name castFromPointer($natLib lib, ffi.Pointer<ObjCObject> other) {
+    return $name._(other, lib, retain: true, release: true);
+  }
+
+''');
 
     if (isNSString) {
       builtInFunctions.generateNSStringUtils(w, s);
@@ -185,8 +186,8 @@ class ObjCInterface extends BindingType {
       }
       s.write(');\n');
       if (convertReturn) {
-        final result = _doReturnConversion(
-            returnType, '_ret', name, '_lib', m.isNullableReturn);
+        final result = _doReturnConversion(returnType, '_ret', name, '_lib',
+            m.isNullableReturn, m.isOwnedReturn);
         s.write('    return $result;');
       }
 
@@ -214,9 +215,9 @@ class ObjCInterface extends BindingType {
     }
 
     _classObject = ObjCInternalGlobal(
-        PointerType(objCObjectType),
         '_class_$originalName',
-        () => '${builtInFunctions.getClass.name}("$originalName")')
+        (Writer w) => '${builtInFunctions.getClass.name}("$originalName")',
+        builtInFunctions.getClass)
       ..addDependencies(dependencies);
 
     if (isNSString) {
@@ -345,22 +346,20 @@ class ObjCInterface extends BindingType {
   }
 
   String _doReturnConversion(Type type, String value, String enclosingClass,
-      String library, bool isNullable) {
-    String prefix = "";
-    if (isNullable) {
-      prefix += "$value.address == 0 ? null : ";
-    }
+      String library, bool isNullable, bool isOwnedReturn) {
+    final prefix = isNullable ? '$value.address == 0 ? null : ' : '';
+    final ownerFlags = 'retain: ${!isOwnedReturn}, release: true';
     if (type is ObjCInterface) {
-      return prefix + '${type.name}._($value, $library)';
+      return '$prefix${type.name}._($value, $library, $ownerFlags)';
     }
     if (type is ObjCBlock) {
-      return prefix + '${type.name}._($value, $library)';
+      return '$prefix${type.name}._($value, $library)';
     }
     if (_isObject(type)) {
-      return prefix + 'NSObject._($value, $library)';
+      return '${prefix}NSObject._($value, $library, $ownerFlags)';
     }
     if (_isInstanceType(type)) {
-      return prefix + '$enclosingClass._($value, $library)';
+      return '$prefix$enclosingClass._($value, $library, $ownerFlags)';
     }
     return prefix + value;
   }
@@ -445,6 +444,8 @@ class ObjCMethod {
     // msgSend is deduped by signature, so this check covers the signature.
     return msgSend == other.msgSend;
   }
+
+  bool get isOwnedReturn => originalName == 'new' || originalName == 'alloc';
 }
 
 class ObjCMethodParam {

@@ -49,6 +49,27 @@ class ObjCBuiltInFunctions {
     return s.toString();
   });
 
+  late final _retainFunc = Func(
+    name: '_objc_retain',
+    originalName: 'objc_retain',
+    returnType: PointerType(objCObjectType),
+    parameters: [Parameter(name: 'value', type: PointerType(objCObjectType))],
+    isInternal: true,
+  );
+  late final _releaseFunc = Func(
+    name: '_objc_release',
+    originalName: 'objc_release',
+    returnType: voidType,
+    parameters: [Parameter(name: 'value', type: PointerType(objCObjectType))],
+    isInternal: true,
+  );
+  late final _releaseFinalizer = ObjCInternalGlobal(
+    '_objc_releaseFinalizer',
+    (Writer w) => '${w.ffiLibraryPrefix}.NativeFinalizer('
+        '${_releaseFunc.funcPointerName}.cast())',
+    _releaseFunc,
+  );
+
   // We need to load a separate instance of objc_msgSend for each signature.
   final _msgSendFuncs = <String, Func>{};
   Func getMsgSendFunc(Type returnType, List<ObjCMethodParam> params) {
@@ -72,9 +93,10 @@ class ObjCBuiltInFunctions {
   final _selObjects = <String, ObjCInternalGlobal>{};
   ObjCInternalGlobal getSelObject(String methodName) {
     return _selObjects[methodName] ??= ObjCInternalGlobal(
-        PointerType(objCSelType),
-        '_sel_${methodName.replaceAll(":", "_")}',
-        () => '${registerName.name}("$methodName")');
+      '_sel_${methodName.replaceAll(":", "_")}',
+      (Writer w) => '${registerName.name}("$methodName")',
+      registerName,
+    );
   }
 
   // See https://clang.llvm.org/docs/Block-ABI-Apple.html
@@ -116,9 +138,9 @@ class ObjCBuiltInFunctions {
     return s.toString();
   });
   late final blockDescSingleton = ObjCInternalGlobal(
-    PointerType(blockDescStruct),
     '_objc_block_desc',
-    () => '${newBlockDesc.name}()',
+    (Writer w) => '${newBlockDesc.name}()',
+    blockDescStruct,
   );
   late final newBlock =
       ObjCInternalFunction('_newBlock', null, (Writer w, String name) {
@@ -144,11 +166,33 @@ class ObjCBuiltInFunctions {
 
     final objType = PointerType(objCObjectType).getCType(w);
     s.write('''
-class _ObjCWrapper {
+class _ObjCWrapper implements ${w.ffiLibraryPrefix}.Finalizable {
   final $objType _id;
   final ${w.className} _lib;
+  bool _pendingRelease;
 
-  _ObjCWrapper._(this._id, this._lib);
+  _ObjCWrapper._(this._id, this._lib,
+      {bool retain = false, bool release = false}) : _pendingRelease = release {
+    if (retain) {
+      _lib.${_retainFunc.name}(_id);
+    }
+    if (release) {
+      _lib.${_releaseFinalizer.name}.attach(this, _id.cast(), detach: this);
+    }
+  }
+
+  /// Releases the reference to the underlying ObjC object held by this wrapper.
+  /// Throws a StateError if this wrapper doesn't currently hold a reference.
+  void release() {
+    if (_pendingRelease) {
+      _pendingRelease = false;
+      _lib.${_releaseFunc.name}(_id);
+      _lib.${_releaseFinalizer.name}.detach(this);
+    } else {
+      throw StateError(
+          'Released an ObjC object that was unowned or already released.');
+    }
+  }
 
   @override
   bool operator ==(Object other) {
@@ -164,6 +208,9 @@ class _ObjCWrapper {
   void addDependencies(Set<Binding> dependencies) {
     registerName.addDependencies(dependencies);
     getClass.addDependencies(dependencies);
+    _retainFunc.addDependencies(dependencies);
+    _releaseFunc.addDependencies(dependencies);
+    _releaseFinalizer.addDependencies(dependencies);
     for (final func in _msgSendFuncs.values) {
       func.addDependencies(dependencies);
     }
@@ -229,17 +276,17 @@ class ObjCInternalFunction extends LookUpBinding {
 
 /// Globals only used internally by ObjC bindings, such as classes and SELs.
 class ObjCInternalGlobal extends LookUpBinding {
-  final Type type;
-  final String Function() makeValue;
+  final String Function(Writer) makeValue;
+  Binding? binding;
 
-  ObjCInternalGlobal(this.type, String name, this.makeValue)
+  ObjCInternalGlobal(String name, this.makeValue, [this.binding])
       : super(originalName: name, name: name, isInternal: true);
 
   @override
   BindingString toBindingString(Writer w) {
     final s = StringBuffer();
     name = w.wrapperLevelUniqueNamer.makeUnique(name);
-    s.write('late final ${type.getCType(w)} $name = ${makeValue()};');
+    s.write('late final $name = ${makeValue(w)};');
     return BindingString(type: BindingStringType.global, string: s.toString());
   }
 
@@ -247,6 +294,6 @@ class ObjCInternalGlobal extends LookUpBinding {
   void addDependencies(Set<Binding> dependencies) {
     if (dependencies.contains(this)) return;
     dependencies.add(this);
-    type.addDependencies(dependencies);
+    binding?.addDependencies(dependencies);
   }
 }
