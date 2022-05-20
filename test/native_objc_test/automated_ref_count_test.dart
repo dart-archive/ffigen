@@ -71,6 +71,7 @@ void main() {
 
       // GC to clean up temporaries created between alloc and initWithCounter_.
       doGC();
+      expect(counter.value, 3);
 
       obj1.release();
       expect(counter.value, 2);

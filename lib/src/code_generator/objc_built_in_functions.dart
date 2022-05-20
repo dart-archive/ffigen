@@ -181,6 +181,8 @@ class _ObjCWrapper implements ${w.ffiLibraryPrefix}.Finalizable {
     }
   }
 
+  /// Releases the reference to the underlying ObjC object held by this wrapper.
+  /// Throws a StateError if this wrapper doesn't currently hold a reference.
   void release() {
     if (_pendingRelease) {
       _pendingRelease = false;
