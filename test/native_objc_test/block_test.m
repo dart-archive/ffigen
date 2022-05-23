@@ -15,6 +15,7 @@ typedef int32_t (^IntBlock)(int32_t);
 + (BlockTester*)makeFromMultiplier:(int32_t)mult;
 - (int32_t)call:(int32_t)x;
 - (IntBlock)getBlock;
+- (void)pokeBlock;
 @end
 
 @implementation BlockTester
@@ -33,10 +34,15 @@ typedef int32_t (^IntBlock)(int32_t);
 }
 
 - (int32_t)call:(int32_t)x {
-  return self->myBlock(x);
+  return myBlock(x);
 }
 
 - (IntBlock)getBlock {
-  return self->myBlock;
+  return myBlock;
+}
+
+- (void)pokeBlock {
+  // Used to repro https://github.com/dart-lang/ffigen/issues/376
+  [[myBlock retain] release];
 }
 @end

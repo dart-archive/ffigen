@@ -142,6 +142,11 @@ class ObjCBuiltInFunctions {
     (Writer w) => '${newBlockDesc.name}()',
     blockDescStruct,
   );
+  late final concreteGlobalBlock = ObjCInternalGlobal(
+    '_objc_concrete_global_block',
+    (Writer w) => '${w.lookupFuncIdentifier}<${voidType.getCType(w)}>('
+        "'_NSConcreteGlobalBlock')",
+  );
   late final newBlock =
       ObjCInternalFunction('_newBlock', null, (Writer w, String name) {
     final s = StringBuffer();
@@ -151,6 +156,7 @@ class ObjCBuiltInFunctions {
     s.write('\n$blockPtr $name($voidPtr invoke, $voidPtr target) {\n');
     s.write('  final b = ${w.ffiPkgLibraryPrefix}.calloc.allocate<$blockType>('
         '${w.ffiLibraryPrefix}.sizeOf<$blockType>());\n');
+    s.write('  b.ref.isa = ${concreteGlobalBlock.name};\n');
     s.write('  b.ref.invoke = invoke;\n');
     s.write('  b.ref.target = target;\n');
     s.write('  b.ref.descriptor = ${blockDescSingleton.name};\n');

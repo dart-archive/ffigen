@@ -97,6 +97,7 @@ class ObjCBlock extends BindingType {
     builtInFunctions.newBlockDesc.addDependencies(dependencies);
     builtInFunctions.blockDescSingleton.addDependencies(dependencies);
     builtInFunctions.blockStruct.addDependencies(dependencies);
+    builtInFunctions.concreteGlobalBlock.addDependencies(dependencies);
     builtInFunctions.newBlock.addDependencies(dependencies);
   }
 

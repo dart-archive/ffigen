@@ -32,6 +32,7 @@ void main() {
       expect(blockTester.call_(123), 1230);
       final intBlock = blockTester.getBlock();
       final blockTester2 = BlockTester.makeFromBlock_(lib, intBlock);
+      blockTester2.pokeBlock();
       expect(blockTester2.call_(456), 4560);
     });
 
@@ -39,6 +40,7 @@ void main() {
       final block = ObjCBlock.fromFunctionPointer(
           lib, Pointer.fromFunction(_add100, 999));
       final blockTester = BlockTester.makeFromBlock_(lib, block.pointer);
+      blockTester.pokeBlock();
       expect(blockTester.call_(123), 223);
     });
   });
