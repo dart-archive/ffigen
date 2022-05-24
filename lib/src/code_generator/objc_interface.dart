@@ -387,6 +387,7 @@ class ObjCMethod {
   final List<ObjCMethodParam> params;
   final ObjCMethodKind kind;
   final bool isClass;
+  bool returnsRetained = false;
   ObjCInternalGlobal? selObject;
   Func? msgSend;
 
@@ -445,7 +446,12 @@ class ObjCMethod {
     return msgSend == other.msgSend;
   }
 
-  bool get isOwnedReturn => originalName == 'new' || originalName == 'alloc';
+  static final _copyRegExp = RegExp('[cC]opy');
+  bool get isOwnedReturn =>
+      returnsRetained ||
+      originalName.startsWith('new') ||
+      originalName.startsWith('alloc') ||
+      originalName.contains(_copyRegExp);
 }
 
 class ObjCMethodParam {

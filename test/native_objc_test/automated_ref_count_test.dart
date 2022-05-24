@@ -42,12 +42,20 @@ void main() {
     }
 
     verifyRefCountsInner(Pointer<Int32> counter) {
-      final obj1 = ArcTestObject.alloc(lib).initWithCounter_(counter);
+      final obj1 = ArcTestObject.new1(lib);
+      obj1.setCounter_(counter);
       expect(counter.value, 1);
       final obj2 = ArcTestObject.alloc(lib).initWithCounter_(counter);
       expect(counter.value, 2);
-      final obj3 = ArcTestObject.alloc(lib).initWithCounter_(counter);
+      final obj3 = ArcTestObject.castFrom(ArcTestObject.alloc(lib).init());
+      obj3.setCounter_(counter);
       expect(counter.value, 3);
+      final obj4 = obj3.makeACopy();
+      expect(counter.value, 4);
+      final obj5 = ArcTestObject.allocTheThing(lib).initWithCounter_(counter);
+      expect(counter.value, 5);
+      final obj6 = ArcTestObject.newWithCounter_(lib, counter);
+      expect(counter.value, 6);
     }
 
     test('Verify ref counts', () {
@@ -62,22 +70,36 @@ void main() {
 
     test('Manual release', () {
       final counter = calloc<Int32>();
-      final obj1 = ArcTestObject.alloc(lib).initWithCounter_(counter);
+      final obj1 = ArcTestObject.new1(lib);
+      obj1.setCounter_(counter);
       expect(counter.value, 1);
       final obj2 = ArcTestObject.alloc(lib).initWithCounter_(counter);
       expect(counter.value, 2);
-      final obj3 = ArcTestObject.alloc(lib).initWithCounter_(counter);
+      final obj3 = ArcTestObject.castFrom(ArcTestObject.alloc(lib).init());
+      obj3.setCounter_(counter);
       expect(counter.value, 3);
+      final obj4 = obj3.makeACopy();
+      expect(counter.value, 4);
+      final obj5 = ArcTestObject.allocTheThing(lib).initWithCounter_(counter);
+      expect(counter.value, 5);
+      final obj6 = ArcTestObject.newWithCounter_(lib, counter);
+      expect(counter.value, 6);
 
-      // GC to clean up temporaries created between alloc and initWithCounter_.
+      // GC to clean up temporaries created between alloc and init.
       doGC();
-      expect(counter.value, 3);
+      expect(counter.value, 6);
 
       obj1.release();
-      expect(counter.value, 2);
+      expect(counter.value, 5);
       obj2.release();
-      expect(counter.value, 1);
+      expect(counter.value, 4);
       obj3.release();
+      expect(counter.value, 3);
+      obj4.release();
+      expect(counter.value, 2);
+      obj5.release();
+      expect(counter.value, 1);
+      obj6.release();
       expect(counter.value, 0);
 
       expect(() => obj1.release(), throwsStateError);
@@ -85,7 +107,8 @@ void main() {
     });
 
     ArcTestObject unownedReferenceInner2(Pointer<Int32> counter) {
-      final obj1 = ArcTestObject.alloc(lib).initWithCounter_(counter);
+      final obj1 = ArcTestObject.new1(lib);
+      obj1.setCounter_(counter);
       expect(counter.value, 1);
       final obj1b = obj1.unownedReference();
       expect(counter.value, 1);
@@ -93,7 +116,8 @@ void main() {
       // Make a second object so that the counter check in unownedReferenceInner
       // sees some sort of change. Otherwise this test could pass just by the GC
       // not working correctly.
-      final obj2 = ArcTestObject.alloc(lib).initWithCounter_(counter);
+      final obj2 = ArcTestObject.new1(lib);
+      obj2.setCounter_(counter);
       expect(counter.value, 2);
 
       return obj1b;

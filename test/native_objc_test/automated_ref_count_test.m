@@ -8,18 +8,36 @@
   int32_t* counter;
 }
 
++ (instancetype)allocTheThing;
++ (instancetype)newWithCounter:(int32_t*) _counter;
 - (instancetype)initWithCounter:(int32_t*) _counter;
+- (void)setCounter:(int32_t*) _counter;
 - (void)dealloc;
 - (ArcTestObject*)unownedReference;
+- (ArcTestObject*)makeACopy;
+- (ArcTestObject*)returnsRetained NS_RETURNS_RETAINED;
 
 @end
 
 @implementation ArcTestObject
 
++ (instancetype)allocTheThing {
+  return [ArcTestObject alloc];
+}
+
++ (instancetype)newWithCounter:(int32_t*) _counter {
+  return [[ArcTestObject alloc] initWithCounter: _counter];
+}
+
 - (instancetype)initWithCounter:(int32_t*) _counter {
   counter = _counter;
   ++*counter;
   return [super init];
+}
+
+- (void)setCounter:(int32_t*) _counter {
+  counter = _counter;
+  ++*counter;
 }
 
 - (void)dealloc {
@@ -29,6 +47,14 @@
 
 - (ArcTestObject*)unownedReference {
   return self;
+}
+
+- (ArcTestObject*)makeACopy {
+  return [[ArcTestObject alloc] initWithCounter: counter];
+}
+
+- (ArcTestObject*)returnsRetained NS_RETURNS_RETAINED {
+  return [self retain];
 }
 
 @end

@@ -222,6 +222,9 @@ int _parseMethodVisitor(clang_types.CXCursor cursor,
     case clang_types.CXCursorKind.CXCursor_ParmDecl:
       _parseMethodParam(cursor);
       break;
+    case clang_types.CXCursorKind.CXCursor_NSReturnsRetained:
+      _markMethodReturnsRetained(cursor);
+      break;
     default:
   }
   return clang_types.CXChildVisitResult.CXChildVisit_Continue;
@@ -265,6 +268,10 @@ void _parseMethodParam(clang_types.CXCursor cursor) {
       '           >> Parameter: $type $name ${cursor.completeStringRepr()}');
   _methodStack.top.method.params
       .add(ObjCMethodParam(type, name, isNullable: isNullable));
+}
+
+void _markMethodReturnsRetained(clang_types.CXCursor cursor) {
+  _methodStack.top.method.returnsRetained = true;
 }
 
 BindingType? parseObjCCategoryDeclaration(clang_types.CXCursor cursor) {
