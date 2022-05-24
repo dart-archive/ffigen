@@ -43,6 +43,17 @@ void main() {
       blockTester.pokeBlock();
       expect(blockTester.call_(123), 223);
     });
+
+    int Function(int) makeAdder(int addTo) {
+      return (int x) => addTo + x;
+    }
+
+    test('Block from function', () {
+      final block = ObjCBlock.fromFunction(lib, makeAdder(4000));
+      final blockTester = BlockTester.makeFromBlock_(lib, block.pointer);
+      blockTester.pokeBlock();
+      expect(blockTester.call_(123), 4123);
+    });
   });
 }
 
