@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 #import <Foundation/NSObject.h>
+#import <Foundation/NSAutoreleasePool.h>
 
 @interface ArcTestObject : NSObject {
   int32_t* counter;
@@ -11,11 +12,13 @@
 + (instancetype)allocTheThing;
 + (instancetype)newWithCounter:(int32_t*) _counter;
 - (instancetype)initWithCounter:(int32_t*) _counter;
++ (ArcTestObject*)makeAndAutorelease:(int32_t*) _counter;
 - (void)setCounter:(int32_t*) _counter;
 - (void)dealloc;
 - (ArcTestObject*)unownedReference;
 - (ArcTestObject*)copyMe;
 - (ArcTestObject*)makeACopy;
+- (id)copyWithZone:(NSZone*) zone;
 - (ArcTestObject*)returnsRetained NS_RETURNS_RETAINED;
 
 @end
@@ -34,6 +37,10 @@
   counter = _counter;
   ++*counter;
   return [super init];
+}
+
++ (instancetype)makeAndAutorelease:(int32_t*) _counter {
+  return [[[ArcTestObject alloc] initWithCounter: _counter] autorelease];
 }
 
 - (void)setCounter:(int32_t*) _counter {
@@ -58,8 +65,20 @@
   return [[ArcTestObject alloc] initWithCounter: counter];
 }
 
+- (id)copyWithZone:(NSZone*) zone {
+  return [[ArcTestObject alloc] initWithCounter: counter];
+}
+
 - (ArcTestObject*)returnsRetained NS_RETURNS_RETAINED {
   return [self retain];
 }
 
 @end
+
+id createAutoreleasePool() {
+  return [NSAutoreleasePool new];
+}
+
+void destroyAutoreleasePool(id pool) {
+  [pool release];
+}

@@ -86,6 +86,10 @@ void main() {
       expect(counter.value, 2);
       final obj3 = obj1.makeACopy();
       expect(counter.value, 3);
+      final obj4 = obj1.copyWithZone_(nullptr);
+      expect(counter.value, 4);
+      final obj5 = obj1.copy();
+      expect(counter.value, 5);
     }
 
     test('copy methods ref count correctly', () {
@@ -94,6 +98,37 @@ void main() {
       copyMethodsInner(counter);
       doGC();
       expect(counter.value, 0);
+      calloc.free(counter);
+    });
+
+    autoreleaseMethodsInner(Pointer<Int32> counter) {
+      final obj = ArcTestObject.makeAndAutorelease_(lib, counter);
+      expect(counter.value, 1);
+    }
+
+    test('autorelease methods ref count correctly', () {
+      final counter = calloc<Int32>();
+      counter.value = 0;
+
+      final pool1 = lib.createAutoreleasePool();
+      autoreleaseMethodsInner(counter);
+      doGC();
+      // The autorelease pool is still holding a reference to the object.
+      expect(counter.value, 1);
+      lib.destroyAutoreleasePool(pool1);
+      expect(counter.value, 0);
+
+      final pool2 = lib.createAutoreleasePool();
+      final obj = ArcTestObject.makeAndAutorelease_(lib, counter);
+      expect(counter.value, 1);
+      doGC();
+      expect(counter.value, 1);
+      lib.destroyAutoreleasePool(pool2);
+      // The obj variable still holds a reference to the object.
+      expect(counter.value, 1);
+      obj.release();
+      expect(counter.value, 0);
+
       calloc.free(counter);
     });
 
