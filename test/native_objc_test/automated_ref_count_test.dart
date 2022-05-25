@@ -41,20 +41,57 @@ void main() {
       calloc.free(gcNow);
     }
 
-    verifyRefCountsInner(Pointer<Int32> counter) {
-      final obj1 = ArcTestObject.alloc(lib).initWithCounter_(counter);
+    newMethodsInner(Pointer<Int32> counter) {
+      final obj1 = ArcTestObject.new1(lib);
+      obj1.setCounter_(counter);
       expect(counter.value, 1);
-      final obj2 = ArcTestObject.alloc(lib).initWithCounter_(counter);
+      final obj2 = ArcTestObject.newWithCounter_(lib, counter);
       expect(counter.value, 2);
-      final obj3 = ArcTestObject.alloc(lib).initWithCounter_(counter);
-      expect(counter.value, 3);
     }
 
-    test('Verify ref counts', () {
+    test('new methods ref count correctly', () {
       // To get the GC to work correctly, the references to the objects all have
       // to be in a separate function.
       final counter = calloc<Int32>();
-      verifyRefCountsInner(counter);
+      counter.value = 0;
+      newMethodsInner(counter);
+      doGC();
+      expect(counter.value, 0);
+      calloc.free(counter);
+    });
+
+    allocMethodsInner(Pointer<Int32> counter) {
+      final obj1 = ArcTestObject.alloc(lib).initWithCounter_(counter);
+      expect(counter.value, 1);
+      final obj2 = ArcTestObject.castFrom(ArcTestObject.alloc(lib).init());
+      obj2.setCounter_(counter);
+      expect(counter.value, 2);
+      final obj3 = ArcTestObject.allocTheThing(lib).initWithCounter_(counter);
+      expect(counter.value, 3);
+    }
+
+    test('alloc and init methods ref count correctly', () {
+      final counter = calloc<Int32>();
+      counter.value = 0;
+      allocMethodsInner(counter);
+      doGC();
+      expect(counter.value, 0);
+      calloc.free(counter);
+    });
+
+    copyMethodsInner(Pointer<Int32> counter) {
+      final obj1 = ArcTestObject.newWithCounter_(lib, counter);
+      expect(counter.value, 1);
+      final obj2 = obj1.copyMe();
+      expect(counter.value, 2);
+      final obj3 = obj1.makeACopy();
+      expect(counter.value, 3);
+    }
+
+    test('copy methods ref count correctly', () {
+      final counter = calloc<Int32>();
+      counter.value = 0;
+      copyMethodsInner(counter);
       doGC();
       expect(counter.value, 0);
       calloc.free(counter);
@@ -62,15 +99,11 @@ void main() {
 
     test('Manual release', () {
       final counter = calloc<Int32>();
-      final obj1 = ArcTestObject.alloc(lib).initWithCounter_(counter);
+      final obj1 = ArcTestObject.newWithCounter_(lib, counter);
       expect(counter.value, 1);
-      final obj2 = ArcTestObject.alloc(lib).initWithCounter_(counter);
+      final obj2 = ArcTestObject.newWithCounter_(lib, counter);
       expect(counter.value, 2);
-      final obj3 = ArcTestObject.alloc(lib).initWithCounter_(counter);
-      expect(counter.value, 3);
-
-      // GC to clean up temporaries created between alloc and initWithCounter_.
-      doGC();
+      final obj3 = ArcTestObject.newWithCounter_(lib, counter);
       expect(counter.value, 3);
 
       obj1.release();
@@ -85,7 +118,8 @@ void main() {
     });
 
     ArcTestObject unownedReferenceInner2(Pointer<Int32> counter) {
-      final obj1 = ArcTestObject.alloc(lib).initWithCounter_(counter);
+      final obj1 = ArcTestObject.new1(lib);
+      obj1.setCounter_(counter);
       expect(counter.value, 1);
       final obj1b = obj1.unownedReference();
       expect(counter.value, 1);
@@ -93,7 +127,8 @@ void main() {
       // Make a second object so that the counter check in unownedReferenceInner
       // sees some sort of change. Otherwise this test could pass just by the GC
       // not working correctly.
-      final obj2 = ArcTestObject.alloc(lib).initWithCounter_(counter);
+      final obj2 = ArcTestObject.new1(lib);
+      obj2.setCounter_(counter);
       expect(counter.value, 2);
 
       return obj1b;
