@@ -1,4 +1,4 @@
-## 5.0.0
+# 5.0.0
 
 - Stable release targeting Dart 2.17, supporting ABI-specific integer types.
 - _EXPERIMENTAL_ support for ObjectiveC on MacOS hosts. The API and output
