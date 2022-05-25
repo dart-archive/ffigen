@@ -14,6 +14,7 @@
 - (void)setCounter:(int32_t*) _counter;
 - (void)dealloc;
 - (ArcTestObject*)unownedReference;
+- (ArcTestObject*)copyMe;
 - (ArcTestObject*)makeACopy;
 - (ArcTestObject*)returnsRetained NS_RETURNS_RETAINED;
 
@@ -47,6 +48,10 @@
 
 - (ArcTestObject*)unownedReference {
   return self;
+}
+
+- (ArcTestObject*)copyMe {
+  return [[ArcTestObject alloc] initWithCounter: counter];
 }
 
 - (ArcTestObject*)makeACopy {
