@@ -46,8 +46,6 @@ class ObjCInterface extends BindingType {
   late final ObjCInternalGlobal _classObject;
   late final ObjCInternalGlobal _isKindOfClass;
   late final Func _isKindOfClassMsgSend;
-  late final ObjCInternalGlobal _classGetter;
-  late final Func _classGetterMsgSend;
 
   ObjCInterface({
     String? usr,
@@ -113,8 +111,7 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
   static bool isInstance(_ObjCWrapper obj) {
     return obj._lib.${_isKindOfClassMsgSend.name}(
         obj._id, obj._lib.${_isKindOfClass.name},
-        obj._lib.${_classGetterMsgSend.name}(
-            obj._lib.${_classObject.name}, obj._lib.${_classGetter.name}));
+        obj._lib.${_classObject.name});
   }
 
 ''');
@@ -236,9 +233,6 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
     _isKindOfClass = builtInFunctions.getSelObject('isKindOfClass:');
     _isKindOfClassMsgSend = builtInFunctions.getMsgSendFunc(
         BooleanType(), [ObjCMethodParam(PointerType(objCObjectType), 'clazz')]);
-    _classGetter = builtInFunctions.getSelObject('class');
-    _classGetterMsgSend = builtInFunctions.getMsgSendFunc(
-        PointerType(objCObjectType), []);
 
     if (isNSString) {
       _addNSStringMethods();
