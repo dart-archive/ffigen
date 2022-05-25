@@ -51,6 +51,7 @@ const testNames = [
   'cast',
   'category',
   'forward_decl',
+  'is_instance',
   'method',
   'native_objc',
   'nullable',

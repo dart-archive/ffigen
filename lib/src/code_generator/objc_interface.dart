@@ -44,6 +44,8 @@ class ObjCInterface extends BindingType {
   final ObjCBuiltInFunctions builtInFunctions;
   final bool isBuiltIn;
   late final ObjCInternalGlobal _classObject;
+  late final ObjCInternalGlobal _isKindOfClass;
+  late final Func _isKindOfClassMsgSend;
 
   ObjCInterface({
     String? usr,
@@ -95,12 +97,21 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
       {bool retain = false, bool release = false}) :
           super._(id, lib, retain: retain, release: release);
 
+  /// Returns a [$name] that points to the same underlying object as [other].
   static $name castFrom<T extends _ObjCWrapper>(T other) {
     return $name._(other._id, other._lib, retain: true, release: true);
   }
 
+  /// Returns a [$name] that wraps the given raw object pointer.
   static $name castFromPointer($natLib lib, ffi.Pointer<ObjCObject> other) {
     return $name._(other, lib, retain: true, release: true);
+  }
+
+  /// Returns whether [obj] is an instance of [$name].
+  static bool isInstance(_ObjCWrapper obj) {
+    return obj._lib.${_isKindOfClassMsgSend.name}(
+        obj._id, obj._lib.${_isKindOfClass.name},
+        obj._lib.${_classObject.name});
   }
 
 ''');
@@ -219,6 +230,9 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
         (Writer w) => '${builtInFunctions.getClass.name}("$originalName")',
         builtInFunctions.getClass)
       ..addDependencies(dependencies);
+    _isKindOfClass = builtInFunctions.getSelObject('isKindOfClass:');
+    _isKindOfClassMsgSend = builtInFunctions.getMsgSendFunc(
+        BooleanType(), [ObjCMethodParam(PointerType(objCObjectType), 'clazz')]);
 
     if (isNSString) {
       _addNSStringMethods();
