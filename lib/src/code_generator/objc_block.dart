@@ -34,12 +34,21 @@ class ObjCBlock extends BindingType {
     }
 
     final isVoid = returnType == NativeType(SupportedNativeType.Void);
+    final voidPtr = PointerType(voidType).getCType(w);
     final blockPtr = PointerType(builtInFunctions.blockStruct);
     final funcType = FunctionType(returnType: returnType, parameters: params);
     final natFnType = NativeFunc(funcType);
     final natFnPtr = PointerType(natFnType).getCType(w);
     final funcPtrTrampoline =
         w.topLevelUniqueNamer.makeUnique('_${name}_fnPtrTrampoline');
+    final closureTrampoline =
+        w.topLevelUniqueNamer.makeUnique('_${name}_closureTrampoline');
+    final registerClosure =
+        w.topLevelUniqueNamer.makeUnique('_${name}_registerClosure');
+    final closureRegistry =
+        w.topLevelUniqueNamer.makeUnique('_${name}_closureRegistry');
+    final closureRegistryIndex =
+        w.topLevelUniqueNamer.makeUnique('_${name}_closureRegistryIndex');
     final trampFuncType = FunctionType(
         returnType: returnType,
         parameters: [Parameter(type: blockPtr, name: 'block'), ...params]);
@@ -60,6 +69,32 @@ class ObjCBlock extends BindingType {
     s.write(');\n');
     s.write('}\n');
 
+    // Write the closure registry function.
+    s.write('''
+final $closureRegistry = <int, Function>{};
+int $closureRegistryIndex = 0;
+$voidPtr $registerClosure(Function fn) {
+  final id = ++$closureRegistryIndex;
+  $closureRegistry[id] = fn;
+  return $voidPtr.fromAddress(id);
+}
+''');
+
+    // Write the closure based trampoline function.
+    s.write(returnType.getDartType(w));
+    s.write(' $closureTrampoline(${blockPtr.getCType(w)} block');
+    for (int i = 0; i < params.length; ++i) {
+      s.write(', ${params[i].type.getDartType(w)} ${params[i].name}');
+    }
+    s.write(') {\n');
+    s.write('  ${isVoid ? '' : 'return '}$closureRegistry['
+        'block.ref.target.address]!(');
+    for (int i = 0; i < params.length; ++i) {
+      s.write('${i == 0 ? '' : ', '}${params[i].name}');
+    }
+    s.write(');\n');
+    s.write('}\n');
+
     // Write the wrapper class.
     s.write('class $name {\n');
     s.write('  final ${blockPtr.getCType(w)} _impl;\n');
@@ -69,12 +104,18 @@ class ObjCBlock extends BindingType {
     // Constructor from a function pointer.
     final defaultValue = returnType.getDefaultValue(w, '_lib');
     final exceptionalReturn = defaultValue == null ? '' : ', $defaultValue';
-    s.write('\n');
-    s.write('  $name.fromFunctionPointer(this._lib, $natFnPtr ptr)');
-    s.write(' : _impl =  _lib.${builtInFunctions.newBlock.name}('
-        '${w.ffiLibraryPrefix}.Pointer.fromFunction<'
-        '${trampFuncType.getCType(w)}>($funcPtrTrampoline'
-        '$exceptionalReturn).cast(), ptr.cast());\n');
+    s.write('''
+  $name.fromFunctionPointer(this._lib, $natFnPtr ptr)
+      : _impl =  _lib.${builtInFunctions.newBlock.name}(
+          ${w.ffiLibraryPrefix}.Pointer.fromFunction<
+              ${trampFuncType.getCType(w)}>($funcPtrTrampoline
+                  $exceptionalReturn).cast(), ptr.cast());
+  $name.fromFunction(this._lib, ${funcType.getDartType(w)} fn)
+      : _impl =  _lib.${builtInFunctions.newBlock.name}(
+          ${w.ffiLibraryPrefix}.Pointer.fromFunction<
+              ${trampFuncType.getCType(w)}>($closureTrampoline
+                  $exceptionalReturn).cast(), $registerClosure(fn));
+''');
 
     // Get the pointer to the underlying block.
     s.write('  ${blockPtr.getCType(w)} get pointer => _impl;\n');
