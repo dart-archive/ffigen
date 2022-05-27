@@ -97,6 +97,38 @@ void main() {
       calloc.free(counter);
     });
 
+    castFromPointerInnerReleaseAndRetain(int address) {
+      final fromCast = RefCounted.castFromPointer(
+          lib, Pointer<ObjCObject>.fromAddress(address),
+          release: true, retain: true);
+      expect(fromCast.refCount, 2);
+    }
+
+    test('castFromPointer - release and retain', () {
+      final obj1 = RefCounted.new1(lib);
+      expect(obj1.refCount, 1);
+
+      castFromPointerInnerReleaseAndRetain(obj1.meAsInt());
+      doGC();
+      expect(obj1.refCount, 1);
+    });
+
+    castFromPointerInnerNoReleaseAndRetain(int address) {
+      final fromCast = RefCounted.castFromPointer(
+          lib, Pointer<ObjCObject>.fromAddress(address),
+          release: false, retain: false);
+      expect(fromCast.refCount, 1);
+    }
+
+    test('castFromPointer - no release and retain', () {
+      final obj1 = RefCounted.new1(lib);
+      expect(obj1.refCount, 1);
+
+      castFromPointerInnerNoReleaseAndRetain(obj1.meAsInt());
+      doGC();
+      expect(obj1.refCount, 1);
+    });
+
     test('Manual release', () {
       final counter = calloc<Int32>();
       final obj1 = ArcTestObject.newWithCounter_(lib, counter);
