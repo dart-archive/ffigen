@@ -132,6 +132,98 @@ void main() {
       calloc.free(counter);
     });
 
+    assignPropertiesInnerInner(Pointer<Int32> counter, ArcTestObject outerObj) {
+      final assignObj = ArcTestObject.newWithCounter_(lib, counter);
+      expect(counter.value, 2);
+      outerObj.assignedProperty = assignObj;
+      expect(counter.value, 2);
+      expect(assignObj, outerObj.assignedProperty);
+      // To test that outerObj isn't holding a reference to assignObj, we let
+      // assignObj go out of scope, but keep outerObj in scope. This is
+      // dangerous because outerObj now has a dangling reference, so don't
+      // access that reference.
+    }
+
+    assignPropertiesInner(Pointer<Int32> counter) {
+      final outerObj = ArcTestObject.newWithCounter_(lib, counter);
+      expect(counter.value, 1);
+      assignPropertiesInnerInner(counter, outerObj);
+      doGC();
+      // assignObj has been cleaned up.
+      expect(counter.value, 1);
+    }
+
+    test('assign properties ref count correctly', () {
+      final counter = calloc<Int32>();
+      counter.value = 0;
+      assignPropertiesInner(counter);
+      doGC();
+      expect(counter.value, 0);
+      calloc.free(counter);
+    });
+
+    retainPropertiesInnerInner(Pointer<Int32> counter, ArcTestObject outerObj) {
+      final retainObj = ArcTestObject.newWithCounter_(lib, counter);
+      expect(counter.value, 2);
+      outerObj.retainedProperty = retainObj;
+      expect(counter.value, 2);
+      expect(retainObj, outerObj.retainedProperty);
+    }
+
+    retainPropertiesInner(Pointer<Int32> counter) {
+      final outerObj = ArcTestObject.newWithCounter_(lib, counter);
+      expect(counter.value, 1);
+      retainPropertiesInnerInner(counter, outerObj);
+      doGC();
+      // retainObj is still around, because outerObj retains a reference to it.
+      expect(counter.value, 2);
+    }
+
+    test('retain properties ref count correctly', () {
+      final counter = calloc<Int32>();
+      counter.value = 0;
+      // The getters of retain properties retain+autorelease the value. So we
+      // need an autorelease pool.
+      final pool = lib.createAutoreleasePool();
+      retainPropertiesInner(counter);
+      doGC();
+      expect(counter.value, 1);
+      lib.destroyAutoreleasePool(pool);
+      expect(counter.value, 0);
+      calloc.free(counter);
+    });
+
+    copyPropertiesInner(Pointer<Int32> counter) {
+      final outerObj = ArcTestObject.newWithCounter_(lib, counter);
+      expect(counter.value, 1);
+
+      final copyObj = ArcTestObject.newWithCounter_(lib, counter);
+      expect(counter.value, 2);
+      outerObj.copiedProperty = copyObj;
+      // Copy properties make a copy of the object, so now we have 3 objects.
+      expect(counter.value, 3);
+      expect(copyObj, isNot(outerObj.copiedProperty));
+
+      final anotherCopy = outerObj.copiedProperty;
+      // The getter doesn't copy the object.
+      expect(counter.value, 3);
+      expect(anotherCopy, outerObj.copiedProperty);
+    }
+
+    test('copy properties ref count correctly', () {
+      final counter = calloc<Int32>();
+      counter.value = 0;
+      // The getters of copy properties retain+autorelease the value. So we need
+      // an autorelease pool.
+      final pool = lib.createAutoreleasePool();
+      copyPropertiesInner(counter);
+      doGC();
+      expect(counter.value, 1);
+      lib.destroyAutoreleasePool(pool);
+      expect(counter.value, 0);
+      calloc.free(counter);
+    });
+
     castFromPointerInnerReleaseAndRetain(int address) {
       final fromCast = RefCounted.castFromPointer(
           lib, Pointer<ObjCObject>.fromAddress(address),

@@ -21,6 +21,10 @@
 - (id)copyWithZone:(NSZone*) zone;
 - (ArcTestObject*)returnsRetained NS_RETURNS_RETAINED;
 
+@property (assign) ArcTestObject* assignedProperty;
+@property (retain) ArcTestObject* retainedProperty;
+@property (copy) ArcTestObject* copiedProperty;
+
 @end
 
 @interface RefCounted : NSObject
@@ -58,6 +62,8 @@
 
 - (void)dealloc {
   --*counter;
+  [_retainedProperty release];
+  [_copiedProperty release];
   [super dealloc];
 }
 
