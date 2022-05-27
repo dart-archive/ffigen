@@ -1,3 +1,7 @@
+# 5.0.1
+
+- Add a the xcode tools llvm as default path on MacOS.
+
 # 5.0.0
 
 - Stable release targeting Dart 2.17, supporting ABI-specific integer types.
