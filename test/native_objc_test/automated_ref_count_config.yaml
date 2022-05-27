@@ -3,8 +3,9 @@ description: 'Tests automatic reference counting of Objective-C objects'
 language: objc
 output: 'test/native_objc_test/automated_ref_count_bindings.dart'
 functions:
-  exclude:
-    - '.*'
+  include:
+    - createAutoreleasePool
+    - destroyAutoreleasePool
 headers:
   entry-points:
     - 'test/native_objc_test/automated_ref_count_test.m'
