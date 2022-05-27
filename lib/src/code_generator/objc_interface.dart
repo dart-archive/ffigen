@@ -103,8 +103,9 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
   }
 
   /// Returns a [$name] that wraps the given raw object pointer.
-  static $name castFromPointer($natLib lib, ffi.Pointer<ObjCObject> other) {
-    return $name._(other, lib, retain: true, release: true);
+  static $name castFromPointer($natLib lib, ffi.Pointer<ObjCObject> other,
+      {bool retain = false, bool release = false}) {
+    return $name._(other, lib, retain: retain, release: release);
   }
 
   /// Returns whether [obj] is an instance of [$name].
