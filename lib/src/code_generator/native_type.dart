@@ -66,7 +66,7 @@ class NativeType extends Type {
 
 class BooleanType extends NativeType {
   // Booleans are treated as uint8.
-  const BooleanType._() : super._('Uint8', 'int', '0');
+  const BooleanType._() : super._('Bool', 'bool', 'false');
   static const _boolean = BooleanType._();
   factory BooleanType() => _boolean;
 

@@ -167,7 +167,6 @@ const supportedNativeType_mappings = <String, SupportedNativeType>{
 // Boolean flags.
 const sort = 'sort';
 const useSupportedTypedefs = 'use-supported-typedefs';
-const dartBool = 'dart-bool';
 const useDartHandle = 'use-dart-handle';
 
 const comments = 'comments';

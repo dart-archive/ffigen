@@ -29,7 +29,6 @@ class Library {
     String? description,
     required List<Binding> bindings,
     String? header,
-    bool dartBool = true,
     bool sort = false,
     StructPackingOverride? packingOverride,
     Set<LibraryImport>? libraryImports,
@@ -75,7 +74,6 @@ class Library {
       className: name,
       classDocComment: description,
       header: header,
-      dartBool: dartBool,
       additionalImports: libraryImports,
     );
   }

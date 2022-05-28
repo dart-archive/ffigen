@@ -60,8 +60,6 @@ class Writer {
   late String _symbolAddressVariableName;
   late String _symbolAddressLibraryVarName;
 
-  final bool dartBool;
-
   /// Initial namers set after running constructor. Namers are reset to this
   /// initial state everytime [generate] is called.
   late UniqueNamer _initialTopLevelUniqueNamer, _initialWrapperLevelUniqueNamer;
@@ -82,7 +80,6 @@ class Writer {
     required this.lookUpBindings,
     required this.noLookUpBindings,
     required String className,
-    required this.dartBool,
     Set<LibraryImport>? additionalImports,
     this.classDocComment,
     this.header,

@@ -333,7 +333,6 @@ void main() {
   test('boolean_dartBool', () {
     final library = Library(
       name: 'Bindings',
-      dartBool: true,
       bindings: [
         Func(
           name: 'test1',
@@ -352,29 +351,6 @@ void main() {
       ],
     );
     _matchLib(library, 'boolean_dartbool');
-  });
-  test('boolean_no_dartBool', () {
-    final library = Library(
-      name: 'Bindings',
-      dartBool: false,
-      bindings: [
-        Func(
-          name: 'test1',
-          returnType: BooleanType(),
-          parameters: [
-            Parameter(name: 'a', type: BooleanType()),
-            Parameter(name: 'b', type: PointerType(BooleanType())),
-          ],
-        ),
-        Struct(
-          name: 'Test2',
-          members: [
-            Member(name: 'a', type: BooleanType()),
-          ],
-        ),
-      ],
-    );
-    _matchLib(library, 'boolean_no_dartbool');
   });
   test('sort bindings', () {
     final library = Library(

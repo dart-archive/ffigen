@@ -119,10 +119,6 @@ class Config {
   StructPackingOverride get structPackingOverride => _structPackingOverride;
   late StructPackingOverride _structPackingOverride;
 
-  /// If dart bool should be generated for C booleans.
-  bool get dartBool => _dartBool;
-  late bool _dartBool;
-
   /// Name of the wrapper class.
   String get wrapperName => _wrapperName;
   late String _wrapperName;
@@ -436,13 +432,6 @@ class Config {
         defaultValue: () => StructPackingOverride(),
         extractedResult: (dynamic result) =>
             _structPackingOverride = result as StructPackingOverride,
-      ),
-      [strings.dartBool]: Specification<bool>(
-        requirement: Requirement.no,
-        validator: booleanValidator,
-        extractor: booleanExtractor,
-        defaultValue: () => true,
-        extractedResult: (dynamic result) => _dartBool = result as bool,
       ),
       [strings.name]: Specification<String>(
         requirement: Requirement.prefer,
