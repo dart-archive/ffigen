@@ -69,19 +69,18 @@ class Bindings {
   late final _func3 = _func3Ptr.asFunction<void Function(int, int)>();
 
   bool func4(
-    ffi.Pointer<ffi.Uint8> a,
+    ffi.Pointer<ffi.Bool> a,
   ) {
     return _func4(
-          a,
-        ) !=
-        0;
+      a,
+    );
   }
 
   late final _func4Ptr =
-      _lookup<ffi.NativeFunction<ffi.Uint8 Function(ffi.Pointer<ffi.Uint8>)>>(
+      _lookup<ffi.NativeFunction<ffi.Bool Function(ffi.Pointer<ffi.Bool>)>>(
           'func4');
   late final _func4 =
-      _func4Ptr.asFunction<int Function(ffi.Pointer<ffi.Uint8>)>();
+      _func4Ptr.asFunction<bool Function(ffi.Pointer<ffi.Bool>)>();
 }
 
 class Struct1 extends ffi.Struct {
@@ -115,6 +114,6 @@ typedef NestingASpecifiedType = ffi.IntPtr;
 class Struct2 extends ffi.Opaque {}
 
 class WithBoolAlias extends ffi.Struct {
-  @ffi.Uint8()
-  external int b;
+  @ffi.Bool()
+  external bool b;
 }

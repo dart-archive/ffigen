@@ -98,39 +98,18 @@ class Func extends LookUpBinding {
       p.name = paramNamer.makeUnique(p.name);
     }
     // Write enclosing function.
-    if (w.dartBool && functionType.returnType.typealiasType is BooleanType) {
-      // Use bool return type in enclosing function.
-      s.write('bool $enclosingFuncName(\n');
-    } else {
-      s.write(
-          '${functionType.returnType.getDartType(w)} $enclosingFuncName(\n');
-    }
+    s.write('${functionType.returnType.getDartType(w)} $enclosingFuncName(\n');
     for (final p in functionType.parameters) {
-      if (w.dartBool && p.type.typealiasType is BooleanType) {
-        // Use bool parameter type in enclosing function.
-        s.write('  bool ${p.name},\n');
-      } else {
-        s.write('  ${p.type.getDartType(w)} ${p.name},\n');
-      }
+      s.write('  ${p.type.getDartType(w)} ${p.name},\n');
     }
     s.write(') {\n');
     s.write('return $funcVarName');
 
     s.write('(\n');
     for (final p in functionType.parameters) {
-      if (w.dartBool && p.type.typealiasType is BooleanType) {
-        // Convert bool parameter to int before calling.
-        s.write('    ${p.name}?1:0,\n');
-      } else {
-        s.write('    ${p.name},\n');
-      }
+      s.write('    ${p.name},\n');
     }
-    if (w.dartBool && functionType.returnType.typealiasType is BooleanType) {
-      // Convert int return type to bool.
-      s.write('  )!=0;\n');
-    } else {
-      s.write('  );\n');
-    }
+    s.write('  );\n');
     s.write('}\n');
 
     final cType = exposeFunctionTypedefs

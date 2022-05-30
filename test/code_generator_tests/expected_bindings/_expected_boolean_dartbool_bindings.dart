@@ -19,23 +19,22 @@ class Bindings {
 
   bool test1(
     bool a,
-    ffi.Pointer<ffi.Uint8> b,
+    ffi.Pointer<ffi.Bool> b,
   ) {
     return _test1(
-          a ? 1 : 0,
-          b,
-        ) !=
-        0;
+      a,
+      b,
+    );
   }
 
   late final _test1Ptr = _lookup<
       ffi.NativeFunction<
-          ffi.Uint8 Function(ffi.Uint8, ffi.Pointer<ffi.Uint8>)>>('test1');
+          ffi.Bool Function(ffi.Bool, ffi.Pointer<ffi.Bool>)>>('test1');
   late final _test1 =
-      _test1Ptr.asFunction<int Function(int, ffi.Pointer<ffi.Uint8>)>();
+      _test1Ptr.asFunction<bool Function(bool, ffi.Pointer<ffi.Bool>)>();
 }
 
 class Test2 extends ffi.Struct {
-  @ffi.Uint8()
-  external int a;
+  @ffi.Bool()
+  external bool a;
 }

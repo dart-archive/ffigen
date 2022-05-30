@@ -25,15 +25,14 @@ class NativeLibrary {
     bool x,
   ) {
     return _Function1Bool(
-          x ? 1 : 0,
-        ) !=
-        0;
+      x,
+    );
   }
 
   late final _Function1BoolPtr =
-      _lookup<ffi.NativeFunction<ffi.Uint8 Function(ffi.Uint8)>>(
-          'Function1Bool');
-  late final _Function1Bool = _Function1BoolPtr.asFunction<int Function(int)>();
+      _lookup<ffi.NativeFunction<ffi.Bool Function(ffi.Bool)>>('Function1Bool');
+  late final _Function1Bool =
+      _Function1BoolPtr.asFunction<bool Function(bool)>();
 
   int Function1Uint8(
     int x,

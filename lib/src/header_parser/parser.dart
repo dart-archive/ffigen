@@ -28,7 +28,6 @@ Library parse(Config c) {
     name: config.wrapperName,
     description: config.wrapperDocComment,
     header: config.preamble,
-    dartBool: config.dartBool,
     sort: config.sort,
     packingOverride: config.structPackingOverride,
     libraryImports: c.libraryImports.values.toSet(),
