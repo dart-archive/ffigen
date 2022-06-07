@@ -401,18 +401,6 @@ use-supported-typedefs: true
   </td>
   </tr>
   <tr>
-    <td>dart-bool</td>
-    <td>Should generate dart `bool` instead of Uint8 for c99 bool in functions.<br>
-    <b>Default: true</b>
-    </td>
-    <td>
-
-```yaml
-dart-bool: true
-```
-  </td>
-  </tr>
-  <tr>
     <td>use-dart-handle</td>
     <td>Should map `Dart_Handle` to `Handle`.<br>
     <b>Default: true</b>
@@ -504,9 +492,6 @@ language: 'objc'
 </tbody>
 </table>
 
-## Limitations
-1. Multi OS support for types such as long. [Issue #7](https://github.com/dart-lang/ffigen/issues/7)
-
 ## Trying out examples
 1. `cd examples/<example_u_want_to_run>`, Run `dart pub get`.
 2. Run `dart run ffigen`.
@@ -564,11 +549,6 @@ Note: exclude overrides include.
 
 Ffigen treats `char*` just as any other pointer,(`Pointer<Int8>`).
 To convert these to/from `String`, you can use [package:ffi](https://pub.dev/packages/ffi). Use `ptr.cast<Utf8>().toDartString()` to convert `char*` to dart `string` and `"str".toNativeUtf8()` to convert `string` to `char*`.
-### How does ffigen handle C99 bool data type?
-
-Although `dart:ffi` doesn't have a NativeType for `bool`, they can be implemented as `Uint8`.
-Ffigen generates dart `bool` for function parameters and return type by default.
-To disable this, and use `int` instead, set `dart-bool: false` in configurations.
 
 ### How are unnamed enums handled?
 
