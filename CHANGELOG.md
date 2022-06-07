@@ -1,3 +1,7 @@
+# 6.0.1
+
+- Replace path separators in `include-directives` before matching file names.
+
 # 6.0.0
 - Removed config `dart-bool`. Booleans are now always generated with `bool`
 and `ffi.Bool` as it's Dart and C Type respectively.
