@@ -307,7 +307,8 @@ Headers headersExtractor(dynamic yamlConfig) {
     if (key == strings.includeDirectives) {
       for (final h in (yamlConfig[key] as YamlList)) {
         final headerGlob = h as String;
-        includeGlobs.add(quiver.Glob(headerGlob));
+        final fixedGlob = _replaceSeparators(headerGlob);
+        includeGlobs.add(quiver.Glob(fixedGlob));
       }
     }
   }
