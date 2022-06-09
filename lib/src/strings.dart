@@ -207,10 +207,16 @@ const windowsDylibLocations = {
   r'C:\Program Files\LLVM\bin\',
 };
 const macOsDylibLocations = {
-  '/usr/local/opt/llvm/lib/',
-  '/opt/homebrew/opt/llvm/lib/',
+  // Default Xcode installation.
+  '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/',
+  // Default Xcode commandline tools installation.
   '/Library/Developer/CommandLineTools/usr/',
+  // Default path for LLVM installed with apt-get.
+  '/usr/local/opt/llvm/lib/',
+  // Default path for LLVM installed with brew.
+  '/opt/homebrew/opt/llvm/lib/',
 };
+const xcodeDylibLocation = 'Toolchains/XcodeDefault.xctoolchain/usr/lib/';
 
 // Writen doubles.
 const doubleInfinity = 'double.infinity';
