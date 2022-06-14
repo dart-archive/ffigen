@@ -1,6 +1,7 @@
 # 6.0.1
 
 - Replace path separators in `include-directives` before matching file names.
+- Add more ways to find `libclang`.
 
 # 6.0.0
 - Removed config `dart-bool`. Booleans are now always generated with `bool`
