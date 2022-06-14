@@ -381,6 +381,20 @@ String findDylibAtDefaultLocations() {
       k = findLibclangDylib(l);
       if (k != null) return k;
     }
+    Process.runSync('ldconfig', ['-p']);
+    final ldConfigResult = Process.runSync('ldconfig', ['-p']);
+    if (ldConfigResult.exitCode == 0) {
+      final lines = (ldConfigResult.stdout as String).split('\n');
+      final paths = [
+        for (final line in lines)
+          if (line.contains('libclang')) line.split(' => ')[1],
+      ];
+      for (final location in paths) {
+        if (File(location).existsSync()) {
+          return location;
+        }
+      }
+    }
   } else if (Platform.isWindows) {
     for (final l in strings.windowsDylibLocations) {
       k = findLibclangDylib(l);
