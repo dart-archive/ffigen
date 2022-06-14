@@ -57,7 +57,6 @@ void matchLibraryWithExpected(
         .readAsStringSync()
         .replaceAll('\r', '')
         .replaceAll('\\\r', '');
-    ;
     expect(actual, expected);
     if (file.existsSync()) {
       file.delete();
