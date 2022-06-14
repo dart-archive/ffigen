@@ -79,7 +79,7 @@ jobs:
           
   test-windows:
     needs: analyze
-    runs-on: windows-latests
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v1.0
