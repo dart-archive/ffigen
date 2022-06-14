@@ -40,8 +40,10 @@ void main() {
       library.generateFile(file);
 
       try {
-        final actual = file.readAsStringSync();
-        final expected = File(path.join(config.output)).readAsStringSync();
+        final actual = file.readAsStringSync().replaceAll('\r', '');
+        final expected = File(path.join(config.output))
+            .readAsStringSync()
+            .replaceAll('\r', '');
         expect(actual, expected);
         if (file.existsSync()) {
           file.delete();
