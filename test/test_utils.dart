@@ -52,11 +52,10 @@ void matchLibraryWithExpected(
 
   try {
     final actual =
-        file.readAsStringSync().replaceAll('\r', '').replaceAll('\\\r', '');
+        file.readAsStringSync().replaceAll('\r', '');
     final expected = File(path.joinAll(pathToExpected))
         .readAsStringSync()
-        .replaceAll('\r', '')
-        .replaceAll('\\\r', '');
+        .replaceAll('\r', '');
     expect(actual, expected);
     if (file.existsSync()) {
       file.delete();
