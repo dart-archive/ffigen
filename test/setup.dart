@@ -8,16 +8,14 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:path/path.dart' as path;
-
 Future<void> _run(String subdir, String script) async {
-  final dir = path.join(path.dirname(Platform.script.path), subdir);
-  print('\nRunning $script in $dir');
-  final args = ['run', path.join(dir, script)];
+  final dir = Platform.script.resolve('$subdir/');
+  print('\nRunning $script in ${dir.toFilePath()}');
+  final args = ['run', dir.resolve(script).toFilePath()];
   final process = await Process.start(
     Platform.executable,
     args,
-    workingDirectory: dir,
+    workingDirectory: dir.toFilePath(),
   );
   unawaited(stdout.addStream(process.stdout));
   unawaited(stderr.addStream(process.stderr));
