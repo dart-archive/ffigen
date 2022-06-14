@@ -386,6 +386,10 @@ String findDylibAtDefaultLocations() {
       if (k != null) return k;
     }
   } else if (Platform.isMacOS) {
+    for (final l in strings.macOsDylibLocations) {
+      k = findLibclangDylib(l);
+      if (k != null) return k;
+    }
     final findLibraryResult =
         Process.runSync('xcodebuild', ['-find-library', 'libclang.dylib']);
     if (findLibraryResult.exitCode == 0) {
@@ -402,10 +406,6 @@ String findDylibAtDefaultLocations() {
       if (File(location).existsSync()) {
         return location;
       }
-    }
-    for (final l in strings.macOsDylibLocations) {
-      k = findLibclangDylib(l);
-      if (k != null) return k;
     }
   } else {
     throw Exception('Unsupported Platform.');
