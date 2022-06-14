@@ -391,6 +391,23 @@ String findDylibAtDefaultLocations() {
       k = findLibclangDylib(l);
       if (k != null) return k;
     }
+    final findLibraryResult =
+        Process.runSync('xcodebuild', ['-find-library', 'libclang.dylib']);
+    if (findLibraryResult.exitCode == 0) {
+      final location = (findLibraryResult.stdout as String).split('\n').first;
+      if (File(location).existsSync()) {
+        return location;
+      }
+    }
+    final xcodePathResult = Process.runSync('xcode-select', ['-print-path']);
+    if (xcodePathResult.exitCode == 0) {
+      final xcodePath = (xcodePathResult.stdout as String).split('\n').first;
+      final location =
+          p.join(xcodePath, strings.xcodeDylibLocation, strings.dylibFileName);
+      if (File(location).existsSync()) {
+        return location;
+      }
+    }
   } else {
     throw Exception('Unsupported Platform.');
   }
