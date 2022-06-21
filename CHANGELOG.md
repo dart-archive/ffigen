@@ -1,3 +1,7 @@
+# 6.0.2
+
+- Bump `package:ffi` to 2.0.1.
+
 # 6.0.1
 
 - Replace path separators in `include-directives` before matching file names.
