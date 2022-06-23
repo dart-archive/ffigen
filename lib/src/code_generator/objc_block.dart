@@ -121,13 +121,13 @@ $voidPtr $registerClosure(Function fn) {
     // Call method.
     s.write('  ${returnType.getDartType(w)} call(');
     for (int i = 0; i < params.length; ++i) {
-      s.write('${i == 0 ? '' : ', '}${params[i].type.getDartType(w)} ${
-          params[i].name}');
+      s.write('${i == 0 ? '' : ', '}${params[i].type.getDartType(w)}');
+      s.write(' ${params[i].name}');
     }
     s.write(''') {
-    ${isVoid ? '' : 'return '}_impl.ref.invoke.cast<${
-        natTrampFnType.getCType(w)}>().asFunction<${
-            trampFuncType.getDartType(w)}>()(_impl''');
+    ${isVoid ? '' : 'return '}_impl.ref.invoke.cast<
+        ${natTrampFnType.getCType(w)}>().asFunction<
+            ${trampFuncType.getDartType(w)}>()(_impl''');
     for (int i = 0; i < params.length; ++i) {
       s.write(', ${params[i].name}');
     }
