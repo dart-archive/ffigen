@@ -42,6 +42,7 @@ void main() {
       final blockTester = BlockTester.makeFromBlock_(lib, block.pointer);
       blockTester.pokeBlock();
       expect(blockTester.call_(123), 223);
+      expect(block(123), 223);
     });
 
     int Function(int) makeAdder(int addTo) {
@@ -53,6 +54,7 @@ void main() {
       final blockTester = BlockTester.makeFromBlock_(lib, block.pointer);
       blockTester.pokeBlock();
       expect(blockTester.call_(123), 4123);
+      expect(block(123), 4123);
     });
   });
 }
