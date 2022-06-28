@@ -8,6 +8,7 @@
 import 'dart:ffi';
 import 'dart:io';
 
+import 'package:ffi/ffi.dart';
 import 'package:test/test.dart';
 import '../test_utils.dart';
 import 'block_bindings.dart';
@@ -15,6 +16,7 @@ import 'util.dart';
 
 void main() {
   late BlockTestObjCLibrary lib;
+  late void Function(Pointer<Char>, Pointer<Void>) executeInternalCommand;
 
   group('Blocks', () {
     setUpAll(() {
@@ -23,6 +25,11 @@ void main() {
       verifySetupFile(dylib);
       lib = BlockTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
       generateBindingsForCoverage('block');
+
+      executeInternalCommand = DynamicLibrary.process().lookupFunction<
+          Void Function(Pointer<Char>, Pointer<Void>),
+          void Function(
+              Pointer<Char>, Pointer<Void>)>('Dart_ExecuteInternalCommand');
     });
 
     test('BlockTester is working', () {
@@ -55,6 +62,28 @@ void main() {
       blockTester.pokeBlock();
       expect(blockTester.call_(123), 4123);
       expect(block(123), 4123);
+    });
+
+    doGC() {
+      final gcNow = "gc-now".toNativeUtf8();
+      executeInternalCommand(gcNow.cast(), nullptr);
+      calloc.free(gcNow);
+    }
+
+    blockRefCountInner() {
+      final block1 = ObjCBlock.fromFunctionPointer(
+          lib, Pointer.fromFunction(_add100, 999));
+      final block2 = ObjCBlock.fromFunction(lib, makeAdder(4000));
+      expect(internal_ObjCBlock_closureRegistry.length, 1);
+    }
+
+    test('Block ref counting', () {
+      // TODO: Test Dart obj kept alive by reference held by objc code.
+      doGC();
+      expect(internal_ObjCBlock_closureRegistry.length, 0);
+      blockRefCountInner();
+      doGC();
+      expect(internal_ObjCBlock_closureRegistry.length, 0);
     });
   });
 }

@@ -46,7 +46,7 @@ class ObjCBlock extends BindingType {
     final registerClosure =
         w.topLevelUniqueNamer.makeUnique('_${name}_registerClosure');
     final closureRegistry =
-        w.topLevelUniqueNamer.makeUnique('_${name}_closureRegistry');
+        w.topLevelUniqueNamer.makeUnique('internal_${name}_closureRegistry');
     final closureRegistryIndex =
         w.topLevelUniqueNamer.makeUnique('_${name}_closureRegistryIndex');
     final trampFuncType = FunctionType(
@@ -72,7 +72,7 @@ class ObjCBlock extends BindingType {
 
     // Write the closure registry function.
     s.write('''
-final $closureRegistry = <int, Function>{};
+final $closureRegistry = Expando<Function>();
 int $closureRegistryIndex = 0;
 $voidPtr $registerClosure(Function fn) {
   final id = ++$closureRegistryIndex;
@@ -97,7 +97,7 @@ $voidPtr $registerClosure(Function fn) {
     s.write('}\n');
 
     // Write the wrapper class.
-    s.write('class $name {\n');
+    s.write('class $name implements ${w.ffiLibraryPrefix}.Finalizable {\n');
     s.write('  final ${blockPtr.getCType(w)} _impl;\n');
     s.write('  final ${w.className} _lib;\n');
     s.write('  $name._(this._impl, this._lib);\n');
@@ -110,12 +110,18 @@ $voidPtr $registerClosure(Function fn) {
       : _impl =  _lib.${builtInFunctions.newBlock.name}(
           ${w.ffiLibraryPrefix}.Pointer.fromFunction<
               ${trampFuncType.getCType(w)}>($funcPtrTrampoline
-                  $exceptionalReturn).cast(), ptr.cast());
+                  $exceptionalReturn).cast(), ptr.cast()) {
+    _lib.${retainFunc.name}(_impl);
+    _lib.${releaseFinalizer.name}.attach(this, _impl.cast(), detach: this);
+  }
   $name.fromFunction(this._lib, ${funcType.getDartType(w)} fn)
       : _impl =  _lib.${builtInFunctions.newBlock.name}(
           ${w.ffiLibraryPrefix}.Pointer.fromFunction<
               ${trampFuncType.getCType(w)}>($closureTrampoline
-                  $exceptionalReturn).cast(), $registerClosure(fn));
+                  $exceptionalReturn).cast(), $registerClosure(fn)) {
+    _lib.${retainFunc.name}(_impl);
+    _lib.${releaseFinalizer.name}.attach(this, _impl.cast(), detach: this);
+  }
 ''');
 
     // Call method.
