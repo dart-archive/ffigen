@@ -178,8 +178,8 @@ void _parseProperty(clang_types.CXCursor cursor) {
         property: property,
         dartDoc: dartDoc,
         kind: ObjCMethodKind.propertySetter,
-        isClass: isClass);
-    setter.returnType = NativeType(SupportedNativeType.Void);
+        isClass: isClass,
+        returnType: NativeType(SupportedNativeType.Void));
     setter.params
         .add(ObjCMethodParam(fieldType, 'value', isNullable: isNullable));
     itf.addMethod(setter);
@@ -190,11 +190,19 @@ void _parseMethod(clang_types.CXCursor cursor) {
   final methodName = cursor.spelling();
   final isClassMethod =
       cursor.kind == clang_types.CXCursorKind.CXCursor_ObjCClassMethodDecl;
+  final returnType = clang.clang_getCursorResultType(cursor).toCodeGenType();
+  if (returnType.isIncompleteCompound) {
+    _logger.warning('Method "$methodName" in instance '
+        '"${_interfaceStack.top.interface.originalName}" has incomplete '
+        'return type: $returnType.');
+    return;
+  }
   final method = ObjCMethod(
     originalName: methodName,
     dartDoc: getCursorDocComment(cursor),
     kind: ObjCMethodKind.method,
     isClass: isClassMethod,
+    returnType: returnType,
   );
   final parsed = _ParsedObjCMethod(method);
   _logger.fine('       > ${isClassMethod ? 'Class' : 'Instance'} method: '
@@ -215,10 +223,6 @@ void _parseMethod(clang_types.CXCursor cursor) {
 int _parseMethodVisitor(clang_types.CXCursor cursor,
     clang_types.CXCursor parent, Pointer<Void> clientData) {
   switch (cursor.kind) {
-    case clang_types.CXCursorKind.CXCursor_TypeRef:
-    case clang_types.CXCursorKind.CXCursor_ObjCClassRef:
-      _parseMethodReturnType(cursor);
-      break;
     case clang_types.CXCursorKind.CXCursor_ParmDecl:
       _parseMethodParam(cursor);
       break;
@@ -228,22 +232,6 @@ int _parseMethodVisitor(clang_types.CXCursor cursor,
     default:
   }
   return clang_types.CXChildVisitResult.CXChildVisit_Continue;
-}
-
-void _parseMethodReturnType(clang_types.CXCursor cursor) {
-  final parsed = _methodStack.top;
-  if (parsed.method.returnType != null) {
-    parsed.hasError = true;
-    _logger.fine(
-        '           >> Extra return type: ${cursor.completeStringRepr()}');
-    _logger.warning('Method "${parsed.method.originalName}" in instance '
-        '"${_interfaceStack.top.interface.originalName}" has multiple return '
-        'types.');
-  } else {
-    parsed.method.returnType = cursor.type().toCodeGenType();
-    _logger.fine('           >> Return type: '
-        '${parsed.method.returnType} ${cursor.completeStringRepr()}');
-  }
 }
 
 void _parseMethodParam(clang_types.CXCursor cursor) {
@@ -260,14 +248,21 @@ void _parseMethodParam(clang_types.CXCursor cursor) {
 
   option set.
   */
+  final parsed = _methodStack.top;
   final isNullable =
       cursor.type().kind == clang_types.CXTypeKind.CXType_ObjCObjectPointer;
   final name = cursor.spelling();
   final type = cursor.type().toCodeGenType();
+  if (type.isIncompleteCompound) {
+    parsed.hasError = true;
+    _logger.warning('Method "${parsed.method.originalName}" in instance '
+        '"${_interfaceStack.top.interface.originalName}" has incomplete '
+        'parameter type: $type.');
+    return;
+  }
   _logger.fine(
       '           >> Parameter: $type $name ${cursor.completeStringRepr()}');
-  _methodStack.top.method.params
-      .add(ObjCMethodParam(type, name, isNullable: isNullable));
+  parsed.method.params.add(ObjCMethodParam(type, name, isNullable: isNullable));
 }
 
 void _markMethodReturnsRetained(clang_types.CXCursor cursor) {

@@ -47,6 +47,7 @@ Future<void> _generateBindings(String config) async {
 
 const testNames = [
   'automated_ref_count',
+  'bad_method',
   'block',
   'cast',
   'category',
