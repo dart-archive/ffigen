@@ -791,6 +791,23 @@ class Clang {
       _clang_Type_getObjCObjectBaseTypePtr
           .asFunction<CXType Function(CXType)>();
 
+  /// Retrieve the return type associated with a given cursor.
+  ///
+  /// This only returns a valid type if the cursor refers to a function or method.
+  CXType clang_getCursorResultType(
+    CXCursor C,
+  ) {
+    return _clang_getCursorResultType(
+      C,
+    );
+  }
+
+  late final _clang_getCursorResultTypePtr =
+      _lookup<ffi.NativeFunction<CXType Function(CXCursor)>>(
+          'clang_getCursorResultType');
+  late final _clang_getCursorResultType =
+      _clang_getCursorResultTypePtr.asFunction<CXType Function(CXCursor)>();
+
   /// Return the number of elements of an array or vector type.
   ///
   /// If a type is passed in that is not an array or vector type,
