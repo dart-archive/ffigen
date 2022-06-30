@@ -46,7 +46,8 @@ Type getCodeGenType(
     switch (cxtype.kind) {
       case clang_types.CXTypeKind.CXType_ObjCObjectPointer:
         final pt = clang.clang_getPointeeType(cxtype);
-        final s = getCodeGenType(pt, pointerReference: true);
+        final s = getCodeGenType(pt,
+            ignoreFilter: ignoreFilter, pointerReference: true);
         if (s is ObjCInterface) {
           return s;
         }
