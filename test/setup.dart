@@ -26,25 +26,9 @@ Future<void> _run(String subdir, String script) async {
 }
 
 Future<void> main() async {
-  // findHeaders(Directory('/'));
-  // print("\n\n\n");
-
   await _run('native_test', 'build_test_dylib.dart');
   if (Platform.isMacOS) {
     await _run('native_objc_test', 'setup.dart');
   }
   print('\nSuccess :)\n');
-}
-
-void findHeaders(Directory d) {
-  for (final f in d.listSync(recursive: false, followLinks: false)) {
-    if (f is File && f.path.endsWith('NSObject.h')) {
-      print(f.path);
-    } else if (f is Directory) {
-      try {
-        findHeaders(f);
-      } catch (e) {
-      }
-    }
-  }
 }

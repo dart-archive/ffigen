@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
@@ -67,15 +68,7 @@ List<Binding> parseToBindings() {
   if (config.language == Language.objc) {
     compilerOpts.addAll([
       ...strings.clangLangObjC,
-      '-isysroot',
-      '/Applications/Xcode_13.2.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk',
-      // '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers',
-      // '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework',
-      // '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks',
-      // '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library',
-      // '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System',
-      // '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk',
-      // '-I/Library/Developer/CommandLineTools/SDKs',
+      ..._findObjectiveCSysroot(),
     ]);
   }
 
@@ -129,4 +122,16 @@ List<Binding> parseToBindings() {
   clangCmdArgs.dispose(cmdLen);
   clang.clang_disposeIndex(index);
   return bindings.toList();
+}
+
+List<String> _findObjectiveCSysroot() {
+  final result = Process.runSync('xcrun', ['--show-sdk-path']);
+  if (result.exitCode != 0) {
+    for (final line in (result.stdout as String).split('\n')) {
+      if (!line.isEmpty) {
+        return ['-isysroot', line];
+      }
+    }
+  }
+  return [];
 }

@@ -208,7 +208,7 @@ const windowsDylibLocations = {
 };
 const macOsDylibLocations = {
   // Default Xcode commandline tools installation.
-  '/Library/Developer/CommandLineTools/usr/lib/',
+  '/Library/Developer/CommandLineTools/usr/',
   // Default path for LLVM installed with apt-get.
   '/usr/local/opt/llvm/lib/',
   // Default path for LLVM installed with brew.

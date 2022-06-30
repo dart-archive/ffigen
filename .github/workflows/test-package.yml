@@ -13,7 +13,50 @@ env:
   PUB_ENVIRONMENT: bot.github
 
 jobs:
+  # Check code formatting and static analysis on a single OS (macos).
+  analyze:
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        sdk: [stable]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dart-lang/setup-dart@v1.0
+        with:
+          sdk: ${{ matrix.sdk }}
+      - id: install
+        name: Install dependencies
+        run: dart pub get
+      - name: Check formatting
+        run: dart format --output=none --set-exit-if-changed .
+        if: always() && steps.install.outcome == 'success'
+      - name: Build test dylib and bindings
+        run: dart test/setup.dart
+      - name: Analyze code
+        run: dart analyze --fatal-infos
+        if: always() && steps.install.outcome == 'success'
+
+  test-linux:
+    needs: analyze
+    # This job requires clang-10 which is the default on 20.04
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dart-lang/setup-dart@v1.0
+        with:
+          sdk: stable
+      - name: Install dependencies
+        run: dart pub get
+      - name: Install libclang-10-dev
+        run: sudo apt-get install libclang-10-dev
+      - name: Build test dylib and bindings
+        run: dart test/setup.dart
+      - name: Run VM tests
+        run: dart test --platform vm
+
   test-mac:
+    needs: analyze
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
@@ -22,8 +65,6 @@ jobs:
           sdk: stable
       - name: Install dependencies
         run: dart pub get
-      - name: Find sysroot
-        run: xcrun --show-sdk-path
       - name: Build test dylib and bindings
         run: dart test/setup.dart
       - name: Run VM tests
@@ -35,3 +76,18 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: lcov.info
+          
+  test-windows:
+    needs: analyze
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dart-lang/setup-dart@v1.0
+        with:
+          sdk: stable
+      - name: Install dependencies
+        run: dart pub get
+      - name: Build test dylib and bindings
+        run: dart test/setup.dart
+      - name: Run VM tests
+        run: dart test --platform vm
