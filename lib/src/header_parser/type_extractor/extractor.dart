@@ -45,6 +45,12 @@ Type getCodeGenType(
   if (config.language == Language.objc) {
     switch (cxtype.kind) {
       case clang_types.CXTypeKind.CXType_ObjCObjectPointer:
+        final pt = clang.clang_getPointeeType(cxtype);
+        final s = getCodeGenType(pt, pointerReference: true);
+        if (s is ObjCInterface) {
+          return s;
+        }
+        return PointerType(objCObjectType);
       case clang_types.CXTypeKind.CXType_ObjCId:
       case clang_types.CXTypeKind.CXType_ObjCTypeParam:
       case clang_types.CXTypeKind.CXType_ObjCClass:
