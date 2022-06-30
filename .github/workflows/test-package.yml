@@ -22,6 +22,8 @@ jobs:
           sdk: stable
       - name: Install dependencies
         run: dart pub get
+      - name: Find sysroot
+        run: xcrun --show-sdk-path
       - name: Build test dylib and bindings
         run: dart test/setup.dart
       - name: Run VM tests

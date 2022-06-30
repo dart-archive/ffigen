@@ -465,7 +465,6 @@ String llvmPathExtractor(dynamic value) {
   // Extract path from default locations.
   try {
     final res = findDylibAtDefaultLocations();
-    print("Using clang: $res");
     return res;
   } catch (e) {
     _logger.severe(
