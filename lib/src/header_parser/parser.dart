@@ -67,13 +67,13 @@ List<Binding> parseToBindings() {
   if (config.language == Language.objc) {
     compilerOpts.addAll([
       ...strings.clangLangObjC,
-      '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers',
-      '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework',
-      '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks',
-      '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library',
-      '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System',
-      '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk',
-      '-I/Library/Developer/CommandLineTools/SDKs',
+      // '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers',
+      // '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework',
+      // '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks',
+      // '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library',
+      // '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System',
+      // '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk',
+      // '-I/Library/Developer/CommandLineTools/SDKs',
     ]);
   }
 
