@@ -67,6 +67,8 @@ List<Binding> parseToBindings() {
   if (config.language == Language.objc) {
     compilerOpts.addAll([
       ...strings.clangLangObjC,
+      '-isysroot',
+      '/Applications/Xcode_13.2.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk',
       // '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Headers',
       // '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework',
       // '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks',
