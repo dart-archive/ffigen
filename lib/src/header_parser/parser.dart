@@ -128,7 +128,7 @@ List<String> _findObjectiveCSysroot() {
   final result = Process.runSync('xcrun', ['--show-sdk-path']);
   if (result.exitCode != 0) {
     for (final line in (result.stdout as String).split('\n')) {
-      if (!line.isEmpty) {
+      if (line.isNotEmpty) {
         return ['-isysroot', line];
       }
     }
