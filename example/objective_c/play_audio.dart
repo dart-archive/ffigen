@@ -5,8 +5,11 @@
 import 'dart:ffi';
 import 'avf_audio.dart';
 
+const _dylibPath =
+    '/System/Library/Frameworks/AVFAudio.framework/Versions/Current/AVFAudio';
+
 void main(List<String> args) async {
-  final lib = AVFAudio(DynamicLibrary.open('avf_audio.dylib'));
+  final lib = AVFAudio(DynamicLibrary.open(_dylibPath));
   for (final file in args) {
     final fileStr = NSString(lib, file);
     print('Loading $fileStr');
