@@ -137,6 +137,13 @@ void _parseProperty(clang_types.CXCursor cursor) {
   final itf = _interfaceStack.top.interface;
   final fieldName = cursor.spelling();
   final fieldType = cursor.type().toCodeGenType();
+
+  if (fieldType.isIncompleteCompound) {
+    _logger.warning('Property "$fieldName" in instance "${itf.originalName}" '
+        'has incomplete type: $fieldType.');
+    return;
+  }
+
   final dartDoc = getCursorDocComment(cursor);
 
   final propertyAttributes =
