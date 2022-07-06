@@ -24,6 +24,8 @@ struct BitField {
 - (int64_t)bitFieldParam:(struct BitField)x;  // Skipped.
 - (int64_t)bitFieldPointerParam:(struct BitField*)x;  // Not skipped.
 
+@property struct BitField bitFieldProperty;  // Skipped.
+
 @end
 
 @implementation BadMethodTestObject
