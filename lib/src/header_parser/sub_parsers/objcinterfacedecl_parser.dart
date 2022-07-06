@@ -140,7 +140,7 @@ void _parseProperty(clang_types.CXCursor cursor) {
 
   if (fieldType.isIncompleteCompound) {
     _logger.warning('Property "$fieldName" in instance "${itf.originalName}" '
-        'has incomplete return type: $fieldType.');
+        'has incomplete type: $fieldType.');
     return;
   }
 
