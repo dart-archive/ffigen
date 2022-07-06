@@ -125,7 +125,7 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
     for (final m in methods.values) {
       final methodName = m._getDartMethodName(uniqueNamer);
       final isStatic = m.isClass;
-      final returnType = m.returnType!;
+      final returnType = m.returnType;
 
       // The method declaration.
       if (m.dartDoc != null) {
@@ -397,7 +397,7 @@ class ObjCMethod {
   final String? dartDoc;
   final String originalName;
   final ObjCProperty? property;
-  Type? returnType;
+  final Type returnType;
   final bool isNullableReturn;
   final List<ObjCMethodParam> params;
   final ObjCMethodKind kind;
@@ -412,7 +412,7 @@ class ObjCMethod {
     this.dartDoc,
     required this.kind,
     required this.isClass,
-    this.returnType,
+    required this.returnType,
     this.isNullableReturn = false,
     List<ObjCMethodParam>? params_,
   }) : params = params_ ?? [];
@@ -423,14 +423,13 @@ class ObjCMethod {
 
   void addDependencies(
       Set<Binding> dependencies, ObjCBuiltInFunctions builtInFunctions) {
-    returnType ??= NativeType(SupportedNativeType.Void);
-    returnType!.addDependencies(dependencies);
+    returnType.addDependencies(dependencies);
     for (final p in params) {
       p.type.addDependencies(dependencies);
     }
     selObject ??= builtInFunctions.getSelObject(originalName)
       ..addDependencies(dependencies);
-    msgSend ??= builtInFunctions.getMsgSendFunc(returnType!, params)
+    msgSend ??= builtInFunctions.getMsgSendFunc(returnType, params)
       ..addDependencies(dependencies);
   }
 
