@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
@@ -65,7 +66,10 @@ List<Binding> parseToBindings() {
 
   /// If the config targets Objective C, add a compiler opt for it.
   if (config.language == Language.objc) {
-    compilerOpts.addAll(strings.clangLangObjC);
+    compilerOpts.addAll([
+      ...strings.clangLangObjC,
+      ..._findObjectiveCSysroot(),
+    ]);
   }
 
   _logger.fine('CompilerOpts used: $compilerOpts');
@@ -118,4 +122,16 @@ List<Binding> parseToBindings() {
   clangCmdArgs.dispose(cmdLen);
   clang.clang_disposeIndex(index);
   return bindings.toList();
+}
+
+List<String> _findObjectiveCSysroot() {
+  final result = Process.runSync('xcrun', ['--show-sdk-path']);
+  if (result.exitCode == 0) {
+    for (final line in (result.stdout as String).split('\n')) {
+      if (line.isNotEmpty) {
+        return ['-isysroot', line];
+      }
+    }
+  }
+  return [];
 }
