@@ -24,11 +24,18 @@ void main() {
       generateBindingsForCoverage('bad_method');
     });
 
-    test("Test methods that weren't skipped", () {
+    test("Test incomplete struct methods that weren't skipped", () {
       final obj = BadMethodTestObject.new1(lib);
       final structPtr = obj.incompletePointerReturn();
       expect(structPtr.address, 1234);
       expect(obj.incompletePointerParam_(structPtr), 1234);
+    });
+
+    test("Test bit field methods that weren't skipped", () {
+      final obj = BadMethodTestObject.new1(lib);
+      final bitFieldPtr = obj.bitFieldPointerReturn();
+      expect(bitFieldPtr.address, 5678);
+      expect(obj.bitFieldPointerParam_(bitFieldPtr), 5678);
     });
   });
 }
