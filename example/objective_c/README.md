@@ -33,4 +33,4 @@ At the root of this example (`example/objective_c`), run:
 dart run ffigen
 ```
 
-This will generate [avf_audio.dart](./avf_audio.dart).
+This will generate [avf_audio_bindings.dart](./avf_audio_bindings.dart).

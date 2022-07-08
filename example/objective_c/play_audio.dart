@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:ffi';
-import 'avf_audio.dart';
+import 'avf_audio_bindings.dart';
 
 const _dylibPath =
     '/System/Library/Frameworks/AVFAudio.framework/Versions/Current/AVFAudio';
