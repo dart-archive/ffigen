@@ -186,7 +186,7 @@ compiler-opts-automatic:
   <tr>
     <td>
       functions<br><br>structs<br><br>unions<br><br>enums<br><br>
-      unnamed-enums<br><br>macros<br><br>globals<br><br>objcInterfaces
+      unnamed-enums<br><br>macros<br><br>globals<br><br>objc-interfaces
     </td>
     <td>Filters for declarations.<br><b>Default: all are included.</b><br><br>
     Options -<br>

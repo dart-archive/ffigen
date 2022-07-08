@@ -1,0 +1,50 @@
+# Copyright (c) 2022, the Dart project authors. Please see the AUTHORS file
+# for details. All rights reserved. Use of this source code is governed by a
+# BSD-style license that can be found in the LICENSE file.
+
+name: objective_c_example
+
+environment:
+  sdk: '>=2.17.0 <3.0.0'
+
+dependencies:
+  ffi: ^2.0.1
+dev_dependencies:
+  ffigen:
+    path: '../../'
+  lints: ^2.0.0
+
+ffigen:
+  name: AVFAudio
+  description: Bindings for AVFAudio.
+  language: objc
+  output: 'avf_audio_bindings.dart'
+  functions:
+    exclude:
+      - '.*'
+  structs:
+    exclude:
+      - '.*'
+  unions:
+    exclude:
+      - '.*'
+  globals:
+    exclude:
+      - '.*'
+  macros:
+    exclude:
+      - '.*'
+  enums:
+    exclude:
+      - '.*'
+  unnamed-enums:
+    exclude:
+      - '.*'
+  objc-interfaces:
+    include:
+      - 'AVAudioPlayer'
+  headers:
+    entry-points:
+      - '/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/AVFAudio.framework/Headers/AVAudioPlayer.h'
+  preamble: |
+    // ignore_for_file: camel_case_types, non_constant_identifier_names, unused_element, unused_field, return_of_invalid_type, void_checks, annotate_overrides, no_leading_underscores_for_local_identifiers, library_private_types_in_public_api
