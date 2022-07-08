@@ -25,13 +25,24 @@ void main() {
       final pubspecFile = File('example/objective_c/pubspec.yaml');
       final pubspecYaml = loadYaml(pubspecFile.readAsStringSync()) as YamlMap;
       final config = Config.fromYaml(pubspecYaml['ffigen'] as YamlMap);
-      final library = parse(config);
+      final output = parse(config).generate();
 
-      matchLibraryWithExpected(
-        library,
-        ['test', 'debug_generated', 'example_objective_c.dart'],
-        ['example', 'objective_c', config.output],
-      );
+      // Verify that the output contains all the methods and classes that the
+      // example app uses.
+      expect(output, contains('class AVFAudio{'));
+      expect(output, contains('class NSString extends NSObject {'));
+      expect(output, contains('class NSURL extends NSObject {'));
+      expect(
+          output,
+          contains(
+              'static NSURL fileURLWithPath_(AVFAudio _lib, NSString? path) {'));
+      expect(output, contains('class AVAudioPlayer extends NSObject {'));
+      expect(
+          output,
+          contains('AVAudioPlayer initWithContentsOfURL_error_('
+              'NSURL? url, ffi.Pointer<ffi.Pointer<ObjCObject>> outError) {'));
+      expect(output, contains('double get duration {'));
+      expect(output, contains('bool play() {'));
     });
   });
 }
