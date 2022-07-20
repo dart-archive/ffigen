@@ -5,8 +5,8 @@
 import 'dart:io';
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:logging/logging.dart';
 import 'package:list_diff/list_diff.dart' as list_diff;
+import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 
