@@ -45,21 +45,19 @@ Future<void> _generateBindings(String config) async {
   print('Generated bindings for: $config');
 }
 
-const testNames = [
-  'automated_ref_count',
-  'bad_method',
-  'block',
-  'cast',
-  'category',
-  'forward_decl',
-  'is_instance',
-  'method',
-  'native_objc',
-  'nullable',
-  'property',
-  'rename',
-  'string',
-];
+List<String> _getTestNames() {
+  const configSuffix = '_config.yaml';
+  final names = <String>[];
+  for (final entity in Directory.current.listSync()) {
+    final filename = entity.uri.pathSegments.last;
+    if (filename.endsWith(configSuffix)) {
+      names.add(filename.substring(0, filename.length - configSuffix.length));
+    }
+  }
+  return names;
+}
+
+final testNames = _getTestNames();
 
 Future<void> build() async {
   print('Building Dynamic Library for Objective C Native Tests...');

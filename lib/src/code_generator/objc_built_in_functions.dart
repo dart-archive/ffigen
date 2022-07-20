@@ -40,12 +40,17 @@ class ObjCBuiltInFunctions {
       ObjCInternalFunction('_getClass', _getClassFunc, (Writer w, String name) {
     final s = StringBuffer();
     final objType = _getClassFunc.functionType.returnType.getCType(w);
-    s.write('\n$objType $name(String name) {\n');
-    s.write('  final cstr = name.toNativeUtf8();\n');
-    s.write('  final clazz = ${_getClassFunc.name}(cstr.cast());\n');
-    s.write('  ${w.ffiPkgLibraryPrefix}.calloc.free(cstr);\n');
-    s.write('  return clazz;\n');
-    s.write('}\n');
+    s.write('''
+$objType $name(String name) {
+  final cstr = name.toNativeUtf8();
+  final clazz = ${_getClassFunc.name}(cstr.cast());
+  ${w.ffiPkgLibraryPrefix}.calloc.free(cstr);
+  if (clazz == ${w.ffiLibraryPrefix}.nullptr) {
+    throw Exception('Failed to load Objective-C class: \$name');
+  }
+  return clazz;
+}
+''');
     return s.toString();
   });
 
