@@ -69,7 +69,8 @@ class _LargeStringMatcher extends Matcher {
 
   String _diff(String actual) {
     final out = StringBuffer();
-    for (final op in list_diff.diffSync(expected.split('\n'), actual.split('\n'))) {
+    for (final op
+        in list_diff.diffSync(expected.split('\n'), actual.split('\n'))) {
       out.write(op.isInsertion ? 'ACT ' : 'EXP ');
       out.write('${op.index}\t${op.item}\n');
     }
