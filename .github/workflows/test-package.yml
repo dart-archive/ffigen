@@ -39,8 +39,7 @@ jobs:
 
   test-linux:
     needs: analyze
-    # This job requires clang-10 which is the default on 20.04
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v1.0
@@ -48,8 +47,8 @@ jobs:
           sdk: stable
       - name: Install dependencies
         run: dart pub get
-      - name: Install libclang-10-dev
-        run: sudo apt-get install libclang-10-dev
+      - name: Install libclang-14-dev
+        run: sudo apt-get install libclang-14-dev
       - name: Build test dylib and bindings
         run: dart test/setup.dart
       - name: Run VM tests

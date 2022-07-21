@@ -3962,8 +3962,8 @@ class LibClang {
 
   /// Given a cursor that represents an Objective-C method or property
   /// declaration, return non-zero if the declaration was affected by
-  /// "@optional". Returns zero if the cursor is not such a declaration or it is
-  /// "@required".
+  /// "\@optional". Returns zero if the cursor is not such a declaration or it
+  /// is "\@required".
   int clang_Cursor_isObjCOptional(
     CXCursor C,
   ) {
