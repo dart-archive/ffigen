@@ -75,6 +75,27 @@ $objType $name(String name) {
     _releaseFunc,
   );
 
+  late final _blockCopyFunc = Func(
+    name: '_Block_copy',
+    originalName: '_Block_copy',
+    returnType: PointerType(voidType),
+    parameters: [Parameter(name: 'value', type: PointerType(voidType))],
+    isInternal: true,
+  );
+  late final _blockReleaseFunc = Func(
+    name: '_Block_release',
+    originalName: '_Block_release',
+    returnType: voidType,
+    parameters: [Parameter(name: 'value', type: PointerType(voidType))],
+    isInternal: true,
+  );
+  late final _blockReleaseFinalizer = ObjCInternalGlobal(
+    '_objc_releaseFinalizer',
+    (Writer w) => '${w.ffiLibraryPrefix}.NativeFinalizer('
+        '${_blockReleaseFunc.funcPointerName}.cast())',
+    _blockReleaseFunc,
+  );
+
   // We need to load a separate instance of objc_msgSend for each signature.
   final _msgSendFuncs = <String, Func>{};
   Func getMsgSendFunc(Type returnType, List<ObjCMethodParam> params) {
@@ -134,12 +155,14 @@ $objType $name(String name) {
     final blockType = blockStruct.getCType(w);
     final descType = blockDescStruct.getCType(w);
     final descPtr = PointerType(blockDescStruct).getCType(w);
-    s.write('\n$descPtr $name() {\n');
-    s.write('  final d = ${w.ffiPkgLibraryPrefix}.calloc.allocate<$descType>('
-        '${w.ffiLibraryPrefix}.sizeOf<$descType>());\n');
-    s.write('  d.ref.size = ${w.ffiLibraryPrefix}.sizeOf<$blockType>();\n');
-    s.write('  return d;\n');
-    s.write('}\n');
+    s.write('''
+$descPtr $name() {
+  final d = ${w.ffiPkgLibraryPrefix}.calloc.allocate<$descType>(
+      ${w.ffiLibraryPrefix}.sizeOf<$descType>());
+  d.ref.size = ${w.ffiLibraryPrefix}.sizeOf<$blockType>();
+  return d;
+}
+''');
     return s.toString();
   });
   late final blockDescSingleton = ObjCInternalGlobal(
@@ -158,15 +181,17 @@ $objType $name(String name) {
     final blockType = blockStruct.getCType(w);
     final blockPtr = PointerType(blockStruct).getCType(w);
     final voidPtr = PointerType(voidType).getCType(w);
-    s.write('\n$blockPtr $name($voidPtr invoke, $voidPtr target) {\n');
-    s.write('  final b = ${w.ffiPkgLibraryPrefix}.calloc.allocate<$blockType>('
-        '${w.ffiLibraryPrefix}.sizeOf<$blockType>());\n');
-    s.write('  b.ref.isa = ${concreteGlobalBlock.name};\n');
-    s.write('  b.ref.invoke = invoke;\n');
-    s.write('  b.ref.target = target;\n');
-    s.write('  b.ref.descriptor = ${blockDescSingleton.name};\n');
-    s.write('  return b;\n');
-    s.write('}\n');
+    s.write('''
+$blockPtr $name($voidPtr invoke, $voidPtr target) {
+  final b = ${w.ffiPkgLibraryPrefix}.calloc.allocate<$blockType>(
+      ${w.ffiLibraryPrefix}.sizeOf<$blockType>());
+  b.ref.isa = ${concreteGlobalBlock.name};
+  b.ref.invoke = invoke;
+  b.ref.target = target;
+  b.ref.descriptor = ${blockDescSingleton.name};
+  return b;
+}
+''');
     return s.toString();
   });
 
