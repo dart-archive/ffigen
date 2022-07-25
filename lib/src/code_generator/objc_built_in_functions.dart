@@ -202,45 +202,53 @@ $blockPtr $name($voidPtr invoke, $voidPtr target) {
     if (utilsExist) return;
     utilsExist = true;
 
-    final objType = PointerType(objCObjectType).getCType(w);
-    s.write('''
-class _ObjCWrapper implements ${w.ffiLibraryPrefix}.Finalizable {
-  final $objType _id;
+    void writeFinalizableClass(String name, String kind, String idType, String retain, String release, String finalizer) {
+      s.write('''
+class $name implements ${w.ffiLibraryPrefix}.Finalizable {
+  final $idType _id;
   final ${w.className} _lib;
   bool _pendingRelease;
 
-  _ObjCWrapper._(this._id, this._lib,
+  $name._(this._id, this._lib,
       {bool retain = false, bool release = false}) : _pendingRelease = release {
     if (retain) {
-      _lib.${_retainFunc.name}(_id);
+      _lib.$retain(_id.cast());
     }
     if (release) {
-      _lib.${_releaseFinalizer.name}.attach(this, _id.cast(), detach: this);
+      _lib.$finalizer.attach(this, _id.cast(), detach: this);
     }
   }
 
-  /// Releases the reference to the underlying ObjC object held by this wrapper.
+  /// Releases the reference to the underlying ObjC $kind held by this wrapper.
   /// Throws a StateError if this wrapper doesn't currently hold a reference.
   void release() {
     if (_pendingRelease) {
       _pendingRelease = false;
-      _lib.${_releaseFunc.name}(_id);
-      _lib.${_releaseFinalizer.name}.detach(this);
+      _lib.$release(_id.cast());
+      _lib.$finalizer.detach(this);
     } else {
       throw StateError(
-          'Released an ObjC object that was unowned or already released.');
+          'Released an ObjC $kind that was unowned or already released.');
     }
   }
 
   @override
   bool operator ==(Object other) {
-    return other is _ObjCWrapper && _id == other._id;
+    return other is $name && _id == other._id;
   }
 
   @override
   int get hashCode => _id.hashCode;
 }
 ''');
+    }
+
+    writeFinalizableClass(
+        '_ObjCWrapper', 'object', PointerType(objCObjectType).getCType(w), _retainFunc.name, _releaseFunc.name,
+        _releaseFinalizer.name);
+    writeFinalizableClass(
+        '_ObjCBlockBase', 'block', PointerType(blockStruct).getCType(w), _blockCopyFunc.name, _blockReleaseFunc.name,
+        _blockReleaseFinalizer.name);
   }
 
   void addDependencies(Set<Binding> dependencies) {
@@ -249,6 +257,9 @@ class _ObjCWrapper implements ${w.ffiLibraryPrefix}.Finalizable {
     _retainFunc.addDependencies(dependencies);
     _releaseFunc.addDependencies(dependencies);
     _releaseFinalizer.addDependencies(dependencies);
+    _blockCopyFunc.addDependencies(dependencies);
+    _blockReleaseFunc.addDependencies(dependencies);
+    _blockReleaseFinalizer.addDependencies(dependencies);
     for (final func in _msgSendFuncs.values) {
       func.addDependencies(dependencies);
     }

@@ -97,25 +97,26 @@ $voidPtr $registerClosure(Function fn) {
     s.write('}\n');
 
     // Write the wrapper class.
-    s.write('class $name {\n');
-    s.write('  final ${blockPtr.getCType(w)} _impl;\n');
-    s.write('  final ${w.className} _lib;\n');
-    s.write('  $name._(this._impl, this._lib);\n');
-
-    // Constructor from a function pointer.
     final defaultValue = returnType.getDefaultValue(w, '_lib');
     final exceptionalReturn = defaultValue == null ? '' : ', $defaultValue';
     s.write('''
-  $name.fromFunctionPointer(this._lib, $natFnPtr ptr)
-      : _impl =  _lib.${builtInFunctions.newBlock.name}(
+class $name extends _ObjCBlockBase {
+  $name._(${blockPtr.getCType(w)} id, ${w.className} lib) :
+      super._(id, lib, retain: false, release: true);
+
+  /// Creates a block from a C function pointer.
+  $name.fromFunctionPointer(${w.className} lib, $natFnPtr ptr) :
+      this._(lib.${builtInFunctions.newBlock.name}(
           ${w.ffiLibraryPrefix}.Pointer.fromFunction<
               ${trampFuncType.getCType(w)}>($funcPtrTrampoline
-                  $exceptionalReturn).cast(), ptr.cast());
-  $name.fromFunction(this._lib, ${funcType.getDartType(w)} fn)
-      : _impl =  _lib.${builtInFunctions.newBlock.name}(
+                  $exceptionalReturn).cast(), ptr.cast()), lib);
+
+  /// Creates a block from a Dart function.
+  $name.fromFunction(${w.className} lib, ${funcType.getDartType(w)} fn) :
+      this._(lib.${builtInFunctions.newBlock.name}(
           ${w.ffiLibraryPrefix}.Pointer.fromFunction<
               ${trampFuncType.getCType(w)}>($closureTrampoline
-                  $exceptionalReturn).cast(), $registerClosure(fn));
+                  $exceptionalReturn).cast(), $registerClosure(fn)), lib);
 ''');
 
     // Call method.
@@ -125,9 +126,9 @@ $voidPtr $registerClosure(Function fn) {
       s.write(' ${params[i].name}');
     }
     s.write(''') {
-    ${isVoid ? '' : 'return '}_impl.ref.invoke.cast<
+    ${isVoid ? '' : 'return '}_id.ref.invoke.cast<
         ${natTrampFnType.getCType(w)}>().asFunction<
-            ${trampFuncType.getDartType(w)}>()(_impl''');
+            ${trampFuncType.getDartType(w)}>()(_id''');
     for (int i = 0; i < params.length; ++i) {
       s.write(', ${params[i].name}');
     }
@@ -135,7 +136,7 @@ $voidPtr $registerClosure(Function fn) {
   }''');
 
     // Get the pointer to the underlying block.
-    s.write('  ${blockPtr.getCType(w)} get pointer => _impl;\n');
+    s.write('  ${blockPtr.getCType(w)} get pointer => _id;\n');
 
     s.write('}\n');
     return BindingString(
