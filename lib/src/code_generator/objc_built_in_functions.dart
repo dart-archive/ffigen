@@ -176,7 +176,7 @@ $descPtr $name() {
         "'_NSConcreteGlobalBlock')",
   );
   late final newBlock =
-      ObjCInternalFunction('_newBlock', null, (Writer w, String name) {
+      ObjCInternalFunction('_newBlock', _blockCopyFunc, (Writer w, String name) {
     final s = StringBuffer();
     final blockType = blockStruct.getCType(w);
     final blockPtr = PointerType(blockStruct).getCType(w);
@@ -189,7 +189,9 @@ $blockPtr $name($voidPtr invoke, $voidPtr target) {
   b.ref.invoke = invoke;
   b.ref.target = target;
   b.ref.descriptor = ${blockDescSingleton.name};
-  return b;
+  final copy = ${_blockCopyFunc.name}(b.cast()).cast<$blockType>();
+  ${w.ffiPkgLibraryPrefix}.calloc.free(b);
+  return copy;
 }
 ''');
     return s.toString();
