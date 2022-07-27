@@ -28,6 +28,8 @@ class ObjCBlock extends BindingType {
   BindingString toBindingString(Writer w) {
     final s = StringBuffer();
 
+    builtInFunctions.ensureBlockUtilsExist(w, s);
+
     final params = <Parameter>[];
     for (int i = 0; i < argTypes.length; ++i) {
       params.add(Parameter(name: 'arg$i', type: argTypes[i]));
@@ -152,12 +154,7 @@ class $name extends _ObjCBlockBase {
     for (final t in argTypes) {
       t.addDependencies(dependencies);
     }
-
-    builtInFunctions.newBlockDesc.addDependencies(dependencies);
-    builtInFunctions.blockDescSingleton.addDependencies(dependencies);
-    builtInFunctions.blockStruct.addDependencies(dependencies);
-    builtInFunctions.concreteGlobalBlock.addDependencies(dependencies);
-    builtInFunctions.newBlock.addDependencies(dependencies);
+    builtInFunctions.addBlockDependencies(dependencies);
   }
 
   @override

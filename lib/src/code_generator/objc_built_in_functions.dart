@@ -191,14 +191,16 @@ $blockPtr $name($voidPtr invoke, $voidPtr target) {
 ''';
   });
 
-  bool utilsExist = false;
-  void ensureUtilsExist(Writer w, StringBuffer s) {
-    if (utilsExist) return;
-    utilsExist = true;
-
-    void writeFinalizableClass(String name, String kind, String idType,
-        String retain, String release, String finalizer) {
-      s.write('''
+  void _writeFinalizableClass(
+      Writer w,
+      StringBuffer s,
+      String name,
+      String kind,
+      String idType,
+      String retain,
+      String release,
+      String finalizer) {
+    s.write('''
 class $name implements ${w.ffiLibraryPrefix}.Finalizable {
   final $idType _id;
   final ${w.className} _lib;
@@ -236,16 +238,30 @@ class $name implements ${w.ffiLibraryPrefix}.Finalizable {
   int get hashCode => _id.hashCode;
 }
 ''');
-    }
+  }
 
-    writeFinalizableClass(
+  bool utilsExist = false;
+  void ensureUtilsExist(Writer w, StringBuffer s) {
+    if (utilsExist) return;
+    utilsExist = true;
+    _writeFinalizableClass(
+        w,
+        s,
         '_ObjCWrapper',
         'object',
         PointerType(objCObjectType).getCType(w),
         _retainFunc.name,
         _releaseFunc.name,
         _releaseFinalizer.name);
-    writeFinalizableClass(
+  }
+
+  bool blockUtilsExist = false;
+  void ensureBlockUtilsExist(Writer w, StringBuffer s) {
+    if (blockUtilsExist) return;
+    blockUtilsExist = true;
+    _writeFinalizableClass(
+        w,
+        s,
         '_ObjCBlockBase',
         'block',
         PointerType(blockStruct).getCType(w),
@@ -260,15 +276,23 @@ class $name implements ${w.ffiLibraryPrefix}.Finalizable {
     _retainFunc.addDependencies(dependencies);
     _releaseFunc.addDependencies(dependencies);
     _releaseFinalizer.addDependencies(dependencies);
-    _blockCopyFunc.addDependencies(dependencies);
-    _blockReleaseFunc.addDependencies(dependencies);
-    _blockReleaseFinalizer.addDependencies(dependencies);
     for (final func in _msgSendFuncs.values) {
       func.addDependencies(dependencies);
     }
     for (final sel in _selObjects.values) {
       sel.addDependencies(dependencies);
     }
+  }
+
+  void addBlockDependencies(Set<Binding> dependencies) {
+    newBlockDesc.addDependencies(dependencies);
+    blockDescSingleton.addDependencies(dependencies);
+    blockStruct.addDependencies(dependencies);
+    concreteGlobalBlock.addDependencies(dependencies);
+    newBlock.addDependencies(dependencies);
+    _blockCopyFunc.addDependencies(dependencies);
+    _blockReleaseFunc.addDependencies(dependencies);
+    _blockReleaseFinalizer.addDependencies(dependencies);
   }
 
   final _interfaceRegistry = <String, ObjCInterface>{};
