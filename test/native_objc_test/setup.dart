@@ -57,9 +57,7 @@ List<String> _getTestNames() {
   return names;
 }
 
-final testNames = _getTestNames();
-
-Future<void> build() async {
+Future<void> build(List<String> testNames) async {
   print('Building Dynamic Library for Objective C Native Tests...');
   for (final name in testNames) {
     await _buildLib('${name}_test.m', '${name}_test.dylib');
@@ -71,7 +69,7 @@ Future<void> build() async {
   }
 }
 
-Future<void> clean() async {
+Future<void> clean(List<String> testNames) async {
   print('Deleting generated and built files...');
   final filenames = [
     for (final name in testNames) ...[
@@ -93,8 +91,8 @@ Future<void> main(List<String> arguments) async {
   }
 
   if (arguments.isNotEmpty && arguments[0] == 'clean') {
-    return await clean();
+    return await clean(_getTestNames());
   }
 
-  return await build();
+  return await build(arguments.isNotEmpty ? arguments : _getTestNames());
 }

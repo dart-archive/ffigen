@@ -9,12 +9,14 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:test/test.dart';
+import 'package:ffi/ffi.dart';
 import '../test_utils.dart';
 import 'block_bindings.dart';
 import 'util.dart';
 
 void main() {
   late BlockTestObjCLibrary lib;
+  late void Function(Pointer<Char>, Pointer<Void>) executeInternalCommand;
 
   group('Blocks', () {
     setUpAll(() {
@@ -22,8 +24,20 @@ void main() {
       final dylib = File('test/native_objc_test/block_test.dylib');
       verifySetupFile(dylib);
       lib = BlockTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
+
+      executeInternalCommand = DynamicLibrary.process().lookupFunction<
+          Void Function(Pointer<Char>, Pointer<Void>),
+          void Function(
+              Pointer<Char>, Pointer<Void>)>('Dart_ExecuteInternalCommand');
+
       generateBindingsForCoverage('block');
     });
+
+    doGC() {
+      final gcNow = "gc-now".toNativeUtf8();
+      executeInternalCommand(gcNow.cast(), nullptr);
+      calloc.free(gcNow);
+    }
 
     test('BlockTester is working', () {
       // This doesn't test any Block functionality, just that the BlockTester
@@ -55,6 +69,31 @@ void main() {
       blockTester.pokeBlock();
       expect(blockTester.call_(123), 4123);
       expect(block(123), 4123);
+    });
+
+    Pointer<Void> funcPointerBlockRefCountTest() {
+      final block = ObjCBlock.fromFunctionPointer(
+          lib, Pointer.fromFunction(_add100, 999));
+      expect(BlockTester.getBlockRetainCount_(lib, block.pointer), 1);
+      return block.pointer.cast();
+    }
+
+    test('Function pointer block ref counting', () {
+      final rawBlock = funcPointerBlockRefCountTest();
+      doGC();
+      expect(BlockTester.getBlockRetainCount_(lib, rawBlock.cast()), 0);
+    });
+
+    Pointer<Void> funcBlockRefCountTest() {
+      final block = ObjCBlock.fromFunction(lib, makeAdder(4000));
+      expect(BlockTester.getBlockRetainCount_(lib, block.pointer), 1);
+      return block.pointer.cast();
+    }
+
+    test('Function pointer block ref counting', () {
+      final rawBlock = funcBlockRefCountTest();
+      doGC();
+      expect(BlockTester.getBlockRetainCount_(lib, rawBlock.cast()), 0);
     });
   });
 }
