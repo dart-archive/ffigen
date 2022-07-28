@@ -394,7 +394,8 @@ class Config {
         validator: booleanValidator,
         extractor: booleanExtractor,
         defaultValue: () => false,
-        extractedResult: (dynamic result) => _excludeAllByDefault = result as bool,
+        extractedResult: (dynamic result) =>
+            _excludeAllByDefault = result as bool,
       ),
       [strings.sort]: Specification<bool>(
         requirement: Requirement.no,

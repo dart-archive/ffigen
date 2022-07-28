@@ -9,8 +9,11 @@ import '../config_provider/config_types.dart';
 import '../strings.dart' as strings;
 import 'data.dart';
 
-bool _shouldIncludeDecl(String usr, String name,
-    bool Function(String) isSeenDecl, bool Function(String, bool) configIncludes) {
+bool _shouldIncludeDecl(
+    String usr,
+    String name,
+    bool Function(String) isSeenDecl,
+    bool Function(String, bool) configIncludes) {
   if (isSeenDecl(usr) || name == '') {
     return false;
   } else if (configIncludes(name, config.excludeAllByDefault)) {
