@@ -2,9 +2,10 @@ name: BlockTestObjCLibrary
 description: 'Tests calling Objective-C blocks'
 language: objc
 output: 'test/native_objc_test/block_bindings.dart'
-functions:
-  exclude:
-    - '.*'
+exclude-all-by-default: true
+objc-interfaces:
+  include:
+    - BlockTester
 headers:
   entry-points:
     - 'test/native_objc_test/block_test.m'

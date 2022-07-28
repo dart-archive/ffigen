@@ -74,6 +74,8 @@ const macros = 'macros';
 const typedefs = 'typedefs';
 const objcInterfaces = 'objc-interfaces';
 
+const excludeAllByDefault = 'exclude-all-by-default';
+
 // Sub-fields of Declarations.
 const include = 'include';
 const exclude = 'exclude';

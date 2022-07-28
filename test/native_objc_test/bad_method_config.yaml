@@ -10,12 +10,10 @@ name: NativeObjCLibrary
 description: 'Native Objective C test'
 language: objc
 output: 'test/native_objc_test/bad_method_test_bindings.dart'
+exclude-all-by-default: true
 objc-interfaces:
   include:
     - 'BadMethodTestObject'
-functions:
-  exclude:
-    - '.*'
 headers:
   entry-points:
     - 'test/native_objc_test/bad_method_test.m'

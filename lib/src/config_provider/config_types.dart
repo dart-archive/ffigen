@@ -156,7 +156,8 @@ class Declaration {
       _memberRenamer.rename(declaration, member);
 
   /// Checks if a name is allowed by a filter.
-  bool shouldInclude(String name) => _includer.shouldInclude(name);
+  bool shouldInclude(String name, bool excludeAllByDefault) =>
+      _includer.shouldInclude(name, excludeAllByDefault);
 
   /// Checks if the symbol address should be included for this name.
   bool shouldIncludeSymbolAddress(String name) =>
@@ -235,7 +236,7 @@ class Includer {
   /// Returns true if [name] is allowed.
   ///
   /// Exclude overrides include.
-  bool shouldInclude(String name) {
+  bool shouldInclude(String name, [bool excludeAllByDefault = false]) {
     if (_excludeFull.contains(name)) {
       return false;
     }
@@ -261,7 +262,8 @@ class Includer {
     if (_includeMatchers.isNotEmpty || _includeFull.isNotEmpty) {
       return false;
     } else {
-      return true;
+      // Otherwise, fall back to the default behavior for empty filters.
+      return !excludeAllByDefault;
     }
   }
 }

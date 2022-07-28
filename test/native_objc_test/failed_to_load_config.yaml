@@ -2,9 +2,10 @@ name: FailedToLoadTestObjCLibrary
 description: 'Tests failing to load an Objective-C library'
 language: objc
 output: 'test/native_objc_test/failed_to_load_bindings.dart'
-functions:
-  exclude:
-    - '.*'
+exclude-all-by-default: true
+objc-interfaces:
+  include:
+    - ClassThatWillFailToLoad
 headers:
   entry-points:
     - 'test/native_objc_test/failed_to_load_test.m'
