@@ -2,9 +2,10 @@ name: ForwardDeclTestObjCLibrary
 description: 'Test that forward declared ObjC classes are correctly filled'
 language: objc
 output: 'test/native_objc_test/forward_decl_bindings.dart'
-functions:
-  exclude:
-    - '.*'
+exclude-all-by-default: true
+objc-interfaces:
+  include:
+    - ForwardDeclaredClass
 headers:
   entry-points:
     - 'test/native_objc_test/forward_decl_test.h'

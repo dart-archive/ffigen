@@ -1,3 +1,8 @@
+# 6.1.0
+
+- Added `exclude-all-by-default` config flag, which changes the default behavior
+  of declaration filters to exclude everything, rather than include everything.
+
 # 6.0.2
 
 - Bump `package:ffi` to 2.0.1.

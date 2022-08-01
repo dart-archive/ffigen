@@ -19,27 +19,7 @@ ffigen:
   description: Bindings for AVFAudio.
   language: objc
   output: 'avf_audio_bindings.dart'
-  functions:
-    exclude:
-      - '.*'
-  structs:
-    exclude:
-      - '.*'
-  unions:
-    exclude:
-      - '.*'
-  globals:
-    exclude:
-      - '.*'
-  macros:
-    exclude:
-      - '.*'
-  enums:
-    exclude:
-      - '.*'
-  unnamed-enums:
-    exclude:
-      - '.*'
+  exclude-all-by-default: true
   objc-interfaces:
     include:
       - 'AVAudioPlayer'
