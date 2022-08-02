@@ -102,18 +102,16 @@ jobs:
   # Running this sanity check on one OS should be sufficient. Chosing Windows
   # because it is the most likely to break.
   test-windows-flutter:
+    needs: analyze
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: dart-lang/setup-dart@v1.0
-        with:
-          sdk: stable
       - uses: subosito/flutter-action@v2
         with:
           channel: 'master'
       - name: Install dependencies
-        run: dart pub get
+        run: flutter pub get
       - name: Build test dylib and bindings
         run: dart test/setup.dart
       - name: Run VM tests
-        run: dart test test_flutter/ --platform vm
+        run: fluter pub run test test_flutter/ --platform vm

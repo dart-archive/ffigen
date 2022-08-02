@@ -40,7 +40,10 @@ void main() {
         ],
         workingDirectory: tempDirUri,
       ),
-      Copy(source: bindingsGeneratedUri, target: bindingsGeneratedCopyUri),
+      Copy(
+        source: bindingsGeneratedUri,
+        target: bindingsGeneratedCopyUri,
+      ),
       RunProcess(
         executable: 'flutter',
         arguments: [
