@@ -1,11 +1,11 @@
 import Foundation
 
-@objc class FooClass: NSObject {
+@objc public class FooClass: NSObject {
   var val = 123;
-  @objc func getValue() -> Int {
+  @objc public func getValue() -> Int {
     return val;
   }
-  @objc func setValue(x: Int) {
+  @objc public func setValue(x: Int) {
     val = x;
   }
 }
