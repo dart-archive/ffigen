@@ -1,4 +1,6 @@
-@objc class FooClass {
+import Foundation
+
+@objc class FooClass: NSObject {
   var val = 123;
   @objc func getValue() -> Int {
     return val;
