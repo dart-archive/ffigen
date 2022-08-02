@@ -114,4 +114,4 @@ jobs:
       - name: Build test dylib and bindings
         run: dart test/setup.dart
       - name: Run VM tests
-        run: fluter pub run test test_flutter/ --platform vm
+        run: flutter pub run test test_flutter/ --platform vm
