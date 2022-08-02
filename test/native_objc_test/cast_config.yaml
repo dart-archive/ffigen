@@ -2,9 +2,10 @@ name: CastTestObjCLibrary
 description: 'Tests casting objects'
 language: objc
 output: 'test/native_objc_test/cast_bindings.dart'
-functions:
-  exclude:
-    - '.*'
+exclude-all-by-default: true
+objc-interfaces:
+  include:
+    - Castaway
 headers:
   entry-points:
     - 'test/native_objc_test/cast_test.m'

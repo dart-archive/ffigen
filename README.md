@@ -413,6 +413,21 @@ use-dart-handle: true
   </td>
   </tr>
   <tr>
+    <td>exclude-all-by-default</td>
+    <td>
+      When a declaration filter (eg `functions:` or `structs:`) is empty or
+      unset, it defaults to including everything. If this flag is enabled, the
+      default behavior is to exclude everything instead.<br>
+      <b>Default: false</b>
+    </td>
+    <td>
+
+```yaml
+exclude-all-by-default: true
+```
+  </td>
+  </tr>
+  <tr>
     <td>preamble</td>
     <td>Raw header of the file, pasted as-it-is.</td>
     <td>

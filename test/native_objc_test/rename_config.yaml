@@ -10,12 +10,12 @@ name: RenameLibrary
 description: 'Rename test'
 language: objc
 output: 'test/native_objc_test/rename_test_bindings.dart'
+exclude-all-by-default: true
 objc-interfaces:
+  include:
+    - _Renamed
   rename:
     '_(.*)': '$1'
-functions:
-  exclude:
-    - '.*'
 headers:
   entry-points:
     - 'test/native_objc_test/rename_test.m'

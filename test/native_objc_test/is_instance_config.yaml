@@ -2,9 +2,11 @@ name: IsInstanceTestObjCLibrary
 description: 'Tests isInstance'
 language: objc
 output: 'test/native_objc_test/is_instance_bindings.dart'
-functions:
-  exclude:
-    - '.*'
+exclude-all-by-default: true
+objc-interfaces:
+  include:
+    - ChildClass
+    - UnrelatedClass
 headers:
   entry-points:
     - 'test/native_objc_test/is_instance_test.m'

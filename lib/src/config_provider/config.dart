@@ -75,6 +75,11 @@ class Config {
   Declaration get objcInterfaces => _objcInterfaces;
   late Declaration _objcInterfaces;
 
+  /// If enabled, the default behavior of all declaration filters is to exclude
+  /// everything, rather than include everything.
+  bool get excludeAllByDefault => _excludeAllByDefault;
+  late bool _excludeAllByDefault;
+
   /// If generated bindings should be sorted alphabetically.
   bool get sort => _sort;
   late bool _sort;
@@ -83,7 +88,8 @@ class Config {
   bool get useSupportedTypedefs => _useSupportedTypedefs;
   late bool _useSupportedTypedefs;
 
-  /// Stores all the library imports specified by user including those for ffi and pkg_ffi.
+  /// Stores all the library imports specified by user including those for ffi
+  /// and pkg_ffi.
   Map<String, LibraryImport> get libraryImports => _libraryImports;
   late Map<String, LibraryImport> _libraryImports;
 
@@ -382,6 +388,14 @@ class Config {
           _nativeTypeMappings = makeImportTypeMapping(
               result as Map<String, List<String>>, _libraryImports);
         },
+      ),
+      [strings.excludeAllByDefault]: Specification<bool>(
+        requirement: Requirement.no,
+        validator: booleanValidator,
+        extractor: booleanExtractor,
+        defaultValue: () => false,
+        extractedResult: (dynamic result) =>
+            _excludeAllByDefault = result as bool,
       ),
       [strings.sort]: Specification<bool>(
         requirement: Requirement.no,

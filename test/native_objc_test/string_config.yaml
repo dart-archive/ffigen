@@ -2,9 +2,10 @@ name: StringTestObjCLibrary
 description: 'Tests calling Objective-C string methods'
 language: objc
 output: 'test/native_objc_test/string_bindings.dart'
-functions:
-  exclude:
-    - '.*'
+exclude-all-by-default: true
+objc-interfaces:
+  include:
+    - StringUtil
 headers:
   entry-points:
     - 'test/native_objc_test/string_test.m'

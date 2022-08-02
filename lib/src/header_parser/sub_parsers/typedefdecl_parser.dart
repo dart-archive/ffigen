@@ -34,11 +34,12 @@ final _logger = Logger('ffigen.header_parser.typedefdecl_parser');
 /// by the config.
 Typealias? parseTypedefDeclaration(
   clang_types.CXCursor cursor, {
+  bool ignoreFilter = false,
   bool pointerReference = false,
 }) {
   final typedefName = cursor.spelling();
   final typedefUsr = cursor.usr();
-  if (shouldIncludeTypealias(typedefUsr, typedefName)) {
+  if (ignoreFilter || shouldIncludeTypealias(typedefUsr, typedefName)) {
     final ct = clang.clang_getTypedefDeclUnderlyingType(cursor);
     final s = getCodeGenType(ct, pointerReference: pointerReference);
 

@@ -2,10 +2,15 @@ name: AutomatedRefCountTestObjCLibrary
 description: 'Tests automatic reference counting of Objective-C objects'
 language: objc
 output: 'test/native_objc_test/automated_ref_count_bindings.dart'
+exclude-all-by-default: true
 functions:
   include:
     - createAutoreleasePool
     - destroyAutoreleasePool
+objc-interfaces:
+  include:
+    - ArcTestObject
+    - RefCounted
 headers:
   entry-points:
     - 'test/native_objc_test/automated_ref_count_test.m'

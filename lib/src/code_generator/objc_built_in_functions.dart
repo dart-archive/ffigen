@@ -18,15 +18,15 @@ class ObjCBuiltInFunctions {
   );
   late final registerName = ObjCInternalFunction(
       '_registerName', _registerNameFunc, (Writer w, String name) {
-    final s = StringBuffer();
     final selType = _registerNameFunc.functionType.returnType.getCType(w);
-    s.write('\n$selType $name(String name) {\n');
-    s.write('  final cstr = name.toNativeUtf8();\n');
-    s.write('  final sel = ${_registerNameFunc.name}(cstr.cast());\n');
-    s.write('  ${w.ffiPkgLibraryPrefix}.calloc.free(cstr);\n');
-    s.write('  return sel;\n');
-    s.write('}\n');
-    return s.toString();
+    return '''
+$selType $name(String name) {
+  final cstr = name.toNativeUtf8();
+  final sel = ${_registerNameFunc.name}(cstr.cast());
+  ${w.ffiPkgLibraryPrefix}.calloc.free(cstr);
+  return sel;
+}
+''';
   });
 
   late final _getClassFunc = Func(
@@ -38,9 +38,8 @@ class ObjCBuiltInFunctions {
   );
   late final getClass =
       ObjCInternalFunction('_getClass', _getClassFunc, (Writer w, String name) {
-    final s = StringBuffer();
     final objType = _getClassFunc.functionType.returnType.getCType(w);
-    s.write('''
+    return '''
 $objType $name(String name) {
   final cstr = name.toNativeUtf8();
   final clazz = ${_getClassFunc.name}(cstr.cast());
@@ -50,8 +49,7 @@ $objType $name(String name) {
   }
   return clazz;
 }
-''');
-    return s.toString();
+''';
   });
 
   late final _retainFunc = Func(
@@ -73,6 +71,27 @@ $objType $name(String name) {
     (Writer w) => '${w.ffiLibraryPrefix}.NativeFinalizer('
         '${_releaseFunc.funcPointerName}.cast())',
     _releaseFunc,
+  );
+
+  late final _blockCopyFunc = Func(
+    name: '_Block_copy',
+    originalName: '_Block_copy',
+    returnType: PointerType(voidType),
+    parameters: [Parameter(name: 'value', type: PointerType(voidType))],
+    isInternal: true,
+  );
+  late final _blockReleaseFunc = Func(
+    name: '_Block_release',
+    originalName: '_Block_release',
+    returnType: voidType,
+    parameters: [Parameter(name: 'value', type: PointerType(voidType))],
+    isInternal: true,
+  );
+  late final _blockReleaseFinalizer = ObjCInternalGlobal(
+    '_objc_releaseFinalizer',
+    (Writer w) => '${w.ffiLibraryPrefix}.NativeFinalizer('
+        '${_blockReleaseFunc.funcPointerName}.cast())',
+    _blockReleaseFunc,
   );
 
   // We need to load a separate instance of objc_msgSend for each signature.
@@ -130,17 +149,17 @@ $objType $name(String name) {
   );
   late final newBlockDesc =
       ObjCInternalFunction('_newBlockDesc', null, (Writer w, String name) {
-    final s = StringBuffer();
     final blockType = blockStruct.getCType(w);
     final descType = blockDescStruct.getCType(w);
     final descPtr = PointerType(blockDescStruct).getCType(w);
-    s.write('\n$descPtr $name() {\n');
-    s.write('  final d = ${w.ffiPkgLibraryPrefix}.calloc.allocate<$descType>('
-        '${w.ffiLibraryPrefix}.sizeOf<$descType>());\n');
-    s.write('  d.ref.size = ${w.ffiLibraryPrefix}.sizeOf<$blockType>();\n');
-    s.write('  return d;\n');
-    s.write('}\n');
-    return s.toString();
+    return '''
+$descPtr $name() {
+  final d = ${w.ffiPkgLibraryPrefix}.calloc.allocate<$descType>(
+      ${w.ffiLibraryPrefix}.sizeOf<$descType>());
+  d.ref.size = ${w.ffiLibraryPrefix}.sizeOf<$blockType>();
+  return d;
+}
+''';
   });
   late final blockDescSingleton = ObjCInternalGlobal(
     '_objc_block_desc',
@@ -152,68 +171,103 @@ $objType $name(String name) {
     (Writer w) => '${w.lookupFuncIdentifier}<${voidType.getCType(w)}>('
         "'_NSConcreteGlobalBlock')",
   );
-  late final newBlock =
-      ObjCInternalFunction('_newBlock', null, (Writer w, String name) {
-    final s = StringBuffer();
+  late final newBlock = ObjCInternalFunction('_newBlock', _blockCopyFunc,
+      (Writer w, String name) {
     final blockType = blockStruct.getCType(w);
     final blockPtr = PointerType(blockStruct).getCType(w);
     final voidPtr = PointerType(voidType).getCType(w);
-    s.write('\n$blockPtr $name($voidPtr invoke, $voidPtr target) {\n');
-    s.write('  final b = ${w.ffiPkgLibraryPrefix}.calloc.allocate<$blockType>('
-        '${w.ffiLibraryPrefix}.sizeOf<$blockType>());\n');
-    s.write('  b.ref.isa = ${concreteGlobalBlock.name};\n');
-    s.write('  b.ref.invoke = invoke;\n');
-    s.write('  b.ref.target = target;\n');
-    s.write('  b.ref.descriptor = ${blockDescSingleton.name};\n');
-    s.write('  return b;\n');
-    s.write('}\n');
-    return s.toString();
+    return '''
+$blockPtr $name($voidPtr invoke, $voidPtr target) {
+  final b = ${w.ffiPkgLibraryPrefix}.calloc.allocate<$blockType>(
+      ${w.ffiLibraryPrefix}.sizeOf<$blockType>());
+  b.ref.isa = ${concreteGlobalBlock.name};
+  b.ref.invoke = invoke;
+  b.ref.target = target;
+  b.ref.descriptor = ${blockDescSingleton.name};
+  final copy = ${_blockCopyFunc.name}(b.cast()).cast<$blockType>();
+  ${w.ffiPkgLibraryPrefix}.calloc.free(b);
+  return copy;
+}
+''';
   });
 
-  bool utilsExist = false;
-  void ensureUtilsExist(Writer w, StringBuffer s) {
-    if (utilsExist) return;
-    utilsExist = true;
-
-    final objType = PointerType(objCObjectType).getCType(w);
+  void _writeFinalizableClass(
+      Writer w,
+      StringBuffer s,
+      String name,
+      String kind,
+      String idType,
+      String retain,
+      String release,
+      String finalizer) {
     s.write('''
-class _ObjCWrapper implements ${w.ffiLibraryPrefix}.Finalizable {
-  final $objType _id;
+class $name implements ${w.ffiLibraryPrefix}.Finalizable {
+  final $idType _id;
   final ${w.className} _lib;
   bool _pendingRelease;
 
-  _ObjCWrapper._(this._id, this._lib,
+  $name._(this._id, this._lib,
       {bool retain = false, bool release = false}) : _pendingRelease = release {
     if (retain) {
-      _lib.${_retainFunc.name}(_id);
+      _lib.$retain(_id.cast());
     }
     if (release) {
-      _lib.${_releaseFinalizer.name}.attach(this, _id.cast(), detach: this);
+      _lib.$finalizer.attach(this, _id.cast(), detach: this);
     }
   }
 
-  /// Releases the reference to the underlying ObjC object held by this wrapper.
+  /// Releases the reference to the underlying ObjC $kind held by this wrapper.
   /// Throws a StateError if this wrapper doesn't currently hold a reference.
   void release() {
     if (_pendingRelease) {
       _pendingRelease = false;
-      _lib.${_releaseFunc.name}(_id);
-      _lib.${_releaseFinalizer.name}.detach(this);
+      _lib.$release(_id.cast());
+      _lib.$finalizer.detach(this);
     } else {
       throw StateError(
-          'Released an ObjC object that was unowned or already released.');
+          'Released an ObjC $kind that was unowned or already released.');
     }
   }
 
   @override
   bool operator ==(Object other) {
-    return other is _ObjCWrapper && _id == other._id;
+    return other is $name && _id == other._id;
   }
 
   @override
   int get hashCode => _id.hashCode;
 }
 ''');
+  }
+
+  bool utilsExist = false;
+  void ensureUtilsExist(Writer w, StringBuffer s) {
+    if (utilsExist) return;
+    utilsExist = true;
+    _writeFinalizableClass(
+        w,
+        s,
+        '_ObjCWrapper',
+        'object',
+        PointerType(objCObjectType).getCType(w),
+        _retainFunc.name,
+        _releaseFunc.name,
+        _releaseFinalizer.name);
+  }
+
+  bool blockUtilsExist = false;
+  void ensureBlockUtilsExist(Writer w, StringBuffer s) {
+    if (blockUtilsExist) return;
+    blockUtilsExist = true;
+    _writeFinalizableClass(
+        w,
+        s,
+        '_ObjCBlockBase',
+        'block',
+        PointerType(blockStruct).getCType(w),
+        _blockCopyFunc.name,
+        _blockReleaseFunc.name,
+        _blockReleaseFinalizer.name);
   }
 
   void addDependencies(Set<Binding> dependencies) {
@@ -230,33 +284,46 @@ class _ObjCWrapper implements ${w.ffiLibraryPrefix}.Finalizable {
     }
   }
 
+  void addBlockDependencies(Set<Binding> dependencies) {
+    newBlockDesc.addDependencies(dependencies);
+    blockDescSingleton.addDependencies(dependencies);
+    blockStruct.addDependencies(dependencies);
+    concreteGlobalBlock.addDependencies(dependencies);
+    newBlock.addDependencies(dependencies);
+    _blockCopyFunc.addDependencies(dependencies);
+    _blockReleaseFunc.addDependencies(dependencies);
+    _blockReleaseFinalizer.addDependencies(dependencies);
+  }
+
   final _interfaceRegistry = <String, ObjCInterface>{};
   void registerInterface(ObjCInterface interface) {
     _interfaceRegistry[interface.originalName] = interface;
   }
 
   void generateNSStringUtils(Writer w, StringBuffer s) {
-    // Generate a constructor that wraps stringWithCString.
-    s.write('  factory NSString(${w.className} _lib, String str) {\n');
-    s.write('    final cstr = str.toNativeUtf8();\n');
-    s.write('    final nsstr = stringWithCString_encoding_('
-        '_lib, cstr.cast(), 4 /* UTF8 */);\n');
-    s.write('    ${w.ffiPkgLibraryPrefix}.calloc.free(cstr);\n');
-    s.write('    return nsstr;\n');
-    s.write('  }\n\n');
+    // Generate a constructor that wraps stringWithCString, and a toString
+    // method that wraps UTF8String.
+    s.write('''
+  factory NSString(${w.className} _lib, String str) {
+    final cstr = str.toNativeUtf8();
+    final nsstr = stringWithCString_encoding_(_lib, cstr.cast(), 4 /* UTF8 */);
+    ${w.ffiPkgLibraryPrefix}.calloc.free(cstr);
+    return nsstr;
+  }
 
-    // Generate a toString method that wraps UTF8String.
-    s.write('  @override\n');
-    s.write('  String toString() => (UTF8String).cast<'
-        '${w.ffiPkgLibraryPrefix}.Utf8>().toDartString();\n\n');
+  @override
+  String toString() =>
+      (UTF8String).cast<${w.ffiPkgLibraryPrefix}.Utf8>().toDartString();
+''');
   }
 
   void generateStringUtils(Writer w, StringBuffer s) {
     // Generate an extension on String to convert to NSString
-    s.write('extension StringToNSString on String {\n');
-    s.write('  NSString toNSString(${w.className} lib) => '
-        'NSString(lib, this);\n');
-    s.write('}\n\n');
+    s.write('''
+extension StringToNSString on String {
+  NSString toNSString(${w.className} lib) => NSString(lib, this);
+}
+''');
   }
 }
 

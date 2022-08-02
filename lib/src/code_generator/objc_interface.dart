@@ -103,7 +103,7 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
   }
 
   /// Returns a [$name] that wraps the given raw object pointer.
-  static $name castFromPointer($natLib lib, ffi.Pointer<ObjCObject> other,
+  static $name castFromPointer($natLib lib, $objType other,
       {bool retain = false, bool release = false}) {
     return $name._(other, lib, retain: retain, release: release);
   }
@@ -350,11 +350,10 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
         _isObject(arg.type) ||
         _isInstanceType(arg.type) ||
         arg.type is ObjCBlock) {
-      final field = arg.type is ObjCBlock ? '_impl' : '_id';
       if (arg.isNullable) {
-        return '${arg.name}?.$field ?? ffi.nullptr';
+        return '${arg.name}?._id ?? ffi.nullptr';
       } else {
-        return '${arg.name}.$field';
+        return '${arg.name}._id';
       }
     }
     return arg.name;

@@ -18,7 +18,15 @@ It is recommended that you filter out just about everything you're not
 interested in binding (see the ffigen config in [pubspec.yaml](./pubspec.yaml)).
 Virtually all Objective C libraries depend on Apple's internal libraries, which
 are huge. Filtering can reduce the generated bindings from millions of lines to
-tens of thousands.
+tens of thousands. You can use the `exclude-all-by-default` flag, or exclude
+individual sets of declarations like this:
+
+```yaml
+functions:
+  exclude:
+    - '.*'
+# Same for structs/unions/enums etc.
+```
 
 In this example, we're only interested in `AVAudioPlayer`, so we've filtered out
 everything else. But ffigen will automatically pull in anything referenced by
