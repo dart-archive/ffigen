@@ -350,9 +350,9 @@ class Config {
         requirement: Requirement.no,
         validator: stringStringMapValidator,
         extractor: stringStringMapExtractor,
-        defaultValue: () => Map<String, String>(),
-        extractedResult: (dynamic result) =>
-            _objcModulePrefixer = ObjCModulePrefixer(result as Map<String, String>),
+        defaultValue: () => <String, String>{},
+        extractedResult: (dynamic result) => _objcModulePrefixer =
+            ObjCModulePrefixer(result as Map<String, String>),
       ),
       [strings.libraryImports]: Specification<Map<String, LibraryImport>>(
         validator: libraryImportsValidator,

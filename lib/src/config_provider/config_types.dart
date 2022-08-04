@@ -377,7 +377,7 @@ class CompilerOptsAuto {
 class _ObjCModulePrefixerEntry {
   final RegExp pattern;
   final String moduleName;
-  
+
   _ObjCModulePrefixerEntry(this.pattern, this.moduleName);
 }
 

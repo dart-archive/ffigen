@@ -27,7 +27,8 @@ Future<void> _buildLib(String input, String output) async {
   print('Generated file: $output');
 }
 
-Future<void> _buildSwift(String input, String outputHeader, String outputLib) async {
+Future<void> _buildSwift(
+    String input, String outputHeader, String outputLib) async {
   final args = [
     '-c',
     input,
