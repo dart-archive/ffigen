@@ -528,7 +528,7 @@ language: 'objc'
     </td>
     <td>
       Filters for interface declarations. This option works the same as other
-      declaration filters like `functions` and `stucts`.
+      declaration filters like `functions` and `structs`.
     </td>
     <td>
 
@@ -540,14 +540,14 @@ objc-interfaces:
     # Includes all interfaces starting with "NS".
     - 'NS.*'
   exclude:
-    # Override the above NS.* inclusion, to exclude NSObject.
-    - 'NSObject'
+    # Override the above NS.* inclusion, to exclude NSURL.
+    - 'NSURL'
   rename:
     # Removes '_' prefix from interface names.
     '_(.*)': '$1'
 ```
 
-    </td>
+  </td>
   </tr>
 
   <tr>
@@ -555,7 +555,7 @@ objc-interfaces:
       objc-interfaces -> module
     </td>
     <td>
-      Adds a module prefix to an interface name when looking up the class in
+      Adds a module prefix to the class name when loading the class
       from the dylib. This is only relevent for ObjC headers that are generated
       wrappers for a Swift library. See example/swift for more information.
     </td>
@@ -577,7 +577,7 @@ objc-interfaces:
     'FL.*': 'foo_lib'
 ```
 
-    </td>
+  </td>
   </tr>
 </tbody>
 </table>
