@@ -125,6 +125,10 @@ class Config {
   StructPackingOverride get structPackingOverride => _structPackingOverride;
   late StructPackingOverride _structPackingOverride;
 
+  /// Module prefixes for ObjC interfaces.
+  ObjCModulePrefixer get objcModulePrefixer => _objcModulePrefixer;
+  late ObjCModulePrefixer _objcModulePrefixer;
+
   /// Name of the wrapper class.
   String get wrapperName => _wrapperName;
   late String _wrapperName;
@@ -340,6 +344,15 @@ class Config {
         extractedResult: (dynamic result) {
           _objcInterfaces = result as Declaration;
         },
+      ),
+      [strings.objcInterfaces, strings.objcModule]:
+          Specification<Map<String, String>>(
+        requirement: Requirement.no,
+        validator: stringStringMapValidator,
+        extractor: stringStringMapExtractor,
+        defaultValue: () => <String, String>{},
+        extractedResult: (dynamic result) => _objcModulePrefixer =
+            ObjCModulePrefixer(result as Map<String, String>),
       ),
       [strings.libraryImports]: Specification<Map<String, LibraryImport>>(
         validator: libraryImportsValidator,

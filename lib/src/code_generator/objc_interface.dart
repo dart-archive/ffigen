@@ -41,6 +41,7 @@ class ObjCInterface extends BindingType {
   final methods = <String, ObjCMethod>{};
   bool filled = false;
 
+  final String lookupName;
   final ObjCBuiltInFunctions builtInFunctions;
   final bool isBuiltIn;
   late final ObjCInternalGlobal _classObject;
@@ -51,6 +52,7 @@ class ObjCInterface extends BindingType {
     String? usr,
     required String originalName,
     required String name,
+    required this.lookupName,
     String? dartDoc,
     required this.builtInFunctions,
     required this.isBuiltIn,
@@ -228,7 +230,7 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
 
     _classObject = ObjCInternalGlobal(
         '_class_$originalName',
-        (Writer w) => '${builtInFunctions.getClass.name}("$originalName")',
+        (Writer w) => '${builtInFunctions.getClass.name}("$lookupName")',
         builtInFunctions.getClass)
       ..addDependencies(dependencies);
     _isKindOfClass = builtInFunctions.getSelObject('isKindOfClass:');

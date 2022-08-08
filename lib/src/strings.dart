@@ -87,6 +87,9 @@ const symbolAddress = 'symbol-address';
 const exposeFunctionTypedefs = 'expose-typedefs';
 const leafFunctions = 'leaf';
 
+// Sub-fields of ObjC interfaces.
+const objcModule = 'module';
+
 const dependencyOnly = 'dependency-only';
 // Values for `compoundDependencies`.
 const fullCompoundDependencies = 'full';

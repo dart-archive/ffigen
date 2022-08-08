@@ -51,6 +51,7 @@ Type? parseObjCInterfaceDeclaration(
     usr: itfUsr,
     originalName: name,
     name: config.objcInterfaces.renameUsingConfig(name),
+    lookupName: config.objcModulePrefixer.applyPrefix(name),
     dartDoc: getCursorDocComment(cursor),
     builtInFunctions: objCBuiltInFunctions,
     isBuiltIn: cursor.isInSystemHeader(),
