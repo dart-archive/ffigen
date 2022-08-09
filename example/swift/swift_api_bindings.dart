@@ -6,18 +6,18 @@
 import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart' as pkg_ffi;
 
-/// Bindings for Foo.
-class FooLibrary {
+/// Bindings for swift_api.
+class SwiftLibrary {
   /// Holds the symbol lookup function.
   final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
       _lookup;
 
   /// The symbols are looked up in [dynamicLibrary].
-  FooLibrary(ffi.DynamicLibrary dynamicLibrary)
+  SwiftLibrary(ffi.DynamicLibrary dynamicLibrary)
       : _lookup = dynamicLibrary.lookup;
 
   /// The symbols are looked up with [lookup].
-  FooLibrary.fromLookup(
+  SwiftLibrary.fromLookup(
       ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
           lookup)
       : _lookup = lookup;
@@ -28092,14 +28092,15 @@ class FooLibrary {
       _registerName1("normalizeAdjacentTextNodesPreservingCDATA:");
   late final _sel_setAttributesAsDictionary_1 =
       _registerName1("setAttributesAsDictionary:");
-  late final _class_FooClass1 = _getClass1("foo.FooClass");
-  late final _sel_getValue1 = _registerName1("getValue");
-  late final _sel_setValueWithX_1 = _registerName1("setValueWithX:");
+  late final _class_SwiftClass1 = _getClass1("swift_module.SwiftClass");
+  late final _sel_getLogo1 = _registerName1("getLogo");
+  late final _sel_someField1 = _registerName1("someField");
+  late final _sel_setSomeField_1 = _registerName1("setSomeField:");
 }
 
 class _ObjCWrapper implements ffi.Finalizable {
   final ffi.Pointer<ObjCObject> _id;
-  final FooLibrary _lib;
+  final SwiftLibrary _lib;
   bool _pendingRelease;
 
   _ObjCWrapper._(this._id, this._lib,
@@ -28136,7 +28137,7 @@ class _ObjCWrapper implements ffi.Finalizable {
 }
 
 class NSObject extends _ObjCWrapper {
-  NSObject._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSObject._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -28146,7 +28147,8 @@ class NSObject extends _ObjCWrapper {
   }
 
   /// Returns a [NSObject] that wraps the given raw object pointer.
-  static NSObject castFromPointer(FooLibrary lib, ffi.Pointer<ObjCObject> other,
+  static NSObject castFromPointer(
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSObject._(other, lib, retain: retain, release: release);
   }
@@ -28157,11 +28159,11 @@ class NSObject extends _ObjCWrapper {
         obj._id, obj._lib._sel_isKindOfClass_1, obj._lib._class_NSObject1);
   }
 
-  static void load(FooLibrary _lib) {
+  static void load(SwiftLibrary _lib) {
     return _lib._objc_msgSend_1(_lib._class_NSObject1, _lib._sel_load1);
   }
 
-  static void initialize(FooLibrary _lib) {
+  static void initialize(SwiftLibrary _lib) {
     return _lib._objc_msgSend_1(_lib._class_NSObject1, _lib._sel_initialize1);
   }
 
@@ -28170,18 +28172,18 @@ class NSObject extends _ObjCWrapper {
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject new1(FooLibrary _lib) {
+  static NSObject new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSObject1, _lib._sel_new1);
     return NSObject._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSObject allocWithZone_(FooLibrary _lib, ffi.Pointer<_NSZone> zone) {
+  static NSObject allocWithZone_(SwiftLibrary _lib, ffi.Pointer<_NSZone> zone) {
     final _ret = _lib._objc_msgSend_3(
         _lib._class_NSObject1, _lib._sel_allocWithZone_1, zone);
     return NSObject._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSObject alloc(FooLibrary _lib) {
+  static NSObject alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSObject1, _lib._sel_alloc1);
     return NSObject._(_ret, _lib, retain: false, release: true);
   }
@@ -28204,26 +28206,26 @@ class NSObject extends _ObjCWrapper {
     return NSObject._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSObject copyWithZone_(FooLibrary _lib, ffi.Pointer<_NSZone> zone) {
+  static NSObject copyWithZone_(SwiftLibrary _lib, ffi.Pointer<_NSZone> zone) {
     final _ret = _lib._objc_msgSend_3(
         _lib._class_NSObject1, _lib._sel_copyWithZone_1, zone);
     return NSObject._(_ret, _lib, retain: false, release: true);
   }
 
   static NSObject mutableCopyWithZone_(
-      FooLibrary _lib, ffi.Pointer<_NSZone> zone) {
+      SwiftLibrary _lib, ffi.Pointer<_NSZone> zone) {
     final _ret = _lib._objc_msgSend_3(
         _lib._class_NSObject1, _lib._sel_mutableCopyWithZone_1, zone);
     return NSObject._(_ret, _lib, retain: false, release: true);
   }
 
   static bool instancesRespondToSelector_(
-      FooLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
+      SwiftLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
     return _lib._objc_msgSend_4(_lib._class_NSObject1,
         _lib._sel_instancesRespondToSelector_1, aSelector);
   }
 
-  static bool conformsToProtocol_(FooLibrary _lib, Protocol? protocol) {
+  static bool conformsToProtocol_(SwiftLibrary _lib, Protocol? protocol) {
     return _lib._objc_msgSend_5(_lib._class_NSObject1,
         _lib._sel_conformsToProtocol_1, protocol?._id ?? ffi.nullptr);
   }
@@ -28233,7 +28235,7 @@ class NSObject extends _ObjCWrapper {
   }
 
   static IMP instanceMethodForSelector_(
-      FooLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
+      SwiftLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
     return _lib._objc_msgSend_6(_lib._class_NSObject1,
         _lib._sel_instanceMethodForSelector_1, aSelector);
   }
@@ -28262,7 +28264,7 @@ class NSObject extends _ObjCWrapper {
   }
 
   static NSMethodSignature instanceMethodSignatureForSelector_(
-      FooLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
+      SwiftLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
     final _ret = _lib._objc_msgSend_373(_lib._class_NSObject1,
         _lib._sel_instanceMethodSignatureForSelector_1, aSelector);
     return NSMethodSignature._(_ret, _lib, retain: true, release: true);
@@ -28276,54 +28278,54 @@ class NSObject extends _ObjCWrapper {
     return _lib._objc_msgSend_12(_id, _lib._sel_retainWeakReference1);
   }
 
-  static bool isSubclassOfClass_(FooLibrary _lib, NSObject aClass) {
+  static bool isSubclassOfClass_(SwiftLibrary _lib, NSObject aClass) {
     return _lib._objc_msgSend_0(
         _lib._class_NSObject1, _lib._sel_isSubclassOfClass_1, aClass._id);
   }
 
-  static bool resolveClassMethod_(FooLibrary _lib, ffi.Pointer<ObjCSel> sel) {
+  static bool resolveClassMethod_(SwiftLibrary _lib, ffi.Pointer<ObjCSel> sel) {
     return _lib._objc_msgSend_4(
         _lib._class_NSObject1, _lib._sel_resolveClassMethod_1, sel);
   }
 
   static bool resolveInstanceMethod_(
-      FooLibrary _lib, ffi.Pointer<ObjCSel> sel) {
+      SwiftLibrary _lib, ffi.Pointer<ObjCSel> sel) {
     return _lib._objc_msgSend_4(
         _lib._class_NSObject1, _lib._sel_resolveInstanceMethod_1, sel);
   }
 
-  static int hash(FooLibrary _lib) {
+  static int hash(SwiftLibrary _lib) {
     return _lib._objc_msgSend_10(_lib._class_NSObject1, _lib._sel_hash1);
   }
 
-  static NSObject superclass(FooLibrary _lib) {
+  static NSObject superclass(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSObject1, _lib._sel_superclass1);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject class1(FooLibrary _lib) {
+  static NSObject class1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSObject1, _lib._sel_class1);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSString description(FooLibrary _lib) {
+  static NSString description(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_20(_lib._class_NSObject1, _lib._sel_description1);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSString debugDescription(FooLibrary _lib) {
+  static NSString debugDescription(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_20(
         _lib._class_NSObject1, _lib._sel_debugDescription1);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static int version(FooLibrary _lib) {
+  static int version(SwiftLibrary _lib) {
     return _lib._objc_msgSend_78(_lib._class_NSObject1, _lib._sel_version1);
   }
 
-  static void setVersion_(FooLibrary _lib, int aVersion) {
+  static void setVersion_(SwiftLibrary _lib, int aVersion) {
     return _lib._objc_msgSend_374(
         _lib._class_NSObject1, _lib._sel_setVersion_1, aVersion);
   }
@@ -28345,7 +28347,7 @@ class NSObject extends _ObjCWrapper {
     return NSObject._(_ret, _lib, retain: false, release: true);
   }
 
-  static void poseAsClass_(FooLibrary _lib, NSObject aClass) {
+  static void poseAsClass_(SwiftLibrary _lib, NSObject aClass) {
     return _lib._objc_msgSend_15(
         _lib._class_NSObject1, _lib._sel_poseAsClass_1, aClass._id);
   }
@@ -28407,7 +28409,7 @@ class NSObject extends _ObjCWrapper {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -28420,7 +28422,7 @@ class NSObject extends _ObjCWrapper {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSObject1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
@@ -28465,7 +28467,7 @@ class NSObject extends _ObjCWrapper {
         fm?._id ?? ffi.nullptr, path?._id ?? ffi.nullptr);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSObject1, _lib._sel_accessInstanceVariablesDirectly1);
   }
@@ -28577,7 +28579,7 @@ class NSObject extends _ObjCWrapper {
         keyedValues?._id ?? ffi.nullptr);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSObject1, _lib._sel_useStoredAccessor1);
   }
@@ -28721,7 +28723,7 @@ class NSObject extends _ObjCWrapper {
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSObject1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -28730,7 +28732,7 @@ class NSObject extends _ObjCWrapper {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSObject1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -28746,7 +28748,7 @@ class NSObject extends _ObjCWrapper {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSObject1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -28767,13 +28769,13 @@ class NSObject extends _ObjCWrapper {
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSObject1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSObject1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -29124,7 +29126,7 @@ typedef instancetype = ffi.Pointer<ObjCObject>;
 class _NSZone extends ffi.Opaque {}
 
 class Protocol extends _ObjCWrapper {
-  Protocol._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  Protocol._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -29134,7 +29136,8 @@ class Protocol extends _ObjCWrapper {
   }
 
   /// Returns a [Protocol] that wraps the given raw object pointer.
-  static Protocol castFromPointer(FooLibrary lib, ffi.Pointer<ObjCObject> other,
+  static Protocol castFromPointer(
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return Protocol._(other, lib, retain: retain, release: release);
   }
@@ -29149,7 +29152,7 @@ class Protocol extends _ObjCWrapper {
 typedef IMP = ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>;
 
 class NSInvocation extends NSObject {
-  NSInvocation._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSInvocation._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -29160,7 +29163,7 @@ class NSInvocation extends NSObject {
 
   /// Returns a [NSInvocation] that wraps the given raw object pointer.
   static NSInvocation castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSInvocation._(other, lib, retain: retain, release: release);
   }
@@ -29172,7 +29175,7 @@ class NSInvocation extends NSObject {
   }
 
   static NSInvocation invocationWithMethodSignature_(
-      FooLibrary _lib, NSMethodSignature? sig) {
+      SwiftLibrary _lib, NSMethodSignature? sig) {
     final _ret = _lib._objc_msgSend_366(_lib._class_NSInvocation1,
         _lib._sel_invocationWithMethodSignature_1, sig?._id ?? ffi.nullptr);
     return NSInvocation._(_ret, _lib, retain: true, release: true);
@@ -29236,20 +29239,20 @@ class NSInvocation extends NSObject {
     return _lib._objc_msgSend_15(_id, _lib._sel_invokeWithTarget_1, target._id);
   }
 
-  static NSInvocation new1(FooLibrary _lib) {
+  static NSInvocation new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSInvocation1, _lib._sel_new1);
     return NSInvocation._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSInvocation alloc(FooLibrary _lib) {
+  static NSInvocation alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSInvocation1, _lib._sel_alloc1);
     return NSInvocation._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -29262,23 +29265,23 @@ class NSInvocation extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSInvocation1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSInvocation1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSInvocation1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSInvocation1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -29287,7 +29290,7 @@ class NSInvocation extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSInvocation1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -29295,7 +29298,7 @@ class NSInvocation extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSInvocation1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -29303,13 +29306,13 @@ class NSInvocation extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSInvocation1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSInvocation1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -29317,7 +29320,7 @@ class NSInvocation extends NSObject {
 }
 
 class NSMethodSignature extends NSObject {
-  NSMethodSignature._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSMethodSignature._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -29329,7 +29332,7 @@ class NSMethodSignature extends NSObject {
 
   /// Returns a [NSMethodSignature] that wraps the given raw object pointer.
   static NSMethodSignature castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSMethodSignature._(other, lib, retain: retain, release: release);
   }
@@ -29341,7 +29344,7 @@ class NSMethodSignature extends NSObject {
   }
 
   static NSMethodSignature signatureWithObjCTypes_(
-      FooLibrary _lib, ffi.Pointer<ffi.Char> types) {
+      SwiftLibrary _lib, ffi.Pointer<ffi.Char> types) {
     final _ret = _lib._objc_msgSend_9(_lib._class_NSMethodSignature1,
         _lib._sel_signatureWithObjCTypes_1, types);
     return NSMethodSignature._(_ret, _lib, retain: true, release: true);
@@ -29371,20 +29374,20 @@ class NSMethodSignature extends NSObject {
     return _lib._objc_msgSend_10(_id, _lib._sel_methodReturnLength1);
   }
 
-  static NSMethodSignature new1(FooLibrary _lib) {
+  static NSMethodSignature new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSMethodSignature1, _lib._sel_new1);
     return NSMethodSignature._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSMethodSignature alloc(FooLibrary _lib) {
+  static NSMethodSignature alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSMethodSignature1, _lib._sel_alloc1);
     return NSMethodSignature._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -29397,23 +29400,23 @@ class NSMethodSignature extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSMethodSignature1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSMethodSignature1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSMethodSignature1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSMethodSignature1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -29422,7 +29425,7 @@ class NSMethodSignature extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSMethodSignature1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -29430,7 +29433,7 @@ class NSMethodSignature extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSMethodSignature1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -29438,13 +29441,13 @@ class NSMethodSignature extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSMethodSignature1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSMethodSignature1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -29454,7 +29457,7 @@ class NSMethodSignature extends NSObject {
 typedef NSUInteger = ffi.UnsignedLong;
 
 class NSSet extends NSObject {
-  NSSet._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSSet._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -29464,7 +29467,7 @@ class NSSet extends NSObject {
   }
 
   /// Returns a [NSSet] that wraps the given raw object pointer.
-  static NSSet castFromPointer(FooLibrary lib, ffi.Pointer<ObjCObject> other,
+  static NSSet castFromPointer(SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSSet._(other, lib, retain: retain, release: release);
   }
@@ -29606,37 +29609,37 @@ class NSSet extends NSObject {
     return NSSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSSet set1(FooLibrary _lib) {
+  static NSSet set1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSSet1, _lib._sel_set1);
     return NSSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSSet setWithObject_(FooLibrary _lib, NSObject object) {
+  static NSSet setWithObject_(SwiftLibrary _lib, NSObject object) {
     final _ret = _lib._objc_msgSend_16(
         _lib._class_NSSet1, _lib._sel_setWithObject_1, object._id);
     return NSSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSSet setWithObjects_count_(
-      FooLibrary _lib, ffi.Pointer<ffi.Pointer<ObjCObject>> objects, int cnt) {
+  static NSSet setWithObjects_count_(SwiftLibrary _lib,
+      ffi.Pointer<ffi.Pointer<ObjCObject>> objects, int cnt) {
     final _ret = _lib._objc_msgSend_61(
         _lib._class_NSSet1, _lib._sel_setWithObjects_count_1, objects, cnt);
     return NSSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSSet setWithObjects_(FooLibrary _lib, NSObject firstObj) {
+  static NSSet setWithObjects_(SwiftLibrary _lib, NSObject firstObj) {
     final _ret = _lib._objc_msgSend_16(
         _lib._class_NSSet1, _lib._sel_setWithObjects_1, firstObj._id);
     return NSSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSSet setWithSet_(FooLibrary _lib, NSSet? set) {
+  static NSSet setWithSet_(SwiftLibrary _lib, NSSet? set) {
     final _ret = _lib._objc_msgSend_363(
         _lib._class_NSSet1, _lib._sel_setWithSet_1, set?._id ?? ffi.nullptr);
     return NSSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSSet setWithArray_(FooLibrary _lib, NSArray? array) {
+  static NSSet setWithArray_(SwiftLibrary _lib, NSArray? array) {
     final _ret = _lib._objc_msgSend_67(_lib._class_NSSet1,
         _lib._sel_setWithArray_1, array?._id ?? ffi.nullptr);
     return NSSet._(_ret, _lib, retain: true, release: true);
@@ -29722,18 +29725,18 @@ class NSSet extends NSObject {
     return NSSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSSet new1(FooLibrary _lib) {
+  static NSSet new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSSet1, _lib._sel_new1);
     return NSSet._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSSet alloc(FooLibrary _lib) {
+  static NSSet alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSSet1, _lib._sel_alloc1);
     return NSSet._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -29746,23 +29749,23 @@ class NSSet extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSSet1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSSet1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSSet1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSSet1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -29771,7 +29774,7 @@ class NSSet extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSSet1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -29779,7 +29782,7 @@ class NSSet extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSSet1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -29787,13 +29790,13 @@ class NSSet extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSSet1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSSet1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -29801,7 +29804,7 @@ class NSSet extends NSObject {
 }
 
 class NSEnumerator extends NSObject {
-  NSEnumerator._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSEnumerator._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -29812,7 +29815,7 @@ class NSEnumerator extends NSObject {
 
   /// Returns a [NSEnumerator] that wraps the given raw object pointer.
   static NSEnumerator castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSEnumerator._(other, lib, retain: retain, release: release);
   }
@@ -29828,20 +29831,20 @@ class NSEnumerator extends NSObject {
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSEnumerator new1(FooLibrary _lib) {
+  static NSEnumerator new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSEnumerator1, _lib._sel_new1);
     return NSEnumerator._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSEnumerator alloc(FooLibrary _lib) {
+  static NSEnumerator alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSEnumerator1, _lib._sel_alloc1);
     return NSEnumerator._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -29854,23 +29857,23 @@ class NSEnumerator extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSEnumerator1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSEnumerator1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSEnumerator1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSEnumerator1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -29879,7 +29882,7 @@ class NSEnumerator extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSEnumerator1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -29887,7 +29890,7 @@ class NSEnumerator extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSEnumerator1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -29895,13 +29898,13 @@ class NSEnumerator extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSEnumerator1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSEnumerator1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -29909,7 +29912,7 @@ class NSEnumerator extends NSObject {
 }
 
 class NSString extends NSObject {
-  NSString._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSString._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -29919,7 +29922,8 @@ class NSString extends NSObject {
   }
 
   /// Returns a [NSString] that wraps the given raw object pointer.
-  static NSString castFromPointer(FooLibrary lib, ffi.Pointer<ObjCObject> other,
+  static NSString castFromPointer(
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSString._(other, lib, retain: retain, release: release);
   }
@@ -29930,7 +29934,7 @@ class NSString extends NSObject {
         obj._id, obj._lib._sel_isKindOfClass_1, obj._lib._class_NSString1);
   }
 
-  factory NSString(FooLibrary _lib, String str) {
+  factory NSString(SwiftLibrary _lib, String str) {
     final cstr = str.toNativeUtf8();
     final nsstr = stringWithCString_encoding_(_lib, cstr.cast(), 4 /* UTF8 */);
     pkg_ffi.calloc.free(cstr);
@@ -30358,19 +30362,19 @@ class NSString extends NSObject {
   }
 
   static ffi.Pointer<NSStringEncoding> getAvailableStringEncodings(
-      FooLibrary _lib) {
+      SwiftLibrary _lib) {
     return _lib._objc_msgSend_318(
         _lib._class_NSString1, _lib._sel_availableStringEncodings1);
   }
 
   static NSString localizedNameOfStringEncoding_(
-      FooLibrary _lib, int encoding) {
+      SwiftLibrary _lib, int encoding) {
     final _ret = _lib._objc_msgSend_293(_lib._class_NSString1,
         _lib._sel_localizedNameOfStringEncoding_1, encoding);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static int getDefaultCStringEncoding(FooLibrary _lib) {
+  static int getDefaultCStringEncoding(SwiftLibrary _lib) {
     return _lib._objc_msgSend_10(
         _lib._class_NSString1, _lib._sel_defaultCStringEncoding1);
   }
@@ -30639,39 +30643,39 @@ class NSString extends NSObject {
     return NSString._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSString string(FooLibrary _lib) {
+  static NSString string(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSString1, _lib._sel_string1);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSString stringWithString_(FooLibrary _lib, NSString? string) {
+  static NSString stringWithString_(SwiftLibrary _lib, NSString? string) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSString1,
         _lib._sel_stringWithString_1, string?._id ?? ffi.nullptr);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
   static NSString stringWithCharacters_length_(
-      FooLibrary _lib, ffi.Pointer<unichar> characters, int length) {
+      SwiftLibrary _lib, ffi.Pointer<unichar> characters, int length) {
     final _ret = _lib._objc_msgSend_331(_lib._class_NSString1,
         _lib._sel_stringWithCharacters_length_1, characters, length);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
   static NSString stringWithUTF8String_(
-      FooLibrary _lib, ffi.Pointer<ffi.Char> nullTerminatedCString) {
+      SwiftLibrary _lib, ffi.Pointer<ffi.Char> nullTerminatedCString) {
     final _ret = _lib._objc_msgSend_332(_lib._class_NSString1,
         _lib._sel_stringWithUTF8String_1, nullTerminatedCString);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSString stringWithFormat_(FooLibrary _lib, NSString? format) {
+  static NSString stringWithFormat_(SwiftLibrary _lib, NSString? format) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSString1,
         _lib._sel_stringWithFormat_1, format?._id ?? ffi.nullptr);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
   static NSString localizedStringWithFormat_(
-      FooLibrary _lib, NSString? format) {
+      SwiftLibrary _lib, NSString? format) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSString1,
         _lib._sel_localizedStringWithFormat_1, format?._id ?? ffi.nullptr);
     return NSString._(_ret, _lib, retain: true, release: true);
@@ -30685,7 +30689,7 @@ class NSString extends NSObject {
   }
 
   static NSString stringWithCString_encoding_(
-      FooLibrary _lib, ffi.Pointer<ffi.Char> cString, int enc) {
+      SwiftLibrary _lib, ffi.Pointer<ffi.Char> cString, int enc) {
     final _ret = _lib._objc_msgSend_339(_lib._class_NSString1,
         _lib._sel_stringWithCString_encoding_1, cString, enc);
     return NSString._(_ret, _lib, retain: true, release: true);
@@ -30713,7 +30717,7 @@ class NSString extends NSObject {
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSString stringWithContentsOfURL_encoding_error_(FooLibrary _lib,
+  static NSString stringWithContentsOfURL_encoding_error_(SwiftLibrary _lib,
       NSURL? url, int enc, ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
     final _ret = _lib._objc_msgSend_340(
         _lib._class_NSString1,
@@ -30724,7 +30728,7 @@ class NSString extends NSObject {
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSString stringWithContentsOfFile_encoding_error_(FooLibrary _lib,
+  static NSString stringWithContentsOfFile_encoding_error_(SwiftLibrary _lib,
       NSString? path, int enc, ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
     final _ret = _lib._objc_msgSend_341(
         _lib._class_NSString1,
@@ -30762,7 +30766,7 @@ class NSString extends NSObject {
   }
 
   static NSString stringWithContentsOfURL_usedEncoding_error_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSURL? url,
       ffi.Pointer<NSStringEncoding> enc,
       ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
@@ -30776,7 +30780,7 @@ class NSString extends NSObject {
   }
 
   static NSString stringWithContentsOfFile_usedEncoding_error_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSString? path,
       ffi.Pointer<NSStringEncoding> enc,
       ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
@@ -30791,7 +30795,7 @@ class NSString extends NSObject {
 
   static int
       stringEncodingForData_encodingOptions_convertedString_usedLossyConversion_(
-          FooLibrary _lib,
+          SwiftLibrary _lib,
           NSData? data,
           NSDictionary? opts,
           ffi.Pointer<ffi.Pointer<ObjCObject>> string,
@@ -30870,13 +30874,13 @@ class NSString extends NSObject {
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject stringWithContentsOfFile_(FooLibrary _lib, NSString? path) {
+  static NSObject stringWithContentsOfFile_(SwiftLibrary _lib, NSString? path) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSString1,
         _lib._sel_stringWithContentsOfFile_1, path?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject stringWithContentsOfURL_(FooLibrary _lib, NSURL? url) {
+  static NSObject stringWithContentsOfURL_(SwiftLibrary _lib, NSURL? url) {
     final _ret = _lib._objc_msgSend_226(_lib._class_NSString1,
         _lib._sel_stringWithContentsOfURL_1, url?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -30906,14 +30910,14 @@ class NSString extends NSObject {
   }
 
   static NSObject stringWithCString_length_(
-      FooLibrary _lib, ffi.Pointer<ffi.Char> bytes, int length) {
+      SwiftLibrary _lib, ffi.Pointer<ffi.Char> bytes, int length) {
     final _ret = _lib._objc_msgSend_339(_lib._class_NSString1,
         _lib._sel_stringWithCString_length_1, bytes, length);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
   static NSObject stringWithCString_(
-      FooLibrary _lib, ffi.Pointer<ffi.Char> bytes) {
+      SwiftLibrary _lib, ffi.Pointer<ffi.Char> bytes) {
     final _ret = _lib._objc_msgSend_332(
         _lib._class_NSString1, _lib._sel_stringWithCString_1, bytes);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -30929,7 +30933,7 @@ class NSString extends NSObject {
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSString pathWithComponents_(FooLibrary _lib, NSArray? components) {
+  static NSString pathWithComponents_(SwiftLibrary _lib, NSArray? components) {
     final _ret = _lib._objc_msgSend_350(_lib._class_NSString1,
         _lib._sel_pathWithComponents_1, components?._id ?? ffi.nullptr);
     return NSString._(_ret, _lib, retain: true, release: true);
@@ -31112,18 +31116,18 @@ class NSString extends NSObject {
         block._id);
   }
 
-  static NSString new1(FooLibrary _lib) {
+  static NSString new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSString1, _lib._sel_new1);
     return NSString._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSString alloc(FooLibrary _lib) {
+  static NSString alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSString1, _lib._sel_alloc1);
     return NSString._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -31136,23 +31140,23 @@ class NSString extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSString1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSString1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSString1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSString1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -31161,7 +31165,7 @@ class NSString extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSString1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -31169,7 +31173,7 @@ class NSString extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSString1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -31177,13 +31181,13 @@ class NSString extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSString1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSString1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -31191,13 +31195,13 @@ class NSString extends NSObject {
 }
 
 extension StringToNSString on String {
-  NSString toNSString(FooLibrary lib) => NSString(lib, this);
+  NSString toNSString(SwiftLibrary lib) => NSString(lib, this);
 }
 
 typedef unichar = ffi.UnsignedShort;
 
 class NSCoder extends NSObject {
-  NSCoder._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSCoder._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -31207,7 +31211,8 @@ class NSCoder extends NSObject {
   }
 
   /// Returns a [NSCoder] that wraps the given raw object pointer.
-  static NSCoder castFromPointer(FooLibrary lib, ffi.Pointer<ObjCObject> other,
+  static NSCoder castFromPointer(
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSCoder._(other, lib, retain: retain, release: release);
   }
@@ -31641,18 +31646,18 @@ class NSCoder extends NSObject {
         _id, _lib._sel_decodeRectForKey_1, key?._id ?? ffi.nullptr);
   }
 
-  static NSCoder new1(FooLibrary _lib) {
+  static NSCoder new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSCoder1, _lib._sel_new1);
     return NSCoder._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSCoder alloc(FooLibrary _lib) {
+  static NSCoder alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSCoder1, _lib._sel_alloc1);
     return NSCoder._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -31665,23 +31670,23 @@ class NSCoder extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSCoder1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSCoder1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSCoder1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSCoder1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -31690,7 +31695,7 @@ class NSCoder extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSCoder1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -31698,7 +31703,7 @@ class NSCoder extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSCoder1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -31706,13 +31711,13 @@ class NSCoder extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSCoder1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSCoder1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -31720,7 +31725,7 @@ class NSCoder extends NSObject {
 }
 
 class NSData extends NSObject {
-  NSData._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSData._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -31730,7 +31735,7 @@ class NSData extends NSObject {
   }
 
   /// Returns a [NSData] that wraps the given raw object pointer.
-  static NSData castFromPointer(FooLibrary lib, ffi.Pointer<ObjCObject> other,
+  static NSData castFromPointer(SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSData._(other, lib, retain: retain, release: release);
   }
@@ -31810,34 +31815,34 @@ class NSData extends NSObject {
         _id, _lib._sel_enumerateByteRangesUsingBlock_1, block._id);
   }
 
-  static NSData data(FooLibrary _lib) {
+  static NSData data(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSData1, _lib._sel_data1);
     return NSData._(_ret, _lib, retain: true, release: true);
   }
 
   static NSData dataWithBytes_length_(
-      FooLibrary _lib, ffi.Pointer<ffi.Void> bytes, int length) {
+      SwiftLibrary _lib, ffi.Pointer<ffi.Void> bytes, int length) {
     final _ret = _lib._objc_msgSend_237(
         _lib._class_NSData1, _lib._sel_dataWithBytes_length_1, bytes, length);
     return NSData._(_ret, _lib, retain: true, release: true);
   }
 
   static NSData dataWithBytesNoCopy_length_(
-      FooLibrary _lib, ffi.Pointer<ffi.Void> bytes, int length) {
+      SwiftLibrary _lib, ffi.Pointer<ffi.Void> bytes, int length) {
     final _ret = _lib._objc_msgSend_237(_lib._class_NSData1,
         _lib._sel_dataWithBytesNoCopy_length_1, bytes, length);
     return NSData._(_ret, _lib, retain: false, release: true);
   }
 
   static NSData dataWithBytesNoCopy_length_freeWhenDone_(
-      FooLibrary _lib, ffi.Pointer<ffi.Void> bytes, int length, bool b) {
+      SwiftLibrary _lib, ffi.Pointer<ffi.Void> bytes, int length, bool b) {
     final _ret = _lib._objc_msgSend_238(_lib._class_NSData1,
         _lib._sel_dataWithBytesNoCopy_length_freeWhenDone_1, bytes, length, b);
     return NSData._(_ret, _lib, retain: false, release: true);
   }
 
   static NSData dataWithContentsOfFile_options_error_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSString? path,
       int readOptionsMask,
       ffi.Pointer<ffi.Pointer<ObjCObject>> errorPtr) {
@@ -31851,7 +31856,7 @@ class NSData extends NSObject {
   }
 
   static NSData dataWithContentsOfURL_options_error_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSURL? url,
       int readOptionsMask,
       ffi.Pointer<ffi.Pointer<ObjCObject>> errorPtr) {
@@ -31864,13 +31869,13 @@ class NSData extends NSObject {
     return NSData._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSData dataWithContentsOfFile_(FooLibrary _lib, NSString? path) {
+  static NSData dataWithContentsOfFile_(SwiftLibrary _lib, NSString? path) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSData1,
         _lib._sel_dataWithContentsOfFile_1, path?._id ?? ffi.nullptr);
     return NSData._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSData dataWithContentsOfURL_(FooLibrary _lib, NSURL? url) {
+  static NSData dataWithContentsOfURL_(SwiftLibrary _lib, NSURL? url) {
     final _ret = _lib._objc_msgSend_226(_lib._class_NSData1,
         _lib._sel_dataWithContentsOfURL_1, url?._id ?? ffi.nullptr);
     return NSData._(_ret, _lib, retain: true, release: true);
@@ -31946,7 +31951,7 @@ class NSData extends NSObject {
     return NSData._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSData dataWithData_(FooLibrary _lib, NSData? data) {
+  static NSData dataWithData_(SwiftLibrary _lib, NSData? data) {
     final _ret = _lib._objc_msgSend_242(_lib._class_NSData1,
         _lib._sel_dataWithData_1, data?._id ?? ffi.nullptr);
     return NSData._(_ret, _lib, retain: true, release: true);
@@ -32002,7 +32007,7 @@ class NSData extends NSObject {
   }
 
   static NSObject dataWithContentsOfMappedFile_(
-      FooLibrary _lib, NSString? path) {
+      SwiftLibrary _lib, NSString? path) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSData1,
         _lib._sel_dataWithContentsOfMappedFile_1, path?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -32025,18 +32030,18 @@ class NSData extends NSObject {
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSData new1(FooLibrary _lib) {
+  static NSData new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSData1, _lib._sel_new1);
     return NSData._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSData alloc(FooLibrary _lib) {
+  static NSData alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSData1, _lib._sel_alloc1);
     return NSData._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -32049,23 +32054,23 @@ class NSData extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSData1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSData1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSData1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSData1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -32074,7 +32079,7 @@ class NSData extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSData1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -32082,7 +32087,7 @@ class NSData extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSData1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -32090,13 +32095,13 @@ class NSData extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSData1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSData1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -32114,7 +32119,7 @@ class _NSRange extends ffi.Struct {
 }
 
 class NSURL extends NSObject {
-  NSURL._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSURL._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -32124,7 +32129,7 @@ class NSURL extends NSObject {
   }
 
   /// Returns a [NSURL] that wraps the given raw object pointer.
-  static NSURL castFromPointer(FooLibrary lib, ffi.Pointer<ObjCObject> other,
+  static NSURL castFromPointer(SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSURL._(other, lib, retain: retain, release: release);
   }
@@ -32182,7 +32187,7 @@ class NSURL extends NSObject {
   }
 
   static NSURL fileURLWithPath_isDirectory_relativeToURL_(
-      FooLibrary _lib, NSString? path, bool isDir, NSURL? baseURL) {
+      SwiftLibrary _lib, NSString? path, bool isDir, NSURL? baseURL) {
     final _ret = _lib._objc_msgSend_31(
         _lib._class_NSURL1,
         _lib._sel_fileURLWithPath_isDirectory_relativeToURL_1,
@@ -32193,7 +32198,7 @@ class NSURL extends NSObject {
   }
 
   static NSURL fileURLWithPath_relativeToURL_(
-      FooLibrary _lib, NSString? path, NSURL? baseURL) {
+      SwiftLibrary _lib, NSString? path, NSURL? baseURL) {
     final _ret = _lib._objc_msgSend_32(
         _lib._class_NSURL1,
         _lib._sel_fileURLWithPath_relativeToURL_1,
@@ -32203,7 +32208,7 @@ class NSURL extends NSObject {
   }
 
   static NSURL fileURLWithPath_isDirectory_(
-      FooLibrary _lib, NSString? path, bool isDir) {
+      SwiftLibrary _lib, NSString? path, bool isDir) {
     final _ret = _lib._objc_msgSend_33(
         _lib._class_NSURL1,
         _lib._sel_fileURLWithPath_isDirectory_1,
@@ -32212,7 +32217,7 @@ class NSURL extends NSObject {
     return NSURL._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSURL fileURLWithPath_(FooLibrary _lib, NSString? path) {
+  static NSURL fileURLWithPath_(SwiftLibrary _lib, NSString? path) {
     final _ret = _lib._objc_msgSend_34(_lib._class_NSURL1,
         _lib._sel_fileURLWithPath_1, path?._id ?? ffi.nullptr);
     return NSURL._(_ret, _lib, retain: true, release: true);
@@ -32230,7 +32235,10 @@ class NSURL extends NSObject {
   }
 
   static NSURL fileURLWithFileSystemRepresentation_isDirectory_relativeToURL_(
-      FooLibrary _lib, ffi.Pointer<ffi.Char> path, bool isDir, NSURL? baseURL) {
+      SwiftLibrary _lib,
+      ffi.Pointer<ffi.Char> path,
+      bool isDir,
+      NSURL? baseURL) {
     final _ret = _lib._objc_msgSend_36(
         _lib._class_NSURL1,
         _lib._sel_fileURLWithFileSystemRepresentation_isDirectory_relativeToURL_1,
@@ -32255,14 +32263,14 @@ class NSURL extends NSObject {
     return NSURL._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSURL URLWithString_(FooLibrary _lib, NSString? URLString) {
+  static NSURL URLWithString_(SwiftLibrary _lib, NSString? URLString) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSURL1,
         _lib._sel_URLWithString_1, URLString?._id ?? ffi.nullptr);
     return NSURL._(_ret, _lib, retain: true, release: true);
   }
 
   static NSURL URLWithString_relativeToURL_(
-      FooLibrary _lib, NSString? URLString, NSURL? baseURL) {
+      SwiftLibrary _lib, NSString? URLString, NSURL? baseURL) {
     final _ret = _lib._objc_msgSend_28(
         _lib._class_NSURL1,
         _lib._sel_URLWithString_relativeToURL_1,
@@ -32282,7 +32290,7 @@ class NSURL extends NSObject {
   }
 
   static NSURL URLWithDataRepresentation_relativeToURL_(
-      FooLibrary _lib, NSData? data, NSURL? baseURL) {
+      SwiftLibrary _lib, NSData? data, NSURL? baseURL) {
     final _ret = _lib._objc_msgSend_38(
         _lib._class_NSURL1,
         _lib._sel_URLWithDataRepresentation_relativeToURL_1,
@@ -32302,7 +32310,7 @@ class NSURL extends NSObject {
   }
 
   static NSURL absoluteURLWithDataRepresentation_relativeToURL_(
-      FooLibrary _lib, NSData? data, NSURL? baseURL) {
+      SwiftLibrary _lib, NSData? data, NSURL? baseURL) {
     final _ret = _lib._objc_msgSend_38(
         _lib._class_NSURL1,
         _lib._sel_absoluteURLWithDataRepresentation_relativeToURL_1,
@@ -32510,7 +32518,7 @@ class NSURL extends NSObject {
   }
 
   static NSURL fileURLWithPathComponents_(
-      FooLibrary _lib, NSArray? components) {
+      SwiftLibrary _lib, NSArray? components) {
     final _ret = _lib._objc_msgSend_222(_lib._class_NSURL1,
         _lib._sel_fileURLWithPathComponents_1, components?._id ?? ffi.nullptr);
     return NSURL._(_ret, _lib, retain: true, release: true);
@@ -32631,18 +32639,18 @@ class NSURL extends NSObject {
     return NSURLHandle._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSURL new1(FooLibrary _lib) {
+  static NSURL new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSURL1, _lib._sel_new1);
     return NSURL._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSURL alloc(FooLibrary _lib) {
+  static NSURL alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSURL1, _lib._sel_alloc1);
     return NSURL._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -32655,23 +32663,23 @@ class NSURL extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSURL1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURL1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURL1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSURL1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -32680,7 +32688,7 @@ class NSURL extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSURL1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -32688,7 +32696,7 @@ class NSURL extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSURL1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -32696,13 +32704,13 @@ class NSURL extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSURL1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURL1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -32710,7 +32718,7 @@ class NSURL extends NSObject {
 }
 
 class NSNumber extends NSValue {
-  NSNumber._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSNumber._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -32720,7 +32728,8 @@ class NSNumber extends NSValue {
   }
 
   /// Returns a [NSNumber] that wraps the given raw object pointer.
-  static NSNumber castFromPointer(FooLibrary lib, ffi.Pointer<ObjCObject> other,
+  static NSNumber castFromPointer(
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSNumber._(other, lib, retain: retain, release: release);
   }
@@ -32904,104 +32913,104 @@ class NSNumber extends NSValue {
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSNumber numberWithChar_(FooLibrary _lib, int value) {
+  static NSNumber numberWithChar_(SwiftLibrary _lib, int value) {
     final _ret = _lib._objc_msgSend_196(
         _lib._class_NSNumber1, _lib._sel_numberWithChar_1, value);
     return NSNumber._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSNumber numberWithUnsignedChar_(FooLibrary _lib, int value) {
+  static NSNumber numberWithUnsignedChar_(SwiftLibrary _lib, int value) {
     final _ret = _lib._objc_msgSend_197(
         _lib._class_NSNumber1, _lib._sel_numberWithUnsignedChar_1, value);
     return NSNumber._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSNumber numberWithShort_(FooLibrary _lib, int value) {
+  static NSNumber numberWithShort_(SwiftLibrary _lib, int value) {
     final _ret = _lib._objc_msgSend_198(
         _lib._class_NSNumber1, _lib._sel_numberWithShort_1, value);
     return NSNumber._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSNumber numberWithUnsignedShort_(FooLibrary _lib, int value) {
+  static NSNumber numberWithUnsignedShort_(SwiftLibrary _lib, int value) {
     final _ret = _lib._objc_msgSend_199(
         _lib._class_NSNumber1, _lib._sel_numberWithUnsignedShort_1, value);
     return NSNumber._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSNumber numberWithInt_(FooLibrary _lib, int value) {
+  static NSNumber numberWithInt_(SwiftLibrary _lib, int value) {
     final _ret = _lib._objc_msgSend_200(
         _lib._class_NSNumber1, _lib._sel_numberWithInt_1, value);
     return NSNumber._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSNumber numberWithUnsignedInt_(FooLibrary _lib, int value) {
+  static NSNumber numberWithUnsignedInt_(SwiftLibrary _lib, int value) {
     final _ret = _lib._objc_msgSend_201(
         _lib._class_NSNumber1, _lib._sel_numberWithUnsignedInt_1, value);
     return NSNumber._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSNumber numberWithLong_(FooLibrary _lib, int value) {
+  static NSNumber numberWithLong_(SwiftLibrary _lib, int value) {
     final _ret = _lib._objc_msgSend_202(
         _lib._class_NSNumber1, _lib._sel_numberWithLong_1, value);
     return NSNumber._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSNumber numberWithUnsignedLong_(FooLibrary _lib, int value) {
+  static NSNumber numberWithUnsignedLong_(SwiftLibrary _lib, int value) {
     final _ret = _lib._objc_msgSend_203(
         _lib._class_NSNumber1, _lib._sel_numberWithUnsignedLong_1, value);
     return NSNumber._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSNumber numberWithLongLong_(FooLibrary _lib, int value) {
+  static NSNumber numberWithLongLong_(SwiftLibrary _lib, int value) {
     final _ret = _lib._objc_msgSend_204(
         _lib._class_NSNumber1, _lib._sel_numberWithLongLong_1, value);
     return NSNumber._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSNumber numberWithUnsignedLongLong_(FooLibrary _lib, int value) {
+  static NSNumber numberWithUnsignedLongLong_(SwiftLibrary _lib, int value) {
     final _ret = _lib._objc_msgSend_205(
         _lib._class_NSNumber1, _lib._sel_numberWithUnsignedLongLong_1, value);
     return NSNumber._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSNumber numberWithFloat_(FooLibrary _lib, double value) {
+  static NSNumber numberWithFloat_(SwiftLibrary _lib, double value) {
     final _ret = _lib._objc_msgSend_206(
         _lib._class_NSNumber1, _lib._sel_numberWithFloat_1, value);
     return NSNumber._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSNumber numberWithDouble_(FooLibrary _lib, double value) {
+  static NSNumber numberWithDouble_(SwiftLibrary _lib, double value) {
     final _ret = _lib._objc_msgSend_207(
         _lib._class_NSNumber1, _lib._sel_numberWithDouble_1, value);
     return NSNumber._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSNumber numberWithBool_(FooLibrary _lib, bool value) {
+  static NSNumber numberWithBool_(SwiftLibrary _lib, bool value) {
     final _ret = _lib._objc_msgSend_208(
         _lib._class_NSNumber1, _lib._sel_numberWithBool_1, value);
     return NSNumber._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSNumber numberWithInteger_(FooLibrary _lib, int value) {
+  static NSNumber numberWithInteger_(SwiftLibrary _lib, int value) {
     final _ret = _lib._objc_msgSend_202(
         _lib._class_NSNumber1, _lib._sel_numberWithInteger_1, value);
     return NSNumber._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSNumber numberWithUnsignedInteger_(FooLibrary _lib, int value) {
+  static NSNumber numberWithUnsignedInteger_(SwiftLibrary _lib, int value) {
     final _ret = _lib._objc_msgSend_203(
         _lib._class_NSNumber1, _lib._sel_numberWithUnsignedInteger_1, value);
     return NSNumber._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSValue valueWithBytes_objCType_(FooLibrary _lib,
+  static NSValue valueWithBytes_objCType_(SwiftLibrary _lib,
       ffi.Pointer<ffi.Void> value, ffi.Pointer<ffi.Char> type) {
     final _ret = _lib._objc_msgSend_43(_lib._class_NSNumber1,
         _lib._sel_valueWithBytes_objCType_1, value, type);
     return NSValue._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSValue value_withObjCType_(FooLibrary _lib,
+  static NSValue value_withObjCType_(SwiftLibrary _lib,
       ffi.Pointer<ffi.Void> value, ffi.Pointer<ffi.Char> type) {
     final _ret = _lib._objc_msgSend_43(
         _lib._class_NSNumber1, _lib._sel_value_withObjCType_1, value, type);
@@ -33009,61 +33018,61 @@ class NSNumber extends NSValue {
   }
 
   static NSValue valueWithNonretainedObject_(
-      FooLibrary _lib, NSObject anObject) {
+      SwiftLibrary _lib, NSObject anObject) {
     final _ret = _lib._objc_msgSend_44(_lib._class_NSNumber1,
         _lib._sel_valueWithNonretainedObject_1, anObject._id);
     return NSValue._(_ret, _lib, retain: true, release: true);
   }
 
   static NSValue valueWithPointer_(
-      FooLibrary _lib, ffi.Pointer<ffi.Void> pointer) {
+      SwiftLibrary _lib, ffi.Pointer<ffi.Void> pointer) {
     final _ret = _lib._objc_msgSend_45(
         _lib._class_NSNumber1, _lib._sel_valueWithPointer_1, pointer);
     return NSValue._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSValue valueWithRange_(FooLibrary _lib, NSRange range) {
+  static NSValue valueWithRange_(SwiftLibrary _lib, NSRange range) {
     final _ret = _lib._objc_msgSend_48(
         _lib._class_NSNumber1, _lib._sel_valueWithRange_1, range);
     return NSValue._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSValue valueWithPoint_(FooLibrary _lib, NSPoint point) {
+  static NSValue valueWithPoint_(SwiftLibrary _lib, NSPoint point) {
     final _ret = _lib._objc_msgSend_50(
         _lib._class_NSNumber1, _lib._sel_valueWithPoint_1, point);
     return NSValue._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSValue valueWithSize_(FooLibrary _lib, NSSize size) {
+  static NSValue valueWithSize_(SwiftLibrary _lib, NSSize size) {
     final _ret = _lib._objc_msgSend_51(
         _lib._class_NSNumber1, _lib._sel_valueWithSize_1, size);
     return NSValue._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSValue valueWithRect_(FooLibrary _lib, NSRect rect) {
+  static NSValue valueWithRect_(SwiftLibrary _lib, NSRect rect) {
     final _ret = _lib._objc_msgSend_52(
         _lib._class_NSNumber1, _lib._sel_valueWithRect_1, rect);
     return NSValue._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSValue valueWithEdgeInsets_(FooLibrary _lib, NSEdgeInsets insets) {
+  static NSValue valueWithEdgeInsets_(SwiftLibrary _lib, NSEdgeInsets insets) {
     final _ret = _lib._objc_msgSend_53(
         _lib._class_NSNumber1, _lib._sel_valueWithEdgeInsets_1, insets);
     return NSValue._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSNumber new1(FooLibrary _lib) {
+  static NSNumber new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSNumber1, _lib._sel_new1);
     return NSNumber._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSNumber alloc(FooLibrary _lib) {
+  static NSNumber alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSNumber1, _lib._sel_alloc1);
     return NSNumber._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -33076,23 +33085,23 @@ class NSNumber extends NSValue {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSNumber1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSNumber1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSNumber1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSNumber1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -33101,7 +33110,7 @@ class NSNumber extends NSValue {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSNumber1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -33109,7 +33118,7 @@ class NSNumber extends NSValue {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSNumber1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -33117,13 +33126,13 @@ class NSNumber extends NSValue {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSNumber1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSNumber1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -33131,7 +33140,7 @@ class NSNumber extends NSValue {
 }
 
 class NSValue extends NSObject {
-  NSValue._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSValue._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -33141,7 +33150,8 @@ class NSValue extends NSObject {
   }
 
   /// Returns a [NSValue] that wraps the given raw object pointer.
-  static NSValue castFromPointer(FooLibrary lib, ffi.Pointer<ObjCObject> other,
+  static NSValue castFromPointer(
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSValue._(other, lib, retain: retain, release: release);
   }
@@ -33173,14 +33183,14 @@ class NSValue extends NSObject {
     return NSValue._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSValue valueWithBytes_objCType_(FooLibrary _lib,
+  static NSValue valueWithBytes_objCType_(SwiftLibrary _lib,
       ffi.Pointer<ffi.Void> value, ffi.Pointer<ffi.Char> type) {
     final _ret = _lib._objc_msgSend_43(
         _lib._class_NSValue1, _lib._sel_valueWithBytes_objCType_1, value, type);
     return NSValue._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSValue value_withObjCType_(FooLibrary _lib,
+  static NSValue value_withObjCType_(SwiftLibrary _lib,
       ffi.Pointer<ffi.Void> value, ffi.Pointer<ffi.Char> type) {
     final _ret = _lib._objc_msgSend_43(
         _lib._class_NSValue1, _lib._sel_value_withObjCType_1, value, type);
@@ -33188,7 +33198,7 @@ class NSValue extends NSObject {
   }
 
   static NSValue valueWithNonretainedObject_(
-      FooLibrary _lib, NSObject anObject) {
+      SwiftLibrary _lib, NSObject anObject) {
     final _ret = _lib._objc_msgSend_44(_lib._class_NSValue1,
         _lib._sel_valueWithNonretainedObject_1, anObject._id);
     return NSValue._(_ret, _lib, retain: true, release: true);
@@ -33200,7 +33210,7 @@ class NSValue extends NSObject {
   }
 
   static NSValue valueWithPointer_(
-      FooLibrary _lib, ffi.Pointer<ffi.Void> pointer) {
+      SwiftLibrary _lib, ffi.Pointer<ffi.Void> pointer) {
     final _ret = _lib._objc_msgSend_45(
         _lib._class_NSValue1, _lib._sel_valueWithPointer_1, pointer);
     return NSValue._(_ret, _lib, retain: true, release: true);
@@ -33219,7 +33229,7 @@ class NSValue extends NSObject {
     return _lib._objc_msgSend_47(_id, _lib._sel_getValue_1, value);
   }
 
-  static NSValue valueWithRange_(FooLibrary _lib, NSRange range) {
+  static NSValue valueWithRange_(SwiftLibrary _lib, NSRange range) {
     final _ret = _lib._objc_msgSend_48(
         _lib._class_NSValue1, _lib._sel_valueWithRange_1, range);
     return NSValue._(_ret, _lib, retain: true, release: true);
@@ -33229,25 +33239,25 @@ class NSValue extends NSObject {
     return _lib._objc_msgSend_49(_id, _lib._sel_rangeValue1);
   }
 
-  static NSValue valueWithPoint_(FooLibrary _lib, NSPoint point) {
+  static NSValue valueWithPoint_(SwiftLibrary _lib, NSPoint point) {
     final _ret = _lib._objc_msgSend_50(
         _lib._class_NSValue1, _lib._sel_valueWithPoint_1, point);
     return NSValue._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSValue valueWithSize_(FooLibrary _lib, NSSize size) {
+  static NSValue valueWithSize_(SwiftLibrary _lib, NSSize size) {
     final _ret = _lib._objc_msgSend_51(
         _lib._class_NSValue1, _lib._sel_valueWithSize_1, size);
     return NSValue._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSValue valueWithRect_(FooLibrary _lib, NSRect rect) {
+  static NSValue valueWithRect_(SwiftLibrary _lib, NSRect rect) {
     final _ret = _lib._objc_msgSend_52(
         _lib._class_NSValue1, _lib._sel_valueWithRect_1, rect);
     return NSValue._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSValue valueWithEdgeInsets_(FooLibrary _lib, NSEdgeInsets insets) {
+  static NSValue valueWithEdgeInsets_(SwiftLibrary _lib, NSEdgeInsets insets) {
     final _ret = _lib._objc_msgSend_53(
         _lib._class_NSValue1, _lib._sel_valueWithEdgeInsets_1, insets);
     return NSValue._(_ret, _lib, retain: true, release: true);
@@ -33269,18 +33279,18 @@ class NSValue extends NSObject {
     return _lib._objc_msgSend_57(_id, _lib._sel_edgeInsetsValue1);
   }
 
-  static NSValue new1(FooLibrary _lib) {
+  static NSValue new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSValue1, _lib._sel_new1);
     return NSValue._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSValue alloc(FooLibrary _lib) {
+  static NSValue alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSValue1, _lib._sel_alloc1);
     return NSValue._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -33293,23 +33303,23 @@ class NSValue extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSValue1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSValue1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSValue1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSValue1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -33318,7 +33328,7 @@ class NSValue extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSValue1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -33326,7 +33336,7 @@ class NSValue extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSValue1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -33334,13 +33344,13 @@ class NSValue extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSValue1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSValue1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -33391,7 +33401,7 @@ class NSEdgeInsets extends ffi.Struct {
 }
 
 class NSArray extends NSObject {
-  NSArray._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSArray._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -33401,7 +33411,8 @@ class NSArray extends NSObject {
   }
 
   /// Returns a [NSArray] that wraps the given raw object pointer.
-  static NSArray castFromPointer(FooLibrary lib, ffi.Pointer<ObjCObject> other,
+  static NSArray castFromPointer(
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSArray._(other, lib, retain: retain, release: release);
   }
@@ -33710,31 +33721,31 @@ class NSArray extends NSObject {
         cmp);
   }
 
-  static NSArray array(FooLibrary _lib) {
+  static NSArray array(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSArray1, _lib._sel_array1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSArray arrayWithObject_(FooLibrary _lib, NSObject anObject) {
+  static NSArray arrayWithObject_(SwiftLibrary _lib, NSObject anObject) {
     final _ret = _lib._objc_msgSend_16(
         _lib._class_NSArray1, _lib._sel_arrayWithObject_1, anObject._id);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSArray arrayWithObjects_count_(
-      FooLibrary _lib, ffi.Pointer<ffi.Pointer<ObjCObject>> objects, int cnt) {
+  static NSArray arrayWithObjects_count_(SwiftLibrary _lib,
+      ffi.Pointer<ffi.Pointer<ObjCObject>> objects, int cnt) {
     final _ret = _lib._objc_msgSend_61(
         _lib._class_NSArray1, _lib._sel_arrayWithObjects_count_1, objects, cnt);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSArray arrayWithObjects_(FooLibrary _lib, NSObject firstObj) {
+  static NSArray arrayWithObjects_(SwiftLibrary _lib, NSObject firstObj) {
     final _ret = _lib._objc_msgSend_16(
         _lib._class_NSArray1, _lib._sel_arrayWithObjects_1, firstObj._id);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSArray arrayWithArray_(FooLibrary _lib, NSArray? array) {
+  static NSArray arrayWithArray_(SwiftLibrary _lib, NSArray? array) {
     final _ret = _lib._objc_msgSend_67(_lib._class_NSArray1,
         _lib._sel_arrayWithArray_1, array?._id ?? ffi.nullptr);
     return NSArray._(_ret, _lib, retain: true, release: true);
@@ -33768,8 +33779,8 @@ class NSArray extends NSObject {
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSArray arrayWithContentsOfURL_error_(
-      FooLibrary _lib, NSURL? url, ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
+  static NSArray arrayWithContentsOfURL_error_(SwiftLibrary _lib, NSURL? url,
+      ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
     final _ret = _lib._objc_msgSend_117(
         _lib._class_NSArray1,
         _lib._sel_arrayWithContentsOfURL_error_1,
@@ -33782,13 +33793,13 @@ class NSArray extends NSObject {
     return _lib._objc_msgSend_118(_id, _lib._sel_getObjects_1, objects);
   }
 
-  static NSArray arrayWithContentsOfFile_(FooLibrary _lib, NSString? path) {
+  static NSArray arrayWithContentsOfFile_(SwiftLibrary _lib, NSString? path) {
     final _ret = _lib._objc_msgSend_119(_lib._class_NSArray1,
         _lib._sel_arrayWithContentsOfFile_1, path?._id ?? ffi.nullptr);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSArray arrayWithContentsOfURL_(FooLibrary _lib, NSURL? url) {
+  static NSArray arrayWithContentsOfURL_(SwiftLibrary _lib, NSURL? url) {
     final _ret = _lib._objc_msgSend_120(_lib._class_NSArray1,
         _lib._sel_arrayWithContentsOfURL_1, url?._id ?? ffi.nullptr);
     return NSArray._(_ret, _lib, retain: true, release: true);
@@ -33918,18 +33929,18 @@ class NSArray extends NSObject {
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSArray new1(FooLibrary _lib) {
+  static NSArray new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSArray1, _lib._sel_new1);
     return NSArray._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSArray alloc(FooLibrary _lib) {
+  static NSArray alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSArray1, _lib._sel_alloc1);
     return NSArray._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -33942,23 +33953,23 @@ class NSArray extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSArray1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSArray1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSArray1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSArray1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -33967,7 +33978,7 @@ class NSArray extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSArray1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -33975,7 +33986,7 @@ class NSArray extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSArray1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -33983,13 +33994,13 @@ class NSArray extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSArray1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSArray1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -33999,7 +34010,7 @@ class NSArray extends NSObject {
 typedef NSInteger = ffi.Long;
 
 class NSError extends NSObject {
-  NSError._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSError._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -34009,7 +34020,8 @@ class NSError extends NSObject {
   }
 
   /// Returns a [NSError] that wraps the given raw object pointer.
-  static NSError castFromPointer(FooLibrary lib, ffi.Pointer<ObjCObject> other,
+  static NSError castFromPointer(
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSError._(other, lib, retain: retain, release: release);
   }
@@ -34027,7 +34039,7 @@ class NSError extends NSObject {
   }
 
   static NSError errorWithDomain_code_userInfo_(
-      FooLibrary _lib, NSErrorDomain domain, int code) {
+      SwiftLibrary _lib, NSErrorDomain domain, int code) {
     final _ret = _lib._objc_msgSend_77(_lib._class_NSError1,
         _lib._sel_errorWithDomain_code_userInfo_1, domain, code);
     return NSError._(_ret, _lib, retain: true, release: true);
@@ -34041,18 +34053,18 @@ class NSError extends NSObject {
     return _lib._objc_msgSend_78(_id, _lib._sel_code1);
   }
 
-  static NSError new1(FooLibrary _lib) {
+  static NSError new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSError1, _lib._sel_new1);
     return NSError._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSError alloc(FooLibrary _lib) {
+  static NSError alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSError1, _lib._sel_alloc1);
     return NSError._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -34065,23 +34077,23 @@ class NSError extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSError1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSError1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSError1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSError1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -34090,7 +34102,7 @@ class NSError extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSError1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -34098,7 +34110,7 @@ class NSError extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSError1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -34106,13 +34118,13 @@ class NSError extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSError1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSError1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -34122,7 +34134,7 @@ class NSError extends NSObject {
 typedef NSErrorDomain = ffi.Pointer<ObjCObject>;
 
 class NSIndexSet extends NSObject {
-  NSIndexSet._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSIndexSet._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -34133,7 +34145,7 @@ class NSIndexSet extends NSObject {
 
   /// Returns a [NSIndexSet] that wraps the given raw object pointer.
   static NSIndexSet castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSIndexSet._(other, lib, retain: retain, release: release);
   }
@@ -34144,20 +34156,20 @@ class NSIndexSet extends NSObject {
         obj._id, obj._lib._sel_isKindOfClass_1, obj._lib._class_NSIndexSet1);
   }
 
-  static NSIndexSet indexSet(FooLibrary _lib) {
+  static NSIndexSet indexSet(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSIndexSet1, _lib._sel_indexSet1);
     return NSIndexSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSIndexSet indexSetWithIndex_(FooLibrary _lib, int value) {
+  static NSIndexSet indexSetWithIndex_(SwiftLibrary _lib, int value) {
     final _ret = _lib._objc_msgSend_60(
         _lib._class_NSIndexSet1, _lib._sel_indexSetWithIndex_1, value);
     return NSIndexSet._(_ret, _lib, retain: true, release: true);
   }
 
   static NSIndexSet indexSetWithIndexesInRange_(
-      FooLibrary _lib, NSRange range) {
+      SwiftLibrary _lib, NSRange range) {
     final _ret = _lib._objc_msgSend_83(
         _lib._class_NSIndexSet1, _lib._sel_indexSetWithIndexesInRange_1, range);
     return NSIndexSet._(_ret, _lib, retain: true, release: true);
@@ -34331,19 +34343,19 @@ class NSIndexSet extends NSObject {
         block._id);
   }
 
-  static NSIndexSet new1(FooLibrary _lib) {
+  static NSIndexSet new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSIndexSet1, _lib._sel_new1);
     return NSIndexSet._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSIndexSet alloc(FooLibrary _lib) {
+  static NSIndexSet alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSIndexSet1, _lib._sel_alloc1);
     return NSIndexSet._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -34356,23 +34368,23 @@ class NSIndexSet extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSIndexSet1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSIndexSet1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSIndexSet1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSIndexSet1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -34381,7 +34393,7 @@ class NSIndexSet extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSIndexSet1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -34389,7 +34401,7 @@ class NSIndexSet extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSIndexSet1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -34397,13 +34409,13 @@ class NSIndexSet extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSIndexSet1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSIndexSet1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -34414,7 +34426,7 @@ typedef NSRangePointer = ffi.Pointer<NSRange>;
 
 class _ObjCBlockBase implements ffi.Finalizable {
   final ffi.Pointer<_ObjCBlock> _id;
-  final FooLibrary _lib;
+  final SwiftLibrary _lib;
   bool _pendingRelease;
 
   _ObjCBlockBase._(this._id, this._lib,
@@ -34474,12 +34486,12 @@ void _ObjCBlock_closureTrampoline(
 }
 
 class ObjCBlock extends _ObjCBlockBase {
-  ObjCBlock._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(
@@ -34497,7 +34509,7 @@ class ObjCBlock extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock.fromFunction(
-      FooLibrary lib, void Function(int arg0, ffi.Pointer<ffi.Bool> arg1) fn)
+      SwiftLibrary lib, void Function(int arg0, ffi.Pointer<ffi.Bool> arg1) fn)
       : this._(
             lib._newBlock1(
                 ffi.Pointer.fromFunction<
@@ -34580,12 +34592,12 @@ bool _ObjCBlock1_closureTrampoline(
 }
 
 class ObjCBlock1 extends _ObjCBlockBase {
-  ObjCBlock1._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock1._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock1.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Bool Function(
@@ -34603,7 +34615,7 @@ class ObjCBlock1 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock1.fromFunction(
-      FooLibrary lib, bool Function(int arg0, ffi.Pointer<ffi.Bool> arg1) fn)
+      SwiftLibrary lib, bool Function(int arg0, ffi.Pointer<ffi.Bool> arg1) fn)
       : this._(
             lib._newBlock1(
                 ffi.Pointer.fromFunction<
@@ -34652,12 +34664,12 @@ void _ObjCBlock2_closureTrampoline(
 }
 
 class ObjCBlock2 extends _ObjCBlockBase {
-  ObjCBlock2._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock2._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock2.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(NSRange arg0, ffi.Pointer<ffi.Bool> arg1)>>
@@ -34673,7 +34685,7 @@ class ObjCBlock2 extends _ObjCBlockBase {
             lib);
 
   /// Creates a block from a Dart function.
-  ObjCBlock2.fromFunction(FooLibrary lib,
+  ObjCBlock2.fromFunction(SwiftLibrary lib,
       void Function(NSRange arg0, ffi.Pointer<ffi.Bool> arg1) fn)
       : this._(
             lib._newBlock1(
@@ -34725,12 +34737,12 @@ void _ObjCBlock3_closureTrampoline(ffi.Pointer<_ObjCBlock> block,
 }
 
 class ObjCBlock3 extends _ObjCBlockBase {
-  ObjCBlock3._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock3._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock3.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0,
@@ -34751,7 +34763,7 @@ class ObjCBlock3 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock3.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       void Function(ffi.Pointer<ObjCObject> arg0, int arg1,
               ffi.Pointer<ffi.Bool> arg2)
           fn)
@@ -34815,16 +34827,13 @@ bool _ObjCBlock4_closureTrampoline(ffi.Pointer<_ObjCBlock> block,
 }
 
 class ObjCBlock4 extends _ObjCBlockBase {
-  ObjCBlock4._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock4._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock4.fromFunctionPointer(
-      FooLibrary lib,
-      ffi.Pointer<
-              ffi.NativeFunction<
-                  ffi.Bool Function(ffi.Pointer<ObjCObject> arg0,
-                      NSUInteger arg1, ffi.Pointer<ffi.Bool> arg2)>>
+      SwiftLibrary lib,
+      ffi.Pointer<ffi.NativeFunction<ffi.Bool Function(ffi.Pointer<ObjCObject> arg0, NSUInteger arg1, ffi.Pointer<ffi.Bool> arg2)>>
           ptr)
       : this._(
             lib._newBlock1(
@@ -34841,7 +34850,7 @@ class ObjCBlock4 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock4.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       bool Function(ffi.Pointer<ObjCObject> arg0, int arg1,
               ffi.Pointer<ffi.Bool> arg2)
           fn)
@@ -34905,12 +34914,12 @@ int _ObjCBlock5_closureTrampoline(ffi.Pointer<_ObjCBlock> block,
 }
 
 class ObjCBlock5 extends _ObjCBlockBase {
-  ObjCBlock5._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock5._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock5.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Int32 Function(ffi.Pointer<ObjCObject> arg0,
@@ -34930,7 +34939,7 @@ class ObjCBlock5 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock5.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       int Function(ffi.Pointer<ObjCObject> arg0, ffi.Pointer<ObjCObject> arg1)
           fn)
       : this._(
@@ -34987,7 +34996,7 @@ abstract class NSKeyValueObservingOptions {
 }
 
 class NSPredicate extends NSObject {
-  NSPredicate._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSPredicate._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -34998,7 +35007,7 @@ class NSPredicate extends NSObject {
 
   /// Returns a [NSPredicate] that wraps the given raw object pointer.
   static NSPredicate castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSPredicate._(other, lib, retain: retain, release: release);
   }
@@ -35010,7 +35019,7 @@ class NSPredicate extends NSObject {
   }
 
   static NSPredicate predicateWithFormat_argumentArray_(
-      FooLibrary _lib, NSString? predicateFormat, NSArray? arguments) {
+      SwiftLibrary _lib, NSString? predicateFormat, NSArray? arguments) {
     final _ret = _lib._objc_msgSend_129(
         _lib._class_NSPredicate1,
         _lib._sel_predicateWithFormat_argumentArray_1,
@@ -35020,13 +35029,13 @@ class NSPredicate extends NSObject {
   }
 
   static NSPredicate predicateWithFormat_(
-      FooLibrary _lib, NSString? predicateFormat) {
+      SwiftLibrary _lib, NSString? predicateFormat) {
     final _ret = _lib._objc_msgSend_130(_lib._class_NSPredicate1,
         _lib._sel_predicateWithFormat_1, predicateFormat?._id ?? ffi.nullptr);
     return NSPredicate._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSPredicate predicateWithFormat_arguments_(FooLibrary _lib,
+  static NSPredicate predicateWithFormat_arguments_(SwiftLibrary _lib,
       NSString? predicateFormat, ffi.Pointer<__va_list_tag> argList) {
     final _ret = _lib._objc_msgSend_131(
         _lib._class_NSPredicate1,
@@ -35037,7 +35046,7 @@ class NSPredicate extends NSObject {
   }
 
   static NSPredicate predicateFromMetadataQueryString_(
-      FooLibrary _lib, NSString? queryString) {
+      SwiftLibrary _lib, NSString? queryString) {
     final _ret = _lib._objc_msgSend_130(
         _lib._class_NSPredicate1,
         _lib._sel_predicateFromMetadataQueryString_1,
@@ -35045,13 +35054,13 @@ class NSPredicate extends NSObject {
     return NSPredicate._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSPredicate predicateWithValue_(FooLibrary _lib, bool value) {
+  static NSPredicate predicateWithValue_(SwiftLibrary _lib, bool value) {
     final _ret = _lib._objc_msgSend_132(
         _lib._class_NSPredicate1, _lib._sel_predicateWithValue_1, value);
     return NSPredicate._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSPredicate predicateWithBlock_(FooLibrary _lib, ObjCBlock6 block) {
+  static NSPredicate predicateWithBlock_(SwiftLibrary _lib, ObjCBlock6 block) {
     final _ret = _lib._objc_msgSend_193(
         _lib._class_NSPredicate1, _lib._sel_predicateWithBlock_1, block._id);
     return NSPredicate._(_ret, _lib, retain: true, release: true);
@@ -35090,19 +35099,19 @@ class NSPredicate extends NSObject {
     return _lib._objc_msgSend_1(_id, _lib._sel_allowEvaluation1);
   }
 
-  static NSPredicate new1(FooLibrary _lib) {
+  static NSPredicate new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSPredicate1, _lib._sel_new1);
     return NSPredicate._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSPredicate alloc(FooLibrary _lib) {
+  static NSPredicate alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSPredicate1, _lib._sel_alloc1);
     return NSPredicate._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -35115,23 +35124,23 @@ class NSPredicate extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSPredicate1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSPredicate1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSPredicate1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSPredicate1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -35140,7 +35149,7 @@ class NSPredicate extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSPredicate1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -35148,7 +35157,7 @@ class NSPredicate extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSPredicate1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -35156,13 +35165,13 @@ class NSPredicate extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSPredicate1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSPredicate1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -35207,12 +35216,12 @@ bool _ObjCBlock6_closureTrampoline(ffi.Pointer<_ObjCBlock> block,
 }
 
 class ObjCBlock6 extends _ObjCBlockBase {
-  ObjCBlock6._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock6._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock6.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Bool Function(ffi.Pointer<ObjCObject> arg0,
@@ -35232,7 +35241,7 @@ class ObjCBlock6 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock6.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       bool Function(ffi.Pointer<ObjCObject> arg0, ffi.Pointer<ObjCObject> arg1)
           fn)
       : this._(
@@ -35265,7 +35274,7 @@ class ObjCBlock6 extends _ObjCBlockBase {
 }
 
 class NSDictionary extends NSObject {
-  NSDictionary._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSDictionary._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -35276,7 +35285,7 @@ class NSDictionary extends NSObject {
 
   /// Returns a [NSDictionary] that wraps the given raw object pointer.
   static NSDictionary castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSDictionary._(other, lib, retain: retain, release: release);
   }
@@ -35446,14 +35455,14 @@ class NSDictionary extends NSObject {
   }
 
   static NSDictionary dictionaryWithContentsOfFile_(
-      FooLibrary _lib, NSString? path) {
+      SwiftLibrary _lib, NSString? path) {
     final _ret = _lib._objc_msgSend_140(_lib._class_NSDictionary1,
         _lib._sel_dictionaryWithContentsOfFile_1, path?._id ?? ffi.nullptr);
     return NSDictionary._(_ret, _lib, retain: true, release: true);
   }
 
   static NSDictionary dictionaryWithContentsOfURL_(
-      FooLibrary _lib, NSURL? url) {
+      SwiftLibrary _lib, NSURL? url) {
     final _ret = _lib._objc_msgSend_141(_lib._class_NSDictionary1,
         _lib._sel_dictionaryWithContentsOfURL_1, url?._id ?? ffi.nullptr);
     return NSDictionary._(_ret, _lib, retain: true, release: true);
@@ -35481,21 +35490,21 @@ class NSDictionary extends NSObject {
         url?._id ?? ffi.nullptr, atomically);
   }
 
-  static NSDictionary dictionary(FooLibrary _lib) {
+  static NSDictionary dictionary(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSDictionary1, _lib._sel_dictionary1);
     return NSDictionary._(_ret, _lib, retain: true, release: true);
   }
 
   static NSDictionary dictionaryWithObject_forKey_(
-      FooLibrary _lib, NSObject object, NSObject key) {
+      SwiftLibrary _lib, NSObject object, NSObject key) {
     final _ret = _lib._objc_msgSend_142(_lib._class_NSDictionary1,
         _lib._sel_dictionaryWithObject_forKey_1, object._id, key._id);
     return NSDictionary._(_ret, _lib, retain: true, release: true);
   }
 
   static NSDictionary dictionaryWithObjects_forKeys_count_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       ffi.Pointer<ffi.Pointer<ObjCObject>> objects,
       ffi.Pointer<ffi.Pointer<ObjCObject>> keys,
       int cnt) {
@@ -35505,21 +35514,21 @@ class NSDictionary extends NSObject {
   }
 
   static NSDictionary dictionaryWithObjectsAndKeys_(
-      FooLibrary _lib, NSObject firstObject) {
+      SwiftLibrary _lib, NSObject firstObject) {
     final _ret = _lib._objc_msgSend_16(_lib._class_NSDictionary1,
         _lib._sel_dictionaryWithObjectsAndKeys_1, firstObject._id);
     return NSDictionary._(_ret, _lib, retain: true, release: true);
   }
 
   static NSDictionary dictionaryWithDictionary_(
-      FooLibrary _lib, NSDictionary? dict) {
+      SwiftLibrary _lib, NSDictionary? dict) {
     final _ret = _lib._objc_msgSend_143(_lib._class_NSDictionary1,
         _lib._sel_dictionaryWithDictionary_1, dict?._id ?? ffi.nullptr);
     return NSDictionary._(_ret, _lib, retain: true, release: true);
   }
 
   static NSDictionary dictionaryWithObjects_forKeys_(
-      FooLibrary _lib, NSArray? objects, NSArray? keys) {
+      SwiftLibrary _lib, NSArray? objects, NSArray? keys) {
     final _ret = _lib._objc_msgSend_144(
         _lib._class_NSDictionary1,
         _lib._sel_dictionaryWithObjects_forKeys_1,
@@ -35569,8 +35578,8 @@ class NSDictionary extends NSObject {
     return NSDictionary._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSDictionary dictionaryWithContentsOfURL_error_(
-      FooLibrary _lib, NSURL? url, ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
+  static NSDictionary dictionaryWithContentsOfURL_error_(SwiftLibrary _lib,
+      NSURL? url, ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
     final _ret = _lib._objc_msgSend_146(
         _lib._class_NSDictionary1,
         _lib._sel_dictionaryWithContentsOfURL_error_1,
@@ -35579,7 +35588,7 @@ class NSDictionary extends NSObject {
     return NSDictionary._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject sharedKeySetForKeys_(FooLibrary _lib, NSArray? keys) {
+  static NSObject sharedKeySetForKeys_(SwiftLibrary _lib, NSArray? keys) {
     final _ret = _lib._objc_msgSend_67(_lib._class_NSDictionary1,
         _lib._sel_sharedKeySetForKeys_1, keys?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -35677,20 +35686,20 @@ class NSDictionary extends NSObject {
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSDictionary new1(FooLibrary _lib) {
+  static NSDictionary new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSDictionary1, _lib._sel_new1);
     return NSDictionary._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSDictionary alloc(FooLibrary _lib) {
+  static NSDictionary alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSDictionary1, _lib._sel_alloc1);
     return NSDictionary._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -35703,23 +35712,23 @@ class NSDictionary extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSDictionary1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSDictionary1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSDictionary1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSDictionary1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -35728,7 +35737,7 @@ class NSDictionary extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSDictionary1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -35736,7 +35745,7 @@ class NSDictionary extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSDictionary1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -35744,13 +35753,13 @@ class NSDictionary extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSDictionary1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSDictionary1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -35792,12 +35801,12 @@ void _ObjCBlock7_closureTrampoline(
 }
 
 class ObjCBlock7 extends _ObjCBlockBase {
-  ObjCBlock7._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock7._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock7.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(
@@ -35820,7 +35829,7 @@ class ObjCBlock7 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock7.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       void Function(ffi.Pointer<ObjCObject> arg0, ffi.Pointer<ObjCObject> arg1,
               ffi.Pointer<ffi.Bool> arg2)
           fn)
@@ -35870,7 +35879,7 @@ class NSFastEnumerationState extends ffi.Struct {
 }
 
 class NSDate extends NSObject {
-  NSDate._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSDate._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -35880,7 +35889,7 @@ class NSDate extends NSObject {
   }
 
   /// Returns a [NSDate] that wraps the given raw object pointer.
-  static NSDate castFromPointer(FooLibrary lib, ffi.Pointer<ObjCObject> other,
+  static NSDate castFromPointer(SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSDate._(other, lib, retain: retain, release: release);
   }
@@ -35974,32 +35983,32 @@ class NSDate extends NSObject {
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSDate date(FooLibrary _lib) {
+  static NSDate date(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSDate1, _lib._sel_date1);
     return NSDate._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSDate dateWithTimeIntervalSinceNow_(FooLibrary _lib, double secs) {
+  static NSDate dateWithTimeIntervalSinceNow_(SwiftLibrary _lib, double secs) {
     final _ret = _lib._objc_msgSend_150(
         _lib._class_NSDate1, _lib._sel_dateWithTimeIntervalSinceNow_1, secs);
     return NSDate._(_ret, _lib, retain: true, release: true);
   }
 
   static NSDate dateWithTimeIntervalSinceReferenceDate_(
-      FooLibrary _lib, double ti) {
+      SwiftLibrary _lib, double ti) {
     final _ret = _lib._objc_msgSend_150(_lib._class_NSDate1,
         _lib._sel_dateWithTimeIntervalSinceReferenceDate_1, ti);
     return NSDate._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSDate dateWithTimeIntervalSince1970_(FooLibrary _lib, double secs) {
+  static NSDate dateWithTimeIntervalSince1970_(SwiftLibrary _lib, double secs) {
     final _ret = _lib._objc_msgSend_150(
         _lib._class_NSDate1, _lib._sel_dateWithTimeIntervalSince1970_1, secs);
     return NSDate._(_ret, _lib, retain: true, release: true);
   }
 
   static NSDate dateWithTimeInterval_sinceDate_(
-      FooLibrary _lib, double secsToBeAdded, NSDate? date) {
+      SwiftLibrary _lib, double secsToBeAdded, NSDate? date) {
     final _ret = _lib._objc_msgSend_155(
         _lib._class_NSDate1,
         _lib._sel_dateWithTimeInterval_sinceDate_1,
@@ -36008,7 +36017,7 @@ class NSDate extends NSObject {
     return NSDate._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSDate? getDistantFuture(FooLibrary _lib) {
+  static NSDate? getDistantFuture(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_156(_lib._class_NSDate1, _lib._sel_distantFuture1);
     return _ret.address == 0
@@ -36016,7 +36025,7 @@ class NSDate extends NSObject {
         : NSDate._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSDate? getDistantPast(FooLibrary _lib) {
+  static NSDate? getDistantPast(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_156(_lib._class_NSDate1, _lib._sel_distantPast1);
     return _ret.address == 0
@@ -36024,7 +36033,7 @@ class NSDate extends NSObject {
         : NSDate._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSDate? getNow(FooLibrary _lib) {
+  static NSDate? getNow(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_156(_lib._class_NSDate1, _lib._sel_now1);
     return _ret.address == 0
         ? null
@@ -36053,7 +36062,7 @@ class NSDate extends NSObject {
   }
 
   static NSObject dateWithNaturalLanguageString_locale_(
-      FooLibrary _lib, NSString? string, NSObject locale) {
+      SwiftLibrary _lib, NSString? string, NSObject locale) {
     final _ret = _lib._objc_msgSend_157(
         _lib._class_NSDate1,
         _lib._sel_dateWithNaturalLanguageString_locale_1,
@@ -36063,13 +36072,13 @@ class NSDate extends NSObject {
   }
 
   static NSObject dateWithNaturalLanguageString_(
-      FooLibrary _lib, NSString? string) {
+      SwiftLibrary _lib, NSString? string) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSDate1,
         _lib._sel_dateWithNaturalLanguageString_1, string?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject dateWithString_(FooLibrary _lib, NSString? aString) {
+  static NSObject dateWithString_(SwiftLibrary _lib, NSString? aString) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSDate1,
         _lib._sel_dateWithString_1, aString?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -36102,18 +36111,18 @@ class NSDate extends NSObject {
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSDate new1(FooLibrary _lib) {
+  static NSDate new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSDate1, _lib._sel_new1);
     return NSDate._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSDate alloc(FooLibrary _lib) {
+  static NSDate alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSDate1, _lib._sel_alloc1);
     return NSDate._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -36126,23 +36135,23 @@ class NSDate extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSDate1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSDate1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSDate1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSDate1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -36151,7 +36160,7 @@ class NSDate extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSDate1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -36159,7 +36168,7 @@ class NSDate extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSDate1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -36167,13 +36176,13 @@ class NSDate extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSDate1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSDate1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -36183,7 +36192,7 @@ class NSDate extends NSObject {
 typedef NSTimeInterval = ffi.Double;
 
 class NSCalendarDate extends NSDate {
-  NSCalendarDate._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSCalendarDate._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -36194,7 +36203,7 @@ class NSCalendarDate extends NSDate {
 
   /// Returns a [NSCalendarDate] that wraps the given raw object pointer.
   static NSCalendarDate castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSCalendarDate._(other, lib, retain: retain, release: release);
   }
@@ -36205,13 +36214,13 @@ class NSCalendarDate extends NSDate {
         obj._lib._class_NSCalendarDate1);
   }
 
-  static NSObject calendarDate(FooLibrary _lib) {
+  static NSObject calendarDate(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSCalendarDate1, _lib._sel_calendarDate1);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject dateWithString_calendarFormat_locale_(FooLibrary _lib,
+  static NSObject dateWithString_calendarFormat_locale_(SwiftLibrary _lib,
       NSString? description, NSString? format, NSObject locale) {
     final _ret = _lib._objc_msgSend_158(
         _lib._class_NSCalendarDate1,
@@ -36223,7 +36232,7 @@ class NSCalendarDate extends NSDate {
   }
 
   static NSObject dateWithString_calendarFormat_(
-      FooLibrary _lib, NSString? description, NSString? format) {
+      SwiftLibrary _lib, NSString? description, NSString? format) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSCalendarDate1,
         _lib._sel_dateWithString_calendarFormat_1,
@@ -36233,7 +36242,7 @@ class NSCalendarDate extends NSDate {
   }
 
   static NSObject dateWithYear_month_day_hour_minute_second_timeZone_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       int year,
       int month,
       int day,
@@ -36416,7 +36425,7 @@ class NSCalendarDate extends NSDate {
         date?._id ?? ffi.nullptr);
   }
 
-  static NSDate? getDistantFuture(FooLibrary _lib) {
+  static NSDate? getDistantFuture(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_156(
         _lib._class_NSCalendarDate1, _lib._sel_distantFuture1);
     return _ret.address == 0
@@ -36424,7 +36433,7 @@ class NSCalendarDate extends NSDate {
         : NSDate._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSDate? getDistantPast(FooLibrary _lib) {
+  static NSDate? getDistantPast(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_156(
         _lib._class_NSCalendarDate1, _lib._sel_distantPast1);
     return _ret.address == 0
@@ -36432,35 +36441,35 @@ class NSCalendarDate extends NSDate {
         : NSDate._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSCalendarDate date(FooLibrary _lib) {
+  static NSCalendarDate date(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSCalendarDate1, _lib._sel_date1);
     return NSCalendarDate._(_ret, _lib, retain: true, release: true);
   }
 
   static NSCalendarDate dateWithTimeIntervalSinceNow_(
-      FooLibrary _lib, double secs) {
+      SwiftLibrary _lib, double secs) {
     final _ret = _lib._objc_msgSend_150(_lib._class_NSCalendarDate1,
         _lib._sel_dateWithTimeIntervalSinceNow_1, secs);
     return NSCalendarDate._(_ret, _lib, retain: true, release: true);
   }
 
   static NSCalendarDate dateWithTimeIntervalSinceReferenceDate_(
-      FooLibrary _lib, double ti) {
+      SwiftLibrary _lib, double ti) {
     final _ret = _lib._objc_msgSend_150(_lib._class_NSCalendarDate1,
         _lib._sel_dateWithTimeIntervalSinceReferenceDate_1, ti);
     return NSCalendarDate._(_ret, _lib, retain: true, release: true);
   }
 
   static NSCalendarDate dateWithTimeIntervalSince1970_(
-      FooLibrary _lib, double secs) {
+      SwiftLibrary _lib, double secs) {
     final _ret = _lib._objc_msgSend_150(_lib._class_NSCalendarDate1,
         _lib._sel_dateWithTimeIntervalSince1970_1, secs);
     return NSCalendarDate._(_ret, _lib, retain: true, release: true);
   }
 
   static NSCalendarDate dateWithTimeInterval_sinceDate_(
-      FooLibrary _lib, double secsToBeAdded, NSDate? date) {
+      SwiftLibrary _lib, double secsToBeAdded, NSDate? date) {
     final _ret = _lib._objc_msgSend_155(
         _lib._class_NSCalendarDate1,
         _lib._sel_dateWithTimeInterval_sinceDate_1,
@@ -36469,7 +36478,7 @@ class NSCalendarDate extends NSDate {
     return NSCalendarDate._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSDate? getNow(FooLibrary _lib) {
+  static NSDate? getNow(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_156(_lib._class_NSCalendarDate1, _lib._sel_now1);
     return _ret.address == 0
@@ -36478,7 +36487,7 @@ class NSCalendarDate extends NSDate {
   }
 
   static NSObject dateWithNaturalLanguageString_locale_(
-      FooLibrary _lib, NSString? string, NSObject locale) {
+      SwiftLibrary _lib, NSString? string, NSObject locale) {
     final _ret = _lib._objc_msgSend_157(
         _lib._class_NSCalendarDate1,
         _lib._sel_dateWithNaturalLanguageString_locale_1,
@@ -36488,32 +36497,32 @@ class NSCalendarDate extends NSDate {
   }
 
   static NSObject dateWithNaturalLanguageString_(
-      FooLibrary _lib, NSString? string) {
+      SwiftLibrary _lib, NSString? string) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSCalendarDate1,
         _lib._sel_dateWithNaturalLanguageString_1, string?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject dateWithString_(FooLibrary _lib, NSString? aString) {
+  static NSObject dateWithString_(SwiftLibrary _lib, NSString? aString) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSCalendarDate1,
         _lib._sel_dateWithString_1, aString?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSCalendarDate new1(FooLibrary _lib) {
+  static NSCalendarDate new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSCalendarDate1, _lib._sel_new1);
     return NSCalendarDate._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSCalendarDate alloc(FooLibrary _lib) {
+  static NSCalendarDate alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSCalendarDate1, _lib._sel_alloc1);
     return NSCalendarDate._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -36526,23 +36535,23 @@ class NSCalendarDate extends NSDate {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSCalendarDate1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSCalendarDate1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSCalendarDate1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSCalendarDate1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -36551,7 +36560,7 @@ class NSCalendarDate extends NSDate {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSCalendarDate1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -36559,7 +36568,7 @@ class NSCalendarDate extends NSDate {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSCalendarDate1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -36567,13 +36576,13 @@ class NSCalendarDate extends NSDate {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSCalendarDate1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSCalendarDate1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -36581,7 +36590,7 @@ class NSCalendarDate extends NSDate {
 }
 
 class NSTimeZone extends NSObject {
-  NSTimeZone._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSTimeZone._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -36592,7 +36601,7 @@ class NSTimeZone extends NSObject {
 
   /// Returns a [NSTimeZone] that wraps the given raw object pointer.
   static NSTimeZone castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSTimeZone._(other, lib, retain: retain, release: release);
   }
@@ -36646,7 +36655,7 @@ class NSTimeZone extends NSObject {
     return NSDate._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSTimeZone? getSystemTimeZone(FooLibrary _lib) {
+  static NSTimeZone? getSystemTimeZone(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_162(
         _lib._class_NSTimeZone1, _lib._sel_systemTimeZone1);
     return _ret.address == 0
@@ -36654,12 +36663,12 @@ class NSTimeZone extends NSObject {
         : NSTimeZone._(_ret, _lib, retain: true, release: true);
   }
 
-  static void resetSystemTimeZone(FooLibrary _lib) {
+  static void resetSystemTimeZone(SwiftLibrary _lib) {
     return _lib._objc_msgSend_1(
         _lib._class_NSTimeZone1, _lib._sel_resetSystemTimeZone1);
   }
 
-  static NSTimeZone? getDefaultTimeZone(FooLibrary _lib) {
+  static NSTimeZone? getDefaultTimeZone(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_162(
         _lib._class_NSTimeZone1, _lib._sel_defaultTimeZone1);
     return _ret.address == 0
@@ -36667,12 +36676,12 @@ class NSTimeZone extends NSObject {
         : NSTimeZone._(_ret, _lib, retain: true, release: true);
   }
 
-  static void setDefaultTimeZone(FooLibrary _lib, NSTimeZone? value) {
+  static void setDefaultTimeZone(SwiftLibrary _lib, NSTimeZone? value) {
     _lib._objc_msgSend_163(_lib._class_NSTimeZone1,
         _lib._sel_setDefaultTimeZone_1, value?._id ?? ffi.nullptr);
   }
 
-  static NSTimeZone? getLocalTimeZone(FooLibrary _lib) {
+  static NSTimeZone? getLocalTimeZone(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_162(
         _lib._class_NSTimeZone1, _lib._sel_localTimeZone1);
     return _ret.address == 0
@@ -36680,7 +36689,7 @@ class NSTimeZone extends NSObject {
         : NSTimeZone._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSArray? getKnownTimeZoneNames(FooLibrary _lib) {
+  static NSArray? getKnownTimeZoneNames(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSTimeZone1, _lib._sel_knownTimeZoneNames1);
     return _ret.address == 0
@@ -36688,7 +36697,7 @@ class NSTimeZone extends NSObject {
         : NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSDictionary? getAbbreviationDictionary(FooLibrary _lib) {
+  static NSDictionary? getAbbreviationDictionary(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_164(
         _lib._class_NSTimeZone1, _lib._sel_abbreviationDictionary1);
     return _ret.address == 0
@@ -36696,12 +36705,13 @@ class NSTimeZone extends NSObject {
         : NSDictionary._(_ret, _lib, retain: true, release: true);
   }
 
-  static void setAbbreviationDictionary(FooLibrary _lib, NSDictionary? value) {
+  static void setAbbreviationDictionary(
+      SwiftLibrary _lib, NSDictionary? value) {
     _lib._objc_msgSend_165(_lib._class_NSTimeZone1,
         _lib._sel_setAbbreviationDictionary_1, value?._id ?? ffi.nullptr);
   }
 
-  static NSString? getTimeZoneDataVersion(FooLibrary _lib) {
+  static NSString? getTimeZoneDataVersion(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_20(
         _lib._class_NSTimeZone1, _lib._sel_timeZoneDataVersion1);
     return _ret.address == 0
@@ -36754,14 +36764,14 @@ class NSTimeZone extends NSObject {
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSTimeZone timeZoneWithName_(FooLibrary _lib, NSString? tzName) {
+  static NSTimeZone timeZoneWithName_(SwiftLibrary _lib, NSString? tzName) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSTimeZone1,
         _lib._sel_timeZoneWithName_1, tzName?._id ?? ffi.nullptr);
     return NSTimeZone._(_ret, _lib, retain: true, release: true);
   }
 
   static NSTimeZone timeZoneWithName_data_(
-      FooLibrary _lib, NSString? tzName, NSData? aData) {
+      SwiftLibrary _lib, NSString? tzName, NSData? aData) {
     final _ret = _lib._objc_msgSend_182(
         _lib._class_NSTimeZone1,
         _lib._sel_timeZoneWithName_data_1,
@@ -36782,32 +36792,32 @@ class NSTimeZone extends NSObject {
     return NSTimeZone._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSTimeZone timeZoneForSecondsFromGMT_(FooLibrary _lib, int seconds) {
+  static NSTimeZone timeZoneForSecondsFromGMT_(SwiftLibrary _lib, int seconds) {
     final _ret = _lib._objc_msgSend_183(_lib._class_NSTimeZone1,
         _lib._sel_timeZoneForSecondsFromGMT_1, seconds);
     return NSTimeZone._(_ret, _lib, retain: true, release: true);
   }
 
   static NSTimeZone timeZoneWithAbbreviation_(
-      FooLibrary _lib, NSString? abbreviation) {
+      SwiftLibrary _lib, NSString? abbreviation) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSTimeZone1,
         _lib._sel_timeZoneWithAbbreviation_1, abbreviation?._id ?? ffi.nullptr);
     return NSTimeZone._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSTimeZone new1(FooLibrary _lib) {
+  static NSTimeZone new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSTimeZone1, _lib._sel_new1);
     return NSTimeZone._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSTimeZone alloc(FooLibrary _lib) {
+  static NSTimeZone alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSTimeZone1, _lib._sel_alloc1);
     return NSTimeZone._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -36820,23 +36830,23 @@ class NSTimeZone extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSTimeZone1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSTimeZone1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSTimeZone1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSTimeZone1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -36845,7 +36855,7 @@ class NSTimeZone extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSTimeZone1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -36853,7 +36863,7 @@ class NSTimeZone extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSTimeZone1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -36861,13 +36871,13 @@ class NSTimeZone extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSTimeZone1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSTimeZone1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -36884,7 +36894,7 @@ abstract class NSTimeZoneNameStyle {
 }
 
 class NSLocale extends NSObject {
-  NSLocale._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSLocale._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -36894,7 +36904,8 @@ class NSLocale extends NSObject {
   }
 
   /// Returns a [NSLocale] that wraps the given raw object pointer.
-  static NSLocale castFromPointer(FooLibrary lib, ffi.Pointer<ObjCObject> other,
+  static NSLocale castFromPointer(
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSLocale._(other, lib, retain: retain, release: release);
   }
@@ -37126,7 +37137,7 @@ class NSLocale extends NSObject {
         : NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSLocale? getAutoupdatingCurrentLocale(FooLibrary _lib) {
+  static NSLocale? getAutoupdatingCurrentLocale(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_176(
         _lib._class_NSLocale1, _lib._sel_autoupdatingCurrentLocale1);
     return _ret.address == 0
@@ -37134,7 +37145,7 @@ class NSLocale extends NSObject {
         : NSLocale._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSLocale? getCurrentLocale(FooLibrary _lib) {
+  static NSLocale? getCurrentLocale(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_176(_lib._class_NSLocale1, _lib._sel_currentLocale1);
     return _ret.address == 0
@@ -37142,7 +37153,7 @@ class NSLocale extends NSObject {
         : NSLocale._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSLocale? getSystemLocale(FooLibrary _lib) {
+  static NSLocale? getSystemLocale(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_176(_lib._class_NSLocale1, _lib._sel_systemLocale1);
     return _ret.address == 0
@@ -37151,7 +37162,7 @@ class NSLocale extends NSObject {
   }
 
   static NSLocale localeWithLocaleIdentifier_(
-      FooLibrary _lib, NSString? ident) {
+      SwiftLibrary _lib, NSString? ident) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSLocale1,
         _lib._sel_localeWithLocaleIdentifier_1, ident?._id ?? ffi.nullptr);
     return NSLocale._(_ret, _lib, retain: true, release: true);
@@ -37163,7 +37174,7 @@ class NSLocale extends NSObject {
     return NSLocale._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSArray? getAvailableLocaleIdentifiers(FooLibrary _lib) {
+  static NSArray? getAvailableLocaleIdentifiers(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSLocale1, _lib._sel_availableLocaleIdentifiers1);
     return _ret.address == 0
@@ -37171,7 +37182,7 @@ class NSLocale extends NSObject {
         : NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSArray? getISOLanguageCodes(FooLibrary _lib) {
+  static NSArray? getISOLanguageCodes(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSLocale1, _lib._sel_ISOLanguageCodes1);
     return _ret.address == 0
@@ -37179,7 +37190,7 @@ class NSLocale extends NSObject {
         : NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSArray? getISOCountryCodes(FooLibrary _lib) {
+  static NSArray? getISOCountryCodes(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSLocale1, _lib._sel_ISOCountryCodes1);
     return _ret.address == 0
@@ -37187,7 +37198,7 @@ class NSLocale extends NSObject {
         : NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSArray? getISOCurrencyCodes(FooLibrary _lib) {
+  static NSArray? getISOCurrencyCodes(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSLocale1, _lib._sel_ISOCurrencyCodes1);
     return _ret.address == 0
@@ -37195,7 +37206,7 @@ class NSLocale extends NSObject {
         : NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSArray? getCommonISOCurrencyCodes(FooLibrary _lib) {
+  static NSArray? getCommonISOCurrencyCodes(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSLocale1, _lib._sel_commonISOCurrencyCodes1);
     return _ret.address == 0
@@ -37203,7 +37214,7 @@ class NSLocale extends NSObject {
         : NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSArray? getPreferredLanguages(FooLibrary _lib) {
+  static NSArray? getPreferredLanguages(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSLocale1, _lib._sel_preferredLanguages1);
     return _ret.address == 0
@@ -37212,21 +37223,21 @@ class NSLocale extends NSObject {
   }
 
   static NSDictionary componentsFromLocaleIdentifier_(
-      FooLibrary _lib, NSString? string) {
+      SwiftLibrary _lib, NSString? string) {
     final _ret = _lib._objc_msgSend_140(_lib._class_NSLocale1,
         _lib._sel_componentsFromLocaleIdentifier_1, string?._id ?? ffi.nullptr);
     return NSDictionary._(_ret, _lib, retain: true, release: true);
   }
 
   static NSString localeIdentifierFromComponents_(
-      FooLibrary _lib, NSDictionary? dict) {
+      SwiftLibrary _lib, NSDictionary? dict) {
     final _ret = _lib._objc_msgSend_177(_lib._class_NSLocale1,
         _lib._sel_localeIdentifierFromComponents_1, dict?._id ?? ffi.nullptr);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
   static NSString canonicalLocaleIdentifierFromString_(
-      FooLibrary _lib, NSString? string) {
+      SwiftLibrary _lib, NSString? string) {
     final _ret = _lib._objc_msgSend_64(
         _lib._class_NSLocale1,
         _lib._sel_canonicalLocaleIdentifierFromString_1,
@@ -37235,7 +37246,7 @@ class NSLocale extends NSObject {
   }
 
   static NSString canonicalLanguageIdentifierFromString_(
-      FooLibrary _lib, NSString? string) {
+      SwiftLibrary _lib, NSString? string) {
     final _ret = _lib._objc_msgSend_64(
         _lib._class_NSLocale1,
         _lib._sel_canonicalLanguageIdentifierFromString_1,
@@ -37244,14 +37255,14 @@ class NSLocale extends NSObject {
   }
 
   static NSString localeIdentifierFromWindowsLocaleCode_(
-      FooLibrary _lib, int lcid) {
+      SwiftLibrary _lib, int lcid) {
     final _ret = _lib._objc_msgSend_178(_lib._class_NSLocale1,
         _lib._sel_localeIdentifierFromWindowsLocaleCode_1, lcid);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
   static int windowsLocaleCodeFromLocaleIdentifier_(
-      FooLibrary _lib, NSString? localeIdentifier) {
+      SwiftLibrary _lib, NSString? localeIdentifier) {
     return _lib._objc_msgSend_179(
         _lib._class_NSLocale1,
         _lib._sel_windowsLocaleCodeFromLocaleIdentifier_1,
@@ -37259,30 +37270,31 @@ class NSLocale extends NSObject {
   }
 
   static int characterDirectionForLanguage_(
-      FooLibrary _lib, NSString? isoLangCode) {
+      SwiftLibrary _lib, NSString? isoLangCode) {
     return _lib._objc_msgSend_180(
         _lib._class_NSLocale1,
         _lib._sel_characterDirectionForLanguage_1,
         isoLangCode?._id ?? ffi.nullptr);
   }
 
-  static int lineDirectionForLanguage_(FooLibrary _lib, NSString? isoLangCode) {
+  static int lineDirectionForLanguage_(
+      SwiftLibrary _lib, NSString? isoLangCode) {
     return _lib._objc_msgSend_180(_lib._class_NSLocale1,
         _lib._sel_lineDirectionForLanguage_1, isoLangCode?._id ?? ffi.nullptr);
   }
 
-  static NSLocale new1(FooLibrary _lib) {
+  static NSLocale new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSLocale1, _lib._sel_new1);
     return NSLocale._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSLocale alloc(FooLibrary _lib) {
+  static NSLocale alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSLocale1, _lib._sel_alloc1);
     return NSLocale._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -37295,23 +37307,23 @@ class NSLocale extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSLocale1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSLocale1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSLocale1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSLocale1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -37320,7 +37332,7 @@ class NSLocale extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSLocale1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -37328,7 +37340,7 @@ class NSLocale extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSLocale1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -37336,13 +37348,13 @@ class NSLocale extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSLocale1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSLocale1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -37352,7 +37364,7 @@ class NSLocale extends NSObject {
 typedef NSLocaleKey = ffi.Pointer<ObjCObject>;
 
 class NSCharacterSet extends NSObject {
-  NSCharacterSet._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSCharacterSet._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -37363,7 +37375,7 @@ class NSCharacterSet extends NSObject {
 
   /// Returns a [NSCharacterSet] that wraps the given raw object pointer.
   static NSCharacterSet castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSCharacterSet._(other, lib, retain: retain, release: release);
   }
@@ -37374,7 +37386,7 @@ class NSCharacterSet extends NSObject {
         obj._lib._class_NSCharacterSet1);
   }
 
-  static NSCharacterSet? getControlCharacterSet(FooLibrary _lib) {
+  static NSCharacterSet? getControlCharacterSet(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_168(
         _lib._class_NSCharacterSet1, _lib._sel_controlCharacterSet1);
     return _ret.address == 0
@@ -37382,7 +37394,7 @@ class NSCharacterSet extends NSObject {
         : NSCharacterSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSCharacterSet? getWhitespaceCharacterSet(FooLibrary _lib) {
+  static NSCharacterSet? getWhitespaceCharacterSet(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_168(
         _lib._class_NSCharacterSet1, _lib._sel_whitespaceCharacterSet1);
     return _ret.address == 0
@@ -37390,7 +37402,8 @@ class NSCharacterSet extends NSObject {
         : NSCharacterSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSCharacterSet? getWhitespaceAndNewlineCharacterSet(FooLibrary _lib) {
+  static NSCharacterSet? getWhitespaceAndNewlineCharacterSet(
+      SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_168(_lib._class_NSCharacterSet1,
         _lib._sel_whitespaceAndNewlineCharacterSet1);
     return _ret.address == 0
@@ -37398,7 +37411,7 @@ class NSCharacterSet extends NSObject {
         : NSCharacterSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSCharacterSet? getDecimalDigitCharacterSet(FooLibrary _lib) {
+  static NSCharacterSet? getDecimalDigitCharacterSet(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_168(
         _lib._class_NSCharacterSet1, _lib._sel_decimalDigitCharacterSet1);
     return _ret.address == 0
@@ -37406,7 +37419,7 @@ class NSCharacterSet extends NSObject {
         : NSCharacterSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSCharacterSet? getLetterCharacterSet(FooLibrary _lib) {
+  static NSCharacterSet? getLetterCharacterSet(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_168(
         _lib._class_NSCharacterSet1, _lib._sel_letterCharacterSet1);
     return _ret.address == 0
@@ -37414,7 +37427,7 @@ class NSCharacterSet extends NSObject {
         : NSCharacterSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSCharacterSet? getLowercaseLetterCharacterSet(FooLibrary _lib) {
+  static NSCharacterSet? getLowercaseLetterCharacterSet(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_168(
         _lib._class_NSCharacterSet1, _lib._sel_lowercaseLetterCharacterSet1);
     return _ret.address == 0
@@ -37422,7 +37435,7 @@ class NSCharacterSet extends NSObject {
         : NSCharacterSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSCharacterSet? getUppercaseLetterCharacterSet(FooLibrary _lib) {
+  static NSCharacterSet? getUppercaseLetterCharacterSet(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_168(
         _lib._class_NSCharacterSet1, _lib._sel_uppercaseLetterCharacterSet1);
     return _ret.address == 0
@@ -37430,7 +37443,7 @@ class NSCharacterSet extends NSObject {
         : NSCharacterSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSCharacterSet? getNonBaseCharacterSet(FooLibrary _lib) {
+  static NSCharacterSet? getNonBaseCharacterSet(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_168(
         _lib._class_NSCharacterSet1, _lib._sel_nonBaseCharacterSet1);
     return _ret.address == 0
@@ -37438,7 +37451,7 @@ class NSCharacterSet extends NSObject {
         : NSCharacterSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSCharacterSet? getAlphanumericCharacterSet(FooLibrary _lib) {
+  static NSCharacterSet? getAlphanumericCharacterSet(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_168(
         _lib._class_NSCharacterSet1, _lib._sel_alphanumericCharacterSet1);
     return _ret.address == 0
@@ -37446,7 +37459,7 @@ class NSCharacterSet extends NSObject {
         : NSCharacterSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSCharacterSet? getDecomposableCharacterSet(FooLibrary _lib) {
+  static NSCharacterSet? getDecomposableCharacterSet(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_168(
         _lib._class_NSCharacterSet1, _lib._sel_decomposableCharacterSet1);
     return _ret.address == 0
@@ -37454,7 +37467,7 @@ class NSCharacterSet extends NSObject {
         : NSCharacterSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSCharacterSet? getIllegalCharacterSet(FooLibrary _lib) {
+  static NSCharacterSet? getIllegalCharacterSet(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_168(
         _lib._class_NSCharacterSet1, _lib._sel_illegalCharacterSet1);
     return _ret.address == 0
@@ -37462,7 +37475,7 @@ class NSCharacterSet extends NSObject {
         : NSCharacterSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSCharacterSet? getPunctuationCharacterSet(FooLibrary _lib) {
+  static NSCharacterSet? getPunctuationCharacterSet(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_168(
         _lib._class_NSCharacterSet1, _lib._sel_punctuationCharacterSet1);
     return _ret.address == 0
@@ -37470,7 +37483,7 @@ class NSCharacterSet extends NSObject {
         : NSCharacterSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSCharacterSet? getCapitalizedLetterCharacterSet(FooLibrary _lib) {
+  static NSCharacterSet? getCapitalizedLetterCharacterSet(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_168(
         _lib._class_NSCharacterSet1, _lib._sel_capitalizedLetterCharacterSet1);
     return _ret.address == 0
@@ -37478,7 +37491,7 @@ class NSCharacterSet extends NSObject {
         : NSCharacterSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSCharacterSet? getSymbolCharacterSet(FooLibrary _lib) {
+  static NSCharacterSet? getSymbolCharacterSet(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_168(
         _lib._class_NSCharacterSet1, _lib._sel_symbolCharacterSet1);
     return _ret.address == 0
@@ -37486,7 +37499,7 @@ class NSCharacterSet extends NSObject {
         : NSCharacterSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSCharacterSet? getNewlineCharacterSet(FooLibrary _lib) {
+  static NSCharacterSet? getNewlineCharacterSet(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_168(
         _lib._class_NSCharacterSet1, _lib._sel_newlineCharacterSet1);
     return _ret.address == 0
@@ -37495,14 +37508,14 @@ class NSCharacterSet extends NSObject {
   }
 
   static NSCharacterSet characterSetWithRange_(
-      FooLibrary _lib, NSRange aRange) {
+      SwiftLibrary _lib, NSRange aRange) {
     final _ret = _lib._objc_msgSend_169(
         _lib._class_NSCharacterSet1, _lib._sel_characterSetWithRange_1, aRange);
     return NSCharacterSet._(_ret, _lib, retain: true, release: true);
   }
 
   static NSCharacterSet characterSetWithCharactersInString_(
-      FooLibrary _lib, NSString? aString) {
+      SwiftLibrary _lib, NSString? aString) {
     final _ret = _lib._objc_msgSend_170(
         _lib._class_NSCharacterSet1,
         _lib._sel_characterSetWithCharactersInString_1,
@@ -37511,7 +37524,7 @@ class NSCharacterSet extends NSObject {
   }
 
   static NSCharacterSet characterSetWithBitmapRepresentation_(
-      FooLibrary _lib, NSData? data) {
+      SwiftLibrary _lib, NSData? data) {
     final _ret = _lib._objc_msgSend_171(
         _lib._class_NSCharacterSet1,
         _lib._sel_characterSetWithBitmapRepresentation_1,
@@ -37520,7 +37533,7 @@ class NSCharacterSet extends NSObject {
   }
 
   static NSCharacterSet characterSetWithContentsOfFile_(
-      FooLibrary _lib, NSString? fName) {
+      SwiftLibrary _lib, NSString? fName) {
     final _ret = _lib._objc_msgSend_170(_lib._class_NSCharacterSet1,
         _lib._sel_characterSetWithContentsOfFile_1, fName?._id ?? ffi.nullptr);
     return NSCharacterSet._(_ret, _lib, retain: true, release: true);
@@ -37565,7 +37578,7 @@ class NSCharacterSet extends NSObject {
     return _lib._objc_msgSend_175(_id, _lib._sel_hasMemberInPlane_1, thePlane);
   }
 
-  static NSCharacterSet? getURLUserAllowedCharacterSet(FooLibrary _lib) {
+  static NSCharacterSet? getURLUserAllowedCharacterSet(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_168(
         _lib._class_NSCharacterSet1, _lib._sel_URLUserAllowedCharacterSet1);
     return _ret.address == 0
@@ -37573,7 +37586,7 @@ class NSCharacterSet extends NSObject {
         : NSCharacterSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSCharacterSet? getURLPasswordAllowedCharacterSet(FooLibrary _lib) {
+  static NSCharacterSet? getURLPasswordAllowedCharacterSet(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_168(
         _lib._class_NSCharacterSet1, _lib._sel_URLPasswordAllowedCharacterSet1);
     return _ret.address == 0
@@ -37581,7 +37594,7 @@ class NSCharacterSet extends NSObject {
         : NSCharacterSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSCharacterSet? getURLHostAllowedCharacterSet(FooLibrary _lib) {
+  static NSCharacterSet? getURLHostAllowedCharacterSet(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_168(
         _lib._class_NSCharacterSet1, _lib._sel_URLHostAllowedCharacterSet1);
     return _ret.address == 0
@@ -37589,7 +37602,7 @@ class NSCharacterSet extends NSObject {
         : NSCharacterSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSCharacterSet? getURLPathAllowedCharacterSet(FooLibrary _lib) {
+  static NSCharacterSet? getURLPathAllowedCharacterSet(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_168(
         _lib._class_NSCharacterSet1, _lib._sel_URLPathAllowedCharacterSet1);
     return _ret.address == 0
@@ -37597,7 +37610,7 @@ class NSCharacterSet extends NSObject {
         : NSCharacterSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSCharacterSet? getURLQueryAllowedCharacterSet(FooLibrary _lib) {
+  static NSCharacterSet? getURLQueryAllowedCharacterSet(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_168(
         _lib._class_NSCharacterSet1, _lib._sel_URLQueryAllowedCharacterSet1);
     return _ret.address == 0
@@ -37605,7 +37618,7 @@ class NSCharacterSet extends NSObject {
         : NSCharacterSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSCharacterSet? getURLFragmentAllowedCharacterSet(FooLibrary _lib) {
+  static NSCharacterSet? getURLFragmentAllowedCharacterSet(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_168(
         _lib._class_NSCharacterSet1, _lib._sel_URLFragmentAllowedCharacterSet1);
     return _ret.address == 0
@@ -37613,20 +37626,20 @@ class NSCharacterSet extends NSObject {
         : NSCharacterSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSCharacterSet new1(FooLibrary _lib) {
+  static NSCharacterSet new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSCharacterSet1, _lib._sel_new1);
     return NSCharacterSet._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSCharacterSet alloc(FooLibrary _lib) {
+  static NSCharacterSet alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSCharacterSet1, _lib._sel_alloc1);
     return NSCharacterSet._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -37639,23 +37652,23 @@ class NSCharacterSet extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSCharacterSet1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSCharacterSet1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSCharacterSet1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSCharacterSet1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -37664,7 +37677,7 @@ class NSCharacterSet extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSCharacterSet1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -37672,7 +37685,7 @@ class NSCharacterSet extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSCharacterSet1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -37680,13 +37693,13 @@ class NSCharacterSet extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSCharacterSet1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSCharacterSet1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -37709,7 +37722,7 @@ typedef FourCharCode = UInt32;
 typedef NSURLResourceKey = ffi.Pointer<ObjCObject>;
 
 class NSURLHandle extends NSObject {
-  NSURLHandle._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSURLHandle._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -37720,7 +37733,7 @@ class NSURLHandle extends NSObject {
 
   /// Returns a [NSURLHandle] that wraps the given raw object pointer.
   static NSURLHandle castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSURLHandle._(other, lib, retain: retain, release: release);
   }
@@ -37732,12 +37745,12 @@ class NSURLHandle extends NSObject {
   }
 
   static void registerURLHandleClass_(
-      FooLibrary _lib, NSObject anURLHandleSubclass) {
+      SwiftLibrary _lib, NSObject anURLHandleSubclass) {
     return _lib._objc_msgSend_15(_lib._class_NSURLHandle1,
         _lib._sel_registerURLHandleClass_1, anURLHandleSubclass._id);
   }
 
-  static NSObject URLHandleClassForURL_(FooLibrary _lib, NSURL? anURL) {
+  static NSObject URLHandleClassForURL_(SwiftLibrary _lib, NSURL? anURL) {
     final _ret = _lib._objc_msgSend_226(_lib._class_NSURLHandle1,
         _lib._sel_URLHandleClassForURL_1, anURL?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -37800,12 +37813,12 @@ class NSURLHandle extends NSObject {
         newBytes?._id ?? ffi.nullptr, yorn);
   }
 
-  static bool canInitWithURL_(FooLibrary _lib, NSURL? anURL) {
+  static bool canInitWithURL_(SwiftLibrary _lib, NSURL? anURL) {
     return _lib._objc_msgSend_229(_lib._class_NSURLHandle1,
         _lib._sel_canInitWithURL_1, anURL?._id ?? ffi.nullptr);
   }
 
-  static NSURLHandle cachedHandleForURL_(FooLibrary _lib, NSURL? anURL) {
+  static NSURLHandle cachedHandleForURL_(SwiftLibrary _lib, NSURL? anURL) {
     final _ret = _lib._objc_msgSend_230(_lib._class_NSURLHandle1,
         _lib._sel_cachedHandleForURL_1, anURL?._id ?? ffi.nullptr);
     return NSURLHandle._(_ret, _lib, retain: true, release: true);
@@ -37852,19 +37865,19 @@ class NSURLHandle extends NSObject {
     return _lib._objc_msgSend_1(_id, _lib._sel_endLoadInBackground1);
   }
 
-  static NSURLHandle new1(FooLibrary _lib) {
+  static NSURLHandle new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSURLHandle1, _lib._sel_new1);
     return NSURLHandle._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSURLHandle alloc(FooLibrary _lib) {
+  static NSURLHandle alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSURLHandle1, _lib._sel_alloc1);
     return NSURLHandle._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -37877,23 +37890,23 @@ class NSURLHandle extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSURLHandle1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLHandle1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLHandle1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSURLHandle1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -37902,7 +37915,7 @@ class NSURLHandle extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSURLHandle1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -37910,7 +37923,7 @@ class NSURLHandle extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSURLHandle1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -37918,13 +37931,13 @@ class NSURLHandle extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSURLHandle1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLHandle1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -37983,12 +37996,12 @@ void _ObjCBlock8_closureTrampoline(ffi.Pointer<_ObjCBlock> block,
 }
 
 class ObjCBlock8 extends _ObjCBlockBase {
-  ObjCBlock8._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock8._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock8.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ffi.Void> arg0, NSRange arg1,
@@ -38009,7 +38022,7 @@ class ObjCBlock8 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock8.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       void Function(ffi.Pointer<ffi.Void> arg0, NSRange arg1,
               ffi.Pointer<ffi.Bool> arg2)
           fn)
@@ -38079,12 +38092,12 @@ void _ObjCBlock9_closureTrampoline(
 }
 
 class ObjCBlock9 extends _ObjCBlockBase {
-  ObjCBlock9._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock9._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock9.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(
@@ -38103,7 +38116,7 @@ class ObjCBlock9 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock9.fromFunction(
-      FooLibrary lib, void Function(ffi.Pointer<ffi.Void> arg0, int arg1) fn)
+      SwiftLibrary lib, void Function(ffi.Pointer<ffi.Void> arg0, int arg1) fn)
       : this._(
             lib._newBlock1(
                 ffi.Pointer.fromFunction<
@@ -38216,12 +38229,12 @@ void _ObjCBlock10_closureTrampoline(
 }
 
 class ObjCBlock10 extends _ObjCBlockBase {
-  ObjCBlock10._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock10._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock10.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0, NSRange arg1,
@@ -38243,7 +38256,7 @@ class ObjCBlock10 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock10.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       void Function(ffi.Pointer<ObjCObject> arg0, NSRange arg1, NSRange arg2,
               ffi.Pointer<ffi.Bool> arg3)
           fn)
@@ -38309,12 +38322,12 @@ void _ObjCBlock11_closureTrampoline(ffi.Pointer<_ObjCBlock> block,
 }
 
 class ObjCBlock11 extends _ObjCBlockBase {
-  ObjCBlock11._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock11._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock11.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0,
@@ -38334,7 +38347,7 @@ class ObjCBlock11 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock11.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       void Function(ffi.Pointer<ObjCObject> arg0, ffi.Pointer<ffi.Bool> arg1)
           fn)
       : this._(
@@ -38398,12 +38411,12 @@ void _ObjCBlock12_closureTrampoline(
 }
 
 class ObjCBlock12 extends _ObjCBlockBase {
-  ObjCBlock12._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock12._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock12.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(
@@ -38422,7 +38435,7 @@ class ObjCBlock12 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock12.fromFunction(
-      FooLibrary lib, void Function(ffi.Pointer<unichar> arg0, int arg1) fn)
+      SwiftLibrary lib, void Function(ffi.Pointer<unichar> arg0, int arg1) fn)
       : this._(
             lib._newBlock1(
                 ffi.Pointer.fromFunction<
@@ -38458,7 +38471,7 @@ abstract class NSLinguisticTaggerOptions {
 }
 
 class NSOrthography extends NSObject {
-  NSOrthography._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSOrthography._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -38469,7 +38482,7 @@ class NSOrthography extends NSObject {
 
   /// Returns a [NSOrthography] that wraps the given raw object pointer.
   static NSOrthography castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSOrthography._(other, lib, retain: retain, release: release);
   }
@@ -38544,7 +38557,7 @@ class NSOrthography extends NSObject {
   }
 
   static NSOrthography defaultOrthographyForLanguage_(
-      FooLibrary _lib, NSString? language) {
+      SwiftLibrary _lib, NSString? language) {
     final _ret = _lib._objc_msgSend_30(
         _lib._class_NSOrthography1,
         _lib._sel_defaultOrthographyForLanguage_1,
@@ -38553,7 +38566,7 @@ class NSOrthography extends NSObject {
   }
 
   static NSOrthography orthographyWithDominantScript_languageMap_(
-      FooLibrary _lib, NSString? script, NSDictionary? map) {
+      SwiftLibrary _lib, NSString? script, NSDictionary? map) {
     final _ret = _lib._objc_msgSend_352(
         _lib._class_NSOrthography1,
         _lib._sel_orthographyWithDominantScript_languageMap_1,
@@ -38562,20 +38575,20 @@ class NSOrthography extends NSObject {
     return NSOrthography._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSOrthography new1(FooLibrary _lib) {
+  static NSOrthography new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSOrthography1, _lib._sel_new1);
     return NSOrthography._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSOrthography alloc(FooLibrary _lib) {
+  static NSOrthography alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSOrthography1, _lib._sel_alloc1);
     return NSOrthography._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -38588,23 +38601,23 @@ class NSOrthography extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSOrthography1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSOrthography1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSOrthography1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSOrthography1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -38613,7 +38626,7 @@ class NSOrthography extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSOrthography1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -38621,7 +38634,7 @@ class NSOrthography extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSOrthography1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -38629,13 +38642,13 @@ class NSOrthography extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSOrthography1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSOrthography1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -38668,12 +38681,12 @@ void _ObjCBlock13_closureTrampoline(ffi.Pointer<_ObjCBlock> block,
 }
 
 class ObjCBlock13 extends _ObjCBlockBase {
-  ObjCBlock13._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock13._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock13.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0,
@@ -38693,7 +38706,7 @@ class ObjCBlock13 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock13.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       void Function(ffi.Pointer<ObjCObject> arg0, ffi.Pointer<ffi.Bool> arg1)
           fn)
       : this._(
@@ -38751,12 +38764,12 @@ bool _ObjCBlock14_closureTrampoline(ffi.Pointer<_ObjCBlock> block,
 }
 
 class ObjCBlock14 extends _ObjCBlockBase {
-  ObjCBlock14._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock14._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock14.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Bool Function(ffi.Pointer<ObjCObject> arg0,
@@ -38776,7 +38789,7 @@ class ObjCBlock14 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock14.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       bool Function(ffi.Pointer<ObjCObject> arg0, ffi.Pointer<ffi.Bool> arg1)
           fn)
       : this._(
@@ -38809,7 +38822,7 @@ class ObjCBlock14 extends _ObjCBlockBase {
 }
 
 class NSFileManager extends NSObject {
-  NSFileManager._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSFileManager._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -38820,7 +38833,7 @@ class NSFileManager extends NSObject {
 
   /// Returns a [NSFileManager] that wraps the given raw object pointer.
   static NSFileManager castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSFileManager._(other, lib, retain: retain, release: release);
   }
@@ -38831,7 +38844,7 @@ class NSFileManager extends NSObject {
         obj._id, obj._lib._sel_isKindOfClass_1, obj._lib._class_NSFileManager1);
   }
 
-  static NSFileManager? getDefaultManager(FooLibrary _lib) {
+  static NSFileManager? getDefaultManager(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_382(
         _lib._class_NSFileManager1, _lib._sel_defaultManager1);
     return _ret.address == 0
@@ -39261,20 +39274,20 @@ class NSFileManager extends NSObject {
     return NSURL._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSFileManager new1(FooLibrary _lib) {
+  static NSFileManager new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSFileManager1, _lib._sel_new1);
     return NSFileManager._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSFileManager alloc(FooLibrary _lib) {
+  static NSFileManager alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSFileManager1, _lib._sel_alloc1);
     return NSFileManager._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -39287,23 +39300,23 @@ class NSFileManager extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSFileManager1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSFileManager1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSFileManager1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSFileManager1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -39312,7 +39325,7 @@ class NSFileManager extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSFileManager1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -39320,7 +39333,7 @@ class NSFileManager extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSFileManager1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -39328,13 +39341,13 @@ class NSFileManager extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSFileManager1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSFileManager1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -39373,12 +39386,12 @@ void _ObjCBlock15_closureTrampoline(
 }
 
 class ObjCBlock15 extends _ObjCBlockBase {
-  ObjCBlock15._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock15._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock15.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0)>>
@@ -39395,7 +39408,7 @@ class ObjCBlock15 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock15.fromFunction(
-      FooLibrary lib, void Function(ffi.Pointer<ObjCObject> arg0) fn)
+      SwiftLibrary lib, void Function(ffi.Pointer<ObjCObject> arg0) fn)
       : this._(
             lib._newBlock1(
                 ffi.Pointer.fromFunction<
@@ -39472,7 +39485,7 @@ abstract class NSURLRelationship {
 }
 
 class NSMutableArray extends NSArray {
-  NSMutableArray._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSMutableArray._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -39483,7 +39496,7 @@ class NSMutableArray extends NSArray {
 
   /// Returns a [NSMutableArray] that wraps the given raw object pointer.
   static NSMutableArray castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSMutableArray._(other, lib, retain: retain, release: release);
   }
@@ -39655,20 +39668,20 @@ class NSMutableArray extends NSArray {
         _id, _lib._sel_sortWithOptions_usingComparator_1, opts, cmptr);
   }
 
-  static NSMutableArray arrayWithCapacity_(FooLibrary _lib, int numItems) {
+  static NSMutableArray arrayWithCapacity_(SwiftLibrary _lib, int numItems) {
     final _ret = _lib._objc_msgSend_60(
         _lib._class_NSMutableArray1, _lib._sel_arrayWithCapacity_1, numItems);
     return NSMutableArray._(_ret, _lib, retain: true, release: true);
   }
 
   static NSMutableArray arrayWithContentsOfFile_(
-      FooLibrary _lib, NSString? path) {
+      SwiftLibrary _lib, NSString? path) {
     final _ret = _lib._objc_msgSend_425(_lib._class_NSMutableArray1,
         _lib._sel_arrayWithContentsOfFile_1, path?._id ?? ffi.nullptr);
     return NSMutableArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableArray arrayWithContentsOfURL_(FooLibrary _lib, NSURL? url) {
+  static NSMutableArray arrayWithContentsOfURL_(SwiftLibrary _lib, NSURL? url) {
     final _ret = _lib._objc_msgSend_426(_lib._class_NSMutableArray1,
         _lib._sel_arrayWithContentsOfURL_1, url?._id ?? ffi.nullptr);
     return NSMutableArray._(_ret, _lib, retain: true, release: true);
@@ -39700,39 +39713,40 @@ class NSMutableArray extends NSArray {
         _id, _lib._sel_filterUsingPredicate_1, predicate?._id ?? ffi.nullptr);
   }
 
-  static NSMutableArray array(FooLibrary _lib) {
+  static NSMutableArray array(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSMutableArray1, _lib._sel_array1);
     return NSMutableArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableArray arrayWithObject_(FooLibrary _lib, NSObject anObject) {
+  static NSMutableArray arrayWithObject_(SwiftLibrary _lib, NSObject anObject) {
     final _ret = _lib._objc_msgSend_16(
         _lib._class_NSMutableArray1, _lib._sel_arrayWithObject_1, anObject._id);
     return NSMutableArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableArray arrayWithObjects_count_(
-      FooLibrary _lib, ffi.Pointer<ffi.Pointer<ObjCObject>> objects, int cnt) {
+  static NSMutableArray arrayWithObjects_count_(SwiftLibrary _lib,
+      ffi.Pointer<ffi.Pointer<ObjCObject>> objects, int cnt) {
     final _ret = _lib._objc_msgSend_61(_lib._class_NSMutableArray1,
         _lib._sel_arrayWithObjects_count_1, objects, cnt);
     return NSMutableArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableArray arrayWithObjects_(FooLibrary _lib, NSObject firstObj) {
+  static NSMutableArray arrayWithObjects_(
+      SwiftLibrary _lib, NSObject firstObj) {
     final _ret = _lib._objc_msgSend_16(_lib._class_NSMutableArray1,
         _lib._sel_arrayWithObjects_1, firstObj._id);
     return NSMutableArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableArray arrayWithArray_(FooLibrary _lib, NSArray? array) {
+  static NSMutableArray arrayWithArray_(SwiftLibrary _lib, NSArray? array) {
     final _ret = _lib._objc_msgSend_67(_lib._class_NSMutableArray1,
         _lib._sel_arrayWithArray_1, array?._id ?? ffi.nullptr);
     return NSMutableArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSArray arrayWithContentsOfURL_error_(
-      FooLibrary _lib, NSURL? url, ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
+  static NSArray arrayWithContentsOfURL_error_(SwiftLibrary _lib, NSURL? url,
+      ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
     final _ret = _lib._objc_msgSend_117(
         _lib._class_NSMutableArray1,
         _lib._sel_arrayWithContentsOfURL_error_1,
@@ -39741,20 +39755,20 @@ class NSMutableArray extends NSArray {
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableArray new1(FooLibrary _lib) {
+  static NSMutableArray new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSMutableArray1, _lib._sel_new1);
     return NSMutableArray._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSMutableArray alloc(FooLibrary _lib) {
+  static NSMutableArray alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSMutableArray1, _lib._sel_alloc1);
     return NSMutableArray._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -39767,23 +39781,23 @@ class NSMutableArray extends NSArray {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSMutableArray1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSMutableArray1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSMutableArray1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSMutableArray1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -39792,7 +39806,7 @@ class NSMutableArray extends NSArray {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSMutableArray1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -39800,7 +39814,7 @@ class NSMutableArray extends NSArray {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSMutableArray1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -39808,13 +39822,13 @@ class NSMutableArray extends NSArray {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSMutableArray1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSMutableArray1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -39822,7 +39836,7 @@ class NSMutableArray extends NSArray {
 }
 
 class NSMutableOrderedSet extends NSOrderedSet {
-  NSMutableOrderedSet._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSMutableOrderedSet._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -39834,7 +39848,7 @@ class NSMutableOrderedSet extends NSOrderedSet {
 
   /// Returns a [NSMutableOrderedSet] that wraps the given raw object pointer.
   static NSMutableOrderedSet castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSMutableOrderedSet._(other, lib, retain: retain, release: release);
   }
@@ -40005,7 +40019,7 @@ class NSMutableOrderedSet extends NSOrderedSet {
   }
 
   static NSMutableOrderedSet orderedSetWithCapacity_(
-      FooLibrary _lib, int numItems) {
+      SwiftLibrary _lib, int numItems) {
     final _ret = _lib._objc_msgSend_60(_lib._class_NSMutableOrderedSet1,
         _lib._sel_orderedSetWithCapacity_1, numItems);
     return NSMutableOrderedSet._(_ret, _lib, retain: true, release: true);
@@ -40025,42 +40039,42 @@ class NSMutableOrderedSet extends NSOrderedSet {
         _id, _lib._sel_filterUsingPredicate_1, p?._id ?? ffi.nullptr);
   }
 
-  static NSMutableOrderedSet orderedSet(FooLibrary _lib) {
+  static NSMutableOrderedSet orderedSet(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSMutableOrderedSet1, _lib._sel_orderedSet1);
     return NSMutableOrderedSet._(_ret, _lib, retain: true, release: true);
   }
 
   static NSMutableOrderedSet orderedSetWithObject_(
-      FooLibrary _lib, NSObject object) {
+      SwiftLibrary _lib, NSObject object) {
     final _ret = _lib._objc_msgSend_16(_lib._class_NSMutableOrderedSet1,
         _lib._sel_orderedSetWithObject_1, object._id);
     return NSMutableOrderedSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableOrderedSet orderedSetWithObjects_count_(
-      FooLibrary _lib, ffi.Pointer<ffi.Pointer<ObjCObject>> objects, int cnt) {
+  static NSMutableOrderedSet orderedSetWithObjects_count_(SwiftLibrary _lib,
+      ffi.Pointer<ffi.Pointer<ObjCObject>> objects, int cnt) {
     final _ret = _lib._objc_msgSend_61(_lib._class_NSMutableOrderedSet1,
         _lib._sel_orderedSetWithObjects_count_1, objects, cnt);
     return NSMutableOrderedSet._(_ret, _lib, retain: true, release: true);
   }
 
   static NSMutableOrderedSet orderedSetWithObjects_(
-      FooLibrary _lib, NSObject firstObj) {
+      SwiftLibrary _lib, NSObject firstObj) {
     final _ret = _lib._objc_msgSend_16(_lib._class_NSMutableOrderedSet1,
         _lib._sel_orderedSetWithObjects_1, firstObj._id);
     return NSMutableOrderedSet._(_ret, _lib, retain: true, release: true);
   }
 
   static NSMutableOrderedSet orderedSetWithOrderedSet_(
-      FooLibrary _lib, NSOrderedSet? set) {
+      SwiftLibrary _lib, NSOrderedSet? set) {
     final _ret = _lib._objc_msgSend_430(_lib._class_NSMutableOrderedSet1,
         _lib._sel_orderedSetWithOrderedSet_1, set?._id ?? ffi.nullptr);
     return NSMutableOrderedSet._(_ret, _lib, retain: true, release: true);
   }
 
   static NSMutableOrderedSet orderedSetWithOrderedSet_range_copyItems_(
-      FooLibrary _lib, NSOrderedSet? set, NSRange range, bool flag) {
+      SwiftLibrary _lib, NSOrderedSet? set, NSRange range, bool flag) {
     final _ret = _lib._objc_msgSend_431(
         _lib._class_NSMutableOrderedSet1,
         _lib._sel_orderedSetWithOrderedSet_range_copyItems_1,
@@ -40071,14 +40085,14 @@ class NSMutableOrderedSet extends NSOrderedSet {
   }
 
   static NSMutableOrderedSet orderedSetWithArray_(
-      FooLibrary _lib, NSArray? array) {
+      SwiftLibrary _lib, NSArray? array) {
     final _ret = _lib._objc_msgSend_67(_lib._class_NSMutableOrderedSet1,
         _lib._sel_orderedSetWithArray_1, array?._id ?? ffi.nullptr);
     return NSMutableOrderedSet._(_ret, _lib, retain: true, release: true);
   }
 
   static NSMutableOrderedSet orderedSetWithArray_range_copyItems_(
-      FooLibrary _lib, NSArray? array, NSRange range, bool flag) {
+      SwiftLibrary _lib, NSArray? array, NSRange range, bool flag) {
     final _ret = _lib._objc_msgSend_432(
         _lib._class_NSMutableOrderedSet1,
         _lib._sel_orderedSetWithArray_range_copyItems_1,
@@ -40088,33 +40102,33 @@ class NSMutableOrderedSet extends NSOrderedSet {
     return NSMutableOrderedSet._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSMutableOrderedSet orderedSetWithSet_(FooLibrary _lib, NSSet? set) {
+  static NSMutableOrderedSet orderedSetWithSet_(SwiftLibrary _lib, NSSet? set) {
     final _ret = _lib._objc_msgSend_363(_lib._class_NSMutableOrderedSet1,
         _lib._sel_orderedSetWithSet_1, set?._id ?? ffi.nullptr);
     return NSMutableOrderedSet._(_ret, _lib, retain: true, release: true);
   }
 
   static NSMutableOrderedSet orderedSetWithSet_copyItems_(
-      FooLibrary _lib, NSSet? set, bool flag) {
+      SwiftLibrary _lib, NSSet? set, bool flag) {
     final _ret = _lib._objc_msgSend_364(_lib._class_NSMutableOrderedSet1,
         _lib._sel_orderedSetWithSet_copyItems_1, set?._id ?? ffi.nullptr, flag);
     return NSMutableOrderedSet._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSMutableOrderedSet new1(FooLibrary _lib) {
+  static NSMutableOrderedSet new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSMutableOrderedSet1, _lib._sel_new1);
     return NSMutableOrderedSet._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSMutableOrderedSet alloc(FooLibrary _lib) {
+  static NSMutableOrderedSet alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSMutableOrderedSet1, _lib._sel_alloc1);
     return NSMutableOrderedSet._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -40127,23 +40141,23 @@ class NSMutableOrderedSet extends NSOrderedSet {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSMutableOrderedSet1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSMutableOrderedSet1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSMutableOrderedSet1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSMutableOrderedSet1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -40152,7 +40166,7 @@ class NSMutableOrderedSet extends NSOrderedSet {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSMutableOrderedSet1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -40160,7 +40174,7 @@ class NSMutableOrderedSet extends NSOrderedSet {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSMutableOrderedSet1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -40168,13 +40182,13 @@ class NSMutableOrderedSet extends NSOrderedSet {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSMutableOrderedSet1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSMutableOrderedSet1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -40182,7 +40196,7 @@ class NSMutableOrderedSet extends NSOrderedSet {
 }
 
 class NSOrderedSet extends NSObject {
-  NSOrderedSet._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSOrderedSet._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -40193,7 +40207,7 @@ class NSOrderedSet extends NSObject {
 
   /// Returns a [NSOrderedSet] that wraps the given raw object pointer.
   static NSOrderedSet castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSOrderedSet._(other, lib, retain: retain, release: release);
   }
@@ -40434,41 +40448,42 @@ class NSOrderedSet extends NSObject {
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSOrderedSet orderedSet(FooLibrary _lib) {
+  static NSOrderedSet orderedSet(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSOrderedSet1, _lib._sel_orderedSet1);
     return NSOrderedSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSOrderedSet orderedSetWithObject_(FooLibrary _lib, NSObject object) {
+  static NSOrderedSet orderedSetWithObject_(
+      SwiftLibrary _lib, NSObject object) {
     final _ret = _lib._objc_msgSend_16(_lib._class_NSOrderedSet1,
         _lib._sel_orderedSetWithObject_1, object._id);
     return NSOrderedSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSOrderedSet orderedSetWithObjects_count_(
-      FooLibrary _lib, ffi.Pointer<ffi.Pointer<ObjCObject>> objects, int cnt) {
+  static NSOrderedSet orderedSetWithObjects_count_(SwiftLibrary _lib,
+      ffi.Pointer<ffi.Pointer<ObjCObject>> objects, int cnt) {
     final _ret = _lib._objc_msgSend_61(_lib._class_NSOrderedSet1,
         _lib._sel_orderedSetWithObjects_count_1, objects, cnt);
     return NSOrderedSet._(_ret, _lib, retain: true, release: true);
   }
 
   static NSOrderedSet orderedSetWithObjects_(
-      FooLibrary _lib, NSObject firstObj) {
+      SwiftLibrary _lib, NSObject firstObj) {
     final _ret = _lib._objc_msgSend_16(_lib._class_NSOrderedSet1,
         _lib._sel_orderedSetWithObjects_1, firstObj._id);
     return NSOrderedSet._(_ret, _lib, retain: true, release: true);
   }
 
   static NSOrderedSet orderedSetWithOrderedSet_(
-      FooLibrary _lib, NSOrderedSet? set) {
+      SwiftLibrary _lib, NSOrderedSet? set) {
     final _ret = _lib._objc_msgSend_430(_lib._class_NSOrderedSet1,
         _lib._sel_orderedSetWithOrderedSet_1, set?._id ?? ffi.nullptr);
     return NSOrderedSet._(_ret, _lib, retain: true, release: true);
   }
 
   static NSOrderedSet orderedSetWithOrderedSet_range_copyItems_(
-      FooLibrary _lib, NSOrderedSet? set, NSRange range, bool flag) {
+      SwiftLibrary _lib, NSOrderedSet? set, NSRange range, bool flag) {
     final _ret = _lib._objc_msgSend_431(
         _lib._class_NSOrderedSet1,
         _lib._sel_orderedSetWithOrderedSet_range_copyItems_1,
@@ -40478,14 +40493,14 @@ class NSOrderedSet extends NSObject {
     return NSOrderedSet._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSOrderedSet orderedSetWithArray_(FooLibrary _lib, NSArray? array) {
+  static NSOrderedSet orderedSetWithArray_(SwiftLibrary _lib, NSArray? array) {
     final _ret = _lib._objc_msgSend_67(_lib._class_NSOrderedSet1,
         _lib._sel_orderedSetWithArray_1, array?._id ?? ffi.nullptr);
     return NSOrderedSet._(_ret, _lib, retain: true, release: true);
   }
 
   static NSOrderedSet orderedSetWithArray_range_copyItems_(
-      FooLibrary _lib, NSArray? array, NSRange range, bool flag) {
+      SwiftLibrary _lib, NSArray? array, NSRange range, bool flag) {
     final _ret = _lib._objc_msgSend_432(
         _lib._class_NSOrderedSet1,
         _lib._sel_orderedSetWithArray_range_copyItems_1,
@@ -40495,14 +40510,14 @@ class NSOrderedSet extends NSObject {
     return NSOrderedSet._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSOrderedSet orderedSetWithSet_(FooLibrary _lib, NSSet? set) {
+  static NSOrderedSet orderedSetWithSet_(SwiftLibrary _lib, NSSet? set) {
     final _ret = _lib._objc_msgSend_363(_lib._class_NSOrderedSet1,
         _lib._sel_orderedSetWithSet_1, set?._id ?? ffi.nullptr);
     return NSOrderedSet._(_ret, _lib, retain: true, release: true);
   }
 
   static NSOrderedSet orderedSetWithSet_copyItems_(
-      FooLibrary _lib, NSSet? set, bool flag) {
+      SwiftLibrary _lib, NSSet? set, bool flag) {
     final _ret = _lib._objc_msgSend_364(_lib._class_NSOrderedSet1,
         _lib._sel_orderedSetWithSet_copyItems_1, set?._id ?? ffi.nullptr, flag);
     return NSOrderedSet._(_ret, _lib, retain: false, release: true);
@@ -40637,20 +40652,20 @@ class NSOrderedSet extends NSObject {
     return NSOrderedSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSOrderedSet new1(FooLibrary _lib) {
+  static NSOrderedSet new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSOrderedSet1, _lib._sel_new1);
     return NSOrderedSet._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSOrderedSet alloc(FooLibrary _lib) {
+  static NSOrderedSet alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSOrderedSet1, _lib._sel_alloc1);
     return NSOrderedSet._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -40663,23 +40678,23 @@ class NSOrderedSet extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSOrderedSet1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSOrderedSet1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSOrderedSet1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSOrderedSet1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -40688,7 +40703,7 @@ class NSOrderedSet extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSOrderedSet1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -40696,7 +40711,7 @@ class NSOrderedSet extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSOrderedSet1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -40704,13 +40719,13 @@ class NSOrderedSet extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSOrderedSet1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSOrderedSet1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -40718,7 +40733,7 @@ class NSOrderedSet extends NSObject {
 }
 
 class NSMutableSet extends NSSet {
-  NSMutableSet._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSMutableSet._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -40729,7 +40744,7 @@ class NSMutableSet extends NSSet {
 
   /// Returns a [NSMutableSet] that wraps the given raw object pointer.
   static NSMutableSet castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSMutableSet._(other, lib, retain: retain, release: release);
   }
@@ -40796,7 +40811,7 @@ class NSMutableSet extends NSSet {
         _id, _lib._sel_setSet_1, otherSet?._id ?? ffi.nullptr);
   }
 
-  static NSMutableSet setWithCapacity_(FooLibrary _lib, int numItems) {
+  static NSMutableSet setWithCapacity_(SwiftLibrary _lib, int numItems) {
     final _ret = _lib._objc_msgSend_60(
         _lib._class_NSMutableSet1, _lib._sel_setWithCapacity_1, numItems);
     return NSMutableSet._(_ret, _lib, retain: true, release: true);
@@ -40807,57 +40822,57 @@ class NSMutableSet extends NSSet {
         _id, _lib._sel_filterUsingPredicate_1, predicate?._id ?? ffi.nullptr);
   }
 
-  static NSMutableSet set1(FooLibrary _lib) {
+  static NSMutableSet set1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSMutableSet1, _lib._sel_set1);
     return NSMutableSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableSet setWithObject_(FooLibrary _lib, NSObject object) {
+  static NSMutableSet setWithObject_(SwiftLibrary _lib, NSObject object) {
     final _ret = _lib._objc_msgSend_16(
         _lib._class_NSMutableSet1, _lib._sel_setWithObject_1, object._id);
     return NSMutableSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableSet setWithObjects_count_(
-      FooLibrary _lib, ffi.Pointer<ffi.Pointer<ObjCObject>> objects, int cnt) {
+  static NSMutableSet setWithObjects_count_(SwiftLibrary _lib,
+      ffi.Pointer<ffi.Pointer<ObjCObject>> objects, int cnt) {
     final _ret = _lib._objc_msgSend_61(_lib._class_NSMutableSet1,
         _lib._sel_setWithObjects_count_1, objects, cnt);
     return NSMutableSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableSet setWithObjects_(FooLibrary _lib, NSObject firstObj) {
+  static NSMutableSet setWithObjects_(SwiftLibrary _lib, NSObject firstObj) {
     final _ret = _lib._objc_msgSend_16(
         _lib._class_NSMutableSet1, _lib._sel_setWithObjects_1, firstObj._id);
     return NSMutableSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableSet setWithSet_(FooLibrary _lib, NSSet? set) {
+  static NSMutableSet setWithSet_(SwiftLibrary _lib, NSSet? set) {
     final _ret = _lib._objc_msgSend_363(_lib._class_NSMutableSet1,
         _lib._sel_setWithSet_1, set?._id ?? ffi.nullptr);
     return NSMutableSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableSet setWithArray_(FooLibrary _lib, NSArray? array) {
+  static NSMutableSet setWithArray_(SwiftLibrary _lib, NSArray? array) {
     final _ret = _lib._objc_msgSend_67(_lib._class_NSMutableSet1,
         _lib._sel_setWithArray_1, array?._id ?? ffi.nullptr);
     return NSMutableSet._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableSet new1(FooLibrary _lib) {
+  static NSMutableSet new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSMutableSet1, _lib._sel_new1);
     return NSMutableSet._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSMutableSet alloc(FooLibrary _lib) {
+  static NSMutableSet alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSMutableSet1, _lib._sel_alloc1);
     return NSMutableSet._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -40870,23 +40885,23 @@ class NSMutableSet extends NSSet {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSMutableSet1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSMutableSet1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSMutableSet1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSMutableSet1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -40895,7 +40910,7 @@ class NSMutableSet extends NSSet {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSMutableSet1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -40903,7 +40918,7 @@ class NSMutableSet extends NSSet {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSMutableSet1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -40911,13 +40926,13 @@ class NSMutableSet extends NSSet {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSMutableSet1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSMutableSet1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -40939,7 +40954,7 @@ abstract class NSKeyValueSetMutationKind {
 }
 
 class NSKeyedArchiver extends NSCoder {
-  NSKeyedArchiver._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSKeyedArchiver._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -40951,7 +40966,7 @@ class NSKeyedArchiver extends NSCoder {
 
   /// Returns a [NSKeyedArchiver] that wraps the given raw object pointer.
   static NSKeyedArchiver castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSKeyedArchiver._(other, lib, retain: retain, release: release);
   }
@@ -40969,7 +40984,7 @@ class NSKeyedArchiver extends NSCoder {
   }
 
   static NSData archivedDataWithRootObject_requiringSecureCoding_error_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject object,
       bool requiresSecureCoding,
       ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
@@ -40994,14 +41009,14 @@ class NSKeyedArchiver extends NSCoder {
   }
 
   static NSData archivedDataWithRootObject_(
-      FooLibrary _lib, NSObject rootObject) {
+      SwiftLibrary _lib, NSObject rootObject) {
     final _ret = _lib._objc_msgSend_456(_lib._class_NSKeyedArchiver1,
         _lib._sel_archivedDataWithRootObject_1, rootObject._id);
     return NSData._(_ret, _lib, retain: true, release: true);
   }
 
   static bool archiveRootObject_toFile_(
-      FooLibrary _lib, NSObject rootObject, NSString? path) {
+      SwiftLibrary _lib, NSObject rootObject, NSString? path) {
     return _lib._objc_msgSend_225(
         _lib._class_NSKeyedArchiver1,
         _lib._sel_archiveRootObject_toFile_1,
@@ -41041,7 +41056,7 @@ class NSKeyedArchiver extends NSCoder {
   }
 
   static void setClassName_forClass_(
-      FooLibrary _lib, NSString? codedName, NSObject cls) {
+      SwiftLibrary _lib, NSString? codedName, NSObject cls) {
     return _lib._objc_msgSend_459(
         _lib._class_NSKeyedArchiver1,
         _lib._sel_setClassName_forClass_1,
@@ -41049,7 +41064,7 @@ class NSKeyedArchiver extends NSCoder {
         cls._id);
   }
 
-  static NSString classNameForClass_(FooLibrary _lib, NSObject cls) {
+  static NSString classNameForClass_(SwiftLibrary _lib, NSObject cls) {
     final _ret = _lib._objc_msgSend_65(
         _lib._class_NSKeyedArchiver1, _lib._sel_classNameForClass_1, cls._id);
     return NSString._(_ret, _lib, retain: true, release: true);
@@ -41122,20 +41137,20 @@ class NSKeyedArchiver extends NSCoder {
     _lib._objc_msgSend_460(_id, _lib._sel_setRequiresSecureCoding_1, value);
   }
 
-  static NSKeyedArchiver new1(FooLibrary _lib) {
+  static NSKeyedArchiver new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSKeyedArchiver1, _lib._sel_new1);
     return NSKeyedArchiver._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSKeyedArchiver alloc(FooLibrary _lib) {
+  static NSKeyedArchiver alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSKeyedArchiver1, _lib._sel_alloc1);
     return NSKeyedArchiver._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -41148,23 +41163,23 @@ class NSKeyedArchiver extends NSCoder {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSKeyedArchiver1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSKeyedArchiver1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSKeyedArchiver1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSKeyedArchiver1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -41173,7 +41188,7 @@ class NSKeyedArchiver extends NSCoder {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSKeyedArchiver1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -41181,7 +41196,7 @@ class NSKeyedArchiver extends NSCoder {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSKeyedArchiver1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -41189,13 +41204,13 @@ class NSKeyedArchiver extends NSCoder {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSKeyedArchiver1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSKeyedArchiver1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -41203,7 +41218,7 @@ class NSKeyedArchiver extends NSCoder {
 }
 
 class NSMutableData extends NSData {
-  NSMutableData._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSMutableData._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -41214,7 +41229,7 @@ class NSMutableData extends NSData {
 
   /// Returns a [NSMutableData] that wraps the given raw object pointer.
   static NSMutableData castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSMutableData._(other, lib, retain: retain, release: release);
   }
@@ -41278,13 +41293,13 @@ class NSMutableData extends NSData {
         replacementLength);
   }
 
-  static NSMutableData dataWithCapacity_(FooLibrary _lib, int aNumItems) {
+  static NSMutableData dataWithCapacity_(SwiftLibrary _lib, int aNumItems) {
     final _ret = _lib._objc_msgSend_60(
         _lib._class_NSMutableData1, _lib._sel_dataWithCapacity_1, aNumItems);
     return NSMutableData._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableData dataWithLength_(FooLibrary _lib, int length) {
+  static NSMutableData dataWithLength_(SwiftLibrary _lib, int length) {
     final _ret = _lib._objc_msgSend_60(
         _lib._class_NSMutableData1, _lib._sel_dataWithLength_1, length);
     return NSMutableData._(_ret, _lib, retain: true, release: true);
@@ -41313,35 +41328,35 @@ class NSMutableData extends NSData {
         _id, _lib._sel_compressUsingAlgorithm_error_1, algorithm, error);
   }
 
-  static NSMutableData data(FooLibrary _lib) {
+  static NSMutableData data(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSMutableData1, _lib._sel_data1);
     return NSMutableData._(_ret, _lib, retain: true, release: true);
   }
 
   static NSMutableData dataWithBytes_length_(
-      FooLibrary _lib, ffi.Pointer<ffi.Void> bytes, int length) {
+      SwiftLibrary _lib, ffi.Pointer<ffi.Void> bytes, int length) {
     final _ret = _lib._objc_msgSend_237(_lib._class_NSMutableData1,
         _lib._sel_dataWithBytes_length_1, bytes, length);
     return NSMutableData._(_ret, _lib, retain: true, release: true);
   }
 
   static NSMutableData dataWithBytesNoCopy_length_(
-      FooLibrary _lib, ffi.Pointer<ffi.Void> bytes, int length) {
+      SwiftLibrary _lib, ffi.Pointer<ffi.Void> bytes, int length) {
     final _ret = _lib._objc_msgSend_237(_lib._class_NSMutableData1,
         _lib._sel_dataWithBytesNoCopy_length_1, bytes, length);
     return NSMutableData._(_ret, _lib, retain: false, release: true);
   }
 
   static NSMutableData dataWithBytesNoCopy_length_freeWhenDone_(
-      FooLibrary _lib, ffi.Pointer<ffi.Void> bytes, int length, bool b) {
+      SwiftLibrary _lib, ffi.Pointer<ffi.Void> bytes, int length, bool b) {
     final _ret = _lib._objc_msgSend_238(_lib._class_NSMutableData1,
         _lib._sel_dataWithBytesNoCopy_length_freeWhenDone_1, bytes, length, b);
     return NSMutableData._(_ret, _lib, retain: false, release: true);
   }
 
   static NSMutableData dataWithContentsOfFile_options_error_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSString? path,
       int readOptionsMask,
       ffi.Pointer<ffi.Pointer<ObjCObject>> errorPtr) {
@@ -41355,7 +41370,7 @@ class NSMutableData extends NSData {
   }
 
   static NSMutableData dataWithContentsOfURL_options_error_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSURL? url,
       int readOptionsMask,
       ffi.Pointer<ffi.Pointer<ObjCObject>> errorPtr) {
@@ -41369,45 +41384,45 @@ class NSMutableData extends NSData {
   }
 
   static NSMutableData dataWithContentsOfFile_(
-      FooLibrary _lib, NSString? path) {
+      SwiftLibrary _lib, NSString? path) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSMutableData1,
         _lib._sel_dataWithContentsOfFile_1, path?._id ?? ffi.nullptr);
     return NSMutableData._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableData dataWithContentsOfURL_(FooLibrary _lib, NSURL? url) {
+  static NSMutableData dataWithContentsOfURL_(SwiftLibrary _lib, NSURL? url) {
     final _ret = _lib._objc_msgSend_226(_lib._class_NSMutableData1,
         _lib._sel_dataWithContentsOfURL_1, url?._id ?? ffi.nullptr);
     return NSMutableData._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableData dataWithData_(FooLibrary _lib, NSData? data) {
+  static NSMutableData dataWithData_(SwiftLibrary _lib, NSData? data) {
     final _ret = _lib._objc_msgSend_242(_lib._class_NSMutableData1,
         _lib._sel_dataWithData_1, data?._id ?? ffi.nullptr);
     return NSMutableData._(_ret, _lib, retain: true, release: true);
   }
 
   static NSObject dataWithContentsOfMappedFile_(
-      FooLibrary _lib, NSString? path) {
+      SwiftLibrary _lib, NSString? path) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSMutableData1,
         _lib._sel_dataWithContentsOfMappedFile_1, path?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableData new1(FooLibrary _lib) {
+  static NSMutableData new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSMutableData1, _lib._sel_new1);
     return NSMutableData._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSMutableData alloc(FooLibrary _lib) {
+  static NSMutableData alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSMutableData1, _lib._sel_alloc1);
     return NSMutableData._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -41420,23 +41435,23 @@ class NSMutableData extends NSData {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSMutableData1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSMutableData1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSMutableData1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSMutableData1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -41445,7 +41460,7 @@ class NSMutableData extends NSData {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSMutableData1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -41453,7 +41468,7 @@ class NSMutableData extends NSData {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSMutableData1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -41461,13 +41476,13 @@ class NSMutableData extends NSData {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSMutableData1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSMutableData1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -41481,7 +41496,7 @@ abstract class NSPropertyListFormat {
 }
 
 class NSThread extends NSObject {
-  NSThread._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSThread._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -41491,7 +41506,8 @@ class NSThread extends NSObject {
   }
 
   /// Returns a [NSThread] that wraps the given raw object pointer.
-  static NSThread castFromPointer(FooLibrary lib, ffi.Pointer<ObjCObject> other,
+  static NSThread castFromPointer(
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSThread._(other, lib, retain: retain, release: release);
   }
@@ -41502,7 +41518,7 @@ class NSThread extends NSObject {
         obj._id, obj._lib._sel_isKindOfClass_1, obj._lib._class_NSThread1);
   }
 
-  static NSThread? getCurrentThread(FooLibrary _lib) {
+  static NSThread? getCurrentThread(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_464(_lib._class_NSThread1, _lib._sel_currentThread1);
     return _ret.address == 0
@@ -41510,12 +41526,12 @@ class NSThread extends NSObject {
         : NSThread._(_ret, _lib, retain: true, release: true);
   }
 
-  static void detachNewThreadWithBlock_(FooLibrary _lib, ObjCBlock16 block) {
+  static void detachNewThreadWithBlock_(SwiftLibrary _lib, ObjCBlock16 block) {
     return _lib._objc_msgSend_465(
         _lib._class_NSThread1, _lib._sel_detachNewThreadWithBlock_1, block._id);
   }
 
-  static void detachNewThreadSelector_toTarget_withObject_(FooLibrary _lib,
+  static void detachNewThreadSelector_toTarget_withObject_(SwiftLibrary _lib,
       ffi.Pointer<ObjCSel> selector, NSObject target, NSObject argument) {
     return _lib._objc_msgSend_466(
         _lib._class_NSThread1,
@@ -41525,7 +41541,7 @@ class NSThread extends NSObject {
         argument._id);
   }
 
-  static bool isMultiThreaded(FooLibrary _lib) {
+  static bool isMultiThreaded(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSThread1, _lib._sel_isMultiThreaded1);
   }
@@ -41537,17 +41553,17 @@ class NSThread extends NSObject {
         : NSMutableDictionary._(_ret, _lib, retain: true, release: true);
   }
 
-  static void sleepUntilDate_(FooLibrary _lib, NSDate? date) {
+  static void sleepUntilDate_(SwiftLibrary _lib, NSDate? date) {
     return _lib._objc_msgSend_472(_lib._class_NSThread1,
         _lib._sel_sleepUntilDate_1, date?._id ?? ffi.nullptr);
   }
 
-  static void sleepForTimeInterval_(FooLibrary _lib, double ti) {
+  static void sleepForTimeInterval_(SwiftLibrary _lib, double ti) {
     return _lib._objc_msgSend_473(
         _lib._class_NSThread1, _lib._sel_sleepForTimeInterval_1, ti);
   }
 
-  static void exit(FooLibrary _lib) {
+  static void exit(SwiftLibrary _lib) {
     return _lib._objc_msgSend_1(_lib._class_NSThread1, _lib._sel_exit1);
   }
 
@@ -41567,7 +41583,7 @@ class NSThread extends NSObject {
     _lib._objc_msgSend_476(_id, _lib._sel_setQualityOfService_1, value);
   }
 
-  static NSArray? getCallStackReturnAddresses(FooLibrary _lib) {
+  static NSArray? getCallStackReturnAddresses(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSThread1, _lib._sel_callStackReturnAddresses1);
     return _ret.address == 0
@@ -41575,7 +41591,7 @@ class NSThread extends NSObject {
         : NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSArray? getCallStackSymbols(FooLibrary _lib) {
+  static NSArray? getCallStackSymbols(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSThread1, _lib._sel_callStackSymbols1);
     return _ret.address == 0
@@ -41606,7 +41622,7 @@ class NSThread extends NSObject {
     return _lib._objc_msgSend_12(_id, _lib._sel_isMainThread1);
   }
 
-  static NSThread? getMainThread(FooLibrary _lib) {
+  static NSThread? getMainThread(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_464(_lib._class_NSThread1, _lib._sel_mainThread1);
     return _ret.address == 0
@@ -41661,18 +41677,18 @@ class NSThread extends NSObject {
     return _lib._objc_msgSend_1(_id, _lib._sel_main1);
   }
 
-  static NSThread new1(FooLibrary _lib) {
+  static NSThread new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSThread1, _lib._sel_new1);
     return NSThread._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSThread alloc(FooLibrary _lib) {
+  static NSThread alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSThread1, _lib._sel_alloc1);
     return NSThread._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -41685,23 +41701,23 @@ class NSThread extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSThread1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSThread1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSThread1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSThread1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -41710,7 +41726,7 @@ class NSThread extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSThread1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -41718,7 +41734,7 @@ class NSThread extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSThread1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -41726,13 +41742,13 @@ class NSThread extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSThread1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSThread1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -41758,12 +41774,12 @@ void _ObjCBlock16_closureTrampoline(ffi.Pointer<_ObjCBlock> block) {
 }
 
 class ObjCBlock16 extends _ObjCBlockBase {
-  ObjCBlock16._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock16._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
-  ObjCBlock16.fromFunctionPointer(
-      FooLibrary lib, ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>> ptr)
+  ObjCBlock16.fromFunctionPointer(SwiftLibrary lib,
+      ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>> ptr)
       : this._(
             lib._newBlock1(
                 ffi.Pointer.fromFunction<
@@ -41774,7 +41790,7 @@ class ObjCBlock16 extends _ObjCBlockBase {
             lib);
 
   /// Creates a block from a Dart function.
-  ObjCBlock16.fromFunction(FooLibrary lib, void Function() fn)
+  ObjCBlock16.fromFunction(SwiftLibrary lib, void Function() fn)
       : this._(
             lib._newBlock1(
                 ffi.Pointer.fromFunction<
@@ -41795,7 +41811,7 @@ class ObjCBlock16 extends _ObjCBlockBase {
 }
 
 class NSMutableDictionary extends NSDictionary {
-  NSMutableDictionary._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSMutableDictionary._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -41807,7 +41823,7 @@ class NSMutableDictionary extends NSDictionary {
 
   /// Returns a [NSMutableDictionary] that wraps the given raw object pointer.
   static NSMutableDictionary castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSMutableDictionary._(other, lib, retain: retain, release: release);
   }
@@ -41871,21 +41887,21 @@ class NSMutableDictionary extends NSDictionary {
   }
 
   static NSMutableDictionary dictionaryWithCapacity_(
-      FooLibrary _lib, int numItems) {
+      SwiftLibrary _lib, int numItems) {
     final _ret = _lib._objc_msgSend_60(_lib._class_NSMutableDictionary1,
         _lib._sel_dictionaryWithCapacity_1, numItems);
     return NSMutableDictionary._(_ret, _lib, retain: true, release: true);
   }
 
   static NSMutableDictionary dictionaryWithContentsOfFile_(
-      FooLibrary _lib, NSString? path) {
+      SwiftLibrary _lib, NSString? path) {
     final _ret = _lib._objc_msgSend_468(_lib._class_NSMutableDictionary1,
         _lib._sel_dictionaryWithContentsOfFile_1, path?._id ?? ffi.nullptr);
     return NSMutableDictionary._(_ret, _lib, retain: true, release: true);
   }
 
   static NSMutableDictionary dictionaryWithContentsOfURL_(
-      FooLibrary _lib, NSURL? url) {
+      SwiftLibrary _lib, NSURL? url) {
     final _ret = _lib._objc_msgSend_469(_lib._class_NSMutableDictionary1,
         _lib._sel_dictionaryWithContentsOfURL_1, url?._id ?? ffi.nullptr);
     return NSMutableDictionary._(_ret, _lib, retain: true, release: true);
@@ -41904,7 +41920,7 @@ class NSMutableDictionary extends NSDictionary {
   }
 
   static NSMutableDictionary dictionaryWithSharedKeySet_(
-      FooLibrary _lib, NSObject keyset) {
+      SwiftLibrary _lib, NSObject keyset) {
     final _ret = _lib._objc_msgSend_470(_lib._class_NSMutableDictionary1,
         _lib._sel_dictionaryWithSharedKeySet_1, keyset._id);
     return NSMutableDictionary._(_ret, _lib, retain: true, release: true);
@@ -41915,21 +41931,21 @@ class NSMutableDictionary extends NSDictionary {
         _id, _lib._sel_setValue_forKey_1, value._id, key?._id ?? ffi.nullptr);
   }
 
-  static NSMutableDictionary dictionary(FooLibrary _lib) {
+  static NSMutableDictionary dictionary(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSMutableDictionary1, _lib._sel_dictionary1);
     return NSMutableDictionary._(_ret, _lib, retain: true, release: true);
   }
 
   static NSMutableDictionary dictionaryWithObject_forKey_(
-      FooLibrary _lib, NSObject object, NSObject key) {
+      SwiftLibrary _lib, NSObject object, NSObject key) {
     final _ret = _lib._objc_msgSend_142(_lib._class_NSMutableDictionary1,
         _lib._sel_dictionaryWithObject_forKey_1, object._id, key._id);
     return NSMutableDictionary._(_ret, _lib, retain: true, release: true);
   }
 
   static NSMutableDictionary dictionaryWithObjects_forKeys_count_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       ffi.Pointer<ffi.Pointer<ObjCObject>> objects,
       ffi.Pointer<ffi.Pointer<ObjCObject>> keys,
       int cnt) {
@@ -41939,21 +41955,21 @@ class NSMutableDictionary extends NSDictionary {
   }
 
   static NSMutableDictionary dictionaryWithObjectsAndKeys_(
-      FooLibrary _lib, NSObject firstObject) {
+      SwiftLibrary _lib, NSObject firstObject) {
     final _ret = _lib._objc_msgSend_16(_lib._class_NSMutableDictionary1,
         _lib._sel_dictionaryWithObjectsAndKeys_1, firstObject._id);
     return NSMutableDictionary._(_ret, _lib, retain: true, release: true);
   }
 
   static NSMutableDictionary dictionaryWithDictionary_(
-      FooLibrary _lib, NSDictionary? dict) {
+      SwiftLibrary _lib, NSDictionary? dict) {
     final _ret = _lib._objc_msgSend_143(_lib._class_NSMutableDictionary1,
         _lib._sel_dictionaryWithDictionary_1, dict?._id ?? ffi.nullptr);
     return NSMutableDictionary._(_ret, _lib, retain: true, release: true);
   }
 
   static NSMutableDictionary dictionaryWithObjects_forKeys_(
-      FooLibrary _lib, NSArray? objects, NSArray? keys) {
+      SwiftLibrary _lib, NSArray? objects, NSArray? keys) {
     final _ret = _lib._objc_msgSend_144(
         _lib._class_NSMutableDictionary1,
         _lib._sel_dictionaryWithObjects_forKeys_1,
@@ -41962,8 +41978,8 @@ class NSMutableDictionary extends NSDictionary {
     return NSMutableDictionary._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSDictionary dictionaryWithContentsOfURL_error_(
-      FooLibrary _lib, NSURL? url, ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
+  static NSDictionary dictionaryWithContentsOfURL_error_(SwiftLibrary _lib,
+      NSURL? url, ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
     final _ret = _lib._objc_msgSend_146(
         _lib._class_NSMutableDictionary1,
         _lib._sel_dictionaryWithContentsOfURL_error_1,
@@ -41972,26 +41988,26 @@ class NSMutableDictionary extends NSDictionary {
     return NSDictionary._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject sharedKeySetForKeys_(FooLibrary _lib, NSArray? keys) {
+  static NSObject sharedKeySetForKeys_(SwiftLibrary _lib, NSArray? keys) {
     final _ret = _lib._objc_msgSend_67(_lib._class_NSMutableDictionary1,
         _lib._sel_sharedKeySetForKeys_1, keys?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableDictionary new1(FooLibrary _lib) {
+  static NSMutableDictionary new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSMutableDictionary1, _lib._sel_new1);
     return NSMutableDictionary._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSMutableDictionary alloc(FooLibrary _lib) {
+  static NSMutableDictionary alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSMutableDictionary1, _lib._sel_alloc1);
     return NSMutableDictionary._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -42004,23 +42020,23 @@ class NSMutableDictionary extends NSDictionary {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSMutableDictionary1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSMutableDictionary1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSMutableDictionary1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSMutableDictionary1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -42029,7 +42045,7 @@ class NSMutableDictionary extends NSDictionary {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSMutableDictionary1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -42037,7 +42053,7 @@ class NSMutableDictionary extends NSDictionary {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSMutableDictionary1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -42045,13 +42061,13 @@ class NSMutableDictionary extends NSDictionary {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSMutableDictionary1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSMutableDictionary1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -42067,7 +42083,7 @@ abstract class NSQualityOfService {
 }
 
 class NSArchiver extends NSCoder {
-  NSArchiver._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSArchiver._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -42078,7 +42094,7 @@ class NSArchiver extends NSCoder {
 
   /// Returns a [NSArchiver] that wraps the given raw object pointer.
   static NSArchiver castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSArchiver._(other, lib, retain: retain, release: release);
   }
@@ -42115,14 +42131,14 @@ class NSArchiver extends NSCoder {
   }
 
   static NSData archivedDataWithRootObject_(
-      FooLibrary _lib, NSObject rootObject) {
+      SwiftLibrary _lib, NSObject rootObject) {
     final _ret = _lib._objc_msgSend_456(_lib._class_NSArchiver1,
         _lib._sel_archivedDataWithRootObject_1, rootObject._id);
     return NSData._(_ret, _lib, retain: true, release: true);
   }
 
   static bool archiveRootObject_toFile_(
-      FooLibrary _lib, NSObject rootObject, NSString? path) {
+      SwiftLibrary _lib, NSObject rootObject, NSString? path) {
     return _lib._objc_msgSend_225(
         _lib._class_NSArchiver1,
         _lib._sel_archiveRootObject_toFile_1,
@@ -42152,19 +42168,19 @@ class NSArchiver extends NSCoder {
         _id, _lib._sel_replaceObject_withObject_1, object._id, newObject._id);
   }
 
-  static NSArchiver new1(FooLibrary _lib) {
+  static NSArchiver new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSArchiver1, _lib._sel_new1);
     return NSArchiver._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSArchiver alloc(FooLibrary _lib) {
+  static NSArchiver alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSArchiver1, _lib._sel_alloc1);
     return NSArchiver._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -42177,23 +42193,23 @@ class NSArchiver extends NSCoder {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSArchiver1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSArchiver1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSArchiver1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSArchiver1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -42202,7 +42218,7 @@ class NSArchiver extends NSCoder {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSArchiver1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -42210,7 +42226,7 @@ class NSArchiver extends NSCoder {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSArchiver1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -42218,13 +42234,13 @@ class NSArchiver extends NSCoder {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSArchiver1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSArchiver1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -42232,7 +42248,7 @@ class NSArchiver extends NSCoder {
 }
 
 class NSPortCoder extends NSCoder {
-  NSPortCoder._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSPortCoder._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -42243,7 +42259,7 @@ class NSPortCoder extends NSCoder {
 
   /// Returns a [NSPortCoder] that wraps the given raw object pointer.
   static NSPortCoder castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSPortCoder._(other, lib, retain: retain, release: release);
   }
@@ -42278,7 +42294,7 @@ class NSPortCoder extends NSCoder {
   }
 
   static NSObject portCoderWithReceivePort_sendPort_components_(
-      FooLibrary _lib, NSPort? rcvPort, NSPort? sndPort, NSArray? comps) {
+      SwiftLibrary _lib, NSPort? rcvPort, NSPort? sndPort, NSArray? comps) {
     final _ret = _lib._objc_msgSend_521(
         _lib._class_NSPortCoder1,
         _lib._sel_portCoderWithReceivePort_sendPort_components_1,
@@ -42303,19 +42319,19 @@ class NSPortCoder extends NSCoder {
     return _lib._objc_msgSend_1(_id, _lib._sel_dispatch1);
   }
 
-  static NSPortCoder new1(FooLibrary _lib) {
+  static NSPortCoder new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSPortCoder1, _lib._sel_new1);
     return NSPortCoder._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSPortCoder alloc(FooLibrary _lib) {
+  static NSPortCoder alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSPortCoder1, _lib._sel_alloc1);
     return NSPortCoder._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -42328,23 +42344,23 @@ class NSPortCoder extends NSCoder {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSPortCoder1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSPortCoder1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSPortCoder1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSPortCoder1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -42353,7 +42369,7 @@ class NSPortCoder extends NSCoder {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSPortCoder1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -42361,7 +42377,7 @@ class NSPortCoder extends NSCoder {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSPortCoder1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -42369,13 +42385,13 @@ class NSPortCoder extends NSCoder {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSPortCoder1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSPortCoder1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -42383,7 +42399,7 @@ class NSPortCoder extends NSCoder {
 }
 
 class NSPort extends NSObject {
-  NSPort._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSPort._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -42393,7 +42409,7 @@ class NSPort extends NSObject {
   }
 
   /// Returns a [NSPort] that wraps the given raw object pointer.
-  static NSPort castFromPointer(FooLibrary lib, ffi.Pointer<ObjCObject> other,
+  static NSPort castFromPointer(SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSPort._(other, lib, retain: retain, release: release);
   }
@@ -42404,7 +42420,7 @@ class NSPort extends NSObject {
         obj._id, obj._lib._sel_isKindOfClass_1, obj._lib._class_NSPort1);
   }
 
-  static NSPort port(FooLibrary _lib) {
+  static NSPort port(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_485(_lib._class_NSPort1, _lib._sel_port1);
     return NSPort._(_ret, _lib, retain: true, release: true);
   }
@@ -42491,18 +42507,18 @@ class NSPort extends NSObject {
         mode);
   }
 
-  static NSPort new1(FooLibrary _lib) {
+  static NSPort new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSPort1, _lib._sel_new1);
     return NSPort._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSPort alloc(FooLibrary _lib) {
+  static NSPort alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSPort1, _lib._sel_alloc1);
     return NSPort._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -42515,23 +42531,23 @@ class NSPort extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSPort1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSPort1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSPort1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSPort1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -42540,7 +42556,7 @@ class NSPort extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSPort1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -42548,7 +42564,7 @@ class NSPort extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSPort1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -42556,13 +42572,13 @@ class NSPort extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSPort1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSPort1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -42570,7 +42586,7 @@ class NSPort extends NSObject {
 }
 
 class NSRunLoop extends NSObject {
-  NSRunLoop._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSRunLoop._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -42581,7 +42597,7 @@ class NSRunLoop extends NSObject {
 
   /// Returns a [NSRunLoop] that wraps the given raw object pointer.
   static NSRunLoop castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSRunLoop._(other, lib, retain: retain, release: release);
   }
@@ -42592,7 +42608,7 @@ class NSRunLoop extends NSObject {
         obj._id, obj._lib._sel_isKindOfClass_1, obj._lib._class_NSRunLoop1);
   }
 
-  static NSRunLoop? getCurrentRunLoop(FooLibrary _lib) {
+  static NSRunLoop? getCurrentRunLoop(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_486(
         _lib._class_NSRunLoop1, _lib._sel_currentRunLoop1);
     return _ret.address == 0
@@ -42600,7 +42616,7 @@ class NSRunLoop extends NSObject {
         : NSRunLoop._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSRunLoop? getMainRunLoop(FooLibrary _lib) {
+  static NSRunLoop? getMainRunLoop(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_486(_lib._class_NSRunLoop1, _lib._sel_mainRunLoop1);
     return _ret.address == 0
@@ -42703,18 +42719,18 @@ class NSRunLoop extends NSObject {
         _id, _lib._sel_cancelPerformSelectorsWithTarget_1, target._id);
   }
 
-  static NSRunLoop new1(FooLibrary _lib) {
+  static NSRunLoop new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSRunLoop1, _lib._sel_new1);
     return NSRunLoop._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSRunLoop alloc(FooLibrary _lib) {
+  static NSRunLoop alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSRunLoop1, _lib._sel_alloc1);
     return NSRunLoop._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -42727,23 +42743,23 @@ class NSRunLoop extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSRunLoop1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSRunLoop1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSRunLoop1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSRunLoop1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -42752,7 +42768,7 @@ class NSRunLoop extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSRunLoop1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -42760,7 +42776,7 @@ class NSRunLoop extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSRunLoop1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -42768,13 +42784,13 @@ class NSRunLoop extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSRunLoop1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSRunLoop1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -42787,7 +42803,7 @@ typedef CFRunLoopRef = ffi.Pointer<__CFRunLoop>;
 class __CFRunLoop extends ffi.Opaque {}
 
 class NSTimer extends NSObject {
-  NSTimer._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSTimer._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -42797,7 +42813,8 @@ class NSTimer extends NSObject {
   }
 
   /// Returns a [NSTimer] that wraps the given raw object pointer.
-  static NSTimer castFromPointer(FooLibrary lib, ffi.Pointer<ObjCObject> other,
+  static NSTimer castFromPointer(
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSTimer._(other, lib, retain: retain, release: release);
   }
@@ -42809,7 +42826,7 @@ class NSTimer extends NSObject {
   }
 
   static NSTimer timerWithTimeInterval_invocation_repeats_(
-      FooLibrary _lib, double ti, NSInvocation? invocation, bool yesOrNo) {
+      SwiftLibrary _lib, double ti, NSInvocation? invocation, bool yesOrNo) {
     final _ret = _lib._objc_msgSend_488(
         _lib._class_NSTimer1,
         _lib._sel_timerWithTimeInterval_invocation_repeats_1,
@@ -42820,7 +42837,7 @@ class NSTimer extends NSObject {
   }
 
   static NSTimer scheduledTimerWithTimeInterval_invocation_repeats_(
-      FooLibrary _lib, double ti, NSInvocation? invocation, bool yesOrNo) {
+      SwiftLibrary _lib, double ti, NSInvocation? invocation, bool yesOrNo) {
     final _ret = _lib._objc_msgSend_488(
         _lib._class_NSTimer1,
         _lib._sel_scheduledTimerWithTimeInterval_invocation_repeats_1,
@@ -42831,7 +42848,7 @@ class NSTimer extends NSObject {
   }
 
   static NSTimer timerWithTimeInterval_target_selector_userInfo_repeats_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       double ti,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
@@ -42850,7 +42867,7 @@ class NSTimer extends NSObject {
 
   static NSTimer
       scheduledTimerWithTimeInterval_target_selector_userInfo_repeats_(
-          FooLibrary _lib,
+          SwiftLibrary _lib,
           double ti,
           NSObject aTarget,
           ffi.Pointer<ObjCSel> aSelector,
@@ -42868,7 +42885,7 @@ class NSTimer extends NSObject {
   }
 
   static NSTimer timerWithTimeInterval_repeats_block_(
-      FooLibrary _lib, double interval, bool repeats, ObjCBlock17 block) {
+      SwiftLibrary _lib, double interval, bool repeats, ObjCBlock17 block) {
     final _ret = _lib._objc_msgSend_490(
         _lib._class_NSTimer1,
         _lib._sel_timerWithTimeInterval_repeats_block_1,
@@ -42879,7 +42896,7 @@ class NSTimer extends NSObject {
   }
 
   static NSTimer scheduledTimerWithTimeInterval_repeats_block_(
-      FooLibrary _lib, double interval, bool repeats, ObjCBlock17 block) {
+      SwiftLibrary _lib, double interval, bool repeats, ObjCBlock17 block) {
     final _ret = _lib._objc_msgSend_490(
         _lib._class_NSTimer1,
         _lib._sel_scheduledTimerWithTimeInterval_repeats_block_1,
@@ -42961,18 +42978,18 @@ class NSTimer extends NSObject {
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSTimer new1(FooLibrary _lib) {
+  static NSTimer new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSTimer1, _lib._sel_new1);
     return NSTimer._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSTimer alloc(FooLibrary _lib) {
+  static NSTimer alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSTimer1, _lib._sel_alloc1);
     return NSTimer._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -42985,23 +43002,23 @@ class NSTimer extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSTimer1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSTimer1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSTimer1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSTimer1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -43010,7 +43027,7 @@ class NSTimer extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSTimer1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -43018,7 +43035,7 @@ class NSTimer extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSTimer1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -43026,13 +43043,13 @@ class NSTimer extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSTimer1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSTimer1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -43061,12 +43078,12 @@ void _ObjCBlock17_closureTrampoline(
 }
 
 class ObjCBlock17 extends _ObjCBlockBase {
-  ObjCBlock17._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock17._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock17.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0)>>
@@ -43083,7 +43100,7 @@ class ObjCBlock17 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock17.fromFunction(
-      FooLibrary lib, void Function(ffi.Pointer<ObjCObject> arg0) fn)
+      SwiftLibrary lib, void Function(ffi.Pointer<ObjCObject> arg0) fn)
       : this._(
             lib._newBlock1(
                 ffi.Pointer.fromFunction<
@@ -43108,7 +43125,7 @@ class ObjCBlock17 extends _ObjCBlockBase {
 }
 
 class NSConnection extends NSObject {
-  NSConnection._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSConnection._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -43119,7 +43136,7 @@ class NSConnection extends NSObject {
 
   /// Returns a [NSConnection] that wraps the given raw object pointer.
   static NSConnection castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSConnection._(other, lib, retain: retain, release: release);
   }
@@ -43137,20 +43154,20 @@ class NSConnection extends NSObject {
         : NSDictionary._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSArray allConnections(FooLibrary _lib) {
+  static NSArray allConnections(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSConnection1, _lib._sel_allConnections1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSConnection defaultConnection(FooLibrary _lib) {
+  static NSConnection defaultConnection(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_504(
         _lib._class_NSConnection1, _lib._sel_defaultConnection1);
     return NSConnection._(_ret, _lib, retain: true, release: true);
   }
 
   static NSConnection connectionWithRegisteredName_host_(
-      FooLibrary _lib, NSString? name, NSString? hostName) {
+      SwiftLibrary _lib, NSString? name, NSString? hostName) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSConnection1,
         _lib._sel_connectionWithRegisteredName_host_1,
@@ -43160,7 +43177,7 @@ class NSConnection extends NSObject {
   }
 
   static NSConnection connectionWithRegisteredName_host_usingNameServer_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSString? name,
       NSString? hostName,
       NSPortNameServer? server) {
@@ -43174,7 +43191,7 @@ class NSConnection extends NSObject {
   }
 
   static NSDistantObject rootProxyForConnectionWithRegisteredName_host_(
-      FooLibrary _lib, NSString? name, NSString? hostName) {
+      SwiftLibrary _lib, NSString? name, NSString? hostName) {
     final _ret = _lib._objc_msgSend_512(
         _lib._class_NSConnection1,
         _lib._sel_rootProxyForConnectionWithRegisteredName_host_1,
@@ -43185,7 +43202,7 @@ class NSConnection extends NSObject {
 
   static NSDistantObject
       rootProxyForConnectionWithRegisteredName_host_usingNameServer_(
-          FooLibrary _lib,
+          SwiftLibrary _lib,
           NSString? name,
           NSString? hostName,
           NSPortNameServer? server) {
@@ -43199,7 +43216,7 @@ class NSConnection extends NSObject {
   }
 
   static NSConnection serviceConnectionWithName_rootObject_usingNameServer_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSString? name,
       NSObject root,
       NSPortNameServer? server) {
@@ -43213,7 +43230,7 @@ class NSConnection extends NSObject {
   }
 
   static NSConnection serviceConnectionWithName_rootObject_(
-      FooLibrary _lib, NSString? name, NSObject root) {
+      SwiftLibrary _lib, NSString? name, NSObject root) {
     final _ret = _lib._objc_msgSend_157(
         _lib._class_NSConnection1,
         _lib._sel_serviceConnectionWithName_rootObject_1,
@@ -43312,7 +43329,7 @@ class NSConnection extends NSObject {
   }
 
   static NSConnection connectionWithReceivePort_sendPort_(
-      FooLibrary _lib, NSPort? receivePort, NSPort? sendPort) {
+      SwiftLibrary _lib, NSPort? receivePort, NSPort? sendPort) {
     final _ret = _lib._objc_msgSend_517(
         _lib._class_NSConnection1,
         _lib._sel_connectionWithReceivePort_sendPort_1,
@@ -43321,7 +43338,7 @@ class NSConnection extends NSObject {
     return NSConnection._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject currentConversation(FooLibrary _lib) {
+  static NSObject currentConversation(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSConnection1, _lib._sel_currentConversation1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -43392,20 +43409,20 @@ class NSConnection extends NSObject {
         components?._id ?? ffi.nullptr);
   }
 
-  static NSConnection new1(FooLibrary _lib) {
+  static NSConnection new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSConnection1, _lib._sel_new1);
     return NSConnection._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSConnection alloc(FooLibrary _lib) {
+  static NSConnection alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSConnection1, _lib._sel_alloc1);
     return NSConnection._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -43418,23 +43435,23 @@ class NSConnection extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSConnection1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSConnection1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSConnection1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSConnection1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -43443,7 +43460,7 @@ class NSConnection extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSConnection1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -43451,7 +43468,7 @@ class NSConnection extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSConnection1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -43459,13 +43476,13 @@ class NSConnection extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSConnection1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSConnection1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -43473,7 +43490,7 @@ class NSConnection extends NSObject {
 }
 
 class NSPortNameServer extends NSObject {
-  NSPortNameServer._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSPortNameServer._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -43485,7 +43502,7 @@ class NSPortNameServer extends NSObject {
 
   /// Returns a [NSPortNameServer] that wraps the given raw object pointer.
   static NSPortNameServer castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSPortNameServer._(other, lib, retain: retain, release: release);
   }
@@ -43496,7 +43513,7 @@ class NSPortNameServer extends NSObject {
         obj._lib._class_NSPortNameServer1);
   }
 
-  static NSPortNameServer systemDefaultPortNameServer(FooLibrary _lib) {
+  static NSPortNameServer systemDefaultPortNameServer(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_505(
         _lib._class_NSPortNameServer1, _lib._sel_systemDefaultPortNameServer1);
     return NSPortNameServer._(_ret, _lib, retain: true, release: true);
@@ -43524,20 +43541,20 @@ class NSPortNameServer extends NSObject {
         _id, _lib._sel_removePortForName_1, name?._id ?? ffi.nullptr);
   }
 
-  static NSPortNameServer new1(FooLibrary _lib) {
+  static NSPortNameServer new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSPortNameServer1, _lib._sel_new1);
     return NSPortNameServer._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSPortNameServer alloc(FooLibrary _lib) {
+  static NSPortNameServer alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSPortNameServer1, _lib._sel_alloc1);
     return NSPortNameServer._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -43550,23 +43567,23 @@ class NSPortNameServer extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSPortNameServer1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSPortNameServer1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSPortNameServer1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSPortNameServer1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -43575,7 +43592,7 @@ class NSPortNameServer extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSPortNameServer1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -43583,7 +43600,7 @@ class NSPortNameServer extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSPortNameServer1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -43591,13 +43608,13 @@ class NSPortNameServer extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSPortNameServer1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSPortNameServer1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -43605,7 +43622,7 @@ class NSPortNameServer extends NSObject {
 }
 
 class NSDistantObject extends NSProxy {
-  NSDistantObject._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSDistantObject._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -43617,7 +43634,7 @@ class NSDistantObject extends NSProxy {
 
   /// Returns a [NSDistantObject] that wraps the given raw object pointer.
   static NSDistantObject castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSDistantObject._(other, lib, retain: retain, release: release);
   }
@@ -43629,7 +43646,7 @@ class NSDistantObject extends NSProxy {
   }
 
   static NSObject proxyWithTarget_connection_(
-      FooLibrary _lib, NSObject target, NSConnection? connection) {
+      SwiftLibrary _lib, NSObject target, NSConnection? connection) {
     final _ret = _lib._objc_msgSend_510(
         _lib._class_NSDistantObject1,
         _lib._sel_proxyWithTarget_connection_1,
@@ -43649,7 +43666,7 @@ class NSDistantObject extends NSProxy {
   }
 
   static NSObject proxyWithLocal_connection_(
-      FooLibrary _lib, NSObject target, NSConnection? connection) {
+      SwiftLibrary _lib, NSObject target, NSConnection? connection) {
     final _ret = _lib._objc_msgSend_510(
         _lib._class_NSDistantObject1,
         _lib._sel_proxyWithLocal_connection_1,
@@ -43686,21 +43703,21 @@ class NSDistantObject extends NSProxy {
         : NSConnection._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject alloc(FooLibrary _lib) {
+  static NSObject alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSDistantObject1, _lib._sel_alloc1);
     return NSObject._(_ret, _lib, retain: false, release: true);
   }
 
   static bool respondsToSelector_(
-      FooLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
+      SwiftLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
     return _lib._objc_msgSend_4(_lib._class_NSDistantObject1,
         _lib._sel_respondsToSelector_1, aSelector);
   }
 }
 
 class NSProxy extends _ObjCWrapper {
-  NSProxy._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSProxy._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -43710,7 +43727,8 @@ class NSProxy extends _ObjCWrapper {
   }
 
   /// Returns a [NSProxy] that wraps the given raw object pointer.
-  static NSProxy castFromPointer(FooLibrary lib, ffi.Pointer<ObjCObject> other,
+  static NSProxy castFromPointer(
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSProxy._(other, lib, retain: retain, release: release);
   }
@@ -43721,18 +43739,18 @@ class NSProxy extends _ObjCWrapper {
         obj._id, obj._lib._sel_isKindOfClass_1, obj._lib._class_NSProxy1);
   }
 
-  static NSObject alloc(FooLibrary _lib) {
+  static NSObject alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSProxy1, _lib._sel_alloc1);
     return NSObject._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSObject allocWithZone_(FooLibrary _lib, ffi.Pointer<NSZone> zone) {
+  static NSObject allocWithZone_(SwiftLibrary _lib, ffi.Pointer<NSZone> zone) {
     final _ret = _lib._objc_msgSend_3(
         _lib._class_NSProxy1, _lib._sel_allocWithZone_1, zone);
     return NSObject._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSObject class1(FooLibrary _lib) {
+  static NSObject class1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSProxy1, _lib._sel_class1);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
@@ -43771,7 +43789,7 @@ class NSProxy extends _ObjCWrapper {
   }
 
   static bool respondsToSelector_(
-      FooLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
+      SwiftLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
     return _lib._objc_msgSend_4(
         _lib._class_NSProxy1, _lib._sel_respondsToSelector_1, aSelector);
   }
@@ -43786,7 +43804,7 @@ class NSProxy extends _ObjCWrapper {
 }
 
 class NSClassDescription extends NSObject {
-  NSClassDescription._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSClassDescription._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -43798,7 +43816,7 @@ class NSClassDescription extends NSObject {
 
   /// Returns a [NSClassDescription] that wraps the given raw object pointer.
   static NSClassDescription castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSClassDescription._(other, lib, retain: retain, release: release);
   }
@@ -43810,7 +43828,7 @@ class NSClassDescription extends NSObject {
   }
 
   static void registerClassDescription_forClass_(
-      FooLibrary _lib, NSClassDescription? description, NSObject aClass) {
+      SwiftLibrary _lib, NSClassDescription? description, NSObject aClass) {
     return _lib._objc_msgSend_523(
         _lib._class_NSClassDescription1,
         _lib._sel_registerClassDescription_forClass_1,
@@ -43818,13 +43836,13 @@ class NSClassDescription extends NSObject {
         aClass._id);
   }
 
-  static void invalidateClassDescriptionCache(FooLibrary _lib) {
+  static void invalidateClassDescriptionCache(SwiftLibrary _lib) {
     return _lib._objc_msgSend_1(_lib._class_NSClassDescription1,
         _lib._sel_invalidateClassDescriptionCache1);
   }
 
   static NSClassDescription classDescriptionForClass_(
-      FooLibrary _lib, NSObject aClass) {
+      SwiftLibrary _lib, NSObject aClass) {
     final _ret = _lib._objc_msgSend_524(_lib._class_NSClassDescription1,
         _lib._sel_classDescriptionForClass_1, aClass._id);
     return NSClassDescription._(_ret, _lib, retain: true, release: true);
@@ -43863,20 +43881,20 @@ class NSClassDescription extends NSObject {
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSClassDescription new1(FooLibrary _lib) {
+  static NSClassDescription new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSClassDescription1, _lib._sel_new1);
     return NSClassDescription._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSClassDescription alloc(FooLibrary _lib) {
+  static NSClassDescription alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSClassDescription1, _lib._sel_alloc1);
     return NSClassDescription._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -43889,23 +43907,23 @@ class NSClassDescription extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSClassDescription1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSClassDescription1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSClassDescription1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSClassDescription1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -43914,7 +43932,7 @@ class NSClassDescription extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSClassDescription1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -43922,7 +43940,7 @@ class NSClassDescription extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSClassDescription1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -43930,13 +43948,13 @@ class NSClassDescription extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSClassDescription1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSClassDescription1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -43944,7 +43962,7 @@ class NSClassDescription extends NSObject {
 }
 
 class NSScriptObjectSpecifier extends NSObject {
-  NSScriptObjectSpecifier._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSScriptObjectSpecifier._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -43956,7 +43974,7 @@ class NSScriptObjectSpecifier extends NSObject {
 
   /// Returns a [NSScriptObjectSpecifier] that wraps the given raw object pointer.
   static NSScriptObjectSpecifier castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSScriptObjectSpecifier._(other, lib,
         retain: retain, release: release);
@@ -43969,7 +43987,7 @@ class NSScriptObjectSpecifier extends NSObject {
   }
 
   static NSScriptObjectSpecifier objectSpecifierWithDescriptor_(
-      FooLibrary _lib, NSAppleEventDescriptor? descriptor) {
+      SwiftLibrary _lib, NSAppleEventDescriptor? descriptor) {
     final _ret = _lib._objc_msgSend_548(
         _lib._class_NSScriptObjectSpecifier1,
         _lib._sel_objectSpecifierWithDescriptor_1,
@@ -44125,20 +44143,20 @@ class NSScriptObjectSpecifier extends NSObject {
         : NSAppleEventDescriptor._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSScriptObjectSpecifier new1(FooLibrary _lib) {
+  static NSScriptObjectSpecifier new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSScriptObjectSpecifier1, _lib._sel_new1);
     return NSScriptObjectSpecifier._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSScriptObjectSpecifier alloc(FooLibrary _lib) {
+  static NSScriptObjectSpecifier alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSScriptObjectSpecifier1, _lib._sel_alloc1);
     return NSScriptObjectSpecifier._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -44151,23 +44169,23 @@ class NSScriptObjectSpecifier extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSScriptObjectSpecifier1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSScriptObjectSpecifier1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSScriptObjectSpecifier1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSScriptObjectSpecifier1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -44176,7 +44194,7 @@ class NSScriptObjectSpecifier extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSScriptObjectSpecifier1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -44184,7 +44202,7 @@ class NSScriptObjectSpecifier extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSScriptObjectSpecifier1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -44192,13 +44210,13 @@ class NSScriptObjectSpecifier extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSScriptObjectSpecifier1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSScriptObjectSpecifier1,
         _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -44206,7 +44224,7 @@ class NSScriptObjectSpecifier extends NSObject {
 }
 
 class NSAppleEventDescriptor extends NSObject {
-  NSAppleEventDescriptor._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSAppleEventDescriptor._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -44218,7 +44236,7 @@ class NSAppleEventDescriptor extends NSObject {
 
   /// Returns a [NSAppleEventDescriptor] that wraps the given raw object pointer.
   static NSAppleEventDescriptor castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSAppleEventDescriptor._(other, lib,
         retain: retain, release: release);
@@ -44230,14 +44248,14 @@ class NSAppleEventDescriptor extends NSObject {
         obj._lib._class_NSAppleEventDescriptor1);
   }
 
-  static NSAppleEventDescriptor nullDescriptor(FooLibrary _lib) {
+  static NSAppleEventDescriptor nullDescriptor(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_526(
         _lib._class_NSAppleEventDescriptor1, _lib._sel_nullDescriptor1);
     return NSAppleEventDescriptor._(_ret, _lib, retain: true, release: true);
   }
 
   static NSAppleEventDescriptor descriptorWithDescriptorType_bytes_length_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       int descriptorType,
       ffi.Pointer<ffi.Void> bytes,
       int byteCount) {
@@ -44251,7 +44269,7 @@ class NSAppleEventDescriptor extends NSObject {
   }
 
   static NSAppleEventDescriptor descriptorWithDescriptorType_data_(
-      FooLibrary _lib, int descriptorType, NSData? data) {
+      SwiftLibrary _lib, int descriptorType, NSData? data) {
     final _ret = _lib._objc_msgSend_528(
         _lib._class_NSAppleEventDescriptor1,
         _lib._sel_descriptorWithDescriptorType_data_1,
@@ -44261,56 +44279,56 @@ class NSAppleEventDescriptor extends NSObject {
   }
 
   static NSAppleEventDescriptor descriptorWithBoolean_(
-      FooLibrary _lib, int boolean) {
+      SwiftLibrary _lib, int boolean) {
     final _ret = _lib._objc_msgSend_529(_lib._class_NSAppleEventDescriptor1,
         _lib._sel_descriptorWithBoolean_1, boolean);
     return NSAppleEventDescriptor._(_ret, _lib, retain: true, release: true);
   }
 
   static NSAppleEventDescriptor descriptorWithEnumCode_(
-      FooLibrary _lib, int enumerator) {
+      SwiftLibrary _lib, int enumerator) {
     final _ret = _lib._objc_msgSend_530(_lib._class_NSAppleEventDescriptor1,
         _lib._sel_descriptorWithEnumCode_1, enumerator);
     return NSAppleEventDescriptor._(_ret, _lib, retain: true, release: true);
   }
 
   static NSAppleEventDescriptor descriptorWithInt32_(
-      FooLibrary _lib, int signedInt) {
+      SwiftLibrary _lib, int signedInt) {
     final _ret = _lib._objc_msgSend_531(_lib._class_NSAppleEventDescriptor1,
         _lib._sel_descriptorWithInt32_1, signedInt);
     return NSAppleEventDescriptor._(_ret, _lib, retain: true, release: true);
   }
 
   static NSAppleEventDescriptor descriptorWithDouble_(
-      FooLibrary _lib, double doubleValue) {
+      SwiftLibrary _lib, double doubleValue) {
     final _ret = _lib._objc_msgSend_532(_lib._class_NSAppleEventDescriptor1,
         _lib._sel_descriptorWithDouble_1, doubleValue);
     return NSAppleEventDescriptor._(_ret, _lib, retain: true, release: true);
   }
 
   static NSAppleEventDescriptor descriptorWithTypeCode_(
-      FooLibrary _lib, int typeCode) {
+      SwiftLibrary _lib, int typeCode) {
     final _ret = _lib._objc_msgSend_530(_lib._class_NSAppleEventDescriptor1,
         _lib._sel_descriptorWithTypeCode_1, typeCode);
     return NSAppleEventDescriptor._(_ret, _lib, retain: true, release: true);
   }
 
   static NSAppleEventDescriptor descriptorWithString_(
-      FooLibrary _lib, NSString? string) {
+      SwiftLibrary _lib, NSString? string) {
     final _ret = _lib._objc_msgSend_533(_lib._class_NSAppleEventDescriptor1,
         _lib._sel_descriptorWithString_1, string?._id ?? ffi.nullptr);
     return NSAppleEventDescriptor._(_ret, _lib, retain: true, release: true);
   }
 
   static NSAppleEventDescriptor descriptorWithDate_(
-      FooLibrary _lib, NSDate? date) {
+      SwiftLibrary _lib, NSDate? date) {
     final _ret = _lib._objc_msgSend_534(_lib._class_NSAppleEventDescriptor1,
         _lib._sel_descriptorWithDate_1, date?._id ?? ffi.nullptr);
     return NSAppleEventDescriptor._(_ret, _lib, retain: true, release: true);
   }
 
   static NSAppleEventDescriptor descriptorWithFileURL_(
-      FooLibrary _lib, NSURL? fileURL) {
+      SwiftLibrary _lib, NSURL? fileURL) {
     final _ret = _lib._objc_msgSend_535(_lib._class_NSAppleEventDescriptor1,
         _lib._sel_descriptorWithFileURL_1, fileURL?._id ?? ffi.nullptr);
     return NSAppleEventDescriptor._(_ret, _lib, retain: true, release: true);
@@ -44318,7 +44336,7 @@ class NSAppleEventDescriptor extends NSObject {
 
   static NSAppleEventDescriptor
       appleEventWithEventClass_eventID_targetDescriptor_returnID_transactionID_(
-          FooLibrary _lib,
+          SwiftLibrary _lib,
           int eventClass,
           int eventID,
           NSAppleEventDescriptor? targetDescriptor,
@@ -44335,33 +44353,33 @@ class NSAppleEventDescriptor extends NSObject {
     return NSAppleEventDescriptor._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSAppleEventDescriptor listDescriptor(FooLibrary _lib) {
+  static NSAppleEventDescriptor listDescriptor(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_526(
         _lib._class_NSAppleEventDescriptor1, _lib._sel_listDescriptor1);
     return NSAppleEventDescriptor._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSAppleEventDescriptor recordDescriptor(FooLibrary _lib) {
+  static NSAppleEventDescriptor recordDescriptor(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_526(
         _lib._class_NSAppleEventDescriptor1, _lib._sel_recordDescriptor1);
     return NSAppleEventDescriptor._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSAppleEventDescriptor currentProcessDescriptor(FooLibrary _lib) {
+  static NSAppleEventDescriptor currentProcessDescriptor(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_526(_lib._class_NSAppleEventDescriptor1,
         _lib._sel_currentProcessDescriptor1);
     return NSAppleEventDescriptor._(_ret, _lib, retain: true, release: true);
   }
 
   static NSAppleEventDescriptor descriptorWithProcessIdentifier_(
-      FooLibrary _lib, int processIdentifier) {
+      SwiftLibrary _lib, int processIdentifier) {
     final _ret = _lib._objc_msgSend_531(_lib._class_NSAppleEventDescriptor1,
         _lib._sel_descriptorWithProcessIdentifier_1, processIdentifier);
     return NSAppleEventDescriptor._(_ret, _lib, retain: true, release: true);
   }
 
   static NSAppleEventDescriptor descriptorWithBundleIdentifier_(
-      FooLibrary _lib, NSString? bundleIdentifier) {
+      SwiftLibrary _lib, NSString? bundleIdentifier) {
     final _ret = _lib._objc_msgSend_533(
         _lib._class_NSAppleEventDescriptor1,
         _lib._sel_descriptorWithBundleIdentifier_1,
@@ -44370,7 +44388,7 @@ class NSAppleEventDescriptor extends NSObject {
   }
 
   static NSAppleEventDescriptor descriptorWithApplicationURL_(
-      FooLibrary _lib, NSURL? applicationURL) {
+      SwiftLibrary _lib, NSURL? applicationURL) {
     final _ret = _lib._objc_msgSend_535(
         _lib._class_NSAppleEventDescriptor1,
         _lib._sel_descriptorWithApplicationURL_1,
@@ -44604,20 +44622,20 @@ class NSAppleEventDescriptor extends NSObject {
     return NSAppleEventDescriptor._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSAppleEventDescriptor new1(FooLibrary _lib) {
+  static NSAppleEventDescriptor new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSAppleEventDescriptor1, _lib._sel_new1);
     return NSAppleEventDescriptor._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSAppleEventDescriptor alloc(FooLibrary _lib) {
+  static NSAppleEventDescriptor alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSAppleEventDescriptor1, _lib._sel_alloc1);
     return NSAppleEventDescriptor._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -44630,23 +44648,23 @@ class NSAppleEventDescriptor extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSAppleEventDescriptor1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSAppleEventDescriptor1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSAppleEventDescriptor1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSAppleEventDescriptor1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -44655,7 +44673,7 @@ class NSAppleEventDescriptor extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSAppleEventDescriptor1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -44663,7 +44681,7 @@ class NSAppleEventDescriptor extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSAppleEventDescriptor1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -44671,13 +44689,13 @@ class NSAppleEventDescriptor extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSAppleEventDescriptor1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSAppleEventDescriptor1,
         _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -44727,7 +44745,7 @@ abstract class NSAppleEventSendOptions {
 }
 
 class NSScriptClassDescription extends NSClassDescription {
-  NSScriptClassDescription._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSScriptClassDescription._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -44739,7 +44757,7 @@ class NSScriptClassDescription extends NSClassDescription {
 
   /// Returns a [NSScriptClassDescription] that wraps the given raw object pointer.
   static NSScriptClassDescription castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSScriptClassDescription._(other, lib,
         retain: retain, release: release);
@@ -44752,7 +44770,7 @@ class NSScriptClassDescription extends NSClassDescription {
   }
 
   static NSScriptClassDescription classDescriptionForClass_(
-      FooLibrary _lib, NSObject aClass) {
+      SwiftLibrary _lib, NSObject aClass) {
     final _ret = _lib._objc_msgSend_550(_lib._class_NSScriptClassDescription1,
         _lib._sel_classDescriptionForClass_1, aClass._id);
     return NSScriptClassDescription._(_ret, _lib, retain: true, release: true);
@@ -44885,7 +44903,7 @@ class NSScriptClassDescription extends NSClassDescription {
   }
 
   static void registerClassDescription_forClass_(
-      FooLibrary _lib, NSClassDescription? description, NSObject aClass) {
+      SwiftLibrary _lib, NSClassDescription? description, NSObject aClass) {
     return _lib._objc_msgSend_523(
         _lib._class_NSScriptClassDescription1,
         _lib._sel_registerClassDescription_forClass_1,
@@ -44893,25 +44911,25 @@ class NSScriptClassDescription extends NSClassDescription {
         aClass._id);
   }
 
-  static void invalidateClassDescriptionCache(FooLibrary _lib) {
+  static void invalidateClassDescriptionCache(SwiftLibrary _lib) {
     return _lib._objc_msgSend_1(_lib._class_NSScriptClassDescription1,
         _lib._sel_invalidateClassDescriptionCache1);
   }
 
-  static NSScriptClassDescription new1(FooLibrary _lib) {
+  static NSScriptClassDescription new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSScriptClassDescription1, _lib._sel_new1);
     return NSScriptClassDescription._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSScriptClassDescription alloc(FooLibrary _lib) {
+  static NSScriptClassDescription alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSScriptClassDescription1, _lib._sel_alloc1);
     return NSScriptClassDescription._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -44924,23 +44942,23 @@ class NSScriptClassDescription extends NSClassDescription {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSScriptClassDescription1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSScriptClassDescription1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSScriptClassDescription1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSScriptClassDescription1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -44949,7 +44967,7 @@ class NSScriptClassDescription extends NSClassDescription {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSScriptClassDescription1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -44957,7 +44975,7 @@ class NSScriptClassDescription extends NSClassDescription {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSScriptClassDescription1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -44965,13 +44983,13 @@ class NSScriptClassDescription extends NSClassDescription {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSScriptClassDescription1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSScriptClassDescription1,
         _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -44979,7 +44997,7 @@ class NSScriptClassDescription extends NSClassDescription {
 }
 
 class NSScriptCommandDescription extends NSObject {
-  NSScriptCommandDescription._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSScriptCommandDescription._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -44991,7 +45009,7 @@ class NSScriptCommandDescription extends NSObject {
 
   /// Returns a [NSScriptCommandDescription] that wraps the given raw object pointer.
   static NSScriptCommandDescription castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSScriptCommandDescription._(other, lib,
         retain: retain, release: release);
@@ -45106,14 +45124,14 @@ class NSScriptCommandDescription extends NSObject {
     return NSScriptCommand._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSScriptCommandDescription new1(FooLibrary _lib) {
+  static NSScriptCommandDescription new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSScriptCommandDescription1, _lib._sel_new1);
     return NSScriptCommandDescription._(_ret, _lib,
         retain: false, release: true);
   }
 
-  static NSScriptCommandDescription alloc(FooLibrary _lib) {
+  static NSScriptCommandDescription alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSScriptCommandDescription1, _lib._sel_alloc1);
     return NSScriptCommandDescription._(_ret, _lib,
@@ -45121,7 +45139,7 @@ class NSScriptCommandDescription extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -45134,23 +45152,23 @@ class NSScriptCommandDescription extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSScriptCommandDescription1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSScriptCommandDescription1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSScriptCommandDescription1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSScriptCommandDescription1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -45159,7 +45177,7 @@ class NSScriptCommandDescription extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSScriptCommandDescription1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -45167,7 +45185,7 @@ class NSScriptCommandDescription extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSScriptCommandDescription1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -45175,13 +45193,13 @@ class NSScriptCommandDescription extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSScriptCommandDescription1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSScriptCommandDescription1,
         _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -45189,7 +45207,7 @@ class NSScriptCommandDescription extends NSObject {
 }
 
 class NSScriptCommand extends NSObject {
-  NSScriptCommand._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSScriptCommand._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -45201,7 +45219,7 @@ class NSScriptCommand extends NSObject {
 
   /// Returns a [NSScriptCommand] that wraps the given raw object pointer.
   static NSScriptCommand castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSScriptCommand._(other, lib, retain: retain, release: release);
   }
@@ -45342,7 +45360,7 @@ class NSScriptCommand extends NSObject {
         _id, _lib._sel_setScriptErrorString_1, value?._id ?? ffi.nullptr);
   }
 
-  static NSScriptCommand currentCommand(FooLibrary _lib) {
+  static NSScriptCommand currentCommand(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_560(
         _lib._class_NSScriptCommand1, _lib._sel_currentCommand1);
     return NSScriptCommand._(_ret, _lib, retain: true, release: true);
@@ -45364,20 +45382,20 @@ class NSScriptCommand extends NSObject {
         _id, _lib._sel_resumeExecutionWithResult_1, result._id);
   }
 
-  static NSScriptCommand new1(FooLibrary _lib) {
+  static NSScriptCommand new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSScriptCommand1, _lib._sel_new1);
     return NSScriptCommand._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSScriptCommand alloc(FooLibrary _lib) {
+  static NSScriptCommand alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSScriptCommand1, _lib._sel_alloc1);
     return NSScriptCommand._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -45390,23 +45408,23 @@ class NSScriptCommand extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSScriptCommand1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSScriptCommand1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSScriptCommand1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSScriptCommand1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -45415,7 +45433,7 @@ class NSScriptCommand extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSScriptCommand1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -45423,7 +45441,7 @@ class NSScriptCommand extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSScriptCommand1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -45431,13 +45449,13 @@ class NSScriptCommand extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSScriptCommand1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSScriptCommand1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -45445,7 +45463,7 @@ class NSScriptCommand extends NSObject {
 }
 
 class NSItemProvider extends NSObject {
-  NSItemProvider._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSItemProvider._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -45456,7 +45474,7 @@ class NSItemProvider extends NSObject {
 
   /// Returns a [NSItemProvider] that wraps the given raw object pointer.
   static NSItemProvider castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSItemProvider._(other, lib, retain: retain, release: release);
   }
@@ -45660,20 +45678,20 @@ class NSItemProvider extends NSObject {
         completionHandler);
   }
 
-  static NSItemProvider new1(FooLibrary _lib) {
+  static NSItemProvider new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSItemProvider1, _lib._sel_new1);
     return NSItemProvider._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSItemProvider alloc(FooLibrary _lib) {
+  static NSItemProvider alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSItemProvider1, _lib._sel_alloc1);
     return NSItemProvider._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -45686,23 +45704,23 @@ class NSItemProvider extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSItemProvider1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSItemProvider1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSItemProvider1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSItemProvider1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -45711,7 +45729,7 @@ class NSItemProvider extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSItemProvider1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -45719,7 +45737,7 @@ class NSItemProvider extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSItemProvider1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -45727,13 +45745,13 @@ class NSItemProvider extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSItemProvider1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSItemProvider1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -45772,17 +45790,16 @@ ffi.Pointer<ObjCObject> _ObjCBlock18_closureTrampoline(
 }
 
 class ObjCBlock18 extends _ObjCBlockBase {
-  ObjCBlock18._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock18._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock18.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
-                  ffi
-                          .Pointer<ObjCObject>
-                      Function(ffi.Pointer<_ObjCBlock> arg0)>>
+                  ffi.Pointer<ObjCObject> Function(
+                      ffi.Pointer<_ObjCBlock> arg0)>>
           ptr)
       : this._(
             lib._newBlock1(
@@ -45796,7 +45813,7 @@ class ObjCBlock18 extends _ObjCBlockBase {
             lib);
 
   /// Creates a block from a Dart function.
-  ObjCBlock18.fromFunction(FooLibrary lib,
+  ObjCBlock18.fromFunction(SwiftLibrary lib,
       ffi.Pointer<ObjCObject> Function(ffi.Pointer<_ObjCBlock> arg0) fn)
       : this._(
             lib._newBlock1(
@@ -45823,7 +45840,7 @@ class ObjCBlock18 extends _ObjCBlockBase {
 }
 
 class NSProgress extends NSObject {
-  NSProgress._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSProgress._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -45834,7 +45851,7 @@ class NSProgress extends NSObject {
 
   /// Returns a [NSProgress] that wraps the given raw object pointer.
   static NSProgress castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSProgress._(other, lib, retain: retain, release: release);
   }
@@ -45845,28 +45862,28 @@ class NSProgress extends NSObject {
         obj._id, obj._lib._sel_isKindOfClass_1, obj._lib._class_NSProgress1);
   }
 
-  static NSProgress currentProgress(FooLibrary _lib) {
+  static NSProgress currentProgress(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_577(
         _lib._class_NSProgress1, _lib._sel_currentProgress1);
     return NSProgress._(_ret, _lib, retain: true, release: true);
   }
 
   static NSProgress progressWithTotalUnitCount_(
-      FooLibrary _lib, int unitCount) {
+      SwiftLibrary _lib, int unitCount) {
     final _ret = _lib._objc_msgSend_578(_lib._class_NSProgress1,
         _lib._sel_progressWithTotalUnitCount_1, unitCount);
     return NSProgress._(_ret, _lib, retain: true, release: true);
   }
 
   static NSProgress discreteProgressWithTotalUnitCount_(
-      FooLibrary _lib, int unitCount) {
+      SwiftLibrary _lib, int unitCount) {
     final _ret = _lib._objc_msgSend_578(_lib._class_NSProgress1,
         _lib._sel_discreteProgressWithTotalUnitCount_1, unitCount);
     return NSProgress._(_ret, _lib, retain: true, release: true);
   }
 
   static NSProgress progressWithTotalUnitCount_parent_pendingUnitCount_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       int unitCount,
       NSProgress? parent,
       int portionOfParentTotalUnitCount) {
@@ -46035,19 +46052,19 @@ class NSProgress extends NSObject {
     return _lib._objc_msgSend_1(_id, _lib._sel_resume1);
   }
 
-  static NSProgress new1(FooLibrary _lib) {
+  static NSProgress new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSProgress1, _lib._sel_new1);
     return NSProgress._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSProgress alloc(FooLibrary _lib) {
+  static NSProgress alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSProgress1, _lib._sel_alloc1);
     return NSProgress._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -46060,23 +46077,23 @@ class NSProgress extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSProgress1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSProgress1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSProgress1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSProgress1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -46085,7 +46102,7 @@ class NSProgress extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSProgress1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -46093,7 +46110,7 @@ class NSProgress extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSProgress1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -46101,13 +46118,13 @@ class NSProgress extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSProgress1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSProgress1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -46141,12 +46158,12 @@ void _ObjCBlock19_closureTrampoline(ffi.Pointer<_ObjCBlock> block,
 }
 
 class ObjCBlock19 extends _ObjCBlockBase {
-  ObjCBlock19._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock19._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock19.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0,
@@ -46166,7 +46183,7 @@ class ObjCBlock19 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock19.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       void Function(ffi.Pointer<ObjCObject> arg0, ffi.Pointer<ObjCObject> arg1)
           fn)
       : this._(
@@ -46227,17 +46244,16 @@ ffi.Pointer<ObjCObject> _ObjCBlock20_closureTrampoline(
 }
 
 class ObjCBlock20 extends _ObjCBlockBase {
-  ObjCBlock20._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock20._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock20.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
-                  ffi
-                          .Pointer<ObjCObject>
-                      Function(ffi.Pointer<_ObjCBlock> arg0)>>
+                  ffi.Pointer<ObjCObject> Function(
+                      ffi.Pointer<_ObjCBlock> arg0)>>
           ptr)
       : this._(
             lib._newBlock1(
@@ -46251,7 +46267,7 @@ class ObjCBlock20 extends _ObjCBlockBase {
             lib);
 
   /// Creates a block from a Dart function.
-  ObjCBlock20.fromFunction(FooLibrary lib,
+  ObjCBlock20.fromFunction(SwiftLibrary lib,
       ffi.Pointer<ObjCObject> Function(ffi.Pointer<_ObjCBlock> arg0) fn)
       : this._(
             lib._newBlock1(
@@ -46304,12 +46320,12 @@ void _ObjCBlock21_closureTrampoline(ffi.Pointer<_ObjCBlock> block,
 }
 
 class ObjCBlock21 extends _ObjCBlockBase {
-  ObjCBlock21._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock21._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock21.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0, ffi.Bool arg1,
@@ -46330,7 +46346,7 @@ class ObjCBlock21 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock21.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       void Function(ffi.Pointer<ObjCObject> arg0, bool arg1,
               ffi.Pointer<ObjCObject> arg2)
           fn)
@@ -46393,12 +46409,12 @@ void _ObjCBlock22_closureTrampoline(ffi.Pointer<_ObjCBlock> block,
 }
 
 class ObjCBlock22 extends _ObjCBlockBase {
-  ObjCBlock22._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock22._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock22.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0,
@@ -46418,7 +46434,7 @@ class ObjCBlock22 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock22.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       void Function(ffi.Pointer<ObjCObject> arg0, ffi.Pointer<ObjCObject> arg1)
           fn)
       : this._(
@@ -46475,17 +46491,16 @@ ffi.Pointer<ObjCObject> _ObjCBlock23_closureTrampoline(
 }
 
 class ObjCBlock23 extends _ObjCBlockBase {
-  ObjCBlock23._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock23._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock23.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
-                  ffi
-                          .Pointer<ObjCObject>
-                      Function(ffi.Pointer<_ObjCBlock> arg0)>>
+                  ffi.Pointer<ObjCObject> Function(
+                      ffi.Pointer<_ObjCBlock> arg0)>>
           ptr)
       : this._(
             lib._newBlock1(
@@ -46499,7 +46514,7 @@ class ObjCBlock23 extends _ObjCBlockBase {
             lib);
 
   /// Creates a block from a Dart function.
-  ObjCBlock23.fromFunction(FooLibrary lib,
+  ObjCBlock23.fromFunction(SwiftLibrary lib,
       ffi.Pointer<ObjCObject> Function(ffi.Pointer<_ObjCBlock> arg0) fn)
       : this._(
             lib._newBlock1(
@@ -46551,12 +46566,12 @@ void _ObjCBlock24_closureTrampoline(ffi.Pointer<_ObjCBlock> block,
 }
 
 class ObjCBlock24 extends _ObjCBlockBase {
-  ObjCBlock24._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock24._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock24.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0,
@@ -46576,7 +46591,7 @@ class ObjCBlock24 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock24.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       void Function(ffi.Pointer<ObjCObject> arg0, ffi.Pointer<ObjCObject> arg1)
           fn)
       : this._(
@@ -46646,12 +46661,12 @@ void _ObjCBlock25_closureTrampoline(
 }
 
 class ObjCBlock25 extends _ObjCBlockBase {
-  ObjCBlock25._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock25._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock25.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(
@@ -46674,7 +46689,7 @@ class ObjCBlock25 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock25.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       void Function(NSItemProviderCompletionHandler arg0,
               ffi.Pointer<ObjCObject> arg1, ffi.Pointer<ObjCObject> arg2)
           fn)
@@ -46714,7 +46729,7 @@ class ObjCBlock25 extends _ObjCBlockBase {
 typedef NSItemProviderCompletionHandler = ffi.Pointer<_ObjCBlock>;
 
 class NSMutableString extends NSString {
-  NSMutableString._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSMutableString._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -46726,7 +46741,7 @@ class NSMutableString extends NSString {
 
   /// Returns a [NSMutableString] that wraps the given raw object pointer.
   static NSMutableString castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSMutableString._(other, lib, retain: retain, release: release);
   }
@@ -46798,78 +46813,80 @@ class NSMutableString extends NSString {
     return NSMutableString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableString stringWithCapacity_(FooLibrary _lib, int capacity) {
+  static NSMutableString stringWithCapacity_(SwiftLibrary _lib, int capacity) {
     final _ret = _lib._objc_msgSend_607(
         _lib._class_NSMutableString1, _lib._sel_stringWithCapacity_1, capacity);
     return NSMutableString._(_ret, _lib, retain: true, release: true);
   }
 
   static ffi.Pointer<NSStringEncoding> getAvailableStringEncodings(
-      FooLibrary _lib) {
+      SwiftLibrary _lib) {
     return _lib._objc_msgSend_318(
         _lib._class_NSMutableString1, _lib._sel_availableStringEncodings1);
   }
 
   static NSString localizedNameOfStringEncoding_(
-      FooLibrary _lib, int encoding) {
+      SwiftLibrary _lib, int encoding) {
     final _ret = _lib._objc_msgSend_293(_lib._class_NSMutableString1,
         _lib._sel_localizedNameOfStringEncoding_1, encoding);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static int getDefaultCStringEncoding(FooLibrary _lib) {
+  static int getDefaultCStringEncoding(SwiftLibrary _lib) {
     return _lib._objc_msgSend_10(
         _lib._class_NSMutableString1, _lib._sel_defaultCStringEncoding1);
   }
 
-  static NSMutableString string(FooLibrary _lib) {
+  static NSMutableString string(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSMutableString1, _lib._sel_string1);
     return NSMutableString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableString stringWithString_(FooLibrary _lib, NSString? string) {
+  static NSMutableString stringWithString_(
+      SwiftLibrary _lib, NSString? string) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSMutableString1,
         _lib._sel_stringWithString_1, string?._id ?? ffi.nullptr);
     return NSMutableString._(_ret, _lib, retain: true, release: true);
   }
 
   static NSMutableString stringWithCharacters_length_(
-      FooLibrary _lib, ffi.Pointer<unichar> characters, int length) {
+      SwiftLibrary _lib, ffi.Pointer<unichar> characters, int length) {
     final _ret = _lib._objc_msgSend_331(_lib._class_NSMutableString1,
         _lib._sel_stringWithCharacters_length_1, characters, length);
     return NSMutableString._(_ret, _lib, retain: true, release: true);
   }
 
   static NSMutableString stringWithUTF8String_(
-      FooLibrary _lib, ffi.Pointer<ffi.Char> nullTerminatedCString) {
+      SwiftLibrary _lib, ffi.Pointer<ffi.Char> nullTerminatedCString) {
     final _ret = _lib._objc_msgSend_332(_lib._class_NSMutableString1,
         _lib._sel_stringWithUTF8String_1, nullTerminatedCString);
     return NSMutableString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableString stringWithFormat_(FooLibrary _lib, NSString? format) {
+  static NSMutableString stringWithFormat_(
+      SwiftLibrary _lib, NSString? format) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSMutableString1,
         _lib._sel_stringWithFormat_1, format?._id ?? ffi.nullptr);
     return NSMutableString._(_ret, _lib, retain: true, release: true);
   }
 
   static NSMutableString localizedStringWithFormat_(
-      FooLibrary _lib, NSString? format) {
+      SwiftLibrary _lib, NSString? format) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSMutableString1,
         _lib._sel_localizedStringWithFormat_1, format?._id ?? ffi.nullptr);
     return NSMutableString._(_ret, _lib, retain: true, release: true);
   }
 
   static NSMutableString stringWithCString_encoding_(
-      FooLibrary _lib, ffi.Pointer<ffi.Char> cString, int enc) {
+      SwiftLibrary _lib, ffi.Pointer<ffi.Char> cString, int enc) {
     final _ret = _lib._objc_msgSend_339(_lib._class_NSMutableString1,
         _lib._sel_stringWithCString_encoding_1, cString, enc);
     return NSMutableString._(_ret, _lib, retain: true, release: true);
   }
 
   static NSMutableString stringWithContentsOfURL_encoding_error_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSURL? url,
       int enc,
       ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
@@ -46883,7 +46900,7 @@ class NSMutableString extends NSString {
   }
 
   static NSMutableString stringWithContentsOfFile_encoding_error_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSString? path,
       int enc,
       ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
@@ -46897,7 +46914,7 @@ class NSMutableString extends NSString {
   }
 
   static NSMutableString stringWithContentsOfURL_usedEncoding_error_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSURL? url,
       ffi.Pointer<NSStringEncoding> enc,
       ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
@@ -46911,7 +46928,7 @@ class NSMutableString extends NSString {
   }
 
   static NSMutableString stringWithContentsOfFile_usedEncoding_error_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSString? path,
       ffi.Pointer<NSStringEncoding> enc,
       ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
@@ -46926,7 +46943,7 @@ class NSMutableString extends NSString {
 
   static int
       stringEncodingForData_encodingOptions_convertedString_usedLossyConversion_(
-          FooLibrary _lib,
+          SwiftLibrary _lib,
           NSData? data,
           NSDictionary? opts,
           ffi.Pointer<ffi.Pointer<ObjCObject>> string,
@@ -46940,52 +46957,52 @@ class NSMutableString extends NSString {
         usedLossyConversion);
   }
 
-  static NSObject stringWithContentsOfFile_(FooLibrary _lib, NSString? path) {
+  static NSObject stringWithContentsOfFile_(SwiftLibrary _lib, NSString? path) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSMutableString1,
         _lib._sel_stringWithContentsOfFile_1, path?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject stringWithContentsOfURL_(FooLibrary _lib, NSURL? url) {
+  static NSObject stringWithContentsOfURL_(SwiftLibrary _lib, NSURL? url) {
     final _ret = _lib._objc_msgSend_226(_lib._class_NSMutableString1,
         _lib._sel_stringWithContentsOfURL_1, url?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
   static NSObject stringWithCString_length_(
-      FooLibrary _lib, ffi.Pointer<ffi.Char> bytes, int length) {
+      SwiftLibrary _lib, ffi.Pointer<ffi.Char> bytes, int length) {
     final _ret = _lib._objc_msgSend_339(_lib._class_NSMutableString1,
         _lib._sel_stringWithCString_length_1, bytes, length);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
   static NSObject stringWithCString_(
-      FooLibrary _lib, ffi.Pointer<ffi.Char> bytes) {
+      SwiftLibrary _lib, ffi.Pointer<ffi.Char> bytes) {
     final _ret = _lib._objc_msgSend_332(
         _lib._class_NSMutableString1, _lib._sel_stringWithCString_1, bytes);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSString pathWithComponents_(FooLibrary _lib, NSArray? components) {
+  static NSString pathWithComponents_(SwiftLibrary _lib, NSArray? components) {
     final _ret = _lib._objc_msgSend_350(_lib._class_NSMutableString1,
         _lib._sel_pathWithComponents_1, components?._id ?? ffi.nullptr);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableString new1(FooLibrary _lib) {
+  static NSMutableString new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSMutableString1, _lib._sel_new1);
     return NSMutableString._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSMutableString alloc(FooLibrary _lib) {
+  static NSMutableString alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSMutableString1, _lib._sel_alloc1);
     return NSMutableString._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -46998,23 +47015,23 @@ class NSMutableString extends NSString {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSMutableString1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSMutableString1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSMutableString1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSMutableString1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -47023,7 +47040,7 @@ class NSMutableString extends NSString {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSMutableString1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -47031,7 +47048,7 @@ class NSMutableString extends NSString {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSMutableString1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -47039,13 +47056,13 @@ class NSMutableString extends NSString {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSMutableString1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSMutableString1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -47053,7 +47070,7 @@ class NSMutableString extends NSString {
 }
 
 class NSNotification extends NSObject {
-  NSNotification._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSNotification._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -47064,7 +47081,7 @@ class NSNotification extends NSObject {
 
   /// Returns a [NSNotification] that wraps the given raw object pointer.
   static NSNotification castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSNotification._(other, lib, retain: retain, release: release);
   }
@@ -47109,13 +47126,13 @@ class NSNotification extends NSObject {
   }
 
   static NSNotification notificationWithName_object_(
-      FooLibrary _lib, NSNotificationName aName, NSObject anObject) {
+      SwiftLibrary _lib, NSNotificationName aName, NSObject anObject) {
     final _ret = _lib._objc_msgSend_157(_lib._class_NSNotification1,
         _lib._sel_notificationWithName_object_1, aName, anObject._id);
     return NSNotification._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSNotification notificationWithName_object_userInfo_(FooLibrary _lib,
+  static NSNotification notificationWithName_object_userInfo_(SwiftLibrary _lib,
       NSNotificationName aName, NSObject anObject, NSDictionary? aUserInfo) {
     final _ret = _lib._objc_msgSend_608(
         _lib._class_NSNotification1,
@@ -47132,20 +47149,20 @@ class NSNotification extends NSObject {
     return NSNotification._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSNotification new1(FooLibrary _lib) {
+  static NSNotification new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSNotification1, _lib._sel_new1);
     return NSNotification._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSNotification alloc(FooLibrary _lib) {
+  static NSNotification alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSNotification1, _lib._sel_alloc1);
     return NSNotification._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -47158,23 +47175,23 @@ class NSNotification extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSNotification1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSNotification1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSNotification1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSNotification1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -47183,7 +47200,7 @@ class NSNotification extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSNotification1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -47191,7 +47208,7 @@ class NSNotification extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSNotification1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -47199,13 +47216,13 @@ class NSNotification extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSNotification1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSNotification1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -47215,7 +47232,7 @@ class NSNotification extends NSObject {
 typedef NSNotificationName = ffi.Pointer<ObjCObject>;
 
 class NSBundle extends NSObject {
-  NSBundle._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSBundle._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -47225,7 +47242,8 @@ class NSBundle extends NSObject {
   }
 
   /// Returns a [NSBundle] that wraps the given raw object pointer.
-  static NSBundle castFromPointer(FooLibrary lib, ffi.Pointer<ObjCObject> other,
+  static NSBundle castFromPointer(
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSBundle._(other, lib, retain: retain, release: release);
   }
@@ -47236,7 +47254,7 @@ class NSBundle extends NSObject {
         obj._id, obj._lib._sel_isKindOfClass_1, obj._lib._class_NSBundle1);
   }
 
-  static NSBundle? getMainBundle(FooLibrary _lib) {
+  static NSBundle? getMainBundle(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_609(_lib._class_NSBundle1, _lib._sel_mainBundle1);
     return _ret.address == 0
@@ -47244,7 +47262,7 @@ class NSBundle extends NSObject {
         : NSBundle._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSBundle bundleWithPath_(FooLibrary _lib, NSString? path) {
+  static NSBundle bundleWithPath_(SwiftLibrary _lib, NSString? path) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSBundle1,
         _lib._sel_bundleWithPath_1, path?._id ?? ffi.nullptr);
     return NSBundle._(_ret, _lib, retain: true, release: true);
@@ -47256,7 +47274,7 @@ class NSBundle extends NSObject {
     return NSBundle._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSBundle bundleWithURL_(FooLibrary _lib, NSURL? url) {
+  static NSBundle bundleWithURL_(SwiftLibrary _lib, NSURL? url) {
     final _ret = _lib._objc_msgSend_226(_lib._class_NSBundle1,
         _lib._sel_bundleWithURL_1, url?._id ?? ffi.nullptr);
     return NSBundle._(_ret, _lib, retain: true, release: true);
@@ -47268,19 +47286,20 @@ class NSBundle extends NSObject {
     return NSBundle._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSBundle bundleForClass_(FooLibrary _lib, NSObject aClass) {
+  static NSBundle bundleForClass_(SwiftLibrary _lib, NSObject aClass) {
     final _ret = _lib._objc_msgSend_610(
         _lib._class_NSBundle1, _lib._sel_bundleForClass_1, aClass._id);
     return NSBundle._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSBundle bundleWithIdentifier_(FooLibrary _lib, NSString? identifier) {
+  static NSBundle bundleWithIdentifier_(
+      SwiftLibrary _lib, NSString? identifier) {
     final _ret = _lib._objc_msgSend_611(_lib._class_NSBundle1,
         _lib._sel_bundleWithIdentifier_1, identifier?._id ?? ffi.nullptr);
     return NSBundle._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSArray? getAllBundles(FooLibrary _lib) {
+  static NSArray? getAllBundles(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_80(_lib._class_NSBundle1, _lib._sel_allBundles1);
     return _ret.address == 0
@@ -47288,7 +47307,7 @@ class NSBundle extends NSObject {
         : NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSArray? getAllFrameworks(FooLibrary _lib) {
+  static NSArray? getAllFrameworks(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_80(_lib._class_NSBundle1, _lib._sel_allFrameworks1);
     return _ret.address == 0
@@ -47439,7 +47458,7 @@ class NSBundle extends NSObject {
   }
 
   static NSURL URLForResource_withExtension_subdirectory_inBundleWithURL_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSString? name,
       NSString? ext,
       NSString? subpath,
@@ -47455,7 +47474,7 @@ class NSBundle extends NSObject {
   }
 
   static NSArray URLsForResourcesWithExtension_subdirectory_inBundleWithURL_(
-      FooLibrary _lib, NSString? ext, NSString? subpath, NSURL? bundleURL) {
+      SwiftLibrary _lib, NSString? ext, NSString? subpath, NSURL? bundleURL) {
     final _ret = _lib._objc_msgSend_613(
         _lib._class_NSBundle1,
         _lib._sel_URLsForResourcesWithExtension_subdirectory_inBundleWithURL_1,
@@ -47519,7 +47538,7 @@ class NSBundle extends NSObject {
   }
 
   static NSString pathForResource_ofType_inDirectory_(
-      FooLibrary _lib, NSString? name, NSString? ext, NSString? bundlePath) {
+      SwiftLibrary _lib, NSString? name, NSString? ext, NSString? bundlePath) {
     final _ret = _lib._objc_msgSend_619(
         _lib._class_NSBundle1,
         _lib._sel_pathForResource_ofType_inDirectory_1,
@@ -47530,7 +47549,7 @@ class NSBundle extends NSObject {
   }
 
   static NSArray pathsForResourcesOfType_inDirectory_(
-      FooLibrary _lib, NSString? ext, NSString? bundlePath) {
+      SwiftLibrary _lib, NSString? ext, NSString? bundlePath) {
     final _ret = _lib._objc_msgSend_617(
         _lib._class_NSBundle1,
         _lib._sel_pathsForResourcesOfType_inDirectory_1,
@@ -47651,7 +47670,7 @@ class NSBundle extends NSObject {
   }
 
   static NSArray preferredLocalizationsFromArray_(
-      FooLibrary _lib, NSArray? localizationsArray) {
+      SwiftLibrary _lib, NSArray? localizationsArray) {
     final _ret = _lib._objc_msgSend_63(
         _lib._class_NSBundle1,
         _lib._sel_preferredLocalizationsFromArray_1,
@@ -47660,7 +47679,9 @@ class NSBundle extends NSObject {
   }
 
   static NSArray preferredLocalizationsFromArray_forPreferences_(
-      FooLibrary _lib, NSArray? localizationsArray, NSArray? preferencesArray) {
+      SwiftLibrary _lib,
+      NSArray? localizationsArray,
+      NSArray? preferencesArray) {
     final _ret = _lib._objc_msgSend_642(
         _lib._class_NSBundle1,
         _lib._sel_preferredLocalizationsFromArray_forPreferences_1,
@@ -47689,18 +47710,18 @@ class NSBundle extends NSObject {
         _id, _lib._sel_preservationPriorityForTag_1, tag?._id ?? ffi.nullptr);
   }
 
-  static NSBundle new1(FooLibrary _lib) {
+  static NSBundle new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSBundle1, _lib._sel_new1);
     return NSBundle._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSBundle alloc(FooLibrary _lib) {
+  static NSBundle alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSBundle1, _lib._sel_alloc1);
     return NSBundle._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -47713,23 +47734,23 @@ class NSBundle extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSBundle1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSBundle1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSBundle1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSBundle1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -47738,7 +47759,7 @@ class NSBundle extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSBundle1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -47746,7 +47767,7 @@ class NSBundle extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSBundle1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -47754,13 +47775,13 @@ class NSBundle extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSBundle1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSBundle1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -47768,7 +47789,7 @@ class NSBundle extends NSObject {
 }
 
 class NSAttributedString extends NSObject {
-  NSAttributedString._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSAttributedString._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -47780,7 +47801,7 @@ class NSAttributedString extends NSObject {
 
   /// Returns a [NSAttributedString] that wraps the given raw object pointer.
   static NSAttributedString castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSAttributedString._(other, lib, retain: retain, release: release);
   }
@@ -47975,7 +47996,7 @@ class NSAttributedString extends NSObject {
   }
 
   static NSAttributedString localizedAttributedStringWithFormat_(
-      FooLibrary _lib, NSAttributedString? format) {
+      SwiftLibrary _lib, NSAttributedString? format) {
     final _ret = _lib._objc_msgSend_627(
         _lib._class_NSAttributedString1,
         _lib._sel_localizedAttributedStringWithFormat_1,
@@ -47984,7 +48005,7 @@ class NSAttributedString extends NSObject {
   }
 
   static NSAttributedString localizedAttributedStringWithFormat_options_(
-      FooLibrary _lib, NSAttributedString? format, int options) {
+      SwiftLibrary _lib, NSAttributedString? format, int options) {
     final _ret = _lib._objc_msgSend_639(
         _lib._class_NSAttributedString1,
         _lib._sel_localizedAttributedStringWithFormat_options_1,
@@ -47999,20 +48020,20 @@ class NSAttributedString extends NSObject {
     return NSAttributedString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSAttributedString new1(FooLibrary _lib) {
+  static NSAttributedString new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSAttributedString1, _lib._sel_new1);
     return NSAttributedString._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSAttributedString alloc(FooLibrary _lib) {
+  static NSAttributedString alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSAttributedString1, _lib._sel_alloc1);
     return NSAttributedString._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -48025,23 +48046,23 @@ class NSAttributedString extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSAttributedString1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSAttributedString1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSAttributedString1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSAttributedString1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -48050,7 +48071,7 @@ class NSAttributedString extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSAttributedString1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -48058,7 +48079,7 @@ class NSAttributedString extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSAttributedString1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -48066,13 +48087,13 @@ class NSAttributedString extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSAttributedString1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSAttributedString1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -48114,12 +48135,12 @@ void _ObjCBlock26_closureTrampoline(ffi.Pointer<_ObjCBlock> block,
 }
 
 class ObjCBlock26 extends _ObjCBlockBase {
-  ObjCBlock26._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock26._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock26.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0, NSRange arg1,
@@ -48140,7 +48161,7 @@ class ObjCBlock26 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock26.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       void Function(ffi.Pointer<ObjCObject> arg0, NSRange arg1,
               ffi.Pointer<ffi.Bool> arg2)
           fn)
@@ -48204,12 +48225,12 @@ void _ObjCBlock27_closureTrampoline(ffi.Pointer<_ObjCBlock> block,
 }
 
 class ObjCBlock27 extends _ObjCBlockBase {
-  ObjCBlock27._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock27._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock27.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0, NSRange arg1,
@@ -48230,7 +48251,7 @@ class ObjCBlock27 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock27.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       void Function(ffi.Pointer<ObjCObject> arg0, NSRange arg1,
               ffi.Pointer<ffi.Bool> arg2)
           fn)
@@ -48269,7 +48290,7 @@ class ObjCBlock27 extends _ObjCBlockBase {
 
 class NSAttributedStringMarkdownParsingOptions extends NSObject {
   NSAttributedStringMarkdownParsingOptions._(
-      ffi.Pointer<ObjCObject> id, FooLibrary lib,
+      ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -48282,7 +48303,7 @@ class NSAttributedStringMarkdownParsingOptions extends NSObject {
 
   /// Returns a [NSAttributedStringMarkdownParsingOptions] that wraps the given raw object pointer.
   static NSAttributedStringMarkdownParsingOptions castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSAttributedStringMarkdownParsingOptions._(other, lib,
         retain: retain, release: release);
@@ -48337,14 +48358,14 @@ class NSAttributedStringMarkdownParsingOptions extends NSObject {
         _id, _lib._sel_setLanguageCode_1, value?._id ?? ffi.nullptr);
   }
 
-  static NSAttributedStringMarkdownParsingOptions new1(FooLibrary _lib) {
+  static NSAttributedStringMarkdownParsingOptions new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSAttributedStringMarkdownParsingOptions1, _lib._sel_new1);
     return NSAttributedStringMarkdownParsingOptions._(_ret, _lib,
         retain: false, release: true);
   }
 
-  static NSAttributedStringMarkdownParsingOptions alloc(FooLibrary _lib) {
+  static NSAttributedStringMarkdownParsingOptions alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSAttributedStringMarkdownParsingOptions1,
         _lib._sel_alloc1);
@@ -48353,7 +48374,7 @@ class NSAttributedStringMarkdownParsingOptions extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -48366,27 +48387,27 @@ class NSAttributedStringMarkdownParsingOptions extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(
         _lib._class_NSAttributedStringMarkdownParsingOptions1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1,
         aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSAttributedStringMarkdownParsingOptions1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSAttributedStringMarkdownParsingOptions1,
         _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSAttributedStringMarkdownParsingOptions1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -48395,7 +48416,7 @@ class NSAttributedStringMarkdownParsingOptions extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSAttributedStringMarkdownParsingOptions1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -48403,7 +48424,7 @@ class NSAttributedStringMarkdownParsingOptions extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSAttributedStringMarkdownParsingOptions1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -48411,14 +48432,14 @@ class NSAttributedStringMarkdownParsingOptions extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSAttributedStringMarkdownParsingOptions1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSAttributedStringMarkdownParsingOptions1,
         _lib._sel_classForKeyedUnarchiver1);
@@ -48449,7 +48470,7 @@ abstract class NSAttributedStringFormattingOptions {
 }
 
 class NSMutableAttributedString extends NSAttributedString {
-  NSMutableAttributedString._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSMutableAttributedString._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -48461,7 +48482,7 @@ class NSMutableAttributedString extends NSAttributedString {
 
   /// Returns a [NSMutableAttributedString] that wraps the given raw object pointer.
   static NSMutableAttributedString castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSMutableAttributedString._(other, lib,
         retain: retain, release: release);
@@ -48556,7 +48577,7 @@ class NSMutableAttributedString extends NSAttributedString {
   }
 
   static NSMutableAttributedString localizedAttributedStringWithFormat_(
-      FooLibrary _lib, NSAttributedString? format) {
+      SwiftLibrary _lib, NSAttributedString? format) {
     final _ret = _lib._objc_msgSend_627(
         _lib._class_NSMutableAttributedString1,
         _lib._sel_localizedAttributedStringWithFormat_1,
@@ -48565,7 +48586,7 @@ class NSMutableAttributedString extends NSAttributedString {
   }
 
   static NSMutableAttributedString localizedAttributedStringWithFormat_options_(
-      FooLibrary _lib, NSAttributedString? format, int options) {
+      SwiftLibrary _lib, NSAttributedString? format, int options) {
     final _ret = _lib._objc_msgSend_639(
         _lib._class_NSMutableAttributedString1,
         _lib._sel_localizedAttributedStringWithFormat_options_1,
@@ -48574,14 +48595,14 @@ class NSMutableAttributedString extends NSAttributedString {
     return NSMutableAttributedString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableAttributedString new1(FooLibrary _lib) {
+  static NSMutableAttributedString new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSMutableAttributedString1, _lib._sel_new1);
     return NSMutableAttributedString._(_ret, _lib,
         retain: false, release: true);
   }
 
-  static NSMutableAttributedString alloc(FooLibrary _lib) {
+  static NSMutableAttributedString alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSMutableAttributedString1, _lib._sel_alloc1);
     return NSMutableAttributedString._(_ret, _lib,
@@ -48589,7 +48610,7 @@ class NSMutableAttributedString extends NSAttributedString {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -48602,23 +48623,23 @@ class NSMutableAttributedString extends NSAttributedString {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSMutableAttributedString1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSMutableAttributedString1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSMutableAttributedString1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSMutableAttributedString1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -48627,7 +48648,7 @@ class NSMutableAttributedString extends NSAttributedString {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSMutableAttributedString1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -48635,7 +48656,7 @@ class NSMutableAttributedString extends NSAttributedString {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSMutableAttributedString1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -48643,13 +48664,13 @@ class NSMutableAttributedString extends NSAttributedString {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSMutableAttributedString1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSMutableAttributedString1,
         _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -48657,7 +48678,7 @@ class NSMutableAttributedString extends NSAttributedString {
 }
 
 class NSDateFormatter extends NSFormatter {
-  NSDateFormatter._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSDateFormatter._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -48669,7 +48690,7 @@ class NSDateFormatter extends NSFormatter {
 
   /// Returns a [NSDateFormatter] that wraps the given raw object pointer.
   static NSDateFormatter castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSDateFormatter._(other, lib, retain: retain, release: release);
   }
@@ -48715,7 +48736,7 @@ class NSDateFormatter extends NSFormatter {
   }
 
   static NSString localizedStringFromDate_dateStyle_timeStyle_(
-      FooLibrary _lib, NSDate? date, int dstyle, int tstyle) {
+      SwiftLibrary _lib, NSDate? date, int dstyle, int tstyle) {
     final _ret = _lib._objc_msgSend_658(
         _lib._class_NSDateFormatter1,
         _lib._sel_localizedStringFromDate_dateStyle_timeStyle_1,
@@ -48726,7 +48747,7 @@ class NSDateFormatter extends NSFormatter {
   }
 
   static NSString dateFormatFromTemplate_options_locale_(
-      FooLibrary _lib, NSString? tmplate, int opts, NSLocale? locale) {
+      SwiftLibrary _lib, NSString? tmplate, int opts, NSLocale? locale) {
     final _ret = _lib._objc_msgSend_659(
         _lib._class_NSDateFormatter1,
         _lib._sel_dateFormatFromTemplate_options_locale_1,
@@ -48736,12 +48757,12 @@ class NSDateFormatter extends NSFormatter {
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static int getDefaultFormatterBehavior(FooLibrary _lib) {
+  static int getDefaultFormatterBehavior(SwiftLibrary _lib) {
     return _lib._objc_msgSend_660(
         _lib._class_NSDateFormatter1, _lib._sel_defaultFormatterBehavior1);
   }
 
-  static void setDefaultFormatterBehavior(FooLibrary _lib, int value) {
+  static void setDefaultFormatterBehavior(SwiftLibrary _lib, int value) {
     _lib._objc_msgSend_661(_lib._class_NSDateFormatter1,
         _lib._sel_setDefaultFormatterBehavior_1, value);
   }
@@ -49149,20 +49170,20 @@ class NSDateFormatter extends NSFormatter {
     return _lib._objc_msgSend_12(_id, _lib._sel_allowsNaturalLanguage1);
   }
 
-  static NSDateFormatter new1(FooLibrary _lib) {
+  static NSDateFormatter new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSDateFormatter1, _lib._sel_new1);
     return NSDateFormatter._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSDateFormatter alloc(FooLibrary _lib) {
+  static NSDateFormatter alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSDateFormatter1, _lib._sel_alloc1);
     return NSDateFormatter._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -49175,23 +49196,23 @@ class NSDateFormatter extends NSFormatter {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSDateFormatter1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSDateFormatter1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSDateFormatter1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSDateFormatter1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -49200,7 +49221,7 @@ class NSDateFormatter extends NSFormatter {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSDateFormatter1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -49208,7 +49229,7 @@ class NSDateFormatter extends NSFormatter {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSDateFormatter1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -49216,13 +49237,13 @@ class NSDateFormatter extends NSFormatter {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSDateFormatter1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSDateFormatter1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -49230,7 +49251,7 @@ class NSDateFormatter extends NSFormatter {
 }
 
 class NSFormatter extends NSObject {
-  NSFormatter._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSFormatter._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -49241,7 +49262,7 @@ class NSFormatter extends NSObject {
 
   /// Returns a [NSFormatter] that wraps the given raw object pointer.
   static NSFormatter castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSFormatter._(other, lib, retain: retain, release: release);
   }
@@ -49315,19 +49336,19 @@ class NSFormatter extends NSObject {
         error);
   }
 
-  static NSFormatter new1(FooLibrary _lib) {
+  static NSFormatter new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSFormatter1, _lib._sel_new1);
     return NSFormatter._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSFormatter alloc(FooLibrary _lib) {
+  static NSFormatter alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSFormatter1, _lib._sel_alloc1);
     return NSFormatter._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -49340,23 +49361,23 @@ class NSFormatter extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSFormatter1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSFormatter1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSFormatter1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSFormatter1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -49365,7 +49386,7 @@ class NSFormatter extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSFormatter1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -49373,7 +49394,7 @@ class NSFormatter extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSFormatter1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -49381,13 +49402,13 @@ class NSFormatter extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSFormatter1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSFormatter1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -49418,7 +49439,7 @@ abstract class NSDateFormatterBehavior {
 }
 
 class NSCalendar extends NSObject {
-  NSCalendar._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSCalendar._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -49429,7 +49450,7 @@ class NSCalendar extends NSObject {
 
   /// Returns a [NSCalendar] that wraps the given raw object pointer.
   static NSCalendar castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSCalendar._(other, lib, retain: retain, release: release);
   }
@@ -49440,7 +49461,7 @@ class NSCalendar extends NSObject {
         obj._id, obj._lib._sel_isKindOfClass_1, obj._lib._class_NSCalendar1);
   }
 
-  static NSCalendar? getCurrentCalendar(FooLibrary _lib) {
+  static NSCalendar? getCurrentCalendar(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_665(
         _lib._class_NSCalendar1, _lib._sel_currentCalendar1);
     return _ret.address == 0
@@ -49448,7 +49469,7 @@ class NSCalendar extends NSObject {
         : NSCalendar._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSCalendar? getAutoupdatingCurrentCalendar(FooLibrary _lib) {
+  static NSCalendar? getAutoupdatingCurrentCalendar(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_665(
         _lib._class_NSCalendar1, _lib._sel_autoupdatingCurrentCalendar1);
     return _ret.address == 0
@@ -49457,7 +49478,7 @@ class NSCalendar extends NSObject {
   }
 
   static NSCalendar calendarWithIdentifier_(
-      FooLibrary _lib, NSCalendarIdentifier calendarIdentifierConstant) {
+      SwiftLibrary _lib, NSCalendarIdentifier calendarIdentifierConstant) {
     final _ret = _lib._objc_msgSend_666(_lib._class_NSCalendar1,
         _lib._sel_calendarWithIdentifier_1, calendarIdentifierConstant);
     return NSCalendar._(_ret, _lib, retain: true, release: true);
@@ -50028,19 +50049,19 @@ class NSCalendar extends NSObject {
         date?._id ?? ffi.nullptr, components?._id ?? ffi.nullptr);
   }
 
-  static NSCalendar new1(FooLibrary _lib) {
+  static NSCalendar new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSCalendar1, _lib._sel_new1);
     return NSCalendar._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSCalendar alloc(FooLibrary _lib) {
+  static NSCalendar alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSCalendar1, _lib._sel_alloc1);
     return NSCalendar._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -50053,23 +50074,23 @@ class NSCalendar extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSCalendar1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSCalendar1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSCalendar1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSCalendar1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -50078,7 +50099,7 @@ class NSCalendar extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSCalendar1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -50086,7 +50107,7 @@ class NSCalendar extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSCalendar1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -50094,13 +50115,13 @@ class NSCalendar extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSCalendar1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSCalendar1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -50145,7 +50166,7 @@ abstract class NSCalendarUnit {
 }
 
 class NSDateComponents extends NSObject {
-  NSDateComponents._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSDateComponents._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -50157,7 +50178,7 @@ class NSDateComponents extends NSObject {
 
   /// Returns a [NSDateComponents] that wraps the given raw object pointer.
   static NSDateComponents castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSDateComponents._(other, lib, retain: retain, release: release);
   }
@@ -50345,20 +50366,20 @@ class NSDateComponents extends NSObject {
         _id, _lib._sel_isValidDateInCalendar_1, calendar?._id ?? ffi.nullptr);
   }
 
-  static NSDateComponents new1(FooLibrary _lib) {
+  static NSDateComponents new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSDateComponents1, _lib._sel_new1);
     return NSDateComponents._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSDateComponents alloc(FooLibrary _lib) {
+  static NSDateComponents alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSDateComponents1, _lib._sel_alloc1);
     return NSDateComponents._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -50371,23 +50392,23 @@ class NSDateComponents extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSDateComponents1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSDateComponents1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSDateComponents1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSDateComponents1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -50396,7 +50417,7 @@ class NSDateComponents extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSDateComponents1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -50404,7 +50425,7 @@ class NSDateComponents extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSDateComponents1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -50412,13 +50433,13 @@ class NSDateComponents extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSDateComponents1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSDateComponents1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -50463,12 +50484,12 @@ void _ObjCBlock28_closureTrampoline(ffi.Pointer<_ObjCBlock> block,
 }
 
 class ObjCBlock28 extends _ObjCBlockBase {
-  ObjCBlock28._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock28._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock28.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0, ffi.Bool arg1,
@@ -50489,7 +50510,7 @@ class ObjCBlock28 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock28.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       void Function(ffi.Pointer<ObjCObject> arg0, bool arg1, ffi.Pointer<ffi.Bool> arg2)
           fn)
       : this._(
@@ -50526,7 +50547,7 @@ class ObjCBlock28 extends _ObjCBlockBase {
 }
 
 class NSNumberFormatter extends NSFormatter {
-  NSNumberFormatter._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSNumberFormatter._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -50538,7 +50559,7 @@ class NSNumberFormatter extends NSFormatter {
 
   /// Returns a [NSNumberFormatter] that wraps the given raw object pointer.
   static NSNumberFormatter castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSNumberFormatter._(other, lib, retain: retain, release: release);
   }
@@ -50584,7 +50605,7 @@ class NSNumberFormatter extends NSFormatter {
   }
 
   static NSString localizedStringFromNumber_numberStyle_(
-      FooLibrary _lib, NSNumber? num, int nstyle) {
+      SwiftLibrary _lib, NSNumber? num, int nstyle) {
     final _ret = _lib._objc_msgSend_699(
         _lib._class_NSNumberFormatter1,
         _lib._sel_localizedStringFromNumber_numberStyle_1,
@@ -50593,12 +50614,12 @@ class NSNumberFormatter extends NSFormatter {
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static int defaultFormatterBehavior(FooLibrary _lib) {
+  static int defaultFormatterBehavior(SwiftLibrary _lib) {
     return _lib._objc_msgSend_700(
         _lib._class_NSNumberFormatter1, _lib._sel_defaultFormatterBehavior1);
   }
 
-  static void setDefaultFormatterBehavior_(FooLibrary _lib, int behavior) {
+  static void setDefaultFormatterBehavior_(SwiftLibrary _lib, int behavior) {
     return _lib._objc_msgSend_701(_lib._class_NSNumberFormatter1,
         _lib._sel_setDefaultFormatterBehavior_1, behavior);
   }
@@ -51300,20 +51321,20 @@ class NSNumberFormatter extends NSFormatter {
         _id, _lib._sel_setRoundingBehavior_1, value?._id ?? ffi.nullptr);
   }
 
-  static NSNumberFormatter new1(FooLibrary _lib) {
+  static NSNumberFormatter new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSNumberFormatter1, _lib._sel_new1);
     return NSNumberFormatter._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSNumberFormatter alloc(FooLibrary _lib) {
+  static NSNumberFormatter alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSNumberFormatter1, _lib._sel_alloc1);
     return NSNumberFormatter._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -51326,23 +51347,23 @@ class NSNumberFormatter extends NSFormatter {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSNumberFormatter1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSNumberFormatter1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSNumberFormatter1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSNumberFormatter1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -51351,7 +51372,7 @@ class NSNumberFormatter extends NSFormatter {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSNumberFormatter1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -51359,7 +51380,7 @@ class NSNumberFormatter extends NSFormatter {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSNumberFormatter1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -51367,13 +51388,13 @@ class NSNumberFormatter extends NSFormatter {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSNumberFormatter1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSNumberFormatter1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -51417,7 +51438,7 @@ abstract class NSNumberFormatterRoundingMode {
 }
 
 class NSDecimalNumberHandler extends NSObject {
-  NSDecimalNumberHandler._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSDecimalNumberHandler._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -51429,7 +51450,7 @@ class NSDecimalNumberHandler extends NSObject {
 
   /// Returns a [NSDecimalNumberHandler] that wraps the given raw object pointer.
   static NSDecimalNumberHandler castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSDecimalNumberHandler._(other, lib,
         retain: retain, release: release);
@@ -51442,7 +51463,7 @@ class NSDecimalNumberHandler extends NSObject {
   }
 
   static NSDecimalNumberHandler? getDefaultDecimalNumberHandler(
-      FooLibrary _lib) {
+      SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_711(_lib._class_NSDecimalNumberHandler1,
         _lib._sel_defaultDecimalNumberHandler1);
     return _ret.address == 0
@@ -51472,7 +51493,7 @@ class NSDecimalNumberHandler extends NSObject {
 
   static NSDecimalNumberHandler
       decimalNumberHandlerWithRoundingMode_scale_raiseOnExactness_raiseOnOverflow_raiseOnUnderflow_raiseOnDivideByZero_(
-          FooLibrary _lib,
+          SwiftLibrary _lib,
           int roundingMode,
           int scale,
           bool exact,
@@ -51491,20 +51512,20 @@ class NSDecimalNumberHandler extends NSObject {
     return NSDecimalNumberHandler._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSDecimalNumberHandler new1(FooLibrary _lib) {
+  static NSDecimalNumberHandler new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSDecimalNumberHandler1, _lib._sel_new1);
     return NSDecimalNumberHandler._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSDecimalNumberHandler alloc(FooLibrary _lib) {
+  static NSDecimalNumberHandler alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSDecimalNumberHandler1, _lib._sel_alloc1);
     return NSDecimalNumberHandler._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -51517,23 +51538,23 @@ class NSDecimalNumberHandler extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSDecimalNumberHandler1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSDecimalNumberHandler1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSDecimalNumberHandler1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSDecimalNumberHandler1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -51542,7 +51563,7 @@ class NSDecimalNumberHandler extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSDecimalNumberHandler1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -51550,7 +51571,7 @@ class NSDecimalNumberHandler extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSDecimalNumberHandler1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -51558,13 +51579,13 @@ class NSDecimalNumberHandler extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSDecimalNumberHandler1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSDecimalNumberHandler1,
         _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -51579,7 +51600,7 @@ abstract class NSRoundingMode {
 }
 
 class NSScanner extends NSObject {
-  NSScanner._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSScanner._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -51590,7 +51611,7 @@ class NSScanner extends NSObject {
 
   /// Returns a [NSScanner] that wraps the given raw object pointer.
   static NSScanner castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSScanner._(other, lib, retain: retain, release: release);
   }
@@ -51726,14 +51747,14 @@ class NSScanner extends NSObject {
     return _lib._objc_msgSend_12(_id, _lib._sel_isAtEnd1);
   }
 
-  static NSScanner scannerWithString_(FooLibrary _lib, NSString? string) {
+  static NSScanner scannerWithString_(SwiftLibrary _lib, NSString? string) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSScanner1,
         _lib._sel_scannerWithString_1, string?._id ?? ffi.nullptr);
     return NSScanner._(_ret, _lib, retain: true, release: true);
   }
 
   static NSObject localizedScannerWithString_(
-      FooLibrary _lib, NSString? string) {
+      SwiftLibrary _lib, NSString? string) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSScanner1,
         _lib._sel_localizedScannerWithString_1, string?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -51743,18 +51764,18 @@ class NSScanner extends NSObject {
     return _lib._objc_msgSend_724(_id, _lib._sel_scanDecimal_1, dcm);
   }
 
-  static NSScanner new1(FooLibrary _lib) {
+  static NSScanner new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSScanner1, _lib._sel_new1);
     return NSScanner._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSScanner alloc(FooLibrary _lib) {
+  static NSScanner alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSScanner1, _lib._sel_alloc1);
     return NSScanner._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -51767,23 +51788,23 @@ class NSScanner extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSScanner1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSScanner1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSScanner1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSScanner1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -51792,7 +51813,7 @@ class NSScanner extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSScanner1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -51800,7 +51821,7 @@ class NSScanner extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSScanner1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -51808,13 +51829,13 @@ class NSScanner extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSScanner1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSScanner1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -51824,7 +51845,7 @@ class NSScanner extends NSObject {
 class NSDecimal extends ffi.Opaque {}
 
 class NSException extends NSObject {
-  NSException._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSException._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -51835,7 +51856,7 @@ class NSException extends NSObject {
 
   /// Returns a [NSException] that wraps the given raw object pointer.
   static NSException castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSException._(other, lib, retain: retain, release: release);
   }
@@ -51846,7 +51867,7 @@ class NSException extends NSObject {
         obj._id, obj._lib._sel_isKindOfClass_1, obj._lib._class_NSException1);
   }
 
-  static NSException exceptionWithName_reason_userInfo_(FooLibrary _lib,
+  static NSException exceptionWithName_reason_userInfo_(SwiftLibrary _lib,
       NSExceptionName name, NSString? reason, NSDictionary? userInfo) {
     final _ret = _lib._objc_msgSend_725(
         _lib._class_NSException1,
@@ -51906,12 +51927,12 @@ class NSException extends NSObject {
   }
 
   static void raise_format_(
-      FooLibrary _lib, NSExceptionName name, NSString? format) {
+      SwiftLibrary _lib, NSExceptionName name, NSString? format) {
     return _lib._objc_msgSend_483(_lib._class_NSException1,
         _lib._sel_raise_format_1, name, format?._id ?? ffi.nullptr);
   }
 
-  static void raise_format_arguments_(FooLibrary _lib, NSExceptionName name,
+  static void raise_format_arguments_(SwiftLibrary _lib, NSExceptionName name,
       NSString? format, ffi.Pointer<__va_list_tag> argList) {
     return _lib._objc_msgSend_726(
         _lib._class_NSException1,
@@ -51921,19 +51942,19 @@ class NSException extends NSObject {
         argList);
   }
 
-  static NSException new1(FooLibrary _lib) {
+  static NSException new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSException1, _lib._sel_new1);
     return NSException._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSException alloc(FooLibrary _lib) {
+  static NSException alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSException1, _lib._sel_alloc1);
     return NSException._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -51946,23 +51967,23 @@ class NSException extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSException1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSException1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSException1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSException1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -51971,7 +51992,7 @@ class NSException extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSException1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -51979,7 +52000,7 @@ class NSException extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSException1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -51987,13 +52008,13 @@ class NSException extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSException1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSException1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -52003,7 +52024,7 @@ class NSException extends NSObject {
 typedef NSExceptionName = ffi.Pointer<ObjCObject>;
 
 class NSFileHandle extends NSObject {
-  NSFileHandle._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSFileHandle._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -52014,7 +52035,7 @@ class NSFileHandle extends NSObject {
 
   /// Returns a [NSFileHandle] that wraps the given raw object pointer.
   static NSFileHandle castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSFileHandle._(other, lib, retain: retain, release: release);
   }
@@ -52098,7 +52119,7 @@ class NSFileHandle extends NSObject {
     return _lib._objc_msgSend_219(_id, _lib._sel_closeAndReturnError_1, error);
   }
 
-  static NSFileHandle? getFileHandleWithStandardInput(FooLibrary _lib) {
+  static NSFileHandle? getFileHandleWithStandardInput(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_733(
         _lib._class_NSFileHandle1, _lib._sel_fileHandleWithStandardInput1);
     return _ret.address == 0
@@ -52106,7 +52127,7 @@ class NSFileHandle extends NSObject {
         : NSFileHandle._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSFileHandle? getFileHandleWithStandardOutput(FooLibrary _lib) {
+  static NSFileHandle? getFileHandleWithStandardOutput(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_733(
         _lib._class_NSFileHandle1, _lib._sel_fileHandleWithStandardOutput1);
     return _ret.address == 0
@@ -52114,7 +52135,7 @@ class NSFileHandle extends NSObject {
         : NSFileHandle._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSFileHandle? getFileHandleWithStandardError(FooLibrary _lib) {
+  static NSFileHandle? getFileHandleWithStandardError(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_733(
         _lib._class_NSFileHandle1, _lib._sel_fileHandleWithStandardError1);
     return _ret.address == 0
@@ -52122,7 +52143,7 @@ class NSFileHandle extends NSObject {
         : NSFileHandle._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSFileHandle? getFileHandleWithNullDevice(FooLibrary _lib) {
+  static NSFileHandle? getFileHandleWithNullDevice(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_733(
         _lib._class_NSFileHandle1, _lib._sel_fileHandleWithNullDevice1);
     return _ret.address == 0
@@ -52131,28 +52152,28 @@ class NSFileHandle extends NSObject {
   }
 
   static NSFileHandle fileHandleForReadingAtPath_(
-      FooLibrary _lib, NSString? path) {
+      SwiftLibrary _lib, NSString? path) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSFileHandle1,
         _lib._sel_fileHandleForReadingAtPath_1, path?._id ?? ffi.nullptr);
     return NSFileHandle._(_ret, _lib, retain: true, release: true);
   }
 
   static NSFileHandle fileHandleForWritingAtPath_(
-      FooLibrary _lib, NSString? path) {
+      SwiftLibrary _lib, NSString? path) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSFileHandle1,
         _lib._sel_fileHandleForWritingAtPath_1, path?._id ?? ffi.nullptr);
     return NSFileHandle._(_ret, _lib, retain: true, release: true);
   }
 
   static NSFileHandle fileHandleForUpdatingAtPath_(
-      FooLibrary _lib, NSString? path) {
+      SwiftLibrary _lib, NSString? path) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSFileHandle1,
         _lib._sel_fileHandleForUpdatingAtPath_1, path?._id ?? ffi.nullptr);
     return NSFileHandle._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSFileHandle fileHandleForReadingFromURL_error_(
-      FooLibrary _lib, NSURL? url, ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
+  static NSFileHandle fileHandleForReadingFromURL_error_(SwiftLibrary _lib,
+      NSURL? url, ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
     final _ret = _lib._objc_msgSend_734(
         _lib._class_NSFileHandle1,
         _lib._sel_fileHandleForReadingFromURL_error_1,
@@ -52161,8 +52182,8 @@ class NSFileHandle extends NSObject {
     return NSFileHandle._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSFileHandle fileHandleForWritingToURL_error_(
-      FooLibrary _lib, NSURL? url, ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
+  static NSFileHandle fileHandleForWritingToURL_error_(SwiftLibrary _lib,
+      NSURL? url, ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
     final _ret = _lib._objc_msgSend_734(
         _lib._class_NSFileHandle1,
         _lib._sel_fileHandleForWritingToURL_error_1,
@@ -52171,8 +52192,8 @@ class NSFileHandle extends NSObject {
     return NSFileHandle._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSFileHandle fileHandleForUpdatingURL_error_(
-      FooLibrary _lib, NSURL? url, ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
+  static NSFileHandle fileHandleForUpdatingURL_error_(SwiftLibrary _lib,
+      NSURL? url, ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
     final _ret = _lib._objc_msgSend_734(
         _lib._class_NSFileHandle1,
         _lib._sel_fileHandleForUpdatingURL_error_1,
@@ -52297,20 +52318,20 @@ class NSFileHandle extends NSObject {
     return _lib._objc_msgSend_1(_id, _lib._sel_closeFile1);
   }
 
-  static NSFileHandle new1(FooLibrary _lib) {
+  static NSFileHandle new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSFileHandle1, _lib._sel_new1);
     return NSFileHandle._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSFileHandle alloc(FooLibrary _lib) {
+  static NSFileHandle alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSFileHandle1, _lib._sel_alloc1);
     return NSFileHandle._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -52323,23 +52344,23 @@ class NSFileHandle extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSFileHandle1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSFileHandle1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSFileHandle1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSFileHandle1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -52348,7 +52369,7 @@ class NSFileHandle extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSFileHandle1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -52356,7 +52377,7 @@ class NSFileHandle extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSFileHandle1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -52364,13 +52385,13 @@ class NSFileHandle extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSFileHandle1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSFileHandle1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -52399,12 +52420,12 @@ void _ObjCBlock29_closureTrampoline(
 }
 
 class ObjCBlock29 extends _ObjCBlockBase {
-  ObjCBlock29._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock29._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock29.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0)>>
@@ -52421,7 +52442,7 @@ class ObjCBlock29 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock29.fromFunction(
-      FooLibrary lib, void Function(ffi.Pointer<ObjCObject> arg0) fn)
+      SwiftLibrary lib, void Function(ffi.Pointer<ObjCObject> arg0) fn)
       : this._(
             lib._newBlock1(
                 ffi.Pointer.fromFunction<
@@ -52446,7 +52467,7 @@ class ObjCBlock29 extends _ObjCBlockBase {
 }
 
 class NSHTTPCookieStorage extends NSObject {
-  NSHTTPCookieStorage._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSHTTPCookieStorage._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -52458,7 +52479,7 @@ class NSHTTPCookieStorage extends NSObject {
 
   /// Returns a [NSHTTPCookieStorage] that wraps the given raw object pointer.
   static NSHTTPCookieStorage castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSHTTPCookieStorage._(other, lib, retain: retain, release: release);
   }
@@ -52469,7 +52490,7 @@ class NSHTTPCookieStorage extends NSObject {
         obj._lib._class_NSHTTPCookieStorage1);
   }
 
-  static NSHTTPCookieStorage? getSharedHTTPCookieStorage(FooLibrary _lib) {
+  static NSHTTPCookieStorage? getSharedHTTPCookieStorage(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_739(
         _lib._class_NSHTTPCookieStorage1, _lib._sel_sharedHTTPCookieStorage1);
     return _ret.address == 0
@@ -52478,7 +52499,7 @@ class NSHTTPCookieStorage extends NSObject {
   }
 
   static NSHTTPCookieStorage sharedCookieStorageForGroupContainerIdentifier_(
-      FooLibrary _lib, NSString? identifier) {
+      SwiftLibrary _lib, NSString? identifier) {
     final _ret = _lib._objc_msgSend_740(
         _lib._class_NSHTTPCookieStorage1,
         _lib._sel_sharedCookieStorageForGroupContainerIdentifier_1,
@@ -52554,20 +52575,20 @@ class NSHTTPCookieStorage extends NSObject {
         completionHandler._id);
   }
 
-  static NSHTTPCookieStorage new1(FooLibrary _lib) {
+  static NSHTTPCookieStorage new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSHTTPCookieStorage1, _lib._sel_new1);
     return NSHTTPCookieStorage._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSHTTPCookieStorage alloc(FooLibrary _lib) {
+  static NSHTTPCookieStorage alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSHTTPCookieStorage1, _lib._sel_alloc1);
     return NSHTTPCookieStorage._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -52580,23 +52601,23 @@ class NSHTTPCookieStorage extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSHTTPCookieStorage1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSHTTPCookieStorage1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSHTTPCookieStorage1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSHTTPCookieStorage1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -52605,7 +52626,7 @@ class NSHTTPCookieStorage extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSHTTPCookieStorage1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -52613,7 +52634,7 @@ class NSHTTPCookieStorage extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSHTTPCookieStorage1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -52621,13 +52642,13 @@ class NSHTTPCookieStorage extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSHTTPCookieStorage1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSHTTPCookieStorage1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -52635,7 +52656,7 @@ class NSHTTPCookieStorage extends NSObject {
 }
 
 class NSHTTPCookie extends NSObject {
-  NSHTTPCookie._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSHTTPCookie._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -52646,7 +52667,7 @@ class NSHTTPCookie extends NSObject {
 
   /// Returns a [NSHTTPCookie] that wraps the given raw object pointer.
   static NSHTTPCookie castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSHTTPCookie._(other, lib, retain: retain, release: release);
   }
@@ -52664,14 +52685,14 @@ class NSHTTPCookie extends NSObject {
   }
 
   static NSHTTPCookie cookieWithProperties_(
-      FooLibrary _lib, NSDictionary? properties) {
+      SwiftLibrary _lib, NSDictionary? properties) {
     final _ret = _lib._objc_msgSend_741(_lib._class_NSHTTPCookie1,
         _lib._sel_cookieWithProperties_1, properties?._id ?? ffi.nullptr);
     return NSHTTPCookie._(_ret, _lib, retain: true, release: true);
   }
 
   static NSDictionary requestHeaderFieldsWithCookies_(
-      FooLibrary _lib, NSArray? cookies) {
+      SwiftLibrary _lib, NSArray? cookies) {
     final _ret = _lib._objc_msgSend_443(
         _lib._class_NSHTTPCookie1,
         _lib._sel_requestHeaderFieldsWithCookies_1,
@@ -52680,7 +52701,7 @@ class NSHTTPCookie extends NSObject {
   }
 
   static NSArray cookiesWithResponseHeaderFields_forURL_(
-      FooLibrary _lib, NSDictionary? headerFields, NSURL? URL) {
+      SwiftLibrary _lib, NSDictionary? headerFields, NSURL? URL) {
     final _ret = _lib._objc_msgSend_742(
         _lib._class_NSHTTPCookie1,
         _lib._sel_cookiesWithResponseHeaderFields_forURL_1,
@@ -52772,20 +52793,20 @@ class NSHTTPCookie extends NSObject {
     return _lib._objc_msgSend_20(_id, _lib._sel_sameSitePolicy1);
   }
 
-  static NSHTTPCookie new1(FooLibrary _lib) {
+  static NSHTTPCookie new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSHTTPCookie1, _lib._sel_new1);
     return NSHTTPCookie._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSHTTPCookie alloc(FooLibrary _lib) {
+  static NSHTTPCookie alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSHTTPCookie1, _lib._sel_alloc1);
     return NSHTTPCookie._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -52798,23 +52819,23 @@ class NSHTTPCookie extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSHTTPCookie1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSHTTPCookie1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSHTTPCookie1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSHTTPCookie1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -52823,7 +52844,7 @@ class NSHTTPCookie extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSHTTPCookie1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -52831,7 +52852,7 @@ class NSHTTPCookie extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSHTTPCookie1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -52839,13 +52860,13 @@ class NSHTTPCookie extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSHTTPCookie1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSHTTPCookie1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -52861,7 +52882,7 @@ abstract class NSHTTPCookieAcceptPolicy {
 }
 
 class NSURLSessionTask extends NSObject {
-  NSURLSessionTask._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSURLSessionTask._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -52873,7 +52894,7 @@ class NSURLSessionTask extends NSObject {
 
   /// Returns a [NSURLSessionTask] that wraps the given raw object pointer.
   static NSURLSessionTask castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSURLSessionTask._(other, lib, retain: retain, release: release);
   }
@@ -53035,20 +53056,20 @@ class NSURLSessionTask extends NSObject {
     return NSURLSessionTask._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSURLSessionTask new1(FooLibrary _lib) {
+  static NSURLSessionTask new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSURLSessionTask1, _lib._sel_new1);
     return NSURLSessionTask._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSURLSessionTask alloc(FooLibrary _lib) {
+  static NSURLSessionTask alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSURLSessionTask1, _lib._sel_alloc1);
     return NSURLSessionTask._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -53061,23 +53082,23 @@ class NSURLSessionTask extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSURLSessionTask1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSURLSessionTask1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLSessionTask1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSURLSessionTask1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -53086,7 +53107,7 @@ class NSURLSessionTask extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSURLSessionTask1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -53094,7 +53115,7 @@ class NSURLSessionTask extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSURLSessionTask1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -53102,13 +53123,13 @@ class NSURLSessionTask extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSURLSessionTask1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLSessionTask1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -53116,7 +53137,7 @@ class NSURLSessionTask extends NSObject {
 }
 
 class NSURLRequest extends NSObject {
-  NSURLRequest._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSURLRequest._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -53127,7 +53148,7 @@ class NSURLRequest extends NSObject {
 
   /// Returns a [NSURLRequest] that wraps the given raw object pointer.
   static NSURLRequest castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSURLRequest._(other, lib, retain: retain, release: release);
   }
@@ -53138,19 +53159,19 @@ class NSURLRequest extends NSObject {
         obj._id, obj._lib._sel_isKindOfClass_1, obj._lib._class_NSURLRequest1);
   }
 
-  static NSURLRequest requestWithURL_(FooLibrary _lib, NSURL? URL) {
+  static NSURLRequest requestWithURL_(SwiftLibrary _lib, NSURL? URL) {
     final _ret = _lib._objc_msgSend_226(_lib._class_NSURLRequest1,
         _lib._sel_requestWithURL_1, URL?._id ?? ffi.nullptr);
     return NSURLRequest._(_ret, _lib, retain: true, release: true);
   }
 
-  static bool getSupportsSecureCoding(FooLibrary _lib) {
+  static bool getSupportsSecureCoding(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLRequest1, _lib._sel_supportsSecureCoding1);
   }
 
   static NSURLRequest requestWithURL_cachePolicy_timeoutInterval_(
-      FooLibrary _lib, NSURL? URL, int cachePolicy, double timeoutInterval) {
+      SwiftLibrary _lib, NSURL? URL, int cachePolicy, double timeoutInterval) {
     final _ret = _lib._objc_msgSend_747(
         _lib._class_NSURLRequest1,
         _lib._sel_requestWithURL_cachePolicy_timeoutInterval_1,
@@ -53266,20 +53287,20 @@ class NSURLRequest extends NSObject {
     return _lib._objc_msgSend_12(_id, _lib._sel_HTTPShouldUsePipelining1);
   }
 
-  static NSURLRequest new1(FooLibrary _lib) {
+  static NSURLRequest new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSURLRequest1, _lib._sel_new1);
     return NSURLRequest._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSURLRequest alloc(FooLibrary _lib) {
+  static NSURLRequest alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSURLRequest1, _lib._sel_alloc1);
     return NSURLRequest._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -53292,23 +53313,23 @@ class NSURLRequest extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSURLRequest1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLRequest1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLRequest1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSURLRequest1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -53317,7 +53338,7 @@ class NSURLRequest extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSURLRequest1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -53325,7 +53346,7 @@ class NSURLRequest extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSURLRequest1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -53333,13 +53354,13 @@ class NSURLRequest extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSURLRequest1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLRequest1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -53374,7 +53395,7 @@ abstract class NSURLRequestAttribution {
 }
 
 class NSInputStream extends NSStream {
-  NSInputStream._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSInputStream._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -53385,7 +53406,7 @@ class NSInputStream extends NSStream {
 
   /// Returns a [NSInputStream] that wraps the given raw object pointer.
   static NSInputStream castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSInputStream._(other, lib, retain: retain, release: release);
   }
@@ -53428,27 +53449,27 @@ class NSInputStream extends NSStream {
     return NSInputStream._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSInputStream inputStreamWithData_(FooLibrary _lib, NSData? data) {
+  static NSInputStream inputStreamWithData_(SwiftLibrary _lib, NSData? data) {
     final _ret = _lib._objc_msgSend_242(_lib._class_NSInputStream1,
         _lib._sel_inputStreamWithData_1, data?._id ?? ffi.nullptr);
     return NSInputStream._(_ret, _lib, retain: true, release: true);
   }
 
   static NSInputStream inputStreamWithFileAtPath_(
-      FooLibrary _lib, NSString? path) {
+      SwiftLibrary _lib, NSString? path) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSInputStream1,
         _lib._sel_inputStreamWithFileAtPath_1, path?._id ?? ffi.nullptr);
     return NSInputStream._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSInputStream inputStreamWithURL_(FooLibrary _lib, NSURL? url) {
+  static NSInputStream inputStreamWithURL_(SwiftLibrary _lib, NSURL? url) {
     final _ret = _lib._objc_msgSend_226(_lib._class_NSInputStream1,
         _lib._sel_inputStreamWithURL_1, url?._id ?? ffi.nullptr);
     return NSInputStream._(_ret, _lib, retain: true, release: true);
   }
 
   static void getStreamsToHostWithName_port_inputStream_outputStream_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSString? hostname,
       int port,
       ffi.Pointer<ffi.Pointer<ObjCObject>> inputStream,
@@ -53463,7 +53484,7 @@ class NSInputStream extends NSStream {
   }
 
   static void getStreamsToHost_port_inputStream_outputStream_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSHost? host,
       int port,
       ffi.Pointer<ffi.Pointer<ObjCObject>> inputStream,
@@ -53478,7 +53499,7 @@ class NSInputStream extends NSStream {
   }
 
   static void getBoundStreamsWithBufferSize_inputStream_outputStream_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       int bufferSize,
       ffi.Pointer<ffi.Pointer<ObjCObject>> inputStream,
       ffi.Pointer<ffi.Pointer<ObjCObject>> outputStream) {
@@ -53490,20 +53511,20 @@ class NSInputStream extends NSStream {
         outputStream);
   }
 
-  static NSInputStream new1(FooLibrary _lib) {
+  static NSInputStream new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSInputStream1, _lib._sel_new1);
     return NSInputStream._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSInputStream alloc(FooLibrary _lib) {
+  static NSInputStream alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSInputStream1, _lib._sel_alloc1);
     return NSInputStream._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -53516,23 +53537,23 @@ class NSInputStream extends NSStream {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSInputStream1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSInputStream1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSInputStream1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSInputStream1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -53541,7 +53562,7 @@ class NSInputStream extends NSStream {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSInputStream1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -53549,7 +53570,7 @@ class NSInputStream extends NSStream {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSInputStream1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -53557,13 +53578,13 @@ class NSInputStream extends NSStream {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSInputStream1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSInputStream1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -53571,7 +53592,7 @@ class NSInputStream extends NSStream {
 }
 
 class NSStream extends NSObject {
-  NSStream._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSStream._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -53581,7 +53602,8 @@ class NSStream extends NSObject {
   }
 
   /// Returns a [NSStream] that wraps the given raw object pointer.
-  static NSStream castFromPointer(FooLibrary lib, ffi.Pointer<ObjCObject> other,
+  static NSStream castFromPointer(
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSStream._(other, lib, retain: retain, release: release);
   }
@@ -53644,7 +53666,7 @@ class NSStream extends NSObject {
   }
 
   static void getStreamsToHostWithName_port_inputStream_outputStream_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSString? hostname,
       int port,
       ffi.Pointer<ffi.Pointer<ObjCObject>> inputStream,
@@ -53659,7 +53681,7 @@ class NSStream extends NSObject {
   }
 
   static void getStreamsToHost_port_inputStream_outputStream_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSHost? host,
       int port,
       ffi.Pointer<ffi.Pointer<ObjCObject>> inputStream,
@@ -53674,7 +53696,7 @@ class NSStream extends NSObject {
   }
 
   static void getBoundStreamsWithBufferSize_inputStream_outputStream_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       int bufferSize,
       ffi.Pointer<ffi.Pointer<ObjCObject>> inputStream,
       ffi.Pointer<ffi.Pointer<ObjCObject>> outputStream) {
@@ -53686,18 +53708,18 @@ class NSStream extends NSObject {
         outputStream);
   }
 
-  static NSStream new1(FooLibrary _lib) {
+  static NSStream new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSStream1, _lib._sel_new1);
     return NSStream._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSStream alloc(FooLibrary _lib) {
+  static NSStream alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSStream1, _lib._sel_alloc1);
     return NSStream._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -53710,23 +53732,23 @@ class NSStream extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSStream1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSStream1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSStream1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSStream1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -53735,7 +53757,7 @@ class NSStream extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSStream1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -53743,7 +53765,7 @@ class NSStream extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSStream1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -53751,13 +53773,13 @@ class NSStream extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSStream1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSStream1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -53778,7 +53800,7 @@ abstract class NSStreamStatus {
 }
 
 class NSOutputStream extends NSStream {
-  NSOutputStream._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSOutputStream._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -53789,7 +53811,7 @@ class NSOutputStream extends NSStream {
 
   /// Returns a [NSOutputStream] that wraps the given raw object pointer.
   static NSOutputStream castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSOutputStream._(other, lib, retain: retain, release: release);
   }
@@ -53833,21 +53855,21 @@ class NSOutputStream extends NSStream {
     return NSOutputStream._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSOutputStream outputStreamToMemory(FooLibrary _lib) {
+  static NSOutputStream outputStreamToMemory(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSOutputStream1, _lib._sel_outputStreamToMemory1);
     return NSOutputStream._(_ret, _lib, retain: true, release: true);
   }
 
   static NSOutputStream outputStreamToBuffer_capacity_(
-      FooLibrary _lib, ffi.Pointer<ffi.Uint8> buffer, int capacity) {
+      SwiftLibrary _lib, ffi.Pointer<ffi.Uint8> buffer, int capacity) {
     final _ret = _lib._objc_msgSend_753(_lib._class_NSOutputStream1,
         _lib._sel_outputStreamToBuffer_capacity_1, buffer, capacity);
     return NSOutputStream._(_ret, _lib, retain: true, release: true);
   }
 
   static NSOutputStream outputStreamToFileAtPath_append_(
-      FooLibrary _lib, NSString? path, bool shouldAppend) {
+      SwiftLibrary _lib, NSString? path, bool shouldAppend) {
     final _ret = _lib._objc_msgSend_29(
         _lib._class_NSOutputStream1,
         _lib._sel_outputStreamToFileAtPath_append_1,
@@ -53857,7 +53879,7 @@ class NSOutputStream extends NSStream {
   }
 
   static NSOutputStream outputStreamWithURL_append_(
-      FooLibrary _lib, NSURL? url, bool shouldAppend) {
+      SwiftLibrary _lib, NSURL? url, bool shouldAppend) {
     final _ret = _lib._objc_msgSend_231(
         _lib._class_NSOutputStream1,
         _lib._sel_outputStreamWithURL_append_1,
@@ -53867,7 +53889,7 @@ class NSOutputStream extends NSStream {
   }
 
   static void getStreamsToHostWithName_port_inputStream_outputStream_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSString? hostname,
       int port,
       ffi.Pointer<ffi.Pointer<ObjCObject>> inputStream,
@@ -53882,7 +53904,7 @@ class NSOutputStream extends NSStream {
   }
 
   static void getStreamsToHost_port_inputStream_outputStream_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSHost? host,
       int port,
       ffi.Pointer<ffi.Pointer<ObjCObject>> inputStream,
@@ -53897,7 +53919,7 @@ class NSOutputStream extends NSStream {
   }
 
   static void getBoundStreamsWithBufferSize_inputStream_outputStream_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       int bufferSize,
       ffi.Pointer<ffi.Pointer<ObjCObject>> inputStream,
       ffi.Pointer<ffi.Pointer<ObjCObject>> outputStream) {
@@ -53909,20 +53931,20 @@ class NSOutputStream extends NSStream {
         outputStream);
   }
 
-  static NSOutputStream new1(FooLibrary _lib) {
+  static NSOutputStream new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSOutputStream1, _lib._sel_new1);
     return NSOutputStream._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSOutputStream alloc(FooLibrary _lib) {
+  static NSOutputStream alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSOutputStream1, _lib._sel_alloc1);
     return NSOutputStream._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -53935,23 +53957,23 @@ class NSOutputStream extends NSStream {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSOutputStream1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSOutputStream1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSOutputStream1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSOutputStream1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -53960,7 +53982,7 @@ class NSOutputStream extends NSStream {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSOutputStream1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -53968,7 +53990,7 @@ class NSOutputStream extends NSStream {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSOutputStream1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -53976,13 +53998,13 @@ class NSOutputStream extends NSStream {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSOutputStream1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSOutputStream1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -53990,7 +54012,7 @@ class NSOutputStream extends NSStream {
 }
 
 class NSHost extends NSObject {
-  NSHost._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSHost._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -54000,7 +54022,7 @@ class NSHost extends NSObject {
   }
 
   /// Returns a [NSHost] that wraps the given raw object pointer.
-  static NSHost castFromPointer(FooLibrary lib, ffi.Pointer<ObjCObject> other,
+  static NSHost castFromPointer(SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSHost._(other, lib, retain: retain, release: release);
   }
@@ -54011,19 +54033,19 @@ class NSHost extends NSObject {
         obj._id, obj._lib._sel_isKindOfClass_1, obj._lib._class_NSHost1);
   }
 
-  static NSHost currentHost(FooLibrary _lib) {
+  static NSHost currentHost(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSHost1, _lib._sel_currentHost1);
     return NSHost._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSHost hostWithName_(FooLibrary _lib, NSString? name) {
+  static NSHost hostWithName_(SwiftLibrary _lib, NSString? name) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSHost1,
         _lib._sel_hostWithName_1, name?._id ?? ffi.nullptr);
     return NSHost._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSHost hostWithAddress_(FooLibrary _lib, NSString? address) {
+  static NSHost hostWithAddress_(SwiftLibrary _lib, NSString? address) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSHost1,
         _lib._sel_hostWithAddress_1, address?._id ?? ffi.nullptr);
     return NSHost._(_ret, _lib, retain: true, release: true);
@@ -54069,32 +54091,32 @@ class NSHost extends NSObject {
         : NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static void setHostCacheEnabled_(FooLibrary _lib, bool flag) {
+  static void setHostCacheEnabled_(SwiftLibrary _lib, bool flag) {
     return _lib._objc_msgSend_756(
         _lib._class_NSHost1, _lib._sel_setHostCacheEnabled_1, flag);
   }
 
-  static bool isHostCacheEnabled(FooLibrary _lib) {
+  static bool isHostCacheEnabled(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSHost1, _lib._sel_isHostCacheEnabled1);
   }
 
-  static void flushHostCache(FooLibrary _lib) {
+  static void flushHostCache(SwiftLibrary _lib) {
     return _lib._objc_msgSend_1(_lib._class_NSHost1, _lib._sel_flushHostCache1);
   }
 
-  static NSHost new1(FooLibrary _lib) {
+  static NSHost new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSHost1, _lib._sel_new1);
     return NSHost._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSHost alloc(FooLibrary _lib) {
+  static NSHost alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSHost1, _lib._sel_alloc1);
     return NSHost._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -54107,23 +54129,23 @@ class NSHost extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSHost1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSHost1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSHost1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSHost1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -54132,7 +54154,7 @@ class NSHost extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSHost1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -54140,7 +54162,7 @@ class NSHost extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSHost1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -54148,13 +54170,13 @@ class NSHost extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSHost1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSHost1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -54162,7 +54184,7 @@ class NSHost extends NSObject {
 }
 
 class NSURLResponse extends NSObject {
-  NSURLResponse._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSURLResponse._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -54173,7 +54195,7 @@ class NSURLResponse extends NSObject {
 
   /// Returns a [NSURLResponse] that wraps the given raw object pointer.
   static NSURLResponse castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSURLResponse._(other, lib, retain: retain, release: release);
   }
@@ -54228,20 +54250,20 @@ class NSURLResponse extends NSObject {
         : NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSURLResponse new1(FooLibrary _lib) {
+  static NSURLResponse new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSURLResponse1, _lib._sel_new1);
     return NSURLResponse._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSURLResponse alloc(FooLibrary _lib) {
+  static NSURLResponse alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSURLResponse1, _lib._sel_alloc1);
     return NSURLResponse._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -54254,23 +54276,23 @@ class NSURLResponse extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSURLResponse1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLResponse1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLResponse1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSURLResponse1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -54279,7 +54301,7 @@ class NSURLResponse extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSURLResponse1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -54287,7 +54309,7 @@ class NSURLResponse extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSURLResponse1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -54295,13 +54317,13 @@ class NSURLResponse extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSURLResponse1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLResponse1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -54337,12 +54359,12 @@ void _ObjCBlock30_closureTrampoline(
 }
 
 class ObjCBlock30 extends _ObjCBlockBase {
-  ObjCBlock30._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock30._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock30.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0)>>
@@ -54359,7 +54381,7 @@ class ObjCBlock30 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock30.fromFunction(
-      FooLibrary lib, void Function(ffi.Pointer<ObjCObject> arg0) fn)
+      SwiftLibrary lib, void Function(ffi.Pointer<ObjCObject> arg0) fn)
       : this._(
             lib._newBlock1(
                 ffi.Pointer.fromFunction<
@@ -54384,7 +54406,7 @@ class ObjCBlock30 extends _ObjCBlockBase {
 }
 
 class NSIndexPath extends NSObject {
-  NSIndexPath._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSIndexPath._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -54395,7 +54417,7 @@ class NSIndexPath extends NSObject {
 
   /// Returns a [NSIndexPath] that wraps the given raw object pointer.
   static NSIndexPath castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSIndexPath._(other, lib, retain: retain, release: release);
   }
@@ -54406,14 +54428,14 @@ class NSIndexPath extends NSObject {
         obj._id, obj._lib._sel_isKindOfClass_1, obj._lib._class_NSIndexPath1);
   }
 
-  static NSIndexPath indexPathWithIndex_(FooLibrary _lib, int index) {
+  static NSIndexPath indexPathWithIndex_(SwiftLibrary _lib, int index) {
     final _ret = _lib._objc_msgSend_60(
         _lib._class_NSIndexPath1, _lib._sel_indexPathWithIndex_1, index);
     return NSIndexPath._(_ret, _lib, retain: true, release: true);
   }
 
   static NSIndexPath indexPathWithIndexes_length_(
-      FooLibrary _lib, ffi.Pointer<NSUInteger> indexes, int length) {
+      SwiftLibrary _lib, ffi.Pointer<NSUInteger> indexes, int length) {
     final _ret = _lib._objc_msgSend_768(_lib._class_NSIndexPath1,
         _lib._sel_indexPathWithIndexes_length_1, indexes, length);
     return NSIndexPath._(_ret, _lib, retain: true, release: true);
@@ -54466,19 +54488,19 @@ class NSIndexPath extends NSObject {
     return _lib._objc_msgSend_773(_id, _lib._sel_getIndexes_1, indexes);
   }
 
-  static NSIndexPath new1(FooLibrary _lib) {
+  static NSIndexPath new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSIndexPath1, _lib._sel_new1);
     return NSIndexPath._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSIndexPath alloc(FooLibrary _lib) {
+  static NSIndexPath alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSIndexPath1, _lib._sel_alloc1);
     return NSIndexPath._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -54491,23 +54513,23 @@ class NSIndexPath extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSIndexPath1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSIndexPath1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSIndexPath1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSIndexPath1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -54516,7 +54538,7 @@ class NSIndexPath extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSIndexPath1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -54524,7 +54546,7 @@ class NSIndexPath extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSIndexPath1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -54532,13 +54554,13 @@ class NSIndexPath extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSIndexPath1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSIndexPath1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -54546,7 +54568,7 @@ class NSIndexPath extends NSObject {
 }
 
 class NSInflectionRule extends NSObject {
-  NSInflectionRule._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSInflectionRule._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -54558,7 +54580,7 @@ class NSInflectionRule extends NSObject {
 
   /// Returns a [NSInflectionRule] that wraps the given raw object pointer.
   static NSInflectionRule castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSInflectionRule._(other, lib, retain: retain, release: release);
   }
@@ -54575,7 +54597,7 @@ class NSInflectionRule extends NSObject {
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSInflectionRule? getAutomaticRule(FooLibrary _lib) {
+  static NSInflectionRule? getAutomaticRule(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_774(
         _lib._class_NSInflectionRule1, _lib._sel_automaticRule1);
     return _ret.address == 0
@@ -54583,30 +54605,30 @@ class NSInflectionRule extends NSObject {
         : NSInflectionRule._(_ret, _lib, retain: true, release: true);
   }
 
-  static bool canInflectLanguage_(FooLibrary _lib, NSString? language) {
+  static bool canInflectLanguage_(SwiftLibrary _lib, NSString? language) {
     return _lib._objc_msgSend_59(_lib._class_NSInflectionRule1,
         _lib._sel_canInflectLanguage_1, language?._id ?? ffi.nullptr);
   }
 
-  static bool getCanInflectPreferredLocalization(FooLibrary _lib) {
+  static bool getCanInflectPreferredLocalization(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSInflectionRule1,
         _lib._sel_canInflectPreferredLocalization1);
   }
 
-  static NSInflectionRule new1(FooLibrary _lib) {
+  static NSInflectionRule new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSInflectionRule1, _lib._sel_new1);
     return NSInflectionRule._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSInflectionRule alloc(FooLibrary _lib) {
+  static NSInflectionRule alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSInflectionRule1, _lib._sel_alloc1);
     return NSInflectionRule._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -54619,23 +54641,23 @@ class NSInflectionRule extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSInflectionRule1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSInflectionRule1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSInflectionRule1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSInflectionRule1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -54644,7 +54666,7 @@ class NSInflectionRule extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSInflectionRule1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -54652,7 +54674,7 @@ class NSInflectionRule extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSInflectionRule1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -54660,13 +54682,13 @@ class NSInflectionRule extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSInflectionRule1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSInflectionRule1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -54674,7 +54696,7 @@ class NSInflectionRule extends NSObject {
 }
 
 class NSMorphology extends NSObject {
-  NSMorphology._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSMorphology._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -54685,7 +54707,7 @@ class NSMorphology extends NSObject {
 
   /// Returns a [NSMorphology] that wraps the given raw object pointer.
   static NSMorphology castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSMorphology._(other, lib, retain: retain, release: release);
   }
@@ -54740,7 +54762,7 @@ class NSMorphology extends NSObject {
     return _lib._objc_msgSend_12(_id, _lib._sel_isUnspecified1);
   }
 
-  static NSMorphology? getUserMorphology(FooLibrary _lib) {
+  static NSMorphology? getUserMorphology(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_783(
         _lib._class_NSMorphology1, _lib._sel_userMorphology1);
     return _ret.address == 0
@@ -54748,20 +54770,20 @@ class NSMorphology extends NSObject {
         : NSMorphology._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMorphology new1(FooLibrary _lib) {
+  static NSMorphology new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSMorphology1, _lib._sel_new1);
     return NSMorphology._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSMorphology alloc(FooLibrary _lib) {
+  static NSMorphology alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSMorphology1, _lib._sel_alloc1);
     return NSMorphology._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -54774,23 +54796,23 @@ class NSMorphology extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSMorphology1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSMorphology1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSMorphology1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSMorphology1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -54799,7 +54821,7 @@ class NSMorphology extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSMorphology1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -54807,7 +54829,7 @@ class NSMorphology extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSMorphology1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -54815,13 +54837,13 @@ class NSMorphology extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSMorphology1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSMorphology1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -54864,7 +54886,7 @@ abstract class NSGrammaticalNumber {
 }
 
 class NSMorphologyCustomPronoun extends NSObject {
-  NSMorphologyCustomPronoun._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSMorphologyCustomPronoun._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -54876,7 +54898,7 @@ class NSMorphologyCustomPronoun extends NSObject {
 
   /// Returns a [NSMorphologyCustomPronoun] that wraps the given raw object pointer.
   static NSMorphologyCustomPronoun castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSMorphologyCustomPronoun._(other, lib,
         retain: retain, release: release);
@@ -54888,12 +54910,13 @@ class NSMorphologyCustomPronoun extends NSObject {
         obj._lib._class_NSMorphologyCustomPronoun1);
   }
 
-  static bool isSupportedForLanguage_(FooLibrary _lib, NSString? language) {
+  static bool isSupportedForLanguage_(SwiftLibrary _lib, NSString? language) {
     return _lib._objc_msgSend_59(_lib._class_NSMorphologyCustomPronoun1,
         _lib._sel_isSupportedForLanguage_1, language?._id ?? ffi.nullptr);
   }
 
-  static NSArray requiredKeysForLanguage_(FooLibrary _lib, NSString? language) {
+  static NSArray requiredKeysForLanguage_(
+      SwiftLibrary _lib, NSString? language) {
     final _ret = _lib._objc_msgSend_119(_lib._class_NSMorphologyCustomPronoun1,
         _lib._sel_requiredKeysForLanguage_1, language?._id ?? ffi.nullptr);
     return NSArray._(_ret, _lib, retain: true, release: true);
@@ -54959,14 +54982,14 @@ class NSMorphologyCustomPronoun extends NSObject {
         _id, _lib._sel_setReflexiveForm_1, value?._id ?? ffi.nullptr);
   }
 
-  static NSMorphologyCustomPronoun new1(FooLibrary _lib) {
+  static NSMorphologyCustomPronoun new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSMorphologyCustomPronoun1, _lib._sel_new1);
     return NSMorphologyCustomPronoun._(_ret, _lib,
         retain: false, release: true);
   }
 
-  static NSMorphologyCustomPronoun alloc(FooLibrary _lib) {
+  static NSMorphologyCustomPronoun alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSMorphologyCustomPronoun1, _lib._sel_alloc1);
     return NSMorphologyCustomPronoun._(_ret, _lib,
@@ -54974,7 +54997,7 @@ class NSMorphologyCustomPronoun extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -54987,23 +55010,23 @@ class NSMorphologyCustomPronoun extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSMorphologyCustomPronoun1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSMorphologyCustomPronoun1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSMorphologyCustomPronoun1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSMorphologyCustomPronoun1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -55012,7 +55035,7 @@ class NSMorphologyCustomPronoun extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSMorphologyCustomPronoun1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -55020,7 +55043,7 @@ class NSMorphologyCustomPronoun extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSMorphologyCustomPronoun1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -55028,13 +55051,13 @@ class NSMorphologyCustomPronoun extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSMorphologyCustomPronoun1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSMorphologyCustomPronoun1,
         _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -55042,7 +55065,7 @@ class NSMorphologyCustomPronoun extends NSObject {
 }
 
 class NSOperationQueue extends NSObject {
-  NSOperationQueue._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSOperationQueue._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -55054,7 +55077,7 @@ class NSOperationQueue extends NSObject {
 
   /// Returns a [NSOperationQueue] that wraps the given raw object pointer.
   static NSOperationQueue castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSOperationQueue._(other, lib, retain: retain, release: release);
   }
@@ -55148,7 +55171,7 @@ class NSOperationQueue extends NSObject {
         _id, _lib._sel_waitUntilAllOperationsAreFinished1);
   }
 
-  static NSOperationQueue? getCurrentQueue(FooLibrary _lib) {
+  static NSOperationQueue? getCurrentQueue(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_790(
         _lib._class_NSOperationQueue1, _lib._sel_currentQueue1);
     return _ret.address == 0
@@ -55156,7 +55179,7 @@ class NSOperationQueue extends NSObject {
         : NSOperationQueue._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSOperationQueue? getMainQueue(FooLibrary _lib) {
+  static NSOperationQueue? getMainQueue(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_790(
         _lib._class_NSOperationQueue1, _lib._sel_mainQueue1);
     return _ret.address == 0
@@ -55175,20 +55198,20 @@ class NSOperationQueue extends NSObject {
     return _lib._objc_msgSend_10(_id, _lib._sel_operationCount1);
   }
 
-  static NSOperationQueue new1(FooLibrary _lib) {
+  static NSOperationQueue new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSOperationQueue1, _lib._sel_new1);
     return NSOperationQueue._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSOperationQueue alloc(FooLibrary _lib) {
+  static NSOperationQueue alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSOperationQueue1, _lib._sel_alloc1);
     return NSOperationQueue._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -55201,23 +55224,23 @@ class NSOperationQueue extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSOperationQueue1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSOperationQueue1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSOperationQueue1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSOperationQueue1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -55226,7 +55249,7 @@ class NSOperationQueue extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSOperationQueue1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -55234,7 +55257,7 @@ class NSOperationQueue extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSOperationQueue1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -55242,13 +55265,13 @@ class NSOperationQueue extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSOperationQueue1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSOperationQueue1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -55256,7 +55279,7 @@ class NSOperationQueue extends NSObject {
 }
 
 class NSOperation extends NSObject {
-  NSOperation._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSOperation._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -55267,7 +55290,7 @@ class NSOperation extends NSObject {
 
   /// Returns a [NSOperation] that wraps the given raw object pointer.
   static NSOperation castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSOperation._(other, lib, retain: retain, release: release);
   }
@@ -55379,19 +55402,19 @@ class NSOperation extends NSObject {
     _lib._objc_msgSend_477(_id, _lib._sel_setName_1, value?._id ?? ffi.nullptr);
   }
 
-  static NSOperation new1(FooLibrary _lib) {
+  static NSOperation new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSOperation1, _lib._sel_new1);
     return NSOperation._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSOperation alloc(FooLibrary _lib) {
+  static NSOperation alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSOperation1, _lib._sel_alloc1);
     return NSOperation._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -55404,23 +55427,23 @@ class NSOperation extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSOperation1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSOperation1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSOperation1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSOperation1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -55429,7 +55452,7 @@ class NSOperation extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSOperation1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -55437,7 +55460,7 @@ class NSOperation extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSOperation1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -55445,13 +55468,13 @@ class NSOperation extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSOperation1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSOperation1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -55469,7 +55492,7 @@ abstract class NSOperationQueuePriority {
 typedef dispatch_queue_t = ffi.Pointer<ObjCObject>;
 
 class NSPointerArray extends NSObject {
-  NSPointerArray._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSPointerArray._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -55480,7 +55503,7 @@ class NSPointerArray extends NSObject {
 
   /// Returns a [NSPointerArray] that wraps the given raw object pointer.
   static NSPointerArray castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSPointerArray._(other, lib, retain: retain, release: release);
   }
@@ -55503,14 +55526,15 @@ class NSPointerArray extends NSObject {
     return NSPointerArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSPointerArray pointerArrayWithOptions_(FooLibrary _lib, int options) {
+  static NSPointerArray pointerArrayWithOptions_(
+      SwiftLibrary _lib, int options) {
     final _ret = _lib._objc_msgSend_806(_lib._class_NSPointerArray1,
         _lib._sel_pointerArrayWithOptions_1, options);
     return NSPointerArray._(_ret, _lib, retain: true, release: true);
   }
 
   static NSPointerArray pointerArrayWithPointerFunctions_(
-      FooLibrary _lib, NSPointerFunctions? functions) {
+      SwiftLibrary _lib, NSPointerFunctions? functions) {
     final _ret = _lib._objc_msgSend_807(
         _lib._class_NSPointerArray1,
         _lib._sel_pointerArrayWithPointerFunctions_1,
@@ -55560,25 +55584,25 @@ class NSPointerArray extends NSObject {
     _lib._objc_msgSend_451(_id, _lib._sel_setCount_1, value);
   }
 
-  static NSObject pointerArrayWithStrongObjects(FooLibrary _lib) {
+  static NSObject pointerArrayWithStrongObjects(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSPointerArray1, _lib._sel_pointerArrayWithStrongObjects1);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject pointerArrayWithWeakObjects(FooLibrary _lib) {
+  static NSObject pointerArrayWithWeakObjects(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSPointerArray1, _lib._sel_pointerArrayWithWeakObjects1);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSPointerArray strongObjectsPointerArray(FooLibrary _lib) {
+  static NSPointerArray strongObjectsPointerArray(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_811(
         _lib._class_NSPointerArray1, _lib._sel_strongObjectsPointerArray1);
     return NSPointerArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSPointerArray weakObjectsPointerArray(FooLibrary _lib) {
+  static NSPointerArray weakObjectsPointerArray(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_811(
         _lib._class_NSPointerArray1, _lib._sel_weakObjectsPointerArray1);
     return NSPointerArray._(_ret, _lib, retain: true, release: true);
@@ -55591,20 +55615,20 @@ class NSPointerArray extends NSObject {
         : NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSPointerArray new1(FooLibrary _lib) {
+  static NSPointerArray new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSPointerArray1, _lib._sel_new1);
     return NSPointerArray._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSPointerArray alloc(FooLibrary _lib) {
+  static NSPointerArray alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSPointerArray1, _lib._sel_alloc1);
     return NSPointerArray._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -55617,23 +55641,23 @@ class NSPointerArray extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSPointerArray1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSPointerArray1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSPointerArray1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSPointerArray1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -55642,7 +55666,7 @@ class NSPointerArray extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSPointerArray1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -55650,7 +55674,7 @@ class NSPointerArray extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSPointerArray1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -55658,13 +55682,13 @@ class NSPointerArray extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSPointerArray1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSPointerArray1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -55688,7 +55712,7 @@ abstract class NSPointerFunctionsOptions {
 }
 
 class NSPointerFunctions extends NSObject {
-  NSPointerFunctions._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSPointerFunctions._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -55700,7 +55724,7 @@ class NSPointerFunctions extends NSObject {
 
   /// Returns a [NSPointerFunctions] that wraps the given raw object pointer.
   static NSPointerFunctions castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSPointerFunctions._(other, lib, retain: retain, release: release);
   }
@@ -55718,7 +55742,7 @@ class NSPointerFunctions extends NSObject {
   }
 
   static NSPointerFunctions pointerFunctionsWithOptions_(
-      FooLibrary _lib, int options) {
+      SwiftLibrary _lib, int options) {
     final _ret = _lib._objc_msgSend_792(_lib._class_NSPointerFunctions1,
         _lib._sel_pointerFunctionsWithOptions_1, options);
     return NSPointerFunctions._(_ret, _lib, retain: true, release: true);
@@ -55863,20 +55887,20 @@ class NSPointerFunctions extends NSObject {
         _id, _lib._sel_setUsesWeakReadAndWriteBarriers_1, value);
   }
 
-  static NSPointerFunctions new1(FooLibrary _lib) {
+  static NSPointerFunctions new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSPointerFunctions1, _lib._sel_new1);
     return NSPointerFunctions._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSPointerFunctions alloc(FooLibrary _lib) {
+  static NSPointerFunctions alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSPointerFunctions1, _lib._sel_alloc1);
     return NSPointerFunctions._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -55889,23 +55913,23 @@ class NSPointerFunctions extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSPointerFunctions1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSPointerFunctions1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSPointerFunctions1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSPointerFunctions1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -55914,7 +55938,7 @@ class NSPointerFunctions extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSPointerFunctions1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -55922,7 +55946,7 @@ class NSPointerFunctions extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSPointerFunctions1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -55930,13 +55954,13 @@ class NSPointerFunctions extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSPointerFunctions1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSPointerFunctions1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -55944,7 +55968,7 @@ class NSPointerFunctions extends NSObject {
 }
 
 class NSProcessInfo extends NSObject {
-  NSProcessInfo._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSProcessInfo._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -55955,7 +55979,7 @@ class NSProcessInfo extends NSObject {
 
   /// Returns a [NSProcessInfo] that wraps the given raw object pointer.
   static NSProcessInfo castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSProcessInfo._(other, lib, retain: retain, release: release);
   }
@@ -55966,7 +55990,7 @@ class NSProcessInfo extends NSObject {
         obj._id, obj._lib._sel_isKindOfClass_1, obj._lib._class_NSProcessInfo1);
   }
 
-  static NSProcessInfo? getProcessInfo(FooLibrary _lib) {
+  static NSProcessInfo? getProcessInfo(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_812(
         _lib._class_NSProcessInfo1, _lib._sel_processInfo1);
     return _ret.address == 0
@@ -56151,20 +56175,20 @@ class NSProcessInfo extends NSObject {
     return _lib._objc_msgSend_12(_id, _lib._sel_isiOSAppOnMac1);
   }
 
-  static NSProcessInfo new1(FooLibrary _lib) {
+  static NSProcessInfo new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSProcessInfo1, _lib._sel_new1);
     return NSProcessInfo._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSProcessInfo alloc(FooLibrary _lib) {
+  static NSProcessInfo alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSProcessInfo1, _lib._sel_alloc1);
     return NSProcessInfo._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -56177,23 +56201,23 @@ class NSProcessInfo extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSProcessInfo1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSProcessInfo1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSProcessInfo1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSProcessInfo1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -56202,7 +56226,7 @@ class NSProcessInfo extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSProcessInfo1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -56210,7 +56234,7 @@ class NSProcessInfo extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSProcessInfo1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -56218,13 +56242,13 @@ class NSProcessInfo extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSProcessInfo1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSProcessInfo1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -56272,11 +56296,11 @@ void _ObjCBlock31_closureTrampoline(ffi.Pointer<_ObjCBlock> block, bool arg0) {
 }
 
 class ObjCBlock31 extends _ObjCBlockBase {
-  ObjCBlock31._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock31._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
-  ObjCBlock31.fromFunctionPointer(FooLibrary lib,
+  ObjCBlock31.fromFunctionPointer(SwiftLibrary lib,
       ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Bool arg0)>> ptr)
       : this._(
             lib._newBlock1(
@@ -56288,7 +56312,7 @@ class ObjCBlock31 extends _ObjCBlockBase {
             lib);
 
   /// Creates a block from a Dart function.
-  ObjCBlock31.fromFunction(FooLibrary lib, void Function(bool arg0) fn)
+  ObjCBlock31.fromFunction(SwiftLibrary lib, void Function(bool arg0) fn)
       : this._(
             lib._newBlock1(
                 ffi.Pointer.fromFunction<
@@ -56319,7 +56343,7 @@ abstract class NSProcessInfoThermalState {
 }
 
 class NSTextCheckingResult extends NSObject {
-  NSTextCheckingResult._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSTextCheckingResult._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -56331,7 +56355,7 @@ class NSTextCheckingResult extends NSObject {
 
   /// Returns a [NSTextCheckingResult] that wraps the given raw object pointer.
   static NSTextCheckingResult castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSTextCheckingResult._(other, lib, retain: retain, release: release);
   }
@@ -56451,7 +56475,7 @@ class NSTextCheckingResult extends NSObject {
   }
 
   static NSTextCheckingResult orthographyCheckingResultWithRange_orthography_(
-      FooLibrary _lib, NSRange range, NSOrthography? orthography) {
+      SwiftLibrary _lib, NSRange range, NSOrthography? orthography) {
     final _ret = _lib._objc_msgSend_834(
         _lib._class_NSTextCheckingResult1,
         _lib._sel_orthographyCheckingResultWithRange_orthography_1,
@@ -56461,14 +56485,14 @@ class NSTextCheckingResult extends NSObject {
   }
 
   static NSTextCheckingResult spellCheckingResultWithRange_(
-      FooLibrary _lib, NSRange range) {
+      SwiftLibrary _lib, NSRange range) {
     final _ret = _lib._objc_msgSend_835(_lib._class_NSTextCheckingResult1,
         _lib._sel_spellCheckingResultWithRange_1, range);
     return NSTextCheckingResult._(_ret, _lib, retain: true, release: true);
   }
 
   static NSTextCheckingResult grammarCheckingResultWithRange_details_(
-      FooLibrary _lib, NSRange range, NSArray? details) {
+      SwiftLibrary _lib, NSRange range, NSArray? details) {
     final _ret = _lib._objc_msgSend_836(
         _lib._class_NSTextCheckingResult1,
         _lib._sel_grammarCheckingResultWithRange_details_1,
@@ -56478,7 +56502,7 @@ class NSTextCheckingResult extends NSObject {
   }
 
   static NSTextCheckingResult dateCheckingResultWithRange_date_(
-      FooLibrary _lib, NSRange range, NSDate? date) {
+      SwiftLibrary _lib, NSRange range, NSDate? date) {
     final _ret = _lib._objc_msgSend_837(
         _lib._class_NSTextCheckingResult1,
         _lib._sel_dateCheckingResultWithRange_date_1,
@@ -56488,7 +56512,7 @@ class NSTextCheckingResult extends NSObject {
   }
 
   static NSTextCheckingResult
-      dateCheckingResultWithRange_date_timeZone_duration_(FooLibrary _lib,
+      dateCheckingResultWithRange_date_timeZone_duration_(SwiftLibrary _lib,
           NSRange range, NSDate? date, NSTimeZone? timeZone, double duration) {
     final _ret = _lib._objc_msgSend_838(
         _lib._class_NSTextCheckingResult1,
@@ -56501,7 +56525,7 @@ class NSTextCheckingResult extends NSObject {
   }
 
   static NSTextCheckingResult addressCheckingResultWithRange_components_(
-      FooLibrary _lib, NSRange range, NSDictionary? components) {
+      SwiftLibrary _lib, NSRange range, NSDictionary? components) {
     final _ret = _lib._objc_msgSend_839(
         _lib._class_NSTextCheckingResult1,
         _lib._sel_addressCheckingResultWithRange_components_1,
@@ -56511,7 +56535,7 @@ class NSTextCheckingResult extends NSObject {
   }
 
   static NSTextCheckingResult linkCheckingResultWithRange_URL_(
-      FooLibrary _lib, NSRange range, NSURL? url) {
+      SwiftLibrary _lib, NSRange range, NSURL? url) {
     final _ret = _lib._objc_msgSend_840(
         _lib._class_NSTextCheckingResult1,
         _lib._sel_linkCheckingResultWithRange_URL_1,
@@ -56521,7 +56545,7 @@ class NSTextCheckingResult extends NSObject {
   }
 
   static NSTextCheckingResult quoteCheckingResultWithRange_replacementString_(
-      FooLibrary _lib, NSRange range, NSString? replacementString) {
+      SwiftLibrary _lib, NSRange range, NSString? replacementString) {
     final _ret = _lib._objc_msgSend_841(
         _lib._class_NSTextCheckingResult1,
         _lib._sel_quoteCheckingResultWithRange_replacementString_1,
@@ -56531,7 +56555,7 @@ class NSTextCheckingResult extends NSObject {
   }
 
   static NSTextCheckingResult dashCheckingResultWithRange_replacementString_(
-      FooLibrary _lib, NSRange range, NSString? replacementString) {
+      SwiftLibrary _lib, NSRange range, NSString? replacementString) {
     final _ret = _lib._objc_msgSend_841(
         _lib._class_NSTextCheckingResult1,
         _lib._sel_dashCheckingResultWithRange_replacementString_1,
@@ -56542,7 +56566,7 @@ class NSTextCheckingResult extends NSObject {
 
   static NSTextCheckingResult
       replacementCheckingResultWithRange_replacementString_(
-          FooLibrary _lib, NSRange range, NSString? replacementString) {
+          SwiftLibrary _lib, NSRange range, NSString? replacementString) {
     final _ret = _lib._objc_msgSend_841(
         _lib._class_NSTextCheckingResult1,
         _lib._sel_replacementCheckingResultWithRange_replacementString_1,
@@ -56553,7 +56577,7 @@ class NSTextCheckingResult extends NSObject {
 
   static NSTextCheckingResult
       correctionCheckingResultWithRange_replacementString_(
-          FooLibrary _lib, NSRange range, NSString? replacementString) {
+          SwiftLibrary _lib, NSRange range, NSString? replacementString) {
     final _ret = _lib._objc_msgSend_841(
         _lib._class_NSTextCheckingResult1,
         _lib._sel_correctionCheckingResultWithRange_replacementString_1,
@@ -56564,7 +56588,7 @@ class NSTextCheckingResult extends NSObject {
 
   static NSTextCheckingResult
       correctionCheckingResultWithRange_replacementString_alternativeStrings_(
-          FooLibrary _lib,
+          SwiftLibrary _lib,
           NSRange range,
           NSString? replacementString,
           NSArray? alternativeStrings) {
@@ -56579,7 +56603,7 @@ class NSTextCheckingResult extends NSObject {
 
   static NSTextCheckingResult
       regularExpressionCheckingResultWithRanges_count_regularExpression_(
-          FooLibrary _lib,
+          SwiftLibrary _lib,
           NSRangePointer ranges,
           int count,
           NSRegularExpression? regularExpression) {
@@ -56593,7 +56617,7 @@ class NSTextCheckingResult extends NSObject {
   }
 
   static NSTextCheckingResult phoneNumberCheckingResultWithRange_phoneNumber_(
-      FooLibrary _lib, NSRange range, NSString? phoneNumber) {
+      SwiftLibrary _lib, NSRange range, NSString? phoneNumber) {
     final _ret = _lib._objc_msgSend_841(
         _lib._class_NSTextCheckingResult1,
         _lib._sel_phoneNumberCheckingResultWithRange_phoneNumber_1,
@@ -56604,7 +56628,7 @@ class NSTextCheckingResult extends NSObject {
 
   static NSTextCheckingResult
       transitInformationCheckingResultWithRange_components_(
-          FooLibrary _lib, NSRange range, NSDictionary? components) {
+          SwiftLibrary _lib, NSRange range, NSDictionary? components) {
     final _ret = _lib._objc_msgSend_839(
         _lib._class_NSTextCheckingResult1,
         _lib._sel_transitInformationCheckingResultWithRange_components_1,
@@ -56613,20 +56637,20 @@ class NSTextCheckingResult extends NSObject {
     return NSTextCheckingResult._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSTextCheckingResult new1(FooLibrary _lib) {
+  static NSTextCheckingResult new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSTextCheckingResult1, _lib._sel_new1);
     return NSTextCheckingResult._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSTextCheckingResult alloc(FooLibrary _lib) {
+  static NSTextCheckingResult alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSTextCheckingResult1, _lib._sel_alloc1);
     return NSTextCheckingResult._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -56639,23 +56663,23 @@ class NSTextCheckingResult extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSTextCheckingResult1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSTextCheckingResult1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSTextCheckingResult1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSTextCheckingResult1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -56664,7 +56688,7 @@ class NSTextCheckingResult extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSTextCheckingResult1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -56672,7 +56696,7 @@ class NSTextCheckingResult extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSTextCheckingResult1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -56680,13 +56704,13 @@ class NSTextCheckingResult extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSTextCheckingResult1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSTextCheckingResult1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -56710,7 +56734,7 @@ abstract class NSTextCheckingType {
 }
 
 class NSRegularExpression extends NSObject {
-  NSRegularExpression._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSRegularExpression._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -56722,7 +56746,7 @@ class NSRegularExpression extends NSObject {
 
   /// Returns a [NSRegularExpression] that wraps the given raw object pointer.
   static NSRegularExpression castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSRegularExpression._(other, lib, retain: retain, release: release);
   }
@@ -56734,7 +56758,7 @@ class NSRegularExpression extends NSObject {
   }
 
   static NSRegularExpression regularExpressionWithPattern_options_error_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSString? pattern,
       int options,
       ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
@@ -56773,7 +56797,8 @@ class NSRegularExpression extends NSObject {
     return _lib._objc_msgSend_10(_id, _lib._sel_numberOfCaptureGroups1);
   }
 
-  static NSString escapedPatternForString_(FooLibrary _lib, NSString? string) {
+  static NSString escapedPatternForString_(
+      SwiftLibrary _lib, NSString? string) {
     final _ret = _lib._objc_msgSend_64(_lib._class_NSRegularExpression1,
         _lib._sel_escapedPatternForString_1, string?._id ?? ffi.nullptr);
     return NSString._(_ret, _lib, retain: true, release: true);
@@ -56870,26 +56895,27 @@ class NSRegularExpression extends NSObject {
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSString escapedTemplateForString_(FooLibrary _lib, NSString? string) {
+  static NSString escapedTemplateForString_(
+      SwiftLibrary _lib, NSString? string) {
     final _ret = _lib._objc_msgSend_64(_lib._class_NSRegularExpression1,
         _lib._sel_escapedTemplateForString_1, string?._id ?? ffi.nullptr);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSRegularExpression new1(FooLibrary _lib) {
+  static NSRegularExpression new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSRegularExpression1, _lib._sel_new1);
     return NSRegularExpression._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSRegularExpression alloc(FooLibrary _lib) {
+  static NSRegularExpression alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSRegularExpression1, _lib._sel_alloc1);
     return NSRegularExpression._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -56902,23 +56928,23 @@ class NSRegularExpression extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSRegularExpression1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSRegularExpression1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSRegularExpression1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSRegularExpression1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -56927,7 +56953,7 @@ class NSRegularExpression extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSRegularExpression1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -56935,7 +56961,7 @@ class NSRegularExpression extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSRegularExpression1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -56943,13 +56969,13 @@ class NSRegularExpression extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSRegularExpression1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSRegularExpression1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -57001,12 +57027,12 @@ void _ObjCBlock32_closureTrampoline(ffi.Pointer<_ObjCBlock> block,
 }
 
 class ObjCBlock32 extends _ObjCBlockBase {
-  ObjCBlock32._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock32._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock32.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0,
@@ -57027,7 +57053,7 @@ class ObjCBlock32 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock32.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       void Function(ffi.Pointer<ObjCObject> arg0, int arg1,
               ffi.Pointer<ffi.Bool> arg2)
           fn)
@@ -57073,7 +57099,7 @@ abstract class NSMatchingFlags {
 }
 
 class NSURLCache extends NSObject {
-  NSURLCache._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSURLCache._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -57084,7 +57110,7 @@ class NSURLCache extends NSObject {
 
   /// Returns a [NSURLCache] that wraps the given raw object pointer.
   static NSURLCache castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSURLCache._(other, lib, retain: retain, release: release);
   }
@@ -57095,7 +57121,7 @@ class NSURLCache extends NSObject {
         obj._id, obj._lib._sel_isKindOfClass_1, obj._lib._class_NSURLCache1);
   }
 
-  static NSURLCache? getSharedURLCache(FooLibrary _lib) {
+  static NSURLCache? getSharedURLCache(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_844(
         _lib._class_NSURLCache1, _lib._sel_sharedURLCache1);
     return _ret.address == 0
@@ -57103,7 +57129,7 @@ class NSURLCache extends NSObject {
         : NSURLCache._(_ret, _lib, retain: true, release: true);
   }
 
-  static void setSharedURLCache(FooLibrary _lib, NSURLCache? value) {
+  static void setSharedURLCache(SwiftLibrary _lib, NSURLCache? value) {
     _lib._objc_msgSend_845(_lib._class_NSURLCache1,
         _lib._sel_setSharedURLCache_1, value?._id ?? ffi.nullptr);
   }
@@ -57210,19 +57236,19 @@ class NSURLCache extends NSObject {
         dataTask?._id ?? ffi.nullptr);
   }
 
-  static NSURLCache new1(FooLibrary _lib) {
+  static NSURLCache new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSURLCache1, _lib._sel_new1);
     return NSURLCache._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSURLCache alloc(FooLibrary _lib) {
+  static NSURLCache alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSURLCache1, _lib._sel_alloc1);
     return NSURLCache._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -57235,23 +57261,23 @@ class NSURLCache extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSURLCache1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLCache1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLCache1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSURLCache1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -57260,7 +57286,7 @@ class NSURLCache extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSURLCache1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -57268,7 +57294,7 @@ class NSURLCache extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSURLCache1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -57276,13 +57302,13 @@ class NSURLCache extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSURLCache1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLCache1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -57290,7 +57316,7 @@ class NSURLCache extends NSObject {
 }
 
 class NSCachedURLResponse extends NSObject {
-  NSCachedURLResponse._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSCachedURLResponse._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -57302,7 +57328,7 @@ class NSCachedURLResponse extends NSObject {
 
   /// Returns a [NSCachedURLResponse] that wraps the given raw object pointer.
   static NSCachedURLResponse castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSCachedURLResponse._(other, lib, retain: retain, release: release);
   }
@@ -57360,20 +57386,20 @@ class NSCachedURLResponse extends NSObject {
     return _lib._objc_msgSend_850(_id, _lib._sel_storagePolicy1);
   }
 
-  static NSCachedURLResponse new1(FooLibrary _lib) {
+  static NSCachedURLResponse new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSCachedURLResponse1, _lib._sel_new1);
     return NSCachedURLResponse._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSCachedURLResponse alloc(FooLibrary _lib) {
+  static NSCachedURLResponse alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSCachedURLResponse1, _lib._sel_alloc1);
     return NSCachedURLResponse._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -57386,23 +57412,23 @@ class NSCachedURLResponse extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSCachedURLResponse1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSCachedURLResponse1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSCachedURLResponse1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSCachedURLResponse1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -57411,7 +57437,7 @@ class NSCachedURLResponse extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSCachedURLResponse1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -57419,7 +57445,7 @@ class NSCachedURLResponse extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSCachedURLResponse1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -57427,13 +57453,13 @@ class NSCachedURLResponse extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSCachedURLResponse1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSCachedURLResponse1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -57447,7 +57473,7 @@ abstract class NSURLCacheStoragePolicy {
 }
 
 class NSURLSessionDataTask extends NSURLSessionTask {
-  NSURLSessionDataTask._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSURLSessionDataTask._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -57459,7 +57485,7 @@ class NSURLSessionDataTask extends NSURLSessionTask {
 
   /// Returns a [NSURLSessionDataTask] that wraps the given raw object pointer.
   static NSURLSessionDataTask castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSURLSessionDataTask._(other, lib, retain: retain, release: release);
   }
@@ -57476,20 +57502,20 @@ class NSURLSessionDataTask extends NSURLSessionTask {
     return NSURLSessionDataTask._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSURLSessionDataTask new1(FooLibrary _lib) {
+  static NSURLSessionDataTask new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSURLSessionDataTask1, _lib._sel_new1);
     return NSURLSessionDataTask._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSURLSessionDataTask alloc(FooLibrary _lib) {
+  static NSURLSessionDataTask alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLSessionDataTask1, _lib._sel_alloc1);
     return NSURLSessionDataTask._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -57502,23 +57528,23 @@ class NSURLSessionDataTask extends NSURLSessionTask {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSURLSessionDataTask1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSURLSessionDataTask1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLSessionDataTask1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSURLSessionDataTask1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -57527,7 +57553,7 @@ class NSURLSessionDataTask extends NSURLSessionTask {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSURLSessionDataTask1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -57535,7 +57561,7 @@ class NSURLSessionDataTask extends NSURLSessionTask {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSURLSessionDataTask1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -57543,13 +57569,13 @@ class NSURLSessionDataTask extends NSURLSessionTask {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSURLSessionDataTask1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLSessionDataTask1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -57578,12 +57604,12 @@ void _ObjCBlock33_closureTrampoline(
 }
 
 class ObjCBlock33 extends _ObjCBlockBase {
-  ObjCBlock33._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock33._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock33.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0)>>
@@ -57600,7 +57626,7 @@ class ObjCBlock33 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock33.fromFunction(
-      FooLibrary lib, void Function(ffi.Pointer<ObjCObject> arg0) fn)
+      SwiftLibrary lib, void Function(ffi.Pointer<ObjCObject> arg0) fn)
       : this._(
             lib._newBlock1(
                 ffi.Pointer.fromFunction<
@@ -57625,7 +57651,7 @@ class ObjCBlock33 extends _ObjCBlockBase {
 }
 
 class NSURLConnection extends NSObject {
-  NSURLConnection._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSURLConnection._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -57637,7 +57663,7 @@ class NSURLConnection extends NSObject {
 
   /// Returns a [NSURLConnection] that wraps the given raw object pointer.
   static NSURLConnection castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSURLConnection._(other, lib, retain: retain, release: release);
   }
@@ -57670,7 +57696,7 @@ class NSURLConnection extends NSObject {
   }
 
   static NSURLConnection connectionWithRequest_delegate_(
-      FooLibrary _lib, NSURLRequest? request, NSObject delegate) {
+      SwiftLibrary _lib, NSURLRequest? request, NSObject delegate) {
     final _ret = _lib._objc_msgSend_859(
         _lib._class_NSURLConnection1,
         _lib._sel_connectionWithRequest_delegate_1,
@@ -57719,13 +57745,13 @@ class NSURLConnection extends NSObject {
         _id, _lib._sel_setDelegateQueue_1, queue?._id ?? ffi.nullptr);
   }
 
-  static bool canHandleRequest_(FooLibrary _lib, NSURLRequest? request) {
+  static bool canHandleRequest_(SwiftLibrary _lib, NSURLRequest? request) {
     return _lib._objc_msgSend_861(_lib._class_NSURLConnection1,
         _lib._sel_canHandleRequest_1, request?._id ?? ffi.nullptr);
   }
 
   static NSData sendSynchronousRequest_returningResponse_error_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSURLRequest? request,
       ffi.Pointer<ffi.Pointer<ObjCObject>> response,
       ffi.Pointer<ffi.Pointer<ObjCObject>> error) {
@@ -57738,8 +57764,11 @@ class NSURLConnection extends NSObject {
     return NSData._(_ret, _lib, retain: true, release: true);
   }
 
-  static void sendAsynchronousRequest_queue_completionHandler_(FooLibrary _lib,
-      NSURLRequest? request, NSOperationQueue? queue, ObjCBlock34 handler) {
+  static void sendAsynchronousRequest_queue_completionHandler_(
+      SwiftLibrary _lib,
+      NSURLRequest? request,
+      NSOperationQueue? queue,
+      ObjCBlock34 handler) {
     return _lib._objc_msgSend_863(
         _lib._class_NSURLConnection1,
         _lib._sel_sendAsynchronousRequest_queue_completionHandler_1,
@@ -57748,20 +57777,20 @@ class NSURLConnection extends NSObject {
         handler._id);
   }
 
-  static NSURLConnection new1(FooLibrary _lib) {
+  static NSURLConnection new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSURLConnection1, _lib._sel_new1);
     return NSURLConnection._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSURLConnection alloc(FooLibrary _lib) {
+  static NSURLConnection alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSURLConnection1, _lib._sel_alloc1);
     return NSURLConnection._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -57774,23 +57803,23 @@ class NSURLConnection extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSURLConnection1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSURLConnection1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLConnection1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSURLConnection1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -57799,7 +57828,7 @@ class NSURLConnection extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSURLConnection1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -57807,7 +57836,7 @@ class NSURLConnection extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSURLConnection1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -57815,13 +57844,13 @@ class NSURLConnection extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSURLConnection1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLConnection1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -57865,12 +57894,12 @@ void _ObjCBlock34_closureTrampoline(
 }
 
 class ObjCBlock34 extends _ObjCBlockBase {
-  ObjCBlock34._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock34._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock34.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(
@@ -57893,7 +57922,7 @@ class ObjCBlock34 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock34.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       void Function(ffi.Pointer<ObjCObject> arg0, ffi.Pointer<ObjCObject> arg1,
               ffi.Pointer<ObjCObject> arg2)
           fn)
@@ -57931,7 +57960,7 @@ class ObjCBlock34 extends _ObjCBlockBase {
 }
 
 class NSURLCredential extends NSObject {
-  NSURLCredential._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSURLCredential._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -57943,7 +57972,7 @@ class NSURLCredential extends NSObject {
 
   /// Returns a [NSURLCredential] that wraps the given raw object pointer.
   static NSURLCredential castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSURLCredential._(other, lib, retain: retain, release: release);
   }
@@ -57970,7 +57999,7 @@ class NSURLCredential extends NSObject {
   }
 
   static NSURLCredential credentialWithUser_password_persistence_(
-      FooLibrary _lib, NSString? user, NSString? password, int persistence) {
+      SwiftLibrary _lib, NSString? user, NSString? password, int persistence) {
     final _ret = _lib._objc_msgSend_866(
         _lib._class_NSURLCredential1,
         _lib._sel_credentialWithUser_password_persistence_1,
@@ -58010,7 +58039,7 @@ class NSURLCredential extends NSObject {
   }
 
   static NSURLCredential credentialWithIdentity_certificates_persistence_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       SecIdentityRef identity,
       NSArray? certArray,
       int persistence) {
@@ -58040,26 +58069,26 @@ class NSURLCredential extends NSObject {
   }
 
   static NSURLCredential credentialForTrust_(
-      FooLibrary _lib, SecTrustRef trust) {
+      SwiftLibrary _lib, SecTrustRef trust) {
     final _ret = _lib._objc_msgSend_871(
         _lib._class_NSURLCredential1, _lib._sel_credentialForTrust_1, trust);
     return NSURLCredential._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSURLCredential new1(FooLibrary _lib) {
+  static NSURLCredential new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSURLCredential1, _lib._sel_new1);
     return NSURLCredential._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSURLCredential alloc(FooLibrary _lib) {
+  static NSURLCredential alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSURLCredential1, _lib._sel_alloc1);
     return NSURLCredential._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -58072,23 +58101,23 @@ class NSURLCredential extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSURLCredential1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSURLCredential1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLCredential1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSURLCredential1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -58097,7 +58126,7 @@ class NSURLCredential extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSURLCredential1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -58105,7 +58134,7 @@ class NSURLCredential extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSURLCredential1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -58113,13 +58142,13 @@ class NSURLCredential extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSURLCredential1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLCredential1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -58142,7 +58171,7 @@ typedef SecTrustRef = ffi.Pointer<__SecTrust>;
 class __SecTrust extends ffi.Opaque {}
 
 class NSURLProtectionSpace extends NSObject {
-  NSURLProtectionSpace._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSURLProtectionSpace._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -58154,7 +58183,7 @@ class NSURLProtectionSpace extends NSObject {
 
   /// Returns a [NSURLProtectionSpace] that wraps the given raw object pointer.
   static NSURLProtectionSpace castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSURLProtectionSpace._(other, lib, retain: retain, release: release);
   }
@@ -58257,20 +58286,20 @@ class NSURLProtectionSpace extends NSObject {
     return _lib._objc_msgSend_873(_id, _lib._sel_serverTrust1);
   }
 
-  static NSURLProtectionSpace new1(FooLibrary _lib) {
+  static NSURLProtectionSpace new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSURLProtectionSpace1, _lib._sel_new1);
     return NSURLProtectionSpace._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSURLProtectionSpace alloc(FooLibrary _lib) {
+  static NSURLProtectionSpace alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLProtectionSpace1, _lib._sel_alloc1);
     return NSURLProtectionSpace._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -58283,23 +58312,23 @@ class NSURLProtectionSpace extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSURLProtectionSpace1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSURLProtectionSpace1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLProtectionSpace1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSURLProtectionSpace1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -58308,7 +58337,7 @@ class NSURLProtectionSpace extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSURLProtectionSpace1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -58316,7 +58345,7 @@ class NSURLProtectionSpace extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSURLProtectionSpace1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -58324,13 +58353,13 @@ class NSURLProtectionSpace extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSURLProtectionSpace1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLProtectionSpace1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -58338,7 +58367,7 @@ class NSURLProtectionSpace extends NSObject {
 }
 
 class NSURLCredentialStorage extends NSObject {
-  NSURLCredentialStorage._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSURLCredentialStorage._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -58350,7 +58379,7 @@ class NSURLCredentialStorage extends NSObject {
 
   /// Returns a [NSURLCredentialStorage] that wraps the given raw object pointer.
   static NSURLCredentialStorage castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSURLCredentialStorage._(other, lib,
         retain: retain, release: release);
@@ -58362,7 +58391,7 @@ class NSURLCredentialStorage extends NSObject {
         obj._lib._class_NSURLCredentialStorage1);
   }
 
-  static NSURLCredentialStorage? getSharedCredentialStorage(FooLibrary _lib) {
+  static NSURLCredentialStorage? getSharedCredentialStorage(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_874(_lib._class_NSURLCredentialStorage1,
         _lib._sel_sharedCredentialStorage1);
     return _ret.address == 0
@@ -58489,20 +58518,20 @@ class NSURLCredentialStorage extends NSObject {
         task?._id ?? ffi.nullptr);
   }
 
-  static NSURLCredentialStorage new1(FooLibrary _lib) {
+  static NSURLCredentialStorage new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLCredentialStorage1, _lib._sel_new1);
     return NSURLCredentialStorage._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSURLCredentialStorage alloc(FooLibrary _lib) {
+  static NSURLCredentialStorage alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLCredentialStorage1, _lib._sel_alloc1);
     return NSURLCredentialStorage._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -58515,23 +58544,23 @@ class NSURLCredentialStorage extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSURLCredentialStorage1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSURLCredentialStorage1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLCredentialStorage1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSURLCredentialStorage1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -58540,7 +58569,7 @@ class NSURLCredentialStorage extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSURLCredentialStorage1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -58548,7 +58577,7 @@ class NSURLCredentialStorage extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSURLCredentialStorage1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -58556,13 +58585,13 @@ class NSURLCredentialStorage extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSURLCredentialStorage1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSURLCredentialStorage1,
         _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -58591,12 +58620,12 @@ void _ObjCBlock35_closureTrampoline(
 }
 
 class ObjCBlock35 extends _ObjCBlockBase {
-  ObjCBlock35._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock35._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock35.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0)>>
@@ -58613,7 +58642,7 @@ class ObjCBlock35 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock35.fromFunction(
-      FooLibrary lib, void Function(ffi.Pointer<ObjCObject> arg0) fn)
+      SwiftLibrary lib, void Function(ffi.Pointer<ObjCObject> arg0) fn)
       : this._(
             lib._newBlock1(
                 ffi.Pointer.fromFunction<
@@ -58659,12 +58688,12 @@ void _ObjCBlock36_closureTrampoline(
 }
 
 class ObjCBlock36 extends _ObjCBlockBase {
-  ObjCBlock36._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock36._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock36.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0)>>
@@ -58681,7 +58710,7 @@ class ObjCBlock36 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock36.fromFunction(
-      FooLibrary lib, void Function(ffi.Pointer<ObjCObject> arg0) fn)
+      SwiftLibrary lib, void Function(ffi.Pointer<ObjCObject> arg0) fn)
       : this._(
             lib._newBlock1(
                 ffi.Pointer.fromFunction<
@@ -58706,7 +58735,7 @@ class ObjCBlock36 extends _ObjCBlockBase {
 }
 
 class NSURLProtocol extends NSObject {
-  NSURLProtocol._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSURLProtocol._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -58717,7 +58746,7 @@ class NSURLProtocol extends NSObject {
 
   /// Returns a [NSURLProtocol] that wraps the given raw object pointer.
   static NSURLProtocol castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSURLProtocol._(other, lib, retain: retain, release: release);
   }
@@ -58760,20 +58789,20 @@ class NSURLProtocol extends NSObject {
         : NSCachedURLResponse._(_ret, _lib, retain: true, release: true);
   }
 
-  static bool canInitWithRequest_(FooLibrary _lib, NSURLRequest? request) {
+  static bool canInitWithRequest_(SwiftLibrary _lib, NSURLRequest? request) {
     return _lib._objc_msgSend_861(_lib._class_NSURLProtocol1,
         _lib._sel_canInitWithRequest_1, request?._id ?? ffi.nullptr);
   }
 
   static NSURLRequest canonicalRequestForRequest_(
-      FooLibrary _lib, NSURLRequest? request) {
+      SwiftLibrary _lib, NSURLRequest? request) {
     final _ret = _lib._objc_msgSend_885(_lib._class_NSURLProtocol1,
         _lib._sel_canonicalRequestForRequest_1, request?._id ?? ffi.nullptr);
     return NSURLRequest._(_ret, _lib, retain: true, release: true);
   }
 
   static bool requestIsCacheEquivalent_toRequest_(
-      FooLibrary _lib, NSURLRequest? a, NSURLRequest? b) {
+      SwiftLibrary _lib, NSURLRequest? a, NSURLRequest? b) {
     return _lib._objc_msgSend_886(
         _lib._class_NSURLProtocol1,
         _lib._sel_requestIsCacheEquivalent_toRequest_1,
@@ -58790,7 +58819,7 @@ class NSURLProtocol extends NSObject {
   }
 
   static NSObject propertyForKey_inRequest_(
-      FooLibrary _lib, NSString? key, NSURLRequest? request) {
+      SwiftLibrary _lib, NSString? key, NSURLRequest? request) {
     final _ret = _lib._objc_msgSend_887(
         _lib._class_NSURLProtocol1,
         _lib._sel_propertyForKey_inRequest_1,
@@ -58799,7 +58828,7 @@ class NSURLProtocol extends NSObject {
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static void setProperty_forKey_inRequest_(FooLibrary _lib, NSObject value,
+  static void setProperty_forKey_inRequest_(SwiftLibrary _lib, NSObject value,
       NSString? key, NSMutableURLRequest? request) {
     return _lib._objc_msgSend_894(
         _lib._class_NSURLProtocol1,
@@ -58810,7 +58839,7 @@ class NSURLProtocol extends NSObject {
   }
 
   static void removePropertyForKey_inRequest_(
-      FooLibrary _lib, NSString? key, NSMutableURLRequest? request) {
+      SwiftLibrary _lib, NSString? key, NSMutableURLRequest? request) {
     return _lib._objc_msgSend_895(
         _lib._class_NSURLProtocol1,
         _lib._sel_removePropertyForKey_inRequest_1,
@@ -58818,17 +58847,17 @@ class NSURLProtocol extends NSObject {
         request?._id ?? ffi.nullptr);
   }
 
-  static bool registerClass_(FooLibrary _lib, NSObject protocolClass) {
+  static bool registerClass_(SwiftLibrary _lib, NSObject protocolClass) {
     return _lib._objc_msgSend_0(_lib._class_NSURLProtocol1,
         _lib._sel_registerClass_1, protocolClass._id);
   }
 
-  static void unregisterClass_(FooLibrary _lib, NSObject protocolClass) {
+  static void unregisterClass_(SwiftLibrary _lib, NSObject protocolClass) {
     return _lib._objc_msgSend_15(_lib._class_NSURLProtocol1,
         _lib._sel_unregisterClass_1, protocolClass._id);
   }
 
-  static bool canInitWithTask_(FooLibrary _lib, NSURLSessionTask? task) {
+  static bool canInitWithTask_(SwiftLibrary _lib, NSURLSessionTask? task) {
     return _lib._objc_msgSend_896(_lib._class_NSURLProtocol1,
         _lib._sel_canInitWithTask_1, task?._id ?? ffi.nullptr);
   }
@@ -58851,20 +58880,20 @@ class NSURLProtocol extends NSObject {
         : NSURLSessionTask._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSURLProtocol new1(FooLibrary _lib) {
+  static NSURLProtocol new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSURLProtocol1, _lib._sel_new1);
     return NSURLProtocol._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSURLProtocol alloc(FooLibrary _lib) {
+  static NSURLProtocol alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSURLProtocol1, _lib._sel_alloc1);
     return NSURLProtocol._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -58877,23 +58906,23 @@ class NSURLProtocol extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSURLProtocol1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLProtocol1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLProtocol1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSURLProtocol1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -58902,7 +58931,7 @@ class NSURLProtocol extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSURLProtocol1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -58910,7 +58939,7 @@ class NSURLProtocol extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSURLProtocol1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -58918,13 +58947,13 @@ class NSURLProtocol extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSURLProtocol1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLProtocol1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -58932,7 +58961,7 @@ class NSURLProtocol extends NSObject {
 }
 
 class NSMutableURLRequest extends NSURLRequest {
-  NSMutableURLRequest._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSMutableURLRequest._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -58944,7 +58973,7 @@ class NSMutableURLRequest extends NSURLRequest {
 
   /// Returns a [NSMutableURLRequest] that wraps the given raw object pointer.
   static NSMutableURLRequest castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSMutableURLRequest._(other, lib, retain: retain, release: release);
   }
@@ -59135,19 +59164,19 @@ class NSMutableURLRequest extends NSURLRequest {
     _lib._objc_msgSend_460(_id, _lib._sel_setHTTPShouldUsePipelining_1, value);
   }
 
-  static NSMutableURLRequest requestWithURL_(FooLibrary _lib, NSURL? URL) {
+  static NSMutableURLRequest requestWithURL_(SwiftLibrary _lib, NSURL? URL) {
     final _ret = _lib._objc_msgSend_226(_lib._class_NSMutableURLRequest1,
         _lib._sel_requestWithURL_1, URL?._id ?? ffi.nullptr);
     return NSMutableURLRequest._(_ret, _lib, retain: true, release: true);
   }
 
-  static bool getSupportsSecureCoding(FooLibrary _lib) {
+  static bool getSupportsSecureCoding(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSMutableURLRequest1, _lib._sel_supportsSecureCoding1);
   }
 
   static NSMutableURLRequest requestWithURL_cachePolicy_timeoutInterval_(
-      FooLibrary _lib, NSURL? URL, int cachePolicy, double timeoutInterval) {
+      SwiftLibrary _lib, NSURL? URL, int cachePolicy, double timeoutInterval) {
     final _ret = _lib._objc_msgSend_747(
         _lib._class_NSMutableURLRequest1,
         _lib._sel_requestWithURL_cachePolicy_timeoutInterval_1,
@@ -59157,20 +59186,20 @@ class NSMutableURLRequest extends NSURLRequest {
     return NSMutableURLRequest._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSMutableURLRequest new1(FooLibrary _lib) {
+  static NSMutableURLRequest new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSMutableURLRequest1, _lib._sel_new1);
     return NSMutableURLRequest._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSMutableURLRequest alloc(FooLibrary _lib) {
+  static NSMutableURLRequest alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSMutableURLRequest1, _lib._sel_alloc1);
     return NSMutableURLRequest._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -59183,23 +59212,23 @@ class NSMutableURLRequest extends NSURLRequest {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSMutableURLRequest1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSMutableURLRequest1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSMutableURLRequest1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSMutableURLRequest1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -59208,7 +59237,7 @@ class NSMutableURLRequest extends NSURLRequest {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSMutableURLRequest1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -59216,7 +59245,7 @@ class NSMutableURLRequest extends NSURLRequest {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSMutableURLRequest1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -59224,13 +59253,13 @@ class NSMutableURLRequest extends NSURLRequest {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSMutableURLRequest1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSMutableURLRequest1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -59238,7 +59267,7 @@ class NSMutableURLRequest extends NSURLRequest {
 }
 
 class NSXMLParser extends NSObject {
-  NSXMLParser._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSXMLParser._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -59249,7 +59278,7 @@ class NSXMLParser extends NSObject {
 
   /// Returns a [NSXMLParser] that wraps the given raw object pointer.
   static NSXMLParser castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSXMLParser._(other, lib, retain: retain, release: release);
   }
@@ -59376,19 +59405,19 @@ class NSXMLParser extends NSObject {
     return _lib._objc_msgSend_78(_id, _lib._sel_columnNumber1);
   }
 
-  static NSXMLParser new1(FooLibrary _lib) {
+  static NSXMLParser new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSXMLParser1, _lib._sel_new1);
     return NSXMLParser._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSXMLParser alloc(FooLibrary _lib) {
+  static NSXMLParser alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSXMLParser1, _lib._sel_alloc1);
     return NSXMLParser._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -59401,23 +59430,23 @@ class NSXMLParser extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSXMLParser1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSXMLParser1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSXMLParser1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSXMLParser1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -59426,7 +59455,7 @@ class NSXMLParser extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSXMLParser1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -59434,7 +59463,7 @@ class NSXMLParser extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSXMLParser1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -59442,13 +59471,13 @@ class NSXMLParser extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSXMLParser1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSXMLParser1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -59463,7 +59492,7 @@ abstract class NSXMLParserExternalEntityResolvingPolicy {
 }
 
 class NSFileWrapper extends NSObject {
-  NSFileWrapper._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSFileWrapper._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -59474,7 +59503,7 @@ class NSFileWrapper extends NSObject {
 
   /// Returns a [NSFileWrapper] that wraps the given raw object pointer.
   static NSFileWrapper castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSFileWrapper._(other, lib, retain: retain, release: release);
   }
@@ -59717,20 +59746,20 @@ class NSFileWrapper extends NSObject {
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSFileWrapper new1(FooLibrary _lib) {
+  static NSFileWrapper new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSFileWrapper1, _lib._sel_new1);
     return NSFileWrapper._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSFileWrapper alloc(FooLibrary _lib) {
+  static NSFileWrapper alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSFileWrapper1, _lib._sel_alloc1);
     return NSFileWrapper._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -59743,23 +59772,23 @@ class NSFileWrapper extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSFileWrapper1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSFileWrapper1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSFileWrapper1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSFileWrapper1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -59768,7 +59797,7 @@ class NSFileWrapper extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSFileWrapper1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -59776,7 +59805,7 @@ class NSFileWrapper extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSFileWrapper1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -59784,13 +59813,13 @@ class NSFileWrapper extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSFileWrapper1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSFileWrapper1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -59808,7 +59837,7 @@ abstract class NSFileWrapperWritingOptions {
 }
 
 class NSURLSession extends NSObject {
-  NSURLSession._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSURLSession._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -59819,7 +59848,7 @@ class NSURLSession extends NSObject {
 
   /// Returns a [NSURLSession] that wraps the given raw object pointer.
   static NSURLSession castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSURLSession._(other, lib, retain: retain, release: release);
   }
@@ -59830,7 +59859,7 @@ class NSURLSession extends NSObject {
         obj._id, obj._lib._sel_isKindOfClass_1, obj._lib._class_NSURLSession1);
   }
 
-  static NSURLSession? getSharedSession(FooLibrary _lib) {
+  static NSURLSession? getSharedSession(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_910(
         _lib._class_NSURLSession1, _lib._sel_sharedSession1);
     return _ret.address == 0
@@ -59839,7 +59868,7 @@ class NSURLSession extends NSObject {
   }
 
   static NSURLSession sessionWithConfiguration_(
-      FooLibrary _lib, NSURLSessionConfiguration? configuration) {
+      SwiftLibrary _lib, NSURLSessionConfiguration? configuration) {
     final _ret = _lib._objc_msgSend_921(
         _lib._class_NSURLSession1,
         _lib._sel_sessionWithConfiguration_1,
@@ -59848,7 +59877,7 @@ class NSURLSession extends NSObject {
   }
 
   static NSURLSession sessionWithConfiguration_delegate_delegateQueue_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSURLSessionConfiguration? configuration,
       NSObject? delegate,
       NSOperationQueue? queue) {
@@ -60022,7 +60051,7 @@ class NSURLSession extends NSObject {
     return NSURLSession._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSURLSession new1(FooLibrary _lib) {
+  static NSURLSession new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSURLSession1, _lib._sel_new1);
     return NSURLSession._(_ret, _lib, retain: false, release: true);
@@ -60100,14 +60129,14 @@ class NSURLSession extends NSObject {
     return NSURLSessionDownloadTask._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSURLSession alloc(FooLibrary _lib) {
+  static NSURLSession alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSURLSession1, _lib._sel_alloc1);
     return NSURLSession._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -60120,23 +60149,23 @@ class NSURLSession extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSURLSession1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLSession1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLSession1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSURLSession1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -60145,7 +60174,7 @@ class NSURLSession extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSURLSession1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -60153,7 +60182,7 @@ class NSURLSession extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSURLSession1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -60161,13 +60190,13 @@ class NSURLSession extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSURLSession1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLSession1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -60175,7 +60204,7 @@ class NSURLSession extends NSObject {
 }
 
 class NSURLSessionConfiguration extends NSObject {
-  NSURLSessionConfiguration._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSURLSessionConfiguration._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -60187,7 +60216,7 @@ class NSURLSessionConfiguration extends NSObject {
 
   /// Returns a [NSURLSessionConfiguration] that wraps the given raw object pointer.
   static NSURLSessionConfiguration castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSURLSessionConfiguration._(other, lib,
         retain: retain, release: release);
@@ -60200,7 +60229,7 @@ class NSURLSessionConfiguration extends NSObject {
   }
 
   static NSURLSessionConfiguration? getDefaultSessionConfiguration(
-      FooLibrary _lib) {
+      SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_911(_lib._class_NSURLSessionConfiguration1,
         _lib._sel_defaultSessionConfiguration1);
     return _ret.address == 0
@@ -60209,7 +60238,7 @@ class NSURLSessionConfiguration extends NSObject {
   }
 
   static NSURLSessionConfiguration? getEphemeralSessionConfiguration(
-      FooLibrary _lib) {
+      SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_911(_lib._class_NSURLSessionConfiguration1,
         _lib._sel_ephemeralSessionConfiguration1);
     return _ret.address == 0
@@ -60219,7 +60248,7 @@ class NSURLSessionConfiguration extends NSObject {
 
   static NSURLSessionConfiguration
       backgroundSessionConfigurationWithIdentifier_(
-          FooLibrary _lib, NSString? identifier) {
+          SwiftLibrary _lib, NSString? identifier) {
     final _ret = _lib._objc_msgSend_912(
         _lib._class_NSURLSessionConfiguration1,
         _lib._sel_backgroundSessionConfigurationWithIdentifier_1,
@@ -60500,7 +60529,7 @@ class NSURLSessionConfiguration extends NSObject {
     return NSURLSessionConfiguration._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSURLSessionConfiguration new1(FooLibrary _lib) {
+  static NSURLSessionConfiguration new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLSessionConfiguration1, _lib._sel_new1);
     return NSURLSessionConfiguration._(_ret, _lib,
@@ -60508,7 +60537,7 @@ class NSURLSessionConfiguration extends NSObject {
   }
 
   static NSURLSessionConfiguration backgroundSessionConfiguration_(
-      FooLibrary _lib, NSString? identifier) {
+      SwiftLibrary _lib, NSString? identifier) {
     final _ret = _lib._objc_msgSend_912(
         _lib._class_NSURLSessionConfiguration1,
         _lib._sel_backgroundSessionConfiguration_1,
@@ -60516,7 +60545,7 @@ class NSURLSessionConfiguration extends NSObject {
     return NSURLSessionConfiguration._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSURLSessionConfiguration alloc(FooLibrary _lib) {
+  static NSURLSessionConfiguration alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLSessionConfiguration1, _lib._sel_alloc1);
     return NSURLSessionConfiguration._(_ret, _lib,
@@ -60524,7 +60553,7 @@ class NSURLSessionConfiguration extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -60537,23 +60566,23 @@ class NSURLSessionConfiguration extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSURLSessionConfiguration1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSURLSessionConfiguration1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLSessionConfiguration1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSURLSessionConfiguration1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -60562,7 +60591,7 @@ class NSURLSessionConfiguration extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSURLSessionConfiguration1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -60570,7 +60599,7 @@ class NSURLSessionConfiguration extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSURLSessionConfiguration1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -60578,13 +60607,13 @@ class NSURLSessionConfiguration extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSURLSessionConfiguration1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSURLSessionConfiguration1,
         _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -60660,12 +60689,12 @@ void _ObjCBlock37_closureTrampoline(
 }
 
 class ObjCBlock37 extends _ObjCBlockBase {
-  ObjCBlock37._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock37._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock37.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(
@@ -60688,7 +60717,7 @@ class ObjCBlock37 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock37.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       void Function(ffi.Pointer<ObjCObject> arg0, ffi.Pointer<ObjCObject> arg1,
               ffi.Pointer<ObjCObject> arg2)
           fn)
@@ -60726,7 +60755,7 @@ class ObjCBlock37 extends _ObjCBlockBase {
 }
 
 class NSURLSessionUploadTask extends NSURLSessionDataTask {
-  NSURLSessionUploadTask._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSURLSessionUploadTask._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -60738,7 +60767,7 @@ class NSURLSessionUploadTask extends NSURLSessionDataTask {
 
   /// Returns a [NSURLSessionUploadTask] that wraps the given raw object pointer.
   static NSURLSessionUploadTask castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSURLSessionUploadTask._(other, lib,
         retain: retain, release: release);
@@ -60756,20 +60785,20 @@ class NSURLSessionUploadTask extends NSURLSessionDataTask {
     return NSURLSessionUploadTask._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSURLSessionUploadTask new1(FooLibrary _lib) {
+  static NSURLSessionUploadTask new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLSessionUploadTask1, _lib._sel_new1);
     return NSURLSessionUploadTask._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSURLSessionUploadTask alloc(FooLibrary _lib) {
+  static NSURLSessionUploadTask alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLSessionUploadTask1, _lib._sel_alloc1);
     return NSURLSessionUploadTask._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -60782,23 +60811,23 @@ class NSURLSessionUploadTask extends NSURLSessionDataTask {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSURLSessionUploadTask1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSURLSessionUploadTask1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLSessionUploadTask1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSURLSessionUploadTask1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -60807,7 +60836,7 @@ class NSURLSessionUploadTask extends NSURLSessionDataTask {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSURLSessionUploadTask1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -60815,7 +60844,7 @@ class NSURLSessionUploadTask extends NSURLSessionDataTask {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSURLSessionUploadTask1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -60823,13 +60852,13 @@ class NSURLSessionUploadTask extends NSURLSessionDataTask {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSURLSessionUploadTask1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSURLSessionUploadTask1,
         _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -60837,7 +60866,7 @@ class NSURLSessionUploadTask extends NSURLSessionDataTask {
 }
 
 class NSURLSessionDownloadTask extends NSURLSessionTask {
-  NSURLSessionDownloadTask._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSURLSessionDownloadTask._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -60849,7 +60878,7 @@ class NSURLSessionDownloadTask extends NSURLSessionTask {
 
   /// Returns a [NSURLSessionDownloadTask] that wraps the given raw object pointer.
   static NSURLSessionDownloadTask castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSURLSessionDownloadTask._(other, lib,
         retain: retain, release: release);
@@ -60872,20 +60901,20 @@ class NSURLSessionDownloadTask extends NSURLSessionTask {
     return NSURLSessionDownloadTask._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSURLSessionDownloadTask new1(FooLibrary _lib) {
+  static NSURLSessionDownloadTask new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLSessionDownloadTask1, _lib._sel_new1);
     return NSURLSessionDownloadTask._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSURLSessionDownloadTask alloc(FooLibrary _lib) {
+  static NSURLSessionDownloadTask alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLSessionDownloadTask1, _lib._sel_alloc1);
     return NSURLSessionDownloadTask._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -60898,23 +60927,23 @@ class NSURLSessionDownloadTask extends NSURLSessionTask {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSURLSessionDownloadTask1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSURLSessionDownloadTask1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLSessionDownloadTask1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSURLSessionDownloadTask1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -60923,7 +60952,7 @@ class NSURLSessionDownloadTask extends NSURLSessionTask {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSURLSessionDownloadTask1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -60931,7 +60960,7 @@ class NSURLSessionDownloadTask extends NSURLSessionTask {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSURLSessionDownloadTask1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -60939,13 +60968,13 @@ class NSURLSessionDownloadTask extends NSURLSessionTask {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSURLSessionDownloadTask1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSURLSessionDownloadTask1,
         _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -60974,12 +61003,12 @@ void _ObjCBlock38_closureTrampoline(
 }
 
 class ObjCBlock38 extends _ObjCBlockBase {
-  ObjCBlock38._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock38._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock38.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0)>>
@@ -60996,7 +61025,7 @@ class ObjCBlock38 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock38.fromFunction(
-      FooLibrary lib, void Function(ffi.Pointer<ObjCObject> arg0) fn)
+      SwiftLibrary lib, void Function(ffi.Pointer<ObjCObject> arg0) fn)
       : this._(
             lib._newBlock1(
                 ffi.Pointer.fromFunction<
@@ -61021,7 +61050,7 @@ class ObjCBlock38 extends _ObjCBlockBase {
 }
 
 class NSURLSessionStreamTask extends NSURLSessionTask {
-  NSURLSessionStreamTask._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSURLSessionStreamTask._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -61033,7 +61062,7 @@ class NSURLSessionStreamTask extends NSURLSessionTask {
 
   /// Returns a [NSURLSessionStreamTask] that wraps the given raw object pointer.
   static NSURLSessionStreamTask castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSURLSessionStreamTask._(other, lib,
         retain: retain, release: release);
@@ -61092,20 +61121,20 @@ class NSURLSessionStreamTask extends NSURLSessionTask {
     return NSURLSessionStreamTask._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSURLSessionStreamTask new1(FooLibrary _lib) {
+  static NSURLSessionStreamTask new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLSessionStreamTask1, _lib._sel_new1);
     return NSURLSessionStreamTask._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSURLSessionStreamTask alloc(FooLibrary _lib) {
+  static NSURLSessionStreamTask alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLSessionStreamTask1, _lib._sel_alloc1);
     return NSURLSessionStreamTask._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -61118,23 +61147,23 @@ class NSURLSessionStreamTask extends NSURLSessionTask {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSURLSessionStreamTask1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSURLSessionStreamTask1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLSessionStreamTask1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSURLSessionStreamTask1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -61143,7 +61172,7 @@ class NSURLSessionStreamTask extends NSURLSessionTask {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSURLSessionStreamTask1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -61151,7 +61180,7 @@ class NSURLSessionStreamTask extends NSURLSessionTask {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSURLSessionStreamTask1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -61159,13 +61188,13 @@ class NSURLSessionStreamTask extends NSURLSessionTask {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSURLSessionStreamTask1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSURLSessionStreamTask1,
         _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -61199,12 +61228,12 @@ void _ObjCBlock39_closureTrampoline(ffi.Pointer<_ObjCBlock> block,
 }
 
 class ObjCBlock39 extends _ObjCBlockBase {
-  ObjCBlock39._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock39._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock39.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0, ffi.Bool arg1,
@@ -61225,7 +61254,7 @@ class ObjCBlock39 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock39.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       void Function(ffi.Pointer<ObjCObject> arg0, bool arg1,
               ffi.Pointer<ObjCObject> arg2)
           fn)
@@ -61263,7 +61292,7 @@ class ObjCBlock39 extends _ObjCBlockBase {
 }
 
 class NSNetService extends NSObject {
-  NSNetService._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSNetService._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -61274,7 +61303,7 @@ class NSNetService extends NSObject {
 
   /// Returns a [NSNetService] that wraps the given raw object pointer.
   static NSNetService castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSNetService._(other, lib, retain: retain, release: release);
   }
@@ -61394,14 +61423,14 @@ class NSNetService extends NSObject {
   }
 
   static NSDictionary dictionaryFromTXTRecordData_(
-      FooLibrary _lib, NSData? txtData) {
+      SwiftLibrary _lib, NSData? txtData) {
     final _ret = _lib._objc_msgSend_939(_lib._class_NSNetService1,
         _lib._sel_dictionaryFromTXTRecordData_1, txtData?._id ?? ffi.nullptr);
     return NSDictionary._(_ret, _lib, retain: true, release: true);
   }
 
   static NSData dataFromTXTRecordDictionary_(
-      FooLibrary _lib, NSDictionary? txtDictionary) {
+      SwiftLibrary _lib, NSDictionary? txtDictionary) {
     final _ret = _lib._objc_msgSend_940(
         _lib._class_NSNetService1,
         _lib._sel_dataFromTXTRecordDictionary_1,
@@ -61438,20 +61467,20 @@ class NSNetService extends NSObject {
     return _lib._objc_msgSend_1(_id, _lib._sel_stopMonitoring1);
   }
 
-  static NSNetService new1(FooLibrary _lib) {
+  static NSNetService new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSNetService1, _lib._sel_new1);
     return NSNetService._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSNetService alloc(FooLibrary _lib) {
+  static NSNetService alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSNetService1, _lib._sel_alloc1);
     return NSNetService._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -61464,23 +61493,23 @@ class NSNetService extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSNetService1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSNetService1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSNetService1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSNetService1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -61489,7 +61518,7 @@ class NSNetService extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSNetService1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -61497,7 +61526,7 @@ class NSNetService extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSNetService1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -61505,13 +61534,13 @@ class NSNetService extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSNetService1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSNetService1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -61524,7 +61553,7 @@ abstract class NSNetServiceOptions {
 }
 
 class NSURLSessionWebSocketTask extends NSURLSessionTask {
-  NSURLSessionWebSocketTask._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSURLSessionWebSocketTask._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -61536,7 +61565,7 @@ class NSURLSessionWebSocketTask extends NSURLSessionTask {
 
   /// Returns a [NSURLSessionWebSocketTask] that wraps the given raw object pointer.
   static NSURLSessionWebSocketTask castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSURLSessionWebSocketTask._(other, lib,
         retain: retain, release: release);
@@ -61597,14 +61626,14 @@ class NSURLSessionWebSocketTask extends NSURLSessionTask {
     return NSURLSessionWebSocketTask._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSURLSessionWebSocketTask new1(FooLibrary _lib) {
+  static NSURLSessionWebSocketTask new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLSessionWebSocketTask1, _lib._sel_new1);
     return NSURLSessionWebSocketTask._(_ret, _lib,
         retain: false, release: true);
   }
 
-  static NSURLSessionWebSocketTask alloc(FooLibrary _lib) {
+  static NSURLSessionWebSocketTask alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLSessionWebSocketTask1, _lib._sel_alloc1);
     return NSURLSessionWebSocketTask._(_ret, _lib,
@@ -61612,7 +61641,7 @@ class NSURLSessionWebSocketTask extends NSURLSessionTask {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -61625,23 +61654,23 @@ class NSURLSessionWebSocketTask extends NSURLSessionTask {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSURLSessionWebSocketTask1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSURLSessionWebSocketTask1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSURLSessionWebSocketTask1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSURLSessionWebSocketTask1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -61650,7 +61679,7 @@ class NSURLSessionWebSocketTask extends NSURLSessionTask {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSURLSessionWebSocketTask1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -61658,7 +61687,7 @@ class NSURLSessionWebSocketTask extends NSURLSessionTask {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSURLSessionWebSocketTask1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -61666,13 +61695,13 @@ class NSURLSessionWebSocketTask extends NSURLSessionTask {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(_lib._class_NSURLSessionWebSocketTask1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSURLSessionWebSocketTask1,
         _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -61680,7 +61709,7 @@ class NSURLSessionWebSocketTask extends NSURLSessionTask {
 }
 
 class NSURLSessionWebSocketMessage extends NSObject {
-  NSURLSessionWebSocketMessage._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSURLSessionWebSocketMessage._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -61693,7 +61722,7 @@ class NSURLSessionWebSocketMessage extends NSObject {
 
   /// Returns a [NSURLSessionWebSocketMessage] that wraps the given raw object pointer.
   static NSURLSessionWebSocketMessage castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSURLSessionWebSocketMessage._(other, lib,
         retain: retain, release: release);
@@ -61744,14 +61773,14 @@ class NSURLSessionWebSocketMessage extends NSObject {
         retain: true, release: true);
   }
 
-  static NSURLSessionWebSocketMessage new1(FooLibrary _lib) {
+  static NSURLSessionWebSocketMessage new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLSessionWebSocketMessage1, _lib._sel_new1);
     return NSURLSessionWebSocketMessage._(_ret, _lib,
         retain: false, release: true);
   }
 
-  static NSURLSessionWebSocketMessage alloc(FooLibrary _lib) {
+  static NSURLSessionWebSocketMessage alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSURLSessionWebSocketMessage1, _lib._sel_alloc1);
     return NSURLSessionWebSocketMessage._(_ret, _lib,
@@ -61759,7 +61788,7 @@ class NSURLSessionWebSocketMessage extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -61772,23 +61801,23 @@ class NSURLSessionWebSocketMessage extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSURLSessionWebSocketMessage1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSURLSessionWebSocketMessage1,
         _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(_lib._class_NSURLSessionWebSocketMessage1,
         _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSURLSessionWebSocketMessage1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -61797,7 +61826,7 @@ class NSURLSessionWebSocketMessage extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSURLSessionWebSocketMessage1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -61805,7 +61834,7 @@ class NSURLSessionWebSocketMessage extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSURLSessionWebSocketMessage1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -61813,14 +61842,14 @@ class NSURLSessionWebSocketMessage extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSURLSessionWebSocketMessage1,
         _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSURLSessionWebSocketMessage1,
         _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -61858,12 +61887,12 @@ void _ObjCBlock40_closureTrampoline(ffi.Pointer<_ObjCBlock> block,
 }
 
 class ObjCBlock40 extends _ObjCBlockBase {
-  ObjCBlock40._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock40._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock40.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0,
@@ -61883,7 +61912,7 @@ class ObjCBlock40 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock40.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       void Function(ffi.Pointer<ObjCObject> arg0, ffi.Pointer<ObjCObject> arg1)
           fn)
       : this._(
@@ -61969,12 +61998,12 @@ void _ObjCBlock41_closureTrampoline(
 }
 
 class ObjCBlock41 extends _ObjCBlockBase {
-  ObjCBlock41._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock41._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock41.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(
@@ -61997,7 +62026,7 @@ class ObjCBlock41 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock41.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       void Function(ffi.Pointer<ObjCObject> arg0, ffi.Pointer<ObjCObject> arg1,
               ffi.Pointer<ObjCObject> arg2)
           fn)
@@ -62071,12 +62100,12 @@ void _ObjCBlock42_closureTrampoline(
 }
 
 class ObjCBlock42 extends _ObjCBlockBase {
-  ObjCBlock42._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock42._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock42.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(
@@ -62099,7 +62128,7 @@ class ObjCBlock42 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock42.fromFunction(
-      FooLibrary lib,
+      SwiftLibrary lib,
       void Function(ffi.Pointer<ObjCObject> arg0, ffi.Pointer<ObjCObject> arg1,
               ffi.Pointer<ObjCObject> arg2)
           fn)
@@ -62137,7 +62166,7 @@ class ObjCBlock42 extends _ObjCBlockBase {
 }
 
 class NSProtocolChecker extends NSProxy {
-  NSProtocolChecker._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSProtocolChecker._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -62149,7 +62178,7 @@ class NSProtocolChecker extends NSProxy {
 
   /// Returns a [NSProtocolChecker] that wraps the given raw object pointer.
   static NSProtocolChecker castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSProtocolChecker._(other, lib, retain: retain, release: release);
   }
@@ -62175,7 +62204,7 @@ class NSProtocolChecker extends NSProxy {
   }
 
   static NSProtocolChecker protocolCheckerWithTarget_protocol_(
-      FooLibrary _lib, NSObject? anObject, Protocol? aProtocol) {
+      SwiftLibrary _lib, NSObject? anObject, Protocol? aProtocol) {
     final _ret = _lib._objc_msgSend_960(
         _lib._class_NSProtocolChecker1,
         _lib._sel_protocolCheckerWithTarget_protocol_1,
@@ -62194,21 +62223,21 @@ class NSProtocolChecker extends NSProxy {
     return NSProtocolChecker._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject alloc(FooLibrary _lib) {
+  static NSObject alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSProtocolChecker1, _lib._sel_alloc1);
     return NSObject._(_ret, _lib, retain: false, release: true);
   }
 
   static bool respondsToSelector_(
-      FooLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
+      SwiftLibrary _lib, ffi.Pointer<ObjCSel> aSelector) {
     return _lib._objc_msgSend_4(_lib._class_NSProtocolChecker1,
         _lib._sel_respondsToSelector_1, aSelector);
   }
 }
 
 class NSTask extends NSObject {
-  NSTask._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSTask._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -62218,7 +62247,7 @@ class NSTask extends NSObject {
   }
 
   /// Returns a [NSTask] that wraps the given raw object pointer.
-  static NSTask castFromPointer(FooLibrary lib, ffi.Pointer<ObjCObject> other,
+  static NSTask castFromPointer(SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSTask._(other, lib, retain: retain, release: release);
   }
@@ -62365,7 +62394,7 @@ class NSTask extends NSObject {
 
   static NSTask
       launchedTaskWithExecutableURL_arguments_error_terminationHandler_(
-          FooLibrary _lib,
+          SwiftLibrary _lib,
           NSURL? url,
           NSArray? arguments,
           ffi.Pointer<ffi.Pointer<ObjCObject>> error,
@@ -62413,7 +62442,7 @@ class NSTask extends NSObject {
   }
 
   static NSTask launchedTaskWithLaunchPath_arguments_(
-      FooLibrary _lib, NSString? path, NSArray? arguments) {
+      SwiftLibrary _lib, NSString? path, NSArray? arguments) {
     final _ret = _lib._objc_msgSend_965(
         _lib._class_NSTask1,
         _lib._sel_launchedTaskWithLaunchPath_arguments_1,
@@ -62422,18 +62451,18 @@ class NSTask extends NSObject {
     return NSTask._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSTask new1(FooLibrary _lib) {
+  static NSTask new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSTask1, _lib._sel_new1);
     return NSTask._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSTask alloc(FooLibrary _lib) {
+  static NSTask alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSTask1, _lib._sel_alloc1);
     return NSTask._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -62446,23 +62475,23 @@ class NSTask extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSTask1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSTask1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSTask1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSTask1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -62471,7 +62500,7 @@ class NSTask extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSTask1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -62479,7 +62508,7 @@ class NSTask extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSTask1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -62487,13 +62516,13 @@ class NSTask extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSTask1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSTask1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -62527,12 +62556,12 @@ void _ObjCBlock43_closureTrampoline(
 }
 
 class ObjCBlock43 extends _ObjCBlockBase {
-  ObjCBlock43._(ffi.Pointer<_ObjCBlock> id, FooLibrary lib)
+  ObjCBlock43._(ffi.Pointer<_ObjCBlock> id, SwiftLibrary lib)
       : super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
   ObjCBlock43.fromFunctionPointer(
-      FooLibrary lib,
+      SwiftLibrary lib,
       ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0)>>
@@ -62549,7 +62578,7 @@ class ObjCBlock43 extends _ObjCBlockBase {
 
   /// Creates a block from a Dart function.
   ObjCBlock43.fromFunction(
-      FooLibrary lib, void Function(ffi.Pointer<ObjCObject> arg0) fn)
+      SwiftLibrary lib, void Function(ffi.Pointer<ObjCObject> arg0) fn)
       : this._(
             lib._newBlock1(
                 ffi.Pointer.fromFunction<
@@ -62574,7 +62603,7 @@ class ObjCBlock43 extends _ObjCBlockBase {
 }
 
 class NSXMLElement extends NSXMLNode {
-  NSXMLElement._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSXMLElement._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -62585,7 +62614,7 @@ class NSXMLElement extends NSXMLNode {
 
   /// Returns a [NSXMLElement] that wraps the given raw object pointer.
   static NSXMLElement castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSXMLElement._(other, lib, retain: retain, release: release);
   }
@@ -62769,27 +62798,27 @@ class NSXMLElement extends NSXMLNode {
         attributes?._id ?? ffi.nullptr);
   }
 
-  static NSObject document(FooLibrary _lib) {
+  static NSObject document(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSXMLElement1, _lib._sel_document1);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
   static NSObject documentWithRootElement_(
-      FooLibrary _lib, NSXMLElement? element) {
+      SwiftLibrary _lib, NSXMLElement? element) {
     final _ret = _lib._objc_msgSend_968(_lib._class_NSXMLElement1,
         _lib._sel_documentWithRootElement_1, element?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject elementWithName_(FooLibrary _lib, NSString? name) {
+  static NSObject elementWithName_(SwiftLibrary _lib, NSString? name) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSXMLElement1,
         _lib._sel_elementWithName_1, name?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
   static NSObject elementWithName_URI_(
-      FooLibrary _lib, NSString? name, NSString? URI) {
+      SwiftLibrary _lib, NSString? name, NSString? URI) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLElement1,
         _lib._sel_elementWithName_URI_1,
@@ -62799,7 +62828,7 @@ class NSXMLElement extends NSXMLNode {
   }
 
   static NSObject elementWithName_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? string) {
+      SwiftLibrary _lib, NSString? name, NSString? string) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLElement1,
         _lib._sel_elementWithName_stringValue_1,
@@ -62808,8 +62837,8 @@ class NSXMLElement extends NSXMLNode {
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject elementWithName_children_attributes_(
-      FooLibrary _lib, NSString? name, NSArray? children, NSArray? attributes) {
+  static NSObject elementWithName_children_attributes_(SwiftLibrary _lib,
+      NSString? name, NSArray? children, NSArray? attributes) {
     final _ret = _lib._objc_msgSend_969(
         _lib._class_NSXMLElement1,
         _lib._sel_elementWithName_children_attributes_1,
@@ -62820,7 +62849,7 @@ class NSXMLElement extends NSXMLNode {
   }
 
   static NSObject attributeWithName_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? name, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLElement1,
         _lib._sel_attributeWithName_stringValue_1,
@@ -62830,7 +62859,7 @@ class NSXMLElement extends NSXMLNode {
   }
 
   static NSObject attributeWithName_URI_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? URI, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? name, NSString? URI, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_26(
         _lib._class_NSXMLElement1,
         _lib._sel_attributeWithName_URI_stringValue_1,
@@ -62841,7 +62870,7 @@ class NSXMLElement extends NSXMLNode {
   }
 
   static NSObject namespaceWithName_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? name, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLElement1,
         _lib._sel_namespaceWithName_stringValue_1,
@@ -62851,7 +62880,7 @@ class NSXMLElement extends NSXMLNode {
   }
 
   static NSObject processingInstructionWithName_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? name, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLElement1,
         _lib._sel_processingInstructionWithName_stringValue_1,
@@ -62861,57 +62890,58 @@ class NSXMLElement extends NSXMLNode {
   }
 
   static NSObject commentWithStringValue_(
-      FooLibrary _lib, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSXMLElement1,
         _lib._sel_commentWithStringValue_1, stringValue?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject textWithStringValue_(FooLibrary _lib, NSString? stringValue) {
+  static NSObject textWithStringValue_(
+      SwiftLibrary _lib, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSXMLElement1,
         _lib._sel_textWithStringValue_1, stringValue?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject DTDNodeWithXMLString_(FooLibrary _lib, NSString? string) {
+  static NSObject DTDNodeWithXMLString_(SwiftLibrary _lib, NSString? string) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSXMLElement1,
         _lib._sel_DTDNodeWithXMLString_1, string?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSString localNameForName_(FooLibrary _lib, NSString? name) {
+  static NSString localNameForName_(SwiftLibrary _lib, NSString? name) {
     final _ret = _lib._objc_msgSend_64(_lib._class_NSXMLElement1,
         _lib._sel_localNameForName_1, name?._id ?? ffi.nullptr);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSString prefixForName_(FooLibrary _lib, NSString? name) {
+  static NSString prefixForName_(SwiftLibrary _lib, NSString? name) {
     final _ret = _lib._objc_msgSend_64(_lib._class_NSXMLElement1,
         _lib._sel_prefixForName_1, name?._id ?? ffi.nullptr);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
   static NSXMLNode predefinedNamespaceForPrefix_(
-      FooLibrary _lib, NSString? name) {
+      SwiftLibrary _lib, NSString? name) {
     final _ret = _lib._objc_msgSend_983(_lib._class_NSXMLElement1,
         _lib._sel_predefinedNamespaceForPrefix_1, name?._id ?? ffi.nullptr);
     return NSXMLNode._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSXMLElement new1(FooLibrary _lib) {
+  static NSXMLElement new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSXMLElement1, _lib._sel_new1);
     return NSXMLElement._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSXMLElement alloc(FooLibrary _lib) {
+  static NSXMLElement alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSXMLElement1, _lib._sel_alloc1);
     return NSXMLElement._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -62924,23 +62954,23 @@ class NSXMLElement extends NSXMLNode {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSXMLElement1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSXMLElement1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSXMLElement1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSXMLElement1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -62949,7 +62979,7 @@ class NSXMLElement extends NSXMLNode {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSXMLElement1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -62957,7 +62987,7 @@ class NSXMLElement extends NSXMLNode {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSXMLElement1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -62965,13 +62995,13 @@ class NSXMLElement extends NSXMLNode {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSXMLElement1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSXMLElement1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -62979,7 +63009,7 @@ class NSXMLElement extends NSXMLNode {
 }
 
 class NSXMLNode extends NSObject {
-  NSXMLNode._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSXMLNode._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -62990,7 +63020,7 @@ class NSXMLNode extends NSObject {
 
   /// Returns a [NSXMLNode] that wraps the given raw object pointer.
   static NSXMLNode castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSXMLNode._(other, lib, retain: retain, release: release);
   }
@@ -63018,27 +63048,27 @@ class NSXMLNode extends NSObject {
     return NSXMLNode._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject document(FooLibrary _lib) {
+  static NSObject document(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSXMLNode1, _lib._sel_document1);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
   static NSObject documentWithRootElement_(
-      FooLibrary _lib, NSXMLElement? element) {
+      SwiftLibrary _lib, NSXMLElement? element) {
     final _ret = _lib._objc_msgSend_968(_lib._class_NSXMLNode1,
         _lib._sel_documentWithRootElement_1, element?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject elementWithName_(FooLibrary _lib, NSString? name) {
+  static NSObject elementWithName_(SwiftLibrary _lib, NSString? name) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSXMLNode1,
         _lib._sel_elementWithName_1, name?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
   static NSObject elementWithName_URI_(
-      FooLibrary _lib, NSString? name, NSString? URI) {
+      SwiftLibrary _lib, NSString? name, NSString? URI) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLNode1,
         _lib._sel_elementWithName_URI_1,
@@ -63048,7 +63078,7 @@ class NSXMLNode extends NSObject {
   }
 
   static NSObject elementWithName_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? string) {
+      SwiftLibrary _lib, NSString? name, NSString? string) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLNode1,
         _lib._sel_elementWithName_stringValue_1,
@@ -63057,8 +63087,8 @@ class NSXMLNode extends NSObject {
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject elementWithName_children_attributes_(
-      FooLibrary _lib, NSString? name, NSArray? children, NSArray? attributes) {
+  static NSObject elementWithName_children_attributes_(SwiftLibrary _lib,
+      NSString? name, NSArray? children, NSArray? attributes) {
     final _ret = _lib._objc_msgSend_969(
         _lib._class_NSXMLNode1,
         _lib._sel_elementWithName_children_attributes_1,
@@ -63069,7 +63099,7 @@ class NSXMLNode extends NSObject {
   }
 
   static NSObject attributeWithName_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? name, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLNode1,
         _lib._sel_attributeWithName_stringValue_1,
@@ -63079,7 +63109,7 @@ class NSXMLNode extends NSObject {
   }
 
   static NSObject attributeWithName_URI_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? URI, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? name, NSString? URI, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_26(
         _lib._class_NSXMLNode1,
         _lib._sel_attributeWithName_URI_stringValue_1,
@@ -63090,7 +63120,7 @@ class NSXMLNode extends NSObject {
   }
 
   static NSObject namespaceWithName_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? name, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLNode1,
         _lib._sel_namespaceWithName_stringValue_1,
@@ -63100,7 +63130,7 @@ class NSXMLNode extends NSObject {
   }
 
   static NSObject processingInstructionWithName_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? name, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLNode1,
         _lib._sel_processingInstructionWithName_stringValue_1,
@@ -63110,19 +63140,20 @@ class NSXMLNode extends NSObject {
   }
 
   static NSObject commentWithStringValue_(
-      FooLibrary _lib, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSXMLNode1,
         _lib._sel_commentWithStringValue_1, stringValue?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject textWithStringValue_(FooLibrary _lib, NSString? stringValue) {
+  static NSObject textWithStringValue_(
+      SwiftLibrary _lib, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSXMLNode1,
         _lib._sel_textWithStringValue_1, stringValue?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject DTDNodeWithXMLString_(FooLibrary _lib, NSString? string) {
+  static NSObject DTDNodeWithXMLString_(SwiftLibrary _lib, NSString? string) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSXMLNode1,
         _lib._sel_DTDNodeWithXMLString_1, string?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -63274,20 +63305,20 @@ class NSXMLNode extends NSObject {
     _lib._objc_msgSend_477(_id, _lib._sel_setURI_1, value?._id ?? ffi.nullptr);
   }
 
-  static NSString localNameForName_(FooLibrary _lib, NSString? name) {
+  static NSString localNameForName_(SwiftLibrary _lib, NSString? name) {
     final _ret = _lib._objc_msgSend_64(_lib._class_NSXMLNode1,
         _lib._sel_localNameForName_1, name?._id ?? ffi.nullptr);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSString prefixForName_(FooLibrary _lib, NSString? name) {
+  static NSString prefixForName_(SwiftLibrary _lib, NSString? name) {
     final _ret = _lib._objc_msgSend_64(_lib._class_NSXMLNode1,
         _lib._sel_prefixForName_1, name?._id ?? ffi.nullptr);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
   static NSXMLNode predefinedNamespaceForPrefix_(
-      FooLibrary _lib, NSString? name) {
+      SwiftLibrary _lib, NSString? name) {
     final _ret = _lib._objc_msgSend_983(_lib._class_NSXMLNode1,
         _lib._sel_predefinedNamespaceForPrefix_1, name?._id ?? ffi.nullptr);
     return NSXMLNode._(_ret, _lib, retain: true, release: true);
@@ -63344,18 +63375,18 @@ class NSXMLNode extends NSObject {
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSXMLNode new1(FooLibrary _lib) {
+  static NSXMLNode new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSXMLNode1, _lib._sel_new1);
     return NSXMLNode._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSXMLNode alloc(FooLibrary _lib) {
+  static NSXMLNode alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSXMLNode1, _lib._sel_alloc1);
     return NSXMLNode._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -63368,23 +63399,23 @@ class NSXMLNode extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSXMLNode1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSXMLNode1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSXMLNode1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSXMLNode1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -63393,7 +63424,7 @@ class NSXMLNode extends NSObject {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSXMLNode1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -63401,7 +63432,7 @@ class NSXMLNode extends NSObject {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSXMLNode1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -63409,13 +63440,13 @@ class NSXMLNode extends NSObject {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSXMLNode1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSXMLNode1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -63470,7 +63501,7 @@ abstract class NSXMLNodeOptions {
 }
 
 class NSXMLDocument extends NSXMLNode {
-  NSXMLDocument._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSXMLDocument._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -63481,7 +63512,7 @@ class NSXMLDocument extends NSXMLNode {
 
   /// Returns a [NSXMLDocument] that wraps the given raw object pointer.
   static NSXMLDocument castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSXMLDocument._(other, lib, retain: retain, release: release);
   }
@@ -63537,7 +63568,7 @@ class NSXMLDocument extends NSXMLNode {
     return NSXMLDocument._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject replacementClassForClass_(FooLibrary _lib, NSObject cls) {
+  static NSObject replacementClassForClass_(SwiftLibrary _lib, NSObject cls) {
     final _ret = _lib._objc_msgSend_16(_lib._class_NSXMLDocument1,
         _lib._sel_replacementClassForClass_1, cls._id);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -63696,27 +63727,27 @@ class NSXMLDocument extends NSXMLNode {
         _id, _lib._sel_validateAndReturnError_1, error);
   }
 
-  static NSObject document(FooLibrary _lib) {
+  static NSObject document(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSXMLDocument1, _lib._sel_document1);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
   static NSObject documentWithRootElement_(
-      FooLibrary _lib, NSXMLElement? element) {
+      SwiftLibrary _lib, NSXMLElement? element) {
     final _ret = _lib._objc_msgSend_968(_lib._class_NSXMLDocument1,
         _lib._sel_documentWithRootElement_1, element?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject elementWithName_(FooLibrary _lib, NSString? name) {
+  static NSObject elementWithName_(SwiftLibrary _lib, NSString? name) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSXMLDocument1,
         _lib._sel_elementWithName_1, name?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
   static NSObject elementWithName_URI_(
-      FooLibrary _lib, NSString? name, NSString? URI) {
+      SwiftLibrary _lib, NSString? name, NSString? URI) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLDocument1,
         _lib._sel_elementWithName_URI_1,
@@ -63726,7 +63757,7 @@ class NSXMLDocument extends NSXMLNode {
   }
 
   static NSObject elementWithName_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? string) {
+      SwiftLibrary _lib, NSString? name, NSString? string) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLDocument1,
         _lib._sel_elementWithName_stringValue_1,
@@ -63735,8 +63766,8 @@ class NSXMLDocument extends NSXMLNode {
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject elementWithName_children_attributes_(
-      FooLibrary _lib, NSString? name, NSArray? children, NSArray? attributes) {
+  static NSObject elementWithName_children_attributes_(SwiftLibrary _lib,
+      NSString? name, NSArray? children, NSArray? attributes) {
     final _ret = _lib._objc_msgSend_969(
         _lib._class_NSXMLDocument1,
         _lib._sel_elementWithName_children_attributes_1,
@@ -63747,7 +63778,7 @@ class NSXMLDocument extends NSXMLNode {
   }
 
   static NSObject attributeWithName_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? name, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLDocument1,
         _lib._sel_attributeWithName_stringValue_1,
@@ -63757,7 +63788,7 @@ class NSXMLDocument extends NSXMLNode {
   }
 
   static NSObject attributeWithName_URI_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? URI, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? name, NSString? URI, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_26(
         _lib._class_NSXMLDocument1,
         _lib._sel_attributeWithName_URI_stringValue_1,
@@ -63768,7 +63799,7 @@ class NSXMLDocument extends NSXMLNode {
   }
 
   static NSObject namespaceWithName_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? name, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLDocument1,
         _lib._sel_namespaceWithName_stringValue_1,
@@ -63778,7 +63809,7 @@ class NSXMLDocument extends NSXMLNode {
   }
 
   static NSObject processingInstructionWithName_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? name, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLDocument1,
         _lib._sel_processingInstructionWithName_stringValue_1,
@@ -63788,57 +63819,58 @@ class NSXMLDocument extends NSXMLNode {
   }
 
   static NSObject commentWithStringValue_(
-      FooLibrary _lib, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSXMLDocument1,
         _lib._sel_commentWithStringValue_1, stringValue?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject textWithStringValue_(FooLibrary _lib, NSString? stringValue) {
+  static NSObject textWithStringValue_(
+      SwiftLibrary _lib, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSXMLDocument1,
         _lib._sel_textWithStringValue_1, stringValue?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject DTDNodeWithXMLString_(FooLibrary _lib, NSString? string) {
+  static NSObject DTDNodeWithXMLString_(SwiftLibrary _lib, NSString? string) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSXMLDocument1,
         _lib._sel_DTDNodeWithXMLString_1, string?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSString localNameForName_(FooLibrary _lib, NSString? name) {
+  static NSString localNameForName_(SwiftLibrary _lib, NSString? name) {
     final _ret = _lib._objc_msgSend_64(_lib._class_NSXMLDocument1,
         _lib._sel_localNameForName_1, name?._id ?? ffi.nullptr);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSString prefixForName_(FooLibrary _lib, NSString? name) {
+  static NSString prefixForName_(SwiftLibrary _lib, NSString? name) {
     final _ret = _lib._objc_msgSend_64(_lib._class_NSXMLDocument1,
         _lib._sel_prefixForName_1, name?._id ?? ffi.nullptr);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
   static NSXMLNode predefinedNamespaceForPrefix_(
-      FooLibrary _lib, NSString? name) {
+      SwiftLibrary _lib, NSString? name) {
     final _ret = _lib._objc_msgSend_983(_lib._class_NSXMLDocument1,
         _lib._sel_predefinedNamespaceForPrefix_1, name?._id ?? ffi.nullptr);
     return NSXMLNode._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSXMLDocument new1(FooLibrary _lib) {
+  static NSXMLDocument new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSXMLDocument1, _lib._sel_new1);
     return NSXMLDocument._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSXMLDocument alloc(FooLibrary _lib) {
+  static NSXMLDocument alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSXMLDocument1, _lib._sel_alloc1);
     return NSXMLDocument._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -63851,23 +63883,23 @@ class NSXMLDocument extends NSXMLNode {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSXMLDocument1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSXMLDocument1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSXMLDocument1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSXMLDocument1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -63876,7 +63908,7 @@ class NSXMLDocument extends NSXMLNode {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSXMLDocument1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -63884,7 +63916,7 @@ class NSXMLDocument extends NSXMLNode {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSXMLDocument1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -63892,13 +63924,13 @@ class NSXMLDocument extends NSXMLNode {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSXMLDocument1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSXMLDocument1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -63913,7 +63945,7 @@ abstract class NSXMLDocumentContentKind {
 }
 
 class NSXMLDTD extends NSXMLNode {
-  NSXMLDTD._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSXMLDTD._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -63923,7 +63955,8 @@ class NSXMLDTD extends NSXMLNode {
   }
 
   /// Returns a [NSXMLDTD] that wraps the given raw object pointer.
-  static NSXMLDTD castFromPointer(FooLibrary lib, ffi.Pointer<ObjCObject> other,
+  static NSXMLDTD castFromPointer(
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSXMLDTD._(other, lib, retain: retain, release: release);
   }
@@ -64051,7 +64084,7 @@ class NSXMLDTD extends NSXMLNode {
   }
 
   static NSXMLDTDNode predefinedEntityDeclarationForName_(
-      FooLibrary _lib, NSString? name) {
+      SwiftLibrary _lib, NSString? name) {
     final _ret = _lib._objc_msgSend_984(
         _lib._class_NSXMLDTD1,
         _lib._sel_predefinedEntityDeclarationForName_1,
@@ -64059,27 +64092,27 @@ class NSXMLDTD extends NSXMLNode {
     return NSXMLDTDNode._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject document(FooLibrary _lib) {
+  static NSObject document(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSXMLDTD1, _lib._sel_document1);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
   static NSObject documentWithRootElement_(
-      FooLibrary _lib, NSXMLElement? element) {
+      SwiftLibrary _lib, NSXMLElement? element) {
     final _ret = _lib._objc_msgSend_968(_lib._class_NSXMLDTD1,
         _lib._sel_documentWithRootElement_1, element?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject elementWithName_(FooLibrary _lib, NSString? name) {
+  static NSObject elementWithName_(SwiftLibrary _lib, NSString? name) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSXMLDTD1,
         _lib._sel_elementWithName_1, name?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
   static NSObject elementWithName_URI_(
-      FooLibrary _lib, NSString? name, NSString? URI) {
+      SwiftLibrary _lib, NSString? name, NSString? URI) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLDTD1,
         _lib._sel_elementWithName_URI_1,
@@ -64089,7 +64122,7 @@ class NSXMLDTD extends NSXMLNode {
   }
 
   static NSObject elementWithName_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? string) {
+      SwiftLibrary _lib, NSString? name, NSString? string) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLDTD1,
         _lib._sel_elementWithName_stringValue_1,
@@ -64098,8 +64131,8 @@ class NSXMLDTD extends NSXMLNode {
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject elementWithName_children_attributes_(
-      FooLibrary _lib, NSString? name, NSArray? children, NSArray? attributes) {
+  static NSObject elementWithName_children_attributes_(SwiftLibrary _lib,
+      NSString? name, NSArray? children, NSArray? attributes) {
     final _ret = _lib._objc_msgSend_969(
         _lib._class_NSXMLDTD1,
         _lib._sel_elementWithName_children_attributes_1,
@@ -64110,7 +64143,7 @@ class NSXMLDTD extends NSXMLNode {
   }
 
   static NSObject attributeWithName_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? name, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLDTD1,
         _lib._sel_attributeWithName_stringValue_1,
@@ -64120,7 +64153,7 @@ class NSXMLDTD extends NSXMLNode {
   }
 
   static NSObject attributeWithName_URI_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? URI, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? name, NSString? URI, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_26(
         _lib._class_NSXMLDTD1,
         _lib._sel_attributeWithName_URI_stringValue_1,
@@ -64131,7 +64164,7 @@ class NSXMLDTD extends NSXMLNode {
   }
 
   static NSObject namespaceWithName_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? name, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLDTD1,
         _lib._sel_namespaceWithName_stringValue_1,
@@ -64141,7 +64174,7 @@ class NSXMLDTD extends NSXMLNode {
   }
 
   static NSObject processingInstructionWithName_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? name, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLDTD1,
         _lib._sel_processingInstructionWithName_stringValue_1,
@@ -64151,55 +64184,56 @@ class NSXMLDTD extends NSXMLNode {
   }
 
   static NSObject commentWithStringValue_(
-      FooLibrary _lib, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSXMLDTD1,
         _lib._sel_commentWithStringValue_1, stringValue?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject textWithStringValue_(FooLibrary _lib, NSString? stringValue) {
+  static NSObject textWithStringValue_(
+      SwiftLibrary _lib, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSXMLDTD1,
         _lib._sel_textWithStringValue_1, stringValue?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject DTDNodeWithXMLString_(FooLibrary _lib, NSString? string) {
+  static NSObject DTDNodeWithXMLString_(SwiftLibrary _lib, NSString? string) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSXMLDTD1,
         _lib._sel_DTDNodeWithXMLString_1, string?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSString localNameForName_(FooLibrary _lib, NSString? name) {
+  static NSString localNameForName_(SwiftLibrary _lib, NSString? name) {
     final _ret = _lib._objc_msgSend_64(_lib._class_NSXMLDTD1,
         _lib._sel_localNameForName_1, name?._id ?? ffi.nullptr);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSString prefixForName_(FooLibrary _lib, NSString? name) {
+  static NSString prefixForName_(SwiftLibrary _lib, NSString? name) {
     final _ret = _lib._objc_msgSend_64(_lib._class_NSXMLDTD1,
         _lib._sel_prefixForName_1, name?._id ?? ffi.nullptr);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
   static NSXMLNode predefinedNamespaceForPrefix_(
-      FooLibrary _lib, NSString? name) {
+      SwiftLibrary _lib, NSString? name) {
     final _ret = _lib._objc_msgSend_983(_lib._class_NSXMLDTD1,
         _lib._sel_predefinedNamespaceForPrefix_1, name?._id ?? ffi.nullptr);
     return NSXMLNode._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSXMLDTD new1(FooLibrary _lib) {
+  static NSXMLDTD new1(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSXMLDTD1, _lib._sel_new1);
     return NSXMLDTD._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSXMLDTD alloc(FooLibrary _lib) {
+  static NSXMLDTD alloc(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(_lib._class_NSXMLDTD1, _lib._sel_alloc1);
     return NSXMLDTD._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -64212,23 +64246,23 @@ class NSXMLDTD extends NSXMLNode {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSXMLDTD1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSXMLDTD1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSXMLDTD1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSXMLDTD1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -64237,7 +64271,7 @@ class NSXMLDTD extends NSXMLNode {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSXMLDTD1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -64245,7 +64279,7 @@ class NSXMLDTD extends NSXMLNode {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSXMLDTD1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -64253,13 +64287,13 @@ class NSXMLDTD extends NSXMLNode {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSXMLDTD1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSXMLDTD1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -64267,7 +64301,7 @@ class NSXMLDTD extends NSXMLNode {
 }
 
 class NSXMLDTDNode extends NSXMLNode {
-  NSXMLDTDNode._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+  NSXMLDTDNode._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
@@ -64278,7 +64312,7 @@ class NSXMLDTDNode extends NSXMLNode {
 
   /// Returns a [NSXMLDTDNode] that wraps the given raw object pointer.
   static NSXMLDTDNode castFromPointer(
-      FooLibrary lib, ffi.Pointer<ObjCObject> other,
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
     return NSXMLDTDNode._(other, lib, retain: retain, release: release);
   }
@@ -64356,27 +64390,27 @@ class NSXMLDTDNode extends NSXMLNode {
         _id, _lib._sel_setNotationName_1, value?._id ?? ffi.nullptr);
   }
 
-  static NSObject document(FooLibrary _lib) {
+  static NSObject document(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSXMLDTDNode1, _lib._sel_document1);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
   static NSObject documentWithRootElement_(
-      FooLibrary _lib, NSXMLElement? element) {
+      SwiftLibrary _lib, NSXMLElement? element) {
     final _ret = _lib._objc_msgSend_968(_lib._class_NSXMLDTDNode1,
         _lib._sel_documentWithRootElement_1, element?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject elementWithName_(FooLibrary _lib, NSString? name) {
+  static NSObject elementWithName_(SwiftLibrary _lib, NSString? name) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSXMLDTDNode1,
         _lib._sel_elementWithName_1, name?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
   static NSObject elementWithName_URI_(
-      FooLibrary _lib, NSString? name, NSString? URI) {
+      SwiftLibrary _lib, NSString? name, NSString? URI) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLDTDNode1,
         _lib._sel_elementWithName_URI_1,
@@ -64386,7 +64420,7 @@ class NSXMLDTDNode extends NSXMLNode {
   }
 
   static NSObject elementWithName_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? string) {
+      SwiftLibrary _lib, NSString? name, NSString? string) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLDTDNode1,
         _lib._sel_elementWithName_stringValue_1,
@@ -64395,8 +64429,8 @@ class NSXMLDTDNode extends NSXMLNode {
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject elementWithName_children_attributes_(
-      FooLibrary _lib, NSString? name, NSArray? children, NSArray? attributes) {
+  static NSObject elementWithName_children_attributes_(SwiftLibrary _lib,
+      NSString? name, NSArray? children, NSArray? attributes) {
     final _ret = _lib._objc_msgSend_969(
         _lib._class_NSXMLDTDNode1,
         _lib._sel_elementWithName_children_attributes_1,
@@ -64407,7 +64441,7 @@ class NSXMLDTDNode extends NSXMLNode {
   }
 
   static NSObject attributeWithName_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? name, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLDTDNode1,
         _lib._sel_attributeWithName_stringValue_1,
@@ -64417,7 +64451,7 @@ class NSXMLDTDNode extends NSXMLNode {
   }
 
   static NSObject attributeWithName_URI_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? URI, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? name, NSString? URI, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_26(
         _lib._class_NSXMLDTDNode1,
         _lib._sel_attributeWithName_URI_stringValue_1,
@@ -64428,7 +64462,7 @@ class NSXMLDTDNode extends NSXMLNode {
   }
 
   static NSObject namespaceWithName_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? name, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLDTDNode1,
         _lib._sel_namespaceWithName_stringValue_1,
@@ -64438,7 +64472,7 @@ class NSXMLDTDNode extends NSXMLNode {
   }
 
   static NSObject processingInstructionWithName_stringValue_(
-      FooLibrary _lib, NSString? name, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? name, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_159(
         _lib._class_NSXMLDTDNode1,
         _lib._sel_processingInstructionWithName_stringValue_1,
@@ -64448,57 +64482,58 @@ class NSXMLDTDNode extends NSXMLNode {
   }
 
   static NSObject commentWithStringValue_(
-      FooLibrary _lib, NSString? stringValue) {
+      SwiftLibrary _lib, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSXMLDTDNode1,
         _lib._sel_commentWithStringValue_1, stringValue?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject textWithStringValue_(FooLibrary _lib, NSString? stringValue) {
+  static NSObject textWithStringValue_(
+      SwiftLibrary _lib, NSString? stringValue) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSXMLDTDNode1,
         _lib._sel_textWithStringValue_1, stringValue?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject DTDNodeWithXMLString_(FooLibrary _lib, NSString? string) {
+  static NSObject DTDNodeWithXMLString_(SwiftLibrary _lib, NSString? string) {
     final _ret = _lib._objc_msgSend_30(_lib._class_NSXMLDTDNode1,
         _lib._sel_DTDNodeWithXMLString_1, string?._id ?? ffi.nullptr);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSString localNameForName_(FooLibrary _lib, NSString? name) {
+  static NSString localNameForName_(SwiftLibrary _lib, NSString? name) {
     final _ret = _lib._objc_msgSend_64(_lib._class_NSXMLDTDNode1,
         _lib._sel_localNameForName_1, name?._id ?? ffi.nullptr);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSString prefixForName_(FooLibrary _lib, NSString? name) {
+  static NSString prefixForName_(SwiftLibrary _lib, NSString? name) {
     final _ret = _lib._objc_msgSend_64(_lib._class_NSXMLDTDNode1,
         _lib._sel_prefixForName_1, name?._id ?? ffi.nullptr);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 
   static NSXMLNode predefinedNamespaceForPrefix_(
-      FooLibrary _lib, NSString? name) {
+      SwiftLibrary _lib, NSString? name) {
     final _ret = _lib._objc_msgSend_983(_lib._class_NSXMLDTDNode1,
         _lib._sel_predefinedNamespaceForPrefix_1, name?._id ?? ffi.nullptr);
     return NSXMLNode._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSXMLDTDNode new1(FooLibrary _lib) {
+  static NSXMLDTDNode new1(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSXMLDTDNode1, _lib._sel_new1);
     return NSXMLDTDNode._(_ret, _lib, retain: false, release: true);
   }
 
-  static NSXMLDTDNode alloc(FooLibrary _lib) {
+  static NSXMLDTDNode alloc(SwiftLibrary _lib) {
     final _ret =
         _lib._objc_msgSend_2(_lib._class_NSXMLDTDNode1, _lib._sel_alloc1);
     return NSXMLDTDNode._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
@@ -64511,23 +64546,23 @@ class NSXMLDTDNode extends NSXMLNode {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
+      SwiftLibrary _lib, NSObject aTarget) {
     return _lib._objc_msgSend_15(_lib._class_NSXMLDTDNode1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSXMLDTDNode1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
         _lib._class_NSXMLDTDNode1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
         _lib._class_NSXMLDTDNode1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
@@ -64536,7 +64571,7 @@ class NSXMLDTDNode extends NSXMLNode {
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
         _lib._class_NSXMLDTDNode1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
@@ -64544,7 +64579,7 @@ class NSXMLDTDNode extends NSXMLNode {
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
         _lib._class_NSXMLDTDNode1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
@@ -64552,13 +64587,13 @@ class NSXMLDTDNode extends NSXMLNode {
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
         _lib._class_NSXMLDTDNode1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
         _lib._class_NSXMLDTDNode1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
@@ -64588,59 +64623,66 @@ abstract class NSXMLDTDNodeKind {
   static const int NSXMLElementDeclarationElementKind = 20;
 }
 
-class FooClass extends NSObject {
-  FooClass._(ffi.Pointer<ObjCObject> id, FooLibrary lib,
+class SwiftClass extends NSObject {
+  SwiftClass._(ffi.Pointer<ObjCObject> id, SwiftLibrary lib,
       {bool retain = false, bool release = false})
       : super._(id, lib, retain: retain, release: release);
 
-  /// Returns a [FooClass] that points to the same underlying object as [other].
-  static FooClass castFrom<T extends _ObjCWrapper>(T other) {
-    return FooClass._(other._id, other._lib, retain: true, release: true);
+  /// Returns a [SwiftClass] that points to the same underlying object as [other].
+  static SwiftClass castFrom<T extends _ObjCWrapper>(T other) {
+    return SwiftClass._(other._id, other._lib, retain: true, release: true);
   }
 
-  /// Returns a [FooClass] that wraps the given raw object pointer.
-  static FooClass castFromPointer(FooLibrary lib, ffi.Pointer<ObjCObject> other,
+  /// Returns a [SwiftClass] that wraps the given raw object pointer.
+  static SwiftClass castFromPointer(
+      SwiftLibrary lib, ffi.Pointer<ObjCObject> other,
       {bool retain = false, bool release = false}) {
-    return FooClass._(other, lib, retain: retain, release: release);
+    return SwiftClass._(other, lib, retain: retain, release: release);
   }
 
-  /// Returns whether [obj] is an instance of [FooClass].
+  /// Returns whether [obj] is an instance of [SwiftClass].
   static bool isInstance(_ObjCWrapper obj) {
     return obj._lib._objc_msgSend_0(
-        obj._id, obj._lib._sel_isKindOfClass_1, obj._lib._class_FooClass1);
+        obj._id, obj._lib._sel_isKindOfClass_1, obj._lib._class_SwiftClass1);
   }
 
-  int getValue() {
-    return _lib._objc_msgSend_78(_id, _lib._sel_getValue1);
+  NSString getLogo() {
+    final _ret = _lib._objc_msgSend_20(_id, _lib._sel_getLogo1);
+    return NSString._(_ret, _lib, retain: true, release: true);
   }
 
-  void setValueWithX_(int x) {
-    return _lib._objc_msgSend_374(_id, _lib._sel_setValueWithX_1, x);
+  int get someField {
+    return _lib._objc_msgSend_78(_id, _lib._sel_someField1);
+  }
+
+  set someField(int value) {
+    _lib._objc_msgSend_558(_id, _lib._sel_setSomeField_1, value);
   }
 
   @override
-  FooClass init() {
+  SwiftClass init() {
     final _ret = _lib._objc_msgSend_2(_id, _lib._sel_init1);
-    return FooClass._(_ret, _lib, retain: true, release: true);
+    return SwiftClass._(_ret, _lib, retain: true, release: true);
   }
 
-  static FooClass new1(FooLibrary _lib) {
-    final _ret = _lib._objc_msgSend_2(_lib._class_FooClass1, _lib._sel_new1);
-    return FooClass._(_ret, _lib, retain: false, release: true);
+  static SwiftClass new1(SwiftLibrary _lib) {
+    final _ret = _lib._objc_msgSend_2(_lib._class_SwiftClass1, _lib._sel_new1);
+    return SwiftClass._(_ret, _lib, retain: false, release: true);
   }
 
-  static FooClass alloc(FooLibrary _lib) {
-    final _ret = _lib._objc_msgSend_2(_lib._class_FooClass1, _lib._sel_alloc1);
-    return FooClass._(_ret, _lib, retain: false, release: true);
+  static SwiftClass alloc(SwiftLibrary _lib) {
+    final _ret =
+        _lib._objc_msgSend_2(_lib._class_SwiftClass1, _lib._sel_alloc1);
+    return SwiftClass._(_ret, _lib, retain: false, release: true);
   }
 
   static void cancelPreviousPerformRequestsWithTarget_selector_object_(
-      FooLibrary _lib,
+      SwiftLibrary _lib,
       NSObject aTarget,
       ffi.Pointer<ObjCSel> aSelector,
       NSObject anArgument) {
     return _lib._objc_msgSend_14(
-        _lib._class_FooClass1,
+        _lib._class_SwiftClass1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_selector_object_1,
         aTarget._id,
         aSelector,
@@ -64648,56 +64690,56 @@ class FooClass extends NSObject {
   }
 
   static void cancelPreviousPerformRequestsWithTarget_(
-      FooLibrary _lib, NSObject aTarget) {
-    return _lib._objc_msgSend_15(_lib._class_FooClass1,
+      SwiftLibrary _lib, NSObject aTarget) {
+    return _lib._objc_msgSend_15(_lib._class_SwiftClass1,
         _lib._sel_cancelPreviousPerformRequestsWithTarget_1, aTarget._id);
   }
 
-  static bool getAccessInstanceVariablesDirectly(FooLibrary _lib) {
+  static bool getAccessInstanceVariablesDirectly(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
-        _lib._class_FooClass1, _lib._sel_accessInstanceVariablesDirectly1);
+        _lib._class_SwiftClass1, _lib._sel_accessInstanceVariablesDirectly1);
   }
 
-  static bool useStoredAccessor(FooLibrary _lib) {
+  static bool useStoredAccessor(SwiftLibrary _lib) {
     return _lib._objc_msgSend_12(
-        _lib._class_FooClass1, _lib._sel_useStoredAccessor1);
+        _lib._class_SwiftClass1, _lib._sel_useStoredAccessor1);
   }
 
   static NSSet keyPathsForValuesAffectingValueForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     final _ret = _lib._objc_msgSend_58(
-        _lib._class_FooClass1,
+        _lib._class_SwiftClass1,
         _lib._sel_keyPathsForValuesAffectingValueForKey_1,
         key?._id ?? ffi.nullptr);
     return NSSet._(_ret, _lib, retain: true, release: true);
   }
 
   static bool automaticallyNotifiesObserversForKey_(
-      FooLibrary _lib, NSString? key) {
+      SwiftLibrary _lib, NSString? key) {
     return _lib._objc_msgSend_59(
-        _lib._class_FooClass1,
+        _lib._class_SwiftClass1,
         _lib._sel_automaticallyNotifiesObserversForKey_1,
         key?._id ?? ffi.nullptr);
   }
 
   static void setKeys_triggerChangeNotificationsForDependentKey_(
-      FooLibrary _lib, NSArray? keys, NSString? dependentKey) {
+      SwiftLibrary _lib, NSArray? keys, NSString? dependentKey) {
     return _lib._objc_msgSend_79(
-        _lib._class_FooClass1,
+        _lib._class_SwiftClass1,
         _lib._sel_setKeys_triggerChangeNotificationsForDependentKey_1,
         keys?._id ?? ffi.nullptr,
         dependentKey?._id ?? ffi.nullptr);
   }
 
-  static NSArray classFallbacksForKeyedArchiver(FooLibrary _lib) {
+  static NSArray classFallbacksForKeyedArchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_80(
-        _lib._class_FooClass1, _lib._sel_classFallbacksForKeyedArchiver1);
+        _lib._class_SwiftClass1, _lib._sel_classFallbacksForKeyedArchiver1);
     return NSArray._(_ret, _lib, retain: true, release: true);
   }
 
-  static NSObject classForKeyedUnarchiver(FooLibrary _lib) {
+  static NSObject classForKeyedUnarchiver(SwiftLibrary _lib) {
     final _ret = _lib._objc_msgSend_2(
-        _lib._class_FooClass1, _lib._sel_classForKeyedUnarchiver1);
+        _lib._class_SwiftClass1, _lib._sel_classForKeyedUnarchiver1);
     return NSObject._(_ret, _lib, retain: true, release: true);
   }
 }
