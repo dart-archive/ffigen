@@ -27,6 +27,27 @@ Future<void> _buildLib(String input, String output) async {
   print('Generated file: $output');
 }
 
+Future<void> _buildSwift(
+    String input, String outputHeader, String outputLib) async {
+  final args = [
+    '-c',
+    input,
+    '-emit-objc-header-path',
+    outputHeader,
+    '-emit-library',
+    '-o',
+    outputLib,
+  ];
+  final process = await Process.start('swiftc', args);
+  unawaited(stdout.addStream(process.stdout));
+  unawaited(stderr.addStream(process.stderr));
+  final result = await process.exitCode;
+  if (result != 0) {
+    throw ProcessException('swiftc', args, 'Build failed', result);
+  }
+  print('Generated files: $outputHeader and $outputLib');
+}
+
 Future<void> _generateBindings(String config) async {
   final args = [
     'run',
@@ -60,7 +81,19 @@ List<String> _getTestNames() {
 Future<void> build(List<String> testNames) async {
   print('Building Dynamic Library for Objective C Native Tests...');
   for (final name in testNames) {
-    await _buildLib('${name}_test.m', '${name}_test.dylib');
+    final mFile = '${name}_test.m';
+    if (await File(mFile).exists()) {
+      await _buildLib(mFile, '${name}_test.dylib');
+    }
+  }
+
+  print('Building Dynamic Library and Header for Swift Tests...');
+  for (final name in testNames) {
+    final swiftFile = '${name}_test.swift';
+    if (await File(swiftFile).exists()) {
+      await _buildSwift(
+          swiftFile, '${name}_test-Swift.h', '${name}_test.dylib');
+    }
   }
 
   print('Generating Bindings for Objective C Native Tests...');

@@ -373,3 +373,32 @@ class CompilerOptsAuto {
     return [];
   }
 }
+
+class _ObjCModulePrefixerEntry {
+  final RegExp pattern;
+  final String moduleName;
+
+  _ObjCModulePrefixerEntry(this.pattern, this.moduleName);
+}
+
+/// Handles applying module prefixes to ObjC classes.
+class ObjCModulePrefixer {
+  final _prefixes = <_ObjCModulePrefixerEntry>[];
+
+  ObjCModulePrefixer(Map<String, String> prefixes) {
+    for (final entry in prefixes.entries) {
+      _prefixes.add(_ObjCModulePrefixerEntry(RegExp(entry.key), entry.value));
+    }
+  }
+
+  /// If any of the prefixing patterns match, applies that module prefix.
+  /// Otherwise returns the class name unmodified.
+  String applyPrefix(String className) {
+    for (final entry in _prefixes) {
+      if (quiver.matchesFull(entry.pattern, className)) {
+        return '${entry.moduleName}.$className';
+      }
+    }
+    return className;
+  }
+}

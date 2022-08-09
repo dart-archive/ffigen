@@ -179,6 +179,29 @@ bool typeMapValidator(List<String> name, dynamic yamlConfig) {
   return result;
 }
 
+Map<String, String> stringStringMapExtractor(dynamic yamlConfig) {
+  final resultMap = <String, String>{};
+  final inputMap = yamlConfig as YamlMap?;
+  if (inputMap != null) {
+    for (final key in inputMap.keys) {
+      resultMap[key as String] = inputMap[key] as String;
+    }
+  }
+  return resultMap;
+}
+
+bool stringStringMapValidator(List<String> name, dynamic yamlConfig) {
+  if (!checkType<YamlMap>(name, yamlConfig)) {
+    return false;
+  }
+  for (final key in (yamlConfig as YamlMap).keys) {
+    if (!checkType<String>([...name, key as String], yamlConfig[key])) {
+      return false;
+    }
+  }
+  return true;
+}
+
 Map<String, ImportedType> makeImportTypeMapping(
     Map<String, List<String>> rawTypeMappings,
     Map<String, LibraryImport> libraryImportsMap) {
