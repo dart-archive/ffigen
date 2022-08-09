@@ -1,10 +1,13 @@
 #import <Foundation/NSObject.h>
 
+@class UndefinedTemplate<ObjectType>;
+
 @interface PropertyInterface : NSObject {
 }
 
 @property (readonly) int32_t readOnlyProperty;
 @property int32_t readWriteProperty;
+@property (class, readonly, copy) UndefinedTemplate<NSString *> *regressGH436;
 @property (class, readonly) int32_t classReadOnlyProperty;
 @property (class) int32_t classReadWriteProperty;
 
