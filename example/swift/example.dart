@@ -5,10 +5,10 @@
 import 'dart:ffi';
 import 'swift_api_bindings.dart';
 
-void main(List<String> args) {
+void main() {
   final lib = SwiftLibrary(DynamicLibrary.open('libswiftapi.dylib'));
   final object = SwiftClass.new1(lib);
-  print(object.getLogo());
+  print(object.sayHello());
   print('field = ${object.someField}');
   object.someField = 456;
   print('field = ${object.someField}');

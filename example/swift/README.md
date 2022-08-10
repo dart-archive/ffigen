@@ -25,8 +25,8 @@ any other header:
 dart run ffigen
 ```
 
-This will generate [swift_api.dart](./swift_api.dart), using the config
-in the ffigen section of the pubspec.yaml.
+This will generate [swift_api_bindings.dart](./swift_api_bindings.dart),
+using the config in the ffigen section of the pubspec.yaml.
 
 Finally, you can run the example using this command:
 

@@ -28093,7 +28093,7 @@ class SwiftLibrary {
   late final _sel_setAttributesAsDictionary_1 =
       _registerName1("setAttributesAsDictionary:");
   late final _class_SwiftClass1 = _getClass1("swift_module.SwiftClass");
-  late final _sel_getLogo1 = _registerName1("getLogo");
+  late final _sel_sayHello1 = _registerName1("sayHello");
   late final _sel_someField1 = _registerName1("someField");
   late final _sel_setSomeField_1 = _registerName1("setSomeField:");
 }
@@ -64646,8 +64646,8 @@ class SwiftClass extends NSObject {
         obj._id, obj._lib._sel_isKindOfClass_1, obj._lib._class_SwiftClass1);
   }
 
-  NSString getLogo() {
-    final _ret = _lib._objc_msgSend_20(_id, _lib._sel_getLogo1);
+  NSString sayHello() {
+    final _ret = _lib._objc_msgSend_20(_id, _lib._sel_sayHello1);
     return NSString._(_ret, _lib, retain: true, release: true);
   }
 

@@ -211,7 +211,7 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 
 SWIFT_CLASS("_TtC12swift_module10SwiftClass")
 @interface SwiftClass : NSObject
-- (NSString * _Nonnull)getLogo SWIFT_WARN_UNUSED_RESULT;
+- (NSString * _Nonnull)sayHello SWIFT_WARN_UNUSED_RESULT;
 @property (nonatomic) NSInteger someField;
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
 @end
