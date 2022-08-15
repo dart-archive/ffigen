@@ -140,20 +140,6 @@ class RunProcess implements Task {
   }
 }
 
-class EnsureExists implements Task {
-  final Uri target;
-
-  EnsureExists(this.target);
-
-  @override
-  Future<void> run() async {
-    final targetDir = Directory.fromUri(target);
-    if (!await targetDir.exists()) {
-      await targetDir.create(recursive: true);
-    }
-  }
-}
-
 class Copy implements Task {
   final Uri source;
   final Uri target;
