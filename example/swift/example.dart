@@ -6,6 +6,7 @@ import 'dart:ffi';
 import 'swift_api_bindings.dart';
 
 void main() {
+  // TODO(#443): Add a test for this.
   final lib = SwiftLibrary(DynamicLibrary.open('libswiftapi.dylib'));
   final object = SwiftClass.new1(lib);
   print(object.sayHello());
