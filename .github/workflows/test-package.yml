@@ -75,7 +75,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: lcov.info
-          
+
   test-windows:
     needs: analyze
     runs-on: windows-latest
@@ -90,3 +90,28 @@ jobs:
         run: dart test/setup.dart
       - name: Run VM tests
         run: dart test --platform vm
+
+  # Sanity check the latest `flutter create --template plugin_ffi`.
+  # This will break if we change the Flutter template or the generated code.
+  # But, getting libclang on the LUCI infrastructure has proven to be
+  # non-trivial. See discussion on
+  # https://github.com/flutter/flutter/issues/105513.
+  # If we need to change the generated code, we should temporarily disable this
+  # test, or temporarily disable the requirement for all bots to be green to
+  # merge PRs.
+  # Running this sanity check on one OS should be sufficient. Chosing Windows
+  # because it is the most likely to break.
+  test-windows-flutter:
+    needs: analyze
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'master'
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Build test dylib and bindings
+        run: dart test/setup.dart
+      - name: Run VM tests
+        run: flutter pub run test test_flutter/ --platform vm
