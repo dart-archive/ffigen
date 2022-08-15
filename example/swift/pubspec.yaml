@@ -1,0 +1,36 @@
+# Copyright (c) 2022, the Dart project authors. Please see the AUTHORS file
+# for details. All rights reserved. Use of this source code is governed by a
+# BSD-style license that can be found in the LICENSE file.
+
+name: swift_example
+
+environment:
+  sdk: '>=2.17.0 <3.0.0'
+
+dependencies:
+  ffi: ^2.0.1
+dev_dependencies:
+  ffigen:
+    path: '../../'
+  lints: ^2.0.0
+
+ffigen:
+  name: SwiftLibrary
+  description: Bindings for swift_api.
+  language: objc
+  output: 'swift_api_bindings.dart'
+  exclude-all-by-default: true
+  objc-interfaces:
+    include:
+      - 'SwiftClass'
+    module:
+      'SwiftClass': 'swift_module'
+  headers:
+    entry-points:
+      - 'swift_api.h'
+  preamble: |
+    // ignore_for_file: camel_case_types, non_constant_identifier_names
+    // ignore_for_file: unused_element, unused_field, return_of_invalid_type
+    // ignore_for_file: void_checks, annotate_overrides
+    // ignore_for_file: no_leading_underscores_for_local_identifiers
+    // ignore_for_file: library_private_types_in_public_api
