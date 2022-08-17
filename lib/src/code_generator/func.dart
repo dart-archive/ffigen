@@ -11,11 +11,14 @@ import 'writer.dart';
 
 /// A binding for C function.
 ///
-/// For a C function -
+/// For example, take the following C function.
+///
 /// ```c
 /// int sum(int a, int b);
 /// ```
-/// The Generated dart code is -
+///
+/// The generated Dart code for this function (without `FfiNative`) is as follows.
+///
 /// ```dart
 /// int sum(int a, int b) {
 ///   return _sum(a, b);
@@ -26,6 +29,13 @@ import 'writer.dart';
 /// typedef _c_sum = ffi.Int32 Function(ffi.Int32 a, ffi.Int32 b);
 ///
 /// typedef _dart_sum = int Function(int a, int b);
+/// ```
+///
+/// When using `FfiNative`, the code is as follows.
+///
+/// ```dart
+/// @ffi.FfiNative<ffi.Int32 Function(ffi.Int32 a, ffi.Int32 b)>('sum')
+/// external int sum(int a, int b);
 /// ```
 class Func extends LookUpBinding {
   final FunctionType functionType;
