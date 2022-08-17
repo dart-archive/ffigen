@@ -151,7 +151,7 @@ class Func extends LookUpBinding {
       // Write function pointer.
       s.write(
           "late final $funcPointerName = ${w.lookupFuncIdentifier}<${w.ffiLibraryPrefix}.NativeFunction<$cType>>('$originalName');\n");
-    final isLeafString = isLeaf ? 'isLeaf:true' : '';
+      final isLeafString = isLeaf ? 'isLeaf:true' : '';
       s.write(
           'late final $funcVarName = $funcPointerName.asFunction<$dartType>($isLeafString);\n\n');
     }
