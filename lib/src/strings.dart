@@ -232,3 +232,6 @@ const doubleNaN = 'double.nan';
 
 /// USR for struct `_Dart_Handle`.
 const dartHandleUsr = 'c:@S@_Dart_Handle';
+
+const ffiNative = 'ffi-native';
+const ffiNativeAsset = 'asset';

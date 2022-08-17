@@ -8,7 +8,6 @@ import 'package:ffigen/src/header_parser/includer.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
-import '../data.dart';
 import '../utils.dart';
 
 final _logger = Logger('ffigen.header_parser.var_parser');

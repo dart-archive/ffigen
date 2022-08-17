@@ -80,6 +80,7 @@ Func? parseFunctionDeclaration(clang_types.CXCursor cursor) {
       exposeFunctionTypedefs:
           config.exposeFunctionTypedefs.shouldInclude(funcName),
       isLeaf: config.leafFunctions.shouldInclude(funcName),
+      ffiNativeConfig: config.ffiNativeConfig,
     );
     bindingsIndex.addFuncToSeen(funcUsr, _stack.top.func!);
   } else if (bindingsIndex.isSeenFunc(funcUsr)) {

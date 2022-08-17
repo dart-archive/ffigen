@@ -5,12 +5,10 @@
 import 'dart:io';
 
 import 'package:cli_util/cli_util.dart';
+import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/config_provider/config_types.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
-import 'binding.dart';
-import 'imports.dart';
-import 'struct.dart';
 import 'utils.dart';
 import 'writer.dart';
 
@@ -64,12 +62,23 @@ class Library {
     }
 
     // Seperate bindings which require lookup.
-    final lookUpBindings = this.bindings.whereType<LookUpBinding>().toList();
+    final lookUpBindings = this.bindings.whereType<LookUpBinding>().where((e) {
+      if (e is Func) {
+        return !e.ffiNativeConfig.enabled;
+      }
+      return true;
+    }).toList();
+    final ffiNativeBindings = this
+        .bindings
+        .whereType<Func>()
+        .where((e) => e.ffiNativeConfig.enabled)
+        .toList();
     final noLookUpBindings =
         this.bindings.whereType<NoLookUpBinding>().toList();
 
     _writer = Writer(
       lookUpBindings: lookUpBindings,
+      ffiNativeBindings: ffiNativeBindings,
       noLookUpBindings: noLookUpBindings,
       className: name,
       classDocComment: description,

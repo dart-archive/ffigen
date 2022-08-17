@@ -918,3 +918,28 @@ bool structPackingOverrideValidator(List<String> name, dynamic value) {
 
   return _result;
 }
+
+FfiNativeConfig ffiNativeExtractor(dynamic yamlConfig) {
+  final yamlMap = yamlConfig as YamlMap?;
+  return FfiNativeConfig(
+    enabled: true,
+    asset: yamlMap?[strings.ffiNativeAsset] as String?,
+  );
+}
+
+bool ffiNativeValidator(List<String> name, dynamic yamlConfig) {
+  if (!checkType<YamlMap>(name, yamlConfig)) {
+    return false;
+  }
+  for (final key in (yamlConfig as YamlMap).keys) {
+    if (!checkType<String?>([...name, key as String], yamlConfig[key])) {
+      return false;
+    }
+    if (key != strings.ffiNativeAsset) {
+      _logger.severe("'$name -> $key' must be one of the following - ${[
+        strings.ffiNativeAsset
+      ]}");
+    }
+  }
+  return true;
+}

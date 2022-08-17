@@ -15,7 +15,6 @@ import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
-import '../data.dart';
 import '../utils.dart';
 
 final _logger = Logger('ffigen.header_parser.macro_parser');
