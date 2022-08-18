@@ -932,8 +932,8 @@ bool ffiNativeValidator(List<String> name, dynamic yamlConfig) {
   if (!checkType<YamlMap?>(name, yamlConfig)) {
     return false;
   }
-  // ignore: prefer_void_to_null
-  if (checkType<Null>(name, yamlConfig)) {
+  if (yamlConfig == null) {
+    // Empty means no asset name.
     return true;
   }
   for (final key in (yamlConfig as YamlMap).keys) {
