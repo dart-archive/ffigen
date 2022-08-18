@@ -11,6 +11,7 @@ import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 import 'utils.dart';
 import 'writer.dart';
+import '../strings.dart' as strings;
 
 final _logger = Logger('ffigen.code_generator.library');
 
@@ -44,11 +45,12 @@ class Library {
       _sort();
     }
 
-    /// Handle any declaration-declaration name conflicts.
+    /// Handle any declaration-declaration name conflicts and emit warnings.
     final declConflictHandler = UniqueNamer({});
     for (final b in this.bindings) {
       _warnIfPrivateDeclaration(b);
       _resolveIfNameConflicts(declConflictHandler, b);
+      _warnIfExposeSymbolAddressAndFfiNative(b);
     }
 
     // Override pack values according to config. We do this after declaration
@@ -106,6 +108,16 @@ class Library {
           "Resolved name conflict: Declaration '$oldName' and has been renamed to '${b.name}'.");
     } else {
       namer.markUsed(b.name);
+    }
+  }
+
+  /// Logs a warning if generated declaration will be private.
+  void _warnIfExposeSymbolAddressAndFfiNative(Binding b) {
+    if (b is Func) {
+      if (b.exposeSymbolAddress && b.ffiNativeConfig.enabled) {
+        _logger.warning(
+            "Ignoring ${strings.symbolAddress} for '${b.name}' because it is generated as FfiNative.");
+      }
     }
   }
 

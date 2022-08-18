@@ -235,10 +235,8 @@ class Writer {
       s.write('}\n\n');
     }
 
-    if (ffiNativeBindings.isNotEmpty) {
-      for (final b in ffiNativeBindings) {
-        s.write(b.toBindingString(this).string);
-      }
+    for (final b in ffiNativeBindings) {
+      s.write(b.toBindingString(this).string);
     }
 
     if (symbolAddressWriter.shouldGenerate) {
