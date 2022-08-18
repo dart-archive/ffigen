@@ -33,6 +33,12 @@ Global? parseVarDeclaration(clang_types.CXCursor cursor) {
     return null;
   }
 
+  if (config.ffiNativeConfig.enabled) {
+    _logger.warning(
+        "Skipped global variable '$name', not supported in FfiNatives.");
+    return null;
+  }
+
   final global = Global(
     originalName: name,
     name: config.globals.renameUsingConfig(name),
