@@ -9,9 +9,10 @@ import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/config_provider/config_types.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
+
+import '../strings.dart' as strings;
 import 'utils.dart';
 import 'writer.dart';
-import '../strings.dart' as strings;
 
 final _logger = Logger('ffigen.code_generator.library');
 
