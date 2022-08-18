@@ -49,7 +49,8 @@ bool checkKeyInYaml(List<String> key, YamlMap map) {
       return false;
     }
   }
-  return last != null;
+  // The entry for the last key may be null.
+  return true;
 }
 
 /// Extracts value of nested [key] from [map].
@@ -928,11 +929,14 @@ FfiNativeConfig ffiNativeExtractor(dynamic yamlConfig) {
 }
 
 bool ffiNativeValidator(List<String> name, dynamic yamlConfig) {
-  if (!checkType<YamlMap>(name, yamlConfig)) {
+  if (!checkType<YamlMap?>(name, yamlConfig)) {
     return false;
   }
+  if (checkType<Null>(name, yamlConfig)) {
+    return true;
+  }
   for (final key in (yamlConfig as YamlMap).keys) {
-    if (!checkType<String?>([...name, key as String], yamlConfig[key])) {
+    if (!checkType<String>([...name, key as String], yamlConfig[key])) {
       return false;
     }
     if (key != strings.ffiNativeAsset) {

@@ -17,7 +17,7 @@ dev_dependencies:
 ffigen:
   name: NativeLibrary
   ffi-native:
-    asset: # 'assetname' # (optional)
+    # asset: 'assetname' # (optional)
   description: Bindings to `headers/example.h`.
   output: 'generated_bindings.dart'
   headers:

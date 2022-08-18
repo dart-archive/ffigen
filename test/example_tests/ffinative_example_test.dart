@@ -21,7 +21,6 @@ void main() {
       final config = Config.fromYaml(loadYaml('''
 ${strings.name}: NativeLibrary
 ${strings.ffiNative}:
-  ${strings.ffiNativeAsset}:
 ${strings.description}: Bindings to `headers/example.h`.
 ${strings.output}: 'generated_bindings.dart'
 ${strings.headers}:
