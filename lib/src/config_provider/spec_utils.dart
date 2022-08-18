@@ -932,6 +932,7 @@ bool ffiNativeValidator(List<String> name, dynamic yamlConfig) {
   if (!checkType<YamlMap?>(name, yamlConfig)) {
     return false;
   }
+  // ignore: prefer_void_to_null
   if (checkType<Null>(name, yamlConfig)) {
     return true;
   }
