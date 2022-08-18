@@ -49,7 +49,8 @@ bool checkKeyInYaml(List<String> key, YamlMap map) {
       return false;
     }
   }
-  return last != null;
+  // The entry for the last key may be null.
+  return true;
 }
 
 /// Extracts value of nested [key] from [map].
@@ -917,4 +918,33 @@ bool structPackingOverrideValidator(List<String> name, dynamic value) {
   }
 
   return _result;
+}
+
+FfiNativeConfig ffiNativeExtractor(dynamic yamlConfig) {
+  final yamlMap = yamlConfig as YamlMap?;
+  return FfiNativeConfig(
+    enabled: true,
+    asset: yamlMap?[strings.ffiNativeAsset] as String?,
+  );
+}
+
+bool ffiNativeValidator(List<String> name, dynamic yamlConfig) {
+  if (!checkType<YamlMap?>(name, yamlConfig)) {
+    return false;
+  }
+  // ignore: prefer_void_to_null
+  if (checkType<Null>(name, yamlConfig)) {
+    return true;
+  }
+  for (final key in (yamlConfig as YamlMap).keys) {
+    if (!checkType<String>([...name, key as String], yamlConfig[key])) {
+      return false;
+    }
+    if (key != strings.ffiNativeAsset) {
+      _logger.severe("'$name -> $key' must be one of the following - ${[
+        strings.ffiNativeAsset
+      ]}");
+    }
+  }
+  return true;
 }

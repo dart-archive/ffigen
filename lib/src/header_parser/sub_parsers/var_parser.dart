@@ -8,7 +8,6 @@ import 'package:ffigen/src/header_parser/includer.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
-import '../data.dart';
 import '../utils.dart';
 
 final _logger = Logger('ffigen.header_parser.var_parser');
@@ -31,6 +30,12 @@ Global? parseVarDeclaration(clang_types.CXCursor cursor) {
     _logger.fine('---- Removed Global, reason: unsupported type: '
         '${cursor.completeStringRepr()}');
     _logger.warning("Skipped global variable '$name', type not supported.");
+    return null;
+  }
+
+  if (config.ffiNativeConfig.enabled) {
+    _logger.warning(
+        "Skipped global variable '$name', not supported in FfiNatives.");
     return null;
   }
 

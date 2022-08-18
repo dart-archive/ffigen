@@ -1,3 +1,8 @@
+# 6.1.1
+
+- _EXPERIMENTAL_ support for `FfiNative`. The API and output
+  might change at any point.
+
 # 6.1.0
 
 - Added `exclude-all-by-default` config flag, which changes the default behavior

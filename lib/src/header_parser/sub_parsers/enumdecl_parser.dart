@@ -10,7 +10,6 @@ import 'package:ffigen/src/header_parser/sub_parsers/unnamed_enumdecl_parser.dar
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
-import '../data.dart';
 import '../includer.dart';
 import '../utils.dart';
 

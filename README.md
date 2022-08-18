@@ -489,6 +489,23 @@ type-map:
       'dart-type': 'CustomType3'
 ```
   </td>
+  </tr>
+  <tr>
+    <td>ffi-native</td>
+    <td>
+      <b>WARNING:</b> FfiNative support is EXPERIMENTAL. The API may change
+      in a breaking way without notice.
+      <br><br>
+      Generate `@FfiNative` bindings instead of bindings using `DynamicLibrary` or `lookup`.
+    </td>
+    <td>
+
+```yaml
+ffi-native:
+  asset: 'myasset' # Optional.
+```
+  </td>
+  </tr>
   <tr>
     <td>language</td>
     <td>
