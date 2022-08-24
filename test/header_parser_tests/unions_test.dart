@@ -14,7 +14,7 @@ import '../test_utils.dart';
 
 late Library actual;
 void main() {
-  group('packed_structs_test', () {
+  group('unions_test', () {
     setUpAll(() {
       logWarnings(Level.SEVERE);
       actual = parser.parse(

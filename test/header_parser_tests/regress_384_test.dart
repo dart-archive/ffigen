@@ -39,7 +39,7 @@ ${strings.headers}:
         'test',
         'header_parser_tests',
         'expected_bindings',
-        '_expected_unions_bindings.dart'
+        '_expected_regress_384_bindings.dart'
       ]);
     });
   });
