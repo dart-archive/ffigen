@@ -1,6 +1,11 @@
-# 6.1.1
+# 6.1.2
 
 - Fix bug where function bindings were not deduped correctly.
+
+# 6.1.1
+
+- _EXPERIMENTAL_ support for `FfiNative`. The API and output
+  might change at any point.
 
 # 6.1.0
 

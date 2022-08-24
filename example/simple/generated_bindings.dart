@@ -86,21 +86,21 @@ class NativeLibrary {
       _dividePtr.asFunction<ffi.Pointer<ffi.Float> Function(int, int)>();
 
   /// Divides 2 floats, returns a pointer to double.
-  ffi.Pointer<ffi.Double> dividePercision(
+  ffi.Pointer<ffi.Double> dividePrecision(
     ffi.Pointer<ffi.Float> a,
     ffi.Pointer<ffi.Float> b,
   ) {
-    return _dividePercision(
+    return _dividePrecision(
       a,
       b,
     );
   }
 
-  late final _dividePercisionPtr = _lookup<
+  late final _dividePrecisionPtr = _lookup<
       ffi.NativeFunction<
           ffi.Pointer<ffi.Double> Function(ffi.Pointer<ffi.Float>,
-              ffi.Pointer<ffi.Float>)>>('dividePercision');
-  late final _dividePercision = _dividePercisionPtr.asFunction<
+              ffi.Pointer<ffi.Float>)>>('dividePrecision');
+  late final _dividePrecision = _dividePrecisionPtr.asFunction<
       ffi.Pointer<ffi.Double> Function(
           ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>)>();
 }

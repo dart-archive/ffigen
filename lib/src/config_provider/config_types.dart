@@ -402,3 +402,10 @@ class ObjCModulePrefixer {
     return className;
   }
 }
+
+class FfiNativeConfig {
+  final bool enabled;
+  final String? asset;
+
+  const FfiNativeConfig({required this.enabled, this.asset});
+}

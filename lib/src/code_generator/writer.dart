@@ -2,10 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:ffigen/src/code_generator/imports.dart';
+import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/code_generator/utils.dart';
-
-import 'binding.dart';
 
 /// To store generated String bindings.
 class Writer {
@@ -13,6 +11,9 @@ class Writer {
 
   /// Holds bindings, which lookup symbols.
   final List<Binding> lookUpBindings;
+
+  /// Holds bindings, which lookup symbols through `FfiNative`.
+  final List<Binding> ffiNativeBindings;
 
   /// Holds bindings which don't lookup symbols.
   final List<Binding> noLookUpBindings;
@@ -78,6 +79,7 @@ class Writer {
   /// already used. This is used to avoid name collisions.
   Writer({
     required this.lookUpBindings,
+    required this.ffiNativeBindings,
     required this.noLookUpBindings,
     required String className,
     Set<LibraryImport>? additionalImports,
@@ -231,6 +233,10 @@ class Writer {
       }
 
       s.write('}\n\n');
+    }
+
+    for (final b in ffiNativeBindings) {
+      s.write(b.toBindingString(this).string);
     }
 
     if (symbolAddressWriter.shouldGenerate) {

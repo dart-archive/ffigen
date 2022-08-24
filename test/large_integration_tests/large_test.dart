@@ -39,10 +39,6 @@ ${strings.headers}:
     - '**Index.h'
 ${strings.typeMap}:
   ${strings.typeMapTypedefs}:
-    'size_t':
-      lib: 'pkg_ffi'
-      c-type: 'Size'
-      dart-type: 'int'
     'time_t':
       lib: 'ffi'
       c-type: 'Int64'
@@ -71,12 +67,6 @@ ${strings.headers}:
     - third_party/cjson_library/cJSON.h
   ${strings.includeDirectives}:
     - '**cJSON.h'
-${strings.typeMap}:
-  ${strings.typeMapTypedefs}:
-    'size_t':
-      lib: 'pkg_ffi'
-      c-type: 'Size'
-      dart-type: 'int'
 ${strings.preamble}: |
   // ignore_for_file: camel_case_types, non_constant_identifier_names
       ''') as YamlMap);

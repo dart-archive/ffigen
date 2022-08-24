@@ -151,6 +151,9 @@ class Config {
   Includer get leafFunctions => _leafFunctions;
   late Includer _leafFunctions;
 
+  FfiNativeConfig get ffiNativeConfig => _ffiNativeConfig;
+  late FfiNativeConfig _ffiNativeConfig;
+
   Config._();
 
   /// Create config from Yaml map.
@@ -505,6 +508,14 @@ class Config {
         extractedResult: (dynamic result) =>
             _leafFunctions = result as Includer,
       ),
+      [strings.ffiNative]: Specification<FfiNativeConfig>(
+        requirement: Requirement.no,
+        validator: ffiNativeValidator,
+        extractor: ffiNativeExtractor,
+        defaultValue: () => FfiNativeConfig(enabled: false),
+        extractedResult: (dynamic result) =>
+            _ffiNativeConfig = result as FfiNativeConfig,
+      )
     };
   }
 }
