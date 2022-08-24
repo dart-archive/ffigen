@@ -1,3 +1,7 @@
+# 6.1.1
+
+- Fix bug where function bindings were not deduped correctly.
+
 # 6.1.0
 
 - Added `exclude-all-by-default` config flag, which changes the default behavior
