@@ -1,4 +1,4 @@
-// Copyright (c) 2021, the Dart project authors. Please see the AUTHORS file
+// Copyright (c) 2022, the Dart project authors. Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
@@ -14,17 +14,18 @@ import '../test_utils.dart';
 
 late Library actual;
 void main() {
-  group('unions_test', () {
+  group('regress_384_test', () {
     setUpAll(() {
       logWarnings(Level.SEVERE);
       actual = parser.parse(
         Config.fromYaml(yaml.loadYaml('''
 ${strings.name}: 'NativeLibrary'
-${strings.description}: 'Unions Test'
+${strings.description}: 'Regression test for #384'
 ${strings.output}: 'unused'
 ${strings.headers}:
   ${strings.entryPoints}:
-    - 'test/header_parser_tests/unions.h'
+    - 'test/header_parser_tests/regress_384_header_1.h'
+    - 'test/header_parser_tests/regress_384_header_2.h'
         ''') as yaml.YamlMap),
       );
     });
@@ -33,12 +34,12 @@ ${strings.headers}:
       matchLibraryWithExpected(actual, [
         'test',
         'debug_generated',
-        'header_parser_unions_test_output.dart'
+        'header_parser_regress_384_test_output.dart'
       ], [
         'test',
         'header_parser_tests',
         'expected_bindings',
-        '_expected_unions_bindings.dart'
+        '_expected_regress_384_bindings.dart'
       ]);
     });
   });

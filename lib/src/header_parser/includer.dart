@@ -35,7 +35,7 @@ bool shouldIncludeUnion(String usr, String name) {
 
 bool shouldIncludeFunc(String usr, String name) {
   return _shouldIncludeDecl(
-      usr, name, bindingsIndex.isSeenType, config.functionDecl.shouldInclude);
+      usr, name, bindingsIndex.isSeenFunc, config.functionDecl.shouldInclude);
 }
 
 bool shouldIncludeEnumClass(String usr, String name) {
