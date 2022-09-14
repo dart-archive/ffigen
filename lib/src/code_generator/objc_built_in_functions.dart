@@ -300,8 +300,13 @@ class $name implements ${w.ffiLibraryPrefix}.Finalizable {
     _interfaceRegistry[interface.originalName] = interface;
   }
 
-  ObjCInterface? getInterface(String name) {
-    return _interfaceRegistry[name];
+  ObjCInterface get nsData {
+    return _interfaceRegistry["NSData"] ??
+        (ObjCInterface(
+          originalName: "NSData",
+          builtInFunctions: this,
+          isBuiltIn: true,
+        ));
   }
 
   void generateNSStringUtils(Writer w, StringBuffer s) {

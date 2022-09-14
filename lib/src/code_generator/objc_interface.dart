@@ -51,15 +51,16 @@ class ObjCInterface extends BindingType {
   ObjCInterface({
     String? usr,
     required String originalName,
-    required String name,
-    required this.lookupName,
+    String? name,
+    String? lookupName,
     String? dartDoc,
     required this.builtInFunctions,
     required this.isBuiltIn,
-  }) : super(
+  })  : lookupName = lookupName ?? originalName,
+        super(
           usr: usr,
           originalName: originalName,
-          name: name,
+          name: name ?? originalName,
           dartDoc: dartDoc,
         ) {
     if (isBuiltIn) {
@@ -308,10 +309,17 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
       originalName: 'dataUsingEncoding:',
       kind: ObjCMethodKind.method,
       isClass: false,
-      returnType: builtInFunctions.getInterface('NSData')!,
+      returnType: builtInFunctions.nsData,
       params_: [
         ObjCMethodParam(unsignedIntType, 'encoding'),
       ],
+    ));
+    addMethod(ObjCMethod(
+      originalName: 'length',
+      kind: ObjCMethodKind.propertyGetter,
+      isClass: false,
+      returnType: unsignedIntType,
+      params_: [],
     ));
   }
 
