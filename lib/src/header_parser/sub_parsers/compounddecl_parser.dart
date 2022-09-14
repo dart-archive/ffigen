@@ -74,6 +74,7 @@ final _stack = Stack<_ParsedCompound>();
 Compound? parseCompoundDeclaration(
   clang_types.CXCursor cursor,
   CompoundType compoundType, {
+
   /// Option to ignore declaration filter (Useful in case of extracting
   /// declarations when they are passed/returned by an included function.)
   bool ignoreFilter = false,
@@ -146,6 +147,7 @@ Compound? parseCompoundDeclaration(
 void fillCompoundMembersIfNeeded(
   Compound compound,
   clang_types.CXCursor cursor, {
+
   /// Option to ignore declaration filter (Useful in case of extracting
   /// declarations when they are passed/returned by an included function.)
   bool ignoreFilter = false,
