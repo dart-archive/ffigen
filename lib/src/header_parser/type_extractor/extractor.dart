@@ -24,7 +24,6 @@ const _padding = '  ';
 /// Converts cxtype to a typestring code_generator can accept.
 Type getCodeGenType(
   clang_types.CXType cxtype, {
-
   /// Option to ignore declaration filter (Useful in case of extracting
   /// declarations when they are passed/returned by an included function.)
   bool ignoreFilter = true,
