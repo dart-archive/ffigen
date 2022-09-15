@@ -11,9 +11,9 @@ external int sum(
 );
 
 /// Subtracts 2 integers.
-@ffi.FfiNative<ffi.Int Function(ffi.Pointer<ffi.Int>, ffi.Int)>('subtract')
+@ffi.FfiNative<ffi.Int Function(ffi.Int, ffi.Int)>('subtract')
 external int subtract(
-  ffi.Pointer<ffi.Int> a,
+  int a,
   int b,
 );
 
@@ -34,8 +34,8 @@ external ffi.Pointer<ffi.Float> divide(
 /// Divides 2 floats, returns a pointer to double.
 @ffi.FfiNative<
     ffi.Pointer<ffi.Double> Function(
-        ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>)>('dividePrecision')
+        ffi.Float, ffi.Pointer<ffi.Float>)>('dividePrecision')
 external ffi.Pointer<ffi.Double> dividePrecision(
-  ffi.Pointer<ffi.Float> a,
+  double a,
   ffi.Pointer<ffi.Float> b,
 );
