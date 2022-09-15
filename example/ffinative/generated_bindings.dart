@@ -32,10 +32,9 @@ external ffi.Pointer<ffi.Float> divide(
 );
 
 /// Divides 2 floats, returns a pointer to double.
-@ffi.FfiNative<
-    ffi.Pointer<ffi.Double> Function(
-        ffi.Float, ffi.Pointer<ffi.Float>)>('dividePrecision')
+@ffi.FfiNative<ffi.Pointer<ffi.Double> Function(ffi.Float, ffi.Float)>(
+    'dividePrecision')
 external ffi.Pointer<ffi.Double> dividePrecision(
   double a,
-  ffi.Pointer<ffi.Float> b,
+  double b,
 );
