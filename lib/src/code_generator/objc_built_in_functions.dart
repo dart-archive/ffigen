@@ -300,20 +300,33 @@ class $name implements ${w.ffiLibraryPrefix}.Finalizable {
     _interfaceRegistry[interface.originalName] = interface;
   }
 
+  ObjCInterface get nsData {
+    return _interfaceRegistry["NSData"] ??
+        (ObjCInterface(
+          originalName: "NSData",
+          builtInFunctions: this,
+          isBuiltIn: true,
+        ));
+  }
+
   void generateNSStringUtils(Writer w, StringBuffer s) {
-    // Generate a constructor that wraps stringWithCString, and a toString
-    // method that wraps UTF8String.
+    // Generate a constructor that wraps stringWithCharacters, and a toString
+    // method that wraps dataUsingEncoding.
     s.write('''
   factory NSString(${w.className} _lib, String str) {
-    final cstr = str.toNativeUtf8();
-    final nsstr = stringWithCString_encoding_(_lib, cstr.cast(), 4 /* UTF8 */);
+    final cstr = str.toNativeUtf16();
+    final nsstr = stringWithCharacters_length_(_lib, cstr.cast(), str.length);
     ${w.ffiPkgLibraryPrefix}.calloc.free(cstr);
     return nsstr;
   }
 
   @override
-  String toString() =>
-      (UTF8String).cast<${w.ffiPkgLibraryPrefix}.Utf8>().toDartString();
+  String toString() {
+    final data = dataUsingEncoding_(
+        0x94000100 /* NSUTF16LittleEndianStringEncoding */);
+    return data.bytes.cast<${w.ffiPkgLibraryPrefix}.Utf16>().toDartString(
+        length: length);
+  }
 ''');
   }
 

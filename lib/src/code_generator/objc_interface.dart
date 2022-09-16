@@ -51,19 +51,25 @@ class ObjCInterface extends BindingType {
   ObjCInterface({
     String? usr,
     required String originalName,
-    required String name,
-    required this.lookupName,
+    String? name,
+    String? lookupName,
     String? dartDoc,
     required this.builtInFunctions,
     required this.isBuiltIn,
-  }) : super(
+  })  : lookupName = lookupName ?? originalName,
+        super(
           usr: usr,
           originalName: originalName,
-          name: name,
+          name: name ?? originalName,
           dartDoc: dartDoc,
-        );
+        ) {
+    if (isBuiltIn) {
+      builtInFunctions.registerInterface(this);
+    }
+  }
 
   bool get isNSString => isBuiltIn && originalName == "NSString";
+  bool get isNSData => isBuiltIn && originalName == "NSData";
 
   @override
   BindingString toBindingString(Writer w) {
@@ -224,10 +230,6 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
     dependencies.add(this);
     builtInFunctions.addDependencies(dependencies);
 
-    if (isBuiltIn) {
-      builtInFunctions.registerInterface(this);
-    }
-
     _classObject = ObjCInternalGlobal(
         '_class_$originalName',
         (Writer w) => '${builtInFunctions.getClass.name}("$lookupName")',
@@ -239,6 +241,10 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
 
     if (isNSString) {
       _addNSStringMethods();
+    }
+
+    if (isNSData) {
+      _addNSDataMethods();
     }
 
     if (superType != null) {
@@ -290,20 +296,39 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
 
   void _addNSStringMethods() {
     addMethod(ObjCMethod(
-      originalName: 'stringWithCString:encoding:',
+      originalName: 'stringWithCharacters:length:',
       kind: ObjCMethodKind.method,
       isClass: true,
       returnType: this,
       params_: [
-        ObjCMethodParam(PointerType(charType), 'cString'),
-        ObjCMethodParam(unsignedIntType, 'enc'),
+        ObjCMethodParam(PointerType(wCharType), 'characters'),
+        ObjCMethodParam(unsignedIntType, 'length'),
       ],
     ));
     addMethod(ObjCMethod(
-      originalName: 'UTF8String',
+      originalName: 'dataUsingEncoding:',
+      kind: ObjCMethodKind.method,
+      isClass: false,
+      returnType: builtInFunctions.nsData,
+      params_: [
+        ObjCMethodParam(unsignedIntType, 'encoding'),
+      ],
+    ));
+    addMethod(ObjCMethod(
+      originalName: 'length',
       kind: ObjCMethodKind.propertyGetter,
       isClass: false,
-      returnType: PointerType(charType),
+      returnType: unsignedIntType,
+      params_: [],
+    ));
+  }
+
+  void _addNSDataMethods() {
+    addMethod(ObjCMethod(
+      originalName: 'bytes',
+      kind: ObjCMethodKind.propertyGetter,
+      isClass: false,
+      returnType: PointerType(voidType),
       params_: [],
     ));
   }
