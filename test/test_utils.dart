@@ -5,7 +5,6 @@
 import 'dart:io';
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:list_diff/list_diff.dart' as list_diff;
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
@@ -41,43 +40,6 @@ void verifySetupFile(File file) {
   }
 }
 
-// String matcher for large strings, which prints the diffs between the expected
-// and actual values, rather than just printing the entire strings.
-class _LargeStringMatcher extends Matcher {
-  final String expected;
-
-  _LargeStringMatcher(this.expected);
-
-  @override
-  bool matches(dynamic item, Map matchState) {
-    return expected == item;
-  }
-
-  @override
-  Description describe(Description description) {
-    return description.add('Has no diffs');
-  }
-
-  @override
-  Description describeMismatch(Object? item, Description mismatchDescription,
-      Map matchState, bool verbose) {
-    if (item is! String) {
-      return mismatchDescription.add('is ').addDescriptionOf(item);
-    }
-    return mismatchDescription.add('has diff:\n').add(_diff(item));
-  }
-
-  String _diff(String actual) {
-    final out = StringBuffer();
-    for (final op
-        in list_diff.diffSync(expected.split('\n'), actual.split('\n'))) {
-      out.write(op.isInsertion ? 'ACT ' : 'EXP ');
-      out.write('${op.index}\t${op.item}\n');
-    }
-    return out.toString();
-  }
-}
-
 /// Generates actual file using library and tests using [expect] with expected
 ///
 /// This will not delete the actual debug file incase [expect] throws an error.
@@ -93,7 +55,7 @@ void matchLibraryWithExpected(
     final expected = File(path.joinAll(pathToExpected))
         .readAsStringSync()
         .replaceAll('\r', '');
-    expect(actual, _LargeStringMatcher(expected));
+    expect(actual, expected);
     if (file.existsSync()) {
       file.delete();
     }

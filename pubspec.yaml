@@ -23,5 +23,4 @@ dependencies:
 
 dev_dependencies:
   lints: ^1.0.1
-  list_diff: ^2.0.1
   test: ^1.16.2
