@@ -21,12 +21,19 @@ final _logger = Logger('ffigen.header_parser.translation_unit_parser');
 
 late Set<Binding> _bindings;
 
+Pointer<
+        NativeFunction<
+            Int32 Function(
+                clang_types.CXCursor, clang_types.CXCursor, Pointer<Void>)>>?
+    _rootCursorVisitorPtr;
+
 /// Parses the translation unit and returns the generated bindings.
 Set<Binding> parseTranslationUnit(clang_types.CXCursor translationUnitCursor) {
   _bindings = {};
   final resultCode = clang.clang_visitChildren(
     translationUnitCursor,
-    Pointer.fromFunction(_rootCursorVisitor, exceptional_visitor_return),
+    _rootCursorVisitorPtr ??=
+        Pointer.fromFunction(_rootCursorVisitor, exceptional_visitor_return),
     nullptr,
   );
 

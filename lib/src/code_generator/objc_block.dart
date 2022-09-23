@@ -109,16 +109,18 @@ class $name extends _ObjCBlockBase {
   /// Creates a block from a C function pointer.
   $name.fromFunctionPointer(${w.className} lib, $natFnPtr ptr) :
       this._(lib.${builtInFunctions.newBlock.name}(
-          ${w.ffiLibraryPrefix}.Pointer.fromFunction<
+          _cFuncTrampoline ??= ${w.ffiLibraryPrefix}.Pointer.fromFunction<
               ${trampFuncType.getCType(w)}>($funcPtrTrampoline
                   $exceptionalReturn).cast(), ptr.cast()), lib);
+  static $voidPtr? _cFuncTrampoline;
 
   /// Creates a block from a Dart function.
   $name.fromFunction(${w.className} lib, ${funcType.getDartType(w)} fn) :
       this._(lib.${builtInFunctions.newBlock.name}(
-          ${w.ffiLibraryPrefix}.Pointer.fromFunction<
+          _dartFuncTrampoline ??= ${w.ffiLibraryPrefix}.Pointer.fromFunction<
               ${trampFuncType.getCType(w)}>($closureTrampoline
                   $exceptionalReturn).cast(), $registerClosure(fn)), lib);
+  static $voidPtr? _dartFuncTrampoline;
 ''');
 
     // Call method.

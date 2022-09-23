@@ -14,6 +14,27 @@ import '../utils.dart';
 
 final _logger = Logger('ffigen.header_parser.objcinterfacedecl_parser');
 
+Pointer<
+        NativeFunction<
+            Int32 Function(
+                clang_types.CXCursor, clang_types.CXCursor, Pointer<Void>)>>?
+    _parseInterfaceVisitorPtr;
+Pointer<
+        NativeFunction<
+            Int32 Function(
+                clang_types.CXCursor, clang_types.CXCursor, Pointer<Void>)>>?
+    _isClassDeclarationVisitorPtr;
+Pointer<
+        NativeFunction<
+            Int32 Function(
+                clang_types.CXCursor, clang_types.CXCursor, Pointer<Void>)>>?
+    _parseMethodVisitorPtr;
+Pointer<
+        NativeFunction<
+            Int32 Function(
+                clang_types.CXCursor, clang_types.CXCursor, Pointer<Void>)>>?
+    _findCategoryInterfaceVisitorPtr;
+
 class _ParsedObjCInterface {
   ObjCInterface interface;
   _ParsedObjCInterface(this.interface);
@@ -75,7 +96,8 @@ void fillObjCInterfaceMethodsIfNeeded(
   _interfaceStack.push(_ParsedObjCInterface(itf));
   clang.clang_visitChildren(
       cursor,
-      Pointer.fromFunction(_parseInterfaceVisitor, exceptional_visitor_return),
+      _parseInterfaceVisitorPtr ??= Pointer.fromFunction(
+          _parseInterfaceVisitor, exceptional_visitor_return),
       nullptr);
   _interfaceStack.pop();
 
@@ -89,7 +111,7 @@ bool _isClassDeclaration(clang_types.CXCursor cursor) {
   _isClassDeclarationResult = true;
   clang.clang_visitChildren(
       cursor,
-      Pointer.fromFunction(
+      _isClassDeclarationVisitorPtr ??= Pointer.fromFunction(
           _isClassDeclarationVisitor, exceptional_visitor_return),
       nullptr);
   return _isClassDeclarationResult;
@@ -218,7 +240,8 @@ void _parseMethod(clang_types.CXCursor cursor) {
   _methodStack.push(parsed);
   clang.clang_visitChildren(
       cursor,
-      Pointer.fromFunction(_parseMethodVisitor, exceptional_visitor_return),
+      _parseMethodVisitorPtr ??=
+          Pointer.fromFunction(_parseMethodVisitor, exceptional_visitor_return),
       nullptr);
   _methodStack.pop();
   if (parsed.hasError) {
@@ -292,7 +315,7 @@ BindingType? parseObjCCategoryDeclaration(clang_types.CXCursor cursor) {
   _findCategoryInterfaceVisitorResult = null;
   clang.clang_visitChildren(
       cursor,
-      Pointer.fromFunction(
+      _findCategoryInterfaceVisitorPtr ??= Pointer.fromFunction(
           _findCategoryInterfaceVisitor, exceptional_visitor_return),
       nullptr);
   final itfCursor = _findCategoryInterfaceVisitorResult;
@@ -312,7 +335,8 @@ BindingType? parseObjCCategoryDeclaration(clang_types.CXCursor cursor) {
   _interfaceStack.push(_ParsedObjCInterface(itf));
   clang.clang_visitChildren(
       cursor,
-      Pointer.fromFunction(_parseInterfaceVisitor, exceptional_visitor_return),
+      _parseInterfaceVisitorPtr ??= Pointer.fromFunction(
+          _parseInterfaceVisitor, exceptional_visitor_return),
       nullptr);
   _interfaceStack.pop();
 

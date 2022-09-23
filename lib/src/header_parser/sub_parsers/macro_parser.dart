@@ -19,6 +19,12 @@ import '../utils.dart';
 
 final _logger = Logger('ffigen.header_parser.macro_parser');
 
+Pointer<
+        NativeFunction<
+            Int32 Function(
+                clang_types.CXCursor, clang_types.CXCursor, Pointer<Void>)>>?
+    _macroVariablevisitorPtr;
+
 /// Adds a macro definition to be parsed later.
 void saveMacroDefinition(clang_types.CXCursor cursor) {
   final macroUsr = cursor.usr();
@@ -79,7 +85,8 @@ List<Constant>? parseSavedMacros() {
 
     final resultCode = clang.clang_visitChildren(
       rootCursor,
-      Pointer.fromFunction(_macroVariablevisitor, exceptional_visitor_return),
+      _macroVariablevisitorPtr ??= Pointer.fromFunction(
+          _macroVariablevisitor, exceptional_visitor_return),
       nullptr,
     );
 

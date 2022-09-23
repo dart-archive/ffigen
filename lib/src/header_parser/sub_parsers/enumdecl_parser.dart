@@ -15,6 +15,12 @@ import '../utils.dart';
 
 final _logger = Logger('ffigen.header_parser.enumdecl_parser');
 
+Pointer<
+        NativeFunction<
+            Int32 Function(
+                clang_types.CXCursor, clang_types.CXCursor, Pointer<Void>)>>?
+    _enumCursorVisitorPtr;
+
 /// Holds temporary information regarding [EnumClass] while parsing.
 class _ParsedEnum {
   EnumClass? enumClass;
@@ -70,7 +76,8 @@ EnumClass? parseEnumDeclaration(
 void _addEnumConstant(clang_types.CXCursor cursor) {
   final resultCode = clang.clang_visitChildren(
     cursor,
-    Pointer.fromFunction(_enumCursorVisitor, exceptional_visitor_return),
+    _enumCursorVisitorPtr ??=
+        Pointer.fromFunction(_enumCursorVisitor, exceptional_visitor_return),
     nullptr,
   );
 

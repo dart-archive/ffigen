@@ -127,6 +127,11 @@ extension CXCursorExt on clang_types.CXCursor {
   }
 }
 
+Pointer<
+        NativeFunction<
+            Int32 Function(
+                clang_types.CXCursor, clang_types.CXCursor, Pointer<Void>)>>?
+    _printAstVisitorPtr;
 int _printAstVisitorMaxDepth = 0;
 int _printAstVisitor(clang_types.CXCursor cursor, clang_types.CXCursor parent,
     Pointer<Void> clientData) {
@@ -137,7 +142,8 @@ int _printAstVisitor(clang_types.CXCursor cursor, clang_types.CXCursor parent,
   print(('  ' * depth) + cursor.completeStringRepr());
   clang.clang_visitChildren(
       cursor,
-      Pointer.fromFunction(_printAstVisitor, exceptional_visitor_return),
+      _printAstVisitorPtr ??=
+          Pointer.fromFunction(_printAstVisitor, exceptional_visitor_return),
       Pointer<Void>.fromAddress(depth + 1));
   return clang_types.CXChildVisitResult.CXChildVisit_Continue;
 }
