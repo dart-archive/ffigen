@@ -16,6 +16,12 @@ import '../utils.dart';
 
 final _logger = Logger('ffigen.header_parser.compounddecl_parser');
 
+Pointer<
+        NativeFunction<
+            Int32 Function(
+                clang_types.CXCursor, clang_types.CXCursor, Pointer<Void>)>>?
+    _compoundMembersVisitorPtr;
+
 /// Holds temporary information regarding [compound] while parsing.
 class _ParsedCompound {
   Compound compound;
@@ -179,7 +185,8 @@ void fillCompoundMembersIfNeeded(
   _stack.push(parsed);
   final resultCode = clang.clang_visitChildren(
     cursor,
-    Pointer.fromFunction(_compoundMembersVisitor, exceptional_visitor_return),
+    _compoundMembersVisitorPtr ??= Pointer.fromFunction(
+        _compoundMembersVisitor, exceptional_visitor_return),
     nullptr,
   );
   _stack.pop();
