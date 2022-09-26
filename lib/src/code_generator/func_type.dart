@@ -58,7 +58,7 @@ class FunctionType extends Type {
 
 /// Represents a NativeFunction<Function>.
 class NativeFunc extends Type {
-  final Type type;
+  final FunctionType type;
 
   NativeFunc(this.type);
 
