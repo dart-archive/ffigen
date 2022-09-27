@@ -192,8 +192,10 @@ _CreateTypeFromCursorResult _createTypeFromCursor(clang_types.CXType cxtype,
         }
       }
 
-      final typealias = parseTypedefDeclaration(cursor,
-          pointerReference: pointerReference);
+      final typealias = parseTypedefDeclaration(
+        cursor,
+        pointerReference: pointerReference
+      );
 
       if (typealias != null) {
         return _CreateTypeFromCursorResult(typealias);
