@@ -17,8 +17,10 @@ import 'config_types.dart';
 
 final _logger = Logger('ffigen.config_provider.spec_utils');
 
-/// Replaces the path separators according to current platform.
-String _replaceSeparators(String path) {
+/// Replaces the path separators according to current platform. If a relative
+/// path is passed in, it is resolved relative to the config path, and the
+/// absolute path is returned.
+String _normalizePath(String path) {
   if (Platform.isWindows) {
     return path.replaceAll(p.posix.separator, p.windows.separator);
   } else {
@@ -314,14 +316,14 @@ Headers headersExtractor(dynamic yamlConfig) {
         final headerGlob = h as String;
         // Add file directly to header if it's not a Glob but a File.
         if (File(headerGlob).existsSync()) {
-          final osSpecificPath = _replaceSeparators(headerGlob);
+          final osSpecificPath = _normalizePath(headerGlob);
           entryPoints.add(osSpecificPath);
           _logger.fine('Adding header/file: $headerGlob');
         } else {
           final glob = Glob(headerGlob);
           for (final file in glob.listFileSystemSync(const LocalFileSystem(),
               followLinks: true)) {
-            final fixedPath = _replaceSeparators(file.path);
+            final fixedPath = _normalizePath(file.path);
             entryPoints.add(fixedPath);
             _logger.fine('Adding header/file: $fixedPath');
           }
@@ -331,7 +333,7 @@ Headers headersExtractor(dynamic yamlConfig) {
     if (key == strings.includeDirectives) {
       for (final h in (yamlConfig[key] as YamlList)) {
         final headerGlob = h as String;
-        final fixedGlob = _replaceSeparators(headerGlob);
+        final fixedGlob = _normalizePath(headerGlob);
         includeGlobs.add(quiver.Glob(fixedGlob));
       }
     }
@@ -384,7 +386,7 @@ bool libclangDylibValidator(List<String> name, dynamic value) {
 }
 
 String getDylibPath(String dylibParentFoler) {
-  dylibParentFoler = _replaceSeparators(dylibParentFoler);
+  dylibParentFoler = _normalizePath(dylibParentFoler);
   String dylibPath;
   if (Platform.isMacOS) {
     dylibPath = p.join(dylibParentFoler, strings.libclang_dylib_macos);
@@ -504,7 +506,7 @@ bool llvmPathValidator(List<String> name, dynamic value) {
   return true;
 }
 
-String outputExtractor(dynamic value) => _replaceSeparators(value as String);
+String outputExtractor(dynamic value) => _normalizePath(value as String);
 
 bool outputValidator(List<String> name, dynamic value) =>
     checkType<String>(name, value);

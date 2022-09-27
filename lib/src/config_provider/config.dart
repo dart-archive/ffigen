@@ -157,7 +157,7 @@ class Config {
   Config._();
 
   /// Create config from Yaml map.
-  factory Config.fromYaml(YamlMap map) {
+  factory Config.fromYaml(YamlMap map, String filename) {
     final configspecs = Config._();
     _logger.finest('Config Map: ' + map.toString());
 
