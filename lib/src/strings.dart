@@ -39,7 +39,10 @@ const langObjC = 'objc';
 const clangLangObjC = ['-x', 'objective-c'];
 const clangObjCBoolDefine = '__OBJC_BOOL_IS_BOOL';
 const clangInclude = '-include';
+
+// Special objective C types.
 const objcBOOL = 'BOOL';
+const objcInstanceType = 'instancetype';
 
 // Internal objective C directories that are automatically pulled in by clang,
 // and should be excluded from output (unless explicitly used).

@@ -53,7 +53,7 @@ void main() {
     test('Block from function pointer', () {
       final block = ObjCBlock.fromFunctionPointer(
           lib, Pointer.fromFunction(_add100, 999));
-      final blockTester = BlockTester.makeFromBlock_(lib, block.pointer);
+      final blockTester = BlockTester.makeFromBlock_(lib, block);
       blockTester.pokeBlock();
       expect(blockTester.call_(123), 223);
       expect(block(123), 223);
@@ -65,7 +65,7 @@ void main() {
 
     test('Block from function', () {
       final block = ObjCBlock.fromFunction(lib, makeAdder(4000));
-      final blockTester = BlockTester.makeFromBlock_(lib, block.pointer);
+      final blockTester = BlockTester.makeFromBlock_(lib, block);
       blockTester.pokeBlock();
       expect(blockTester.call_(123), 4123);
       expect(block(123), 4123);
@@ -74,26 +74,32 @@ void main() {
     Pointer<Void> funcPointerBlockRefCountTest() {
       final block = ObjCBlock.fromFunctionPointer(
           lib, Pointer.fromFunction(_add100, 999));
-      expect(BlockTester.getBlockRetainCount_(lib, block.pointer), 1);
+      expect(BlockTester.getBlockRetainCount_(lib, block), 1);
       return block.pointer.cast();
     }
 
     test('Function pointer block ref counting', () {
       final rawBlock = funcPointerBlockRefCountTest();
       doGC();
-      expect(BlockTester.getBlockRetainCount_(lib, rawBlock.cast()), 0);
+      expect(
+          BlockTester.getBlockRetainCount_(
+              lib, ObjCBlock.fromBlockPointer(lib, rawBlock.cast())),
+          0);
     });
 
     Pointer<Void> funcBlockRefCountTest() {
       final block = ObjCBlock.fromFunction(lib, makeAdder(4000));
-      expect(BlockTester.getBlockRetainCount_(lib, block.pointer), 1);
+      expect(BlockTester.getBlockRetainCount_(lib, block), 1);
       return block.pointer.cast();
     }
 
     test('Function pointer block ref counting', () {
       final rawBlock = funcBlockRefCountTest();
       doGC();
-      expect(BlockTester.getBlockRetainCount_(lib, rawBlock.cast()), 0);
+      expect(
+          BlockTester.getBlockRetainCount_(
+              lib, ObjCBlock.fromBlockPointer(lib, rawBlock.cast())),
+          0);
     });
   });
 }
