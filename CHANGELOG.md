@@ -1,3 +1,7 @@
+# 6.1.3
+
+- Fix typedef include/exclude config.
+
 # 6.1.2
 
 - Fix bug where function bindings were not deduped correctly.
