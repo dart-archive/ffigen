@@ -59,6 +59,10 @@ bool shouldIncludeMacro(String usr, String name) {
 }
 
 bool shouldIncludeTypealias(String usr, String name) {
+  // Objective C has some core typedefs that are important to keep.
+  if (config.language == Language.objc && name == strings.objcInstanceType) {
+    return true;
+  }
   return _shouldIncludeDecl(
       usr, name, bindingsIndex.isSeenType, config.typedefs.shouldInclude);
 }
