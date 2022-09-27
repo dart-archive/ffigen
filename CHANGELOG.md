@@ -2,7 +2,6 @@
 
 - Fix typedef include/exclude config.
 - Return `ObjCBlock` wrapper instead of raw pointer in more cases.
-- Add `ObjCBlock.fromBlockPointer`.
 
 # 6.1.2
 

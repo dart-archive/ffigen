@@ -121,10 +121,6 @@ class $name extends _ObjCBlockBase {
               ${trampFuncType.getCType(w)}>($closureTrampoline
                   $exceptionalReturn).cast(), $registerClosure(fn)), lib);
   static $voidPtr? _dartFuncTrampoline;
-
-  /// Creates a block from an Objective C raw block pointer.
-  $name.fromBlockPointer(${w.className} lib, ${blockPtr.getCType(w)} block) :
-      super._(block, lib, retain: true, release: true);
 ''');
 
     // Call method.

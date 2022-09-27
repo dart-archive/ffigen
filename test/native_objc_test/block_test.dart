@@ -74,7 +74,7 @@ void main() {
     Pointer<Void> funcPointerBlockRefCountTest() {
       final block = ObjCBlock.fromFunctionPointer(
           lib, Pointer.fromFunction(_add100, 999));
-      expect(BlockTester.getBlockRetainCount_(lib, block), 1);
+      expect(BlockTester.getBlockRetainCount_(lib, block.pointer.cast()), 1);
       return block.pointer.cast();
     }
 
@@ -82,14 +82,13 @@ void main() {
       final rawBlock = funcPointerBlockRefCountTest();
       doGC();
       expect(
-          BlockTester.getBlockRetainCount_(
-              lib, ObjCBlock.fromBlockPointer(lib, rawBlock.cast())),
+          BlockTester.getBlockRetainCount_(lib, rawBlock.cast()),
           0);
     });
 
     Pointer<Void> funcBlockRefCountTest() {
       final block = ObjCBlock.fromFunction(lib, makeAdder(4000));
-      expect(BlockTester.getBlockRetainCount_(lib, block), 1);
+      expect(BlockTester.getBlockRetainCount_(lib, block.pointer.cast()), 1);
       return block.pointer.cast();
     }
 
@@ -97,8 +96,7 @@ void main() {
       final rawBlock = funcBlockRefCountTest();
       doGC();
       expect(
-          BlockTester.getBlockRetainCount_(
-              lib, ObjCBlock.fromBlockPointer(lib, rawBlock.cast())),
+          BlockTester.getBlockRetainCount_(lib, rawBlock.cast()),
           0);
     });
   });

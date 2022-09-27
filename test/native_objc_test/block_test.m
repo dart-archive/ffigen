@@ -13,7 +13,7 @@ typedef int32_t (^IntBlock)(int32_t);
 }
 + (BlockTester*)makeFromBlock:(IntBlock)block;
 + (BlockTester*)makeFromMultiplier:(int32_t)mult;
-+ (uint64_t)getBlockRetainCount:(IntBlock)block;
++ (uint64_t)getBlockRetainCount:(void*)block;
 - (int32_t)call:(int32_t)x;
 - (IntBlock)getBlock;
 - (void)pokeBlock;
@@ -41,7 +41,7 @@ typedef struct {
 } BlockRefCountExtractor;
 
 void* valid_block_isa = NULL;
-+ (uint64_t)getBlockRetainCount:(IntBlock)block {
++ (uint64_t)getBlockRetainCount:(void*)block {
   BlockRefCountExtractor* b = (BlockRefCountExtractor*)block;
   // HACK: The only way I can find to reliably figure out that a block has been
   // deleted is to check the isa field (the lower bits of the flags field seem
