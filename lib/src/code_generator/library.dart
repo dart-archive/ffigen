@@ -4,11 +4,10 @@
 
 import 'dart:io';
 
-import 'package:cli_util/cli_util.dart';
+import 'package:dart_style/dart_style.dart';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/config_provider/config_types.dart';
 import 'package:logging/logging.dart';
-import 'package:path/path.dart' as p;
 
 import '../strings.dart' as strings;
 import 'utils.dart';
@@ -132,20 +131,21 @@ class Library {
   /// If format is true(default), the formatter will be called to format the generated file.
   void generateFile(File file, {bool format = true}) {
     if (!file.existsSync()) file.createSync(recursive: true);
-    file.writeAsStringSync(generate());
+    var bindings = generate();
     if (format) {
-      _dartFormat(file.path);
+      bindings = _dartFormat(bindings, file.path);
     }
+    file.writeAsStringSync(bindings);
   }
 
-  /// Formats a file using the Dart formatter.
-  void _dartFormat(String path) {
-    final sdkPath = getSdkPath();
-    final result = Process.runSync(
-        p.join(sdkPath, 'bin', 'dart'), ['format', path],
-        runInShell: Platform.isWindows);
-    if (result.stderr.toString().isNotEmpty) {
-      _logger.severe(result.stderr);
+  /// Formats [content] using the Dart formatter, specifying [path] as the
+  /// file location for error output.
+  String _dartFormat(String content, String path) {
+    final formatter = DartFormatter();
+    try {
+      return formatter.format(content, uri: path);
+    } catch (err) {
+      _logger.severe(err);
       throw FormatException('Unable to format generated file: $path.');
     }
   }
