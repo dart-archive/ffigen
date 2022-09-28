@@ -32,11 +32,8 @@ ${strings.preamble}: |
     });
 
     test('Expected bindings', () {
-      matchLibraryWithExpected(actual, [
-        'test',
-        'debug_generated',
-        'decl_type_name_collision_test_output.dart'
-      ], [
+      matchLibraryWithExpected(
+          actual, 'decl_type_name_collision_test_output.dart', [
         'test',
         'collision_tests',
         'expected_bindings',

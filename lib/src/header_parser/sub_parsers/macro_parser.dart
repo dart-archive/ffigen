@@ -183,7 +183,7 @@ File createFileForMacros() {
   final fileExt = 'hpp';
 
   // Find a filename which doesn't already exist.
-  var file = File('$fileNameBase.$fileExt');
+  var file = File(p.join(strings.tmpDir, '$fileNameBase.$fileExt'));
   var i = 0;
   while (file.existsSync()) {
     i++;

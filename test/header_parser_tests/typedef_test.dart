@@ -45,11 +45,8 @@ ${strings.preamble}: |
     });
 
     test('Expected Bindings', () {
-      matchLibraryWithExpected(actual, [
-        'test',
-        'debug_generated',
-        'header_parser_typedef_test_output.dart'
-      ], [
+      matchLibraryWithExpected(
+          actual, 'header_parser_typedef_test_output.dart', [
         'test',
         'header_parser_tests',
         'expected_bindings',
