@@ -81,9 +81,7 @@ void main() {
     test('Function pointer block ref counting', () {
       final rawBlock = funcPointerBlockRefCountTest();
       doGC();
-      expect(
-          BlockTester.getBlockRetainCount_(lib, rawBlock.cast()),
-          0);
+      expect(BlockTester.getBlockRetainCount_(lib, rawBlock.cast()), 0);
     });
 
     Pointer<Void> funcBlockRefCountTest() {
@@ -95,9 +93,7 @@ void main() {
     test('Function pointer block ref counting', () {
       final rawBlock = funcBlockRefCountTest();
       doGC();
-      expect(
-          BlockTester.getBlockRetainCount_(lib, rawBlock.cast()),
-          0);
+      expect(BlockTester.getBlockRetainCount_(lib, rawBlock.cast()), 0);
     });
   });
 }
