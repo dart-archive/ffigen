@@ -40,10 +40,10 @@ void verifySetupFile(File file) {
   }
 }
 
-// Remove '\r' for Windows compatibility. Replace \\@ with @, because of a
+// Remove '\r' for Windows compatibility. Replace \@ with @, because of a
 // mismatch in the comments generated on different versions of clang.
 String _normalizeGeneratedCode(String generated) {
-  return generated.replaceAll('\r', '').replaceAll(r"\\@", "@");
+  return generated.replaceAll('\r', '').replaceAll(r"\@", "@");
 }
 
 /// Generates actual file using library and tests using [expect] with expected
