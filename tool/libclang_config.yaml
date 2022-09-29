@@ -118,3 +118,4 @@ functions:
     - clang_Cursor_getObjCPropertySetterName
     - clang_Type_getNullability
     - clang_Location_isInSystemHeader
+    - clang_getClangVersion
