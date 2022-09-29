@@ -66,7 +66,13 @@ List<Constant>? parseSavedMacros() {
   final index = clang.clang_createIndex(0, 0);
   Pointer<Pointer<Utf8>> clangCmdArgs = nullptr;
   var cmdLen = 0;
-  clangCmdArgs = createDynamicStringArray(config.compilerOpts);
+
+  final compilerOpts = config.compilerOpts;
+  config.headers.entryPoints.followedBy([file.path]).forEach((entryFile) {
+    compilerOpts.add("-imacros$entryFile");
+  });
+  clangCmdArgs = createDynamicStringArray(compilerOpts);
+
   cmdLen = config.compilerOpts.length;
   final tu = clang.clang_parseTranslationUnit(
     index,
@@ -179,20 +185,21 @@ late Set<String> _macroVarNames;
 
 /// Creates a temporary file for parsing macros in current directory.
 File createFileForMacros() {
-  final fileNameBase = 'temp_for_macros';
+  final fileNameBase = p.join(strings.tmpDir, 'temp_for_macros');
   final fileExt = 'hpp';
 
   // Find a filename which doesn't already exist.
-  var file = File(p.join(strings.tmpDir, '$fileNameBase.$fileExt'));
+  var file = File('$fileNameBase.$fileExt');
   var i = 0;
   while (file.existsSync()) {
     i++;
-    file = File('${fileNameBase.split('.')[0]}_$i.$fileExt');
+    file = File('${fileNameBase}_$i.$fileExt');
   }
 
   // Create file.
   file.createSync();
-  // Save generted name.
+
+  // Save generated name.
   _generatedFileBaseName = p.basename(file.path);
 
   // Write file contents.
