@@ -1176,6 +1176,17 @@ class Clang {
   late final _clang_getCursorKindSpelling =
       _clang_getCursorKindSpellingPtr.asFunction<CXString Function(int)>();
 
+  /// Return a version string, suitable for showing to a user, but not
+  /// intended to be parsed (the format is not guaranteed to be stable).
+  CXString clang_getClangVersion() {
+    return _clang_getClangVersion();
+  }
+
+  late final _clang_getClangVersionPtr =
+      _lookup<ffi.NativeFunction<CXString Function()>>('clang_getClangVersion');
+  late final _clang_getClangVersion =
+      _clang_getClangVersionPtr.asFunction<CXString Function()>();
+
   /// If cursor is a statement declaration tries to evaluate the
   /// statement and if its variable, tries to evaluate its initializer,
   /// into its corresponding type.
