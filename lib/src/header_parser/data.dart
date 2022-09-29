@@ -50,5 +50,6 @@ void initializeGlobals({required Config config}) {
   _bindingsIndex = BindingsIndex();
   _objCBuiltInFunctions = ObjCBuiltInFunctions();
 
-  print("DEBUG: Clang version = ${_clang.clang_getClangVersion().toStringAndDispose()}");
+  print(
+      "DEBUG: Clang version = ${_clang.clang_getClangVersion().toStringAndDispose()}");
 }
