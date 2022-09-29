@@ -40,6 +40,12 @@ void verifySetupFile(File file) {
   }
 }
 
+// Remove '\r' for Windows compatibility. Replace \\@ with @, because of a
+// mismatch in the comments generated on different versions of clang.
+String _normalizeGeneratedCode(String generated) {
+  return generated.replaceAll('\r', '').replaceAll(r"\\@", "@");
+}
+
 /// Generates actual file using library and tests using [expect] with expected
 ///
 /// This will not delete the actual debug file incase [expect] throws an error.
@@ -51,10 +57,9 @@ void matchLibraryWithExpected(
   library.generateFile(file);
 
   try {
-    final actual = file.readAsStringSync().replaceAll('\r', '');
-    final expected = File(path.joinAll(pathToExpected))
-        .readAsStringSync()
-        .replaceAll('\r', '');
+    final actual = _normalizeGeneratedCode(file.readAsStringSync());
+    final expected = _normalizeGeneratedCode(
+        File(path.joinAll(pathToExpected)).readAsStringSync());
     expect(actual, expected);
     if (file.existsSync()) {
       file.delete();
