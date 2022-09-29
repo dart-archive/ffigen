@@ -1,3 +1,8 @@
+# 7.0.0-dev
+
+- Relative paths in ffigen config files are now assumed to be relative to the
+  config file, rather than the working directory of the tool invocation.
+
 # 6.1.2
 
 - Fix bug where function bindings were not deduped correctly.
