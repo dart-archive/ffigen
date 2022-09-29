@@ -19,6 +19,10 @@ final _logger = Logger('ffigen.config_provider.config');
 ///
 /// Handles validation, extraction of confiurations from yaml file.
 class Config {
+  /// Input filename.
+  String? get filename => _filename;
+  String? _filename;
+
   /// Location for llvm/lib folder.
   String get libclangDylib => _libclangDylib;
   late String _libclangDylib;
@@ -154,11 +158,11 @@ class Config {
   FfiNativeConfig get ffiNativeConfig => _ffiNativeConfig;
   late FfiNativeConfig _ffiNativeConfig;
 
-  Config._();
+  Config._(this._filename);
 
   /// Create config from Yaml map.
-  factory Config.fromYaml(YamlMap map, String filename) {
-    final configspecs = Config._();
+  factory Config.fromYaml(YamlMap map, [String? filename]) {
+    final configspecs = Config._(filename);
     _logger.finest('Config Map: ' + map.toString());
 
     final specs = configspecs._getSpecs();
@@ -235,7 +239,7 @@ class Config {
       [strings.output]: Specification<String>(
         requirement: Requirement.yes,
         validator: outputValidator,
-        extractor: outputExtractor,
+        extractor: (dynamic value) => outputExtractor(value, filename),
         extractedResult: (dynamic result) => _output = result as String,
       ),
       [strings.language]: Specification<Language>(
@@ -248,7 +252,7 @@ class Config {
       [strings.headers]: Specification<Headers>(
         requirement: Requirement.yes,
         validator: headersValidator,
-        extractor: headersExtractor,
+        extractor: (dynamic value) => headersExtractor(value, filename),
         extractedResult: (dynamic result) => _headers = result as Headers,
       ),
       [strings.compilerOpts]: Specification<List<String>>(

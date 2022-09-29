@@ -55,8 +55,7 @@ Future<void> _generateBindings(String config) async {
     '--config',
     'test/native_objc_test/$config',
   ];
-  final process =
-      await Process.start(Platform.executable, args, workingDirectory: '../..');
+  final process = await Process.start(Platform.executable, args);
   unawaited(stdout.addStream(process.stdout));
   unawaited(stderr.addStream(process.stderr));
   final result = await process.exitCode;
