@@ -49,4 +49,6 @@ void initializeGlobals({required Config config}) {
   _unnamedEnumConstants = [];
   _bindingsIndex = BindingsIndex();
   _objCBuiltInFunctions = ObjCBuiltInFunctions();
+
+  print("DEBUG: Clang version = ${_clang.clang_getClangVersion().toStringAndDispose()}");
 }

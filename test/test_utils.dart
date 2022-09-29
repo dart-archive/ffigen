@@ -40,26 +40,30 @@ void verifySetupFile(File file) {
   }
 }
 
-// Remove '\r' for Windows compatibility. Replace \@ with @, because of a
-// mismatch in the comments generated on different versions of clang.
-String _normalizeGeneratedCode(String generated) {
-  return generated.replaceAll('\r', '').replaceAll(r"\@", "@");
+// Remove '\r' for Windows compatibility, then apply user's normalizer.
+String _normalizeGeneratedCode(
+    String generated, String Function(String)? codeNormalizer) {
+  final noCR = generated.replaceAll('\r', '');
+  if (codeNormalizer == null) return noCR;
+  return codeNormalizer(noCR);
 }
 
 /// Generates actual file using library and tests using [expect] with expected
 ///
 /// This will not delete the actual debug file incase [expect] throws an error.
 void matchLibraryWithExpected(
-    Library library, List<String> pathForActual, List<String> pathToExpected) {
+    Library library, List<String> pathForActual, List<String> pathToExpected,
+    {String Function(String)? codeNormalizer}) {
   final file = File(
     path.joinAll(pathForActual),
   );
   library.generateFile(file);
 
   try {
-    final actual = _normalizeGeneratedCode(file.readAsStringSync());
+    final actual =
+        _normalizeGeneratedCode(file.readAsStringSync(), codeNormalizer);
     final expected = _normalizeGeneratedCode(
-        File(path.joinAll(pathToExpected)).readAsStringSync());
+        File(path.joinAll(pathToExpected)).readAsStringSync(), codeNormalizer);
     expect(actual, expected);
     if (file.existsSync()) {
       file.delete();
