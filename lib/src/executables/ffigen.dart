@@ -113,11 +113,7 @@ Config getConfigFromCustomYaml(String yamlPath) {
     exit(1);
   }
 
-  // Throws a [YamlException] if it's unable to parse the Yaml.
-  final bindingsConfigMap =
-      yaml.loadYaml(yamlFile.readAsStringSync()) as yaml.YamlMap;
-
-  return Config.fromYaml(bindingsConfigMap, yamlFile.path);
+  return Config.fromFile(yamlFile);
 }
 
 /// Parses the cmd line arguments.

@@ -4,8 +4,9 @@
 
 /// Validates the yaml input by the user, prints useful info for the user
 
-import 'package:ffigen/src/code_generator.dart';
+import 'dart:io';
 
+import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart';
 
@@ -174,6 +175,14 @@ class Config {
 
     configspecs._extract(map, specs);
     return configspecs;
+  }
+
+  /// Create config from a file.
+  factory Config.fromFile(File file) {
+    // Throws a [YamlException] if it's unable to parse the Yaml.
+    final configYaml = loadYaml(file.readAsStringSync()) as YamlMap;
+
+    return Config.fromYaml(configYaml, file.path);
   }
 
   /// Add compiler options for clang. If [highPriority] is true these are added
