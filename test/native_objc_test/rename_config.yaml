@@ -9,7 +9,7 @@
 name: RenameLibrary
 description: 'Rename test'
 language: objc
-output: 'test/native_objc_test/rename_test_bindings.dart'
+output: 'rename_test_bindings.dart'
 exclude-all-by-default: true
 objc-interfaces:
   include:
@@ -18,6 +18,6 @@ objc-interfaces:
     '_(.*)': '$1'
 headers:
   entry-points:
-    - 'test/native_objc_test/rename_test.m'
+    - 'rename_test.m'
 preamble: |
   // ignore_for_file: camel_case_types, non_constant_identifier_names, unused_element, unused_field
