@@ -26,6 +26,14 @@ String _replaceSeparators(String path) {
   }
 }
 
+/// Replaces the path separators according to current platform. If a relative
+/// path is passed in, it is resolved relative to the config path, and the
+/// absolute path is returned.
+String _normalizePath(String path, String? configFilename) {
+  return _replaceSeparators(
+      configFilename == null ? path : p.join(p.dirname(configFilename), path));
+}
+
 /// Checks if type of value is [T], logs an error if it's not.
 ///
 /// [key] is printed as `'item1 -> item2 => item3'` in log message.
@@ -305,23 +313,23 @@ bool compilerOptsAutoValidator(List<String> name, dynamic value) {
   return _result;
 }
 
-Headers headersExtractor(dynamic yamlConfig) {
+Headers headersExtractor(dynamic yamlConfig, String? configFilename) {
   final entryPoints = <String>[];
   final includeGlobs = <quiver.Glob>[];
   for (final key in (yamlConfig as YamlMap).keys) {
     if (key == strings.entryPoints) {
       for (final h in (yamlConfig[key] as YamlList)) {
-        final headerGlob = h as String;
+        final headerGlob = _normalizePath(h as String, configFilename);
         // Add file directly to header if it's not a Glob but a File.
         if (File(headerGlob).existsSync()) {
-          final osSpecificPath = _replaceSeparators(headerGlob);
+          final osSpecificPath = headerGlob;
           entryPoints.add(osSpecificPath);
           _logger.fine('Adding header/file: $headerGlob');
         } else {
           final glob = Glob(headerGlob);
           for (final file in glob.listFileSystemSync(const LocalFileSystem(),
               followLinks: true)) {
-            final fixedPath = _replaceSeparators(file.path);
+            final fixedPath = file.path;
             entryPoints.add(fixedPath);
             _logger.fine('Adding header/file: $fixedPath');
           }
@@ -331,7 +339,7 @@ Headers headersExtractor(dynamic yamlConfig) {
     if (key == strings.includeDirectives) {
       for (final h in (yamlConfig[key] as YamlList)) {
         final headerGlob = h as String;
-        final fixedGlob = _replaceSeparators(headerGlob);
+        final fixedGlob = _normalizePath(headerGlob, configFilename);
         includeGlobs.add(quiver.Glob(fixedGlob));
       }
     }
@@ -364,36 +372,6 @@ bool headersValidator(List<String> name, dynamic value) {
     }
     return true;
   }
-}
-
-String libclangDylibExtractor(dynamic value) => getDylibPath(value as String);
-
-bool libclangDylibValidator(List<String> name, dynamic value) {
-  if (!checkType<String>(name, value)) {
-    return false;
-  } else {
-    final dylibPath = getDylibPath(value as String);
-    if (!File(dylibPath).existsSync()) {
-      _logger.severe(
-          'Dynamic library: $dylibPath does not exist or is corrupt, input folder: $value.');
-      return false;
-    } else {
-      return true;
-    }
-  }
-}
-
-String getDylibPath(String dylibParentFoler) {
-  dylibParentFoler = _replaceSeparators(dylibParentFoler);
-  String dylibPath;
-  if (Platform.isMacOS) {
-    dylibPath = p.join(dylibParentFoler, strings.libclang_dylib_macos);
-  } else if (Platform.isWindows) {
-    dylibPath = p.join(dylibParentFoler, strings.libclang_dylib_windows);
-  } else {
-    dylibPath = p.join(dylibParentFoler, strings.libclang_dylib_linux);
-  }
-  return dylibPath;
 }
 
 /// Returns location of dynamic library by searching default locations. Logs
@@ -504,7 +482,8 @@ bool llvmPathValidator(List<String> name, dynamic value) {
   return true;
 }
 
-String outputExtractor(dynamic value) => _replaceSeparators(value as String);
+String outputExtractor(dynamic value, String? configFilename) =>
+    _normalizePath(value as String, configFilename);
 
 bool outputValidator(List<String> name, dynamic value) =>
     checkType<String>(name, value);

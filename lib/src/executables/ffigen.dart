@@ -101,7 +101,7 @@ Config getConfigFromPubspec() {
     _logger.severe("Couldn't find an entry for '$configKey' in $pubspecName.");
     exit(1);
   }
-  return Config.fromYaml(bindingsConfigMap);
+  return Config.fromYaml(bindingsConfigMap, pubspecFile.path);
 }
 
 /// Extracts configuration from a custom yaml file.
@@ -113,11 +113,7 @@ Config getConfigFromCustomYaml(String yamlPath) {
     exit(1);
   }
 
-  // Throws a [YamlException] if it's unable to parse the Yaml.
-  final bindingsConfigMap =
-      yaml.loadYaml(yamlFile.readAsStringSync()) as yaml.YamlMap;
-
-  return Config.fromYaml(bindingsConfigMap);
+  return Config.fromFile(yamlFile);
 }
 
 /// Parses the cmd line arguments.
