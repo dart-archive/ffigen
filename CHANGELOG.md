@@ -1,3 +1,8 @@
+# 7.0.0
+
+- Fix typedef include/exclude config.
+- Return `ObjCBlock` wrapper instead of raw pointer in more cases.
+
 # 7.0.0-dev
 
 - Relative paths in ffigen config files are now assumed to be relative to the

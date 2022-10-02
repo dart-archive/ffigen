@@ -5,6 +5,7 @@
 import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 
+import '../strings.dart' as strings;
 import 'binding_string.dart';
 import 'utils.dart';
 import 'writer.dart';
@@ -341,7 +342,7 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
 
   bool _isInstanceType(Type type) =>
       type is Typealias &&
-      type.originalName == 'instancetype' &&
+      type.originalName == strings.objcInstanceType &&
       _isObject(type.type);
 
   // Utils for converting between the internal types passed to native code, and
