@@ -188,12 +188,14 @@ bool typeMapValidator(List<String> name, dynamic yamlConfig) {
   return result;
 }
 
-Map<String, String> symbolFileMapExtractor(dynamic yamlConfig) {
+Map<String, String> symbolFileMapExtractor(
+    dynamic yamlConfig, String? configFilename) {
   final resultMap = <String, String>{};
   final typeMap = yamlConfig as YamlMap?;
   if (typeMap != null) {
     for (final typeName in typeMap.keys) {
-      resultMap[typeName as String] = typeMap[typeName] as String;
+      resultMap[typeName as String] =
+          _normalizePath(typeMap[typeName] as String, configFilename);
     }
   }
   return resultMap;

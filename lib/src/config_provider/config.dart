@@ -396,7 +396,7 @@ class Config {
       ),
       [strings.symbolFileMap]: Specification<Map<String, String>>(
         validator: symbolFileMapValidator,
-        extractor: symbolFileMapExtractor,
+        extractor: (dynamic value) => symbolFileMapExtractor(value, filename),
         defaultValue: () => <String, String>{},
         extractedResult: (dynamic result) {
           _usrTypeMappings = makeImportTypeMappingFromSymbolFileMap(
