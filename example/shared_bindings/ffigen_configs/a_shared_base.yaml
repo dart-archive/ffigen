@@ -12,3 +12,5 @@ library-imports:
   base_h: '../generated/base_gen.dart'
 symbol-file-map:
   base_h: '../generated/base_symbols.yaml'
+preamble: |
+  // ignore_for_file: non_constant_identifier_names, camel_case_types

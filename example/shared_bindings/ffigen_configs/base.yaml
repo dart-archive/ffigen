@@ -9,3 +9,5 @@ symbol-file-output: '../generated/base_symbols.yaml'
 headers:
   entry-points:
     - '../headers/base.h'
+preamble: |
+  // ignore_for_file: non_constant_identifier_names, camel_case_types
