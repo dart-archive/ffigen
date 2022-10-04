@@ -28,6 +28,7 @@ const llvmPath = 'llvm-path';
 String get dynamicLibParentName => Platform.isWindows ? 'bin' : 'lib';
 
 const output = 'output';
+const symbolFileOutput = 'symbol-file-output';
 
 const language = 'language';
 

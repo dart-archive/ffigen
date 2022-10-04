@@ -29,12 +29,14 @@ class Typealias extends BindingType {
     ///
     /// E.g if C type is ffi.Void func(ffi.Int32), Dart type is void func(int).
     bool useDartType = false,
+    bool isInternal = false,
   })  : _useDartType = useDartType,
         super(
           usr: usr,
           name: name,
           dartDoc: dartDoc,
           originalName: originalName,
+          isInternal: isInternal,
         );
 
   @override

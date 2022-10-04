@@ -58,6 +58,13 @@ void main(List<String> args) {
   library.generateFile(gen);
   _logger
       .info(successPen('Finished, Bindings generated in ${gen.absolute.path}'));
+
+  if (config.symbolFileOutput.isNotEmpty) {
+    final symbolFileGen = File(config.symbolFileOutput);
+    library.generateSymbolOutputFileFile(symbolFileGen);
+    _logger.info(successPen(
+        'Finished, Symbol Output generated in ${symbolFileGen.absolute.path}'));
+  }
 }
 
 Config getConfig(ArgResults result) {

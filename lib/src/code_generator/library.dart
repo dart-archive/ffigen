@@ -138,6 +138,22 @@ class Library {
     }
   }
 
+  /// Generates [file] with symbol output yaml.
+  void generateSymbolOutputFileFile(File file) {
+    final bindings =
+        this.bindings.where((element) => !element.isInternal).toList();
+    bindings.sort((a, b) => a.usr.compareTo(b.usr));
+    final sb = StringBuffer();
+    // Write symbols.
+    sb.writeln("symbols:");
+    for (final b in bindings) {
+      sb.writeln('  "${b.usr}":');
+      sb.writeln("    name: ${b.name}");
+    }
+    if (!file.existsSync()) file.createSync(recursive: true);
+    file.writeAsStringSync(sb.toString());
+  }
+
   /// Formats a file using the Dart formatter.
   void _dartFormat(String path) {
     final sdkPath = getSdkPath();

@@ -32,6 +32,10 @@ class Config {
   String get output => _output;
   late String _output;
 
+  /// Symbol file output name.
+  String get symbolFileOutput => _symbolFileOutput;
+  late String _symbolFileOutput;
+
   /// Language that ffigen is consuming.
   Language get language => _language;
   late Language _language;
@@ -250,6 +254,14 @@ class Config {
         validator: outputValidator,
         extractor: (dynamic value) => outputExtractor(value, filename),
         extractedResult: (dynamic result) => _output = result as String,
+      ),
+      [strings.symbolFileOutput]: Specification<String>(
+        requirement: Requirement.no,
+        validator: outputValidator,
+        extractor: (dynamic value) => outputExtractor(value, filename),
+        defaultValue: () => "",
+        extractedResult: (dynamic result) =>
+            _symbolFileOutput = result as String,
       ),
       [strings.language]: Specification<Language>(
         requirement: Requirement.no,
