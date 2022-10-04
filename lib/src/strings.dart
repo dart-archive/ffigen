@@ -139,6 +139,8 @@ final predefinedLibraryImports = {
 
 const typeMap = 'type-map';
 
+const symbolFileMap = 'symbol-file-map';
+
 // Sub-fields for type-map.
 const typeMapTypedefs = 'typedefs';
 const typeMapStructs = 'structs';

@@ -188,6 +188,34 @@ bool typeMapValidator(List<String> name, dynamic yamlConfig) {
   return result;
 }
 
+Map<String, String> symbolFileMapExtractor(dynamic yamlConfig) {
+  final resultMap = <String, String>{};
+  final typeMap = yamlConfig as YamlMap?;
+  if (typeMap != null) {
+    for (final typeName in typeMap.keys) {
+      resultMap[typeName as String] = typeMap[typeName] as String;
+    }
+  }
+  return resultMap;
+}
+
+bool symbolFileMapValidator(List<String> name, dynamic yamlConfig) {
+  if (!checkType<YamlMap>(name, yamlConfig)) {
+    return false;
+  }
+  for (final key in (yamlConfig as YamlMap).keys) {
+    if (!checkType<String>([...name, key as String], yamlConfig[key])) {
+      return false;
+    }
+    if (strings.predefinedLibraryImports.containsKey(key)) {
+      _logger.severe(
+          '${strings.symbolFileMap} -> $key should not collide with any predefined imports - ${strings.predefinedLibraryImports.keys}.');
+      return false;
+    }
+  }
+  return true;
+}
+
 Map<String, String> stringStringMapExtractor(dynamic yamlConfig) {
   final resultMap = <String, String>{};
   final inputMap = yamlConfig as YamlMap?;
@@ -227,6 +255,28 @@ Map<String, ImportedType> makeImportTypeMapping(
           ImportedType(libraryImportsMap[lib]!, cType, dartType);
     } else {
       throw Exception("Please declare $lib under library-imports.");
+    }
+  }
+  return typeMappings;
+}
+
+Map<String, ImportedType> makeImportTypeMappingFromSymbolFileMap(
+    Map<String, String> symbolFileMappings,
+    Map<String, LibraryImport> libraryImportsMap) {
+  final typeMappings = <String, ImportedType>{};
+  for (final lib in symbolFileMappings.keys) {
+    if (!libraryImportsMap.containsKey(lib)) {
+      throw Exception("Please declare $lib under library-imports.");
+    }
+    final libraryImport = libraryImportsMap[lib]!;
+    final symbolDocument =
+        loadYaml(File(symbolFileMappings[lib]!).readAsStringSync()) as YamlMap;
+    final symbols = symbolDocument['symbols']! as YamlMap;
+    for (final key in symbols.keys) {
+      final usr = key as String;
+      final value = symbols[usr]! as YamlMap;
+      typeMappings[usr] = ImportedType(
+          libraryImport, (value)['name'] as String, (value)['name'] as String);
     }
   }
   return typeMappings;

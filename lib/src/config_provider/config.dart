@@ -106,6 +106,10 @@ class Config {
   Map<String, ImportedType> get typedefTypeMappings => _typedefTypeMappings;
   late Map<String, ImportedType> _typedefTypeMappings;
 
+  /// Stores all the symbol file maps name to ImportedType mappings specified by user.
+  Map<String, ImportedType> get usrTypeMappings => _usrTypeMappings;
+  late Map<String, ImportedType> _usrTypeMappings;
+
   /// Stores struct name to ImportedType mappings specified by user.
   Map<String, ImportedType> get structTypeMappings => _structTypeMappings;
   late Map<String, ImportedType> _structTypeMappings;
@@ -388,6 +392,15 @@ class Config {
         defaultValue: () => <String, LibraryImport>{},
         extractedResult: (dynamic result) {
           _libraryImports = result as Map<String, LibraryImport>;
+        },
+      ),
+      [strings.symbolFileMap]: Specification<Map<String, String>>(
+        validator: symbolFileMapValidator,
+        extractor: symbolFileMapExtractor,
+        defaultValue: () => <String, String>{},
+        extractedResult: (dynamic result) {
+          _usrTypeMappings = makeImportTypeMappingFromSymbolFileMap(
+              result as Map<String, String>, _libraryImports);
         },
       ),
       [strings.typeMap, strings.typeMapTypedefs]:
