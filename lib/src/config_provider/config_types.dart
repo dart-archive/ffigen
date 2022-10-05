@@ -5,6 +5,7 @@
 /// Contains all the neccesary classes required by config.
 import 'dart:io';
 
+import 'package:ffigen/src/code_generator.dart';
 import 'package:quiver/pattern.dart' as quiver;
 
 import 'path_finder.dart';
@@ -408,4 +409,12 @@ class FfiNativeConfig {
   final String? asset;
 
   const FfiNativeConfig({required this.enabled, this.asset});
+}
+
+class LibraryImportConfig {
+  final Map<String, LibraryImport> libraryImportMap;
+  final Map<String, ImportedType> usrTypeMappings;
+
+  LibraryImportConfig(
+      {this.libraryImportMap = const {}, this.usrTypeMappings = const {}});
 }

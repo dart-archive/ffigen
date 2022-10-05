@@ -8,6 +8,7 @@ import 'dart:io';
 
 import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
+import 'package:package_config/package_config_types.dart';
 import 'package:yaml/yaml.dart';
 
 import '../strings.dart' as strings;
@@ -23,6 +24,10 @@ class Config {
   /// Input filename.
   String? get filename => _filename;
   String? _filename;
+
+  /// Package config.
+  PackageConfig? get packageConfig => _packageConfig;
+  PackageConfig? _packageConfig;
 
   /// Location for llvm/lib folder.
   String get libclangDylib => _libclangDylib;
@@ -167,11 +172,12 @@ class Config {
   FfiNativeConfig get ffiNativeConfig => _ffiNativeConfig;
   late FfiNativeConfig _ffiNativeConfig;
 
-  Config._(this._filename);
+  Config._(this._filename, this._packageConfig);
 
   /// Create config from Yaml map.
-  factory Config.fromYaml(YamlMap map, [String? filename]) {
-    final configspecs = Config._(filename);
+  factory Config.fromYaml(YamlMap map,
+      {String? filename, PackageConfig? packageConfig}) {
+    final configspecs = Config._(filename, packageConfig);
     _logger.finest('Config Map: ' + map.toString());
 
     final specs = configspecs._getSpecs();
@@ -186,11 +192,12 @@ class Config {
   }
 
   /// Create config from a file.
-  factory Config.fromFile(File file) {
+  factory Config.fromFile(File file, {PackageConfig? packageConfig}) {
     // Throws a [YamlException] if it's unable to parse the Yaml.
     final configYaml = loadYaml(file.readAsStringSync()) as YamlMap;
 
-    return Config.fromYaml(configYaml, file.path);
+    return Config.fromYaml(configYaml,
+        filename: file.path, packageConfig: packageConfig);
   }
 
   /// Add compiler options for clang. If [highPriority] is true these are added
@@ -386,21 +393,15 @@ class Config {
         extractedResult: (dynamic result) => _objcModulePrefixer =
             ObjCModulePrefixer(result as Map<String, String>),
       ),
-      [strings.libraryImports]: Specification<Map<String, LibraryImport>>(
+      [strings.libraryImports]: Specification<LibraryImportConfig>(
         validator: libraryImportsValidator,
-        extractor: libraryImportsExtractor,
-        defaultValue: () => <String, LibraryImport>{},
+        extractor: (dynamic value) =>
+            libraryImportsExtractor(value, _filename, _packageConfig),
+        defaultValue: () => LibraryImportConfig(),
         extractedResult: (dynamic result) {
-          _libraryImports = result as Map<String, LibraryImport>;
-        },
-      ),
-      [strings.symbolFileMap]: Specification<Map<String, String>>(
-        validator: symbolFileMapValidator,
-        extractor: (dynamic value) => symbolFileMapExtractor(value, filename),
-        defaultValue: () => <String, String>{},
-        extractedResult: (dynamic result) {
-          _usrTypeMappings = makeImportTypeMappingFromSymbolFileMap(
-              result as Map<String, String>, _libraryImports);
+          result = result as LibraryImportConfig;
+          _libraryImports = result.libraryImportMap;
+          _usrTypeMappings = result.usrTypeMappings;
         },
       ),
       [strings.typeMap, strings.typeMapTypedefs]:

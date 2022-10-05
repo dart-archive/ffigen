@@ -20,6 +20,7 @@ dependencies:
   cli_util: ^0.3.0
   glob: ^2.0.0
   file: ^6.0.0
+  package_config: ^2.1.0
 
 dev_dependencies:
   lints: ^1.0.1

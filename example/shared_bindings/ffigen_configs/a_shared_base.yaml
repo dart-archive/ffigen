@@ -9,8 +9,8 @@ headers:
   entry-points:
     - '../headers/a.h'
 library-imports:
-  base_h: '../generated/base_gen.dart'
-symbol-file-map:
-  base_h: '../generated/base_symbols.yaml'
+  base_h:
+    import-path: '../generated/base_gen.dart'
+    symbol-file: '../generated/base_symbols.yaml'
 preamble: |
   // ignore_for_file: non_constant_identifier_names, camel_case_types

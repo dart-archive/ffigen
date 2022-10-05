@@ -46,8 +46,8 @@ void main() {
 
       final pubspecFile = File('example/swift/pubspec.yaml');
       final pubspecYaml = loadYaml(pubspecFile.readAsStringSync()) as YamlMap;
-      final config =
-          Config.fromYaml(pubspecYaml['ffigen'] as YamlMap, pubspecFile.path);
+      final config = Config.fromYaml(pubspecYaml['ffigen'] as YamlMap,
+          filename: pubspecFile.path);
       final output = parse(config).generate();
 
       // Verify that the output contains all the methods and classes that the

@@ -9,6 +9,7 @@ import 'package:file/local.dart';
 import 'package:glob/glob.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
+import 'package:package_config/package_config.dart';
 import 'package:quiver/pattern.dart' as quiver;
 import 'package:yaml/yaml.dart';
 
@@ -114,16 +115,46 @@ bool booleanExtractor(dynamic value) => value as bool;
 bool booleanValidator(List<String> name, dynamic value) =>
     checkType<bool>(name, value);
 
-Map<String, LibraryImport> libraryImportsExtractor(dynamic yamlConfig) {
-  final resultMap = <String, LibraryImport>{};
-  final typeMap = yamlConfig as YamlMap?;
-  if (typeMap != null) {
-    for (final typeName in typeMap.keys) {
-      resultMap[typeName as String] =
-          LibraryImport(typeName, typeMap[typeName] as String);
+LibraryImportConfig libraryImportsExtractor(
+    dynamic yamlConfig, String? configFileName, PackageConfig? packageConfig) {
+  final libraryImportMap = <String, LibraryImport>{};
+  final usrTypeMappings = <String, ImportedType>{};
+
+  for (final typeName in (yamlConfig as YamlMap).keys) {
+    final value = yamlConfig[typeName];
+    if (value is String) {
+      libraryImportMap[typeName as String] = LibraryImport(typeName, value);
+    } else if (value is YamlMap) {
+      var importPath = value[strings.importPath] as String?;
+      if (value.containsKey(strings.symbolFile)) {
+        try {
+          final symbolFile = loadSymbolFile(value[strings.symbolFile] as String,
+              configFileName, packageConfig);
+          importPath ??= symbolFile[strings.importPath] as String;
+          libraryImportMap[typeName as String] =
+              LibraryImport(typeName, importPath);
+          final symbols = symbolFile['symbols'] as YamlMap;
+          for (final key in symbols.keys) {
+            final usr = key as String;
+            final value = symbols[usr]! as YamlMap;
+            usrTypeMappings[usr] = ImportedType(
+                libraryImportMap[typeName as String]!,
+                value['name'] as String,
+                value['name'] as String);
+          }
+        } catch (e, s) {
+          throw Exception("Error parsing: ${[
+            strings.libraryImports,
+            typeName,
+            strings.symbolFile
+          ].join(' -> ')} ${value[strings.symbolFile]}. Error: $e, Stack: $s");
+        }
+      }
     }
   }
-  return resultMap;
+
+  return LibraryImportConfig(
+      libraryImportMap: libraryImportMap, usrTypeMappings: usrTypeMappings);
 }
 
 bool libraryImportsValidator(List<String> name, dynamic yamlConfig) {
@@ -131,16 +162,42 @@ bool libraryImportsValidator(List<String> name, dynamic yamlConfig) {
     return false;
   }
   for (final key in (yamlConfig as YamlMap).keys) {
-    if (!checkType<String>([...name, key as String], yamlConfig[key])) {
-      return false;
-    }
     if (strings.predefinedLibraryImports.containsKey(key)) {
       _logger.severe(
           'library-import -> $key should not collide with any predefined imports - ${strings.predefinedLibraryImports.keys}.');
       return false;
     }
+    if (yamlConfig[key] is YamlMap) {
+      final subkeys = (yamlConfig[key] as YamlMap).keys;
+      // TODO: we probably need to make both import-path and symbol-file required.
+      if (subkeys.isEmpty) {
+        _logger.severe("${[...name, key].join(' -> ')} cannot be empty");
+        return false;
+      }
+      for (final subkey in subkeys) {
+        if (![strings.importPath, strings.symbolFile].contains(subkey)) {
+          _logger.severe("Unknown key '$subkey' in '$name -> $key.");
+          return false;
+        }
+        if (!checkType<String>([...name, key as String, subkey as String],
+            yamlConfig[key][subkey])) {
+          return false;
+        }
+      }
+    } else if (!checkType<String>([...name, key as String], yamlConfig[key])) {
+      return false;
+    }
   }
   return true;
+}
+
+YamlMap loadSymbolFile(String symbolFilePath, String? configFileName,
+    PackageConfig? packageConfig) {
+  final path = symbolFilePath.startsWith('package:')
+      ? packageConfig!.resolve(Uri.parse(symbolFilePath))!.toFilePath()
+      : _normalizePath(symbolFilePath, configFileName);
+
+  return loadYaml(File(path).readAsStringSync()) as YamlMap;
 }
 
 Map<String, List<String>> typeMapExtractor(dynamic yamlConfig) {
@@ -188,36 +245,6 @@ bool typeMapValidator(List<String> name, dynamic yamlConfig) {
   return result;
 }
 
-Map<String, String> symbolFileMapExtractor(
-    dynamic yamlConfig, String? configFilename) {
-  final resultMap = <String, String>{};
-  final typeMap = yamlConfig as YamlMap?;
-  if (typeMap != null) {
-    for (final typeName in typeMap.keys) {
-      resultMap[typeName as String] =
-          _normalizePath(typeMap[typeName] as String, configFilename);
-    }
-  }
-  return resultMap;
-}
-
-bool symbolFileMapValidator(List<String> name, dynamic yamlConfig) {
-  if (!checkType<YamlMap>(name, yamlConfig)) {
-    return false;
-  }
-  for (final key in (yamlConfig as YamlMap).keys) {
-    if (!checkType<String>([...name, key as String], yamlConfig[key])) {
-      return false;
-    }
-    if (strings.predefinedLibraryImports.containsKey(key)) {
-      _logger.severe(
-          '${strings.symbolFileMap} -> $key should not collide with any predefined imports - ${strings.predefinedLibraryImports.keys}.');
-      return false;
-    }
-  }
-  return true;
-}
-
 Map<String, String> stringStringMapExtractor(dynamic yamlConfig) {
   final resultMap = <String, String>{};
   final inputMap = yamlConfig as YamlMap?;
@@ -257,28 +284,6 @@ Map<String, ImportedType> makeImportTypeMapping(
           ImportedType(libraryImportsMap[lib]!, cType, dartType);
     } else {
       throw Exception("Please declare $lib under library-imports.");
-    }
-  }
-  return typeMappings;
-}
-
-Map<String, ImportedType> makeImportTypeMappingFromSymbolFileMap(
-    Map<String, String> symbolFileMappings,
-    Map<String, LibraryImport> libraryImportsMap) {
-  final typeMappings = <String, ImportedType>{};
-  for (final lib in symbolFileMappings.keys) {
-    if (!libraryImportsMap.containsKey(lib)) {
-      throw Exception("Please declare $lib under library-imports.");
-    }
-    final libraryImport = libraryImportsMap[lib]!;
-    final symbolDocument =
-        loadYaml(File(symbolFileMappings[lib]!).readAsStringSync()) as YamlMap;
-    final symbols = symbolDocument['symbols']! as YamlMap;
-    for (final key in symbols.keys) {
-      final usr = key as String;
-      final value = symbols[usr]! as YamlMap;
-      typeMappings[usr] = ImportedType(
-          libraryImport, (value)['name'] as String, (value)['name'] as String);
     }
   }
   return typeMappings;
