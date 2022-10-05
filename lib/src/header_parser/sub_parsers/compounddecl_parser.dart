@@ -38,7 +38,8 @@ class _ParsedCompound {
       flexibleArrayMember ||
       bitFieldMember ||
       (dartHandleMember && config.useDartHandle) ||
-      incompleteCompoundMember;
+      incompleteCompoundMember ||
+      alignment == clang_types.CXTypeLayoutError.CXTypeLayoutError_Incomplete;
 
   // A struct without any attribute is definitely not packed. #pragma pack(...)
   // also adds an attribute, but it's unexposed and cannot be travesed.
@@ -60,7 +61,7 @@ class _ParsedCompound {
   /// Returns pack value of a struct depending on config, returns null for no
   /// packing.
   int? get packValue {
-    if (compound.isStruct && _isPacked) {
+    if (compound.isStruct && _isPacked && !isIncomplete) {
       if (strings.packingValuesMap.containsKey(alignment)) {
         return alignment;
       } else {

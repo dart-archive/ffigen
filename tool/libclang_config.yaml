@@ -41,6 +41,7 @@ enums:
     - CXEvalResultKind
     - CXObjCPropertyAttrKind
     - CXTypeNullabilityKind
+    - CXTypeLayoutError
 
 structs:
   include:

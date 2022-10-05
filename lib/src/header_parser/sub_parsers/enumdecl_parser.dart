@@ -96,6 +96,9 @@ int _enumCursorVisitor(clang_types.CXCursor cursor, clang_types.CXCursor parent,
       case clang_types.CXCursorKind.CXCursor_EnumConstantDecl:
         _addEnumConstantToEnumClass(cursor);
         break;
+      case clang_types.CXCursorKind.CXCursor_UnexposedAttr:
+        // Ignore.
+        break;
       default:
         _logger.fine('invalid enum constant');
     }
