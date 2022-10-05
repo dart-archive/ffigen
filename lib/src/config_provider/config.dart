@@ -37,9 +37,9 @@ class Config {
   String get output => _output;
   late String _output;
 
-  /// Symbol file output name.
-  String get symbolFileOutput => _symbolFileOutput;
-  late String _symbolFileOutput;
+  /// Symbol file config.
+  SymbolFile? get symbolFile => _symbolFile;
+  late SymbolFile? _symbolFile;
 
   /// Language that ffigen is consuming.
   Language get language => _language;
@@ -266,13 +266,13 @@ class Config {
         extractor: (dynamic value) => outputExtractor(value, filename),
         extractedResult: (dynamic result) => _output = result as String,
       ),
-      [strings.symbolFileOutput]: Specification<String>(
+      [strings.symbolFile]: Specification<SymbolFile?>(
         requirement: Requirement.no,
-        validator: outputValidator,
-        extractor: (dynamic value) => outputExtractor(value, filename),
-        defaultValue: () => "",
+        validator: symbolFileValidator,
+        extractor: (dynamic value) => symbolFileExtractor(value, filename),
+        defaultValue: () => null,
         extractedResult: (dynamic result) =>
-            _symbolFileOutput = result as String,
+            _symbolFile = result as SymbolFile?,
       ),
       [strings.language]: Specification<Language>(
         requirement: Requirement.no,

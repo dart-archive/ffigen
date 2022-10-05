@@ -28,7 +28,6 @@ const llvmPath = 'llvm-path';
 String get dynamicLibParentName => Platform.isWindows ? 'bin' : 'lib';
 
 const output = 'output';
-const symbolFileOutput = 'symbol-file-output';
 
 const language = 'language';
 
@@ -133,7 +132,12 @@ const sizemap_native_mapping = <String, int>{
 const libraryImports = 'library-imports';
 // Sub-Sub keys of library inputs.
 const importPath = 'import-path';
+
+// Symbol file output.
 const symbolFile = 'symbol-file';
+
+// Sub Keys of symbol file.
+const symbols = 'symbols';
 
 final predefinedLibraryImports = {
   ffiImport.name: ffiImport,

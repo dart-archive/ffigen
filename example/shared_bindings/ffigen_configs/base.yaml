@@ -5,9 +5,12 @@
 name: NativeLibraryBase
 description: Bindings to `headers/base.h`.
 output: '../generated/base_gen.dart'
-symbol-file-output: '../generated/base_symbols.yaml'
+symbol-file:
+  output: '../generated/base_symbols.yaml'
+  import-path: '../generated/base_gen.dart'
 headers:
   entry-points:
     - '../headers/base.h'
 preamble: |
   // ignore_for_file: non_constant_identifier_names, camel_case_types
+  library genfiles;

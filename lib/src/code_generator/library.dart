@@ -139,13 +139,15 @@ class Library {
   }
 
   /// Generates [file] with symbol output yaml.
-  void generateSymbolOutputFileFile(File file) {
+  void generateSymbolOutputFile(File file, String importPath) {
     final bindings =
         this.bindings.where((element) => !element.isInternal).toList();
     bindings.sort((a, b) => a.usr.compareTo(b.usr));
     final sb = StringBuffer();
+    // Write import path;
+    sb.writeln('${strings.importPath}: $importPath');
     // Write symbols.
-    sb.writeln("symbols:");
+    sb.writeln("${strings.symbols}:");
     for (final b in bindings) {
       sb.writeln('  "${b.usr}":');
       sb.writeln("    name: ${b.name}");

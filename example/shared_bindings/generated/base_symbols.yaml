@@ -1,3 +1,4 @@
+import-path: ../generated/base_gen.dart
 symbols:
   "c:@E@BaseEnum":
     name: BaseEnum

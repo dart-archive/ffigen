@@ -418,3 +418,10 @@ class LibraryImportConfig {
   LibraryImportConfig(
       {this.libraryImportMap = const {}, this.usrTypeMappings = const {}});
 }
+
+class SymbolFile {
+  final String importPath;
+  final String output;
+
+  SymbolFile(this.importPath, this.output);
+}

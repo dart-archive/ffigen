@@ -10,7 +10,8 @@ headers:
     - '../headers/a.h'
 library-imports:
   base_h:
-    import-path: '../generated/base_gen.dart'
     symbol-file: '../generated/base_symbols.yaml'
+    # import-path is picked from symbol-file but can be overriden.
+    import-path: '../generated/base_gen.dart'
 preamble: |
   // ignore_for_file: non_constant_identifier_names, camel_case_types

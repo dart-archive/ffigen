@@ -167,7 +167,6 @@ bool libraryImportsValidator(List<String> name, dynamic yamlConfig) {
     }
     if (yamlConfig[key] is YamlMap) {
       final subkeys = (yamlConfig[key] as YamlMap).keys;
-      // TODO: we probably need to make both import-path and symbol-file required.
       if (subkeys.isEmpty) {
         _logger.severe("${[...name, key].join(' -> ')} cannot be empty");
         return false;
@@ -542,6 +541,43 @@ String outputExtractor(dynamic value, String? configFilename) =>
 
 bool outputValidator(List<String> name, dynamic value) =>
     checkType<String>(name, value);
+
+SymbolFile symbolFileExtractor(dynamic value, String? configFilename) {
+  value = value as YamlMap;
+  final output =
+      _normalizePath(value[strings.output] as String, configFilename);
+  final importPath = value[strings.importPath] as String;
+  if (!importPath.startsWith('package:')) {
+    _logger.warning('Consider using a `package:` import for '
+        '${strings.symbolFile} -> ${strings.importPath}: $importPath');
+  }
+  return SymbolFile(importPath, output);
+}
+
+bool symbolFileValidator(List<String> name, dynamic value) {
+  if (!checkType<YamlMap>(name, value)) {
+    return false;
+  }
+  if (!(value as YamlMap).containsKey(strings.output)) {
+    _logger.severe("Required '$name -> ${strings.output}'.");
+    return false;
+  }
+  if (!(value).containsKey(strings.importPath)) {
+    _logger.severe("Required '$name -> ${strings.importPath}'.");
+    return false;
+  }
+  for (final key in value.keys) {
+    if (key == strings.output || key == strings.importPath) {
+      if (!checkType<String>([...name, key as String], value[key])) {
+        return false;
+      }
+    } else {
+      _logger.severe("Unknown key '$key' in '$name'.");
+      return false;
+    }
+  }
+  return true;
+}
 
 Language languageExtractor(dynamic value) {
   if (value == strings.langC) {
