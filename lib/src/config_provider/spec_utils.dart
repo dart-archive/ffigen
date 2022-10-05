@@ -8,8 +8,8 @@ import 'package:ffigen/src/code_generator.dart';
 import 'package:file/local.dart';
 import 'package:glob/glob.dart';
 import 'package:logging/logging.dart';
-import 'package:path/path.dart' as p;
 import 'package:package_config/package_config.dart';
+import 'package:path/path.dart' as p;
 import 'package:quiver/pattern.dart' as quiver;
 import 'package:yaml/yaml.dart';
 
@@ -137,10 +137,8 @@ LibraryImportConfig libraryImportsExtractor(
           for (final key in symbols.keys) {
             final usr = key as String;
             final value = symbols[usr]! as YamlMap;
-            usrTypeMappings[usr] = ImportedType(
-                libraryImportMap[typeName as String]!,
-                value['name'] as String,
-                value['name'] as String);
+            usrTypeMappings[usr] = ImportedType(libraryImportMap[typeName]!,
+                value['name'] as String, value['name'] as String);
           }
         } catch (e, s) {
           throw Exception("Error parsing: ${[
