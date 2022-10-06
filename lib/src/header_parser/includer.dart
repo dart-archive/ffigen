@@ -80,13 +80,6 @@ bool shouldIncludeRootCursor(String sourceFile) {
     return false;
   }
 
-  // Objective C has some extra system headers that have a non-empty sourceFile.
-  if (config.language == Language.objc &&
-      strings.objCInternalDirectories
-          .any((path) => sourceFile.startsWith(path))) {
-    return false;
-  }
-
   // Add header to seen if it's not.
   if (!bindingsIndex.isSeenHeader(sourceFile)) {
     bindingsIndex.addHeaderToSeen(

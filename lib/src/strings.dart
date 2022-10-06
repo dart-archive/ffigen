@@ -44,14 +44,6 @@ const clangInclude = '-include';
 const objcBOOL = 'BOOL';
 const objcInstanceType = 'instancetype';
 
-// Internal objective C directories that are automatically pulled in by clang,
-// and should be excluded from output (unless explicitly used).
-const objCInternalDirectories = [
-  '/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include',
-  '/Applications/Xcode.app/Contents/Developer',
-  '/usr/local/opt/llvm/lib',
-];
-
 const headers = 'headers';
 
 // Sub-fields of headers
