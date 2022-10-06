@@ -47,6 +47,9 @@ int _unnamedenumCursorVisitor(clang_types.CXCursor cursor,
           _addUnNamedEnumConstant(cursor);
         }
         break;
+      case clang_types.CXCursorKind.CXCursor_UnexposedAttr:
+        // Ignore.
+        break;
       default:
         _logger.severe('Invalid enum constant.');
     }

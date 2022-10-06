@@ -2522,6 +2522,32 @@ abstract class CXTypeNullabilityKind {
   static const int CXTypeNullability_Invalid = 3;
 }
 
+/// List the possible error codes for \c clang_Type_getSizeOf,
+/// \c clang_Type_getAlignOf, \c clang_Type_getOffsetOf and
+/// \c clang_Cursor_getOffsetOf.
+///
+/// A value of this enumeration type can be returned if the target type is not
+/// a valid argument to sizeof, alignof or offsetof.
+abstract class CXTypeLayoutError {
+  /// Type is of kind CXType_Invalid.
+  static const int CXTypeLayoutError_Invalid = -1;
+
+  /// The type is an incomplete Type.
+  static const int CXTypeLayoutError_Incomplete = -2;
+
+  /// The type is a dependent Type.
+  static const int CXTypeLayoutError_Dependent = -3;
+
+  /// The type is not a constant size type.
+  static const int CXTypeLayoutError_NotConstantSize = -4;
+
+  /// The Field name is not valid for this record.
+  static const int CXTypeLayoutError_InvalidFieldName = -5;
+
+  /// The type is undeduced.
+  static const int CXTypeLayoutError_Undeduced = -6;
+}
+
 /// Describes how the traversal of the children of a particular
 /// cursor should proceed after visiting a particular child cursor.
 ///
