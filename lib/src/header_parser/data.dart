@@ -7,7 +7,7 @@ import 'dart:ffi';
 import 'package:ffigen/src/code_generator.dart'
     show Constant, ObjCBuiltInFunctions;
 import 'package:ffigen/src/config_provider.dart' show Config;
-import 'clang_bindings/clang_bindings.dart' show Clang;
+import 'clang_bindings/clang_bindings.dart' show Clang, CXCursor;
 
 import 'utils.dart';
 
@@ -20,6 +20,10 @@ late Config _config;
 /// Holds clang functions.
 Clang get clang => _clang;
 late Clang _clang;
+
+// Cursor index.
+CursorIndex get cursorIndex => _cursorIndex;
+CursorIndex _cursorIndex = CursorIndex();
 
 // Tracks seen status for bindings
 BindingsIndex get bindingsIndex => _bindingsIndex;
@@ -47,6 +51,7 @@ void initializeGlobals({required Config config}) {
   _incrementalNamer = IncrementalNamer();
   _savedMacros = {};
   _unnamedEnumConstants = [];
+  _cursorIndex = CursorIndex();
   _bindingsIndex = BindingsIndex();
   _objCBuiltInFunctions = ObjCBuiltInFunctions();
 }

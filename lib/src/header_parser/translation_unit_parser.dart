@@ -27,6 +27,12 @@ Pointer<
                 clang_types.CXCursor, clang_types.CXCursor, Pointer<Void>)>>?
     _rootCursorVisitorPtr;
 
+Pointer<
+        NativeFunction<
+            Int32 Function(
+                clang_types.CXCursor, clang_types.CXCursor, Pointer<Void>)>>?
+    _cursorDefinitionVisitorPtr;
+
 /// Parses the translation unit and returns the generated bindings.
 Set<Binding> parseTranslationUnit(clang_types.CXCursor translationUnitCursor) {
   _bindings = {};
@@ -93,4 +99,30 @@ void addToBindings(Binding? b) {
 BindingType? _getCodeGenTypeFromCursor(clang_types.CXCursor cursor) {
   final t = getCodeGenType(cursor.type(), ignoreFilter: false);
   return t is BindingType ? t : null;
+}
+
+/// Visits all cursors and builds a map of usr and [CXCursor].
+void buildUsrCursorDefinitionMap(clang_types.CXCursor translationUnitCursor) {
+  _bindings = {};
+  final resultCode = clang.clang_visitChildren(
+    translationUnitCursor,
+    _cursorDefinitionVisitorPtr ??= Pointer.fromFunction(
+        _definitionCursorVisitor, exceptional_visitor_return),
+    nullptr,
+  );
+
+  visitChildrenResultChecker(resultCode);
+}
+
+/// Child visitor invoked on translationUnitCursor [CXCursorKind.CXCursor_TranslationUnit].
+int _definitionCursorVisitor(clang_types.CXCursor cursor,
+    clang_types.CXCursor parent, Pointer<Void> clientData) {
+  try {
+    cursorIndex.saveDefinition(cursor);
+  } catch (e, s) {
+    _logger.severe(e);
+    _logger.severe(s);
+    rethrow;
+  }
+  return clang_types.CXChildVisitResult.CXChildVisit_Continue;
 }

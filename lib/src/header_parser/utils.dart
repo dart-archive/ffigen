@@ -13,6 +13,8 @@ import 'clang_bindings/clang_bindings.dart' as clang_types;
 import 'data.dart';
 import 'type_extractor/extractor.dart';
 
+final _logger = Logger('ffigen.header_parser.utils');
+
 const exceptional_visitor_return =
     clang_types.CXChildVisitResult.CXChildVisit_Break;
 
@@ -242,11 +244,6 @@ String? removeRawCommentMarkups(String? string) {
   return sb.toString().trim();
 }
 
-bool isForwardDeclaration(clang_types.CXCursor cursor) {
-  return clang.clang_Cursor_isNull(clang.clang_getCursorDefinition(cursor)) ==
-      0;
-}
-
 extension CXTypeExt on clang_types.CXType {
   /// Get code_gen [Type] representation of [clang_types.CXType].
   Type toCodeGenType() {
@@ -398,4 +395,44 @@ class BindingsIndex {
   bool? getSeenHeaderStatus(String source) => _headerCache[source];
   void addObjCBlockToSeen(String key, ObjCBlock t) => _objcBlocks[key] = t;
   ObjCBlock? getSeenObjCBlock(String key) => _objcBlocks[key];
+}
+
+class CursorIndex {
+  final _usrCursorDefinition = <String, clang_types.CXCursor>{};
+
+  /// Returns the Cursor definition (if found) or itself.
+  clang_types.CXCursor getDefinition(clang_types.CXCursor cursor) {
+    final cursorDefinition = clang.clang_getCursorDefinition(cursor);
+    if (clang.clang_Cursor_isNull(cursorDefinition) == 0) {
+      return cursorDefinition;
+    } else {
+      final usr = cursor.usr();
+      if (_usrCursorDefinition.containsKey(usr)) {
+        return _usrCursorDefinition[cursor.usr()]!;
+      } else {
+        _logger.warning(
+            "No definition found for declaration - ${cursor.completeStringRepr()}");
+        return cursor;
+      }
+    }
+  }
+
+  /// Saves cursor definition based on its kind.
+  void saveDefinition(clang_types.CXCursor cursor) {
+    switch (cursor.kind) {
+      case clang_types.CXCursorKind.CXCursor_StructDecl:
+      case clang_types.CXCursorKind.CXCursor_UnionDecl:
+      case clang_types.CXCursorKind.CXCursor_EnumDecl:
+        final usr = cursor.usr();
+        if (!_usrCursorDefinition.containsKey(usr)) {
+          final cursorDefinition = clang.clang_getCursorDefinition(cursor);
+          if (clang.clang_Cursor_isNull(cursorDefinition) == 0) {
+            _usrCursorDefinition[usr] = cursorDefinition;
+          } else {
+            _logger.finest(
+                "Missing cursor definition in current translation unit: ${cursor.completeStringRepr()}");
+          }
+        }
+    }
+  }
 }

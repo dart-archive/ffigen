@@ -40,9 +40,7 @@ EnumClass? parseEnumDeclaration(
   _stack.push(_ParsedEnum());
 
   // Parse the cursor definition instead, if this is a forward declaration.
-  if (isForwardDeclaration(cursor)) {
-    cursor = clang.clang_getCursorDefinition(cursor);
-  }
+  cursor = cursorIndex.getDefinition(cursor);
 
   final enumUsr = cursor.usr();
   final String enumName;
