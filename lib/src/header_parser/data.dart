@@ -7,7 +7,7 @@ import 'dart:ffi';
 import 'package:ffigen/src/code_generator.dart'
     show Constant, ObjCBuiltInFunctions;
 import 'package:ffigen/src/config_provider.dart' show Config;
-import 'clang_bindings/clang_bindings.dart' show Clang, CXCursor;
+import 'clang_bindings/clang_bindings.dart' show Clang;
 
 import 'utils.dart';
 
