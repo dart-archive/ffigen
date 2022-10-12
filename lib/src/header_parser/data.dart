@@ -21,6 +21,10 @@ late Config _config;
 Clang get clang => _clang;
 late Clang _clang;
 
+// Cursor index.
+CursorIndex get cursorIndex => _cursorIndex;
+CursorIndex _cursorIndex = CursorIndex();
+
 // Tracks seen status for bindings
 BindingsIndex get bindingsIndex => _bindingsIndex;
 BindingsIndex _bindingsIndex = BindingsIndex();
@@ -47,6 +51,7 @@ void initializeGlobals({required Config config}) {
   _incrementalNamer = IncrementalNamer();
   _savedMacros = {};
   _unnamedEnumConstants = [];
+  _cursorIndex = CursorIndex();
   _bindingsIndex = BindingsIndex();
   _objCBuiltInFunctions = ObjCBuiltInFunctions();
 }

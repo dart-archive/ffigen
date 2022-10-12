@@ -106,9 +106,7 @@ Compound? parseCompoundDeclaration(
   }
 
   // Parse the cursor definition instead, if this is a forward declaration.
-  if (isForwardDeclaration(cursor)) {
-    cursor = clang.clang_getCursorDefinition(cursor);
-  }
+  cursor = cursorIndex.getDefinition(cursor);
   final declUsr = cursor.usr();
   final String declName;
 
@@ -163,6 +161,7 @@ void fillCompoundMembersIfNeeded(
   /// generate these as opaque if `dependency-only` was set to opaque).
   bool pointerReference = false,
 }) {
+  cursor = cursorIndex.getDefinition(cursor);
   final compoundType = compound.compoundType;
 
   // Skip dependencies if already seen OR user has specified `dependency-only`

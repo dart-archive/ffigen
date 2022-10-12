@@ -82,6 +82,9 @@ List<Binding> parseToBindings() {
   // Log all headers for user.
   _logger.info('Input Headers: ${config.headers.entryPoints}');
 
+  final tuList = <Pointer<clang_types.CXTranslationUnitImpl>>[];
+
+  // Parse all translation units from entry points.
   for (final headerLocation in config.headers.entryPoints) {
     _logger.fine('Creating TranslationUnit for header: $headerLocation');
 
@@ -105,11 +108,24 @@ List<Binding> parseToBindings() {
     }
 
     logTuDiagnostics(tu, _logger, headerLocation);
-    final rootCursor = clang.clang_getTranslationUnitCursor(tu);
+    tuList.add(tu);
+  }
 
+  final tuCursors =
+      tuList.map((tu) => clang.clang_getTranslationUnitCursor(tu));
+
+  // Build usr to CXCusror map from translation units.
+  for (final rootCursor in tuCursors) {
+    buildUsrCursorDefinitionMap(rootCursor);
+  }
+
+  // Parse definitions from translation units.
+  for (final rootCursor in tuCursors) {
     bindings.addAll(parseTranslationUnit(rootCursor));
+  }
 
-    // Cleanup.
+  // Dispose translation units.
+  for (final tu in tuList) {
     clang.clang_disposeTranslationUnit(tu);
   }
 

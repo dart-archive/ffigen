@@ -1,3 +1,6 @@
+# 7.1.0
+- Handle declarations with definition accessible from a different entry-point.
+
 # 7.0.0
 
 - Fix typedef include/exclude config.
