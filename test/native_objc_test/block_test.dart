@@ -100,7 +100,7 @@ void main() {
       final block = ObjCBlock.fromFunction(lib, makeAdder(4000));
       final blockPtr = block.pointer;
       expect(blockPtr.ref.isa, isNot(0));
-      expect(blockPtr.ref.flags, isNot(0));  // Set by Block_copy.
+      expect(blockPtr.ref.flags, isNot(0)); // Set by Block_copy.
       expect(blockPtr.ref.reserved, 0);
       expect(blockPtr.ref.invoke, isNot(0));
       expect(blockPtr.ref.target, isNot(0));
