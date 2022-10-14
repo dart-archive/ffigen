@@ -156,7 +156,11 @@ $objType $name(String name) {
 $descPtr $name() {
   final d = ${w.ffiPkgLibraryPrefix}.calloc.allocate<$descType>(
       ${w.ffiLibraryPrefix}.sizeOf<$descType>());
+  d.ref.reserved = 0;
   d.ref.size = ${w.ffiLibraryPrefix}.sizeOf<$blockType>();
+  d.ref.copy_helper = ${w.ffiLibraryPrefix}.nullptr;
+  d.ref.dispose_helper = ${w.ffiLibraryPrefix}.nullptr;
+  d.ref.signature = ${w.ffiLibraryPrefix}.nullptr;
   return d;
 }
 ''';
@@ -181,6 +185,8 @@ $blockPtr $name($voidPtr invoke, $voidPtr target) {
   final b = ${w.ffiPkgLibraryPrefix}.calloc.allocate<$blockType>(
       ${w.ffiLibraryPrefix}.sizeOf<$blockType>());
   b.ref.isa = ${concreteGlobalBlock.name};
+  b.ref.flags = 0;
+  b.ref.reserved = 0;
   b.ref.invoke = invoke;
   b.ref.target = target;
   b.ref.descriptor = ${blockDescSingleton.name};

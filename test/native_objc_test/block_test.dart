@@ -95,6 +95,22 @@ void main() {
       doGC();
       expect(BlockTester.getBlockRetainCount_(lib, rawBlock.cast()), 0);
     });
+
+    test('Block fields have sensible values', () {
+      final block = ObjCBlock.fromFunction(lib, makeAdder(4000));
+      final blockPtr = block.pointer;
+      expect(blockPtr.ref.isa, isNot(0));
+      expect(blockPtr.ref.flags, isNot(0)); // Set by Block_copy.
+      expect(blockPtr.ref.reserved, 0);
+      expect(blockPtr.ref.invoke, isNot(0));
+      expect(blockPtr.ref.target, isNot(0));
+      final descPtr = blockPtr.ref.descriptor;
+      expect(descPtr.ref.reserved, 0);
+      expect(descPtr.ref.size, isNot(0));
+      expect(descPtr.ref.copy_helper, nullptr);
+      expect(descPtr.ref.dispose_helper, nullptr);
+      expect(descPtr.ref.signature, nullptr);
+    });
   });
 }
 
