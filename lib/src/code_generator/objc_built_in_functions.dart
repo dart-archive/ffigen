@@ -158,9 +158,9 @@ $descPtr $name() {
       ${w.ffiLibraryPrefix}.sizeOf<$descType>());
   d.ref.reserved = 0;
   d.ref.size = ${w.ffiLibraryPrefix}.sizeOf<$blockType>();
-  d.ref.copy_helper = nullptr;
-  d.ref.dispose_helper = nullptr;
-  d.ref.signature = nullptr;
+  d.ref.copy_helper = ${w.ffiLibraryPrefix}.nullptr;
+  d.ref.dispose_helper = ${w.ffiLibraryPrefix}.nullptr;
+  d.ref.signature = ${w.ffiLibraryPrefix}.nullptr;
   return d;
 }
 ''';
