@@ -173,6 +173,7 @@ Map<String, ImportedType> symbolFileImportExtractor(
   final resultMap = <String, ImportedType>{};
   for (final item in (yamlConfig as YamlList)) {
     String symbolFilePath;
+    // ignore: unused_local_variable
     String? importPath; // TODO: Maybe we remove this ?
     if (item is String) {
       symbolFilePath = item;
