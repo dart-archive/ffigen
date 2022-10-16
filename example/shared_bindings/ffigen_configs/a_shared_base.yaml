@@ -8,10 +8,8 @@ output: '../generated/a_shared_b_gen.dart'
 headers:
   entry-points:
     - '../headers/a.h'
-library-imports:
-  base_h:
-    symbol-file: '../generated/base_symbols.yaml'
-    # import-path is picked from symbol-file but can be overriden.
-    import-path: '../generated/base_gen.dart'
+import:
+  symbol-files:
+    - '../generated/base_symbols.yaml'
 preamble: |
   // ignore_for_file: non_constant_identifier_names, camel_case_types

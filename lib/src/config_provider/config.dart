@@ -107,13 +107,13 @@ class Config {
   Map<String, LibraryImport> get libraryImports => _libraryImports;
   late Map<String, LibraryImport> _libraryImports;
 
-  /// Stores typedef name to ImportedType mappings specified by user.
-  Map<String, ImportedType> get typedefTypeMappings => _typedefTypeMappings;
-  late Map<String, ImportedType> _typedefTypeMappings;
-
   /// Stores all the symbol file maps name to ImportedType mappings specified by user.
   Map<String, ImportedType> get usrTypeMappings => _usrTypeMappings;
   late Map<String, ImportedType> _usrTypeMappings;
+
+  /// Stores typedef name to ImportedType mappings specified by user.
+  Map<String, ImportedType> get typedefTypeMappings => _typedefTypeMappings;
+  late Map<String, ImportedType> _typedefTypeMappings;
 
   /// Stores struct name to ImportedType mappings specified by user.
   Map<String, ImportedType> get structTypeMappings => _structTypeMappings;
@@ -388,15 +388,22 @@ class Config {
         extractedResult: (dynamic result) => _objcModulePrefixer =
             ObjCModulePrefixer(result as Map<String, String>),
       ),
-      [strings.libraryImports]: Specification<LibraryImportConfig>(
+      [strings.libraryImports]: Specification<Map<String, LibraryImport>>(
         validator: libraryImportsValidator,
-        extractor: (dynamic value) =>
-            libraryImportsExtractor(value, _filename, _packageConfig),
-        defaultValue: () => LibraryImportConfig(),
+        extractor: libraryImportsExtractor,
+        defaultValue: () => <String, LibraryImport>{},
         extractedResult: (dynamic result) {
-          result = result as LibraryImportConfig;
-          _libraryImports = result.libraryImportMap;
-          _usrTypeMappings = result.usrTypeMappings;
+          _libraryImports = result as Map<String, LibraryImport>;
+        },
+      ),
+      [strings.import, strings.symbolFilesImport]:
+          Specification<Map<String, ImportedType>>(
+        validator: symbolFileImportValidator,
+        extractor: (value) => symbolFileImportExtractor(
+            value, _libraryImports, filename, packageConfig),
+        defaultValue: () => <String, ImportedType>{},
+        extractedResult: (dynamic result) {
+          _usrTypeMappings = result as Map<String, ImportedType>;
         },
       ),
       [strings.typeMap, strings.typeMapTypedefs]:
