@@ -29,6 +29,10 @@ String get dynamicLibParentName => Platform.isWindows ? 'bin' : 'lib';
 
 const output = 'output';
 
+// Sub-keys of output.
+const bindings = "bindings";
+const symbolFile = 'symbol-file';
+
 const language = 'language';
 
 // String mappings for the Language enum.
@@ -133,11 +137,19 @@ const libraryImports = 'library-imports';
 // Sub-Sub keys of library inputs.
 const importPath = 'import-path';
 
-// Symbol file output.
-const symbolFile = 'symbol-file';
-
 // Sub Keys of symbol file.
 const symbols = 'symbols';
+
+// Symbol file yaml.
+const formatVersion = "format_version";
+const symbolFileFormatVersion = "1.0.0";
+const files = "files";
+const usedConfig = "used-config";
+
+const import = 'import';
+
+// Sub keys of import.
+const symbolFilesImport = 'symbol-files';
 
 final predefinedLibraryImports = {
   ffiImport.name: ffiImport,
@@ -145,8 +157,6 @@ final predefinedLibraryImports = {
 };
 
 const typeMap = 'type-map';
-
-const symbolFileMap = 'symbol-file-map';
 
 // Sub-fields for type-map.
 const typeMapTypedefs = 'typedefs';

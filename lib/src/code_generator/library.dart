@@ -140,20 +140,10 @@ class Library {
 
   /// Generates [file] with symbol output yaml.
   void generateSymbolOutputFile(File file, String importPath) {
-    final bindings =
-        this.bindings.where((element) => !element.isInternal).toList();
-    bindings.sort((a, b) => a.usr.compareTo(b.usr));
-    final sb = StringBuffer();
-    // Write import path;
-    sb.writeln('${strings.importPath}: $importPath');
-    // Write symbols.
-    sb.writeln("${strings.symbols}:");
-    for (final b in bindings) {
-      sb.writeln('  "${b.usr}":');
-      sb.writeln("    name: ${b.name}");
-    }
     if (!file.existsSync()) file.createSync(recursive: true);
-    file.writeAsStringSync(sb.toString());
+    final yamlWriter = YamlWriter();
+    final symbolFileYamlMap = writer.generateSymbolOutputYamlMap(importPath);
+    file.writeAsStringSync(yamlWriter.write(symbolFileYamlMap));
   }
 
   /// Formats a file using the Dart formatter.

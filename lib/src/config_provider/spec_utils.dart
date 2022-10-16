@@ -133,13 +133,8 @@ LibraryImportConfig libraryImportsExtractor(
           importPath ??= symbolFile[strings.importPath] as String;
           libraryImportMap[typeName as String] =
               LibraryImport(typeName, importPath);
-          final symbols = symbolFile['symbols'] as YamlMap;
-          for (final key in symbols.keys) {
-            final usr = key as String;
-            final value = symbols[usr]! as YamlMap;
-            usrTypeMappings[usr] = ImportedType(libraryImportMap[typeName]!,
-                value['name'] as String, value['name'] as String);
-          }
+          loadImportedTypes(
+              symbolFile, usrTypeMappings, libraryImportMap, typeName);
         } catch (e, s) {
           throw Exception("Error parsing: ${[
             strings.libraryImports,
@@ -153,6 +148,20 @@ LibraryImportConfig libraryImportsExtractor(
 
   return LibraryImportConfig(
       libraryImportMap: libraryImportMap, usrTypeMappings: usrTypeMappings);
+}
+
+void loadImportedTypes(
+    YamlMap symbolFile,
+    Map<String, ImportedType> usrTypeMappings,
+    Map<String, LibraryImport> libraryImportMap,
+    String typeName) {
+  final symbols = symbolFile['symbols'] as YamlMap;
+  for (final key in symbols.keys) {
+    final usr = key as String;
+    final value = symbols[usr]! as YamlMap;
+    usrTypeMappings[usr] = ImportedType(libraryImportMap[typeName]!,
+        value['name'] as String, value['name'] as String);
+  }
 }
 
 bool libraryImportsValidator(List<String> name, dynamic yamlConfig) {
@@ -536,13 +545,47 @@ bool llvmPathValidator(List<String> name, dynamic value) {
   return true;
 }
 
-String outputExtractor(dynamic value, String? configFilename) =>
-    _normalizePath(value as String, configFilename);
+OutputConfig outputExtractor(dynamic value, String? configFilename) {
+  if (value is String) {
+    return OutputConfig(value, null);
+  }
+  value = value as YamlMap;
+  return OutputConfig(
+    _normalizePath((value)[strings.bindings] as String, configFilename),
+    value.containsKey(strings.symbolFile)
+        ? symbolFileOutputExtractor(value[strings.symbolFile], configFilename)
+        : null,
+  );
+}
 
-bool outputValidator(List<String> name, dynamic value) =>
-    checkType<String>(name, value);
+bool outputValidator(List<String> name, dynamic value) {
+  if (value is String) {
+    return true;
+  } else if (value is YamlMap) {
+    final keys = value.keys;
+    var result = true;
+    for (final key in keys) {
+      if (key == strings.bindings) {
+        if (!checkType<String>([...name, key as String], value[key])) {
+          result = false;
+        }
+      } else if (key == strings.symbolFile) {
+        result = symbolFileOutputValidator(
+            [...name, strings.symbolFile], value[key]);
+      } else {
+        result = false;
+        _logger.severe("Unknown key '$key' in '$name'.");
+      }
+    }
+    return result;
+  } else {
+    _logger.severe(
+        "Expected value of key '${name.join(' -> ')}' to be a String or Map.");
+    return false;
+  }
+}
 
-SymbolFile symbolFileExtractor(dynamic value, String? configFilename) {
+SymbolFile symbolFileOutputExtractor(dynamic value, String? configFilename) {
   value = value as YamlMap;
   final output =
       _normalizePath(value[strings.output] as String, configFilename);
@@ -554,7 +597,7 @@ SymbolFile symbolFileExtractor(dynamic value, String? configFilename) {
   return SymbolFile(importPath, output);
 }
 
-bool symbolFileValidator(List<String> name, dynamic value) {
+bool symbolFileOutputValidator(List<String> name, dynamic value) {
   if (!checkType<YamlMap>(name, value)) {
     return false;
   }

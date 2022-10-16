@@ -60,7 +60,7 @@ void main(List<String> args) async {
   _logger
       .info(successPen('Finished, Bindings generated in ${gen.absolute.path}'));
 
-  if (config.symbolFile?.output != null) {
+  if (config.symbolFile != null) {
     final symbolFileGen = File(config.symbolFile!.output);
     library.generateSymbolOutputFile(
         symbolFileGen, config.symbolFile!.importPath);

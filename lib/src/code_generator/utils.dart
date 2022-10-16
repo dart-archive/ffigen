@@ -70,3 +70,73 @@ String makeDoc(String text) {
 
   return s.toString();
 }
+
+class YamlWriter {
+  final String indent;
+
+  YamlWriter({this.indent = '  '});
+
+  /// Writes [obj] as YAML.
+  String write(dynamic obj) {
+    final sb = StringBuffer();
+    _write(obj, sb);
+    return sb.toString();
+  }
+
+  bool _write(dynamic obj, StringBuffer sb, {String curIndent = ''}) {
+    if (obj is List) {
+      return _writeList(obj, sb, curIndent: curIndent);
+    } else if (obj is Map) {
+      return _writeMap(obj, sb, curIndent: curIndent);
+    } else if (obj is String) {
+      return _writeString(obj, sb, curIndent: curIndent);
+    } else {
+      sb.write(obj);
+      return false;
+    }
+  }
+
+  bool _writeString(String obj, StringBuffer sb, {String curIndent = ''}) {
+    sb.write(' "${obj.replaceAll('"', r'\"')}"');
+    return false;
+  }
+
+  bool _writeList(List obj, StringBuffer sb, {String curIndent = ''}) {
+    if (obj.isEmpty) {
+      sb.write('[]');
+      return false;
+    }
+    sb.write('\n');
+
+    var wroteLineBreak = false;
+
+    for (final item in obj) {
+      sb.write('$curIndent- ');
+      final line = _write(item, sb, curIndent: curIndent + indent);
+      if (!line) {
+        sb.write('\n');
+        wroteLineBreak = true;
+      }
+    }
+
+    return wroteLineBreak;
+  }
+
+  bool _writeMap(Map obj, StringBuffer sb, {String curIndent = ''}) {
+    if (sb.isNotEmpty) {
+      sb.write('\n');
+    }
+    var wroteLineBreak = false;
+
+    for (final entry in obj.entries) {
+      sb.write("$curIndent${entry.key}:");
+      final line = _write(entry.value, sb, curIndent: curIndent + indent);
+      if (!line) {
+        sb.write('\n');
+        wroteLineBreak = true;
+      }
+    }
+
+    return wroteLineBreak;
+  }
+}

@@ -260,19 +260,14 @@ class Config {
           _libclangDylib = result as String;
         },
       ),
-      [strings.output]: Specification<String>(
+      [strings.output]: Specification<OutputConfig>(
         requirement: Requirement.yes,
         validator: outputValidator,
         extractor: (dynamic value) => outputExtractor(value, filename),
-        extractedResult: (dynamic result) => _output = result as String,
-      ),
-      [strings.symbolFile]: Specification<SymbolFile?>(
-        requirement: Requirement.no,
-        validator: symbolFileValidator,
-        extractor: (dynamic value) => symbolFileExtractor(value, filename),
-        defaultValue: () => null,
-        extractedResult: (dynamic result) =>
-            _symbolFile = result as SymbolFile?,
+        extractedResult: (dynamic result) {
+          _output = (result as OutputConfig).output;
+          _symbolFile = result.symbolFile;
+        },
       ),
       [strings.language]: Specification<Language>(
         requirement: Requirement.no,

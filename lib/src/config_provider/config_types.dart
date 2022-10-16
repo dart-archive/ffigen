@@ -425,3 +425,10 @@ class SymbolFile {
 
   SymbolFile(this.importPath, this.output);
 }
+
+class OutputConfig {
+  final String output;
+  final SymbolFile? symbolFile;
+
+  OutputConfig(this.output, this.symbolFile);
+}
