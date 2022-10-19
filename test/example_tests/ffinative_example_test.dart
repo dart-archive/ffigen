@@ -31,7 +31,7 @@ ${strings.headers}:
 
       matchLibraryWithExpected(
         library,
-        ['test', 'debug_generated', 'example_ffinative.dart'],
+        'example_ffinative.dart',
         ['example', 'ffinative', config.output],
       );
     });

@@ -35,11 +35,8 @@ void main() {
       );
     });
     test('declaration and symbol address conflict', () {
-      matchLibraryWithExpected(actual, [
-        'test',
-        'debug_generated',
-        'collision_test_decl_symbol_address_collision_output.dart'
-      ], [
+      matchLibraryWithExpected(
+          actual, 'collision_test_decl_symbol_address_collision_output.dart', [
         'test',
         'collision_tests',
         'expected_bindings',

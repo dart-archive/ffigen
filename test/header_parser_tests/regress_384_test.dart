@@ -31,11 +31,8 @@ ${strings.headers}:
     });
 
     test('Expected bindings', () {
-      matchLibraryWithExpected(actual, [
-        'test',
-        'debug_generated',
-        'header_parser_regress_384_test_output.dart'
-      ], [
+      matchLibraryWithExpected(
+          actual, 'header_parser_regress_384_test_output.dart', [
         'test',
         'header_parser_tests',
         'expected_bindings',

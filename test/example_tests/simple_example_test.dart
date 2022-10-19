@@ -30,7 +30,7 @@ ${strings.headers}:
 
       matchLibraryWithExpected(
         library,
-        ['test', 'debug_generated', 'example_simple.dart'],
+        'example_simple.dart',
         ['example', 'simple', config.output],
       );
     });
