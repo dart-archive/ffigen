@@ -90,7 +90,7 @@ void main() {
       return block.pointer.cast();
     }
 
-    test('Function pointer block ref counting', () {
+    test('Function block ref counting', () {
       final rawBlock = funcBlockRefCountTest();
       doGC();
       expect(BlockTester.getBlockRetainCount_(lib, rawBlock.cast()), 0);
@@ -110,6 +110,39 @@ void main() {
       expect(descPtr.ref.copy_helper, nullptr);
       expect(descPtr.ref.dispose_helper, nullptr);
       expect(descPtr.ref.signature, nullptr);
+    });
+
+    test('Generating a block for the same function returns the same block', () {
+      final func = makeAdder(4000);
+      final block1 = ObjCBlock.fromFunction(lib, func);
+      final block2 = ObjCBlock.fromFunction(lib, func);
+      expect(block1.pointer, block2.pointer);
+
+      final block3 = ObjCBlock.fromFunction(lib, makeAdder(4000));
+      expect(block1.pointer, isNot(block3.pointer));
+    });
+
+    void reusedBlockRefCountTestInner(int Function(int) func) {
+      final block2 = ObjCBlock.fromFunction(lib, func);
+      expect(BlockTester.getBlockRetainCount_(lib, block2.pointer.cast()), 2);
+    }
+
+    Pointer<Void> reusedBlockRefCountTest() {
+      final func = makeAdder(4000);
+      final block1 = ObjCBlock.fromFunction(lib, func);
+      expect(BlockTester.getBlockRetainCount_(lib, block1.pointer.cast()), 1);
+
+      reusedBlockRefCountTestInner(func);
+      doGC();
+      expect(BlockTester.getBlockRetainCount_(lib, block1.pointer.cast()), 1);
+
+      return block1.pointer.cast();
+    }
+
+    test('Reused function blocks ref count correctly', () {
+      final rawBlock = reusedBlockRefCountTest();
+      doGC();
+      expect(BlockTester.getBlockRetainCount_(lib, rawBlock.cast()), 0);
     });
   });
 }

@@ -103,8 +103,8 @@ $voidPtr $registerClosure(Function fn) {
     final exceptionalReturn = defaultValue == null ? '' : ', $defaultValue';
     s.write('''
 class $name extends _ObjCBlockBase {
-  $name._(${blockPtr.getCType(w)} id, ${w.className} lib) :
-      super._(id, lib, retain: false, release: true);
+  $name._(${blockPtr.getCType(w)} id, ${w.className} lib, {
+      bool retain = false}) : super._(id, lib, retain: retain, release: true);
 
   /// Creates a block from a C function pointer.
   $name.fromFunctionPointer(${w.className} lib, $natFnPtr ptr) :
@@ -115,12 +115,20 @@ class $name extends _ObjCBlockBase {
   static $voidPtr? _cFuncTrampoline;
 
   /// Creates a block from a Dart function.
-  $name.fromFunction(${w.className} lib, ${funcType.getDartType(w)} fn) :
-      this._(lib.${builtInFunctions.newBlock.name}(
+  static $name fromFunction(${w.className} lib, ${funcType.getDartType(w)} fn) {
+    final oldBlock = _funcToBlock[fn];
+    if (oldBlock != null) {
+      return $name._(oldBlock, lib, retain: true);
+    }
+    final newBlock = lib.${builtInFunctions.newBlock.name}(
           _dartFuncTrampoline ??= ${w.ffiLibraryPrefix}.Pointer.fromFunction<
               ${trampFuncType.getCType(w)}>($closureTrampoline
-                  $exceptionalReturn).cast(), $registerClosure(fn)), lib);
+                  $exceptionalReturn).cast(), $registerClosure(fn));
+    _funcToBlock[fn] = newBlock;
+    return $name._(newBlock, lib);
+  }
   static $voidPtr? _dartFuncTrampoline;
+  static final _funcToBlock = Expando<${blockPtr.getCType(w)}>('$name');
 ''');
 
     // Call method.
