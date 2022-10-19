@@ -733,9 +733,9 @@ The following typedefs are not generated -
   - They refer to a struct/union having the same name as itself.
   - They refer to a boolean, enum, inline array, Handle or any unsupported type.
 
-### How are macros handles?
+### How are macros handled?
 
-An understanding of your program's source headers is beyond `ffigen`'s perview; rather, it uses `clang`'s own compiler frontend to parse and traverse the `C` header files. As macros are an advanced feature of the compiler, `ffigen` needs to first expand the macros using `clang`'s macro expansion and then run its own traversal. To do this, `ffigen` generates temporary files in a system tmp directory.
+`ffigen` uses `clang`'s own compiler frontend to parse and traverse the `C` header files. `ffigen` expands the macros using `clang`'s macro expansion and then traverses the expanded code. To do this, `ffigen` generates temporary files in a system tmp directory.
 
 A custom temporary directory can be specified by setting the `TEST_TMPDIR` environment variable.
 
