@@ -15,7 +15,7 @@ env:
 jobs:
   # Check code formatting and static analysis on a single OS (macos).
   analyze:
-    runs-on: ubuntu-22.04
+    runs-on: macos-latest
     strategy:
       fail-fast: false
       matrix:
