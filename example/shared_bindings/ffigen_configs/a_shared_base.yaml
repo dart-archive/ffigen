@@ -10,6 +10,7 @@ headers:
     - '../headers/a.h'
 import:
   symbol-files:
-    - '../lib/generated/base_symbols.yaml'
+    # Both package Uri and file paths are allowed here.
+    - 'package:shared_bindings/generated/base_symbols.yaml'
 preamble: |
   // ignore_for_file: non_constant_identifier_names, camel_case_types

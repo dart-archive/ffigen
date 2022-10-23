@@ -187,14 +187,14 @@ Map<String, ImportedType> symbolFileImportExtractor(
           'Incompatible format versions for file $symbolFilePath: ${strings.symbolFileFormatVersion}(ours), $formatVersion(theirs).');
       exit(1);
     }
-    final defaultSymbolImportName = '_imp';
-    final uniqueNamer = UniqueNamer(
-        libraryImports.keys.followedBy([defaultSymbolImportName]).toSet());
+    final uniqueNamer = UniqueNamer(libraryImports.keys
+        .followedBy([strings.defaultSymbolFileImportPrefix]).toSet());
     for (final file in (symbolFile[strings.files] as YamlMap).keys) {
       final existingImports =
           libraryImports.values.where((element) => element.importPath == file);
       if (existingImports.isEmpty) {
-        final name = uniqueNamer.makeUnique(defaultSymbolImportName);
+        final name =
+            uniqueNamer.makeUnique(strings.defaultSymbolFileImportPrefix);
         libraryImports[name] = LibraryImport(name, file as String);
       }
       final libraryImport = libraryImports.values.firstWhere(
