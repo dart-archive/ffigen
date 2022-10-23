@@ -5,6 +5,7 @@
 import 'dart:io';
 
 import 'package:ffigen/src/code_generator.dart';
+import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
@@ -52,10 +53,10 @@ String _normalizeGeneratedCode(
 ///
 /// This will not delete the actual debug file incase [expect] throws an error.
 void matchLibraryWithExpected(
-    Library library, List<String> pathForActual, List<String> pathToExpected,
+    Library library, String pathForActual, List<String> pathToExpected,
     {String Function(String)? codeNormalizer}) {
   final file = File(
-    path.joinAll(pathForActual),
+    path.join(strings.tmpDir, pathForActual),
   );
   library.generateFile(file);
 
