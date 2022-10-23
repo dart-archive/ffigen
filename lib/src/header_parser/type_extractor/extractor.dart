@@ -274,7 +274,6 @@ Type? _extractfromRecord(clang_types.CXType cxtype, clang_types.CXCursor cursor,
     }
 
     // Also add a struct binding, if its unseen.
-    // TODO(23): Check if we should auto add compound declarations.
     if (compoundTypeMappings.containsKey(declSpelling)) {
       _logger.fine('  Type Mapped from type-map');
       return compoundTypeMappings[declSpelling]!;
