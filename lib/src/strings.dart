@@ -134,8 +134,6 @@ const sizemap_native_mapping = <String, int>{
 
 // Library imports.
 const libraryImports = 'library-imports';
-// Sub-Sub keys of library inputs.
-const importPath = 'import-path';
 
 // Sub Keys of symbol file.
 const symbols = 'symbols';
@@ -155,6 +153,8 @@ const defaultSymbolFileImportPrefix = '_imp';
 
 // Sub keys of import.
 const symbolFilesImport = 'symbol-files';
+// Sub-Sub keys of symbolFilesImport.
+const importPath = 'import-path';
 
 final predefinedLibraryImports = {
   ffiImport.name: ffiImport,
