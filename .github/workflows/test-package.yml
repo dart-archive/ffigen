@@ -27,7 +27,7 @@ jobs:
           sdk: ${{ matrix.sdk }}
       - id: install
         name: Install dependencies
-        run: dart pub get
+        run: dart pub get && dart pub get --directory="example/shared_bindings"
       - name: Check formatting
         run: dart format --output=none --set-exit-if-changed .
         if: always() && steps.install.outcome == 'success'
