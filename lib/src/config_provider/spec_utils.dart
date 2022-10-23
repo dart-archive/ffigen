@@ -173,13 +173,10 @@ Map<String, ImportedType> symbolFileImportExtractor(
   final resultMap = <String, ImportedType>{};
   for (final item in (yamlConfig as YamlList)) {
     String symbolFilePath;
-    // ignore: unused_local_variable
-    String? importPath; // TODO: Maybe we remove this ?
     if (item is String) {
       symbolFilePath = item;
     } else {
       symbolFilePath = item[strings.symbolFile] as String;
-      importPath = item[strings.importPath] as String?;
     }
     final symbolFile =
         loadSymbolFile(symbolFilePath, configFileName, packageConfig);
@@ -223,7 +220,7 @@ bool symbolFileImportValidator(List<String> name, dynamic yamlConfig) {
             .severe('Key $name -> $idx -> ${strings.symbolFile} is required.');
       }
       for (final key in value.keys) {
-        if (key == strings.symbolFile || key == strings.importPath) {
+        if (key == strings.symbolFile) {
           if (!checkType<String>(
               [...name, idx.toString(), key as String], value[key])) {
             result = false;
