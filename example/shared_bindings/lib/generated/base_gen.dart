@@ -65,5 +65,3 @@ abstract class BaseEnum {
 
 typedef BaseTypedef1 = BaseStruct1;
 typedef BaseTypedef2 = BaseStruct2;
-
-const int BASE_MACRO_1 = 1;
