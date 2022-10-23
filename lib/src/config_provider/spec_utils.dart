@@ -580,7 +580,8 @@ bool llvmPathValidator(List<String> name, dynamic value) {
   return true;
 }
 
-OutputConfig outputExtractor(dynamic value, String? configFilename) {
+OutputConfig outputExtractor(
+    dynamic value, String? configFilename, PackageConfig? packageConfig) {
   if (value is String) {
     return OutputConfig(_normalizePath(value, configFilename), null);
   }
@@ -588,7 +589,8 @@ OutputConfig outputExtractor(dynamic value, String? configFilename) {
   return OutputConfig(
     _normalizePath((value)[strings.bindings] as String, configFilename),
     value.containsKey(strings.symbolFile)
-        ? symbolFileOutputExtractor(value[strings.symbolFile], configFilename)
+        ? symbolFileOutputExtractor(
+            value[strings.symbolFile], configFilename, packageConfig)
         : null,
   );
 }
@@ -620,14 +622,21 @@ bool outputValidator(List<String> name, dynamic value) {
   }
 }
 
-SymbolFile symbolFileOutputExtractor(dynamic value, String? configFilename) {
+SymbolFile symbolFileOutputExtractor(
+    dynamic value, String? configFilename, PackageConfig? packageConfig) {
   value = value as YamlMap;
-  final output =
-      _normalizePath(value[strings.output] as String, configFilename);
+  var output = value[strings.output] as String;
+  if (Uri.parse(output).scheme != "package") {
+    _logger.warning(
+        'Consider using a Package Uri for ${strings.symbolFile} -> ${strings.output}: $output so that external packages can use it.');
+    output = _normalizePath(output, configFilename);
+  } else {
+    output = packageConfig!.resolve(Uri.parse(output))!.toFilePath();
+  }
   final importPath = value[strings.importPath] as String;
-  if (!importPath.startsWith('package:')) {
-    _logger.warning('Consider using a `package:` import for '
-        '${strings.symbolFile} -> ${strings.importPath}: $importPath');
+  if (Uri.parse(importPath).scheme != "package") {
+    _logger.warning(
+        'Consider using a Package Uri for ${strings.symbolFile} -> ${strings.importPath}: $importPath so that external packages can use it.');
   }
   return SymbolFile(importPath, output);
 }

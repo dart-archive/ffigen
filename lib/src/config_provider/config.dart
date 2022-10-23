@@ -263,7 +263,8 @@ class Config {
       [strings.output]: Specification<OutputConfig>(
         requirement: Requirement.yes,
         validator: outputValidator,
-        extractor: (dynamic value) => outputExtractor(value, filename),
+        extractor: (dynamic value) =>
+            outputExtractor(value, filename, packageConfig),
         extractedResult: (dynamic result) {
           _output = (result as OutputConfig).output;
           _symbolFile = result.symbolFile;

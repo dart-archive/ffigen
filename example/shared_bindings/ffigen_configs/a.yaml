@@ -4,7 +4,7 @@
 
 name: NativeLibraryA
 description: Bindings to `headers/a.h`.
-output: '../generated/a_gen.dart'
+output: '../lib/generated/a_gen.dart'
 headers:
   entry-points:
     - '../headers/a.h'

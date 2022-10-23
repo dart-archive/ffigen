@@ -4,12 +4,12 @@
 
 name: NativeLibraryASharedB
 description: Bindings to `headers/a.h` with shared definitions from `headers/base.h`.
-output: '../generated/a_shared_b_gen.dart'
+output: '../lib/generated/a_shared_b_gen.dart'
 headers:
   entry-points:
     - '../headers/a.h'
 import:
   symbol-files:
-    - '../generated/base_symbols.yaml'
+    - '../lib/generated/base_symbols.yaml'
 preamble: |
   // ignore_for_file: non_constant_identifier_names, camel_case_types
