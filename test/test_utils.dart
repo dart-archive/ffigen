@@ -61,6 +61,7 @@ void matchLibraryWithExpected(
     pathToExpected: pathToExpected,
     fileWriter: ({required Library library, required File file}) =>
         library.generateFile(file),
+    codeNormalizer: codeNormalizer,
   );
 }
 
