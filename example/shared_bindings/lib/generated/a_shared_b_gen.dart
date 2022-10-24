@@ -65,4 +65,6 @@ abstract class A_Enum {
   static const int A_ENUM_2 = 1;
 }
 
+const int BASE_MACRO_1 = 1;
+
 const int A_MACRO_1 = 1;

@@ -4,8 +4,11 @@
 
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/code_generator/utils.dart';
+import 'package:logging/logging.dart';
 
 import '../strings.dart' as strings;
+
+final _logger = Logger('ffigen.code_generator.writer');
 
 /// To store generated String bindings.
 class Writer {
@@ -285,8 +288,20 @@ class Writer {
 
     final fileConfig = result[strings.files][importFilePath];
     fileConfig[strings.usedConfig] = <String, dynamic>{};
-    // Remove internal bindings and sort alphabetically.
-    bindings.removeWhere((element) => element.isInternal);
+
+    // Warn for macros.
+    final hasMacroBindings = bindings.any(
+        (element) => element is Constant && element.usr.contains('@macro@'));
+    if (hasMacroBindings) {
+      _logger.info(
+          'Removing all Macros from symbol file since they cannot be cross referenced reliably.');
+    }
+    // Remove internal bindings and macros.
+    bindings.removeWhere((element) {
+      return element.isInternal ||
+          (element is Constant && element.usr.contains('@macro@'));
+    });
+    // Sort bindings alphabetically by USR.
     bindings.sort((a, b) => a.usr.compareTo(b.usr));
     fileConfig[strings.usedConfig][strings.ffiNative] = bindings
         .whereType<Func>()
