@@ -145,7 +145,11 @@ class Library {
     final symbolFileYamlMap = writer.generateSymbolOutputYamlMap(importPath);
     final yamlEditor = YamlEditor("");
     yamlEditor.update([], wrapAsYamlNode(symbolFileYamlMap));
-    file.writeAsStringSync(yamlEditor.toString());
+    var yamlString = yamlEditor.toString();
+    if (!yamlString.endsWith('\n')) {
+      yamlString += "\n";
+    }
+    file.writeAsStringSync(yamlString);
   }
 
   /// Formats a file using the Dart formatter.
