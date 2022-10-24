@@ -16,6 +16,8 @@ files:
         name: BaseUnion1
       c:@U@BaseUnion2:
         name: BaseUnion2
+      c:base.h@496@macro@BASE_MACRO_1:
+        name: BASE_MACRO_1
       c:base.h@T@BaseTypedef1:
         name: BaseTypedef1
       c:base.h@T@BaseTypedef2:
