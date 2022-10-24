@@ -8,6 +8,7 @@ import 'dart:io';
 
 import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
+import 'package:package_config/package_config_types.dart';
 import 'package:yaml/yaml.dart';
 
 import '../strings.dart' as strings;
@@ -24,6 +25,10 @@ class Config {
   String? get filename => _filename;
   String? _filename;
 
+  /// Package config.
+  PackageConfig? get packageConfig => _packageConfig;
+  PackageConfig? _packageConfig;
+
   /// Location for llvm/lib folder.
   String get libclangDylib => _libclangDylib;
   late String _libclangDylib;
@@ -31,6 +36,10 @@ class Config {
   /// Output file name.
   String get output => _output;
   late String _output;
+
+  /// Symbol file config.
+  SymbolFile? get symbolFile => _symbolFile;
+  late SymbolFile? _symbolFile;
 
   /// Language that ffigen is consuming.
   Language get language => _language;
@@ -98,6 +107,10 @@ class Config {
   Map<String, LibraryImport> get libraryImports => _libraryImports;
   late Map<String, LibraryImport> _libraryImports;
 
+  /// Stores all the symbol file maps name to ImportedType mappings specified by user.
+  Map<String, ImportedType> get usrTypeMappings => _usrTypeMappings;
+  late Map<String, ImportedType> _usrTypeMappings;
+
   /// Stores typedef name to ImportedType mappings specified by user.
   Map<String, ImportedType> get typedefTypeMappings => _typedefTypeMappings;
   late Map<String, ImportedType> _typedefTypeMappings;
@@ -159,11 +172,12 @@ class Config {
   FfiNativeConfig get ffiNativeConfig => _ffiNativeConfig;
   late FfiNativeConfig _ffiNativeConfig;
 
-  Config._(this._filename);
+  Config._(this._filename, this._packageConfig);
 
   /// Create config from Yaml map.
-  factory Config.fromYaml(YamlMap map, [String? filename]) {
-    final configspecs = Config._(filename);
+  factory Config.fromYaml(YamlMap map,
+      {String? filename, PackageConfig? packageConfig}) {
+    final configspecs = Config._(filename, packageConfig);
     _logger.finest('Config Map: ' + map.toString());
 
     final specs = configspecs._getSpecs();
@@ -178,11 +192,12 @@ class Config {
   }
 
   /// Create config from a file.
-  factory Config.fromFile(File file) {
+  factory Config.fromFile(File file, {PackageConfig? packageConfig}) {
     // Throws a [YamlException] if it's unable to parse the Yaml.
     final configYaml = loadYaml(file.readAsStringSync()) as YamlMap;
 
-    return Config.fromYaml(configYaml, file.path);
+    return Config.fromYaml(configYaml,
+        filename: file.path, packageConfig: packageConfig);
   }
 
   /// Add compiler options for clang. If [highPriority] is true these are added
@@ -245,11 +260,15 @@ class Config {
           _libclangDylib = result as String;
         },
       ),
-      [strings.output]: Specification<String>(
+      [strings.output]: Specification<OutputConfig>(
         requirement: Requirement.yes,
         validator: outputValidator,
-        extractor: (dynamic value) => outputExtractor(value, filename),
-        extractedResult: (dynamic result) => _output = result as String,
+        extractor: (dynamic value) =>
+            outputExtractor(value, filename, packageConfig),
+        extractedResult: (dynamic result) {
+          _output = (result as OutputConfig).output;
+          _symbolFile = result.symbolFile;
+        },
       ),
       [strings.language]: Specification<Language>(
         requirement: Requirement.no,
@@ -376,6 +395,16 @@ class Config {
         defaultValue: () => <String, LibraryImport>{},
         extractedResult: (dynamic result) {
           _libraryImports = result as Map<String, LibraryImport>;
+        },
+      ),
+      [strings.import, strings.symbolFilesImport]:
+          Specification<Map<String, ImportedType>>(
+        validator: symbolFileImportValidator,
+        extractor: (value) => symbolFileImportExtractor(
+            value, _libraryImports, filename, packageConfig),
+        defaultValue: () => <String, ImportedType>{},
+        extractedResult: (dynamic result) {
+          _usrTypeMappings = result as Map<String, ImportedType>;
         },
       ),
       [strings.typeMap, strings.typeMapTypedefs]:

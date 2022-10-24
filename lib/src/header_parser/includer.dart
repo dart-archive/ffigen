@@ -16,6 +16,8 @@ bool _shouldIncludeDecl(
     bool Function(String, bool) configIncludes) {
   if (isSeenDecl(usr) || name == '') {
     return false;
+  } else if (config.usrTypeMappings.containsKey(usr)) {
+    return false;
   } else if (configIncludes(name, config.excludeAllByDefault)) {
     return true;
   } else {

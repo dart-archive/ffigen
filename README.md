@@ -92,6 +92,12 @@ The following configuration options are available-
 ```yaml
 output: 'generated_bindings.dart'
 ```
+or
+```yaml
+output:
+  bindings: 'generated_bindings.dart'
+  ... 
+```
   </td>
   </tr>
   <tr>
@@ -521,6 +527,36 @@ language: 'objc'
 ```
   </td>
   </tr>
+  <tr>
+    <td>output -> symbol-file</td>
+    <td>Generates a symbol file yaml containing all types defined in the generated output.</td>
+    <td>
+
+```yaml
+output:
+  ...
+  symbol-file:
+    # Although file paths are supported here, prefer Package Uri's here
+    # so that other pacakges can use them.
+    output: 'package:some_pkg/symbols.yaml'
+    import-path: 'package:some_pkg/base.dart'
+```
+</td>
+  </tr>
+  <tr>
+    <td>import -> symbol-files</td>
+    <td>Import symbols from a symbol file. Used for sharing type definitions from other pacakges.</td>
+    <td>
+
+```yaml
+import:
+  symbol-files:
+    # Both package Uri and file paths are supported here.
+    - 'package:some_pkg/symbols.yaml'
+    - 'path/to/some/symbol_file.yaml'
+```
+</td>
+  </tr>
 </tbody>
 </table>
 
@@ -757,3 +793,16 @@ Ffigen can sometimes generate a lot of logs, especially when it's parsing a lot 
     Level options are - `[all, fine, info (default), warning, severe]`.
     The `all` and `fine` will print a ton of logs are meant for debugging
     purposes only.
+
+### How can type definitions be shared?
+
+Ffigen can share type definitions using symbol files.
+- A package can generate a symbol file using the `output -> symbol-file` config.
+- And another package can then import this, using `import -> symbol-files` config.
+- Doing so will reuse all the types such as Struct/Unions, and will automatically
+ exclude generating other types (E.g functions, enums, macros).
+
+Checkout `examples/shared_bindings` for details.
+
+For manually reusing definitions from another package, the `library-imports`
+and `type-map` config can be used.

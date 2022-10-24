@@ -5,9 +5,11 @@
 import 'dart:io';
 
 import 'package:ffigen/src/code_generator.dart';
+import 'package:ffigen/src/code_generator/utils.dart';
 import 'package:file/local.dart';
 import 'package:glob/glob.dart';
 import 'package:logging/logging.dart';
+import 'package:package_config/package_config.dart';
 import 'package:path/path.dart' as p;
 import 'package:quiver/pattern.dart' as quiver;
 import 'package:yaml/yaml.dart';
@@ -141,6 +143,99 @@ bool libraryImportsValidator(List<String> name, dynamic yamlConfig) {
     }
   }
   return true;
+}
+
+void loadImportedTypes(YamlMap fileConfig,
+    Map<String, ImportedType> usrTypeMappings, LibraryImport libraryImport) {
+  final symbols = fileConfig['symbols'] as YamlMap;
+  for (final key in symbols.keys) {
+    final usr = key as String;
+    final value = symbols[usr]! as YamlMap;
+    usrTypeMappings[usr] = ImportedType(
+        libraryImport, value['name'] as String, value['name'] as String);
+  }
+}
+
+YamlMap loadSymbolFile(String symbolFilePath, String? configFileName,
+    PackageConfig? packageConfig) {
+  final path = symbolFilePath.startsWith('package:')
+      ? packageConfig!.resolve(Uri.parse(symbolFilePath))!.toFilePath()
+      : _normalizePath(symbolFilePath, configFileName);
+
+  return loadYaml(File(path).readAsStringSync()) as YamlMap;
+}
+
+Map<String, ImportedType> symbolFileImportExtractor(
+    dynamic yamlConfig,
+    Map<String, LibraryImport> libraryImports,
+    String? configFileName,
+    PackageConfig? packageConfig) {
+  final resultMap = <String, ImportedType>{};
+  for (final item in (yamlConfig as YamlList)) {
+    String symbolFilePath;
+    if (item is String) {
+      symbolFilePath = item;
+    } else {
+      symbolFilePath = item[strings.symbolFile] as String;
+    }
+    final symbolFile =
+        loadSymbolFile(symbolFilePath, configFileName, packageConfig);
+    final formatVersion = symbolFile[strings.formatVersion] as String;
+    if (formatVersion.split('.')[0] !=
+        strings.symbolFileFormatVersion.split('.')[0]) {
+      _logger.severe(
+          'Incompatible format versions for file $symbolFilePath: ${strings.symbolFileFormatVersion}(ours), $formatVersion(theirs).');
+      exit(1);
+    }
+    final uniqueNamer = UniqueNamer(libraryImports.keys
+        .followedBy([strings.defaultSymbolFileImportPrefix]).toSet());
+    for (final file in (symbolFile[strings.files] as YamlMap).keys) {
+      final existingImports =
+          libraryImports.values.where((element) => element.importPath == file);
+      if (existingImports.isEmpty) {
+        final name =
+            uniqueNamer.makeUnique(strings.defaultSymbolFileImportPrefix);
+        libraryImports[name] = LibraryImport(name, file as String);
+      }
+      final libraryImport = libraryImports.values.firstWhere(
+        (element) => element.importPath == file,
+      );
+      loadImportedTypes(
+          symbolFile[strings.files][file] as YamlMap, resultMap, libraryImport);
+    }
+  }
+  return resultMap;
+}
+
+bool symbolFileImportValidator(List<String> name, dynamic yamlConfig) {
+  if (!checkType<YamlList>(name, yamlConfig)) {
+    return false;
+  }
+  var result = true;
+  (yamlConfig as YamlList).asMap().forEach((idx, value) {
+    if (value is YamlMap) {
+      if (!value.keys.contains(strings.symbolFile)) {
+        result = false;
+        _logger
+            .severe('Key $name -> $idx -> ${strings.symbolFile} is required.');
+      }
+      for (final key in value.keys) {
+        if (key == strings.symbolFile) {
+          if (!checkType<String>(
+              [...name, idx.toString(), key as String], value[key])) {
+            result = false;
+          }
+        } else {
+          result = false;
+          _logger.severe('Unknown key : $name -> $idx -> $key.');
+        }
+      }
+    } else if (value is! String) {
+      result = false;
+      _logger.severe('Expected $name -> $idx should be a String or Map.');
+    }
+  });
+  return result;
 }
 
 Map<String, List<String>> typeMapExtractor(dynamic yamlConfig) {
@@ -482,11 +577,91 @@ bool llvmPathValidator(List<String> name, dynamic value) {
   return true;
 }
 
-String outputExtractor(dynamic value, String? configFilename) =>
-    _normalizePath(value as String, configFilename);
+OutputConfig outputExtractor(
+    dynamic value, String? configFilename, PackageConfig? packageConfig) {
+  if (value is String) {
+    return OutputConfig(_normalizePath(value, configFilename), null);
+  }
+  value = value as YamlMap;
+  return OutputConfig(
+    _normalizePath((value)[strings.bindings] as String, configFilename),
+    value.containsKey(strings.symbolFile)
+        ? symbolFileOutputExtractor(
+            value[strings.symbolFile], configFilename, packageConfig)
+        : null,
+  );
+}
 
-bool outputValidator(List<String> name, dynamic value) =>
-    checkType<String>(name, value);
+bool outputValidator(List<String> name, dynamic value) {
+  if (value is String) {
+    return true;
+  } else if (value is YamlMap) {
+    final keys = value.keys;
+    var result = true;
+    for (final key in keys) {
+      if (key == strings.bindings) {
+        if (!checkType<String>([...name, key as String], value[key])) {
+          result = false;
+        }
+      } else if (key == strings.symbolFile) {
+        result = symbolFileOutputValidator(
+            [...name, strings.symbolFile], value[key]);
+      } else {
+        result = false;
+        _logger.severe("Unknown key '$key' in '$name'.");
+      }
+    }
+    return result;
+  } else {
+    _logger.severe(
+        "Expected value of key '${name.join(' -> ')}' to be a String or Map.");
+    return false;
+  }
+}
+
+SymbolFile symbolFileOutputExtractor(
+    dynamic value, String? configFilename, PackageConfig? packageConfig) {
+  value = value as YamlMap;
+  var output = value[strings.output] as String;
+  if (Uri.parse(output).scheme != "package") {
+    _logger.warning(
+        'Consider using a Package Uri for ${strings.symbolFile} -> ${strings.output}: $output so that external packages can use it.');
+    output = _normalizePath(output, configFilename);
+  } else {
+    output = packageConfig!.resolve(Uri.parse(output))!.toFilePath();
+  }
+  final importPath = value[strings.importPath] as String;
+  if (Uri.parse(importPath).scheme != "package") {
+    _logger.warning(
+        'Consider using a Package Uri for ${strings.symbolFile} -> ${strings.importPath}: $importPath so that external packages can use it.');
+  }
+  return SymbolFile(importPath, output);
+}
+
+bool symbolFileOutputValidator(List<String> name, dynamic value) {
+  if (!checkType<YamlMap>(name, value)) {
+    return false;
+  }
+  if (!(value as YamlMap).containsKey(strings.output)) {
+    _logger.severe("Required '$name -> ${strings.output}'.");
+    return false;
+  }
+  if (!(value).containsKey(strings.importPath)) {
+    _logger.severe("Required '$name -> ${strings.importPath}'.");
+    return false;
+  }
+  for (final key in value.keys) {
+    if (key == strings.output || key == strings.importPath) {
+      if (!checkType<String>([...name, key as String], value[key])) {
+        return false;
+      }
+    } else {
+      _logger.severe("Unknown key '$key' in '$name'.");
+      return false;
+    }
+  }
+  return true;
+}
 
 Language languageExtractor(dynamic value) {
   if (value == strings.langC) {

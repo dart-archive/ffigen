@@ -29,6 +29,10 @@ String get dynamicLibParentName => Platform.isWindows ? 'bin' : 'lib';
 
 const output = 'output';
 
+// Sub-keys of output.
+const bindings = "bindings";
+const symbolFile = 'symbol-file';
+
 const language = 'language';
 
 // String mappings for the Language enum.
@@ -130,6 +134,29 @@ const sizemap_native_mapping = <String, int>{
 
 // Library imports.
 const libraryImports = 'library-imports';
+
+// Sub Keys of symbol file.
+const symbols = 'symbols';
+
+// Symbol file yaml.
+const formatVersion = "format_version";
+
+/// Current symbol file format version.
+///
+/// This is generated when generating any symbol file. When importing any other
+/// symbol file, this version is compared according to `semantic` versioning
+/// to determine compatibility.
+const symbolFileFormatVersion = "1.0.0";
+const files = "files";
+const usedConfig = "used-config";
+
+const import = 'import';
+const defaultSymbolFileImportPrefix = '_imp';
+
+// Sub keys of import.
+const symbolFilesImport = 'symbol-files';
+// Sub-Sub keys of symbolFilesImport.
+const importPath = 'import-path';
 
 final predefinedLibraryImports = {
   ffiImport.name: ffiImport,

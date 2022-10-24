@@ -49,17 +49,52 @@ String _normalizeGeneratedCode(
   return codeNormalizer(noCR);
 }
 
-/// Generates actual file using library and tests using [expect] with expected
+/// Generates actual file using library and tests using [expect] with expected.
 ///
 /// This will not delete the actual debug file incase [expect] throws an error.
 void matchLibraryWithExpected(
     Library library, String pathForActual, List<String> pathToExpected,
     {String Function(String)? codeNormalizer}) {
+  _matchFileWithExpected(
+    library: library,
+    pathForActual: pathForActual,
+    pathToExpected: pathToExpected,
+    fileWriter: ({required Library library, required File file}) =>
+        library.generateFile(file),
+    codeNormalizer: codeNormalizer,
+  );
+}
+
+/// Generates actual file using library and tests using [expect] with expected.
+///
+/// This will not delete the actual debug file incase [expect] throws an error.
+void matchLibrarySymbolFileWithExpected(Library library, String pathForActual,
+    List<String> pathToExpected, String importPath) {
+  _matchFileWithExpected(
+      library: library,
+      pathForActual: pathForActual,
+      pathToExpected: pathToExpected,
+      fileWriter: ({required Library library, required File file}) {
+        if (!library.writer.canGenerateSymbolOutput) library.generate();
+        library.generateSymbolOutputFile(file, importPath);
+      });
+}
+
+/// Generates actual file using library and tests using [expect] with expected.
+///
+/// This will not delete the actual debug file incase [expect] throws an error.
+void _matchFileWithExpected({
+  required Library library,
+  required String pathForActual,
+  required List<String> pathToExpected,
+  required void Function({required Library library, required File file})
+      fileWriter,
+  String Function(String)? codeNormalizer,
+}) {
   final file = File(
     path.join(strings.tmpDir, pathForActual),
   );
-  library.generateFile(file);
-
+  fileWriter(library: library, file: file);
   try {
     final actual =
         _normalizeGeneratedCode(file.readAsStringSync(), codeNormalizer);

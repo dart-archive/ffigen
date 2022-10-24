@@ -1,3 +1,7 @@
+# 7.2.0
+- Added support for sharing bindings using `symbol-file` config. (See `README.md`
+and examples/shared_bindings).
+
 # 7.1.0
 - Handle declarations with definition accessible from a different entry-point.
 

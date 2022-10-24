@@ -4,6 +4,11 @@
 
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/code_generator/utils.dart';
+import 'package:logging/logging.dart';
+
+import '../strings.dart' as strings;
+
+final _logger = Logger('ffigen.code_generator.writer');
 
 /// To store generated String bindings.
 class Writer {
@@ -74,6 +79,11 @@ class Writer {
 
   /// Guaranteed to be a unique prefix.
   String get arrayHelperClassPrefix => _arrayHelperClassPrefix;
+
+  /// Set true after calling [generate]. Indicates if
+  /// [generateSymbolOutputYamlMap] can be called.
+  bool get canGenerateSymbolOutput => _canGenerateSymbolOutput;
+  bool _canGenerateSymbolOutput = false;
 
   /// [_usedUpNames] should contain names of all the declarations which are
   /// already used. This is used to avoid name collisions.
@@ -256,7 +266,54 @@ class Writer {
     }
     result.write(s);
 
+    _canGenerateSymbolOutput = true;
     return result.toString();
+  }
+
+  Map<String, dynamic> generateSymbolOutputYamlMap(String importFilePath) {
+    final bindings = <Binding>[
+      ...noLookUpBindings,
+      ...ffiNativeBindings,
+      ...lookUpBindings
+    ];
+    if (!canGenerateSymbolOutput) {
+      throw Exception(
+          "Invalid state: generateSymbolOutputYamlMap() called before generate()");
+    }
+    final result = <String, dynamic>{};
+
+    result[strings.formatVersion] = strings.symbolFileFormatVersion;
+    result[strings.files] = <String, dynamic>{};
+    result[strings.files][importFilePath] = <String, dynamic>{};
+
+    final fileConfig = result[strings.files][importFilePath];
+    fileConfig[strings.usedConfig] = <String, dynamic>{};
+
+    // Warn for macros.
+    final hasMacroBindings = bindings.any(
+        (element) => element is Constant && element.usr.contains('@macro@'));
+    if (hasMacroBindings) {
+      _logger.info(
+          'Removing all Macros from symbol file since they cannot be cross referenced reliably.');
+    }
+    // Remove internal bindings and macros.
+    bindings.removeWhere((element) {
+      return element.isInternal ||
+          (element is Constant && element.usr.contains('@macro@'));
+    });
+    // Sort bindings alphabetically by USR.
+    bindings.sort((a, b) => a.usr.compareTo(b.usr));
+    fileConfig[strings.usedConfig][strings.ffiNative] = bindings
+        .whereType<Func>()
+        .any((element) => element.ffiNativeConfig.enabled);
+    fileConfig[strings.symbols] = <String, dynamic>{};
+    final symbolConfig = fileConfig[strings.symbols];
+    for (final binding in bindings) {
+      symbolConfig[binding.usr] = {
+        strings.name: binding.name,
+      };
+    }
+    return result;
   }
 }
 

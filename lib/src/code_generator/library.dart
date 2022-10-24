@@ -9,6 +9,7 @@ import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/config_provider/config_types.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
+import 'package:yaml_edit/yaml_edit.dart';
 
 import '../strings.dart' as strings;
 import 'utils.dart';
@@ -136,6 +137,19 @@ class Library {
     if (format) {
       _dartFormat(file.path);
     }
+  }
+
+  /// Generates [file] with symbol output yaml.
+  void generateSymbolOutputFile(File file, String importPath) {
+    if (!file.existsSync()) file.createSync(recursive: true);
+    final symbolFileYamlMap = writer.generateSymbolOutputYamlMap(importPath);
+    final yamlEditor = YamlEditor("");
+    yamlEditor.update([], wrapAsYamlNode(symbolFileYamlMap));
+    var yamlString = yamlEditor.toString();
+    if (!yamlString.endsWith('\n')) {
+      yamlString += "\n";
+    }
+    file.writeAsStringSync(yamlString);
   }
 
   /// Formats a file using the Dart formatter.

@@ -409,3 +409,17 @@ class FfiNativeConfig {
 
   const FfiNativeConfig({required this.enabled, this.asset});
 }
+
+class SymbolFile {
+  final String importPath;
+  final String output;
+
+  SymbolFile(this.importPath, this.output);
+}
+
+class OutputConfig {
+  final String output;
+  final SymbolFile? symbolFile;
+
+  OutputConfig(this.output, this.symbolFile);
+}

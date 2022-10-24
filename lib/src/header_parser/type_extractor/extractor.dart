@@ -174,10 +174,15 @@ _CreateTypeFromCursorResult _createTypeFromCursor(clang_types.CXType cxtype,
         // those two types are ABI compatible, so just return bool regardless.
         return _CreateTypeFromCursorResult(BooleanType());
       }
+      final usr = cursor.usr();
       if (config.typedefTypeMappings.containsKey(spelling)) {
         _logger.fine('  Type $spelling mapped from type-map');
         return _CreateTypeFromCursorResult(
             config.typedefTypeMappings[spelling]!);
+      }
+      if (config.usrTypeMappings.containsKey(usr)) {
+        _logger.fine('  Type $spelling mapped from usr');
+        return _CreateTypeFromCursorResult(config.usrTypeMappings[usr]!);
       }
       // Get name from supported typedef name if config allows.
       if (config.useSupportedTypedefs) {
@@ -249,6 +254,7 @@ Type? _extractfromRecord(clang_types.CXType cxtype, clang_types.CXCursor cursor,
   if (cursorKind == clang_types.CXCursorKind.CXCursor_StructDecl ||
       cursorKind == clang_types.CXCursorKind.CXCursor_UnionDecl) {
     final declSpelling = cursor.spelling();
+    final declUsr = cursor.usr();
 
     // Set includer functions according to compoundType.
     final CompoundType compoundType;
@@ -268,10 +274,12 @@ Type? _extractfromRecord(clang_types.CXType cxtype, clang_types.CXCursor cursor,
     }
 
     // Also add a struct binding, if its unseen.
-    // TODO(23): Check if we should auto add compound declarations.
     if (compoundTypeMappings.containsKey(declSpelling)) {
       _logger.fine('  Type Mapped from type-map');
       return compoundTypeMappings[declSpelling]!;
+    } else if (config.usrTypeMappings.containsKey(declUsr)) {
+      _logger.fine('  Type Mapped from usr');
+      return config.usrTypeMappings[declUsr]!;
     } else {
       final struct = parseCompoundDeclaration(
         cursor,
