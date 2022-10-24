@@ -23,3 +23,5 @@ ffigen:
   headers:
     entry-points:
       - 'headers/example.h'
+  preamble: |
+    // ignore_for_file: deprecated_member_use
