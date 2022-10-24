@@ -6,5 +6,5 @@ with other bindings.
 ## Generating bindings
 At the root of this example (`example/shared_bindings`), run -
 ```
-./run.sh
+dart run generate.dart
 ```
