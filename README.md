@@ -536,7 +536,7 @@ language: 'objc'
 output:
   ...
   symbol-file:
-    # Although file paths are allowed here, prefer Package Uri's here
+    # Although file paths are supported here, prefer Package Uri's here
     # so that other pacakges can use them.
     output: 'package:some_pkg/symbols.yaml'
     import-path: 'package:some_pkg/base.dart'
@@ -551,7 +551,7 @@ output:
 ```yaml
 import:
   symbol-files:
-    # Both package Uri and file paths are allowed here.
+    # Both package Uri and file paths are supported here.
     - 'package:some_pkg/symbols.yaml'
     - 'path/to/some/symbol_file.yaml'
 ```
@@ -796,13 +796,13 @@ Ffigen can sometimes generate a lot of logs, especially when it's parsing a lot 
 
 ### How can type definitions be shared?
 
-For manually reusing definitions from another package, the `library-imports`
-and `type-map` config can be used.
-
-Another way, is using symbol files.
+Ffigen can share type definitions using symbol files.
 - A package can generate a symbol file using the `output -> symbol-file` config.
 - And another package can then import this, using `import -> symbol-files` config.
 - Doing so will reuse all the types such as Struct/Unions, and will automatically
  exclude generating other types (E.g functions, enums, macros).
 
 Checkout `examples/shared_bindings` for details.
+
+For manually reusing definitions from another package, the `library-imports`
+and `type-map` config can be used.

@@ -49,7 +49,7 @@ String _normalizeGeneratedCode(
   return codeNormalizer(noCR);
 }
 
-/// Generates actual file using library and tests using [expect] with expected
+/// Generates actual file using library and tests using [expect] with expected.
 ///
 /// This will not delete the actual debug file incase [expect] throws an error.
 void matchLibraryWithExpected(
@@ -65,7 +65,7 @@ void matchLibraryWithExpected(
   );
 }
 
-/// Generates actual file using library and tests using [expect] with expected
+/// Generates actual file using library and tests using [expect] with expected.
 ///
 /// This will not delete the actual debug file incase [expect] throws an error.
 void matchLibrarySymbolFileWithExpected(Library library, String pathForActual,
@@ -80,7 +80,7 @@ void matchLibrarySymbolFileWithExpected(Library library, String pathForActual,
       });
 }
 
-/// Generates actual file using library and tests using [expect] with expected
+/// Generates actual file using library and tests using [expect] with expected.
 ///
 /// This will not delete the actual debug file incase [expect] throws an error.
 void _matchFileWithExpected({

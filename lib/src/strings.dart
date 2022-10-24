@@ -141,9 +141,11 @@ const symbols = 'symbols';
 // Symbol file yaml.
 const formatVersion = "format_version";
 
-/// Current symbol file format version. This is generated when generating any
-/// symbol file. When importing any other symbol file, this version is
-/// compared according to `semantic` versioning to determine compatibility.
+/// Current symbol file format version.
+///
+/// This is generated when generating any symbol file. When importing any other
+/// symbol file, this version is compared according to `semantic` versioning
+/// to determine compatibility.
 const symbolFileFormatVersion = "1.0.0";
 const files = "files";
 const usedConfig = "used-config";
