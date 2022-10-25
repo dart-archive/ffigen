@@ -26,6 +26,8 @@ ${strings.output}: 'generated_bindings.dart'
 ${strings.headers}:
   ${strings.entryPoints}:
     - 'example/ffinative/headers/example.h'
+${strings.preamble}: |
+  // ignore_for_file: deprecated_member_use
 ''') as YamlMap);
       final library = parse(config);
 
