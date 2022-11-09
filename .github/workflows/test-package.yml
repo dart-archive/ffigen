@@ -21,8 +21,8 @@ jobs:
       matrix:
         sdk: [stable]
     steps:
-      - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v1.0
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+      - uses: dart-lang/setup-dart@6a218f2413a3e78e9087f638a238f6b40893203d
         with:
           sdk: ${{ matrix.sdk }}
       - id: install
@@ -41,8 +41,8 @@ jobs:
     needs: analyze
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v1.0
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+      - uses: dart-lang/setup-dart@6a218f2413a3e78e9087f638a238f6b40893203d
         with:
           sdk: stable
       - name: Install dependencies
@@ -58,8 +58,8 @@ jobs:
     needs: analyze
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v1.0
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+      - uses: dart-lang/setup-dart@6a218f2413a3e78e9087f638a238f6b40893203d
         with:
           sdk: stable
       - name: Install dependencies
@@ -71,7 +71,7 @@ jobs:
       - name: Collect coverage
         run: ./tool/coverage.sh
       - name: Upload coverage
-        uses: coverallsapp/github-action@v1.1.2
+        uses: coverallsapp/github-action@8cbef1dea373ebce56de0a14c68d6267baa10b44
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: lcov.info
@@ -80,8 +80,8 @@ jobs:
     needs: analyze
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v1.0
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+      - uses: dart-lang/setup-dart@6a218f2413a3e78e9087f638a238f6b40893203d
         with:
           sdk: stable
       - name: Install dependencies
@@ -105,8 +105,8 @@ jobs:
     needs: analyze
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+      - uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
         with:
           channel: 'master'
       - name: Install dependencies
