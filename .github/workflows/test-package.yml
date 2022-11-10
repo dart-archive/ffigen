@@ -71,7 +71,7 @@ jobs:
       - name: Collect coverage
         run: ./tool/coverage.sh
       - name: Upload coverage
-        uses: coverallsapp/github-action@8cbef1dea373ebce56de0a14c68d6267baa10b44
+        uses: coverallsapp/github-action@9ba913c152ae4be1327bfb9085dc806cedb44057
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: lcov.info
