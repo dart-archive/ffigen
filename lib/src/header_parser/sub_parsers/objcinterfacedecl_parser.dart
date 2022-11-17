@@ -75,7 +75,6 @@ Type? parseObjCInterfaceDeclaration(
     lookupName: config.objcModulePrefixer.applyPrefix(name),
     dartDoc: getCursorDocComment(cursor),
     builtInFunctions: objCBuiltInFunctions,
-    isBuiltIn: cursor.isInSystemHeader(),
   );
 }
 

@@ -311,7 +311,6 @@ class $name implements ${w.ffiLibraryPrefix}.Finalizable {
         (ObjCInterface(
           originalName: "NSData",
           builtInFunctions: this,
-          isBuiltIn: true,
         ));
   }
 
