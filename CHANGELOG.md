@@ -1,8 +1,14 @@
+# 7.2.1
+
+- Fix helper methods sometimes missing from NSString.
+
 # 7.2.0
+
 - Added support for sharing bindings using `symbol-file` config. (See `README.md`
 and examples/shared_bindings).
 
 # 7.1.0
+
 - Handle declarations with definition accessible from a different entry-point.
 
 # 7.0.0

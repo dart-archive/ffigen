@@ -44,7 +44,6 @@ class ObjCInterface extends BindingType {
 
   final String lookupName;
   final ObjCBuiltInFunctions builtInFunctions;
-  final bool isBuiltIn;
   late final ObjCInternalGlobal _classObject;
   late final ObjCInternalGlobal _isKindOfClass;
   late final Func _isKindOfClassMsgSend;
@@ -56,7 +55,6 @@ class ObjCInterface extends BindingType {
     String? lookupName,
     String? dartDoc,
     required this.builtInFunctions,
-    required this.isBuiltIn,
   })  : lookupName = lookupName ?? originalName,
         super(
           usr: usr,
@@ -64,13 +62,11 @@ class ObjCInterface extends BindingType {
           name: name ?? originalName,
           dartDoc: dartDoc,
         ) {
-    if (isBuiltIn) {
-      builtInFunctions.registerInterface(this);
-    }
+    builtInFunctions.registerInterface(this);
   }
 
-  bool get isNSString => isBuiltIn && originalName == "NSString";
-  bool get isNSData => isBuiltIn && originalName == "NSData";
+  bool get isNSString => originalName == "NSString";
+  bool get isNSData => originalName == "NSData";
 
   @override
   BindingString toBindingString(Writer w) {
