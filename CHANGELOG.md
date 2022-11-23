@@ -1,6 +1,6 @@
 # 7.2.2
 
-- Added newer version of LLVM, to default `linuxDylibLocations`.
+- Added newer versions of LLVM, to default `linuxDylibLocations`.
 
 # 7.2.1
 
