@@ -227,6 +227,8 @@ const linuxDylibLocations = {
   '/usr/lib/llvm-11/lib/',
   '/usr/lib/llvm-12/lib/',
   '/usr/lib/llvm-13/lib/',
+  '/usr/lib/llvm-14/lib/',
+  '/usr/lib/llvm-15/lib/',
   '/usr/lib/',
   '/usr/lib64/',
 };
