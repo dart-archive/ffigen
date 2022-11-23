@@ -1,3 +1,7 @@
+# 7.2.2
+
+- Added newer versions of LLVM, to default `linuxDylibLocations`.
+
 # 7.2.1
 
 - Fix helper methods sometimes missing from NSString.
