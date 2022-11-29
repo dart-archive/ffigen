@@ -5,7 +5,6 @@
 import 'package:ffigen/ffigen.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:test/test.dart';
-import 'package:yaml/yaml.dart' as yaml;
 
 import '../test_utils.dart';
 
@@ -69,6 +68,6 @@ $field:
     }
   }
 
-  final config = Config.fromYaml(yaml.loadYaml(templateString) as yaml.YamlMap);
+  final config = testConfig(templateString);
   return config;
 }

@@ -6,7 +6,8 @@ import 'package:ffigen/ffigen.dart';
 import 'package:ffigen/src/config_provider/spec_utils.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:test/test.dart';
-import 'package:yaml/yaml.dart' as yaml;
+
+import '../test_utils.dart';
 
 late Library actual, expected;
 
@@ -28,7 +29,7 @@ void main() {
       );
     });
     test('Compiler Opts Automatic', () {
-      final config = Config.fromYaml(yaml.loadYaml('''
+      final config = testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Compiler Opts Test'
 ${strings.output}: 'unused'
@@ -38,7 +39,7 @@ ${strings.headers}:
 ${strings.compilerOptsAuto}:
   ${strings.macos}:
     ${strings.includeCStdLib}: false
-        ''') as yaml.YamlMap);
+        ''');
       expect(config.compilerOpts.isEmpty, true);
     });
   });

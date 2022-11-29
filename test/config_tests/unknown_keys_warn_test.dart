@@ -6,7 +6,6 @@ import 'package:ffigen/ffigen.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
 import 'package:test/test.dart';
-import 'package:yaml/yaml.dart' as yaml;
 
 import '../test_utils.dart';
 
@@ -18,7 +17,7 @@ void main() {
     setUpAll(() {
       final logArr = <String>[];
       logWarningsToArray(logArr, Level.WARNING);
-      Config.fromYaml(yaml.loadYaml('''
+      testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Warn for unknown keys.'
 ${strings.output}: 'unused'
@@ -35,7 +34,7 @@ ${strings.structs}:
   'warn-5': 'skip'
 ${strings.unions}:
   'warn-6': 'skip'
-        ''') as yaml.YamlMap);
+        ''');
       logString = logArr.join("\n");
     });
     test('Warn for unknown keys.', () {

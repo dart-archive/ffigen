@@ -2,13 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:ffigen/src/config_provider/config.dart';
 import 'package:ffigen/src/header_parser.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
-import 'package:yaml/yaml.dart';
 
 import '../test_utils.dart';
 
@@ -18,7 +16,7 @@ void main() {
       logWarnings(Level.SEVERE);
     });
     test('Libclang test', () {
-      final config = Config.fromYaml(loadYaml('''
+      final config = testConfig('''
 ${strings.name}: LibClang
 ${strings.description}: Bindings to LibClang.
 ${strings.output}: unused
@@ -45,7 +43,7 @@ ${strings.typeMap}:
       dart-type: 'int'
 ${strings.preamble}: |
   // ignore_for_file: camel_case_types, non_constant_identifier_names
-      ''') as YamlMap);
+      ''');
       final library = parse(config);
 
       matchLibraryWithExpected(
@@ -60,7 +58,7 @@ ${strings.preamble}: |
     });
 
     test('CJSON test', () {
-      final config = Config.fromYaml(loadYaml('''
+      final config = testConfig('''
 ${strings.name}: CJson
 ${strings.description}: Bindings to Cjson.
 ${strings.output}: unused
@@ -73,7 +71,7 @@ ${strings.headers}:
     - '**cJSON.h'
 ${strings.preamble}: |
   // ignore_for_file: camel_case_types, non_constant_identifier_names
-      ''') as YamlMap);
+      ''');
       final library = parse(config);
 
       matchLibraryWithExpected(
@@ -86,7 +84,7 @@ ${strings.preamble}: |
     test('SQLite test', () {
       // Excluding functions that use 'va_list' because it can either be a
       // Pointer<__va_list_tag> or int depending on the OS.
-      final config = Config.fromYaml(loadYaml('''
+      final config = testConfig('''
 ${strings.name}: SQLite
 ${strings.description}: Bindings to SQLite.
 ${strings.output}: unused
@@ -105,7 +103,7 @@ ${strings.functions}:
     - sqlite3_str_vappendf
 ${strings.preamble}: |
   // ignore_for_file: camel_case_types, non_constant_identifier_names
-      ''') as YamlMap);
+      ''');
       final library = parse(config);
 
       matchLibraryWithExpected(

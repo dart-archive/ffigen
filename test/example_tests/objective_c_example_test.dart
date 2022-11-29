@@ -5,13 +5,10 @@
 // Objective C support is only available on mac.
 @TestOn('mac-os')
 
-import 'dart:io';
-
-import 'package:ffigen/src/config_provider/config.dart';
 import 'package:ffigen/src/header_parser.dart';
+import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
 import 'package:test/test.dart';
-import 'package:yaml/yaml.dart';
 
 import '../test_utils.dart';
 
@@ -22,9 +19,21 @@ void main() {
     });
 
     test('objective_c', () {
-      final pubspecFile = File('example/objective_c/pubspec.yaml');
-      final pubspecYaml = loadYaml(pubspecFile.readAsStringSync()) as YamlMap;
-      final config = Config.fromYaml(pubspecYaml['ffigen'] as YamlMap);
+      final config = testConfig('''
+${strings.name}: AVFAudio
+${strings.description}: Bindings for AVFAudio.
+${strings.language}: objc
+${strings.output}: 'avf_audio_bindings.dart'
+${strings.excludeAllByDefault}: true
+${strings.objcInterfaces}:
+  ${strings.include}:
+    - 'AVAudioPlayer'
+${strings.headers}:
+  ${strings.entryPoints}:
+    - '/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/AVFAudio.framework/Headers/AVAudioPlayer.h'
+${strings.preamble}: |
+  // ignore_for_file: camel_case_types, non_constant_identifier_names, unused_element, unused_field, return_of_invalid_type, void_checks, annotate_overrides, no_leading_underscores_for_local_identifiers, library_private_types_in_public_api
+''');
       final output = parse(config).generate();
 
       // Verify that the output contains all the methods and classes that the

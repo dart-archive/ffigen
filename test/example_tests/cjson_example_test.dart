@@ -2,12 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:ffigen/src/config_provider/config.dart';
 import 'package:ffigen/src/header_parser.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
 import 'package:test/test.dart';
-import 'package:yaml/yaml.dart';
 
 import '../test_utils.dart';
 
@@ -17,7 +15,7 @@ void main() {
       logWarnings(Level.SEVERE);
     });
     test('c_json', () {
-      final config = Config.fromYaml(loadYaml('''
+      final config = testConfig('''
 ${strings.output}: 'cjson_generated_bindings.dart'
 ${strings.name}: 'CJson'
 ${strings.description}: 'Holds bindings to cJSON.'
@@ -49,7 +47,7 @@ ${strings.preamble}: |
   // THE SOFTWARE.
 
   // ignore_for_file: camel_case_types, non_constant_identifier_names
-''') as YamlMap);
+''');
       final library = parse(config);
 
       matchLibraryWithExpected(

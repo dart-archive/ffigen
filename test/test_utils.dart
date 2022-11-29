@@ -5,10 +5,12 @@
 import 'dart:io';
 
 import 'package:ffigen/src/code_generator.dart';
+import 'package:ffigen/src/config_provider.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
+import 'package:yaml/yaml.dart' as yaml;
 
 extension LibraryTestExt on Library {
   /// Get a [Binding]'s generated string with a given name.
@@ -132,4 +134,8 @@ void logWarningsToArray(List<String> logArr, [Level level = Level.WARNING]) {
   Logger.root.onRecord.listen((record) {
     logArr.add('${record.level.name.padRight(8)}: ${record.message}');
   });
+}
+
+Config testConfig(String yamlBody) {
+  return Config.fromYaml(yaml.loadYaml(yamlBody) as yaml.YamlMap);
 }

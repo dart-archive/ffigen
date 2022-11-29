@@ -6,7 +6,6 @@ import 'package:ffigen/ffigen.dart';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:test/test.dart';
-import 'package:yaml/yaml.dart' as yaml;
 
 import '../test_utils.dart';
 
@@ -24,21 +23,15 @@ ${strings.headers}:
 ${strings.structs}:
   ${strings.structPack}:
     ''';
-      expect(
-          () => Config.fromYaml(
-              yaml.loadYaml("$baseYaml'.*': null") as yaml.YamlMap),
+      expect(() => testConfig("$baseYaml'.*': null"),
           throwsA(TypeMatcher<FormatException>()));
-      expect(
-          () => Config.fromYaml(
-              yaml.loadYaml("$baseYaml'.*': 3") as yaml.YamlMap),
+      expect(() => testConfig("$baseYaml'.*': 3"),
           throwsA(TypeMatcher<FormatException>()));
-      expect(
-          () => Config.fromYaml(
-              yaml.loadYaml("$baseYaml'.*': 32") as yaml.YamlMap),
+      expect(() => testConfig("$baseYaml'.*': 32"),
           throwsA(TypeMatcher<FormatException>()));
     });
     test('Override values', () {
-      final config = Config.fromYaml(yaml.loadYaml('''
+      final config = testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Packed Struct Override Test'
 ${strings.output}: 'unused'
@@ -50,7 +43,7 @@ ${strings.structs}:
     'Normal.*': 1
     'StructWithAttr': 2
     'PackedAttr': none
-        ''') as yaml.YamlMap);
+        ''');
 
       final library = parse(config);
 

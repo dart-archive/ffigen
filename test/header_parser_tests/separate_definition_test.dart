@@ -8,7 +8,6 @@ import 'package:ffigen/src/header_parser.dart' as parser;
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
 import 'package:test/test.dart';
-import 'package:yaml/yaml.dart' as yaml;
 
 import '../test_utils.dart';
 
@@ -38,13 +37,13 @@ Config _makeConfig(List<String> entryPoints) {
   for (final ep in entryPoints) {
     entryPointBuilder.writeln("    - $ep");
   }
-  final config = Config.fromYaml(yaml.loadYaml('''
+  final config = testConfig('''
 ${strings.name}: 'Bindings'
 ${strings.output}: 'unused'
 
 ${strings.headers}:
   ${strings.entryPoints}:
 ${entryPointBuilder.toString()}
-''') as yaml.YamlMap);
+''');
   return config;
 }

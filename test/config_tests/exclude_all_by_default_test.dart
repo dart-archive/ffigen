@@ -6,14 +6,13 @@ import 'package:ffigen/ffigen.dart';
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:test/test.dart';
-import 'package:yaml/yaml.dart' as yaml;
 
 import '../test_utils.dart';
 
 void main() {
   group('exclude_all_by_default', () {
     test('exclude_all_by_default test flag false', () {
-      final config = Config.fromYaml(yaml.loadYaml('''
+      final config = testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'exclude_all_by_default test'
 ${strings.output}: 'unused'
@@ -21,7 +20,7 @@ ${strings.excludeAllByDefault}: false
 ${strings.headers}:
   ${strings.entryPoints}:
     - 'test/config_tests/exclude_all_by_default.h'
-''') as yaml.YamlMap);
+''');
 
       final library = parse(config);
       expect(library.getBinding('func'), isA<Func>());
@@ -34,7 +33,7 @@ ${strings.headers}:
     });
 
     test('exclude_all_by_default test flag true', () {
-      final config = Config.fromYaml(yaml.loadYaml('''
+      final config = testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'exclude_all_by_default test'
 ${strings.output}: 'unused'
@@ -42,7 +41,7 @@ ${strings.excludeAllByDefault}: true
 ${strings.headers}:
   ${strings.entryPoints}:
     - 'test/config_tests/exclude_all_by_default.h'
-''') as yaml.YamlMap);
+''');
 
       final library = parse(config);
       expect(() => library.getBinding('func'), throwsException);
