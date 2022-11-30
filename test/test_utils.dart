@@ -46,7 +46,7 @@ void verifySetupFile(File file) {
 // Remove '\r' for Windows compatibility, then apply user's normalizer.
 String _normalizeGeneratedCode(
     String generated, String Function(String)? codeNormalizer) {
-  final noCR = generated.replaceAll('\r', '');
+  final noCR = generated.replaceAll('\r', '').replaceAll(RegExp(r'\n+'), '\n');
   if (codeNormalizer == null) return noCR;
   return codeNormalizer(noCR);
 }
@@ -136,6 +136,15 @@ void logWarningsToArray(List<String> logArr, [Level level = Level.WARNING]) {
   });
 }
 
-Config testConfig(String yamlBody) {
-  return Config.fromYaml(yaml.loadYaml(yamlBody) as yaml.YamlMap);
+Config testConfig(String yamlBody, {String? filename}) {
+  return Config.fromYaml(
+    yaml.loadYaml(yamlBody) as yaml.YamlMap,
+    filename: filename,
+  );
+}
+
+Config testConfigFromPath(String path) {
+  final file = File(path);
+  final yamlBody = file.readAsStringSync();
+  return testConfig(yamlBody, filename: path);
 }

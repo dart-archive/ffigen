@@ -3,8 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/header_parser.dart';
-import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
+import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 
 import '../test_utils.dart';
@@ -16,20 +16,17 @@ void main() {
     });
 
     test('simple', () {
-      final config = testConfig('''
-${strings.name}: NativeLibrary
-${strings.description}: Bindings to `headers/example.h`.
-${strings.output}: 'generated_bindings.dart'
-${strings.headers}:
-  ${strings.entryPoints}:
-    - 'example/simple/headers/example.h'
-''');
+      final config = testConfigFromPath(path.join(
+        'example',
+        'simple',
+        'ffigen.yaml',
+      ));
       final library = parse(config);
 
       matchLibraryWithExpected(
         library,
         'example_simple.dart',
-        ['example', 'simple', config.output],
+        [config.output],
       );
     });
   });

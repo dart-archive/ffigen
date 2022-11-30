@@ -9,9 +9,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:ffigen/src/header_parser.dart';
-import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
-import 'package:path/path.dart' as p;
+import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 
 import '../test_utils.dart';
@@ -37,33 +36,17 @@ void main() {
             '-o',
             'libswiftapi.dylib',
           ],
-          workingDirectory: p.join(Directory.current.path, 'example/swift'));
+          workingDirectory: path.join(Directory.current.path, 'example/swift'));
       unawaited(stdout.addStream(process.stdout));
       unawaited(stderr.addStream(process.stderr));
       final result = await process.exitCode;
       expect(result, 0);
 
-      final config = testConfig('''
-${strings.name}: SwiftLibrary
-${strings.description}: Bindings for swift_api.
-${strings.language}: objc
-${strings.output}: 'swift_api_bindings.dart'
-${strings.excludeAllByDefault}: true
-${strings.objcInterfaces}:
-  ${strings.include}:
-    - 'SwiftClass'
-  ${strings.objcModule}:
-    'SwiftClass': 'swift_module'
-${strings.headers}:
-  ${strings.entryPoints}:
-    - 'example/swift/swift_api.h'
-${strings.preamble}: |
-  // ignore_for_file: camel_case_types, non_constant_identifier_names
-  // ignore_for_file: unused_element, unused_field, return_of_invalid_type
-  // ignore_for_file: void_checks, annotate_overrides
-  // ignore_for_file: no_leading_underscores_for_local_identifiers
-  // ignore_for_file: library_private_types_in_public_api
-''');
+      final config = testConfigFromPath(path.join(
+        'example',
+        'swift',
+        'ffigen.yaml',
+      ));
       final output = parse(config).generate();
 
       // Verify that the output contains all the methods and classes that the
