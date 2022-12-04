@@ -27,50 +27,6 @@ class LibClang {
           lookup)
       : _lookup = lookup;
 
-  /// Retrieve the character data associated with the given string.
-  ffi.Pointer<ffi.Char> clang_getCString(
-    CXString string,
-  ) {
-    return _clang_getCString(
-      string,
-    );
-  }
-
-  late final _clang_getCStringPtr =
-      _lookup<ffi.NativeFunction<NativeClang_getCString>>('clang_getCString');
-  late final _clang_getCString =
-      _clang_getCStringPtr.asFunction<DartClang_getCString>();
-
-  /// Free the given string.
-  void clang_disposeString(
-    CXString string,
-  ) {
-    return _clang_disposeString(
-      string,
-    );
-  }
-
-  late final _clang_disposeStringPtr =
-      _lookup<ffi.NativeFunction<NativeClang_disposeString>>(
-          'clang_disposeString');
-  late final _clang_disposeString =
-      _clang_disposeStringPtr.asFunction<DartClang_disposeString>();
-
-  /// Free the given string set.
-  void clang_disposeStringSet(
-    ffi.Pointer<CXStringSet> set1,
-  ) {
-    return _clang_disposeStringSet(
-      set1,
-    );
-  }
-
-  late final _clang_disposeStringSetPtr =
-      _lookup<ffi.NativeFunction<NativeClang_disposeStringSet>>(
-          'clang_disposeStringSet');
-  late final _clang_disposeStringSet =
-      _clang_disposeStringSetPtr.asFunction<DartClang_disposeStringSet>();
-
   /// Provides a shared context for creating translation units.
   ///
   /// It provides two options:
@@ -6833,12 +6789,6 @@ class LibClang {
 class _SymbolAddresses {
   final LibClang _library;
   _SymbolAddresses(this._library);
-  ffi.Pointer<ffi.NativeFunction<NativeClang_getCString>>
-      get clang_getCString => _library._clang_getCStringPtr;
-  ffi.Pointer<ffi.NativeFunction<NativeClang_disposeString>>
-      get clang_disposeString => _library._clang_disposeStringPtr;
-  ffi.Pointer<ffi.NativeFunction<NativeClang_disposeStringSet>>
-      get clang_disposeStringSet => _library._clang_disposeStringSetPtr;
   ffi.Pointer<ffi.NativeFunction<NativeClang_createIndex>>
       get clang_createIndex => _library._clang_createIndexPtr;
   ffi.Pointer<ffi.NativeFunction<NativeClang_disposeIndex>>
@@ -7641,36 +7591,6 @@ class _SymbolAddresses {
       get clang_Type_visitFields => _library._clang_Type_visitFieldsPtr;
 }
 
-/// A character string.
-///
-/// The \c CXString type is used to return strings from the interface when
-/// the ownership of that string might differ from one call to the next.
-/// Use \c clang_getCString() to retrieve the string data and, once finished
-/// with the string data, call \c clang_disposeString() to free the string.
-class CXString extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> data;
-
-  @ffi.UnsignedInt()
-  external int private_flags;
-}
-
-class CXStringSet extends ffi.Struct {
-  external ffi.Pointer<CXString> Strings;
-
-  @ffi.UnsignedInt()
-  external int Count;
-}
-
-typedef NativeClang_getCString = ffi.Pointer<ffi.Char> Function(
-    CXString string);
-typedef DartClang_getCString = ffi.Pointer<ffi.Char> Function(CXString string);
-typedef NativeClang_disposeString = ffi.Void Function(CXString string);
-typedef DartClang_disposeString = void Function(CXString string);
-typedef NativeClang_disposeStringSet = ffi.Void Function(
-    ffi.Pointer<CXStringSet> set1);
-typedef DartClang_disposeStringSet = void Function(
-    ffi.Pointer<CXStringSet> set1);
-
 class CXTargetInfoImpl extends ffi.Opaque {}
 
 class CXTranslationUnitImpl extends ffi.Opaque {}
@@ -7758,6 +7678,19 @@ typedef NativeClang_CXIndex_setInvocationEmissionPathOption = ffi.Void Function(
     CXIndex arg0, ffi.Pointer<ffi.Char> Path);
 typedef DartClang_CXIndex_setInvocationEmissionPathOption = void Function(
     CXIndex arg0, ffi.Pointer<ffi.Char> Path);
+
+/// A character string.
+///
+/// The \c CXString type is used to return strings from the interface when
+/// the ownership of that string might differ from one call to the next.
+/// Use \c clang_getCString() to retrieve the string data and, once finished
+/// with the string data, call \c clang_disposeString() to free the string.
+class CXString extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> data;
+
+  @ffi.UnsignedInt()
+  external int private_flags;
+}
 
 /// A particular source file that is part of a translation unit.
 typedef CXFile = ffi.Pointer<ffi.Void>;
@@ -9925,6 +9858,14 @@ typedef NativeClang_Cursor_getBriefCommentText = CXString Function(CXCursor C);
 typedef DartClang_Cursor_getBriefCommentText = CXString Function(CXCursor C);
 typedef NativeClang_Cursor_getMangling = CXString Function(CXCursor arg0);
 typedef DartClang_Cursor_getMangling = CXString Function(CXCursor arg0);
+
+class CXStringSet extends ffi.Struct {
+  external ffi.Pointer<CXString> Strings;
+
+  @ffi.UnsignedInt()
+  external int Count;
+}
+
 typedef NativeClang_Cursor_getCXXManglings = ffi.Pointer<CXStringSet> Function(
     CXCursor arg0);
 typedef DartClang_Cursor_getCXXManglings = ffi.Pointer<CXStringSet> Function(

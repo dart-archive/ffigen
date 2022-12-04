@@ -20,7 +20,7 @@ void main() {
 
     test('objective_c', () {
       final config = testConfigFromPath(
-          path.join('example', 'objective_c', 'ffigen.yaml'));
+          path.join('example', 'objective_c', 'config.yaml'));
       final output = parse(config).generate();
 
       // Verify that the output contains all the methods and classes that the

@@ -45,7 +45,7 @@ void main() {
       final config = testConfigFromPath(path.join(
         'example',
         'swift',
-        'ffigen.yaml',
+        'config.yaml',
       ));
       final output = parse(config).generate();
 

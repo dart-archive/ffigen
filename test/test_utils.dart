@@ -5,7 +5,7 @@
 import 'dart:io';
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/config_provider.dart';
+import 'package:ffigen/src/config_provider/config.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
@@ -147,4 +147,19 @@ Config testConfigFromPath(String path) {
   final file = File(path);
   final yamlBody = file.readAsStringSync();
   return testConfig(yamlBody, filename: path);
+}
+
+T withChDir<T>(String path, T Function() inner) {
+  final oldDir = Directory.current;
+  Directory.current = File(path).parent;
+
+  late T result;
+
+  try {
+    result = inner();
+  } finally {
+    Directory.current = oldDir;
+  }
+
+  return result;
 }

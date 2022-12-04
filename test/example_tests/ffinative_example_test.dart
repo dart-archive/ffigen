@@ -17,7 +17,7 @@ void main() {
 
     test('ffinative', () {
       final config =
-          testConfigFromPath(path.join('example', 'ffinative', 'ffigen.yaml'));
+          testConfigFromPath(path.join('example', 'ffinative', 'config.yaml'));
       final library = parse(config);
 
       matchLibraryWithExpected(

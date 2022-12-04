@@ -19,7 +19,7 @@ void main() {
       final config = testConfigFromPath(path.join(
         'example',
         'simple',
-        'ffigen.yaml',
+        'config.yaml',
       ));
       final library = parse(config);
 

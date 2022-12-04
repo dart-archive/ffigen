@@ -18,6 +18,7 @@ headers:
 
 compiler-opts:
   - '-I../../third_party/libclang/include'
+  - '-I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/'
   - '-Wno-nullability-completeness'
 functions:
   include:

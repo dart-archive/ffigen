@@ -16,7 +16,7 @@ void main() {
     });
     test('c_json', () {
       final config =
-          testConfigFromPath(path.join('example', 'c_json', 'ffigen.yaml'));
+          testConfigFromPath(path.join('example', 'c_json', 'config.yaml'));
       final library = parse(config);
 
       matchLibraryWithExpected(
