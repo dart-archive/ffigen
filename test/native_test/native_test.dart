@@ -36,11 +36,11 @@ void main() {
       ).absolute;
 
       late Config config;
-      late Library library;
       withChDir(configFile.path, () {
         config = testConfigFromPath(configFile.path);
-        library = parse(config);
       });
+      final library = parse(config);
+
       library.generateFile(outFile);
 
       try {

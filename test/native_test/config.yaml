@@ -8,10 +8,10 @@
 
 name: NativeLibrary
 description: 'Native tests.'
-output: './native_test_bindings.dart'
+output: 'native_test_bindings.dart'
 headers:
   entry-points:
-    - './native_test.c'
+    - 'native_test.c'
   include-directives:
     - '**native_test.c'
 
