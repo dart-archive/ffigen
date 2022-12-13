@@ -58,18 +58,18 @@ List<Binding> parseToBindings() {
   Pointer<Pointer<Utf8>> clangCmdArgs = nullptr;
   final compilerOpts = <String>[];
 
+  // Add compiler opt for comment parsing for clang based on config.
+  if (config.commentType.length != CommentLength.none &&
+      config.commentType.style == CommentStyle.any) {
+    compilerOpts.add(strings.fparseAllComments);
+  }
+
   // If the config targets Objective C, add a compiler opt for it.
   if (config.language == Language.objc) {
     compilerOpts.addAll([
       ...strings.clangLangObjC,
       ..._findObjectiveCSysroot(),
     ]);
-  }
-
-  // Add compiler opt for comment parsing for clang based on config.
-  if (config.commentType.length != CommentLength.none &&
-      config.commentType.style == CommentStyle.any) {
-    compilerOpts.add(strings.fparseAllComments);
   }
 
   // Add the user options last so they can override any other options.
