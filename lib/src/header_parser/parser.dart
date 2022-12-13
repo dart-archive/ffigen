@@ -56,21 +56,24 @@ List<Binding> parseToBindings() {
   final index = clang.clang_createIndex(0, 0);
 
   Pointer<Pointer<Utf8>> clangCmdArgs = nullptr;
-  final compilerOpts = List<String>.from(config.compilerOpts);
+  final compilerOpts = <String>[];
 
-  /// Add compiler opt for comment parsing for clang based on config.
+  // Add compiler opt for comment parsing for clang based on config.
   if (config.commentType.length != CommentLength.none &&
       config.commentType.style == CommentStyle.any) {
     compilerOpts.add(strings.fparseAllComments);
   }
 
-  /// If the config targets Objective C, add a compiler opt for it.
+  // If the config targets Objective C, add a compiler opt for it.
   if (config.language == Language.objc) {
     compilerOpts.addAll([
       ...strings.clangLangObjC,
       ..._findObjectiveCSysroot(),
     ]);
   }
+
+  // Add the user options last so they can override any other options.
+  compilerOpts.addAll(config.compilerOpts);
 
   _logger.fine('CompilerOpts used: $compilerOpts');
   clangCmdArgs = createDynamicStringArray(compilerOpts);

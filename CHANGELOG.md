@@ -1,3 +1,8 @@
+# 7.2.3
+
+- Change compiler option order so that user options can override built-in
+  options.
+
 # 7.2.2
 
 - Added newer versions of LLVM, to default `linuxDylibLocations`.
