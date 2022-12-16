@@ -1,3 +1,7 @@
+# 7.2.4
+
+- Add new supported typedef - `uintptr_t` (mapped to `ffi.UintPtr`).
+
 # 7.2.3
 
 - Change compiler option order so that user options can override built-in
