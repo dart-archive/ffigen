@@ -26,3 +26,9 @@ class WithPointerMember extends ffi.Struct {
   @ffi.Uint8()
   external int c;
 }
+
+class WithIntPtrUintPtr extends ffi.Struct {
+  external ffi.Pointer<ffi.UintPtr> a;
+
+  external ffi.Pointer<ffi.Pointer<ffi.IntPtr>> b;
+}
