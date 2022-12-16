@@ -156,7 +156,7 @@ void main() {
                 name: 'a',
                 type: PointerType(
                   NativeType(
-                    SupportedNativeType.UIntPtr,
+                    SupportedNativeType.UintPtr,
                   ),
                 ),
               ),
