@@ -32,6 +32,7 @@ var suportedTypedefToSuportedNativeType = <String, SupportedNativeType>{
   'int32_t': SupportedNativeType.Int32,
   'int64_t': SupportedNativeType.Int64,
   'intptr_t': SupportedNativeType.IntPtr,
+  'uintptr_t': SupportedNativeType.UintPtr,
 };
 
 var supportedTypedefToImportedType = <String, ImportedType>{

@@ -20,6 +20,7 @@ enum SupportedNativeType {
   Float,
   Double,
   IntPtr,
+  UintPtr,
 }
 
 /// Represents a primitive native type, such as float.
@@ -38,6 +39,7 @@ class NativeType extends Type {
     SupportedNativeType.Float: NativeType._('Float', 'double', '0'),
     SupportedNativeType.Double: NativeType._('Double', 'double', '0'),
     SupportedNativeType.IntPtr: NativeType._('IntPtr', 'int', '0'),
+    SupportedNativeType.UintPtr: NativeType._('UintPtr', 'int', '0'),
   };
 
   final String _cType;

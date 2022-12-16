@@ -158,6 +158,20 @@ class NativeLibrary {
   late final _Function1IntPtr =
       _Function1IntPtrPtr.asFunction<int Function(int)>();
 
+  int Function1UintPtr(
+    int x,
+  ) {
+    return _Function1UintPtr(
+      x,
+    );
+  }
+
+  late final _Function1UintPtrPtr =
+      _lookup<ffi.NativeFunction<ffi.UintPtr Function(ffi.UintPtr)>>(
+          'Function1UintPtr');
+  late final _Function1UintPtr =
+      _Function1UintPtrPtr.asFunction<int Function(int)>();
+
   double Function1Float(
     double x,
   ) {

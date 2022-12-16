@@ -149,6 +149,29 @@ void main() {
               ),
             ],
           ),
+          Struct(
+            name: 'WithIntPtrUintPtr',
+            members: [
+              Member(
+                name: 'a',
+                type: PointerType(
+                  NativeType(
+                    SupportedNativeType.UintPtr,
+                  ),
+                ),
+              ),
+              Member(
+                name: 'b',
+                type: PointerType(
+                  PointerType(
+                    NativeType(
+                      SupportedNativeType.IntPtr,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ],
       );
 
