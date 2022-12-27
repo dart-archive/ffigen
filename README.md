@@ -22,14 +22,14 @@ ffigen:
 ```
 Output (_generated_bindings.dart_).
 ```dart
-import 'package:ffi/ffi.dart' as pkg_ffi;
+import 'dart:ffi' as ffi;
 class NativeLibrary {
-  final Pointer<T> Function<T extends NativeType>(String symbolName)
+  final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
       _lookup;
-  NativeLibrary(DynamicLibrary dynamicLibrary)
+  NativeLibrary(ffi.DynamicLibrary dynamicLibrary)
       : _lookup = dynamicLibrary.lookup;
   NativeLibrary.fromLookup(
-      Pointer<T> Function<T extends NativeType>(String symbolName)
+      ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
           lookup)
       : _lookup = lookup;
 
@@ -37,8 +37,9 @@ class NativeLibrary {
     return _sum(a, b);
   }
 
-  late final _sumPtr = _lookup<ffi.NativeFunction<pkg_ffi.Int Function(pkg_ffi.Int, pkg_ffi.Int)>>('sum');
-  late final _sum = _sum_ptr.asFunction<int Function(int, int)>();
+  late final _sumPtr = _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Int)>>('sum');
+  late final _sum = _sumPtr.asFunction<int Function(int, int)>();
+}
 }
 ```
 ## Using this package
