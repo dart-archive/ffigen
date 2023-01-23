@@ -13,7 +13,7 @@ https://dart.dev/guides/libraries/c-interop
 
 ffigen also has experimental support for calling ObjC and Swift code;
 for details see:
-https://dart.dev/guides/libraries/c-interop
+https://dart.dev/guides/libraries/objective-c-interop
 
 ## Example
 
