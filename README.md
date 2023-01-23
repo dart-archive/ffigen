@@ -4,7 +4,16 @@
 
 Binding generator for [FFI](https://dart.dev/guides/libraries/c-interop) bindings.
 
-> Note: ffigen only supports parsing `C` headers.
+> Note: ffigen only supports parsing `C` headers, not `C++` headers.
+
+This bindings generator can be used to call C code -- or code in another
+language that compiles to C modules that follow the C calling convention --
+such as Go or Rust. For more details, see:
+https://dart.dev/guides/libraries/c-interop
+
+ffigen also has experimental support for calling ObjC and Swift code;
+for details see:
+https://dart.dev/guides/libraries/objective-c-interop
 
 ## Example
 
