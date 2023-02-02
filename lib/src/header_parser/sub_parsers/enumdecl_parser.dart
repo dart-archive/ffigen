@@ -32,7 +32,6 @@ final _stack = Stack<_ParsedEnum>();
 /// Parses an enum declaration.
 EnumClass? parseEnumDeclaration(
   clang_types.CXCursor cursor, {
-
   /// Option to ignore declaration filter (Useful in case of extracting
   /// declarations when they are passed/returned by an included function.)
   bool ignoreFilter = false,
