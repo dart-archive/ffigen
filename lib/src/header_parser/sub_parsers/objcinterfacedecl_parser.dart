@@ -51,7 +51,6 @@ final _methodStack = Stack<_ParsedObjCMethod>();
 
 Type? parseObjCInterfaceDeclaration(
   clang_types.CXCursor cursor, {
-
   /// Option to ignore declaration filter (Useful in case of extracting
   /// declarations when they are passed/returned by an included function.)
   bool ignoreFilter = false,
