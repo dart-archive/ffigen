@@ -57,6 +57,10 @@ ${strings.structs}:
       expect(actual.getBindingAsString('Struct5'),
           expected.getBindingAsString('Struct5'));
     });
+    test('Struct6', () {
+      expect(actual.getBindingAsString('Struct6'),
+          expected.getBindingAsString('Struct6'));
+    });
   });
 }
 
@@ -110,6 +114,59 @@ Library expectedLibrary() {
       Struct(name: 'EmptyStruct'),
       Struct(name: 'Struct4'),
       Struct(name: 'Struct5'),
+      Struct(
+        name: 'Struct6',
+        members: [
+          Member(
+            name: '',
+            type: Union(
+              name: 'UnnamedStruct2',
+              members: [
+                Member(
+                  name: 'a',
+                  type: intType,
+                ),
+              ],
+            ),
+          ),
+          Member(
+            name: 'c',
+            type: Union(
+              name: 'UnnamedStruct3',
+              members: [
+                Member(
+                  name: 'b',
+                  type: intType,
+                ),
+              ],
+            ),
+          ),
+          Member(
+            name: '',
+            type: Union(
+              name: 'UnnamedUnion1',
+              members: [
+                Member(
+                  name: 'd',
+                  type: intType,
+                ),
+              ],
+            ),
+          ),
+          Member(
+            name: 'f',
+            type: Union(
+              name: 'UnnamedUnion2',
+              members: [
+                Member(
+                  name: 'e',
+                  type: intType,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     ],
   );
 }

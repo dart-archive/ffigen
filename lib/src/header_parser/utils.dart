@@ -97,6 +97,12 @@ extension CXCursorExt on clang_types.CXCursor {
     return clang.clang_getCursorType(this);
   }
 
+  /// Determine whether the given cursor
+  /// represents an anonymous record declaration.
+  bool isAnonymousRecordDecl() {
+    return clang.clang_Cursor_isAnonymousRecordDecl(this) == 1;
+  }
+
   /// Only valid for [clang.CXCursorKind.CXCursor_FunctionDecl]. Type will have
   /// kind [clang.CXTypeKind.CXType_Invalid] otherwise.
   clang_types.CXType returnType() {
