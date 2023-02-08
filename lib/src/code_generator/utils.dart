@@ -15,7 +15,6 @@ class UniqueNamer {
   ///
   /// Adds the resulting name to the used names by default.
   String makeUnique(String name, [bool addToUsedUpNames = true]) {
-
     // For example, nested structures/unions may not have a name
     if (name.isEmpty) {
       name = 'unnamed';
