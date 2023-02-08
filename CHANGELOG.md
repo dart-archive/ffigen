@@ -1,4 +1,4 @@
-# 7.2.4
+# 7.2.5
 
 - Add support nested anonymous union/struct
 
