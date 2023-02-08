@@ -43,27 +43,20 @@ struct Struct5{
 
 struct Struct6
 {
-    // An anonymous, unnamed struct.
-    struct
-    {
-        int a;
-    };
-
-    // An unnamed struct.
-    struct
-    {
-        int b;
-    } c;
-
     // An anonymous, unnamed union.
     union
     {
-        int d;
+        float a;
     };
 
     // An unnamed union.
     union
     {
-        int e;
-    } f;
+        float b;
+    } c;
+
+    union
+    {
+        float d;
+    } e;
 };

@@ -299,7 +299,7 @@ int _compoundMembersVisitor(clang_types.CXCursor cursor,
 
         // If the union/struct are anonymous, then we need to add them now,
         // otherwise they will be added in the next iteration.
-        if (cursor.isAnonymousRecordDecl()) break;
+        if (!cursor.isAnonymousRecordDecl()) break;
 
         parsed.compound.members.add(
           Member(

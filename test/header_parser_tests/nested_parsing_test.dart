@@ -120,11 +120,11 @@ Library expectedLibrary() {
           Member(
             name: '',
             type: Union(
-              name: 'UnnamedStruct2',
+              name: 'UnnamedUnion1',
               members: [
                 Member(
                   name: 'a',
-                  type: intType,
+                  type: floatType,
                 ),
               ],
             ),
@@ -132,35 +132,23 @@ Library expectedLibrary() {
           Member(
             name: 'c',
             type: Union(
-              name: 'UnnamedStruct3',
-              members: [
-                Member(
-                  name: 'b',
-                  type: intType,
-                ),
-              ],
-            ),
-          ),
-          Member(
-            name: '',
-            type: Union(
-              name: 'UnnamedUnion1',
-              members: [
-                Member(
-                  name: 'd',
-                  type: intType,
-                ),
-              ],
-            ),
-          ),
-          Member(
-            name: 'f',
-            type: Union(
               name: 'UnnamedUnion2',
               members: [
                 Member(
-                  name: 'e',
-                  type: intType,
+                  name: 'b',
+                  type: floatType,
+                ),
+              ],
+            ),
+          ),
+          Member(
+            name: 'e',
+            type: Union(
+              name: 'UnnamedUnion3',
+              members: [
+                Member(
+                  name: 'd',
+                  type: floatType,
                 ),
               ],
             ),
