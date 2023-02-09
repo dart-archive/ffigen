@@ -1,3 +1,7 @@
+# 7.2.5
+
+- Add support nested anonymous union/struct
+
 # 7.2.4
 
 - Add new supported typedef - `uintptr_t` (mapped to `ffi.UintPtr`).

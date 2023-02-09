@@ -44,10 +44,13 @@ class _ParsedCompound {
   // A struct without any attribute is definitely not packed. #pragma pack(...)
   // also adds an attribute, but it's unexposed and cannot be travesed.
   bool hasAttr = false;
+
   // A struct which as a __packed__ attribute is definitely packed.
   bool hasPackedAttr = false;
+
   // Stores the maximum alignment from all the children.
   int maxChildAlignment = 0;
+
   // Alignment of this struct.
   int alignment = 0;
 
@@ -240,50 +243,80 @@ int _compoundMembersVisitor(clang_types.CXCursor cursor,
     clang_types.CXCursor parent, Pointer<Void> clientData) {
   final parsed = _stack.top;
   try {
-    if (cursor.kind == clang_types.CXCursorKind.CXCursor_FieldDecl) {
-      _logger.finer('===== member: ${cursor.completeStringRepr()}');
+    switch (cursor.kind) {
+      case clang_types.CXCursorKind.CXCursor_FieldDecl:
+        _logger.finer('===== member: ${cursor.completeStringRepr()}');
 
-      // Set maxChildAlignValue.
-      final align = cursor.type().alignment();
-      if (align > parsed.maxChildAlignment) {
-        parsed.maxChildAlignment = align;
-      }
+        // Set maxChildAlignValue.
+        final align = cursor.type().alignment();
+        if (align > parsed.maxChildAlignment) {
+          parsed.maxChildAlignment = align;
+        }
 
-      final mt = cursor.type().toCodeGenType();
-      if (mt is IncompleteArray) {
-        // TODO(68): Structs with flexible Array Members are not supported.
-        parsed.flexibleArrayMember = true;
-      }
-      if (clang.clang_getFieldDeclBitWidth(cursor) != -1) {
-        // TODO(84): Struct with bitfields are not suppoorted.
-        parsed.bitFieldMember = true;
-      }
-      if (mt is HandleType) {
-        parsed.dartHandleMember = true;
-      }
-      if (mt.isIncompleteCompound) {
-        parsed.incompleteCompoundMember = true;
-      }
-      if (mt.baseType is UnimplementedType) {
-        parsed.unimplementedMemberType = true;
-      }
+        final mt = cursor.type().toCodeGenType();
+        if (mt is IncompleteArray) {
+          // TODO(68): Structs with flexible Array Members are not supported.
+          parsed.flexibleArrayMember = true;
+        }
+        if (clang.clang_getFieldDeclBitWidth(cursor) != -1) {
+          // TODO(84): Struct with bitfields are not suppoorted.
+          parsed.bitFieldMember = true;
+        }
+        if (mt is HandleType) {
+          parsed.dartHandleMember = true;
+        }
+        if (mt.isIncompleteCompound) {
+          parsed.incompleteCompoundMember = true;
+        }
+        if (mt.baseType is UnimplementedType) {
+          parsed.unimplementedMemberType = true;
+        }
 
-      parsed.compound.members.add(
-        Member(
-          dartDoc: getCursorDocComment(
-            cursor,
-            nesting.length + commentPrefix.length,
+        parsed.compound.members.add(
+          Member(
+            dartDoc: getCursorDocComment(
+              cursor,
+              nesting.length + commentPrefix.length,
+            ),
+            originalName: cursor.spelling(),
+            name: config.structDecl.renameMemberUsingConfig(
+              parsed.compound.originalName,
+              cursor.spelling(),
+            ),
+            type: mt,
           ),
-          originalName: cursor.spelling(),
-          name: config.structDecl.renameMemberUsingConfig(
-            parsed.compound.originalName,
-            cursor.spelling(),
+        );
+
+        break;
+
+      case clang_types.CXCursorKind.CXCursor_PackedAttr:
+        parsed.hasPackedAttr = true;
+
+        break;
+      case clang_types.CXCursorKind.CXCursor_UnionDecl:
+      case clang_types.CXCursorKind.CXCursor_StructDecl:
+        final mt = cursor.type().toCodeGenType();
+
+        // If the union/struct are anonymous, then we need to add them now,
+        // otherwise they will be added in the next iteration.
+        if (!cursor.isAnonymousRecordDecl()) break;
+
+        parsed.compound.members.add(
+          Member(
+            dartDoc: getCursorDocComment(
+              cursor,
+              nesting.length + commentPrefix.length,
+            ),
+            originalName: cursor.spelling(),
+            name: config.structDecl.renameMemberUsingConfig(
+              parsed.compound.originalName,
+              cursor.spelling(),
+            ),
+            type: mt,
           ),
-          type: mt,
-        ),
-      );
-    } else if (cursor.kind == clang_types.CXCursorKind.CXCursor_PackedAttr) {
-      parsed.hasPackedAttr = true;
+        );
+
+        break;
     }
   } catch (e, s) {
     _logger.severe(e);
