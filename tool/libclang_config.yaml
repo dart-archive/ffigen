@@ -91,6 +91,7 @@ functions:
     - clang_Cursor_getArgument
     - clang_getNumArgTypes
     - clang_getArgType
+    - clang_isFunctionTypeVariadic
     - clang_getCursorResultType
     - clang_getEnumConstantDeclValue
     - clang_equalRanges
