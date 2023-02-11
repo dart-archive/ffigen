@@ -339,8 +339,8 @@ Map<String, List<VarArgFunction>> makeVarArgFunctionsMapping(
       final types = <Type>[];
       for (final rva in rawVarArgs) {
         final lib = rva[0];
-        final cType = rva[1]; // TODO: change
-        final dartType = rva[1]; // TODO: change
+        final cType = rva[1]; // TODO: deduce these automatically
+        final dartType = rva[1]; // TODO: deduce these automatically
         if (strings.predefinedLibraryImports.containsKey(lib)) {
           types.add(ImportedType(
               strings.predefinedLibraryImports[lib]!, cType, dartType));
@@ -350,6 +350,7 @@ Map<String, List<VarArgFunction>> makeVarArgFunctionsMapping(
           throw Exception("Please declare $lib under library-imports.");
         }
       }
+      // Extract postfix from config and/or deduce from var names.
       varArgList.add(VarArgFunction('vaf', types));
     }
     mappings[key] = varArgList;
