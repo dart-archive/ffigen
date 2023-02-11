@@ -329,6 +329,34 @@ Map<String, ImportedType> makeImportTypeMapping(
   return typeMappings;
 }
 
+Map<String, List<VarArgFunction>> makeVarArgFunctionsMapping(
+    Map<String, List<List<List<String>>>> rawVarArgMappings,
+    Map<String, LibraryImport> libraryImportsMap) {
+  final mappings = <String, List<VarArgFunction>>{};
+  for (final key in rawVarArgMappings.keys) {
+    final varArgList = <VarArgFunction>[];
+    for (final rawVarArgs in rawVarArgMappings[key]!) {
+      final types = <Type>[];
+      for (final rva in rawVarArgs) {
+        final lib = rva[0];
+        final cType = rva[1]; // TODO: change
+        final dartType = rva[1]; // TODO: change
+        if (strings.predefinedLibraryImports.containsKey(lib)) {
+          types.add(ImportedType(
+              strings.predefinedLibraryImports[lib]!, cType, dartType));
+        } else if (libraryImportsMap.containsKey(lib)) {
+          types.add(ImportedType(libraryImportsMap[lib]!, cType, dartType));
+        } else {
+          throw Exception("Please declare $lib under library-imports.");
+        }
+      }
+      varArgList.add(VarArgFunction('vaf', types));
+    }
+    mappings[key] = varArgList;
+  }
+  return mappings;
+}
+
 final _quoteMatcher = RegExp(r'''^["'](.*)["']$''', dotAll: true);
 final _cmdlineArgMatcher = RegExp(r'''['"](\\"|[^"])*?['"]|[^ ]+''');
 List<String> compilerOptsToList(String compilerOpts) {
@@ -741,6 +769,44 @@ Includer _extractIncluderFromYaml(dynamic yamlMap) {
     excludeMatchers: excludeMatchers,
     excludeFull: excludeFull,
   );
+}
+
+Map<String, List<List<List<String>>>> varArgFunctionConfigExtractor(
+    dynamic yamlMap) {
+  final result = <String, List<List<List<String>>>>{};
+  final configMap = (yamlMap as YamlMap);
+  for (final key in configMap.keys) {
+    final List<List<List<String>>> vf = [];
+    for (final vaFuncs in (configMap[key] as YamlList)) {
+      final List<List<String>> vfTypes = [];
+      for (final typeStrings in (vaFuncs as YamlList)) {
+        vfTypes.add((typeStrings as String).split("."));
+      }
+      vf.add(vfTypes);
+    }
+    result[key as String] = vf;
+  }
+  return result;
+}
+
+bool varArgFunctionConfigExtractorValidator(List<String> name, dynamic value) {
+  if (!checkType<YamlMap>(name, value)) {
+    return false;
+  }
+  var _result = true;
+  for (final key in (value as YamlMap).cast<String, dynamic>().keys) {
+    final list = value[key];
+    if (!checkType<YamlList>([...name, key], list)) {
+      _result = false;
+      continue;
+    }
+    (list as YamlList).asMap().forEach((idx, subList) {
+      if (!checkType<YamlList>([...name, key, idx.toString()], subList)) {
+        _result = false;
+      }
+    });
+  }
+  return _result;
 }
 
 Declaration declarationConfigExtractor(dynamic yamlMap) {

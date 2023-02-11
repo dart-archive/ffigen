@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator.dart';
+import 'package:ffigen/src/config_provider/config_types.dart';
 import 'package:ffigen/src/header_parser/data.dart';
 import 'package:logging/logging.dart';
 
@@ -14,7 +15,7 @@ final _logger = Logger('ffigen.header_parser.functiondecl_parser');
 
 /// Holds temporary information regarding [Func] while parsing.
 class _ParserFunc {
-  Func? func;
+  List<Func> funcs = [];
   bool incompleteStructParameter = false;
   bool unimplementedParameterType = false;
   _ParserFunc();
@@ -23,7 +24,7 @@ class _ParserFunc {
 final _stack = Stack<_ParserFunc>();
 
 /// Parses a function declaration.
-Func? parseFunctionDeclaration(clang_types.CXCursor cursor) {
+List<Func>? parseFunctionDeclaration(clang_types.CXCursor cursor) {
   _stack.push(_ParserFunc());
 
   final funcUsr = cursor.usr();
@@ -39,8 +40,8 @@ Func? parseFunctionDeclaration(clang_types.CXCursor cursor) {
           '${cursor.completeStringRepr()}');
       _logger.warning(
           "Skipped Function '$funcName', inline functions are not supported.");
-      // Returning null so that [addToBindings] function excludes this.
-      return _stack.pop().func;
+      // Returning empty so that [addToBindings] function excludes this.
+      return _stack.pop().funcs;
     }
 
     if (rt.isIncompleteCompound || _stack.top.incompleteStructParameter) {
@@ -51,7 +52,7 @@ Func? parseFunctionDeclaration(clang_types.CXCursor cursor) {
           "Skipped Function '$funcName', Incomplete struct pass/return by "
           'value not supported.');
       // Returning null so that [addToBindings] function excludes this.
-      return _stack.pop().func;
+      return _stack.pop().funcs;
     }
 
     if (rt.baseType is UnimplementedType ||
@@ -62,32 +63,42 @@ Func? parseFunctionDeclaration(clang_types.CXCursor cursor) {
           "Skipped Function '$funcName', function has unsupported return type "
           'or parameter type.');
       // Returning null so that [addToBindings] function excludes this.
-      return _stack.pop().func;
+      return _stack.pop().funcs;
     }
-
-    _stack.top.func = Func(
-      dartDoc: getCursorDocComment(
-        cursor,
-        nesting.length + commentPrefix.length,
-      ),
-      usr: funcUsr,
-      name: config.functionDecl.renameUsingConfig(funcName),
-      originalName: funcName,
-      returnType: rt,
-      parameters: parameters,
-      exposeSymbolAddress:
-          config.functionDecl.shouldIncludeSymbolAddress(funcName),
-      exposeFunctionTypedefs:
-          config.exposeFunctionTypedefs.shouldInclude(funcName),
-      isLeaf: config.leafFunctions.shouldInclude(funcName),
-      ffiNativeConfig: config.ffiNativeConfig,
-    );
-    bindingsIndex.addFuncToSeen(funcUsr, _stack.top.func!);
+    final varArgFunctions = <VarArgFunction>[];
+    if (config.varArgFunctions.containsKey(funcName) &&
+        clang.clang_isFunctionTypeVariadic(cursor.type()) == 1) {
+      varArgFunctions.addAll(config.varArgFunctions[funcName]!);
+    } else {
+      varArgFunctions.add(VarArgFunction('', []));
+    }
+    for (final vaFunc in varArgFunctions) {
+      _stack.top.funcs.add(Func(
+        dartDoc: getCursorDocComment(
+          cursor,
+          nesting.length + commentPrefix.length,
+        ),
+        usr: funcUsr,
+        name: config.functionDecl.renameUsingConfig(funcName),
+        originalName: funcName,
+        returnType: rt,
+        parameters: parameters,
+        varArgParameters:
+            vaFunc.types.map((ta) => Parameter(type: ta, name: 'va')).toList(),
+        exposeSymbolAddress:
+            config.functionDecl.shouldIncludeSymbolAddress(funcName),
+        exposeFunctionTypedefs:
+            config.exposeFunctionTypedefs.shouldInclude(funcName),
+        isLeaf: config.leafFunctions.shouldInclude(funcName),
+        ffiNativeConfig: config.ffiNativeConfig,
+      ));
+    }
+    bindingsIndex.addFuncToSeen(funcUsr, _stack.top.funcs.last);
   } else if (bindingsIndex.isSeenFunc(funcUsr)) {
-    _stack.top.func = bindingsIndex.getSeenFunc(funcUsr);
+    _stack.top.funcs.add(bindingsIndex.getSeenFunc(funcUsr)!);
   }
 
-  return _stack.pop().func;
+  return _stack.pop().funcs;
 }
 
 Type _getFunctionReturnType(clang_types.CXCursor cursor) {
