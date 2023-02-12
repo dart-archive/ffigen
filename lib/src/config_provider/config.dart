@@ -451,14 +451,14 @@ class Config {
         },
       ),
       [strings.functions, strings.varArgFunctions]:
-          Specification<Map<String, List<List<List<String>>>>>(
+          Specification<Map<String, List<RawVarArgFunction>>>(
         requirement: Requirement.no,
-        validator: varArgFunctionConfigExtractorValidator,
+        validator: varArgFunctionConfigValidator,
         extractor: varArgFunctionConfigExtractor,
-        defaultValue: () => <String, List<List<List<String>>>>{},
+        defaultValue: () => <String, List<RawVarArgFunction>>{},
         extractedResult: (dynamic result) {
           _varArgFunctions = makeVarArgFunctionsMapping(
-              result as Map<String, List<List<List<String>>>>, _libraryImports);
+              result as Map<String, List<RawVarArgFunction>>, _libraryImports);
         },
       ),
       [strings.excludeAllByDefault]: Specification<bool>(

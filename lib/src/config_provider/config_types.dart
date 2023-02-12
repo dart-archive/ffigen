@@ -425,6 +425,13 @@ class OutputConfig {
   OutputConfig(this.output, this.symbolFile);
 }
 
+class RawVarArgFunction {
+  String? postfix;
+  final List<String> rawTypeStrings;
+
+  RawVarArgFunction(this.postfix, this.rawTypeStrings);
+}
+
 class VarArgFunction {
   final String postfix;
   final List<Type> types;

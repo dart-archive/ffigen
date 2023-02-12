@@ -3,4 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 int myfunc(int a, ...);
+void myfunc2(char a, char b, ...);
 
+struct SA {
+    int a;
+};

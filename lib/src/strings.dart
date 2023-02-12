@@ -87,6 +87,10 @@ const exposeFunctionTypedefs = 'expose-typedefs';
 const leafFunctions = 'leaf';
 const varArgFunctions = 'variadic-arguments';
 
+// Nested under varArg entries
+const postfix = "postfix";
+const types = "types";
+
 // Sub-fields of ObjC interfaces.
 const objcModule = 'module';
 
