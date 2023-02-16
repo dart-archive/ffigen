@@ -32,8 +32,10 @@ String _replaceSeparators(String path) {
 /// path is passed in, it is resolved relative to the config path, and the
 /// absolute path is returned.
 String _normalizePath(String path, String? configFilename) {
+  final skipNormalization =
+      (configFilename == null) || p.isAbsolute(path) || path.startsWith("**");
   return _replaceSeparators(
-      configFilename == null ? path : p.join(p.dirname(configFilename), path));
+      skipNormalization ? path : p.join(p.dirname(configFilename), path));
 }
 
 /// Checks if type of value is [T], logs an error if it's not.
