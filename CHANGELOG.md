@@ -1,3 +1,7 @@
+# 7.2.6
+
+- Fix path normalization behaviour for absolute paths and globs starting with `**`.
+
 # 7.2.5
 
 - Add support nested anonymous union/struct
