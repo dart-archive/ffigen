@@ -23,6 +23,7 @@ String get dylibFileName {
 }
 
 const llvmPath = 'llvm-path';
+const llvmPathEnv = 'FFIGEN_LLVM_PATH';
 
 /// Name of the parent folder of dynamic library `lib` or `bin` (on windows).
 String get dynamicLibParentName => Platform.isWindows ? 'bin' : 'lib';

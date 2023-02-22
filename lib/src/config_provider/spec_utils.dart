@@ -475,6 +475,22 @@ bool headersValidator(List<String> name, dynamic value) {
 /// error and throws an Exception if not found.
 String findDylibAtDefaultLocations() {
   String? k;
+  // Dylib locations specified by environment variable
+  final llvmPathEnv = Platform.environment[strings.llvmPathEnv];
+  if (llvmPathEnv != null) {
+    if (p.extension(llvmPathEnv).isNotEmpty && File(llvmPathEnv).existsSync()) {
+      k = llvmPathEnv;
+    } else {
+      k = findLibclangDylib(p.join(llvmPathEnv, strings.dynamicLibParentName));
+    }
+    if (k != null) {
+      _logger.info("Found libclang: $k");
+      return k;
+    } else {
+      _logger.warning("Cannot find libclang "
+          "in the path specified by ${strings.llvmPathEnv}");
+    }
+  }
   if (Platform.isLinux) {
     for (final l in strings.linuxDylibLocations) {
       k = findLibclangDylib(l);
