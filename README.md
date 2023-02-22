@@ -116,6 +116,8 @@ output:
     for `lib/libclang.so` on linux, `lib/libclang.dylib` on macOs and
     `bin\libclang.dll` on windows, in the specified paths.<br><br>
     Complete path to the dynamic library can also be supplied.<br>
+    Alternatively, `FFIGEN_LLVM_PATH` environment variable can be set in
+    situations where it's desired to use a different path on current system only.<br>
     <i>Required</i> if ffigen is unable to find this at default locations.</td>
     <td>
 
