@@ -84,6 +84,7 @@ List<Constant>? parseSavedMacros() {
   if (tu == nullptr) {
     _logger.severe('Unable to parse Macros.');
   } else {
+    logTuDiagnostics(tu, _logger, file.path, logLevel: Level.FINEST);
     final rootCursor = clang.clang_getTranslationUnitCursor(tu);
 
     final resultCode = clang.clang_visitChildren(

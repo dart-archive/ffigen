@@ -30,16 +30,13 @@ void visitChildrenResultChecker(int resultCode) {
 
 /// Logs the warnings/errors returned by clang for a translation unit.
 void logTuDiagnostics(
-  Pointer<clang_types.CXTranslationUnitImpl> tu,
-  Logger logger,
-  String header,
-) {
+    Pointer<clang_types.CXTranslationUnitImpl> tu, Logger logger, String header,
+    {Level logLevel = Level.SEVERE}) {
   final total = clang.clang_getNumDiagnostics(tu);
   if (total == 0) {
     return;
   }
-
-  logger.severe('Header $header: Total errors/warnings: $total.');
+  logger.log(logLevel, 'Header $header: Total errors/warnings: $total.');
   for (var i = 0; i < total; i++) {
     final diag = clang.clang_getDiagnostic(tu, i);
     final cxstring = clang.clang_formatDiagnostic(
@@ -50,7 +47,7 @@ void logTuDiagnostics(
           clang_types
               .CXDiagnosticDisplayOptions.CXDiagnostic_DisplayCategoryName,
     );
-    logger.severe('    ' + cxstring.toStringAndDispose());
+    logger.log(logLevel, '    ' + cxstring.toStringAndDispose());
     clang.clang_disposeDiagnostic(diag);
   }
 }
