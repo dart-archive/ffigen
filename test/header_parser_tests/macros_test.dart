@@ -98,6 +98,18 @@ ${strings.headers}:
       expect(actual.getBindingAsString('TEST16'),
           expected.getBindingAsString('TEST16'));
     });
+    test('TEST17', () {
+      expect(actual.getBindingAsString('TEST17'),
+          expected.getBindingAsString('TEST17'));
+    });
+    test('TEST18', () {
+      expect(actual.getBindingAsString('TEST18'),
+          expected.getBindingAsString('TEST18'));
+    });
+    test('TEST19', () {
+      expect(actual.getBindingAsString('TEST19'),
+          expected.getBindingAsString('TEST19'));
+    });
   });
 }
 
@@ -125,6 +137,9 @@ Library expectedLibrary() {
           rawType: 'double',
           rawValue: strings.doubleNegativeInfinity),
       Constant(name: 'TEST16', rawType: 'double', rawValue: strings.doubleNaN),
+      Constant(name: 'TEST17', rawType: 'int', rawValue: "0"),
+      Constant(name: 'TEST18', rawType: 'int', rawValue: "4"),
+      Constant(name: 'TEST19', rawType: 'int', rawValue: "8"),
     ],
   );
 }

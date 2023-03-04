@@ -1,3 +1,7 @@
+# 7.2.7
+
+- Fix some macros not being generated in some cases due to relative header paths.
+
 # 7.2.6
 
 - Fix path normalization behaviour for absolute paths and globs starting with `**`.
