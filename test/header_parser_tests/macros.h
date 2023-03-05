@@ -32,7 +32,7 @@
 #define TEST16 NAN
 
 
-// gtype.h
+// Inside include guard.
 #ifndef __TEST_INCLUDE_GUARD_1__
 #define __TEST_INCLUDE_GUARD_1__
 
