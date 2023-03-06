@@ -68,9 +68,6 @@ List<Constant>? parseSavedMacros() {
   var cmdLen = 0;
 
   final compilerOpts = config.compilerOpts;
-  config.headers.entryPoints.followedBy([file.path]).forEach((entryFile) {
-    compilerOpts.add("-imacros$entryFile");
-  });
   clangCmdArgs = createDynamicStringArray(compilerOpts);
 
   cmdLen = config.compilerOpts.length;
@@ -87,6 +84,7 @@ List<Constant>? parseSavedMacros() {
   if (tu == nullptr) {
     _logger.severe('Unable to parse Macros.');
   } else {
+    logTuDiagnostics(tu, _logger, file.path, logLevel: Level.FINEST);
     final rootCursor = clang.clang_getTranslationUnitCursor(tu);
 
     final resultCode = clang.clang_visitChildren(
@@ -205,7 +203,8 @@ File createFileForMacros() {
   // Write file contents.
   final sb = StringBuffer();
   for (final h in config.headers.entryPoints) {
-    sb.writeln('#include "$h"');
+    final fullHeaderPath = File(h).absolute.path;
+    sb.writeln('#include "$fullHeaderPath"');
   }
 
   _macroVarNames = {};

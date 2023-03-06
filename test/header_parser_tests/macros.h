@@ -30,3 +30,16 @@
 #define TEST14 INFINITY
 #define TEST15 -INFINITY
 #define TEST16 NAN
+
+
+// Inside include guard.
+#ifndef __TEST_INCLUDE_GUARD_1__
+#define __TEST_INCLUDE_GUARD_1__
+
+#define TEST17 TEST_FUNCTION_MACRO(0)
+#define TEST18 TEST_FUNCTION_MACRO(1)
+#define TEST19 TEST_FUNCTION_MACRO(2)
+
+#define TEST_FUNCTION_MACRO(x) ((unsigned long)((x) << (2)))
+
+#endif /* __TEST_INCLUDE_GUARD_1__ */
