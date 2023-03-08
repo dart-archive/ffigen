@@ -12,4 +12,4 @@ dependencies:
 dev_dependencies:
   ffigen:
     path: '../../'
-  lints: ^1.0.1
+  lints: ^2.0.1

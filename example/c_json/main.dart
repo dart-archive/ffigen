@@ -40,8 +40,8 @@ void main() {
     print('Json converted successfully');
   } else {
     print("Converted json doesn't match\n");
-    print('Actual:\n' + dartJson.toString() + '\n');
-    print('Expected:\n' + json.decode(jsonString).toString());
+    print('Actual:\n$dartJson\n');
+    print('Expected:\n${json.decode(jsonString)}');
   }
 }
 
