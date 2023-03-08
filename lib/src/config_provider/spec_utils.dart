@@ -4,6 +4,7 @@
 
 import 'dart:io';
 
+import 'package:config/config.dart' as pkg_config;
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/code_generator/utils.dart';
 import 'package:file/local.dart';
@@ -112,6 +113,9 @@ void _warnUnknownKeysInMap(Map<String, dynamic> allowedKeyMap,
     }
   }
 }
+
+bool? booleanExtractor2(pkg_config.Config config, List<String> key) =>
+    config.getBool(key.join('.'));
 
 bool booleanExtractor(dynamic value) => value as bool;
 

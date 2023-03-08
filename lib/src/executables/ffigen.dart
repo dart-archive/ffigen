@@ -7,6 +7,7 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:cli_util/cli_logging.dart' show Ansi;
+import 'package:config/config.dart' as pkg_config;
 import 'package:ffigen/ffigen.dart';
 import 'package:logging/logging.dart';
 import 'package:package_config/package_config.dart';
@@ -75,9 +76,16 @@ Config getConfig(ArgResults result, PackageConfig? packageConfig) {
 
   // Parse config from yaml.
   if (result.wasParsed(conf)) {
-    config = getConfigFromCustomYaml(result[conf] as String, packageConfig);
+    config = getConfigFromCustomYaml(
+      result[conf] as String,
+      packageConfig,
+      result['defines'] as List<String>,
+    );
   } else {
-    config = getConfigFromPubspec(packageConfig);
+    config = getConfigFromPubspec(
+      packageConfig,
+      result['defines'] as List<String>,
+    );
   }
 
   // Add compiler options from command line.
@@ -91,7 +99,10 @@ Config getConfig(ArgResults result, PackageConfig? packageConfig) {
 }
 
 /// Extracts configuration from pubspec file.
-Config getConfigFromPubspec(PackageConfig? packageConfig) {
+Config getConfigFromPubspec(
+  PackageConfig? packageConfig,
+  List<String> cliDefines,
+) {
   final pubspecFile = File(pubspecName);
 
   if (!pubspecFile.existsSync()) {
@@ -110,12 +121,24 @@ Config getConfigFromPubspec(PackageConfig? packageConfig) {
     _logger.severe("Couldn't find an entry for '$configKey' in $pubspecName.");
     exit(1);
   }
-  return Config.fromYaml(bindingsConfigMap,
+
+  final config = pkg_config.Config(
+    cliDefines: cliDefines,
+    environment: Platform.environment,
+    fileParsed: bindingsConfigMap.cast(),
+    fileSourceUri: pubspecFile.uri,
+  );
+
+  return Config.fromConfig(config,
       filename: pubspecFile.path, packageConfig: packageConfig);
 }
 
 /// Extracts configuration from a custom yaml file.
-Config getConfigFromCustomYaml(String yamlPath, PackageConfig? packageConfig) {
+Config getConfigFromCustomYaml(
+  String yamlPath,
+  PackageConfig? packageConfig,
+  List<String> cliDefines,
+) {
   final yamlFile = File(yamlPath);
 
   if (!yamlFile.existsSync()) {
@@ -123,7 +146,14 @@ Config getConfigFromCustomYaml(String yamlPath, PackageConfig? packageConfig) {
     exit(1);
   }
 
-  return Config.fromFile(yamlFile, packageConfig: packageConfig);
+  final config = pkg_config.Config(
+    cliDefines: cliDefines,
+    environment: Platform.environment,
+    fileContents: yamlFile.readAsStringSync(),
+    fileSourceUri: yamlFile.uri,
+  );
+
+  return Config.fromConfig(config, packageConfig: packageConfig);
 }
 
 /// Parses the cmd line arguments.
@@ -158,6 +188,15 @@ ArgResults getArgResults(List<String> args) {
     compilerOpts,
     help: 'Compiler options for clang. (E.g --$compilerOpts "-I/headers -W")',
   );
+  parser.addMultiOption(
+    'define',
+    abbr: 'D',
+    help: '''Define or override a config property from command line.
+The same option can be passed multiple times.
+Keys should only contain lower-case alphanumeric characters, underscores,
+and '.'s''',
+  );
+
 
   ArgResults results;
   try {

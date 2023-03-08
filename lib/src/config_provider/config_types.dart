@@ -5,6 +5,7 @@
 /// Contains all the neccesary classes required by config.
 import 'dart:io';
 
+import 'package:config/config.dart' as pkg_config;
 import 'package:quiver/pattern.dart' as quiver;
 
 import 'path_finder.dart';
@@ -67,17 +68,21 @@ class StructPackingOverride {
 ///
 /// [E] is the return type of the extractedResult.
 class Specification<E> {
+  final List<String> key;
   final bool Function(List<String> name, dynamic value) validator;
-  final E Function(dynamic map) extractor;
+  final E Function(pkg_config.Config config) extractor;
+  final E? Function(pkg_config.Config config, List<String> key)? extractor2;
   final E Function()? defaultValue;
 
   final Requirement requirement;
   final void Function(dynamic result) extractedResult;
 
   Specification({
+    required this.key,
     required this.extractedResult,
     required this.validator,
     required this.extractor,
+    this.extractor2,
     this.defaultValue,
     this.requirement = Requirement.no,
   });
