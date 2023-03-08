@@ -178,7 +178,7 @@ class Config {
   factory Config.fromYaml(YamlMap map,
       {String? filename, PackageConfig? packageConfig}) {
     final configspecs = Config._(filename, packageConfig);
-    _logger.finest('Config Map: ' + map.toString());
+    _logger.finest('Config Map: $map');
 
     final specs = configspecs._getSpecs();
 
@@ -213,15 +213,14 @@ class Config {
 
   /// Validates Yaml according to given specs.
   bool _checkConfigs(YamlMap map, Map<List<String>, Specification> specs) {
-    var _result = true;
+    var result = true;
     for (final key in specs.keys) {
       final spec = specs[key];
       if (checkKeyInYaml(key, map)) {
-        _result =
-            _result && spec!.validator(key, getKeyValueFromYaml(key, map));
+        result = result && spec!.validator(key, getKeyValueFromYaml(key, map));
       } else if (spec!.requirement == Requirement.yes) {
         _logger.severe("Key '$key' is required.");
-        _result = false;
+        result = false;
       } else if (spec.requirement == Requirement.prefer) {
         _logger.warning("Prefer adding Key '$key' to your config.");
       }
@@ -229,7 +228,7 @@ class Config {
     // Warn about unknown keys.
     warnUnknownKeys(specs.keys.toList(), map);
 
-    return _result;
+    return result;
   }
 
   /// Extracts variables from Yaml according to given specs.

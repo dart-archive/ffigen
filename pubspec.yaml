@@ -17,12 +17,12 @@ dependencies:
   quiver: ^3.0.0
   args: ^2.0.0
   logging: ^1.0.0
-  cli_util: ^0.3.0
+  cli_util: ^0.4.0
   glob: ^2.0.0
   file: ^6.0.0
   package_config: ^2.1.0
   yaml_edit: ^2.0.3
 
 dev_dependencies:
-  lints: ^1.0.1
+  lints: ^2.0.1
   test: ^1.16.2

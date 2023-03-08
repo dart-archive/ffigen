@@ -99,7 +99,7 @@ $objType $name(String name) {
   Func getMsgSendFunc(Type returnType, List<ObjCMethodParam> params) {
     var key = returnType.cacheKey();
     for (final p in params) {
-      key += ' ' + p.type.cacheKey();
+      key += ' ${p.type.cacheKey()}';
     }
     return _msgSendFuncs[key] ??= Func(
       name: '_objc_msgSend_${_msgSendFuncs.length}',

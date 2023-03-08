@@ -26,15 +26,15 @@ ${strings.structs}:
     ''';
       expect(
           () => Config.fromYaml(
-              yaml.loadYaml(baseYaml + "'.*': null") as yaml.YamlMap),
+              yaml.loadYaml("$baseYaml'.*': null") as yaml.YamlMap),
           throwsA(TypeMatcher<FormatException>()));
       expect(
           () => Config.fromYaml(
-              yaml.loadYaml(baseYaml + "'.*': 3") as yaml.YamlMap),
+              yaml.loadYaml("$baseYaml'.*': 3") as yaml.YamlMap),
           throwsA(TypeMatcher<FormatException>()));
       expect(
           () => Config.fromYaml(
-              yaml.loadYaml(baseYaml + "'.*': 32") as yaml.YamlMap),
+              yaml.loadYaml("$baseYaml'.*': 32") as yaml.YamlMap),
           throwsA(TypeMatcher<FormatException>()));
     });
     test('Override values', () {

@@ -22,9 +22,9 @@ ObjCBlock parseObjCBlock(clang_types.CXType cxtype) {
 
   // Create a fake USR code for the block. This code is used to dedupe blocks
   // with the same signature.
-  var usr = 'objcBlock: ' + returnType.cacheKey();
+  var usr = 'objcBlock: ${returnType.cacheKey()}';
   for (final type in argTypes) {
-    usr += ' ' + type.cacheKey();
+    usr += ' ${type.cacheKey()}';
   }
 
   _logger.fine('++++ Adding ObjC block: '

@@ -61,11 +61,11 @@ class EnumClass extends BindingType {
     for (final ec in enumConstants) {
       final enumValueName = localUniqueNamer.makeUnique(ec.name);
       if (ec.dartDoc != null) {
-        s.write(depth + '/// ');
-        s.writeAll(ec.dartDoc!.split('\n'), '\n' + depth + '/// ');
+        s.write('$depth/// ');
+        s.writeAll(ec.dartDoc!.split('\n'), '\n$depth/// ');
         s.write('\n');
       }
-      s.write(depth + 'static const int $enumValueName = ${ec.value};\n');
+      s.write('${depth}static const int $enumValueName = ${ec.value};\n');
     }
     s.write('}\n\n');
 

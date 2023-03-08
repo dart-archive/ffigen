@@ -141,8 +141,8 @@ abstract class Compound extends BindingType {
         s.write('${m.name};\n\n');
       } else {
         if (m.dartDoc != null) {
-          s.write(depth + '/// ');
-          s.writeAll(m.dartDoc!.split('\n'), '\n' + depth + '/// ');
+          s.write('$depth/// ');
+          s.writeAll(m.dartDoc!.split('\n'), '\n$depth/// ');
           s.write('\n');
         }
         if (!sameDartAndCType(m.type, w)) {
