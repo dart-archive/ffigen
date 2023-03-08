@@ -81,7 +81,7 @@ class ObjCInterface extends BindingType {
           (_getConvertedType(p.type, w, name) +
               (p.isNullable ? "? " : " ") +
               p.name)));
-      return '(' + stringParams.join(", ") + ')';
+      return '(${stringParams.join(", ")})';
     }
 
     final s = StringBuffer();
@@ -364,7 +364,7 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
       Type type, Writer w, String enclosingClass, bool isNullableReturn) {
     final result = _getConvertedType(type, w, enclosingClass);
     if (isNullableReturn) {
-      return result + "?";
+      return "$result?";
     }
     return result;
   }

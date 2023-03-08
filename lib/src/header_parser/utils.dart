@@ -47,7 +47,7 @@ void logTuDiagnostics(
           clang_types
               .CXDiagnosticDisplayOptions.CXDiagnostic_DisplayCategoryName,
     );
-    logger.log(logLevel, '    ' + cxstring.toStringAndDispose());
+    logger.log(logLevel, '    ${cxstring.toStringAndDispose()}');
     clang.clang_disposeDiagnostic(diag);
   }
 }

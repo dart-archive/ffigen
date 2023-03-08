@@ -296,7 +296,7 @@ Type? _extractfromRecord(clang_types.CXType cxtype, clang_types.CXCursor cursor,
 
 // Used for function pointer arguments.
 Type _extractFromFunctionProto(clang_types.CXType cxtype) {
-  final _parameters = <Parameter>[];
+  final parameters = <Parameter>[];
   final totalArgs = clang.clang_getNumArgTypes(cxtype);
   for (var i = 0; i < totalArgs; i++) {
     final t = clang.clang_getArgType(cxtype, i);
@@ -309,13 +309,13 @@ Type _extractFromFunctionProto(clang_types.CXType cxtype) {
       return UnimplementedType('Function parameter has an unsupported type.');
     }
 
-    _parameters.add(
+    parameters.add(
       Parameter(name: '', type: pt),
     );
   }
 
   return NativeFunc(FunctionType(
-    parameters: _parameters,
+    parameters: parameters,
     returnType: clang.clang_getResultType(cxtype).toCodeGenType(),
   ));
 }

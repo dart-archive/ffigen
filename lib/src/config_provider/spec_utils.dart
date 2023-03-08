@@ -82,13 +82,13 @@ dynamic getKeyValueFromYaml(List<String> key, YamlMap map) {
 void warnUnknownKeys(List<List<String>> allowedKeyList, YamlMap configKeyMap) {
   final allowedKeyMap = <String, dynamic>{};
   for (final specKeys in allowedKeyList) {
-    var _item = allowedKeyMap;
+    var item = allowedKeyMap;
     for (final specSubKey in specKeys) {
-      _item.putIfAbsent(specSubKey, () => <String, dynamic>{});
-      _item = _item[specSubKey] as Map<String, dynamic>;
+      item.putIfAbsent(specSubKey, () => <String, dynamic>{});
+      item = item[specSubKey] as Map<String, dynamic>;
     }
     // Add empty key to mark that any sub-keys of this key are allowed.
-    _item[''] = <String, dynamic>{};
+    item[''] = <String, dynamic>{};
   }
   _warnUnknownKeysInMap(allowedKeyMap, configKeyMap, <dynamic>[]);
 }
@@ -379,7 +379,7 @@ CompilerOptsAuto compilerOptsAutoExtractor(dynamic value) {
 }
 
 bool compilerOptsAutoValidator(List<String> name, dynamic value) {
-  var _result = true;
+  var result = true;
 
   if (!checkType<YamlMap>(name, value)) {
     return false;
@@ -395,19 +395,19 @@ bool compilerOptsAutoValidator(List<String> name, dynamic value) {
         if (inckey == strings.includeCStdLib) {
           if (!checkType<bool>(
               [...name, oskey, inckey as String], value[oskey][inckey])) {
-            _result = false;
+            result = false;
           }
         } else {
           _logger.severe("Unknown key '$inckey' in '$name -> $oskey.");
-          _result = false;
+          result = false;
         }
       }
     } else {
       _logger.severe("Unknown key '$oskey' in '$name'.");
-      _result = false;
+      result = false;
     }
   }
-  return _result;
+  return result;
 }
 
 Headers headersExtractor(dynamic yamlConfig, String? configFilename) {
@@ -814,32 +814,32 @@ Declaration declarationConfigExtractor(dynamic yamlMap) {
 }
 
 bool declarationConfigValidator(List<String> name, dynamic value) {
-  var _result = true;
+  var result = true;
   if (value is YamlMap) {
     for (final key in value.keys) {
       if (key == strings.include || key == strings.exclude) {
         if (!checkType<YamlList>([...name, key as String], value[key])) {
-          _result = false;
+          result = false;
         }
       } else if (key == strings.rename) {
         if (!checkType<YamlMap>([...name, key as String], value[key])) {
-          _result = false;
+          result = false;
         } else {
           for (final subkey in (value[key] as YamlMap).keys) {
             if (!checkType<String>(
                 [...name, key, subkey as String], value[key][subkey])) {
-              _result = false;
+              result = false;
             }
           }
         }
       } else if (key == strings.memberRename) {
         if (!checkType<YamlMap>([...name, key as String], value[key])) {
-          _result = false;
+          result = false;
         } else {
           for (final declNameKey in (value[key] as YamlMap).keys) {
             if (!checkType<YamlMap>([...name, key, declNameKey as String],
                 value[key][declNameKey])) {
-              _result = false;
+              result = false;
             } else {
               for (final memberNameKey
                   in ((value[key] as YamlMap)[declNameKey] as YamlMap).keys) {
@@ -849,7 +849,7 @@ bool declarationConfigValidator(List<String> name, dynamic value) {
                   declNameKey,
                   memberNameKey as String,
                 ], value[key][declNameKey][memberNameKey])) {
-                  _result = false;
+                  result = false;
                 }
               }
             }
@@ -857,17 +857,17 @@ bool declarationConfigValidator(List<String> name, dynamic value) {
         }
       } else if (key == strings.symbolAddress) {
         if (!checkType<YamlMap>([...name, key as String], value[key])) {
-          _result = false;
+          result = false;
         } else {
           for (final subkey in (value[key] as YamlMap).keys) {
             if (subkey == strings.include || subkey == strings.exclude) {
               if (!checkType<YamlList>(
                   [...name, key, subkey as String], value[key][subkey])) {
-                _result = false;
+                result = false;
               }
             } else {
               _logger.severe("Unknown key '$subkey' in '$name -> $key'.");
-              _result = false;
+              result = false;
             }
           }
         }
@@ -875,59 +875,59 @@ bool declarationConfigValidator(List<String> name, dynamic value) {
     }
   } else {
     _logger.severe("Expected value '$name' to be a Map.");
-    _result = false;
+    result = false;
   }
-  return _result;
+  return result;
 }
 
 Includer exposeFunctionTypeExtractor(dynamic value) =>
     _extractIncluderFromYaml(value);
 
 bool exposeFunctionTypeValidator(List<String> name, dynamic value) {
-  var _result = true;
+  var result = true;
 
   if (!checkType<YamlMap>(name, value)) {
-    _result = false;
+    result = false;
   } else {
     final mp = value as YamlMap;
     for (final key in mp.keys) {
       if (key == strings.include || key == strings.exclude) {
         if (!checkType<YamlList>([...name, key as String], value[key])) {
-          _result = false;
+          result = false;
         }
       } else {
         _logger.severe("Unknown subkey '$key' in '$name'.");
-        _result = false;
+        result = false;
       }
     }
   }
 
-  return _result;
+  return result;
 }
 
 Includer leafFunctionExtractor(dynamic value) =>
     _extractIncluderFromYaml(value);
 
 bool leafFunctionValidator(List<String> name, dynamic value) {
-  var _result = true;
+  var result = true;
 
   if (!checkType<YamlMap>(name, value)) {
-    _result = false;
+    result = false;
   } else {
     final mp = value as YamlMap;
     for (final key in mp.keys) {
       if (key == strings.include || key == strings.exclude) {
         if (!checkType<YamlList>([...name, key as String], value[key])) {
-          _result = false;
+          result = false;
         }
       } else {
         _logger.severe("Unknown subkey '$key' in '$name'.");
-        _result = false;
+        result = false;
       }
     }
   }
 
-  return _result;
+  return result;
 }
 
 SupportedNativeType nativeSupportedType(int value, {bool signed = true}) {
@@ -1059,21 +1059,21 @@ StructPackingOverride structPackingOverrideExtractor(dynamic value) {
 }
 
 bool structPackingOverrideValidator(List<String> name, dynamic value) {
-  var _result = true;
+  var result = true;
 
   if (!checkType<YamlMap>([...name], value)) {
-    _result = false;
+    result = false;
   } else {
     for (final key in (value as YamlMap).keys) {
       if (!(strings.packingValuesMap.keys.contains(value[key]))) {
         _logger.severe(
             "'$name -> $key' must be one of the following - ${strings.packingValuesMap.keys.toList()}");
-        _result = false;
+        result = false;
       }
     }
   }
 
-  return _result;
+  return result;
 }
 
 FfiNativeConfig ffiNativeExtractor(dynamic yamlConfig) {

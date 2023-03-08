@@ -20,7 +20,7 @@ List<String> getCStandardLibraryHeadersForMac() {
       '/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include';
   if (Directory(systemHeaders).existsSync()) {
     _logger.fine('Added $systemHeaders to compiler-opts.');
-    includePaths.add('-I' + systemHeaders);
+    includePaths.add('-I$systemHeaders');
   }
 
   /// Find headers from XCode or LLVM installed via brew.
@@ -39,7 +39,7 @@ List<String> getCStandardLibraryHeadersForMac() {
         final path = p.join(searchPath, version, 'include');
         if (Directory(path).existsSync()) {
           _logger.fine('Added stdlib path: $path to compiler-opts.');
-          includePaths.add('-I' + path);
+          includePaths.add('-I$path');
           return includePaths;
         }
       }
@@ -51,7 +51,7 @@ List<String> getCStandardLibraryHeadersForMac() {
       '/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/';
   if (Directory(cmdLineToolHeaders).existsSync()) {
     _logger.fine('Added stdlib path: $cmdLineToolHeaders to compiler-opts.');
-    includePaths.add('-I' + cmdLineToolHeaders);
+    includePaths.add('-I$cmdLineToolHeaders');
     return includePaths;
   }
 

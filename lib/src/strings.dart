@@ -151,7 +151,7 @@ const files = "files";
 const usedConfig = "used-config";
 
 const import = 'import';
-const defaultSymbolFileImportPrefix = '_imp';
+const defaultSymbolFileImportPrefix = 'imp';
 
 // Sub keys of import.
 const symbolFilesImport = 'symbol-files';
