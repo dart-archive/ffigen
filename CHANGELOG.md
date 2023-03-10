@@ -1,3 +1,7 @@
+# 7.2.8
+
+- Automatically generate `ignore_for_file: type=lint` if not specified in preamble.
+
 # 7.2.7
 
 - Fix some macros not being generated in some cases due to relative header paths.
