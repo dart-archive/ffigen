@@ -1,6 +1,6 @@
 # 7.2.9
 
-- Detect LLVM installed using `scoop` on Windows machines.
+- Detect LLVM installed using Scoop on Windows machines.
 
 # 7.2.8
 
