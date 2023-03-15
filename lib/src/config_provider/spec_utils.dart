@@ -495,7 +495,13 @@ String findDylibAtDefaultLocations() {
       }
     }
   } else if (Platform.isWindows) {
-    for (final l in strings.windowsDylibLocations) {
+    final dylibLocations = strings.windowsDylibLocations.toList();
+    final userHome = Platform.environment['USERPROFILE'];
+    if (userHome != null) {
+      dylibLocations
+          .add(p.join(userHome, 'scoop', 'apps', 'llvm', 'current', 'bin'));
+    }
+    for (final l in dylibLocations) {
       k = findLibclangDylib(l);
       if (k != null) return k;
     }
