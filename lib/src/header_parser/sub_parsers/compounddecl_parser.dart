@@ -271,7 +271,20 @@ int _compoundMembersVisitor(clang_types.CXCursor cursor,
         if (mt.baseType is UnimplementedType) {
           parsed.unimplementedMemberType = true;
         }
-
+        if (mt is PointerType && mt.child is NativeFunc) {
+          clang.clang_visitChildren(
+            cursor,
+            Pointer.fromFunction(
+                _functionPointerFieldVisitor, exceptional_visitor_return),
+            nullptr,
+          );
+          final nativeFunc = mt.child as NativeFunc;
+          final functionType = nativeFunc.type;
+          if (_paramNameList.length == functionType.parameters.length) {
+            functionType.addParameterNames(_paramNameList);
+          }
+          _paramNameList.clear();
+        }
         parsed.compound.members.add(
           Member(
             dartDoc: getCursorDocComment(
@@ -322,6 +335,19 @@ int _compoundMembersVisitor(clang_types.CXCursor cursor,
     _logger.severe(e);
     _logger.severe(s);
     rethrow;
+  }
+  return clang_types.CXChildVisitResult.CXChildVisit_Continue;
+}
+
+final _paramNameList = <String>[];
+
+int _functionPointerFieldVisitor(clang_types.CXCursor cursor,
+    clang_types.CXCursor parent, Pointer<Void> clientData) {
+  if (cursor.kind == clang_types.CXCursorKind.CXCursor_ParmDecl) {
+    final spelling = cursor.spelling();
+    if (spelling.isNotEmpty) {
+      _paramNameList.add(spelling);
+    }
   }
   return clang_types.CXChildVisitResult.CXChildVisit_Continue;
 }

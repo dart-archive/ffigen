@@ -10943,8 +10943,10 @@ class IndexerCallbacks extends ffi.Struct {
   /// Called periodically to check whether indexing should be aborted.
   /// Should return 0 to continue, and non-zero to abort.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int Function(CXClientData, ffi.Pointer<ffi.Void>)>> abortQuery;
+          ffi.NativeFunction<
+              ffi.Int Function(
+                  CXClientData client_data, ffi.Pointer<ffi.Void> reserved)>>
+      abortQuery;
 
   /// Called at the end of indexing; passes the complete diagnostic set.
   external ffi.Pointer<
@@ -10955,8 +10957,8 @@ class IndexerCallbacks extends ffi.Struct {
 
   external ffi.Pointer<
       ffi.NativeFunction<
-          CXIdxClientFile Function(
-              CXClientData, CXFile, ffi.Pointer<ffi.Void>)>> enteredMainFile;
+          CXIdxClientFile Function(CXClientData client_data, CXFile mainFile,
+              ffi.Pointer<ffi.Void> reserved)>> enteredMainFile;
 
   /// Called when a file gets \#included/\#imported.
   external ffi.Pointer<
@@ -10979,9 +10981,10 @@ class IndexerCallbacks extends ffi.Struct {
 
   /// Called at the beginning of indexing a translation unit.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          CXIdxClientContainer Function(
-              CXClientData, ffi.Pointer<ffi.Void>)>> startedTranslationUnit;
+          ffi.NativeFunction<
+              CXIdxClientContainer Function(
+                  CXClientData client_data, ffi.Pointer<ffi.Void> reserved)>>
+      startedTranslationUnit;
 
   external ffi.Pointer<
           ffi.NativeFunction<
