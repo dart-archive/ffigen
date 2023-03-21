@@ -13,3 +13,4 @@ struct S
     // Function pointer field with parameters, but no names
     int (*argsDontHaveNames)(int, int, int, float, char *);
 };
+
