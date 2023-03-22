@@ -65,7 +65,7 @@ class FunctionType extends Type {
       final finalName = paramNamer.makeUnique(names[i]);
       parameters[i] = Parameter(
         type: parameters[i].type,
-        originalName: finalName,
+        originalName: names[i],
         name: finalName,
       );
     }
