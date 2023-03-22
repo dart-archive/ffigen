@@ -271,14 +271,16 @@ int _compoundMembersVisitor(clang_types.CXCursor cursor,
         if (mt.baseType is UnimplementedType) {
           parsed.unimplementedMemberType = true;
         }
-        if (mt is PointerType && mt.child is NativeFunc) {
+        final memberRealType = mt.typealiasType;
+        if (memberRealType is PointerType &&
+            memberRealType.child.typealiasType is NativeFunc) {
           clang.clang_visitChildren(
             cursor,
             Pointer.fromFunction(
                 _functionPointerFieldVisitor, exceptional_visitor_return),
             nullptr,
           );
-          final nativeFunc = mt.child as NativeFunc;
+          final nativeFunc = memberRealType.child as NativeFunc;
           final functionType = nativeFunc.type;
           if (_paramNameList.length == functionType.parameters.length) {
             functionType.addParameterNames(_paramNameList);
