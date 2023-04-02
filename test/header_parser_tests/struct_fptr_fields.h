@@ -20,6 +20,9 @@ struct S
     void (**sortPtr)(int *array, int len);
     // Function pointer with a function pointer parameter
     void (*sortBy)(int *array, int len, int (*evaluator)(int x));
+    // Function where few parameters are named. This should not
+    // produce parameters in output.
+    void (*improperlyDeclaredParams)(int a, int, char);
     // Function pointer with 2 function pointer parameters
     void (*sortByWithFallback)(int *array,
                                int (*primaryEvaluator)(int x),
