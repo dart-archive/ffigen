@@ -12,4 +12,12 @@ struct S
     int (*veryManyArguments)(double a, float b, char *c, int d, long long e);
     // Function pointer field with parameters, but no names
     int (*argsDontHaveNames)(int, int, int, float, char *);
+    // Pointer to function pointer
+    void (**sortPtr)(int *array, int len);
+    // Function pointer with a function pointer parameter
+    void (*sortBy)(int *array, int len, int (*evaluator)(int x));
+    // Function pointer with 2 function pointer parameters
+    void (*sortByWithFallback)(int *array,
+                               int (*primaryEvaluator)(int x),
+                               int (*fallbackEvaluator)(int x));
 };

@@ -21,4 +21,27 @@ class S extends ffi.Struct {
               ffi.Int Function(
                   ffi.Int, ffi.Int, ffi.Int, ffi.Float, ffi.Pointer<ffi.Char>)>>
       argsDontHaveNames;
+
+  external ffi.Pointer<
+          ffi.Pointer<
+              ffi.NativeFunction<
+                  ffi.Void Function(ffi.Pointer<ffi.Int> array, ffi.Int len)>>>
+      sortPtr;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Pointer<ffi.Int> array,
+              ffi.Int len,
+              ffi.Pointer<ffi.NativeFunction<ffi.Int Function(ffi.Int x)>>
+                  evaluator)>> sortBy;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Pointer<ffi.Int> array,
+              ffi.Pointer<ffi.NativeFunction<ffi.Int Function(ffi.Int x)>>
+                  primaryEvaluator,
+              ffi.Pointer<ffi.NativeFunction<ffi.Int Function(ffi.Int x)>>
+                  fallbackEvaluator)>> sortByWithFallback;
 }
