@@ -11996,11 +11996,11 @@ class fts5_api extends ffi.Struct {
 typedef fts5_extension_function = ffi.Pointer<
     ffi.NativeFunction<
         ffi.Void Function(
-            ffi.Pointer<Fts5ExtensionApi>,
-            ffi.Pointer<Fts5Context>,
-            ffi.Pointer<sqlite3_context>,
-            ffi.Int,
-            ffi.Pointer<ffi.Pointer<sqlite3_value>>)>>;
+            ffi.Pointer<Fts5ExtensionApi> pApi,
+            ffi.Pointer<Fts5Context> pFts,
+            ffi.Pointer<sqlite3_context> pCtx,
+            ffi.Int nVal,
+            ffi.Pointer<ffi.Pointer<sqlite3_value>> apVal)>>;
 
 const String SQLITE_VERSION = '3.32.3';
 

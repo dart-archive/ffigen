@@ -7431,7 +7431,9 @@ abstract class CXChildVisitResult {
 
 /// Visitor invoked for each cursor found by a traversal.
 typedef CXCursorVisitor = ffi.Pointer<
-    ffi.NativeFunction<ffi.Int32 Function(CXCursor, CXCursor, CXClientData)>>;
+    ffi.NativeFunction<
+        ffi.Int32 Function(
+            CXCursor cursor, CXCursor parent, CXClientData client_data)>>;
 
 /// Opaque pointer representing client data that will be passed through to
 /// various callbacks and visitors.
@@ -7761,8 +7763,11 @@ abstract class CXCompletionContext {
 /// clang_getInclusions()).
 typedef CXInclusionVisitor = ffi.Pointer<
     ffi.NativeFunction<
-        ffi.Void Function(CXFile, ffi.Pointer<CXSourceLocation>,
-            ffi.UnsignedInt, CXClientData)>>;
+        ffi.Void Function(
+            CXFile included_file,
+            ffi.Pointer<CXSourceLocation> inclusion_stack,
+            ffi.UnsignedInt include_len,
+            CXClientData client_data)>>;
 
 abstract class CXEvalResultKind {
   static const int CXEval_Int = 1;
@@ -8219,8 +8224,9 @@ abstract class CXIndexOptFlags {
 }
 
 /// Visitor invoked for each field found by a traversal.
-typedef CXFieldVisitor = ffi
-    .Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCursor, CXClientData)>>;
+typedef CXFieldVisitor = ffi.Pointer<
+    ffi.NativeFunction<
+        ffi.Int32 Function(CXCursor C, CXClientData client_data)>>;
 
 const int CINDEX_VERSION_MAJOR = 0;
 
