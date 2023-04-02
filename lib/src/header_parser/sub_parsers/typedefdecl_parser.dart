@@ -40,7 +40,8 @@ Typealias? parseTypedefDeclaration(
   final typedefUsr = cursor.usr();
   if (shouldIncludeTypealias(typedefUsr, typedefName)) {
     final ct = clang.clang_getTypedefDeclUnderlyingType(cursor);
-    final s = getCodeGenType(ct, pointerReference: pointerReference);
+    final s = getCodeGenType(ct,
+        pointerReference: pointerReference, originalCursor: cursor);
 
     if (bindingsIndex.isSeenUnsupportedTypealias(typedefUsr)) {
       // Do not process unsupported typealiases again.
