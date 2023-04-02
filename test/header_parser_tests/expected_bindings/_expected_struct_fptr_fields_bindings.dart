@@ -39,6 +39,10 @@ class S extends ffi.Struct {
                   evaluator)>> sortBy;
 
   external ffi.Pointer<
+          ffi.NativeFunction<ffi.Void Function(ffi.Int, ffi.Int, ffi.Char)>>
+      improperlyDeclaredParams;
+
+  external ffi.Pointer<
       ffi.NativeFunction<
           ffi.Void Function(
               ffi.Pointer<ffi.Int> array,
