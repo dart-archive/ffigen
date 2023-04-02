@@ -249,8 +249,8 @@ String? removeRawCommentMarkups(String? string) {
 
 extension CXTypeExt on clang_types.CXType {
   /// Get code_gen [Type] representation of [clang_types.CXType].
-  Type toCodeGenType() {
-    return getCodeGenType(this);
+  Type toCodeGenType({clang_types.CXCursor? originalCursor}) {
+    return getCodeGenType(this, originalCursor: originalCursor);
   }
 
   /// Spelling for a [clang_types.CXTypeKind], useful for debug purposes.
