@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+typedef int (*ArithmeticOperation)(int a, int b);
+
 struct S
 {
     // Function pointer field, but no parameters.
@@ -12,6 +14,8 @@ struct S
     int (*veryManyArguments)(double a, float b, char *c, int d, long long e);
     // Function pointer field with parameters, but no names
     int (*argsDontHaveNames)(int, int, int, float, char *);
+    // Function pointer through typedef
+    ArithmeticOperation operation;
     // Pointer to function pointer
     void (**sortPtr)(int *array, int len);
     // Function pointer with a function pointer parameter

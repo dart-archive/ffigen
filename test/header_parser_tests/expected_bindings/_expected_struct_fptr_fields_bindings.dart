@@ -22,6 +22,8 @@ class S extends ffi.Struct {
                   ffi.Int, ffi.Int, ffi.Int, ffi.Float, ffi.Pointer<ffi.Char>)>>
       argsDontHaveNames;
 
+  external ArithmeticOperation operation;
+
   external ffi.Pointer<
           ffi.Pointer<
               ffi.NativeFunction<
@@ -45,3 +47,6 @@ class S extends ffi.Struct {
               ffi.Pointer<ffi.NativeFunction<ffi.Int Function(ffi.Int x)>>
                   fallbackEvaluator)>> sortByWithFallback;
 }
+
+typedef ArithmeticOperation
+    = ffi.Pointer<ffi.NativeFunction<ffi.Int Function(ffi.Int a, ffi.Int b)>>;

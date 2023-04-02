@@ -9748,7 +9748,9 @@ typedef DartClang_getIBOutletCollectionType = CXType Function(CXCursor arg0);
 /// The visitor should return one of the \c CXChildVisitResult values
 /// to direct clang_visitCursorChildren().
 typedef CXCursorVisitor = ffi.Pointer<
-    ffi.NativeFunction<ffi.Int32 Function(CXCursor, CXCursor, CXClientData)>>;
+    ffi.NativeFunction<
+        ffi.Int32 Function(
+            CXCursor cursor, CXCursor parent, CXClientData client_data)>>;
 
 /// Describes how the traversal of the children of a particular
 /// cursor should proceed after visiting a particular child cursor.
@@ -10425,8 +10427,11 @@ typedef DartClang_toggleCrashRecovery = void Function(int isEnabled);
 /// the first element refers to the location that included 'included_file'.
 typedef CXInclusionVisitor = ffi.Pointer<
     ffi.NativeFunction<
-        ffi.Void Function(CXFile, ffi.Pointer<CXSourceLocation>,
-            ffi.UnsignedInt, CXClientData)>>;
+        ffi.Void Function(
+            CXFile included_file,
+            ffi.Pointer<CXSourceLocation> inclusion_stack,
+            ffi.UnsignedInt include_len,
+            CXClientData client_data)>>;
 typedef NativeClang_getInclusions = ffi.Void Function(
     CXTranslationUnit tu, CXInclusionVisitor visitor, CXClientData client_data);
 typedef DartClang_getInclusions = void Function(
@@ -11098,8 +11103,9 @@ typedef DartClang_indexLoc_getCXSourceLocation = CXSourceLocation Function(
 ///
 /// The visitor should return one of the \c CXVisitorResult values
 /// to direct \c clang_Type_visitFields.
-typedef CXFieldVisitor = ffi
-    .Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCursor, CXClientData)>>;
+typedef CXFieldVisitor = ffi.Pointer<
+    ffi.NativeFunction<
+        ffi.Int32 Function(CXCursor C, CXClientData client_data)>>;
 typedef NativeClang_Type_visitFields = ffi.UnsignedInt Function(
     CXType T, CXFieldVisitor visitor, CXClientData client_data);
 typedef DartClang_Type_visitFields = int Function(
