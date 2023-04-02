@@ -345,7 +345,7 @@ void _parseAndMergeParamNames(
   if (recursionDepth == 0) {
     final cursorRepr = cursor.completeStringRepr();
     _logger.warning('Recursion depth exceeded when merging function parameters.'
-        'Last cursor encountered was $cursorRepr');
+        ' Last cursor encountered was $cursorRepr');
     return;
   }
 
