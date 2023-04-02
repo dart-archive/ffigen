@@ -6,6 +6,7 @@ import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/config_provider/config_types.dart';
+import 'package:ffigen/src/header_parser/sub_parsers/function_pointer_parsers.dart';
 import 'package:logging/logging.dart';
 
 import '../../strings.dart' as strings;
@@ -274,18 +275,10 @@ int _compoundMembersVisitor(clang_types.CXCursor cursor,
         final memberRealType = mt.typealiasType;
         if (memberRealType is PointerType &&
             memberRealType.child.typealiasType is NativeFunc) {
-          clang.clang_visitChildren(
-            cursor,
-            Pointer.fromFunction(
-                _functionPointerFieldVisitor, exceptional_visitor_return),
-            nullptr,
-          );
-          final nativeFunc = memberRealType.child as NativeFunc;
+          final nativeFunc = memberRealType.child.typealiasType as NativeFunc;
           final functionType = nativeFunc.type;
-          if (_paramNameList.length == functionType.parameters.length) {
-            functionType.addParameterNames(_paramNameList);
-          }
-          _paramNameList.clear();
+          final params = parseFunctionPointerParamNames(cursor);
+          functionType.addParameterNames(params.paramNames);
         }
         parsed.compound.members.add(
           Member(
@@ -337,19 +330,6 @@ int _compoundMembersVisitor(clang_types.CXCursor cursor,
     _logger.severe(e);
     _logger.severe(s);
     rethrow;
-  }
-  return clang_types.CXChildVisitResult.CXChildVisit_Continue;
-}
-
-final _paramNameList = <String>[];
-
-int _functionPointerFieldVisitor(clang_types.CXCursor cursor,
-    clang_types.CXCursor parent, Pointer<Void> clientData) {
-  if (cursor.kind == clang_types.CXCursorKind.CXCursor_ParmDecl) {
-    final spelling = cursor.spelling();
-    if (spelling.isNotEmpty) {
-      _paramNameList.add(spelling);
-    }
   }
   return clang_types.CXChildVisitResult.CXChildVisit_Continue;
 }
