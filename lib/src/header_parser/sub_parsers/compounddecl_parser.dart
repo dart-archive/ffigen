@@ -6,7 +6,6 @@ import 'dart:ffi';
 
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/config_provider/config_types.dart';
-import 'package:ffigen/src/header_parser/sub_parsers/function_pointer_parsers.dart';
 import 'package:logging/logging.dart';
 
 import '../../strings.dart' as strings;
