@@ -14,7 +14,7 @@ import '../test_utils.dart';
 
 late Library actual;
 void main() {
-  group('unions_test', () {
+  group('Function pointer parameters parsing test', () {
     setUpAll(() {
       logWarnings(Level.SEVERE);
       actual = parser.parse(
