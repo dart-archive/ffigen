@@ -22,6 +22,8 @@ import '../utils.dart';
 final _logger = Logger('ffigen.header_parser.extractor');
 const _padding = '  ';
 
+const maxRecursionDepth = 5;
+
 /// Converts cxtype to a typestring code_generator can accept.
 Type getCodeGenType(
   clang_types.CXType cxtype, {
@@ -328,14 +330,22 @@ Type _extractFromFunctionProto(clang_types.CXType cxtype,
     parameters: parameters,
     returnType: clang.clang_getResultType(cxtype).toCodeGenType(),
   );
-  _parseAndMergeParamNames(functionType, cursor);
+  _parseAndMergeParamNames(functionType, cursor, maxRecursionDepth);
   return NativeFunc(functionType);
 }
 
-// TODO: Should we add a maxDepth argument here, to prevent deep recursion?
 void _parseAndMergeParamNames(
-    FunctionType functionType, clang_types.CXCursor? cursor) {
+  FunctionType functionType,
+  clang_types.CXCursor? cursor,
+  int recursionDepth,
+) {
   if (cursor == null) {
+    return;
+  }
+  if (recursionDepth == 0) {
+    final cursorRepr = cursor.completeStringRepr();
+    _logger.warning('Recursion depth exceeded when merging function parameters.'
+        'Last cursor encountered was $cursorRepr');
     return;
   }
 
@@ -348,7 +358,11 @@ void _parseAndMergeParamNames(
     if (paramBaseType is NativeFunc && param.name.isNotEmpty) {
       final paramFunctionType = paramBaseType.type;
       final paramCursor = paramsInfo.params[param.name];
-      _parseAndMergeParamNames(paramFunctionType, paramCursor);
+      _parseAndMergeParamNames(
+        paramFunctionType,
+        paramCursor,
+        recursionDepth - 1,
+      );
     }
   }
 }
