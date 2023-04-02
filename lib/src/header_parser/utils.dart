@@ -80,6 +80,11 @@ extension CXCursorExt on clang_types.CXCursor {
         .toStringAndDispose();
   }
 
+  /// Get code_gen [Type] representation of [clang_types.CXType].
+  Type toCodeGenType() {
+    return getCodeGenType(type(), originalCursor: this);
+  }
+
   /// for debug: returns [spelling] [kind] [kindSpelling] [type] [typeSpelling].
   String completeStringRepr() {
     final cxtype = type();
@@ -249,8 +254,8 @@ String? removeRawCommentMarkups(String? string) {
 
 extension CXTypeExt on clang_types.CXType {
   /// Get code_gen [Type] representation of [clang_types.CXType].
-  Type toCodeGenType({clang_types.CXCursor? originalCursor}) {
-    return getCodeGenType(this, originalCursor: originalCursor);
+  Type toCodeGenType() {
+    return getCodeGenType(this);
   }
 
   /// Spelling for a [clang_types.CXTypeKind], useful for debug purposes.
