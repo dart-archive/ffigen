@@ -9585,7 +9585,8 @@ class SQLite {
     ffi.Pointer<sqlite3> pBlocked,
     ffi.Pointer<
             ffi.NativeFunction<
-                ffi.Void Function(ffi.Pointer<ffi.Pointer<ffi.Void>>, ffi.Int)>>
+                ffi.Void Function(
+                    ffi.Pointer<ffi.Pointer<ffi.Void>> apArg, ffi.Int nArg)>>
         xNotify,
     ffi.Pointer<ffi.Void> pNotifyArg,
   ) {
@@ -9603,7 +9604,8 @@ class SQLite {
               ffi.Pointer<
                   ffi.NativeFunction<
                       ffi.Void Function(
-                          ffi.Pointer<ffi.Pointer<ffi.Void>>, ffi.Int)>>,
+                          ffi.Pointer<ffi.Pointer<ffi.Void>> apArg,
+                          ffi.Int nArg)>>,
               ffi.Pointer<ffi.Void>)>>('sqlite3_unlock_notify');
   late final _sqlite3_unlock_notify = _sqlite3_unlock_notifyPtr.asFunction<
       int Function(
@@ -9611,7 +9613,7 @@ class SQLite {
           ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(
-                      ffi.Pointer<ffi.Pointer<ffi.Void>>, ffi.Int)>>,
+                      ffi.Pointer<ffi.Pointer<ffi.Void>> apArg, ffi.Int nArg)>>,
           ffi.Pointer<ffi.Void>)>();
 
   /// CAPI3REF: String Comparison
