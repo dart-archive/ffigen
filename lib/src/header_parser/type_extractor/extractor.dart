@@ -4,7 +4,7 @@
 
 /// Extracts code_gen Type from type.
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/header_parser/sub_parsers/function_pointer_parsers.dart';
+import 'package:ffigen/src/header_parser/sub_parsers/function_type_param_parser.dart';
 import 'package:ffigen/src/header_parser/sub_parsers/typedefdecl_parser.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
