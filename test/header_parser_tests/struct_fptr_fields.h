@@ -27,4 +27,12 @@ struct S
     void (*sortByWithFallback)(int *array,
                                int (*primaryEvaluator)(int x),
                                int (*fallbackEvaluator)(int x));
+    // Array of function pointers. Does not produce proper output right now.
+    void (*manyFunctions[2])(char a, char b);
+};
+
+struct HasIncompleteArrayOfFunctionPointers
+{
+    // Doesn't work: This produces an opaque type right now.
+    void (*functions[])(char a, char b);
 };

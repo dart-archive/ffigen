@@ -50,7 +50,15 @@ class S extends ffi.Struct {
                   primaryEvaluator,
               ffi.Pointer<ffi.NativeFunction<ffi.Int Function(ffi.Int x)>>
                   fallbackEvaluator)>> sortByWithFallback;
+
+  @ffi.Array.multi([2])
+  external ffi.Array<
+          ffi.Pointer<
+              ffi.NativeFunction<ffi.Void Function(ffi.Char, ffi.Char)>>>
+      manyFunctions;
 }
 
 typedef ArithmeticOperation
     = ffi.Pointer<ffi.NativeFunction<ffi.Int Function(ffi.Int a, ffi.Int b)>>;
+
+class HasIncompleteArrayOfFunctionPointers extends ffi.Opaque {}
