@@ -26,10 +26,15 @@ int _functionPointerFieldVisitor(
     if (spelling.isNotEmpty) {
       _params!.paramNames.add(spelling);
       _params!.params[spelling] = cursor;
+      return CXChildVisitResult.CXChildVisit_Continue;
+    } else {
+      // A parameter's spelling is empty, do not continue further traversal.
+      _params!.paramNames.clear();
+      _params!.params.clear();
+      return CXChildVisitResult.CXChildVisit_Break;
     }
-    return CXChildVisitResult.CXChildVisit_Continue;
   }
-  // The cursor itself may be a pointer, array declaration etc..
+  // The cursor itself may be a pointer etc..
   return CXChildVisitResult.CXChildVisit_Recurse;
 }
 
