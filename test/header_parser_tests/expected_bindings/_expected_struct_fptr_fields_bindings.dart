@@ -56,9 +56,17 @@ class S extends ffi.Struct {
           ffi.Pointer<
               ffi.NativeFunction<ffi.Void Function(ffi.Char, ffi.Char)>>>
       manyFunctions;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Int)>>
+              Function(ffi.Int, ffi.Int)>> functionReturningFunction;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Int)>>
+              Function(ffi.Int, ffi.Int)>> functionReturningFunctionImproper;
 }
 
 typedef ArithmeticOperation
     = ffi.Pointer<ffi.NativeFunction<ffi.Int Function(ffi.Int a, ffi.Int b)>>;
-
-class HasIncompleteArrayOfFunctionPointers extends ffi.Opaque {}
