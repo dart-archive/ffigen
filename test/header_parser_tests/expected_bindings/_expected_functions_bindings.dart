@@ -138,4 +138,4 @@ class _SymbolAddresses {
 }
 
 typedef shortHand = ffi.NativeFunction<
-    ffi.Void Function(ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>)>;
+    ffi.Void Function(ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>> b)>;

@@ -1257,13 +1257,12 @@ class cJSON extends ffi.Struct {
 }
 
 class cJSON_Hooks extends ffi.Struct {
-  external ffi
-          .Pointer<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Size)>>
+  external ffi.Pointer<
+          ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Size sz)>>
       malloc_fn;
 
-  external ffi
-          .Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>
-      free_fn;
+  external ffi.Pointer<
+      ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void> ptr)>> free_fn;
 }
 
 typedef cJSON_bool = ffi.Int;

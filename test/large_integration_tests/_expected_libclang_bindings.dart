@@ -7431,7 +7431,9 @@ abstract class CXChildVisitResult {
 
 /// Visitor invoked for each cursor found by a traversal.
 typedef CXCursorVisitor = ffi.Pointer<
-    ffi.NativeFunction<ffi.Int32 Function(CXCursor, CXCursor, CXClientData)>>;
+    ffi.NativeFunction<
+        ffi.Int32 Function(
+            CXCursor cursor, CXCursor parent, CXClientData client_data)>>;
 
 /// Opaque pointer representing client data that will be passed through to
 /// various callbacks and visitors.
@@ -7761,8 +7763,11 @@ abstract class CXCompletionContext {
 /// clang_getInclusions()).
 typedef CXInclusionVisitor = ffi.Pointer<
     ffi.NativeFunction<
-        ffi.Void Function(CXFile, ffi.Pointer<CXSourceLocation>,
-            ffi.UnsignedInt, CXClientData)>>;
+        ffi.Void Function(
+            CXFile included_file,
+            ffi.Pointer<CXSourceLocation> inclusion_stack,
+            ffi.UnsignedInt include_len,
+            CXClientData client_data)>>;
 
 abstract class CXEvalResultKind {
   static const int CXEval_Int = 1;
@@ -8124,8 +8129,10 @@ class IndexerCallbacks extends ffi.Struct {
   /// Called periodically to check whether indexing should be aborted. Should
   /// return 0 to continue, and non-zero to abort.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int Function(CXClientData, ffi.Pointer<ffi.Void>)>> abortQuery;
+          ffi.NativeFunction<
+              ffi.Int Function(
+                  CXClientData client_data, ffi.Pointer<ffi.Void> reserved)>>
+      abortQuery;
 
   /// Called at the end of indexing; passes the complete diagnostic set.
   external ffi.Pointer<
@@ -8136,8 +8143,8 @@ class IndexerCallbacks extends ffi.Struct {
 
   external ffi.Pointer<
       ffi.NativeFunction<
-          CXIdxClientFile Function(
-              CXClientData, CXFile, ffi.Pointer<ffi.Void>)>> enteredMainFile;
+          CXIdxClientFile Function(CXClientData client_data, CXFile mainFile,
+              ffi.Pointer<ffi.Void> reserved)>> enteredMainFile;
 
   /// Called when a file gets #included/#imported.
   external ffi.Pointer<
@@ -8155,9 +8162,10 @@ class IndexerCallbacks extends ffi.Struct {
 
   /// Called at the beginning of indexing a translation unit.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          CXIdxClientContainer Function(
-              CXClientData, ffi.Pointer<ffi.Void>)>> startedTranslationUnit;
+          ffi.NativeFunction<
+              CXIdxClientContainer Function(
+                  CXClientData client_data, ffi.Pointer<ffi.Void> reserved)>>
+      startedTranslationUnit;
 
   external ffi.Pointer<
           ffi.NativeFunction<
@@ -8216,8 +8224,9 @@ abstract class CXIndexOptFlags {
 }
 
 /// Visitor invoked for each field found by a traversal.
-typedef CXFieldVisitor = ffi
-    .Pointer<ffi.NativeFunction<ffi.Int32 Function(CXCursor, CXClientData)>>;
+typedef CXFieldVisitor = ffi.Pointer<
+    ffi.NativeFunction<
+        ffi.Int32 Function(CXCursor C, CXClientData client_data)>>;
 
 const int CINDEX_VERSION_MAJOR = 0;
 

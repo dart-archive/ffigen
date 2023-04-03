@@ -127,5 +127,5 @@ List<Parameter> _getParameters(clang_types.CXCursor cursor, String funcName) {
 }
 
 Type _getParameterType(clang_types.CXCursor cursor) {
-  return cursor.type().toCodeGenType();
+  return cursor.toCodeGenType();
 }

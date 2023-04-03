@@ -80,6 +80,11 @@ extension CXCursorExt on clang_types.CXCursor {
         .toStringAndDispose();
   }
 
+  /// Get code_gen [Type] representation of [clang_types.CXType].
+  Type toCodeGenType() {
+    return getCodeGenType(type(), originalCursor: this);
+  }
+
   /// for debug: returns [spelling] [kind] [kindSpelling] [type] [typeSpelling].
   String completeStringRepr() {
     final cxtype = type();

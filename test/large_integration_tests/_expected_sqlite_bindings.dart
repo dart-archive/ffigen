@@ -9585,7 +9585,8 @@ class SQLite {
     ffi.Pointer<sqlite3> pBlocked,
     ffi.Pointer<
             ffi.NativeFunction<
-                ffi.Void Function(ffi.Pointer<ffi.Pointer<ffi.Void>>, ffi.Int)>>
+                ffi.Void Function(
+                    ffi.Pointer<ffi.Pointer<ffi.Void>> apArg, ffi.Int nArg)>>
         xNotify,
     ffi.Pointer<ffi.Void> pNotifyArg,
   ) {
@@ -9603,7 +9604,8 @@ class SQLite {
               ffi.Pointer<
                   ffi.NativeFunction<
                       ffi.Void Function(
-                          ffi.Pointer<ffi.Pointer<ffi.Void>>, ffi.Int)>>,
+                          ffi.Pointer<ffi.Pointer<ffi.Void>> apArg,
+                          ffi.Int nArg)>>,
               ffi.Pointer<ffi.Void>)>>('sqlite3_unlock_notify');
   late final _sqlite3_unlock_notify = _sqlite3_unlock_notifyPtr.asFunction<
       int Function(
@@ -9611,7 +9613,7 @@ class SQLite {
           ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(
-                      ffi.Pointer<ffi.Pointer<ffi.Void>>, ffi.Int)>>,
+                      ffi.Pointer<ffi.Pointer<ffi.Void>> apArg, ffi.Int nArg)>>,
           ffi.Pointer<ffi.Void>)>();
 
   /// CAPI3REF: String Comparison
@@ -10969,16 +10971,17 @@ class sqlite3_module extends ffi.Struct {
       xBestIndex;
 
   external ffi.Pointer<
-          ffi.NativeFunction<ffi.Int Function(ffi.Pointer<sqlite3_vtab>)>>
+          ffi.NativeFunction<ffi.Int Function(ffi.Pointer<sqlite3_vtab> pVTab)>>
       xDisconnect;
 
   external ffi.Pointer<
-      ffi.NativeFunction<ffi.Int Function(ffi.Pointer<sqlite3_vtab>)>> xDestroy;
+          ffi.NativeFunction<ffi.Int Function(ffi.Pointer<sqlite3_vtab> pVTab)>>
+      xDestroy;
 
   external ffi.Pointer<
       ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<sqlite3_vtab>,
-              ffi.Pointer<ffi.Pointer<sqlite3_vtab_cursor>>)>> xOpen;
+          ffi.Int Function(ffi.Pointer<sqlite3_vtab> pVTab,
+              ffi.Pointer<ffi.Pointer<sqlite3_vtab_cursor>> ppCursor)>> xOpen;
 
   external ffi.Pointer<
       ffi.NativeFunction<
@@ -11020,37 +11023,42 @@ class sqlite3_module extends ffi.Struct {
               ffi.Pointer<sqlite3_int64>)>> xUpdate;
 
   external ffi.Pointer<
-      ffi.NativeFunction<ffi.Int Function(ffi.Pointer<sqlite3_vtab>)>> xBegin;
+          ffi.NativeFunction<ffi.Int Function(ffi.Pointer<sqlite3_vtab> pVTab)>>
+      xBegin;
 
   external ffi.Pointer<
-      ffi.NativeFunction<ffi.Int Function(ffi.Pointer<sqlite3_vtab>)>> xSync;
+          ffi.NativeFunction<ffi.Int Function(ffi.Pointer<sqlite3_vtab> pVTab)>>
+      xSync;
 
   external ffi.Pointer<
-      ffi.NativeFunction<ffi.Int Function(ffi.Pointer<sqlite3_vtab>)>> xCommit;
+          ffi.NativeFunction<ffi.Int Function(ffi.Pointer<sqlite3_vtab> pVTab)>>
+      xCommit;
 
   external ffi.Pointer<
-          ffi.NativeFunction<ffi.Int Function(ffi.Pointer<sqlite3_vtab>)>>
+          ffi.NativeFunction<ffi.Int Function(ffi.Pointer<sqlite3_vtab> pVTab)>>
       xRollback;
 
   external ffi.Pointer<
       ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<sqlite3_vtab>,
-              ffi.Int,
-              ffi.Pointer<ffi.Char>,
+              ffi.Pointer<sqlite3_vtab> pVtab,
+              ffi.Int nArg,
+              ffi.Pointer<ffi.Char> zName,
               ffi.Pointer<
-                  ffi.Pointer<
-                      ffi.NativeFunction<
-                          ffi.Void Function(
-                              ffi.Pointer<sqlite3_context>,
-                              ffi.Int,
-                              ffi.Pointer<ffi.Pointer<sqlite3_value>>)>>>,
-              ffi.Pointer<ffi.Pointer<ffi.Void>>)>> xFindFunction;
+                      ffi.Pointer<
+                          ffi.NativeFunction<
+                              ffi.Void Function(
+                                  ffi.Pointer<sqlite3_context>,
+                                  ffi.Int,
+                                  ffi.Pointer<ffi.Pointer<sqlite3_value>>)>>>
+                  pxFunc,
+              ffi.Pointer<ffi.Pointer<ffi.Void>> ppArg)>> xFindFunction;
 
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int Function(
-              ffi.Pointer<sqlite3_vtab>, ffi.Pointer<ffi.Char>)>> xRename;
+          ffi.NativeFunction<
+              ffi.Int Function(
+                  ffi.Pointer<sqlite3_vtab> pVtab, ffi.Pointer<ffi.Char> zNew)>>
+      xRename;
 
   /// The methods above are in version 1 of the sqlite_module object. Those
   /// below are for version 2 and greater.
@@ -11344,9 +11352,9 @@ class sqlite3_pcache_methods2 extends ffi.Struct {
       xShutdown;
 
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Pointer<sqlite3_pcache> Function(ffi.Int, ffi.Int, ffi.Int)>>
-      xCreate;
+      ffi.NativeFunction<
+          ffi.Pointer<sqlite3_pcache> Function(
+              ffi.Int szPage, ffi.Int szExtra, ffi.Int bPurgeable)>> xCreate;
 
   external ffi.Pointer<
       ffi.NativeFunction<
@@ -11401,7 +11409,8 @@ class sqlite3_pcache_methods extends ffi.Struct {
 
   external ffi.Pointer<
       ffi.NativeFunction<
-          ffi.Pointer<sqlite3_pcache> Function(ffi.Int, ffi.Int)>> xCreate;
+          ffi.Pointer<sqlite3_pcache> Function(
+              ffi.Int szPage, ffi.Int bPurgeable)>> xCreate;
 
   external ffi.Pointer<
       ffi.NativeFunction<
@@ -11952,48 +11961,48 @@ class fts5_api extends ffi.Struct {
 
   /// Create a new tokenizer
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<fts5_api>,
-                  ffi.Pointer<ffi.Char>,
-                  ffi.Pointer<ffi.Void>,
-                  ffi.Pointer<fts5_tokenizer>,
-                  ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int Function(
+              ffi.Pointer<fts5_api> pApi,
+              ffi.Pointer<ffi.Char> zName,
+              ffi.Pointer<ffi.Void> pContext,
+              ffi.Pointer<fts5_tokenizer> pTokenizer,
+              ffi.Pointer<
                       ffi.NativeFunction<
-                          ffi.Void Function(ffi.Pointer<ffi.Void>)>>)>>
-      xCreateTokenizer;
+                          ffi.Void Function(ffi.Pointer<ffi.Void>)>>
+                  xDestroy)>> xCreateTokenizer;
 
   /// Find an existing tokenizer
   external ffi.Pointer<
       ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<fts5_api>,
-              ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Pointer<ffi.Void>>,
-              ffi.Pointer<fts5_tokenizer>)>> xFindTokenizer;
+              ffi.Pointer<fts5_api> pApi,
+              ffi.Pointer<ffi.Char> zName,
+              ffi.Pointer<ffi.Pointer<ffi.Void>> ppContext,
+              ffi.Pointer<fts5_tokenizer> pTokenizer)>> xFindTokenizer;
 
   /// Create a new auxiliary function
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<fts5_api>,
-                  ffi.Pointer<ffi.Char>,
-                  ffi.Pointer<ffi.Void>,
-                  fts5_extension_function,
-                  ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int Function(
+              ffi.Pointer<fts5_api> pApi,
+              ffi.Pointer<ffi.Char> zName,
+              ffi.Pointer<ffi.Void> pContext,
+              fts5_extension_function xFunction,
+              ffi.Pointer<
                       ffi.NativeFunction<
-                          ffi.Void Function(ffi.Pointer<ffi.Void>)>>)>>
-      xCreateFunction;
+                          ffi.Void Function(ffi.Pointer<ffi.Void>)>>
+                  xDestroy)>> xCreateFunction;
 }
 
 typedef fts5_extension_function = ffi.Pointer<
     ffi.NativeFunction<
         ffi.Void Function(
-            ffi.Pointer<Fts5ExtensionApi>,
-            ffi.Pointer<Fts5Context>,
-            ffi.Pointer<sqlite3_context>,
-            ffi.Int,
-            ffi.Pointer<ffi.Pointer<sqlite3_value>>)>>;
+            ffi.Pointer<Fts5ExtensionApi> pApi,
+            ffi.Pointer<Fts5Context> pFts,
+            ffi.Pointer<sqlite3_context> pCtx,
+            ffi.Int nVal,
+            ffi.Pointer<ffi.Pointer<sqlite3_value>> apVal)>>;
 
 const String SQLITE_VERSION = '3.32.3';
 

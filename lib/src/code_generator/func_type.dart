@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator.dart';
+import 'package:ffigen/src/code_generator/utils.dart';
 
 import 'writer.dart';
 
@@ -52,6 +53,21 @@ class FunctionType extends Type {
     returnType.addDependencies(dependencies);
     for (final p in parameters) {
       p.type.addDependencies(dependencies);
+    }
+  }
+
+  void addParameterNames(List<String> names) {
+    if (names.length != parameters.length) {
+      return;
+    }
+    final paramNamer = UniqueNamer({});
+    for (int i = 0; i < parameters.length; i++) {
+      final finalName = paramNamer.makeUnique(names[i]);
+      parameters[i] = Parameter(
+        type: parameters[i].type,
+        originalName: names[i],
+        name: finalName,
+      );
     }
   }
 }

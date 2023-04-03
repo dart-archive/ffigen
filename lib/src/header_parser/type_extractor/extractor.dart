@@ -4,6 +4,7 @@
 
 /// Extracts code_gen Type from type.
 import 'package:ffigen/src/code_generator.dart';
+import 'package:ffigen/src/header_parser/sub_parsers/function_type_param_parser.dart';
 import 'package:ffigen/src/header_parser/sub_parsers/typedefdecl_parser.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
@@ -21,6 +22,8 @@ import '../utils.dart';
 final _logger = Logger('ffigen.header_parser.extractor');
 const _padding = '  ';
 
+const maxRecursionDepth = 5;
+
 /// Converts cxtype to a typestring code_generator can accept.
 Type getCodeGenType(
   clang_types.CXType cxtype, {
@@ -30,6 +33,10 @@ Type getCodeGenType(
 
   /// Passed on if a value was marked as a pointer before this one.
   bool pointerReference = false,
+
+  /// Cursor of the declaration, currently this is useful only to extract
+  /// parameter names in function types.
+  clang_types.CXCursor? originalCursor,
 }) {
   _logger.fine('${_padding}getCodeGenType ${cxtype.completeStringRepr()}');
 
@@ -89,7 +96,11 @@ Type getCodeGenType(
   switch (cxtype.kind) {
     case clang_types.CXTypeKind.CXType_Pointer:
       final pt = clang.clang_getPointeeType(cxtype);
-      final s = getCodeGenType(pt, pointerReference: true);
+      final s = getCodeGenType(
+        pt,
+        pointerReference: true,
+        originalCursor: originalCursor,
+      );
 
       // Replace Pointer<_Dart_Handle> with Handle.
       if (config.useDartHandle &&
@@ -101,10 +112,10 @@ Type getCodeGenType(
       return PointerType(s);
     case clang_types.CXTypeKind.CXType_FunctionProto:
       // Primarily used for function pointers.
-      return _extractFromFunctionProto(cxtype);
+      return _extractFromFunctionProto(cxtype, cursor: originalCursor);
     case clang_types.CXTypeKind.CXType_FunctionNoProto:
       // Primarily used for function types with zero arguments.
-      return _extractFromFunctionProto(cxtype);
+      return _extractFromFunctionProto(cxtype, cursor: originalCursor);
     case clang_types.CXTypeKind
         .CXType_ConstantArray: // Primarily used for constant array in struct members.
       return ConstantArray(
@@ -295,7 +306,8 @@ Type? _extractfromRecord(clang_types.CXType cxtype, clang_types.CXCursor cursor,
 }
 
 // Used for function pointer arguments.
-Type _extractFromFunctionProto(clang_types.CXType cxtype) {
+Type _extractFromFunctionProto(clang_types.CXType cxtype,
+    {clang_types.CXCursor? cursor}) {
   final parameters = <Parameter>[];
   final totalArgs = clang.clang_getNumArgTypes(cxtype);
   for (var i = 0; i < totalArgs; i++) {
@@ -314,8 +326,43 @@ Type _extractFromFunctionProto(clang_types.CXType cxtype) {
     );
   }
 
-  return NativeFunc(FunctionType(
+  final functionType = FunctionType(
     parameters: parameters,
     returnType: clang.clang_getResultType(cxtype).toCodeGenType(),
-  ));
+  );
+  _parseAndMergeParamNames(functionType, cursor, maxRecursionDepth);
+  return NativeFunc(functionType);
+}
+
+void _parseAndMergeParamNames(
+  FunctionType functionType,
+  clang_types.CXCursor? cursor,
+  int recursionDepth,
+) {
+  if (cursor == null) {
+    return;
+  }
+  if (recursionDepth == 0) {
+    final cursorRepr = cursor.completeStringRepr();
+    _logger.warning('Recursion depth exceeded when merging function parameters.'
+        ' Last cursor encountered was $cursorRepr');
+    return;
+  }
+
+  final paramsInfo = parseFunctionPointerParamNames(cursor);
+  functionType.addParameterNames(paramsInfo.paramNames);
+
+  for (final param in functionType.parameters) {
+    final paramRealType = param.type.typealiasType;
+    final paramBaseType = paramRealType.baseType.typealiasType;
+    if (paramBaseType is NativeFunc && param.name.isNotEmpty) {
+      final paramFunctionType = paramBaseType.type;
+      final paramCursor = paramsInfo.params[param.name];
+      _parseAndMergeParamNames(
+        paramFunctionType,
+        paramCursor,
+        recursionDepth - 1,
+      );
+    }
+  }
 }

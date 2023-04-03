@@ -253,7 +253,7 @@ int _compoundMembersVisitor(clang_types.CXCursor cursor,
           parsed.maxChildAlignment = align;
         }
 
-        final mt = cursor.type().toCodeGenType();
+        final mt = cursor.toCodeGenType();
         if (mt is IncompleteArray) {
           // TODO(68): Structs with flexible Array Members are not supported.
           parsed.flexibleArrayMember = true;
@@ -271,7 +271,6 @@ int _compoundMembersVisitor(clang_types.CXCursor cursor,
         if (mt.baseType is UnimplementedType) {
           parsed.unimplementedMemberType = true;
         }
-
         parsed.compound.members.add(
           Member(
             dartDoc: getCursorDocComment(
@@ -295,7 +294,7 @@ int _compoundMembersVisitor(clang_types.CXCursor cursor,
         break;
       case clang_types.CXCursorKind.CXCursor_UnionDecl:
       case clang_types.CXCursorKind.CXCursor_StructDecl:
-        final mt = cursor.type().toCodeGenType();
+        final mt = cursor.toCodeGenType();
 
         // If the union/struct are anonymous, then we need to add them now,
         // otherwise they will be added in the next iteration.

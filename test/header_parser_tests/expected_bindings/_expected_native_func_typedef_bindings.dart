@@ -24,7 +24,8 @@ class NativeLibrary {
     ffi.Pointer<
             ffi.NativeFunction<
                 ffi.Void Function(
-                    ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>)>>
+                    ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>
+                        unnamed2)>>
         unnamed1,
   ) {
     return _func(
@@ -38,16 +39,15 @@ class NativeLibrary {
               ffi.Pointer<
                   ffi.NativeFunction<
                       ffi.Void Function(
-                          ffi.Pointer<
-                              ffi.NativeFunction<
-                                  ffi.Void Function()>>)>>)>>('func');
+                          ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>
+                              unnamed2)>>)>>('func');
   late final _func = _funcPtr.asFunction<
       void Function(
           ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(
-                      ffi.Pointer<
-                          ffi.NativeFunction<ffi.Void Function()>>)>>)>();
+                      ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>
+                          unnamed2)>>)>();
 
   void funcWithNativeFunc(
     WithTypedefReturnType named,
@@ -68,7 +68,8 @@ class Struct extends ffi.Struct {
   external ffi.Pointer<
       ffi.NativeFunction<
           ffi.Void Function(
-              ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>)>> unnamed1;
+              ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>
+                  unnamed2)>> unnamed1;
 }
 
 typedef WithTypedefReturnType
