@@ -1,6 +1,6 @@
 # 7.2.10
 
-- Generate parameter names in function pointer fields
+- Generate parameter names in function pointer fields and typedefs.
 
 # 7.2.9
 
