@@ -8,6 +8,7 @@ import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/config_provider/config.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
+import 'package:package_config/package_config_types.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart' as yaml;
@@ -140,6 +141,12 @@ Config testConfig(String yamlBody, {String? filename}) {
   return Config.fromYaml(
     yaml.loadYaml(yamlBody) as yaml.YamlMap,
     filename: filename,
+    packageConfig: PackageConfig([
+      Package(
+        'shared_bindings',
+        Uri.file(path.join(path.current, 'example', 'shared_bindings', 'lib/')),
+      ),
+    ]),
   );
 }
 
