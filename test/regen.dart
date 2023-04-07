@@ -8,7 +8,7 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:ffigen/ffigen.dart';
 import 'package:logging/logging.dart';
-import 'package:yaml/yaml.dart';
+import './test_utils.dart';
 
 const usage = r'''Regenerates the Dart FFI bindings used in tests and examples.
 
@@ -18,31 +18,12 @@ e.g. with this command:
 $ dart run test/setup.dart && dart run test/regen.dart && dart test
 ''';
 
-Future<void> _regenConfig(File yamlConfig, File bindingOutput,
-    {bool chDir = false}) async {
+Future<void> _regenConfig(File yamlConfig, File bindingOutput) async {
   yamlConfig = yamlConfig.absolute;
   bindingOutput = bindingOutput.absolute;
-
-  Directory? oldDir;
-  var yaml = loadYaml(await yamlConfig.readAsString()) as YamlMap;
-
-  if (chDir) {
-    oldDir = Directory.current;
-    Directory.current = yamlConfig.parent;
-  }
-  try {
-    if (yaml.containsKey("ffigen")) {
-      yaml = yaml["ffigen"] as YamlMap;
-    }
-
-    final config = Config.fromYaml(yaml);
-    final library = parse(config);
-    library.generateFile(bindingOutput);
-  } finally {
-    if (oldDir != null) {
-      Directory.current = oldDir;
-    }
-  }
+  final config = testConfigFromPath(yamlConfig.path);
+  final library = parse(config);
+  library.generateFile(bindingOutput);
 }
 
 Future<void> main(List<String> args) async {
@@ -69,18 +50,25 @@ Future<void> main(List<String> args) async {
     print('${record.level.name}: ${record.time}: ${record.message}');
   });
 
-  await _regenConfig(File('test/native_test/config.yaml'),
-      File('test/native_test/native_test_bindings.dart'));
+  final nativeTestConfig = File('test/native_test/config.yaml').absolute;
+  final nativeTestOut =
+      File('test/native_test/native_test_bindings.dart').absolute;
+  await withChDir(nativeTestConfig.path,
+      () => _regenConfig(nativeTestConfig, nativeTestOut));
 
-  await _regenConfig(File('example/libclang-example/pubspec.yaml'),
-      File('example/libclang-example/generated_bindings.dart'),
-      chDir: true);
+  final libclangConfig = File('example/libclang-example/config.yaml').absolute;
+  final libclangOut =
+      File('example/libclang-example/generated_bindings.dart').absolute;
+  await withChDir(
+      libclangConfig.path, () => _regenConfig(libclangConfig, libclangOut));
 
-  await _regenConfig(File('example/simple/pubspec.yaml'),
-      File('example/simple/generated_bindings.dart'),
-      chDir: true);
+  final simpleConfig = File('example/simple/config.yaml').absolute;
+  final simpleOut = File('example/simple/generated_bindings.dart').absolute;
+  await withChDir(
+      simpleConfig.path, () => _regenConfig(simpleConfig, simpleOut));
 
-  await _regenConfig(File('example/c_json/pubspec.yaml'),
-      File('example/c_json/cjson_generated_bindings.dart'),
-      chDir: true);
+  final cJsonConfig = File('example/c_json/config.yaml').absolute;
+  final cJsonOut =
+      File('example/c_json/cjson_generated_bindings.dart').absolute;
+  await withChDir(cJsonConfig.path, () => _regenConfig(cJsonConfig, cJsonOut));
 }

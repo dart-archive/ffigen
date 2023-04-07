@@ -52,7 +52,7 @@ jobs:
       - name: Build test dylib and bindings
         run: dart test/setup.dart
       - name: Run VM tests
-        run: dart test --platform vm
+        run: dart test --platform vm --concurrency=1
 
   test-mac:
     needs: analyze
@@ -67,7 +67,7 @@ jobs:
       - name: Build test dylib and bindings
         run: dart test/setup.dart
       - name: Run VM tests
-        run: dart test --platform vm
+        run: dart test --platform vm --concurrency=1
       - name: Collect coverage
         run: ./tool/coverage.sh
       - name: Upload coverage
@@ -89,7 +89,7 @@ jobs:
       - name: Build test dylib and bindings
         run: dart test/setup.dart
       - name: Run VM tests
-        run: dart test --platform vm
+        run: dart test --platform vm --concurrency=1
 
   # Sanity check the latest `flutter create --template plugin_ffi`.
   # This will break if we change the Flutter template or the generated code.

@@ -19,7 +19,7 @@ final _logger = Logger('ffigen.config_provider.config');
 
 /// Provides configurations to other modules.
 ///
-/// Handles validation, extraction of confiurations from yaml file.
+/// Handles validation, extraction of configurations from a yaml file.
 class Config {
   /// Input filename.
   String? get filename => _filename;

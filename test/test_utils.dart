@@ -5,10 +5,13 @@
 import 'dart:io';
 
 import 'package:ffigen/src/code_generator.dart';
+import 'package:ffigen/src/config_provider/config.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
+import 'package:package_config/package_config_types.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
+import 'package:yaml/yaml.dart' as yaml;
 
 extension LibraryTestExt on Library {
   /// Get a [Binding]'s generated string with a given name.
@@ -44,7 +47,7 @@ void verifySetupFile(File file) {
 // Remove '\r' for Windows compatibility, then apply user's normalizer.
 String _normalizeGeneratedCode(
     String generated, String Function(String)? codeNormalizer) {
-  final noCR = generated.replaceAll('\r', '');
+  final noCR = generated.replaceAll('\r', '').replaceAll(RegExp(r'\n+'), '\n');
   if (codeNormalizer == null) return noCR;
   return codeNormalizer(noCR);
 }
@@ -132,4 +135,38 @@ void logWarningsToArray(List<String> logArr, [Level level = Level.WARNING]) {
   Logger.root.onRecord.listen((record) {
     logArr.add('${record.level.name.padRight(8)}: ${record.message}');
   });
+}
+
+Config testConfig(String yamlBody, {String? filename}) {
+  return Config.fromYaml(
+    yaml.loadYaml(yamlBody) as yaml.YamlMap,
+    filename: filename,
+    packageConfig: PackageConfig([
+      Package(
+        'shared_bindings',
+        Uri.file(path.join(path.current, 'example', 'shared_bindings', 'lib/')),
+      ),
+    ]),
+  );
+}
+
+Config testConfigFromPath(String path) {
+  final file = File(path);
+  final yamlBody = file.readAsStringSync();
+  return testConfig(yamlBody, filename: path);
+}
+
+T withChDir<T>(String path, T Function() inner) {
+  final oldDir = Directory.current;
+  Directory.current = File(path).parent;
+
+  late T result;
+
+  try {
+    result = inner();
+  } finally {
+    Directory.current = oldDir;
+  }
+
+  return result;
 }

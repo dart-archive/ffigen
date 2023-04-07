@@ -5,13 +5,10 @@
 // Objective C support is only available on mac.
 @TestOn('mac-os')
 
-import 'dart:io';
-
-import 'package:ffigen/src/config_provider/config.dart';
 import 'package:ffigen/src/header_parser.dart';
 import 'package:logging/logging.dart';
+import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
-import 'package:yaml/yaml.dart';
 
 import '../test_utils.dart';
 
@@ -22,9 +19,8 @@ void main() {
     });
 
     test('objective_c', () {
-      final pubspecFile = File('example/objective_c/pubspec.yaml');
-      final pubspecYaml = loadYaml(pubspecFile.readAsStringSync()) as YamlMap;
-      final config = Config.fromYaml(pubspecYaml['ffigen'] as YamlMap);
+      final config = testConfigFromPath(
+          path.join('example', 'objective_c', 'config.yaml'));
       final output = parse(config).generate();
 
       // Verify that the output contains all the methods and classes that the

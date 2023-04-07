@@ -3,11 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/config_provider.dart';
 import 'package:ffigen/src/header_parser.dart' as parser;
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:test/test.dart';
-import 'package:yaml/yaml.dart' as yaml;
 
 import '../test_utils.dart';
 
@@ -18,7 +16,7 @@ void main() {
     setUpAll(() {
       logWarnings();
       actual = parser.parse(
-        Config.fromYaml(yaml.loadYaml('''
+        testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Functions Test'
 ${strings.output}: 'unused'
@@ -40,7 +38,7 @@ ${strings.functions}:
 
 ${strings.preamble}: |
   // ignore_for_file: camel_case_types
-        ''') as yaml.YamlMap),
+        '''),
       );
     });
     test('Expected Bindings', () {

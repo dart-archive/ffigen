@@ -3,11 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/config_provider.dart';
 import 'package:ffigen/src/header_parser.dart' as parser;
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:test/test.dart';
-import 'package:yaml/yaml.dart' as yaml;
 
 import '../test_utils.dart';
 
@@ -22,7 +20,7 @@ void main() {
     setUpAll(() {
       logWarnings();
       expected = expectedLibrary();
-      actual = parser.parse(Config.fromYaml(yaml.loadYaml('''
+      actual = parser.parse(testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Rename Test'
 ${strings.output}: 'unused'
@@ -78,7 +76,7 @@ ${strings.macros}:
 ${strings.typedefs}:
   ${strings.rename}:
     'Struct5_Alias': 'Struct5_Alias_Renamed'
-    ''') as yaml.YamlMap));
+    '''));
     });
 
     test('Function addPrefix', () {

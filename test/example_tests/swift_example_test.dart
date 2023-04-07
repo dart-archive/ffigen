@@ -8,12 +8,10 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:ffigen/src/config_provider/config.dart';
 import 'package:ffigen/src/header_parser.dart';
 import 'package:logging/logging.dart';
-import 'package:path/path.dart' as p;
+import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
-import 'package:yaml/yaml.dart';
 
 import '../test_utils.dart';
 
@@ -38,16 +36,17 @@ void main() {
             '-o',
             'libswiftapi.dylib',
           ],
-          workingDirectory: p.join(Directory.current.path, 'example/swift'));
+          workingDirectory: path.join(Directory.current.path, 'example/swift'));
       unawaited(stdout.addStream(process.stdout));
       unawaited(stderr.addStream(process.stderr));
       final result = await process.exitCode;
       expect(result, 0);
 
-      final pubspecFile = File('example/swift/pubspec.yaml');
-      final pubspecYaml = loadYaml(pubspecFile.readAsStringSync()) as YamlMap;
-      final config = Config.fromYaml(pubspecYaml['ffigen'] as YamlMap,
-          filename: pubspecFile.path);
+      final config = testConfigFromPath(path.join(
+        'example',
+        'swift',
+        'config.yaml',
+      ));
       final output = parse(config).generate();
 
       // Verify that the output contains all the methods and classes that the

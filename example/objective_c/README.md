@@ -38,7 +38,7 @@ any of the fields or methods of `AVAudioPlayer`, so we're still able to use
 At the root of this example (`example/objective_c`), run:
 
 ```
-dart run ffigen
+dart run ffigen --config config.yaml
 ```
 
 This will generate [avf_audio_bindings.dart](./avf_audio_bindings.dart).

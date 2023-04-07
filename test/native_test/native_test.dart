@@ -9,7 +9,6 @@ import 'dart:math';
 import 'package:ffigen/ffigen.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
-import 'package:yaml/yaml.dart';
 import '../test_utils.dart';
 import 'native_test_bindings.dart';
 
@@ -30,26 +29,31 @@ void main() {
     });
 
     test('generate_bindings', () {
-      final config = Config.fromYaml(loadYaml(
-          File(path.join('test', 'native_test', 'config.yaml'))
-              .readAsStringSync()) as YamlMap);
-      final library = parse(config);
-      final file = File(
+      final configFile =
+          File(path.join('test', 'native_test', 'config.yaml')).absolute;
+      final outFile = File(
         path.join('test', 'debug_generated', 'native_test_bindings.dart'),
-      );
-      library.generateFile(file);
+      ).absolute;
+
+      late Config config;
+      withChDir(configFile.path, () {
+        config = testConfigFromPath(configFile.path);
+      });
+      final library = parse(config);
+
+      library.generateFile(outFile);
 
       try {
-        final actual = file.readAsStringSync().replaceAll('\r', '');
+        final actual = outFile.readAsStringSync().replaceAll('\r', '');
         final expected = File(path.join(config.output))
             .readAsStringSync()
             .replaceAll('\r', '');
         expect(actual, expected);
-        if (file.existsSync()) {
-          file.delete();
+        if (outFile.existsSync()) {
+          outFile.delete();
         }
       } catch (e) {
-        print('Failed test: Debug generated file: ${file.absolute.path}');
+        print('Failed test: Debug generated file: ${outFile.absolute.path}');
         rethrow;
       }
     });

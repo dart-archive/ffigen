@@ -22,7 +22,7 @@ Once you have an Objective-C wrapper header, ffigen can parse it like
 any other header:
 
 ```shell
-dart run ffigen
+dart run ffigen --config config.yaml
 ```
 
 This will generate [swift_api_bindings.dart](./swift_api_bindings.dart),

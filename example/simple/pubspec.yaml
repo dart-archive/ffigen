@@ -14,10 +14,3 @@ dev_dependencies:
     path: '../../'
   lints: ^2.0.1
 
-ffigen:
-  name: NativeLibrary
-  description: Bindings to `headers/example.h`.
-  output: 'generated_bindings.dart'
-  headers:
-    entry-points:
-      - 'headers/example.h'
