@@ -13,11 +13,11 @@ import 'package:ffigen/src/header_parser/sub_parsers/macro_parser.dart';
 import 'package:ffigen/src/header_parser/translation_unit_parser.dart';
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
+import 'package:mutex/mutex.dart';
 
 import 'clang_bindings/clang_bindings.dart' as clang_types;
 import 'data.dart';
 import 'utils.dart';
-import 'package:mutex/mutex.dart';
 
 final clangMutex = Mutex();
 

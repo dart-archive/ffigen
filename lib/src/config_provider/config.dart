@@ -23,11 +23,11 @@ final _logger = Logger('ffigen.config_provider.config');
 class Config {
   /// Input filename.
   String? get filename => _filename;
-  String? _filename;
+  final String? _filename;
 
   /// Package config.
   PackageConfig? get packageConfig => _packageConfig;
-  PackageConfig? _packageConfig;
+  final PackageConfig? _packageConfig;
 
   /// Location for llvm/lib folder.
   String get libclangDylib => _libclangDylib;
