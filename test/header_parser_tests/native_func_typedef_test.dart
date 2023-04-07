@@ -13,10 +13,10 @@ import '../test_utils.dart';
 late Library actual;
 void main() {
   group('native_func_typedef_test', () {
-    setUpAll(() {
+    setUpAll(() async {
       logWarnings(Level.SEVERE);
-      actual = parser.parse(
-        testConfig('''
+      actual = await parser.parse(
+        await testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Native Func Typedef Test.'
 ${strings.output}: 'unused'

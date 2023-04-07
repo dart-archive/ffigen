@@ -15,10 +15,10 @@ late Library actual, expected;
 
 void main() {
   group('dart_handle_test', () {
-    setUpAll(() {
+    setUpAll(() async {
       logWarnings();
-      actual = parser.parse(
-        testConfig('''
+      actual = await parser.parse(
+        await testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Dart_Handle Test'
 ${strings.output}: 'unused'

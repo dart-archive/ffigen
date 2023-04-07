@@ -14,10 +14,10 @@ late Library actual, expected;
 
 void main() {
   group('typedef_test', () {
-    setUpAll(() {
+    setUpAll(() async {
       logWarnings(Level.SEVERE);
-      actual = parser.parse(
-        testConfig('''
+      actual = await parser.parse(
+        await testConfig('''
 ${strings.name}: 'Bindings'
 ${strings.output}: 'unused'
 

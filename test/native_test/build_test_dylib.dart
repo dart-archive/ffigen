@@ -53,18 +53,18 @@ Map<String, Options> platformOptions = {
   ),
 };
 
-void main(List<String> arguments) {
+void main(List<String> arguments) async {
   print('Building Dynamic Library for Native Tests... ');
   final options = getPlatformOptions()!;
 
   // Run clang compiler to generate the dynamic library.
-  final processResult = runClangProcess(options);
+  final processResult = await runClangProcess(options);
   printSuccess(processResult, options);
 }
 
 /// Calls the clang compiler.
-ProcessResult runClangProcess(Options options) {
-  final result = Process.runSync(
+Future<ProcessResult> runClangProcess(Options options) async {
+  final result = await Process.run(
     'clang',
     [
       options.sharedFlag,

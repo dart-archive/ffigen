@@ -21,27 +21,27 @@ void main() {
       strings.typedefs: 'Typedef',
     };
     for (final f in fieldsAndNameMap.keys) {
-      test('include $f', () {
-        final config = _makeFieldIncludeExcludeConfig(
+      test('include $f', () async {
+        final config = await _makeFieldIncludeExcludeConfig(
             field: f, include: fieldsAndNameMap[f]);
-        final library = parse(config);
+        final library = await parse(config);
         expect(library.getBinding(fieldsAndNameMap[f]!), isNotNull);
       });
-      test('exclude $f', () {
-        final config = _makeFieldIncludeExcludeConfig(
+      test('exclude $f', () async {
+        final config = await _makeFieldIncludeExcludeConfig(
             field: f, exclude: fieldsAndNameMap[f]);
-        final library = parse(config);
+        final library = await parse(config);
         expect(() => library.getBinding(fieldsAndNameMap[f]!), throwsException);
       });
     }
   });
 }
 
-Config _makeFieldIncludeExcludeConfig({
+Future<Config> _makeFieldIncludeExcludeConfig({
   required String field,
   String? include,
   String? exclude,
-}) {
+}) async {
   var templateString = '''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'include_exclude test'
@@ -68,6 +68,6 @@ $field:
     }
   }
 
-  final config = testConfig(templateString);
+  final config = await testConfig(templateString);
   return config;
 }

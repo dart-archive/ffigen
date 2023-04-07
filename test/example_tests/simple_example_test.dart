@@ -15,15 +15,15 @@ void main() {
       logWarnings(Level.SEVERE);
     });
 
-    test('simple', () {
-      final config = testConfigFromPath(path.join(
+    test('simple', () async {
+      final config = await testConfigFromPath(path.join(
         'example',
         'simple',
         'config.yaml',
       ));
-      final library = parse(config);
+      final library = await parse(config);
 
-      matchLibraryWithExpected(
+      await matchLibraryWithExpected(
         library,
         'example_simple.dart',
         [config.output],

@@ -42,12 +42,12 @@ void main() {
       final result = await process.exitCode;
       expect(result, 0);
 
-      final config = testConfigFromPath(path.join(
+      final config = await testConfigFromPath(path.join(
         'example',
         'swift',
         'config.yaml',
       ));
-      final output = parse(config).generate();
+      final output = (await parse(config)).generate();
 
       // Verify that the output contains all the methods and classes that the
       // example app uses.

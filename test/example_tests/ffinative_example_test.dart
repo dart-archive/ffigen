@@ -15,12 +15,12 @@ void main() {
       logWarnings(Level.SEVERE);
     });
 
-    test('ffinative', () {
-      final config =
-          testConfigFromPath(path.join('example', 'ffinative', 'config.yaml'));
-      final library = parse(config);
+    test('ffinative', () async {
+      final config = await testConfigFromPath(
+          path.join('example', 'ffinative', 'config.yaml'));
+      final library = await parse(config);
 
-      matchLibraryWithExpected(
+      await matchLibraryWithExpected(
         library,
         'example_ffinative.dart',
         [config.output],

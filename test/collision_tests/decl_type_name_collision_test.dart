@@ -13,10 +13,10 @@ import '../test_utils.dart';
 late Library actual;
 void main() {
   group('decl_type_name_collision test', () {
-    setUpAll(() {
+    setUpAll(() async {
       logWarnings(Level.SEVERE);
-      actual = parser.parse(
-        testConfig('''
+      actual = await parser.parse(
+        await testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Decl type name collision test'
 ${strings.output}: 'unused'

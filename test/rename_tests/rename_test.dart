@@ -17,10 +17,10 @@ final macroPrefix = 'mmm';
 
 void main() {
   group('rename_test', () {
-    setUpAll(() {
+    setUpAll(() async {
       logWarnings();
       expected = expectedLibrary();
-      actual = parser.parse(testConfig('''
+      actual = await parser.parse(await testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Rename Test'
 ${strings.output}: 'unused'

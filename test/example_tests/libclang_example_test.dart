@@ -18,15 +18,15 @@ void main() {
     setUpAll(() {
       logWarnings(Level.SEVERE);
     });
-    test('libclang-example', () {
+    test('libclang-example', () async {
       final configYaml =
           File(path.join('example', 'libclang-example', 'config.yaml'))
               .absolute;
       late Config config;
       late Library library;
-      withChDir(configYaml.path, () {
-        config = testConfigFromPath(configYaml.path);
-        library = parse(config);
+      await withChDir(configYaml.path, () async {
+        config = await testConfigFromPath(configYaml.path);
+        library = await parse(config);
       });
 
       matchLibraryWithExpected(

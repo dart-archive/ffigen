@@ -17,24 +17,29 @@ import 'package:logging/logging.dart';
 import 'clang_bindings/clang_bindings.dart' as clang_types;
 import 'data.dart';
 import 'utils.dart';
+import 'package:mutex/mutex.dart';
+
+final clangMutex = Mutex();
 
 /// Main entrypoint for header_parser.
-Library parse(Config c) {
-  initParser(c);
+Future<Library> parse(Config c) async {
+  return clangMutex.protect(() async {
+    initParser(c);
 
-  final bindings = parseToBindings();
+    final bindings = await parseToBindings();
 
-  final library = Library(
-    bindings: bindings,
-    name: config.wrapperName,
-    description: config.wrapperDocComment,
-    header: config.preamble,
-    sort: config.sort,
-    packingOverride: config.structPackingOverride,
-    libraryImports: c.libraryImports.values.toSet(),
-  );
+    final library = Library(
+      bindings: bindings,
+      name: config.wrapperName,
+      description: config.wrapperDocComment,
+      header: config.preamble,
+      sort: config.sort,
+      packingOverride: config.structPackingOverride,
+      libraryImports: c.libraryImports.values.toSet(),
+    );
 
-  return library;
+    return library;
+  });
 }
 
 // ===================================================================================
@@ -52,7 +57,7 @@ void initParser(Config c) {
 }
 
 /// Parses source files and adds generated bindings to [bindings].
-List<Binding> parseToBindings() {
+Future<List<Binding>> parseToBindings() async {
   final index = clang.clang_createIndex(0, 0);
 
   Pointer<Pointer<Utf8>> clangCmdArgs = nullptr;
@@ -65,7 +70,7 @@ List<Binding> parseToBindings() {
     // If the config targets Objective C, add a compiler opt for it.
     if (config.language == Language.objc) ...[
       ...strings.clangLangObjC,
-      ..._findObjectiveCSysroot(),
+      ...await _findObjectiveCSysroot(),
     ],
 
     // Add the user options last so they can override any other options.
@@ -133,15 +138,15 @@ List<Binding> parseToBindings() {
   bindings.addAll(unnamedEnumConstants);
 
   // Parse all saved macros.
-  bindings.addAll(parseSavedMacros()!);
+  bindings.addAll((await parseSavedMacros())!);
 
   clangCmdArgs.dispose(cmdLen);
   clang.clang_disposeIndex(index);
   return bindings.toList();
 }
 
-List<String> _findObjectiveCSysroot() {
-  final result = Process.runSync('xcrun', ['--show-sdk-path']);
+Future<List<String>> _findObjectiveCSysroot() async {
+  final result = await Process.run('xcrun', ['--show-sdk-path']);
   if (result.exitCode == 0) {
     for (final line in (result.stdout as String).split('\n')) {
       if (line.isNotEmpty) {

@@ -131,17 +131,17 @@ class Library {
   /// Generates [file] by generating C bindings.
   ///
   /// If format is true(default), the formatter will be called to format the generated file.
-  void generateFile(File file, {bool format = true}) {
-    if (!file.existsSync()) file.createSync(recursive: true);
-    file.writeAsStringSync(generate());
+  Future<void> generateFile(File file, {bool format = true}) async {
+    if (!await file.exists()) await file.create(recursive: true);
+    await file.writeAsString(generate());
     if (format) {
-      _dartFormat(file.path);
+      await _dartFormat(file.path);
     }
   }
 
   /// Generates [file] with symbol output yaml.
-  void generateSymbolOutputFile(File file, String importPath) {
-    if (!file.existsSync()) file.createSync(recursive: true);
+  Future<void> generateSymbolOutputFile(File file, String importPath) async {
+    if (!await file.exists()) await file.create(recursive: true);
     final symbolFileYamlMap = writer.generateSymbolOutputYamlMap(importPath);
     final yamlEditor = YamlEditor("");
     yamlEditor.update([], wrapAsYamlNode(symbolFileYamlMap));
@@ -149,13 +149,13 @@ class Library {
     if (!yamlString.endsWith('\n')) {
       yamlString += "\n";
     }
-    file.writeAsStringSync(yamlString);
+    await file.writeAsString(yamlString);
   }
 
   /// Formats a file using the Dart formatter.
-  void _dartFormat(String path) {
+  Future<void> _dartFormat(String path) async {
     final sdkPath = getSdkPath();
-    final result = Process.runSync(
+    final result = await Process.run(
         p.join(sdkPath, 'bin', 'dart'), ['format', path],
         runInShell: Platform.isWindows);
     if (result.stderr.toString().isNotEmpty) {

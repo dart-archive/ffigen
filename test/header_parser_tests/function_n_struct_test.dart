@@ -14,11 +14,11 @@ late Library actual, expected;
 
 void main() {
   group('function_n_struct_test', () {
-    setUpAll(() {
+    setUpAll(() async {
       logWarnings(Level.SEVERE);
       expected = expectedLibrary();
-      actual = parser.parse(
-        testConfig('''
+      actual = await parser.parse(
+        await testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Function And Struct Test'
 ${strings.output}: 'unused'

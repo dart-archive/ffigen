@@ -11,8 +11,8 @@ import '../test_utils.dart';
 
 void main() {
   group('exclude_all_by_default', () {
-    test('exclude_all_by_default test flag false', () {
-      final config = testConfig('''
+    test('exclude_all_by_default test flag false', () async {
+      final config = await testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'exclude_all_by_default test'
 ${strings.output}: 'unused'
@@ -22,7 +22,7 @@ ${strings.headers}:
     - 'test/config_tests/exclude_all_by_default.h'
 ''');
 
-      final library = parse(config);
+      final library = await parse(config);
       expect(library.getBinding('func'), isA<Func>());
       expect(library.getBinding('Struct'), isA<Struct>());
       expect(library.getBinding('Union'), isA<Union>());
@@ -32,8 +32,8 @@ ${strings.headers}:
       expect(library.getBinding('unnamedEnum'), isA<Constant>());
     });
 
-    test('exclude_all_by_default test flag true', () {
-      final config = testConfig('''
+    test('exclude_all_by_default test flag true', () async {
+      final config = await testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'exclude_all_by_default test'
 ${strings.output}: 'unused'
@@ -43,7 +43,7 @@ ${strings.headers}:
     - 'test/config_tests/exclude_all_by_default.h'
 ''');
 
-      final library = parse(config);
+      final library = await parse(config);
       expect(() => library.getBinding('func'), throwsException);
       expect(() => library.getBinding('Struct'), throwsException);
       expect(() => library.getBinding('Union'), throwsException);

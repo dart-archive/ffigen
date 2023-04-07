@@ -10,19 +10,18 @@ import 'package:test/test.dart';
 
 import '../test_utils.dart';
 
-void generateBindingsForCoverage(String testName) {
+Future<void> generateBindingsForCoverage(String testName) async {
   // The ObjC test bindings are generated in setup.dart (see #362), which means
   // that the ObjC related bits of ffigen are missed by test coverage. So this
   // function just regenerates those bindings. It doesn't test anything except
   // that the generation succeeded, by asserting the file exists.
-  final config = testConfig(
-      File(path.join('test', 'native_objc_test', '${testName}_config.yaml'))
-          .readAsStringSync());
-  final library = parse(config);
+  final config = await testConfigFromPath(
+      path.join('test', 'native_objc_test', '${testName}_config.yaml'));
+  final library = await parse(config);
   final file = File(
     path.join('test', 'debug_generated', '${testName}_test.dart'),
   );
-  library.generateFile(file);
-  assert(file.existsSync());
-  file.delete();
+  await library.generateFile(file);
+  assert(await file.exists());
+  await file.delete();
 }

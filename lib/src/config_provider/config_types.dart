@@ -68,8 +68,8 @@ class StructPackingOverride {
 /// [E] is the return type of the extractedResult.
 class Specification<E> {
   final bool Function(List<String> name, dynamic value) validator;
-  final E Function(dynamic map) extractor;
-  final E Function()? defaultValue;
+  final Future<E> Function(dynamic map) extractor;
+  final Future<E> Function()? defaultValue;
 
   final Requirement requirement;
   final void Function(dynamic result) extractedResult;
@@ -365,7 +365,7 @@ class CompilerOptsAuto {
       : macIncludeStdLib = macIncludeStdLib ?? true;
 
   /// Extracts compiler options based on OS and config.
-  List<String> extractCompilerOpts() {
+  Future<List<String>> extractCompilerOpts() async {
     if (Platform.isMacOS && macIncludeStdLib) {
       return getCStandardLibraryHeadersForMac();
     }

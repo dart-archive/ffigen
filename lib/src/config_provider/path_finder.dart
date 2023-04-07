@@ -12,13 +12,13 @@ import 'package:path/path.dart' as p;
 final _logger = Logger('ffigen.config_provider.path_finder');
 
 /// This will return include path from either LLVM, XCode or CommandLineTools.
-List<String> getCStandardLibraryHeadersForMac() {
+Future<List<String>> getCStandardLibraryHeadersForMac() async {
   final includePaths = <String>[];
 
   /// Add system headers.
   const systemHeaders =
       '/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include';
-  if (Directory(systemHeaders).existsSync()) {
+  if (await Directory(systemHeaders).exists()) {
     _logger.fine('Added $systemHeaders to compiler-opts.');
     includePaths.add('-I$systemHeaders');
   }
@@ -29,15 +29,15 @@ List<String> getCStandardLibraryHeadersForMac() {
       '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/';
   const searchPaths = [brewLlvmPath, xcodeClangPath];
   for (final searchPath in searchPaths) {
-    if (!Directory(searchPath).existsSync()) continue;
+    if (!await Directory(searchPath).exists()) continue;
 
-    final result = Process.runSync('ls', [searchPath]);
+    final result = await Process.run('ls', [searchPath]);
     final stdout = result.stdout as String;
     if (stdout != '') {
       final versions = stdout.split('\n').where((s) => s != '');
       for (final version in versions) {
         final path = p.join(searchPath, version, 'include');
-        if (Directory(path).existsSync()) {
+        if (await Directory(path).exists()) {
           _logger.fine('Added stdlib path: $path to compiler-opts.');
           includePaths.add('-I$path');
           return includePaths;
@@ -49,7 +49,7 @@ List<String> getCStandardLibraryHeadersForMac() {
   /// If CommandLineTools are installed use those headers.
   const cmdLineToolHeaders =
       '/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Headers/';
-  if (Directory(cmdLineToolHeaders).existsSync()) {
+  if (await Directory(cmdLineToolHeaders).exists()) {
     _logger.fine('Added stdlib path: $cmdLineToolHeaders to compiler-opts.');
     includePaths.add('-I$cmdLineToolHeaders');
     return includePaths;

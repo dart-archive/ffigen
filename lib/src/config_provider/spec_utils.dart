@@ -113,12 +113,13 @@ void _warnUnknownKeysInMap(Map<String, dynamic> allowedKeyMap,
   }
 }
 
-bool booleanExtractor(dynamic value) => value as bool;
+Future<bool> booleanExtractor(dynamic value) async => value as bool;
 
 bool booleanValidator(List<String> name, dynamic value) =>
     checkType<bool>(name, value);
 
-Map<String, LibraryImport> libraryImportsExtractor(dynamic yamlConfig) {
+Future<Map<String, LibraryImport>> libraryImportsExtractor(
+    dynamic yamlConfig) async {
   final resultMap = <String, LibraryImport>{};
   final typeMap = yamlConfig as YamlMap?;
   if (typeMap != null) {
@@ -158,20 +159,20 @@ void loadImportedTypes(YamlMap fileConfig,
   }
 }
 
-YamlMap loadSymbolFile(String symbolFilePath, String? configFileName,
-    PackageConfig? packageConfig) {
+Future<YamlMap> loadSymbolFile(String symbolFilePath, String? configFileName,
+    PackageConfig? packageConfig) async {
   final path = symbolFilePath.startsWith('package:')
       ? packageConfig!.resolve(Uri.parse(symbolFilePath))!.toFilePath()
       : _normalizePath(symbolFilePath, configFileName);
 
-  return loadYaml(File(path).readAsStringSync()) as YamlMap;
+  return loadYaml(await File(path).readAsString()) as YamlMap;
 }
 
-Map<String, ImportedType> symbolFileImportExtractor(
+Future<Map<String, ImportedType>> symbolFileImportExtractor(
     dynamic yamlConfig,
     Map<String, LibraryImport> libraryImports,
     String? configFileName,
-    PackageConfig? packageConfig) {
+    PackageConfig? packageConfig) async {
   final resultMap = <String, ImportedType>{};
   for (final item in (yamlConfig as YamlList)) {
     String symbolFilePath;
@@ -181,7 +182,7 @@ Map<String, ImportedType> symbolFileImportExtractor(
       symbolFilePath = item[strings.symbolFile] as String;
     }
     final symbolFile =
-        loadSymbolFile(symbolFilePath, configFileName, packageConfig);
+        await loadSymbolFile(symbolFilePath, configFileName, packageConfig);
     final formatVersion = symbolFile[strings.formatVersion] as String;
     if (formatVersion.split('.')[0] !=
         strings.symbolFileFormatVersion.split('.')[0]) {
@@ -240,7 +241,7 @@ bool symbolFileImportValidator(List<String> name, dynamic yamlConfig) {
   return result;
 }
 
-Map<String, List<String>> typeMapExtractor(dynamic yamlConfig) {
+Future<Map<String, List<String>>> typeMapExtractor(dynamic yamlConfig) async {
   // Key - type_name, Value - [lib, cType, dartType].
   final resultMap = <String, List<String>>{};
   final typeMap = yamlConfig as YamlMap?;
@@ -285,7 +286,7 @@ bool typeMapValidator(List<String> name, dynamic yamlConfig) {
   return result;
 }
 
-Map<String, String> stringStringMapExtractor(dynamic yamlConfig) {
+Future<Map<String, String>> stringStringMapExtractor(dynamic yamlConfig) async {
   final resultMap = <String, String>{};
   final inputMap = yamlConfig as YamlMap?;
   if (inputMap != null) {
@@ -346,7 +347,7 @@ List<String> compilerOptsToList(String compilerOpts) {
   return list;
 }
 
-List<String> compilerOptsExtractor(dynamic value) {
+Future<List<String>> compilerOptsExtractor(dynamic value) async {
   if (value is String) {
     return compilerOptsToList(value);
   }
@@ -369,7 +370,7 @@ bool compilerOptsValidator(List<String> name, dynamic value) {
   }
 }
 
-CompilerOptsAuto compilerOptsAutoExtractor(dynamic value) {
+Future<CompilerOptsAuto> compilerOptsAutoExtractor(dynamic value) async {
   return CompilerOptsAuto(
     macIncludeStdLib: getKeyValueFromYaml(
       [strings.macos, strings.includeCStdLib],
@@ -410,7 +411,8 @@ bool compilerOptsAutoValidator(List<String> name, dynamic value) {
   return result;
 }
 
-Headers headersExtractor(dynamic yamlConfig, String? configFilename) {
+Future<Headers> headersExtractor(
+    dynamic yamlConfig, String? configFilename) async {
   final entryPoints = <String>[];
   final includeGlobs = <quiver.Glob>[];
   for (final key in (yamlConfig as YamlMap).keys) {
@@ -418,13 +420,13 @@ Headers headersExtractor(dynamic yamlConfig, String? configFilename) {
       for (final h in (yamlConfig[key] as YamlList)) {
         final headerGlob = _normalizePath(h as String, configFilename);
         // Add file directly to header if it's not a Glob but a File.
-        if (File(headerGlob).existsSync()) {
+        if (await File(headerGlob).exists()) {
           final osSpecificPath = headerGlob;
           entryPoints.add(osSpecificPath);
           _logger.fine('Adding header/file: $headerGlob');
         } else {
           final glob = Glob(headerGlob);
-          for (final file in glob.listFileSystemSync(const LocalFileSystem(),
+          await for (final file in glob.listFileSystem(const LocalFileSystem(),
               followLinks: true)) {
             final fixedPath = file.path;
             entryPoints.add(fixedPath);
@@ -473,15 +475,14 @@ bool headersValidator(List<String> name, dynamic value) {
 
 /// Returns location of dynamic library by searching default locations. Logs
 /// error and throws an Exception if not found.
-String findDylibAtDefaultLocations() {
+Future<String> findDylibAtDefaultLocations() async {
   String? k;
   if (Platform.isLinux) {
     for (final l in strings.linuxDylibLocations) {
-      k = findLibclangDylib(l);
+      k = await findLibclangDylib(l);
       if (k != null) return k;
     }
-    Process.runSync('ldconfig', ['-p']);
-    final ldConfigResult = Process.runSync('ldconfig', ['-p']);
+    final ldConfigResult = await Process.run('ldconfig', ['-p']);
     if (ldConfigResult.exitCode == 0) {
       final lines = (ldConfigResult.stdout as String).split('\n');
       final paths = [
@@ -489,7 +490,7 @@ String findDylibAtDefaultLocations() {
           if (line.contains('libclang')) line.split(' => ')[1],
       ];
       for (final location in paths) {
-        if (File(location).existsSync()) {
+        if (await File(location).exists()) {
           return location;
         }
       }
@@ -502,28 +503,28 @@ String findDylibAtDefaultLocations() {
           .add(p.join(userHome, 'scoop', 'apps', 'llvm', 'current', 'bin'));
     }
     for (final l in dylibLocations) {
-      k = findLibclangDylib(l);
+      k = await findLibclangDylib(l);
       if (k != null) return k;
     }
   } else if (Platform.isMacOS) {
     for (final l in strings.macOsDylibLocations) {
-      k = findLibclangDylib(l);
+      k = await findLibclangDylib(l);
       if (k != null) return k;
     }
     final findLibraryResult =
-        Process.runSync('xcodebuild', ['-find-library', 'libclang.dylib']);
+        await Process.run('xcodebuild', ['-find-library', 'libclang.dylib']);
     if (findLibraryResult.exitCode == 0) {
       final location = (findLibraryResult.stdout as String).split('\n').first;
-      if (File(location).existsSync()) {
+      if (await File(location).exists()) {
         return location;
       }
     }
-    final xcodePathResult = Process.runSync('xcode-select', ['-print-path']);
+    final xcodePathResult = await Process.run('xcode-select', ['-print-path']);
     if (xcodePathResult.exitCode == 0) {
       final xcodePath = (xcodePathResult.stdout as String).split('\n').first;
       final location =
           p.join(xcodePath, strings.xcodeDylibLocation, strings.dylibFileName);
-      if (File(location).existsSync()) {
+      if (await File(location).exists()) {
         return location;
       }
     }
@@ -537,21 +538,21 @@ String findDylibAtDefaultLocations() {
   throw Exception("Couldn't find dynamic library in default locations.");
 }
 
-String? findLibclangDylib(String parentFolder) {
+Future<String?> findLibclangDylib(String parentFolder) async {
   final location = p.join(parentFolder, strings.dylibFileName);
-  if (File(location).existsSync()) {
+  if (await File(location).exists()) {
     return location;
   } else {
     return null;
   }
 }
 
-String llvmPathExtractor(dynamic value) {
+Future<String> llvmPathExtractor(dynamic value) async {
   // Extract libclang's dylib from user specified paths.
   for (final path in (value as YamlList)) {
     if (path is! String) continue;
     final dylibPath =
-        findLibclangDylib(p.join(path, strings.dynamicLibParentName));
+        await findLibclangDylib(p.join(path, strings.dynamicLibParentName));
     if (dylibPath != null) {
       _logger.fine('Found dynamic library at: $dylibPath');
       return dylibPath;
@@ -559,7 +560,7 @@ String llvmPathExtractor(dynamic value) {
     // Check if user has specified complete path to dylib.
     final completeDylibPath = path;
     if (p.extension(completeDylibPath).isNotEmpty &&
-        File(completeDylibPath).existsSync()) {
+        await File(completeDylibPath).exists()) {
       _logger.info(
           'Using complete dylib path: $completeDylibPath from llvm-path.');
       return completeDylibPath;
@@ -569,7 +570,7 @@ String llvmPathExtractor(dynamic value) {
       "Couldn't find dynamic library under paths specified by ${strings.llvmPath}.");
   // Extract path from default locations.
   try {
-    final res = findDylibAtDefaultLocations();
+    final res = await findDylibAtDefaultLocations();
     return res;
   } catch (e) {
     _logger.severe(
@@ -671,7 +672,7 @@ bool symbolFileOutputValidator(List<String> name, dynamic value) {
   return true;
 }
 
-Language languageExtractor(dynamic value) {
+Future<Language> languageExtractor(dynamic value) async {
   if (value == strings.langC) {
     return Language.c;
   } else if (value == strings.langObjC) {
@@ -743,7 +744,7 @@ Includer _extractIncluderFromYaml(dynamic yamlMap) {
   );
 }
 
-Declaration declarationConfigExtractor(dynamic yamlMap) {
+Future<Declaration> declarationConfigExtractor(dynamic yamlMap) async {
   final renamePatterns = <RegExpRenamer>[];
   final renameFull = <String, String>{};
   final memberRenamePatterns = <RegExpMemberRenamer>[];
@@ -886,7 +887,7 @@ bool declarationConfigValidator(List<String> name, dynamic value) {
   return result;
 }
 
-Includer exposeFunctionTypeExtractor(dynamic value) =>
+Future<Includer> exposeFunctionTypeExtractor(dynamic value) async =>
     _extractIncluderFromYaml(value);
 
 bool exposeFunctionTypeValidator(List<String> name, dynamic value) {
@@ -911,7 +912,7 @@ bool exposeFunctionTypeValidator(List<String> name, dynamic value) {
   return result;
 }
 
-Includer leafFunctionExtractor(dynamic value) =>
+Future<Includer> leafFunctionExtractor(dynamic value) async =>
     _extractIncluderFromYaml(value);
 
 bool leafFunctionValidator(List<String> name, dynamic value) {
@@ -952,7 +953,7 @@ SupportedNativeType nativeSupportedType(int value, {bool signed = true}) {
   }
 }
 
-String stringExtractor(dynamic value) => value as String;
+Future<String> stringExtractor(dynamic value) async => value as String;
 
 bool nonEmptyStringValidator(List<String> name, dynamic value) {
   if (value is String && value.isNotEmpty) {
@@ -974,7 +975,7 @@ bool dartClassNameValidator(List<String> name, dynamic value) {
   }
 }
 
-CommentType commentExtractor(dynamic value) {
+Future<CommentType> commentExtractor(dynamic value) async {
   if (value is bool) {
     if (value) {
       return CommentType.def();
@@ -1035,7 +1036,7 @@ bool commentValidator(List<String> name, dynamic value) {
   }
 }
 
-CompoundDependencies dependencyOnlyExtractor(dynamic value) {
+Future<CompoundDependencies> dependencyOnlyExtractor(dynamic value) async {
   var result = CompoundDependencies.full;
   if (value == strings.opaqueCompoundDependencies) {
     result = CompoundDependencies.opaque;
@@ -1055,7 +1056,8 @@ bool dependencyOnlyValidator(List<String> name, dynamic value) {
   return result;
 }
 
-StructPackingOverride structPackingOverrideExtractor(dynamic value) {
+Future<StructPackingOverride> structPackingOverrideExtractor(
+    dynamic value) async {
   final matcherMap = <RegExp, int?>{};
   for (final key in (value as YamlMap).keys) {
     matcherMap[RegExp(key as String, dotAll: true)] =
@@ -1082,7 +1084,7 @@ bool structPackingOverrideValidator(List<String> name, dynamic value) {
   return result;
 }
 
-FfiNativeConfig ffiNativeExtractor(dynamic yamlConfig) {
+Future<FfiNativeConfig> ffiNativeExtractor(dynamic yamlConfig) async {
   final yamlMap = yamlConfig as YamlMap?;
   return FfiNativeConfig(
     enabled: true,

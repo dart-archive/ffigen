@@ -28,8 +28,8 @@ void main() {
         ],
       );
     });
-    test('Compiler Opts Automatic', () {
-      final config = testConfig('''
+    test('Compiler Opts Automatic', () async {
+      final config = await testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Compiler Opts Test'
 ${strings.output}: 'unused'

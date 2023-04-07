@@ -13,10 +13,10 @@ late Library actual, expected;
 
 void main() {
   group('functions_test', () {
-    setUpAll(() {
+    setUpAll(() async {
       logWarnings();
-      actual = parser.parse(
-        testConfig('''
+      actual = await parser.parse(
+        await testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Functions Test'
 ${strings.output}: 'unused'

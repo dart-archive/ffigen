@@ -13,11 +13,11 @@ late Library actual, expected;
 
 void main() {
   group('globals_test', () {
-    setUpAll(() {
+    setUpAll(() async {
       logWarnings();
       expected = expectedLibrary();
-      actual = parser.parse(
-        testConfig('''
+      actual = await parser.parse(
+        await testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Globals Test'
 ${strings.output}: 'unused'

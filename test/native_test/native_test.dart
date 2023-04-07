@@ -28,7 +28,7 @@ void main() {
       bindings = NativeLibrary(DynamicLibrary.open(dylib.absolute.path));
     });
 
-    test('generate_bindings', () {
+    test('generate_bindings', () async {
       final configFile =
           File(path.join('test', 'native_test', 'config.yaml')).absolute;
       final outFile = File(
@@ -36,25 +36,25 @@ void main() {
       ).absolute;
 
       late Config config;
-      withChDir(configFile.path, () {
-        config = testConfigFromPath(configFile.path);
+      await withChDir(configFile.path, () async {
+        config = await testConfigFromPath(configFile.path);
       });
-      final library = parse(config);
+      final library = await parse(config);
 
-      library.generateFile(outFile);
+      await library.generateFile(outFile);
 
       try {
-        final actual = outFile.readAsStringSync().replaceAll('\r', '');
-        final expected = File(path.join(config.output))
-            .readAsStringSync()
+        final actual = (await outFile.readAsString()).replaceAll('\r', '');
+        final expected = (await File(path.join(config.output)).readAsString())
             .replaceAll('\r', '');
         expect(actual, expected);
-        if (outFile.existsSync()) {
-          outFile.delete();
-        }
       } catch (e) {
         print('Failed test: Debug generated file: ${outFile.absolute.path}');
         rethrow;
+      } finally {
+        if (await outFile.exists()) {
+          await outFile.delete();
+        }
       }
     });
     test('bool', () {

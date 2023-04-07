@@ -66,10 +66,10 @@ Future<void> _generateBindings(String config) async {
   print('Generated bindings for: $config');
 }
 
-List<String> _getTestNames() {
+Future<List<String>> _getTestNames() async {
   const configSuffix = '_config.yaml';
   final names = <String>[];
-  for (final entity in Directory.current.listSync()) {
+  await for (final entity in Directory.current.list()) {
     final filename = entity.uri.pathSegments.last;
     if (filename.endsWith(configSuffix)) {
       names.add(filename.substring(0, filename.length - configSuffix.length));
@@ -111,7 +111,8 @@ Future<void> clean(List<String> testNames) async {
       '${name}_test.dylib'
     ],
   ];
-  Future.wait(filenames.map((fileName) async {
+
+  await Future.wait(filenames.map((fileName) async {
     final file = File(fileName);
     final exists = await file.exists();
     if (exists) await file.delete();
@@ -124,8 +125,8 @@ Future<void> main(List<String> arguments) async {
   }
 
   if (arguments.isNotEmpty && arguments[0] == 'clean') {
-    return await clean(_getTestNames());
+    await clean(await _getTestNames());
+  } else {
+    await build(arguments.isNotEmpty ? arguments : await _getTestNames());
   }
-
-  return await build(arguments.isNotEmpty ? arguments : _getTestNames());
 }

@@ -21,9 +21,9 @@ $ dart run test/setup.dart && dart run test/regen.dart && dart test
 Future<void> _regenConfig(File yamlConfig, File bindingOutput) async {
   yamlConfig = yamlConfig.absolute;
   bindingOutput = bindingOutput.absolute;
-  final config = testConfigFromPath(yamlConfig.path);
-  final library = parse(config);
-  library.generateFile(bindingOutput);
+  final config = await testConfigFromPath(yamlConfig.path);
+  final library = await parse(config);
+  await library.generateFile(bindingOutput);
 }
 
 Future<void> main(List<String> args) async {

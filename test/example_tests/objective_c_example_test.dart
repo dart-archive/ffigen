@@ -18,10 +18,10 @@ void main() {
       logWarnings(Level.SEVERE);
     });
 
-    test('objective_c', () {
-      final config = testConfigFromPath(
+    test('objective_c', () async {
+      final config = await testConfigFromPath(
           path.join('example', 'objective_c', 'config.yaml'));
-      final output = parse(config).generate();
+      final output = (await parse(config)).generate();
 
       // Verify that the output contains all the methods and classes that the
       // example app uses.

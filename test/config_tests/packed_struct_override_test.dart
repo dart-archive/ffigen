@@ -30,8 +30,8 @@ ${strings.structs}:
       expect(() => testConfig("$baseYaml'.*': 32"),
           throwsA(TypeMatcher<FormatException>()));
     });
-    test('Override values', () {
-      final config = testConfig('''
+    test('Override values', () async {
+      final config = await testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Packed Struct Override Test'
 ${strings.output}: 'unused'
@@ -45,7 +45,7 @@ ${strings.structs}:
     'PackedAttr': none
         ''');
 
-      final library = parse(config);
+      final library = await parse(config);
 
       expect((library.getBinding('NormalStruct1') as Struct).pack, 1);
       expect((library.getBinding('StructWithAttr') as Struct).pack, 2);

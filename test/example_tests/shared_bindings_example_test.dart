@@ -15,31 +15,31 @@ void main() {
       logWarnings(Level.SEVERE);
     });
 
-    test('a_shared_base bindings', () {
-      final config = testConfigFromPath(path.join(
+    test('a_shared_base bindings', () async {
+      final config = await testConfigFromPath(path.join(
         'example',
         'shared_bindings',
         'ffigen_configs',
         'a_shared_base.yaml',
       ));
-      final library = parse(config);
+      final library = await parse(config);
 
-      matchLibraryWithExpected(
+      await matchLibraryWithExpected(
         library,
         'example_shared_bindings.dart',
         [config.output],
       );
     });
 
-    test('base symbol file output', () {
-      final config = testConfigFromPath(path.join(
+    test('base symbol file output', () async {
+      final config = await testConfigFromPath(path.join(
         'example',
         'shared_bindings',
         'ffigen_configs',
         'base.yaml',
       ));
-      final library = parse(config);
-      matchLibrarySymbolFileWithExpected(
+      final library = await parse(config);
+      await matchLibrarySymbolFileWithExpected(
         library,
         'example_shared_bindings.yaml',
         [config.symbolFile!.output],

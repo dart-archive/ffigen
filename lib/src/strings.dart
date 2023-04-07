@@ -264,11 +264,11 @@ Directory? _tmpDir;
 
 /// A path to a unique temporary directory that should be used for files meant
 /// to be discarded after the current execution is finished.
-String get tmpDir {
+Future<String> getTmpDir() async {
   if (Platform.environment.containsKey('TEST_TMPDIR')) {
     return Platform.environment['TEST_TMPDIR']!;
   }
 
-  _tmpDir ??= Directory.systemTemp.createTempSync();
+  _tmpDir ??= await Directory.systemTemp.createTemp();
   return _tmpDir!.path;
 }

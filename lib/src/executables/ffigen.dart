@@ -45,14 +45,15 @@ void main(List<String> args) async {
   // Create a config object.
   Config config;
   try {
-    config = getConfig(argResult, await findPackageConfig(Directory.current));
+    config =
+        await getConfig(argResult, await findPackageConfig(Directory.current));
   } on FormatException {
     _logger.severe('Please fix configuration errors and re-run the tool.');
     exit(1);
   }
 
   // Parse the bindings according to config object provided.
-  final library = parse(config);
+  final library = await parse(config);
 
   // Generate file for the parsed bindings.
   final gen = File(config.output);
@@ -69,15 +70,17 @@ void main(List<String> args) async {
   }
 }
 
-Config getConfig(ArgResults result, PackageConfig? packageConfig) {
+Future<Config> getConfig(
+    ArgResults result, PackageConfig? packageConfig) async {
   _logger.info('Running in ${Directory.current}');
   Config config;
 
   // Parse config from yaml.
   if (result.wasParsed(conf)) {
-    config = getConfigFromCustomYaml(result[conf] as String, packageConfig);
+    config =
+        await getConfigFromCustomYaml(result[conf] as String, packageConfig);
   } else {
-    config = getConfigFromPubspec(packageConfig);
+    config = await getConfigFromPubspec(packageConfig);
   }
 
   // Add compiler options from command line.
@@ -91,10 +94,10 @@ Config getConfig(ArgResults result, PackageConfig? packageConfig) {
 }
 
 /// Extracts configuration from pubspec file.
-Config getConfigFromPubspec(PackageConfig? packageConfig) {
+Future<Config> getConfigFromPubspec(PackageConfig? packageConfig) async {
   final pubspecFile = File(pubspecName);
 
-  if (!pubspecFile.existsSync()) {
+  if (!await pubspecFile.exists()) {
     _logger.severe(
         'Error: $pubspecName not found, please run this tool from the root of your package.');
     exit(1);
@@ -103,8 +106,8 @@ Config getConfigFromPubspec(PackageConfig? packageConfig) {
   // Casting this because pubspec is expected to be a YamlMap.
 
   // Throws a [YamlException] if it's unable to parse the Yaml.
-  final bindingsConfigMap =
-      yaml.loadYaml(pubspecFile.readAsStringSync())[configKey] as yaml.YamlMap?;
+  final bindingsConfigMap = yaml
+      .loadYaml(await pubspecFile.readAsString())[configKey] as yaml.YamlMap?;
 
   if (bindingsConfigMap == null) {
     _logger.severe("Couldn't find an entry for '$configKey' in $pubspecName.");
@@ -115,10 +118,11 @@ Config getConfigFromPubspec(PackageConfig? packageConfig) {
 }
 
 /// Extracts configuration from a custom yaml file.
-Config getConfigFromCustomYaml(String yamlPath, PackageConfig? packageConfig) {
+Future<Config> getConfigFromCustomYaml(
+    String yamlPath, PackageConfig? packageConfig) async {
   final yamlFile = File(yamlPath);
 
-  if (!yamlFile.existsSync()) {
+  if (!await yamlFile.exists()) {
     _logger.severe('Error: $yamlPath not found.');
     exit(1);
   }

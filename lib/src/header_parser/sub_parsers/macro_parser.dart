@@ -53,7 +53,7 @@ List<Constant>? _bindings;
 /// Macros cannot be parsed directly, so we create a new `.hpp` file in which
 /// they are assigned to a variable after which their value can be determined
 /// by evaluating the value of the variable.
-List<Constant>? parseSavedMacros() {
+Future<List<Constant>?> parseSavedMacros() async {
   _bindings = [];
 
   if (savedMacros.keys.isEmpty) {
@@ -61,7 +61,7 @@ List<Constant>? parseSavedMacros() {
   }
 
   // Create a file for parsing macros;
-  final file = createFileForMacros();
+  final file = await createFileForMacros();
 
   final index = clang.clang_createIndex(0, 0);
   Pointer<Pointer<Utf8>> clangCmdArgs = nullptr;
@@ -100,7 +100,7 @@ List<Constant>? parseSavedMacros() {
   clang.clang_disposeTranslationUnit(tu);
   clang.clang_disposeIndex(index);
   // Delete the temp file created for macros.
-  file.deleteSync();
+  await file.delete();
 
   return _bindings;
 }
@@ -182,20 +182,20 @@ String? _generatedFileBaseName;
 late Set<String> _macroVarNames;
 
 /// Creates a temporary file for parsing macros in current directory.
-File createFileForMacros() {
-  final fileNameBase = p.join(strings.tmpDir, 'temp_for_macros');
+Future<File> createFileForMacros() async {
+  final fileNameBase = p.join(await strings.getTmpDir(), 'temp_for_macros');
   final fileExt = 'hpp';
 
   // Find a filename which doesn't already exist.
   var file = File('$fileNameBase.$fileExt');
   var i = 0;
-  while (file.existsSync()) {
+  while (await file.exists()) {
     i++;
     file = File('${fileNameBase}_$i.$fileExt');
   }
 
   // Create file.
-  file.createSync();
+  await file.create();
 
   // Save generated name.
   _generatedFileBaseName = p.basename(file.path);
@@ -223,7 +223,7 @@ File createFileForMacros() {
   _logger.finest(macroFileContent);
   _logger.finest('========================');
 
-  file.writeAsStringSync(macroFileContent);
+  await file.writeAsString(macroFileContent);
   return file;
 }
 

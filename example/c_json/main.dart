@@ -14,9 +14,9 @@ import 'cjson_generated_bindings.dart' as cj;
 final cjson = cj.CJson(DynamicLibrary.open(_getPath()));
 
 /// Using the generated C_JSON bindings.
-void main() {
+void main() async {
   // Load json from [example.json] file.
-  final jsonString = File('./example.json').readAsStringSync();
+  final jsonString = await File('./example.json').readAsString();
 
   // Parse this json string using our cJSON library.
   final cjsonParsedJson = cjson.cJSON_Parse(jsonString.toNativeUtf8().cast());

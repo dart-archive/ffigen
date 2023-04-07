@@ -13,11 +13,11 @@ late Library actual, expected;
 
 void main() {
   group('nested_parsing_test', () {
-    setUpAll(() {
+    setUpAll(() async {
       logWarnings();
       expected = expectedLibrary();
-      actual = parser.parse(
-        testConfig('''
+      actual = await parser.parse(
+        await testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Nested Parsing Test'
 ${strings.output}: 'unused'

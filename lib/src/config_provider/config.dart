@@ -175,8 +175,8 @@ class Config {
   Config._(this._filename, this._packageConfig);
 
   /// Create config from Yaml map.
-  factory Config.fromYaml(YamlMap map,
-      {String? filename, PackageConfig? packageConfig}) {
+  static Future<Config> fromYaml(YamlMap map,
+      {String? filename, PackageConfig? packageConfig}) async {
     final configspecs = Config._(filename, packageConfig);
     _logger.finest('Config Map: $map');
 
@@ -187,14 +187,15 @@ class Config {
       throw FormatException('Invalid configurations provided.');
     }
 
-    configspecs._extract(map, specs);
+    await configspecs._extract(map, specs);
     return configspecs;
   }
 
   /// Create config from a file.
-  factory Config.fromFile(File file, {PackageConfig? packageConfig}) {
+  static Future<Config> fromFile(File file,
+      {PackageConfig? packageConfig}) async {
     // Throws a [YamlException] if it's unable to parse the Yaml.
-    final configYaml = loadYaml(file.readAsStringSync()) as YamlMap;
+    final configYaml = loadYaml(await file.readAsString()) as YamlMap;
 
     return Config.fromYaml(configYaml,
         filename: file.path, packageConfig: packageConfig);
@@ -234,13 +235,15 @@ class Config {
   /// Extracts variables from Yaml according to given specs.
   ///
   /// Validation must be done beforehand, using [_checkConfigs].
-  void _extract(YamlMap map, Map<List<String>, Specification> specs) {
+  Future<void> _extract(
+      YamlMap map, Map<List<String>, Specification> specs) async {
     for (final key in specs.keys) {
       final spec = specs[key];
       if (checkKeyInYaml(key, map)) {
-        spec!.extractedResult(spec.extractor(getKeyValueFromYaml(key, map)));
+        spec!.extractedResult(
+            await spec.extractor(getKeyValueFromYaml(key, map)));
       } else {
-        spec!.extractedResult(spec.defaultValue?.call());
+        spec!.extractedResult(await spec.defaultValue?.call());
       }
     }
   }
@@ -254,7 +257,7 @@ class Config {
         requirement: Requirement.no,
         validator: llvmPathValidator,
         extractor: llvmPathExtractor,
-        defaultValue: () => findDylibAtDefaultLocations(),
+        defaultValue: () async => findDylibAtDefaultLocations(),
         extractedResult: (dynamic result) {
           _libclangDylib = result as String;
         },
@@ -262,7 +265,7 @@ class Config {
       [strings.output]: Specification<OutputConfig>(
         requirement: Requirement.yes,
         validator: outputValidator,
-        extractor: (dynamic value) =>
+        extractor: (dynamic value) async =>
             outputExtractor(value, filename, packageConfig),
         extractedResult: (dynamic result) {
           _output = (result as OutputConfig).output;
@@ -273,37 +276,38 @@ class Config {
         requirement: Requirement.no,
         validator: languageValidator,
         extractor: languageExtractor,
-        defaultValue: () => Language.c,
-        extractedResult: (dynamic result) => _language = result as Language,
+        defaultValue: () async => Language.c,
+        extractedResult: (dynamic result) async =>
+            _language = result as Language,
       ),
       [strings.headers]: Specification<Headers>(
         requirement: Requirement.yes,
         validator: headersValidator,
-        extractor: (dynamic value) => headersExtractor(value, filename),
-        extractedResult: (dynamic result) => _headers = result as Headers,
+        extractor: (dynamic value) async => headersExtractor(value, filename),
+        extractedResult: (dynamic result) async => _headers = result as Headers,
       ),
       [strings.compilerOpts]: Specification<List<String>>(
         requirement: Requirement.no,
         validator: compilerOptsValidator,
         extractor: compilerOptsExtractor,
-        defaultValue: () => [],
-        extractedResult: (dynamic result) =>
+        defaultValue: () async => [],
+        extractedResult: (dynamic result) async =>
             _compilerOpts = result as List<String>,
       ),
       [strings.compilerOptsAuto]: Specification<CompilerOptsAuto>(
           requirement: Requirement.no,
           validator: compilerOptsAutoValidator,
           extractor: compilerOptsAutoExtractor,
-          defaultValue: () => CompilerOptsAuto(),
-          extractedResult: (dynamic result) {
-            _compilerOpts
-                .addAll((result as CompilerOptsAuto).extractCompilerOpts());
+          defaultValue: () async => CompilerOptsAuto(),
+          extractedResult: (dynamic result) async {
+            _compilerOpts.addAll(
+                await (result as CompilerOptsAuto).extractCompilerOpts());
           }),
       [strings.functions]: Specification<Declaration>(
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
+        defaultValue: () async => Declaration(),
         extractedResult: (dynamic result) {
           _functionDecl = result as Declaration;
         },
@@ -312,7 +316,7 @@ class Config {
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
+        defaultValue: () async => Declaration(),
         extractedResult: (dynamic result) {
           _structDecl = result as Declaration;
         },
@@ -321,7 +325,7 @@ class Config {
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
+        defaultValue: () async => Declaration(),
         extractedResult: (dynamic result) {
           _unionDecl = result as Declaration;
         },
@@ -330,7 +334,7 @@ class Config {
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
+        defaultValue: () async => Declaration(),
         extractedResult: (dynamic result) {
           _enumClassDecl = result as Declaration;
         },
@@ -339,15 +343,15 @@ class Config {
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
-        extractedResult: (dynamic result) =>
+        defaultValue: () async => Declaration(),
+        extractedResult: (dynamic result) async =>
             _unnamedEnumConstants = result as Declaration,
       ),
       [strings.globals]: Specification<Declaration>(
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
+        defaultValue: () async => Declaration(),
         extractedResult: (dynamic result) {
           _globals = result as Declaration;
         },
@@ -356,7 +360,7 @@ class Config {
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
+        defaultValue: () async => Declaration(),
         extractedResult: (dynamic result) {
           _macroDecl = result as Declaration;
         },
@@ -365,7 +369,7 @@ class Config {
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
+        defaultValue: () async => Declaration(),
         extractedResult: (dynamic result) {
           _typedefs = result as Declaration;
         },
@@ -374,7 +378,7 @@ class Config {
         requirement: Requirement.no,
         validator: declarationConfigValidator,
         extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
+        defaultValue: () async => Declaration(),
         extractedResult: (dynamic result) {
           _objcInterfaces = result as Declaration;
         },
@@ -384,14 +388,14 @@ class Config {
         requirement: Requirement.no,
         validator: stringStringMapValidator,
         extractor: stringStringMapExtractor,
-        defaultValue: () => <String, String>{},
-        extractedResult: (dynamic result) => _objcModulePrefixer =
+        defaultValue: () async => <String, String>{},
+        extractedResult: (dynamic result) async => _objcModulePrefixer =
             ObjCModulePrefixer(result as Map<String, String>),
       ),
       [strings.libraryImports]: Specification<Map<String, LibraryImport>>(
         validator: libraryImportsValidator,
         extractor: libraryImportsExtractor,
-        defaultValue: () => <String, LibraryImport>{},
+        defaultValue: () async => <String, LibraryImport>{},
         extractedResult: (dynamic result) {
           _libraryImports = result as Map<String, LibraryImport>;
         },
@@ -399,9 +403,9 @@ class Config {
       [strings.import, strings.symbolFilesImport]:
           Specification<Map<String, ImportedType>>(
         validator: symbolFileImportValidator,
-        extractor: (value) => symbolFileImportExtractor(
+        extractor: (value) async => symbolFileImportExtractor(
             value, _libraryImports, filename, packageConfig),
-        defaultValue: () => <String, ImportedType>{},
+        defaultValue: () async => <String, ImportedType>{},
         extractedResult: (dynamic result) {
           _usrTypeMappings = result as Map<String, ImportedType>;
         },
@@ -410,7 +414,7 @@ class Config {
           Specification<Map<String, List<String>>>(
         validator: typeMapValidator,
         extractor: typeMapExtractor,
-        defaultValue: () => <String, List<String>>{},
+        defaultValue: () async => <String, List<String>>{},
         extractedResult: (dynamic result) {
           _typedefTypeMappings = makeImportTypeMapping(
               result as Map<String, List<String>>, _libraryImports);
@@ -420,7 +424,7 @@ class Config {
           Specification<Map<String, List<String>>>(
         validator: typeMapValidator,
         extractor: typeMapExtractor,
-        defaultValue: () => <String, List<String>>{},
+        defaultValue: () async => <String, List<String>>{},
         extractedResult: (dynamic result) {
           _structTypeMappings = makeImportTypeMapping(
               result as Map<String, List<String>>, _libraryImports);
@@ -430,7 +434,7 @@ class Config {
           Specification<Map<String, List<String>>>(
         validator: typeMapValidator,
         extractor: typeMapExtractor,
-        defaultValue: () => <String, List<String>>{},
+        defaultValue: () async => <String, List<String>>{},
         extractedResult: (dynamic result) {
           _unionTypeMappings = makeImportTypeMapping(
               result as Map<String, List<String>>, _libraryImports);
@@ -440,7 +444,7 @@ class Config {
           Specification<Map<String, List<String>>>(
         validator: typeMapValidator,
         extractor: typeMapExtractor,
-        defaultValue: () => <String, List<String>>{},
+        defaultValue: () async => <String, List<String>>{},
         extractedResult: (dynamic result) {
           _nativeTypeMappings = makeImportTypeMapping(
               result as Map<String, List<String>>, _libraryImports);
@@ -450,31 +454,31 @@ class Config {
         requirement: Requirement.no,
         validator: booleanValidator,
         extractor: booleanExtractor,
-        defaultValue: () => false,
-        extractedResult: (dynamic result) =>
+        defaultValue: () async => false,
+        extractedResult: (dynamic result) async =>
             _excludeAllByDefault = result as bool,
       ),
       [strings.sort]: Specification<bool>(
         requirement: Requirement.no,
         validator: booleanValidator,
         extractor: booleanExtractor,
-        defaultValue: () => false,
-        extractedResult: (dynamic result) => _sort = result as bool,
+        defaultValue: () async => false,
+        extractedResult: (dynamic result) async => _sort = result as bool,
       ),
       [strings.useSupportedTypedefs]: Specification<bool>(
         requirement: Requirement.no,
         validator: booleanValidator,
         extractor: booleanExtractor,
-        defaultValue: () => true,
-        extractedResult: (dynamic result) =>
+        defaultValue: () async => true,
+        extractedResult: (dynamic result) async =>
             _useSupportedTypedefs = result as bool,
       ),
       [strings.comments]: Specification<CommentType>(
         requirement: Requirement.no,
         validator: commentValidator,
         extractor: commentExtractor,
-        defaultValue: () => CommentType.def(),
-        extractedResult: (dynamic result) =>
+        defaultValue: () async => CommentType.def(),
+        extractedResult: (dynamic result) async =>
             _commentType = result as CommentType,
       ),
       [strings.structs, strings.dependencyOnly]:
@@ -482,8 +486,8 @@ class Config {
         requirement: Requirement.no,
         validator: dependencyOnlyValidator,
         extractor: dependencyOnlyExtractor,
-        defaultValue: () => CompoundDependencies.full,
-        extractedResult: (dynamic result) =>
+        defaultValue: () async => CompoundDependencies.full,
+        extractedResult: (dynamic result) async =>
             _structDependencies = result as CompoundDependencies,
       ),
       [strings.unions, strings.dependencyOnly]:
@@ -491,8 +495,8 @@ class Config {
         requirement: Requirement.no,
         validator: dependencyOnlyValidator,
         extractor: dependencyOnlyExtractor,
-        defaultValue: () => CompoundDependencies.full,
-        extractedResult: (dynamic result) =>
+        defaultValue: () async => CompoundDependencies.full,
+        extractedResult: (dynamic result) async =>
             _unionDependencies = result as CompoundDependencies,
       ),
       [strings.structs, strings.structPack]:
@@ -500,61 +504,64 @@ class Config {
         requirement: Requirement.no,
         validator: structPackingOverrideValidator,
         extractor: structPackingOverrideExtractor,
-        defaultValue: () => StructPackingOverride(),
-        extractedResult: (dynamic result) =>
+        defaultValue: () async => StructPackingOverride(),
+        extractedResult: (dynamic result) async =>
             _structPackingOverride = result as StructPackingOverride,
       ),
       [strings.name]: Specification<String>(
         requirement: Requirement.prefer,
         validator: dartClassNameValidator,
         extractor: stringExtractor,
-        defaultValue: () => 'NativeLibrary',
-        extractedResult: (dynamic result) => _wrapperName = result as String,
+        defaultValue: () async => 'NativeLibrary',
+        extractedResult: (dynamic result) async =>
+            _wrapperName = result as String,
       ),
       [strings.description]: Specification<String?>(
         requirement: Requirement.prefer,
         validator: nonEmptyStringValidator,
         extractor: stringExtractor,
-        defaultValue: () => null,
-        extractedResult: (dynamic result) =>
+        defaultValue: () async => null,
+        extractedResult: (dynamic result) async =>
             _wrapperDocComment = result as String?,
       ),
       [strings.preamble]: Specification<String?>(
         requirement: Requirement.no,
         validator: nonEmptyStringValidator,
         extractor: stringExtractor,
-        extractedResult: (dynamic result) => _preamble = result as String?,
+        extractedResult: (dynamic result) async =>
+            _preamble = result as String?,
       ),
       [strings.useDartHandle]: Specification<bool>(
         requirement: Requirement.no,
         validator: booleanValidator,
         extractor: booleanExtractor,
-        defaultValue: () => true,
-        extractedResult: (dynamic result) => _useDartHandle = result as bool,
+        defaultValue: () async => true,
+        extractedResult: (dynamic result) async =>
+            _useDartHandle = result as bool,
       ),
       [strings.functions, strings.exposeFunctionTypedefs]:
           Specification<Includer>(
         requirement: Requirement.no,
         validator: exposeFunctionTypeValidator,
         extractor: exposeFunctionTypeExtractor,
-        defaultValue: () => Includer.excludeByDefault(),
-        extractedResult: (dynamic result) =>
+        defaultValue: () async => Includer.excludeByDefault(),
+        extractedResult: (dynamic result) async =>
             _exposeFunctionTypedefs = result as Includer,
       ),
       [strings.functions, strings.leafFunctions]: Specification<Includer>(
         requirement: Requirement.no,
         validator: leafFunctionValidator,
         extractor: leafFunctionExtractor,
-        defaultValue: () => Includer.excludeByDefault(),
-        extractedResult: (dynamic result) =>
+        defaultValue: () async => Includer.excludeByDefault(),
+        extractedResult: (dynamic result) async =>
             _leafFunctions = result as Includer,
       ),
       [strings.ffiNative]: Specification<FfiNativeConfig>(
         requirement: Requirement.no,
         validator: ffiNativeValidator,
         extractor: ffiNativeExtractor,
-        defaultValue: () => FfiNativeConfig(enabled: false),
-        extractedResult: (dynamic result) =>
+        defaultValue: () async => FfiNativeConfig(enabled: false),
+        extractedResult: (dynamic result) async =>
             _ffiNativeConfig = result as FfiNativeConfig,
       )
     };

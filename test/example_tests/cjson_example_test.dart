@@ -14,12 +14,12 @@ void main() {
     setUpAll(() {
       logWarnings(Level.SEVERE);
     });
-    test('c_json', () {
-      final config =
-          testConfigFromPath(path.join('example', 'c_json', 'config.yaml'));
-      final library = parse(config);
+    test('c_json', () async {
+      final config = await testConfigFromPath(
+          path.join('example', 'c_json', 'config.yaml'));
+      final library = await parse(config);
 
-      matchLibraryWithExpected(
+      await matchLibraryWithExpected(
         library,
         'example_c_json.dart',
         [config.output],

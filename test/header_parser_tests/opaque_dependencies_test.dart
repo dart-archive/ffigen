@@ -13,10 +13,10 @@ import '../test_utils.dart';
 late Library actual;
 void main() {
   group('opaque_dependencies_test', () {
-    setUpAll(() {
+    setUpAll(() async {
       logWarnings(Level.SEVERE);
-      actual = parser.parse(
-        testConfig('''
+      actual = await parser.parse(
+        await testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Opaque Dependencies Test'
 ${strings.output}: 'unused'

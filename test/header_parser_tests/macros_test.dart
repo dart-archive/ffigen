@@ -14,11 +14,11 @@ late Library actual, expected;
 
 void main() {
   group('macros_test', () {
-    setUpAll(() {
+    setUpAll(() async {
       logWarnings(Level.WARNING);
       expected = expectedLibrary();
-      actual = parser.parse(
-        testConfig('''
+      actual = await parser.parse(
+        await testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Macros Test'
 ${strings.output}: 'unused'

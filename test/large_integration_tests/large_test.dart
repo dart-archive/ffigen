@@ -15,8 +15,8 @@ void main() {
     setUpAll(() {
       logWarnings(Level.SEVERE);
     });
-    test('Libclang test', () {
-      final config = testConfig('''
+    test('Libclang test', () async {
+      final config = await testConfig('''
 ${strings.name}: LibClang
 ${strings.description}: Bindings to LibClang.
 ${strings.output}: unused
@@ -44,7 +44,7 @@ ${strings.typeMap}:
 ${strings.preamble}: |
   // ignore_for_file: camel_case_types, non_constant_identifier_names
       ''');
-      final library = parse(config);
+      final library = await parse(config);
 
       matchLibraryWithExpected(
         library,
@@ -57,8 +57,8 @@ ${strings.preamble}: |
       );
     });
 
-    test('CJSON test', () {
-      final config = testConfig('''
+    test('CJSON test', () async {
+      final config = await testConfig('''
 ${strings.name}: CJson
 ${strings.description}: Bindings to Cjson.
 ${strings.output}: unused
@@ -72,7 +72,7 @@ ${strings.headers}:
 ${strings.preamble}: |
   // ignore_for_file: camel_case_types, non_constant_identifier_names
       ''');
-      final library = parse(config);
+      final library = await parse(config);
 
       matchLibraryWithExpected(
         library,
@@ -81,10 +81,10 @@ ${strings.preamble}: |
       );
     });
 
-    test('SQLite test', () {
+    test('SQLite test', () async {
       // Excluding functions that use 'va_list' because it can either be a
       // Pointer<__va_list_tag> or int depending on the OS.
-      final config = testConfig('''
+      final config = await testConfig('''
 ${strings.name}: SQLite
 ${strings.description}: Bindings to SQLite.
 ${strings.output}: unused
@@ -104,7 +104,7 @@ ${strings.functions}:
 ${strings.preamble}: |
   // ignore_for_file: camel_case_types, non_constant_identifier_names
       ''');
-      final library = parse(config);
+      final library = await parse(config);
 
       matchLibraryWithExpected(
         library,

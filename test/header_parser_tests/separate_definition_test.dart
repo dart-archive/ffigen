@@ -18,26 +18,28 @@ void main() {
     setUpAll(() {
       logWarnings(Level.SEVERE);
     });
-    test('different header order', () {
+    test('different header order', () async {
       final entryPoints = [
         "test/header_parser_tests/separate_definition_base.h",
         "test/header_parser_tests/separate_definition.h"
       ];
-      final library1String = parser.parse(_makeConfig(entryPoints)).generate();
+      final library1String =
+          (await parser.parse(await _makeConfig(entryPoints))).generate();
       final library2String =
-          parser.parse(_makeConfig(entryPoints.reversed.toList())).generate();
+          (await parser.parse(await _makeConfig(entryPoints.reversed.toList())))
+              .generate();
 
       expect(library1String, library2String);
     });
   });
 }
 
-Config _makeConfig(List<String> entryPoints) {
+Future<Config> _makeConfig(List<String> entryPoints) async {
   final entryPointBuilder = StringBuffer();
   for (final ep in entryPoints) {
     entryPointBuilder.writeln("    - $ep");
   }
-  final config = testConfig('''
+  final config = await testConfig('''
 ${strings.name}: 'Bindings'
 ${strings.output}: 'unused'
 

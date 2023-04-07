@@ -15,10 +15,10 @@ import '../test_utils.dart';
 late Library actual;
 void main() {
   group('Function pointer parameters parsing test', () {
-    setUpAll(() {
+    setUpAll(() async {
       logWarnings(Level.SEVERE);
-      actual = parser.parse(
-        Config.fromYaml(yaml.loadYaml('''
+      actual = await parser.parse(
+        await Config.fromYaml(yaml.loadYaml('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Function pointer fields in structs Test'
 ${strings.output}: 'unused'
