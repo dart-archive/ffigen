@@ -300,16 +300,21 @@ int _compoundMembersVisitor(clang_types.CXCursor cursor,
         // otherwise they will be added in the next iteration.
         if (!cursor.isAnonymousRecordDecl()) break;
 
+        // Anonymous members are always unnamed. To avoid environment-
+        // dependent naming issues with the generated code, we explicitly
+        // use the empty string as spelling.
+        final spelling = '';
+
         parsed.compound.members.add(
           Member(
             dartDoc: getCursorDocComment(
               cursor,
               nesting.length + commentPrefix.length,
             ),
-            originalName: cursor.spelling(),
+            originalName: spelling,
             name: config.structDecl.renameMemberUsingConfig(
               parsed.compound.originalName,
-              cursor.spelling(),
+              spelling,
             ),
             type: mt,
           ),
