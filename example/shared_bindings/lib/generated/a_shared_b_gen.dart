@@ -51,12 +51,12 @@ class NativeLibraryASharedB {
       void Function(imp1.BaseStruct2, imp1.BaseUnion2, imp1.BaseTypedef2)>();
 }
 
-class A_Struct1 extends ffi.Struct {
+final class A_Struct1 extends ffi.Struct {
   @ffi.Int()
   external int a;
 }
 
-class A_Union1 extends ffi.Union {
+final class A_Union1 extends ffi.Union {
   @ffi.Int()
   external int a;
 }

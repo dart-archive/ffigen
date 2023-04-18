@@ -36,7 +36,7 @@ class NativeLibrary {
   late final _func = _funcPtr.asFunction<void Function(ffi.Pointer<A>, int)>();
 }
 
-class A extends ffi.Struct {
+final class A extends ffi.Struct {
   @ffi.Int()
   external int a;
 

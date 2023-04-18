@@ -1234,7 +1234,7 @@ class CJson {
       _cJSON_freePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
 }
 
-class cJSON extends ffi.Struct {
+final class cJSON extends ffi.Struct {
   external ffi.Pointer<cJSON> next;
 
   external ffi.Pointer<cJSON> prev;
@@ -1255,7 +1255,7 @@ class cJSON extends ffi.Struct {
   external ffi.Pointer<ffi.Char> string;
 }
 
-class cJSON_Hooks extends ffi.Struct {
+final class cJSON_Hooks extends ffi.Struct {
   external ffi.Pointer<
           ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Size sz)>>
       malloc_fn;

@@ -28,7 +28,7 @@ import 'dart:ffi';
   Abi.windowsIA32: Uint32(),
   Abi.windowsX64: Uint64(),
 })
-class UintPtr extends AbiSpecificInteger {
+final class UintPtr extends AbiSpecificInteger {
   const UintPtr();
 }
 
@@ -56,8 +56,8 @@ class UintPtr extends AbiSpecificInteger {
   Abi.windowsIA32: Uint32(),
   Abi.windowsX64: Uint32(),
 })
-class UnsignedLong extends AbiSpecificInteger {
+final class UnsignedLong extends AbiSpecificInteger {
   const UnsignedLong();
 }
 
-class CXCursorSetImpl extends Opaque {}
+final class CXCursorSetImpl extends Opaque {}

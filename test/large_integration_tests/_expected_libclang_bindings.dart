@@ -6036,37 +6036,37 @@ abstract class CXErrorCode {
 }
 
 /// A character string.
-class CXString extends ffi.Struct {
+final class CXString extends ffi.Struct {
   external ffi.Pointer<ffi.Void> data;
 
   @ffi.UnsignedInt()
   external int private_flags;
 }
 
-class CXStringSet extends ffi.Struct {
+final class CXStringSet extends ffi.Struct {
   external ffi.Pointer<CXString> Strings;
 
   @ffi.UnsignedInt()
   external int Count;
 }
 
-class CXVirtualFileOverlayImpl extends ffi.Opaque {}
+final class CXVirtualFileOverlayImpl extends ffi.Opaque {}
 
 /// Object encapsulating information about overlaying virtual file/directories
 /// over the real file system.
 typedef CXVirtualFileOverlay = ffi.Pointer<CXVirtualFileOverlayImpl>;
 
-class CXModuleMapDescriptorImpl extends ffi.Opaque {}
+final class CXModuleMapDescriptorImpl extends ffi.Opaque {}
 
 /// Object encapsulating information about a module.map file.
 typedef CXModuleMapDescriptor = ffi.Pointer<CXModuleMapDescriptorImpl>;
 
-class CXTargetInfoImpl extends ffi.Opaque {}
+final class CXTargetInfoImpl extends ffi.Opaque {}
 
-class CXTranslationUnitImpl extends ffi.Opaque {}
+final class CXTranslationUnitImpl extends ffi.Opaque {}
 
 /// Provides the contents of a file that has not yet been saved to disk.
-class CXUnsavedFile extends ffi.Struct {
+final class CXUnsavedFile extends ffi.Struct {
   /// The file whose contents have not yet been saved.
   external ffi.Pointer<ffi.Char> Filename;
 
@@ -6098,7 +6098,7 @@ abstract class CXAvailabilityKind {
 }
 
 /// Describes a version number of the form major.minor.subminor.
-class CXVersion extends ffi.Struct {
+final class CXVersion extends ffi.Struct {
   /// The major version number, e.g., the '10' in '10.7.3'. A negative value
   /// indicates that there is no version number at all.
   @ffi.Int()
@@ -6175,7 +6175,7 @@ typedef CXFile = ffi.Pointer<ffi.Void>;
 
 /// Uniquely identifies a CXFile, that refers to the same underlying file,
 /// across an indexing session.
-class CXFileUniqueID extends ffi.Struct {
+final class CXFileUniqueID extends ffi.Struct {
   @ffi.Array.multi([3])
   external ffi.Array<ffi.UnsignedLongLong> data;
 }
@@ -6184,7 +6184,7 @@ class CXFileUniqueID extends ffi.Struct {
 typedef CXTranslationUnit = ffi.Pointer<CXTranslationUnitImpl>;
 
 /// Identifies a specific source location within a translation unit.
-class CXSourceLocation extends ffi.Struct {
+final class CXSourceLocation extends ffi.Struct {
   @ffi.Array.multi([2])
   external ffi.Array<ffi.Pointer<ffi.Void>> ptr_data;
 
@@ -6193,7 +6193,7 @@ class CXSourceLocation extends ffi.Struct {
 }
 
 /// Identifies a half-open character range in the source code.
-class CXSourceRange extends ffi.Struct {
+final class CXSourceRange extends ffi.Struct {
   @ffi.Array.multi([2])
   external ffi.Array<ffi.Pointer<ffi.Void>> ptr_data;
 
@@ -6205,7 +6205,7 @@ class CXSourceRange extends ffi.Struct {
 }
 
 /// Identifies an array of ranges.
-class CXSourceRangeList extends ffi.Struct {
+final class CXSourceRangeList extends ffi.Struct {
   /// The number of ranges in the ranges array.
   @ffi.UnsignedInt()
   external int count;
@@ -6399,7 +6399,7 @@ abstract class CXTUResourceUsageKind {
   static const int CXTUResourceUsage_Last = 14;
 }
 
-class CXTUResourceUsageEntry extends ffi.Struct {
+final class CXTUResourceUsageEntry extends ffi.Struct {
   @ffi.Int32()
   external int kind;
 
@@ -6408,7 +6408,7 @@ class CXTUResourceUsageEntry extends ffi.Struct {
 }
 
 /// The memory usage of a CXTranslationUnit, broken into categories.
-class CXTUResourceUsage extends ffi.Struct {
+final class CXTUResourceUsage extends ffi.Struct {
   external ffi.Pointer<ffi.Void> data;
 
   @ffi.UnsignedInt()
@@ -7074,7 +7074,7 @@ abstract class CXCursorKind {
 
 /// A cursor representing some element in the abstract syntax tree for a
 /// translation unit.
-class CXCursor extends ffi.Struct {
+final class CXCursor extends ffi.Struct {
   @ffi.Int32()
   external int kind;
 
@@ -7123,7 +7123,7 @@ abstract class CXVisibilityKind {
 
 /// Describes the availability of a given entity on a particular platform, e.g.,
 /// a particular class might only be available on Mac OS 10.7 or newer.
-class CXPlatformAvailability extends ffi.Struct {
+final class CXPlatformAvailability extends ffi.Struct {
   /// A string that describes the platform for which this structure provides
   /// availability information.
   external CXString Platform;
@@ -7164,7 +7164,7 @@ abstract class CXTLSKind {
   static const int CXTLS_Static = 2;
 }
 
-class CXCursorSetImpl extends ffi.Opaque {}
+final class CXCursorSetImpl extends ffi.Opaque {}
 
 /// A fast container representing a set of CXCursors.
 typedef CXCursorSet = ffi.Pointer<CXCursorSetImpl>;
@@ -7321,7 +7321,7 @@ abstract class CXCallingConv {
 }
 
 /// The type of an element in the abstract syntax tree.
-class CXType extends ffi.Struct {
+final class CXType extends ffi.Struct {
   @ffi.Int32()
   external int kind;
 
@@ -7538,7 +7538,7 @@ abstract class CXTokenKind {
 }
 
 /// Describes a single preprocessing token.
-class CXToken extends ffi.Struct {
+final class CXToken extends ffi.Struct {
   @ffi.Array.multi([4])
   external ffi.Array<ffi.UnsignedInt> int_data;
 
@@ -7546,7 +7546,7 @@ class CXToken extends ffi.Struct {
 }
 
 /// A single result of code completion.
-class CXCompletionResult extends ffi.Struct {
+final class CXCompletionResult extends ffi.Struct {
   /// The kind of entity that this completion refers to.
   @ffi.Int32()
   external int CursorKind;
@@ -7633,7 +7633,7 @@ abstract class CXCompletionChunkKind {
 }
 
 /// Contains the results of code-completion.
-class CXCodeCompleteResults extends ffi.Struct {
+final class CXCodeCompleteResults extends ffi.Struct {
   /// The code-completion results.
   external ffi.Pointer<CXCompletionResult> Results;
 
@@ -7791,7 +7791,7 @@ abstract class CXVisitorResult {
   static const int CXVisit_Continue = 1;
 }
 
-class CXCursorAndRangeVisitor extends ffi.Struct {
+final class CXCursorAndRangeVisitor extends ffi.Struct {
   external ffi.Pointer<ffi.Void> context;
 
   external ffi.Pointer<
@@ -7812,7 +7812,7 @@ abstract class CXResult {
 }
 
 /// Source location passed to index callbacks.
-class CXIdxLoc extends ffi.Struct {
+final class CXIdxLoc extends ffi.Struct {
   @ffi.Array.multi([2])
   external ffi.Array<ffi.Pointer<ffi.Void>> ptr_data;
 
@@ -7821,7 +7821,7 @@ class CXIdxLoc extends ffi.Struct {
 }
 
 /// Data for ppIncludedFile callback.
-class CXIdxIncludedFileInfo extends ffi.Struct {
+final class CXIdxIncludedFileInfo extends ffi.Struct {
   /// Location of '#' in the #include/#import directive.
   external CXIdxLoc hashLoc;
 
@@ -7843,7 +7843,7 @@ class CXIdxIncludedFileInfo extends ffi.Struct {
 }
 
 /// Data for IndexerCallbacks#importedASTFile.
-class CXIdxImportedASTFileInfo extends ffi.Struct {
+final class CXIdxImportedASTFileInfo extends ffi.Struct {
   /// Top level AST file containing the imported PCH, module or submodule.
   external CXFile file;
 
@@ -7915,7 +7915,7 @@ abstract class CXIdxAttrKind {
   static const int CXIdxAttr_IBOutletCollection = 3;
 }
 
-class CXIdxAttrInfo extends ffi.Struct {
+final class CXIdxAttrInfo extends ffi.Struct {
   @ffi.Int32()
   external int kind;
 
@@ -7924,7 +7924,7 @@ class CXIdxAttrInfo extends ffi.Struct {
   external CXIdxLoc loc;
 }
 
-class CXIdxEntityInfo extends ffi.Struct {
+final class CXIdxEntityInfo extends ffi.Struct {
   @ffi.Int32()
   external int kind;
 
@@ -7946,11 +7946,11 @@ class CXIdxEntityInfo extends ffi.Struct {
   external int numAttributes;
 }
 
-class CXIdxContainerInfo extends ffi.Struct {
+final class CXIdxContainerInfo extends ffi.Struct {
   external CXCursor cursor;
 }
 
-class CXIdxIBOutletCollectionAttrInfo extends ffi.Struct {
+final class CXIdxIBOutletCollectionAttrInfo extends ffi.Struct {
   external ffi.Pointer<CXIdxAttrInfo> attrInfo;
 
   external ffi.Pointer<CXIdxEntityInfo> objcClass;
@@ -7964,7 +7964,7 @@ abstract class CXIdxDeclInfoFlags {
   static const int CXIdxDeclFlag_Skipped = 1;
 }
 
-class CXIdxDeclInfo extends ffi.Struct {
+final class CXIdxDeclInfo extends ffi.Struct {
   external ffi.Pointer<CXIdxEntityInfo> entityInfo;
 
   external CXCursor cursor;
@@ -8008,14 +8008,14 @@ abstract class CXIdxObjCContainerKind {
   static const int CXIdxObjCContainer_Implementation = 2;
 }
 
-class CXIdxObjCContainerDeclInfo extends ffi.Struct {
+final class CXIdxObjCContainerDeclInfo extends ffi.Struct {
   external ffi.Pointer<CXIdxDeclInfo> declInfo;
 
   @ffi.Int32()
   external int kind;
 }
 
-class CXIdxBaseClassInfo extends ffi.Struct {
+final class CXIdxBaseClassInfo extends ffi.Struct {
   external ffi.Pointer<CXIdxEntityInfo> base;
 
   external CXCursor cursor;
@@ -8023,7 +8023,7 @@ class CXIdxBaseClassInfo extends ffi.Struct {
   external CXIdxLoc loc;
 }
 
-class CXIdxObjCProtocolRefInfo extends ffi.Struct {
+final class CXIdxObjCProtocolRefInfo extends ffi.Struct {
   external ffi.Pointer<CXIdxEntityInfo> protocol;
 
   external CXCursor cursor;
@@ -8031,14 +8031,14 @@ class CXIdxObjCProtocolRefInfo extends ffi.Struct {
   external CXIdxLoc loc;
 }
 
-class CXIdxObjCProtocolRefListInfo extends ffi.Struct {
+final class CXIdxObjCProtocolRefListInfo extends ffi.Struct {
   external ffi.Pointer<ffi.Pointer<CXIdxObjCProtocolRefInfo>> protocols;
 
   @ffi.UnsignedInt()
   external int numProtocols;
 }
 
-class CXIdxObjCInterfaceDeclInfo extends ffi.Struct {
+final class CXIdxObjCInterfaceDeclInfo extends ffi.Struct {
   external ffi.Pointer<CXIdxObjCContainerDeclInfo> containerInfo;
 
   external ffi.Pointer<CXIdxBaseClassInfo> superInfo;
@@ -8046,7 +8046,7 @@ class CXIdxObjCInterfaceDeclInfo extends ffi.Struct {
   external ffi.Pointer<CXIdxObjCProtocolRefListInfo> protocols;
 }
 
-class CXIdxObjCCategoryDeclInfo extends ffi.Struct {
+final class CXIdxObjCCategoryDeclInfo extends ffi.Struct {
   external ffi.Pointer<CXIdxObjCContainerDeclInfo> containerInfo;
 
   external ffi.Pointer<CXIdxEntityInfo> objcClass;
@@ -8058,7 +8058,7 @@ class CXIdxObjCCategoryDeclInfo extends ffi.Struct {
   external ffi.Pointer<CXIdxObjCProtocolRefListInfo> protocols;
 }
 
-class CXIdxObjCPropertyDeclInfo extends ffi.Struct {
+final class CXIdxObjCPropertyDeclInfo extends ffi.Struct {
   external ffi.Pointer<CXIdxDeclInfo> declInfo;
 
   external ffi.Pointer<CXIdxEntityInfo> getter;
@@ -8066,7 +8066,7 @@ class CXIdxObjCPropertyDeclInfo extends ffi.Struct {
   external ffi.Pointer<CXIdxEntityInfo> setter;
 }
 
-class CXIdxCXXClassDeclInfo extends ffi.Struct {
+final class CXIdxCXXClassDeclInfo extends ffi.Struct {
   external ffi.Pointer<CXIdxDeclInfo> declInfo;
 
   external ffi.Pointer<ffi.Pointer<CXIdxBaseClassInfo>> bases;
@@ -8100,7 +8100,7 @@ abstract class CXSymbolRole {
 }
 
 /// Data for IndexerCallbacks#indexEntityReference.
-class CXIdxEntityRefInfo extends ffi.Struct {
+final class CXIdxEntityRefInfo extends ffi.Struct {
   @ffi.Int32()
   external int kind;
 
@@ -8125,7 +8125,7 @@ class CXIdxEntityRefInfo extends ffi.Struct {
 
 /// A group of callbacks used by #clang_indexSourceFile and
 /// #clang_indexTranslationUnit.
-class IndexerCallbacks extends ffi.Struct {
+final class IndexerCallbacks extends ffi.Struct {
   /// Called periodically to check whether indexing should be aborted. Should
   /// return 0 to continue, and non-zero to abort.
   external ffi.Pointer<

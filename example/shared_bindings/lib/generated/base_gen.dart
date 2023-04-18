@@ -39,22 +39,22 @@ class NativeLibraryBase {
       _base_func1Ptr.asFunction<void Function(BaseTypedef1, BaseTypedef2)>();
 }
 
-class BaseStruct1 extends ffi.Struct {
+final class BaseStruct1 extends ffi.Struct {
   @ffi.Int()
   external int a;
 }
 
-class BaseUnion1 extends ffi.Union {
+final class BaseUnion1 extends ffi.Union {
   @ffi.Int()
   external int a;
 }
 
-class BaseStruct2 extends ffi.Struct {
+final class BaseStruct2 extends ffi.Struct {
   @ffi.Int()
   external int a;
 }
 
-class BaseUnion2 extends ffi.Union {
+final class BaseUnion2 extends ffi.Union {
   @ffi.Int()
   external int a;
 }

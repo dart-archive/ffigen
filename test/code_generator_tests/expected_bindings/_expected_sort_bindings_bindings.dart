@@ -33,6 +33,6 @@ class Bindings {
   late final _b = _bPtr.asFunction<void Function()>();
 }
 
-class C extends ffi.Opaque {}
+final class C extends ffi.Opaque {}
 
-class D extends ffi.Opaque {}
+final class D extends ffi.Opaque {}

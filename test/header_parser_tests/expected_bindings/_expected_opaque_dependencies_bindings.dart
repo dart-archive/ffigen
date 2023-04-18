@@ -51,36 +51,36 @@ class NativeLibrary {
 
 typedef BAlias = B;
 
-class B extends ffi.Opaque {}
+final class B extends ffi.Opaque {}
 
-class A extends ffi.Opaque {}
+final class A extends ffi.Opaque {}
 
-class E extends ffi.Struct {
+final class E extends ffi.Struct {
   external ffi.Pointer<C> c;
 
   external D d;
 }
 
-class C extends ffi.Opaque {}
+final class C extends ffi.Opaque {}
 
-class D extends ffi.Struct {
+final class D extends ffi.Struct {
   @ffi.Int()
   external int a;
 }
 
-class UB extends ffi.Opaque {}
+final class UB extends ffi.Opaque {}
 
-class UA extends ffi.Opaque {}
+final class UA extends ffi.Opaque {}
 
-class UE extends ffi.Union {
+final class UE extends ffi.Union {
   external ffi.Pointer<UC> c;
 
   external UD d;
 }
 
-class UC extends ffi.Opaque {}
+final class UC extends ffi.Opaque {}
 
-class UD extends ffi.Union {
+final class UD extends ffi.Union {
   @ffi.Int()
   external int a;
 }

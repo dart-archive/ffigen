@@ -244,7 +244,7 @@ class NativeLibrary {
       _Function1StructPassByValuePtr.asFunction<int Function(Struct3)>();
 }
 
-class Struct1 extends ffi.Struct {
+final class Struct1 extends ffi.Struct {
   @ffi.Int8()
   external int a;
 
@@ -252,7 +252,7 @@ class Struct1 extends ffi.Struct {
   external ffi.Array<ffi.Array<ffi.Array<ffi.Int32>>> data;
 }
 
-class Struct3 extends ffi.Struct {
+final class Struct3 extends ffi.Struct {
   @ffi.Int()
   external int a;
 

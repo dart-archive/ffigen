@@ -30391,13 +30391,13 @@ class NSObject extends _ObjCWrapper {
   }
 }
 
-class ObjCSel extends ffi.Opaque {}
+final class ObjCSel extends ffi.Opaque {}
 
-class ObjCObject extends ffi.Opaque {}
+final class ObjCObject extends ffi.Opaque {}
 
 typedef instancetype = ffi.Pointer<ObjCObject>;
 
-class _NSZone extends ffi.Opaque {}
+final class _NSZone extends ffi.Opaque {}
 
 class Protocol extends _ObjCWrapper {
   Protocol._(ffi.Pointer<ObjCObject> id, AVFAudio lib,
@@ -33375,7 +33375,7 @@ class NSData extends NSObject {
 
 typedef NSRange = _NSRange;
 
-class _NSRange extends ffi.Struct {
+final class _NSRange extends ffi.Struct {
   @NSUInteger()
   external int location;
 
@@ -34616,7 +34616,7 @@ class NSValue extends NSObject {
 
 typedef NSPoint = CGPoint;
 
-class CGPoint extends ffi.Struct {
+final class CGPoint extends ffi.Struct {
   @CGFloat()
   external double x;
 
@@ -34627,7 +34627,7 @@ class CGPoint extends ffi.Struct {
 typedef CGFloat = ffi.Double;
 typedef NSSize = CGSize;
 
-class CGSize extends ffi.Struct {
+final class CGSize extends ffi.Struct {
   @CGFloat()
   external double width;
 
@@ -34637,13 +34637,13 @@ class CGSize extends ffi.Struct {
 
 typedef NSRect = CGRect;
 
-class CGRect extends ffi.Struct {
+final class CGRect extends ffi.Struct {
   external CGPoint origin;
 
   external CGSize size;
 }
 
-class NSEdgeInsets extends ffi.Struct {
+final class NSEdgeInsets extends ffi.Struct {
   @CGFloat()
   external double top;
 
@@ -35786,7 +35786,7 @@ class ObjCBlock extends _ObjCBlockBase {
   ffi.Pointer<_ObjCBlock> get pointer => _id;
 }
 
-class _ObjCBlockDesc extends ffi.Struct {
+final class _ObjCBlockDesc extends ffi.Struct {
   @ffi.UnsignedLong()
   external int reserved;
 
@@ -35800,7 +35800,7 @@ class _ObjCBlockDesc extends ffi.Struct {
   external ffi.Pointer<ffi.Char> signature;
 }
 
-class _ObjCBlock extends ffi.Struct {
+final class _ObjCBlock extends ffi.Struct {
   external ffi.Pointer<ffi.Void> isa;
 
   @ffi.Int()
@@ -36434,7 +36434,7 @@ class NSPredicate extends NSObject {
   }
 }
 
-class __va_list_tag extends ffi.Struct {
+final class __va_list_tag extends ffi.Struct {
   @ffi.UnsignedInt()
   external int gp_offset;
 
@@ -37121,7 +37121,7 @@ class ObjCBlock7 extends _ObjCBlockBase {
   ffi.Pointer<_ObjCBlock> get pointer => _id;
 }
 
-class NSFastEnumerationState extends ffi.Struct {
+final class NSFastEnumerationState extends ffi.Struct {
   @ffi.UnsignedLong()
   external int state;
 
@@ -44040,7 +44040,7 @@ class NSRunLoop extends NSObject {
 typedef NSRunLoopMode = ffi.Pointer<ObjCObject>;
 typedef CFRunLoopRef = ffi.Pointer<__CFRunLoop>;
 
-class __CFRunLoop extends ffi.Opaque {}
+final class __CFRunLoop extends ffi.Opaque {}
 
 class NSTimer extends NSObject {
   NSTimer._(ffi.Pointer<ObjCObject> id, AVFAudio lib,
@@ -45951,7 +45951,7 @@ typedef __darwin_pid_t = __int32_t;
 typedef __int32_t = ffi.Int;
 
 @ffi.Packed(2)
-class AEDesc extends ffi.Struct {
+final class AEDesc extends ffi.Struct {
   @DescType()
   external int descriptorType;
 
@@ -45961,7 +45961,7 @@ class AEDesc extends ffi.Struct {
 typedef AEDataStorage = ffi.Pointer<AEDataStorageType>;
 typedef AEDataStorageType = ffi.Pointer<OpaqueAEDataStorageType>;
 
-class OpaqueAEDataStorageType extends ffi.Opaque {}
+final class OpaqueAEDataStorageType extends ffi.Opaque {}
 
 typedef AEKeyword = FourCharCode;
 
@@ -53059,7 +53059,7 @@ class NSScanner extends NSObject {
   }
 }
 
-class NSDecimal extends ffi.Opaque {}
+final class NSDecimal extends ffi.Opaque {}
 
 class NSException extends NSObject {
   NSException._(ffi.Pointer<ObjCObject> id, AVFAudio lib,
@@ -57469,7 +57469,7 @@ class NSProcessInfo extends NSObject {
   }
 }
 
-class NSOperatingSystemVersion extends ffi.Struct {
+final class NSOperatingSystemVersion extends ffi.Struct {
   @NSInteger()
   external int majorVersion;
 
@@ -59371,11 +59371,11 @@ abstract class NSURLCredentialPersistence {
 
 typedef SecIdentityRef = ffi.Pointer<__SecIdentity>;
 
-class __SecIdentity extends ffi.Opaque {}
+final class __SecIdentity extends ffi.Opaque {}
 
 typedef SecTrustRef = ffi.Pointer<__SecTrust>;
 
-class __SecTrust extends ffi.Opaque {}
+final class __SecTrust extends ffi.Opaque {}
 
 class NSURLProtectionSpace extends NSObject {
   NSURLProtectionSpace._(ffi.Pointer<ObjCObject> id, AVFAudio lib,
@@ -67493,7 +67493,7 @@ class AVAudioFormat extends NSObject {
   }
 }
 
-class AudioStreamBasicDescription extends ffi.Struct {
+final class AudioStreamBasicDescription extends ffi.Struct {
   @Float64()
   external double mSampleRate;
 
@@ -67680,7 +67680,7 @@ class AVAudioChannelLayout extends NSObject {
 
 typedef AudioChannelLayoutTag = UInt32;
 
-class AudioChannelLayout extends ffi.Struct {
+final class AudioChannelLayout extends ffi.Struct {
   @AudioChannelLayoutTag()
   external int mChannelLayoutTag;
 
@@ -67724,7 +67724,7 @@ abstract class AudioChannelBitmap {
   static const int kAudioChannelBit_RightTopRear = 67108864;
 }
 
-class AudioChannelDescription extends ffi.Struct {
+final class AudioChannelDescription extends ffi.Struct {
   @AudioChannelLabel()
   external int mChannelLabel;
 
@@ -67758,4 +67758,4 @@ abstract class AVAudioCommonFormat {
 typedef CMAudioFormatDescriptionRef = CMFormatDescriptionRef;
 typedef CMFormatDescriptionRef = ffi.Pointer<opaqueCMFormatDescription>;
 
-class opaqueCMFormatDescription extends ffi.Opaque {}
+final class opaqueCMFormatDescription extends ffi.Opaque {}

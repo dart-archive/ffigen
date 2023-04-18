@@ -15,7 +15,7 @@ import 'package:ffigen/src/code_generator/compound.dart';
 /// ```
 /// The generated dart code is -
 /// ```dart
-/// class Union extends ffi.Union{
+/// final class Union extends ffi.Union{
 ///  @ffi.Int32()
 ///  int a;
 ///

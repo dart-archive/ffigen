@@ -49,17 +49,17 @@ class NativeLibrary {
       _func2Ptr.asFunction<void Function(ffi.Pointer<Union3>)>();
 }
 
-class Union1 extends ffi.Union {
+final class Union1 extends ffi.Union {
   @ffi.Int()
   external int a;
 }
 
-class Union2 extends ffi.Union {
+final class Union2 extends ffi.Union {
   external Union1 a;
 }
 
-class Union3 extends ffi.Opaque {}
+final class Union3 extends ffi.Opaque {}
 
-class Union4 extends ffi.Opaque {}
+final class Union4 extends ffi.Opaque {}
 
-class Union5 extends ffi.Opaque {}
+final class Union5 extends ffi.Opaque {}
