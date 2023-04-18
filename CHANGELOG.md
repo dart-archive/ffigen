@@ -1,3 +1,8 @@
+# 7.3.0-dev.0
+
+- Adds `final` class modifier to structs and unions.
+- Bumps SDK lowerbound to 3.0.
+
 # 7.2.10
 
 - Generate parameter names in function pointer fields and typedefs.
