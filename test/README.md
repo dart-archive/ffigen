@@ -34,7 +34,7 @@ works by:
     `test/debug_generated` directory.
 
 3.  Comparing the golden file (i.e.
-    [`test/native_test/native_test_bindings.dart`](https://github.com/dart-lang/ffigen/blob/master/test/native_test/native_test_bindings.dart))
+    [`test/native_test/_expected_native_test_bindings.dart`](https://github.com/dart-lang/ffigen/blob/master/test/native_test/_expected_native_test_bindings.dart))
     to the generated file and generating a test failure if they do not match.
 
 4.  Using the *golden* bindings to excercise the dynamic library.

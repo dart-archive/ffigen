@@ -10,7 +10,7 @@ import 'package:ffigen/ffigen.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 import '../test_utils.dart';
-import 'native_test_bindings.dart';
+import '_expected_native_test_bindings.dart';
 
 void main() {
   late NativeLibrary bindings;
@@ -32,7 +32,8 @@ void main() {
       final configFile =
           File(path.join('test', 'native_test', 'config.yaml')).absolute;
       final outFile = File(
-        path.join('test', 'debug_generated', 'native_test_bindings.dart'),
+        path.join(
+            'test', 'debug_generated', '_expected_native_test_bindings.dart'),
       ).absolute;
 
       late Config config;
