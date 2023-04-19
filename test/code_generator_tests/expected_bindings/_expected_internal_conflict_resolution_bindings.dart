@@ -62,12 +62,12 @@ class init_dylib1 {
   late final _Test = _TestPtr.asFunction<void Function()>();
 }
 
-class _Test extends ffi.Struct {
+final class _Test extends ffi.Struct {
   @ffi.Array.multi([2])
   external ffi.Array<ffi.Int8> array;
 }
 
-class ArrayHelperPrefixCollisionTest extends ffi.Opaque {}
+final class ArrayHelperPrefixCollisionTest extends ffi.Opaque {}
 
 abstract class _c_Test {}
 

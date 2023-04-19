@@ -71,8 +71,8 @@ class NativeLibrary {
 typedef Typedef1
     = ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Handle)>>;
 
-class Struct1 extends ffi.Opaque {}
+final class Struct1 extends ffi.Opaque {}
 
-class Struct2 extends ffi.Struct {
+final class Struct2 extends ffi.Struct {
   external ffi.Pointer<ffi.Handle> h;
 }

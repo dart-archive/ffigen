@@ -35,7 +35,7 @@ class Bindings {
       _test1Ptr.asFunction<bool Function(bool, ffi.Pointer<ffi.Bool>)>();
 }
 
-class Test2 extends ffi.Struct {
+final class Test2 extends ffi.Struct {
   @ffi.Bool()
   external bool a;
 }

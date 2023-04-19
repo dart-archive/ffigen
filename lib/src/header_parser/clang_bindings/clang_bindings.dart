@@ -1310,21 +1310,21 @@ class Clang {
 /// the ownership of that string might differ from one call to the next.
 /// Use \c clang_getCString() to retrieve the string data and, once finished
 /// with the string data, call \c clang_disposeString() to free the string.
-class CXString extends ffi.Struct {
+final class CXString extends ffi.Struct {
   external ffi.Pointer<ffi.Void> data;
 
   @ffi.UnsignedInt()
   external int private_flags;
 }
 
-class CXTranslationUnitImpl extends ffi.Opaque {}
+final class CXTranslationUnitImpl extends ffi.Opaque {}
 
 /// Provides the contents of a file that has not yet been saved to disk.
 ///
 /// Each CXUnsavedFile instance provides the name of a file on the
 /// system along with the current contents of that file that have not
 /// yet been saved to disk.
-class CXUnsavedFile extends ffi.Struct {
+final class CXUnsavedFile extends ffi.Struct {
   /// The file whose contents have not yet been saved.
   ///
   /// This file must already exist in the file system.
@@ -1350,7 +1350,7 @@ typedef CXFile = ffi.Pointer<ffi.Void>;
 ///
 /// Use clang_getExpansionLocation() or clang_getSpellingLocation()
 /// to map a source location to a particular file, line, and column.
-class CXSourceLocation extends ffi.Struct {
+final class CXSourceLocation extends ffi.Struct {
   @ffi.Array.multi([2])
   external ffi.Array<ffi.Pointer<ffi.Void>> ptr_data;
 
@@ -1362,7 +1362,7 @@ class CXSourceLocation extends ffi.Struct {
 ///
 /// Use clang_getRangeStart() and clang_getRangeEnd() to retrieve the
 /// starting and end locations from a source range, respectively.
-class CXSourceRange extends ffi.Struct {
+final class CXSourceRange extends ffi.Struct {
   @ffi.Array.multi([2])
   external ffi.Array<ffi.Pointer<ffi.Void>> ptr_data;
 
@@ -2356,7 +2356,7 @@ abstract class CXCursorKind {
 /// translation unit. clang_getCursor() maps from a physical source location
 /// to the entity that resides at that location, allowing one to map from the
 /// source code into the AST.
-class CXCursor extends ffi.Struct {
+final class CXCursor extends ffi.Struct {
   @ffi.Int32()
   external int kind;
 
@@ -2498,7 +2498,7 @@ abstract class CXTypeKind {
 }
 
 /// The type of an element in the abstract syntax tree.
-class CXType extends ffi.Struct {
+final class CXType extends ffi.Struct {
   @ffi.Int32()
   external int kind;
 

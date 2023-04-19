@@ -129,7 +129,7 @@ abstract class Compound extends BindingType {
     }
     final dartClassName = isStruct ? 'Struct' : 'Union';
     // Write class declaration.
-    s.write('class $enclosingClassName extends ');
+    s.write('final class $enclosingClassName extends ');
     s.write('${w.ffiLibraryPrefix}.${isOpaque ? 'Opaque' : dartClassName}{\n');
     const depth = '  ';
     for (final m in members) {

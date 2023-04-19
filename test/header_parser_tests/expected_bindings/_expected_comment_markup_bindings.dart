@@ -52,7 +52,7 @@ class NativeLibrary {
 }
 
 /// Test comment for struct.
-class Com4 extends ffi.Struct {
+final class Com4 extends ffi.Struct {
   /// Muli-line test comment for struct field
   /// With multiple line and both // and ///.
   @ffi.Int()

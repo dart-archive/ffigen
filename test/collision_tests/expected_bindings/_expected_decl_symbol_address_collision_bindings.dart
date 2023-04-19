@@ -50,9 +50,9 @@ class _SymbolAddresses1 {
       _library1.__SymbolAddresses_1Ptr;
 }
 
-class addresses extends ffi.Opaque {}
+final class addresses extends ffi.Opaque {}
 
-class _SymbolAddresses extends ffi.Opaque {}
+final class _SymbolAddresses extends ffi.Opaque {}
 
 abstract class Bindings {}
 

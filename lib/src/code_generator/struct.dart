@@ -16,7 +16,7 @@ import 'package:ffigen/src/code_generator/compound.dart';
 /// ```
 /// The generated dart code is -
 /// ```dart
-/// class Struct extends ffi.Struct{
+/// final class Struct extends ffi.Struct {
 ///  @ffi.Int32()
 ///  int a;
 ///

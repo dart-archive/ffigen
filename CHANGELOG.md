@@ -1,3 +1,15 @@
+# 8.0.0-dev.0
+
+- Adds `final` class modifier to generated sub types `Struct`, `Union` and
+  `Opaque`. A class modifier is required in Dart 3.0 because the classes
+  `dart:ffi` as marked `base`.
+  When migrating a package that uses FFIgen, _and_ exposes the generated code in
+  the public API of the package, to Dart 3.0, that package does not
+  need a major version bump. Sub typing `Struct`, `Union` and
+  `Opaque` sub types is already disallowed by `dart:ffi` pre 3.0, so adding the
+  `final` keyword is not a breaking change.
+- Bumps SDK lowerbound to 3.0.
+
 # 7.2.10
 
 - Generate parameter names in function pointer fields and typedefs.

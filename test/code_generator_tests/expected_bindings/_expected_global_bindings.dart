@@ -44,6 +44,6 @@ class Bindings {
   ffi.Pointer<EmptyStruct> get globalStruct => _globalStruct;
 }
 
-class Some extends ffi.Opaque {}
+final class Some extends ffi.Opaque {}
 
-class EmptyStruct extends ffi.Opaque {}
+final class EmptyStruct extends ffi.Opaque {}
