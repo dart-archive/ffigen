@@ -32,7 +32,7 @@ void main() {
       final configFile =
           File(path.join('test', 'native_test', 'config.yaml')).absolute;
       final outFile = File(
-        path.join('test', 'debug_generated', 'native_test_bindings.dart'),
+        path.join('test', 'debug_generated', '_expected_native_test_bindings.dart'),
       ).absolute;
 
       late Config config;
