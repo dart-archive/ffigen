@@ -6,6 +6,7 @@
 // ignore_for_file: type=lint
 import 'dart:ffi' as ffi;
 
+/// Typedef Test
 class Bindings {
   /// Holds the symbol lookup function.
   final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
