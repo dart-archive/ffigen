@@ -32,6 +32,20 @@ union Union5
     union Union3 s; // Incomplete nested union.
 };
 
+// Multiple anonymous declarations
+union Union6
+{
+    union
+    {
+        float a;
+    };
+
+    union
+    {
+        float b;
+    };
+};
+
 void func1(union Union2 *s);
 
 // Incomplete array parameter will be treated as a pointer.
