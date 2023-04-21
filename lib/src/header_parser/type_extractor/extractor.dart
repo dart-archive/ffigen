@@ -73,7 +73,7 @@ Type getCodeGenType(
   // any potential cycles, and dedupe the Type.
   final cursor = clang.clang_getTypeDeclaration(cxtype);
   if (cursor.kind != clang_types.CXCursorKind.CXCursor_NoDeclFound) {
-    final usr = cursor.usr(addSuffixIfAnonymous: true);
+    final usr = cursor.usr();
     var type = bindingsIndex.getSeenType(usr);
     if (type == null) {
       final result =

@@ -59,9 +59,9 @@ extension CXSourceRangeExt on Pointer<clang_types.CXSourceRange> {
 }
 
 extension CXCursorExt on clang_types.CXCursor {
-  String usr({bool addSuffixIfAnonymous = false}) {
+  String usr() {
     var res = clang.clang_getCursorUSR(this).toStringAndDispose();
-    if (addSuffixIfAnonymous && isAnonymousRecordDecl()) {
+    if (isAnonymousRecordDecl()) {
       res += "@offset:${sourceFileOffset()}";
     }
     return res;
