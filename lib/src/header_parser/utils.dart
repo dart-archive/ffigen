@@ -59,8 +59,12 @@ extension CXSourceRangeExt on Pointer<clang_types.CXSourceRange> {
 }
 
 extension CXCursorExt on clang_types.CXCursor {
-  String usr() {
-    return clang.clang_getCursorUSR(this).toStringAndDispose();
+  String usr({bool addSuffixIfAnonymous = false}) {
+    var res = clang.clang_getCursorUSR(this).toStringAndDispose();
+    if (addSuffixIfAnonymous && isAnonymousRecordDecl()) {
+      res += "@offset:${sourceFileOffset()}";
+    }
+    return res;
   }
 
   /// Returns the kind int from [clang_types.CXCursorKind].
@@ -122,6 +126,15 @@ extension CXCursorExt on clang_types.CXCursor {
 
     calloc.free(cxfilePtr);
     return s;
+  }
+
+  int sourceFileOffset() {
+    final cxsource = clang.clang_getCursorLocation(this);
+    final cxOffset = calloc<UnsignedInt>();
+
+    // Puts the values in these pointers.
+    clang.clang_getFileLocation(cxsource, nullptr, nullptr, nullptr, cxOffset);
+    return cxOffset.value;
   }
 
   /// Returns whether the file that the cursor is inside is a system header.

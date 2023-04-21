@@ -109,7 +109,7 @@ Compound? parseCompoundDeclaration(
 
   // Parse the cursor definition instead, if this is a forward declaration.
   cursor = cursorIndex.getDefinition(cursor);
-  final declUsr = cursor.usr();
+  var declUsr = cursor.usr();
   final String declName;
 
   // Only set name using USR if the type is not Anonymous (A struct is anonymous
@@ -122,6 +122,7 @@ Compound? parseCompoundDeclaration(
   } else {
     // Empty names are treated as inline declarations.
     declName = '';
+    declUsr = cursor.usr(addSuffixIfAnonymous: true);
   }
 
   if (declName.isEmpty) {
@@ -294,8 +295,6 @@ int _compoundMembersVisitor(clang_types.CXCursor cursor,
         break;
       case clang_types.CXCursorKind.CXCursor_UnionDecl:
       case clang_types.CXCursorKind.CXCursor_StructDecl:
-        final mt = cursor.toCodeGenType();
-
         // If the union/struct are anonymous, then we need to add them now,
         // otherwise they will be added in the next iteration.
         if (!cursor.isAnonymousRecordDecl()) break;
@@ -305,6 +304,7 @@ int _compoundMembersVisitor(clang_types.CXCursor cursor,
         // use the empty string as spelling.
         final spelling = '';
 
+        final mt = cursor.type().toCodeGenType();
         parsed.compound.members.add(
           Member(
             dartDoc: getCursorDocComment(
