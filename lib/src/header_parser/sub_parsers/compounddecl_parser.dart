@@ -122,7 +122,7 @@ Compound? parseCompoundDeclaration(
   } else {
     // Empty names are treated as inline declarations.
     declName = '';
-    declUsr = cursor.usr(addSuffixIfAnonymous: true);
+    declUsr = cursor.usr();
   }
 
   if (declName.isEmpty) {
