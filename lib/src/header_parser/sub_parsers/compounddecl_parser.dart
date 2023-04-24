@@ -294,7 +294,7 @@ int _compoundMembersVisitor(clang_types.CXCursor cursor,
         break;
       case clang_types.CXCursorKind.CXCursor_UnionDecl:
       case clang_types.CXCursorKind.CXCursor_StructDecl:
-        final mt = cursor.type().toCodeGenType();
+        final mt = cursor.toCodeGenType();
 
         // If the union/struct are anonymous, then we need to add them now,
         // otherwise they will be added in the next iteration.
