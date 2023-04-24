@@ -4,10 +4,11 @@
 
 /// Validates the yaml input by the user, prints useful info for the user
 
-import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/header_parser/type_extractor/cxtypekindmap.dart';
+import 'dart:io';
 
+import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
+import 'package:package_config/package_config_types.dart';
 import 'package:yaml/yaml.dart';
 
 import '../strings.dart' as strings;
@@ -18,15 +19,32 @@ final _logger = Logger('ffigen.config_provider.config');
 
 /// Provides configurations to other modules.
 ///
-/// Handles validation, extraction of confiurations from yaml file.
+/// Handles validation, extraction of configurations from a yaml file.
 class Config {
+  /// Input filename.
+  String? get filename => _filename;
+  String? _filename;
+
+  /// Package config.
+  PackageConfig? get packageConfig => _packageConfig;
+  PackageConfig? _packageConfig;
+
   /// Location for llvm/lib folder.
   String get libclangDylib => _libclangDylib;
   late String _libclangDylib;
 
-  /// output file name.
+  /// Output file name.
   String get output => _output;
   late String _output;
+
+  /// Symbol file config.
+  SymbolFile? get symbolFile => _symbolFile;
+  late SymbolFile? _symbolFile;
+
+  /// Language that ffigen is consuming.
+  Language get language => _language;
+  late Language _language;
+
   // Holds headers and filters for header.
   Headers get headers => _headers;
   late Headers _headers;
@@ -67,6 +85,15 @@ class Config {
   Declaration get typedefs => _typedefs;
   late Declaration _typedefs;
 
+  /// Declaration config for Objective C interfaces.
+  Declaration get objcInterfaces => _objcInterfaces;
+  late Declaration _objcInterfaces;
+
+  /// If enabled, the default behavior of all declaration filters is to exclude
+  /// everything, rather than include everything.
+  bool get excludeAllByDefault => _excludeAllByDefault;
+  late bool _excludeAllByDefault;
+
   /// If generated bindings should be sorted alphabetically.
   bool get sort => _sort;
   late bool _sort;
@@ -75,10 +102,30 @@ class Config {
   bool get useSupportedTypedefs => _useSupportedTypedefs;
   late bool _useSupportedTypedefs;
 
-  /// Stores typedef name to NativeType mappings specified by user.
-  Map<String, SupportedNativeType> get typedefNativeTypeMappings =>
-      _typedefNativeTypeMappings;
-  late Map<String, SupportedNativeType> _typedefNativeTypeMappings;
+  /// Stores all the library imports specified by user including those for ffi
+  /// and pkg_ffi.
+  Map<String, LibraryImport> get libraryImports => _libraryImports;
+  late Map<String, LibraryImport> _libraryImports;
+
+  /// Stores all the symbol file maps name to ImportedType mappings specified by user.
+  Map<String, ImportedType> get usrTypeMappings => _usrTypeMappings;
+  late Map<String, ImportedType> _usrTypeMappings;
+
+  /// Stores typedef name to ImportedType mappings specified by user.
+  Map<String, ImportedType> get typedefTypeMappings => _typedefTypeMappings;
+  late Map<String, ImportedType> _typedefTypeMappings;
+
+  /// Stores struct name to ImportedType mappings specified by user.
+  Map<String, ImportedType> get structTypeMappings => _structTypeMappings;
+  late Map<String, ImportedType> _structTypeMappings;
+
+  /// Stores union name to ImportedType mappings specified by user.
+  Map<String, ImportedType> get unionTypeMappings => _unionTypeMappings;
+  late Map<String, ImportedType> _unionTypeMappings;
+
+  /// Stores native int name to ImportedType mappings specified by user.
+  Map<String, ImportedType> get nativeTypeMappings => _nativeTypeMappings;
+  late Map<String, ImportedType> _nativeTypeMappings;
 
   /// Extracted Doc comment type.
   CommentType get commentType => _commentType;
@@ -96,9 +143,9 @@ class Config {
   StructPackingOverride get structPackingOverride => _structPackingOverride;
   late StructPackingOverride _structPackingOverride;
 
-  /// If dart bool should be generated for C booleans.
-  bool get dartBool => _dartBool;
-  late bool _dartBool;
+  /// Module prefixes for ObjC interfaces.
+  ObjCModulePrefixer get objcModulePrefixer => _objcModulePrefixer;
+  late ObjCModulePrefixer _objcModulePrefixer;
 
   /// Name of the wrapper class.
   String get wrapperName => _wrapperName;
@@ -122,12 +169,16 @@ class Config {
   Includer get leafFunctions => _leafFunctions;
   late Includer _leafFunctions;
 
-  Config._();
+  FfiNativeConfig get ffiNativeConfig => _ffiNativeConfig;
+  late FfiNativeConfig _ffiNativeConfig;
+
+  Config._(this._filename, this._packageConfig);
 
   /// Create config from Yaml map.
-  factory Config.fromYaml(YamlMap map) {
-    final configspecs = Config._();
-    _logger.finest('Config Map: ' + map.toString());
+  factory Config.fromYaml(YamlMap map,
+      {String? filename, PackageConfig? packageConfig}) {
+    final configspecs = Config._(filename, packageConfig);
+    _logger.finest('Config Map: $map');
 
     final specs = configspecs._getSpecs();
 
@@ -138,6 +189,15 @@ class Config {
 
     configspecs._extract(map, specs);
     return configspecs;
+  }
+
+  /// Create config from a file.
+  factory Config.fromFile(File file, {PackageConfig? packageConfig}) {
+    // Throws a [YamlException] if it's unable to parse the Yaml.
+    final configYaml = loadYaml(file.readAsStringSync()) as YamlMap;
+
+    return Config.fromYaml(configYaml,
+        filename: file.path, packageConfig: packageConfig);
   }
 
   /// Add compiler options for clang. If [highPriority] is true these are added
@@ -153,28 +213,22 @@ class Config {
 
   /// Validates Yaml according to given specs.
   bool _checkConfigs(YamlMap map, Map<List<String>, Specification> specs) {
-    var _result = true;
+    var result = true;
     for (final key in specs.keys) {
       final spec = specs[key];
       if (checkKeyInYaml(key, map)) {
-        _result =
-            _result && spec!.validator(key, getKeyValueFromYaml(key, map));
+        result = result && spec!.validator(key, getKeyValueFromYaml(key, map));
       } else if (spec!.requirement == Requirement.yes) {
         _logger.severe("Key '$key' is required.");
-        _result = false;
+        result = false;
       } else if (spec.requirement == Requirement.prefer) {
         _logger.warning("Prefer adding Key '$key' to your config.");
       }
     }
     // Warn about unknown keys.
-    for (final key in map.keys) {
-      final specString = specs.keys.map((e) => e.join(':')).toSet();
-      if (!specString.contains(key)) {
-        _logger.warning("Unknown key '$key' found.");
-      }
-    }
+    warnUnknownKeys(specs.keys.toList(), map);
 
-    return _result;
+    return result;
   }
 
   /// Extracts variables from Yaml according to given specs.
@@ -205,16 +259,27 @@ class Config {
           _libclangDylib = result as String;
         },
       ),
-      [strings.output]: Specification<String>(
+      [strings.output]: Specification<OutputConfig>(
         requirement: Requirement.yes,
         validator: outputValidator,
-        extractor: outputExtractor,
-        extractedResult: (dynamic result) => _output = result as String,
+        extractor: (dynamic value) =>
+            outputExtractor(value, filename, packageConfig),
+        extractedResult: (dynamic result) {
+          _output = (result as OutputConfig).output;
+          _symbolFile = result.symbolFile;
+        },
+      ),
+      [strings.language]: Specification<Language>(
+        requirement: Requirement.no,
+        validator: languageValidator,
+        extractor: languageExtractor,
+        defaultValue: () => Language.c,
+        extractedResult: (dynamic result) => _language = result as Language,
       ),
       [strings.headers]: Specification<Headers>(
         requirement: Requirement.yes,
         validator: headersValidator,
-        extractor: headersExtractor,
+        extractor: (dynamic value) => headersExtractor(value, filename),
         extractedResult: (dynamic result) => _headers = result as Headers,
       ),
       [strings.compilerOpts]: Specification<List<String>>(
@@ -305,25 +370,89 @@ class Config {
           _typedefs = result as Declaration;
         },
       ),
-      [strings.sizemap]: Specification<Map<int, SupportedNativeType>>(
-        validator: sizemapValidator,
-        extractor: sizemapExtractor,
-        defaultValue: () => <int, SupportedNativeType>{},
+      [strings.objcInterfaces]: Specification<Declaration>(
+        requirement: Requirement.no,
+        validator: declarationConfigValidator,
+        extractor: declarationConfigExtractor,
+        defaultValue: () => Declaration(),
         extractedResult: (dynamic result) {
-          final map = result as Map<int, SupportedNativeType>;
-          for (final key in map.keys) {
-            if (cxTypeKindToSupportedNativeTypes.containsKey(key)) {
-              cxTypeKindToSupportedNativeTypes[key] = map[key]!;
-            }
-          }
+          _objcInterfaces = result as Declaration;
         },
       ),
-      [strings.typedefmap]: Specification<Map<String, SupportedNativeType>>(
-        validator: typedefmapValidator,
-        extractor: typedefmapExtractor,
-        defaultValue: () => <String, SupportedNativeType>{},
-        extractedResult: (dynamic result) => _typedefNativeTypeMappings =
-            result as Map<String, SupportedNativeType>,
+      [strings.objcInterfaces, strings.objcModule]:
+          Specification<Map<String, String>>(
+        requirement: Requirement.no,
+        validator: stringStringMapValidator,
+        extractor: stringStringMapExtractor,
+        defaultValue: () => <String, String>{},
+        extractedResult: (dynamic result) => _objcModulePrefixer =
+            ObjCModulePrefixer(result as Map<String, String>),
+      ),
+      [strings.libraryImports]: Specification<Map<String, LibraryImport>>(
+        validator: libraryImportsValidator,
+        extractor: libraryImportsExtractor,
+        defaultValue: () => <String, LibraryImport>{},
+        extractedResult: (dynamic result) {
+          _libraryImports = result as Map<String, LibraryImport>;
+        },
+      ),
+      [strings.import, strings.symbolFilesImport]:
+          Specification<Map<String, ImportedType>>(
+        validator: symbolFileImportValidator,
+        extractor: (value) => symbolFileImportExtractor(
+            value, _libraryImports, filename, packageConfig),
+        defaultValue: () => <String, ImportedType>{},
+        extractedResult: (dynamic result) {
+          _usrTypeMappings = result as Map<String, ImportedType>;
+        },
+      ),
+      [strings.typeMap, strings.typeMapTypedefs]:
+          Specification<Map<String, List<String>>>(
+        validator: typeMapValidator,
+        extractor: typeMapExtractor,
+        defaultValue: () => <String, List<String>>{},
+        extractedResult: (dynamic result) {
+          _typedefTypeMappings = makeImportTypeMapping(
+              result as Map<String, List<String>>, _libraryImports);
+        },
+      ),
+      [strings.typeMap, strings.typeMapStructs]:
+          Specification<Map<String, List<String>>>(
+        validator: typeMapValidator,
+        extractor: typeMapExtractor,
+        defaultValue: () => <String, List<String>>{},
+        extractedResult: (dynamic result) {
+          _structTypeMappings = makeImportTypeMapping(
+              result as Map<String, List<String>>, _libraryImports);
+        },
+      ),
+      [strings.typeMap, strings.typeMapUnions]:
+          Specification<Map<String, List<String>>>(
+        validator: typeMapValidator,
+        extractor: typeMapExtractor,
+        defaultValue: () => <String, List<String>>{},
+        extractedResult: (dynamic result) {
+          _unionTypeMappings = makeImportTypeMapping(
+              result as Map<String, List<String>>, _libraryImports);
+        },
+      ),
+      [strings.typeMap, strings.typeMapNativeTypes]:
+          Specification<Map<String, List<String>>>(
+        validator: typeMapValidator,
+        extractor: typeMapExtractor,
+        defaultValue: () => <String, List<String>>{},
+        extractedResult: (dynamic result) {
+          _nativeTypeMappings = makeImportTypeMapping(
+              result as Map<String, List<String>>, _libraryImports);
+        },
+      ),
+      [strings.excludeAllByDefault]: Specification<bool>(
+        requirement: Requirement.no,
+        validator: booleanValidator,
+        extractor: booleanExtractor,
+        defaultValue: () => false,
+        extractedResult: (dynamic result) =>
+            _excludeAllByDefault = result as bool,
       ),
       [strings.sort]: Specification<bool>(
         requirement: Requirement.no,
@@ -375,13 +504,6 @@ class Config {
         extractedResult: (dynamic result) =>
             _structPackingOverride = result as StructPackingOverride,
       ),
-      [strings.dartBool]: Specification<bool>(
-        requirement: Requirement.no,
-        validator: booleanValidator,
-        extractor: booleanExtractor,
-        defaultValue: () => true,
-        extractedResult: (dynamic result) => _dartBool = result as bool,
-      ),
       [strings.name]: Specification<String>(
         requirement: Requirement.prefer,
         validator: dartClassNameValidator,
@@ -427,6 +549,14 @@ class Config {
         extractedResult: (dynamic result) =>
             _leafFunctions = result as Includer,
       ),
+      [strings.ffiNative]: Specification<FfiNativeConfig>(
+        requirement: Requirement.no,
+        validator: ffiNativeValidator,
+        extractor: ffiNativeExtractor,
+        defaultValue: () => FfiNativeConfig(enabled: false),
+        extractedResult: (dynamic result) =>
+            _ffiNativeConfig = result as FfiNativeConfig,
+      )
     };
   }
 }

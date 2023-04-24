@@ -1,3 +1,108 @@
+# 7.2.10
+
+- Generate parameter names in function pointer fields and typedefs.
+
+# 7.2.9
+
+- Detect LLVM installed using Scoop on Windows machines.
+
+# 7.2.8
+
+- Automatically generate `ignore_for_file: type=lint` if not specified in preamble.
+
+# 7.2.7
+
+- Fix some macros not being generated in some cases due to relative header paths.
+
+# 7.2.6
+
+- Fix path normalization behaviour for absolute paths and globs starting with `**`.
+
+# 7.2.5
+
+- Add support nested anonymous union/struct
+
+# 7.2.4
+
+- Add new supported typedef - `uintptr_t` (mapped to `ffi.UintPtr`).
+
+# 7.2.3
+
+- Change compiler option order so that user options can override built-in
+  options.
+
+# 7.2.2
+
+- Added newer versions of LLVM, to default `linuxDylibLocations`.
+
+# 7.2.1
+
+- Fix helper methods sometimes missing from NSString.
+
+# 7.2.0
+
+- Added support for sharing bindings using `symbol-file` config. (See `README.md`
+and examples/shared_bindings).
+
+# 7.1.0
+
+- Handle declarations with definition accessible from a different entry-point.
+
+# 7.0.0
+
+- Fix typedef include/exclude config.
+- Return `ObjCBlock` wrapper instead of raw pointer in more cases.
+
+# 7.0.0-dev
+
+- Relative paths in ffigen config files are now assumed to be relative to the
+  config file, rather than the working directory of the tool invocation.
+
+# 6.1.2
+
+- Fix bug where function bindings were not deduped correctly.
+
+# 6.1.1
+
+- _EXPERIMENTAL_ support for `FfiNative`. The API and output
+  might change at any point.
+
+# 6.1.0
+
+- Added `exclude-all-by-default` config flag, which changes the default behavior
+  of declaration filters to exclude everything, rather than include everything.
+
+# 6.0.2
+
+- Bump `package:ffi` to 2.0.1.
+
+# 6.0.1
+
+- Replace path separators in `include-directives` before matching file names.
+- Add more ways to find `libclang`.
+
+# 6.0.0
+- Removed config `dart-bool`. Booleans are now always generated with `bool`
+and `ffi.Bool` as it's Dart and C Type respectively.
+
+# 5.0.1
+
+- Add a the xcode tools llvm as default path on MacOS.
+
+# 5.0.0
+
+- Stable release targeting Dart 2.17, supporting ABI-specific integer types.
+- _EXPERIMENTAL_ support for ObjectiveC on MacOS hosts. The API and output
+  might change at any point. Feel free to report bugs if encountered.
+
+# 5.0.0-dev.1
+- Fixed invalid default dart types being generated for `size_t` and `wchar_t`.
+
+# 5.0.0-dev.0
+- Added support for generating ABI Specific integers.
+- Breaking: removed config keys - `size-map` and `typedef-map`.
+- Added config keys - `library-imports` and `type-map`.
+
 # 4.1.3
 - Analyzer fixes.
 

@@ -14,7 +14,7 @@ import 'writer.dart';
 /// typedef $name = $type;
 /// );
 /// ```
-class Typealias extends NoLookUpBinding {
+class Typealias extends BindingType {
   final Type type;
   final bool _useDartType;
 
@@ -29,12 +29,14 @@ class Typealias extends NoLookUpBinding {
     ///
     /// E.g if C type is ffi.Void func(ffi.Int32), Dart type is void func(int).
     bool useDartType = false,
+    bool isInternal = false,
   })  : _useDartType = useDartType,
         super(
           usr: usr,
           name: name,
           dartDoc: dartDoc,
           originalName: originalName,
+          isInternal: isInternal,
         );
 
   @override
@@ -51,9 +53,36 @@ class Typealias extends NoLookUpBinding {
     if (dartDoc != null) {
       sb.write(makeDartDoc(dartDoc!));
     }
-    sb.write(
-        'typedef $name = ${_useDartType ? type.getDartType(w) : type.getCType(w)};\n');
+    sb.write('typedef $name = ');
+    sb.write('${_useDartType ? type.getDartType(w) : type.getCType(w)};\n');
     return BindingString(
         type: BindingStringType.typeDef, string: sb.toString());
   }
+
+  @override
+  Type get typealiasType => type.typealiasType;
+
+  @override
+  bool get isIncompleteCompound => type.isIncompleteCompound;
+
+  @override
+  String getCType(Writer w) => name;
+
+  @override
+  String getDartType(Writer w) {
+    // Typealias cannot be used by name in Dart types unless both the C and Dart
+    // type of the underlying types are same.
+    if (sameDartAndCType(type, w)) {
+      return name;
+    } else {
+      return type.getDartType(w);
+    }
+  }
+
+  @override
+  String cacheKey() => type.cacheKey();
+
+  @override
+  String? getDefaultValue(Writer w, String nativeLib) =>
+      type.getDefaultValue(w, nativeLib);
 }

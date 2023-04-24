@@ -5,49 +5,13 @@
 name: c_json_example
 
 environment:
-  sdk: '>=2.13.0 <3.0.0'
+  sdk: '>=2.17.0 <4.0.0'
 
 dependencies:
-  ffi: ^1.0.0
+  ffi: ^2.0.1
   path: ^1.8.0
 
 dev_dependencies:
   ffigen:
     path: '../../'
-  lints: ^1.0.1
-
-ffigen:
-  output: 'cjson_generated_bindings.dart'
-  name: 'CJson'
-  description: 'Holds bindings to cJSON.'
-  headers:
-    entry-points:
-      - '../../third_party/cjson_library/cJSON.h'
-    include-directives:
-      - '**cJSON.h'
-  comments: false
-  typedef-map:
-    'size_t': 'IntPtr'
-
-  preamble: |
-    // Copyright (c) 2009-2017 Dave Gamble and cJSON contributors
-    //
-    // Permission is hereby granted, free of charge, to any person obtaining a copy
-    // of this software and associated documentation files (the "Software"), to deal
-    // in the Software without restriction, including without limitation the rights
-    // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    // copies of the Software, and to permit persons to whom the Software is
-    // furnished to do so, subject to the following conditions:
-    //
-    // The above copyright notice and this permission notice shall be included in
-    // all copies or substantial portions of the Software.
-    //
-    // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-    // THE SOFTWARE.
-
-    // ignore_for_file: camel_case_types, non_constant_identifier_names
+  lints: ^2.0.1

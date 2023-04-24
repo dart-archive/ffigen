@@ -15,4 +15,4 @@ int *multiply(int a, int b);
 float *divide(int a, int b);
 
 /** Divides 2 floats, returns a pointer to double. */
-double *dividePercision(float *a, float *b);
+double *dividePrecision(float *a, float *b);

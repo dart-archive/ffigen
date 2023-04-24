@@ -1,0 +1,17 @@
+# Copyright (c) 2022, the Dart project authors. Please see the AUTHORS file
+# for details. All rights reserved. Use of this source code is governed by a
+# BSD-style license that can be found in the LICENSE file.
+
+name: NativeLibraryBase
+description: Bindings to `headers/base.h`.
+output:
+  bindings: '../lib/generated/base_gen.dart'
+  symbol-file:
+    # Although file paths are supported here, prefer Package Uri's here.
+    output: 'package:shared_bindings/generated/base_symbols.yaml'
+    import-path: 'package:shared_bindings/generated/base_gen.dart'
+headers:
+  entry-points:
+    - '../headers/base.h'
+preamble: |
+  // ignore_for_file: non_constant_identifier_names, camel_case_types

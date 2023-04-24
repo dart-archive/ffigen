@@ -5,9 +5,11 @@
 import 'dart:io';
 
 import 'package:ffigen/src/code_generator.dart';
+import 'package:ffigen/src/code_generator/utils.dart';
 import 'package:file/local.dart';
 import 'package:glob/glob.dart';
 import 'package:logging/logging.dart';
+import 'package:package_config/package_config.dart';
 import 'package:path/path.dart' as p;
 import 'package:quiver/pattern.dart' as quiver;
 import 'package:yaml/yaml.dart';
@@ -24,6 +26,16 @@ String _replaceSeparators(String path) {
   } else {
     return path.replaceAll(p.windows.separator, p.posix.separator);
   }
+}
+
+/// Replaces the path separators according to current platform. If a relative
+/// path is passed in, it is resolved relative to the config path, and the
+/// absolute path is returned.
+String _normalizePath(String path, String? configFilename) {
+  final skipNormalization =
+      (configFilename == null) || p.isAbsolute(path) || path.startsWith("**");
+  return _replaceSeparators(
+      skipNormalization ? path : p.join(p.dirname(configFilename), path));
 }
 
 /// Checks if type of value is [T], logs an error if it's not.
@@ -49,7 +61,8 @@ bool checkKeyInYaml(List<String> key, YamlMap map) {
       return false;
     }
   }
-  return last != null;
+  // The entry for the last key may be null.
+  return true;
 }
 
 /// Extracts value of nested [key] from [map].
@@ -65,69 +78,255 @@ dynamic getKeyValueFromYaml(List<String> key, YamlMap map) {
   return null;
 }
 
+/// Recursively checks the keys in [configKeyMap] from [allowedKeyList].
+void warnUnknownKeys(List<List<String>> allowedKeyList, YamlMap configKeyMap) {
+  final allowedKeyMap = <String, dynamic>{};
+  for (final specKeys in allowedKeyList) {
+    var item = allowedKeyMap;
+    for (final specSubKey in specKeys) {
+      item.putIfAbsent(specSubKey, () => <String, dynamic>{});
+      item = item[specSubKey] as Map<String, dynamic>;
+    }
+    // Add empty key to mark that any sub-keys of this key are allowed.
+    item[''] = <String, dynamic>{};
+  }
+  _warnUnknownKeysInMap(allowedKeyMap, configKeyMap, <dynamic>[]);
+}
+
+/// Recursive function to check a key set in a configKeyMap.
+void _warnUnknownKeysInMap(Map<String, dynamic> allowedKeyMap,
+    dynamic configKeyMap, List<dynamic> prev) {
+  if (allowedKeyMap.containsKey('') || configKeyMap is! YamlMap) {
+    return;
+  }
+  for (final key in configKeyMap.keys) {
+    if (allowedKeyMap.containsKey(key)) {
+      prev.add(key);
+      _warnUnknownKeysInMap(
+          allowedKeyMap[key] as Map<String, dynamic>, configKeyMap[key], prev);
+      prev.removeLast();
+    } else {
+      prev.add(key);
+      _logger.warning('Unknown key - ${prev.join(' -> ')}.');
+      prev.removeLast();
+    }
+  }
+}
+
 bool booleanExtractor(dynamic value) => value as bool;
 
 bool booleanValidator(List<String> name, dynamic value) =>
     checkType<bool>(name, value);
 
-Map<int, SupportedNativeType> sizemapExtractor(dynamic yamlConfig) {
-  final resultMap = <int, SupportedNativeType>{};
-  final sizemap = yamlConfig as YamlMap?;
-  if (sizemap != null) {
-    for (final typeName in strings.sizemap_native_mapping.keys) {
-      if (sizemap.containsKey(typeName)) {
-        final cxTypeInt = strings.sizemap_native_mapping[typeName] as int;
-        final byteSize = sizemap[typeName] as int;
-        resultMap[cxTypeInt] = nativeSupportedType(byteSize,
-            signed: typeName.contains('unsigned') ? false : true);
-      }
+Map<String, LibraryImport> libraryImportsExtractor(dynamic yamlConfig) {
+  final resultMap = <String, LibraryImport>{};
+  final typeMap = yamlConfig as YamlMap?;
+  if (typeMap != null) {
+    for (final typeName in typeMap.keys) {
+      resultMap[typeName as String] =
+          LibraryImport(typeName, typeMap[typeName] as String);
     }
   }
   return resultMap;
 }
 
-bool sizemapValidator(List<String> name, dynamic yamlConfig) {
+bool libraryImportsValidator(List<String> name, dynamic yamlConfig) {
   if (!checkType<YamlMap>(name, yamlConfig)) {
     return false;
   }
   for (final key in (yamlConfig as YamlMap).keys) {
-    if (!strings.sizemap_native_mapping.containsKey(key)) {
-      _logger.warning("Unknown subkey '$key' in '$name'.");
+    if (!checkType<String>([...name, key as String], yamlConfig[key])) {
+      return false;
+    }
+    if (strings.predefinedLibraryImports.containsKey(key)) {
+      _logger.severe(
+          'library-import -> $key should not collide with any predefined imports - ${strings.predefinedLibraryImports.keys}.');
+      return false;
     }
   }
-
   return true;
 }
 
-Map<String, SupportedNativeType> typedefmapExtractor(dynamic yamlConfig) {
-  final resultMap = <String, SupportedNativeType>{};
-  final typedefmap = yamlConfig as YamlMap?;
-  if (typedefmap != null) {
-    for (final typeName in typedefmap.keys) {
-      if (typedefmap[typeName] is String &&
-          strings.supportedNativeType_mappings
-              .containsKey(typedefmap[typeName])) {
-        // Map this typename to specified supportedNativeType.
-        resultMap[typeName as String] =
-            strings.supportedNativeType_mappings[typedefmap[typeName]]!;
+void loadImportedTypes(YamlMap fileConfig,
+    Map<String, ImportedType> usrTypeMappings, LibraryImport libraryImport) {
+  final symbols = fileConfig['symbols'] as YamlMap;
+  for (final key in symbols.keys) {
+    final usr = key as String;
+    final value = symbols[usr]! as YamlMap;
+    usrTypeMappings[usr] = ImportedType(
+        libraryImport, value['name'] as String, value['name'] as String);
+  }
+}
+
+YamlMap loadSymbolFile(String symbolFilePath, String? configFileName,
+    PackageConfig? packageConfig) {
+  final path = symbolFilePath.startsWith('package:')
+      ? packageConfig!.resolve(Uri.parse(symbolFilePath))!.toFilePath()
+      : _normalizePath(symbolFilePath, configFileName);
+
+  return loadYaml(File(path).readAsStringSync()) as YamlMap;
+}
+
+Map<String, ImportedType> symbolFileImportExtractor(
+    dynamic yamlConfig,
+    Map<String, LibraryImport> libraryImports,
+    String? configFileName,
+    PackageConfig? packageConfig) {
+  final resultMap = <String, ImportedType>{};
+  for (final item in (yamlConfig as YamlList)) {
+    String symbolFilePath;
+    if (item is String) {
+      symbolFilePath = item;
+    } else {
+      symbolFilePath = item[strings.symbolFile] as String;
+    }
+    final symbolFile =
+        loadSymbolFile(symbolFilePath, configFileName, packageConfig);
+    final formatVersion = symbolFile[strings.formatVersion] as String;
+    if (formatVersion.split('.')[0] !=
+        strings.symbolFileFormatVersion.split('.')[0]) {
+      _logger.severe(
+          'Incompatible format versions for file $symbolFilePath: ${strings.symbolFileFormatVersion}(ours), $formatVersion(theirs).');
+      exit(1);
+    }
+    final uniqueNamer = UniqueNamer(libraryImports.keys
+        .followedBy([strings.defaultSymbolFileImportPrefix]).toSet());
+    for (final file in (symbolFile[strings.files] as YamlMap).keys) {
+      final existingImports =
+          libraryImports.values.where((element) => element.importPath == file);
+      if (existingImports.isEmpty) {
+        final name =
+            uniqueNamer.makeUnique(strings.defaultSymbolFileImportPrefix);
+        libraryImports[name] = LibraryImport(name, file as String);
       }
+      final libraryImport = libraryImports.values.firstWhere(
+        (element) => element.importPath == file,
+      );
+      loadImportedTypes(
+          symbolFile[strings.files][file] as YamlMap, resultMap, libraryImport);
     }
   }
   return resultMap;
 }
 
-bool typedefmapValidator(List<String> name, dynamic yamlConfig) {
+bool symbolFileImportValidator(List<String> name, dynamic yamlConfig) {
+  if (!checkType<YamlList>(name, yamlConfig)) {
+    return false;
+  }
+  var result = true;
+  (yamlConfig as YamlList).asMap().forEach((idx, value) {
+    if (value is YamlMap) {
+      if (!value.keys.contains(strings.symbolFile)) {
+        result = false;
+        _logger
+            .severe('Key $name -> $idx -> ${strings.symbolFile} is required.');
+      }
+      for (final key in value.keys) {
+        if (key == strings.symbolFile) {
+          if (!checkType<String>(
+              [...name, idx.toString(), key as String], value[key])) {
+            result = false;
+          }
+        } else {
+          result = false;
+          _logger.severe('Unknown key : $name -> $idx -> $key.');
+        }
+      }
+    } else if (value is! String) {
+      result = false;
+      _logger.severe('Expected $name -> $idx should be a String or Map.');
+    }
+  });
+  return result;
+}
+
+Map<String, List<String>> typeMapExtractor(dynamic yamlConfig) {
+  // Key - type_name, Value - [lib, cType, dartType].
+  final resultMap = <String, List<String>>{};
+  final typeMap = yamlConfig as YamlMap?;
+  if (typeMap != null) {
+    for (final typeName in typeMap.keys) {
+      final typeConfigItem = typeMap[typeName] as YamlMap;
+      resultMap[typeName as String] = [
+        typeConfigItem[strings.lib] as String,
+        typeConfigItem[strings.cType] as String,
+        typeConfigItem[strings.dartType] as String,
+      ];
+    }
+  }
+  return resultMap;
+}
+
+bool typeMapValidator(List<String> name, dynamic yamlConfig) {
   if (!checkType<YamlMap>(name, yamlConfig)) {
     return false;
   }
-  for (final value in (yamlConfig as YamlMap).values) {
-    if (value is! String ||
-        !strings.supportedNativeType_mappings.containsKey(value)) {
-      _logger.severe("Unknown value of subkey '$value' in '$name'.");
+  var result = true;
+  for (final key in (yamlConfig as YamlMap).keys) {
+    if (!checkType<YamlMap>([...name, key as String], yamlConfig[key])) {
+      return false;
+    }
+    final lib = (yamlConfig[key] as YamlMap).containsKey(strings.lib);
+    if (!lib) {
+      _logger.severe("Key '${strings.lib}' in $name -> $key is required.");
+      result = false;
+    }
+    final cType = (yamlConfig[key] as YamlMap).containsKey(strings.cType);
+    if (!cType) {
+      _logger.severe("Key '${strings.cType}' in $name -> $key is required.");
+      result = false;
+    }
+    final dartType = (yamlConfig[key] as YamlMap).containsKey(strings.dartType);
+    if (!dartType) {
+      _logger.severe("Key '${strings.dartType}' in $name -> $key is required.");
+      result = false;
     }
   }
+  return result;
+}
 
+Map<String, String> stringStringMapExtractor(dynamic yamlConfig) {
+  final resultMap = <String, String>{};
+  final inputMap = yamlConfig as YamlMap?;
+  if (inputMap != null) {
+    for (final key in inputMap.keys) {
+      resultMap[key as String] = inputMap[key] as String;
+    }
+  }
+  return resultMap;
+}
+
+bool stringStringMapValidator(List<String> name, dynamic yamlConfig) {
+  if (!checkType<YamlMap>(name, yamlConfig)) {
+    return false;
+  }
+  for (final key in (yamlConfig as YamlMap).keys) {
+    if (!checkType<String>([...name, key as String], yamlConfig[key])) {
+      return false;
+    }
+  }
   return true;
+}
+
+Map<String, ImportedType> makeImportTypeMapping(
+    Map<String, List<String>> rawTypeMappings,
+    Map<String, LibraryImport> libraryImportsMap) {
+  final typeMappings = <String, ImportedType>{};
+  for (final key in rawTypeMappings.keys) {
+    final lib = rawTypeMappings[key]![0];
+    final cType = rawTypeMappings[key]![1];
+    final dartType = rawTypeMappings[key]![2];
+    if (strings.predefinedLibraryImports.containsKey(lib)) {
+      typeMappings[key] =
+          ImportedType(strings.predefinedLibraryImports[lib]!, cType, dartType);
+    } else if (libraryImportsMap.containsKey(lib)) {
+      typeMappings[key] =
+          ImportedType(libraryImportsMap[lib]!, cType, dartType);
+    } else {
+      throw Exception("Please declare $lib under library-imports.");
+    }
+  }
+  return typeMappings;
 }
 
 final _quoteMatcher = RegExp(r'''^["'](.*)["']$''', dotAll: true);
@@ -180,7 +379,7 @@ CompilerOptsAuto compilerOptsAutoExtractor(dynamic value) {
 }
 
 bool compilerOptsAutoValidator(List<String> name, dynamic value) {
-  var _result = true;
+  var result = true;
 
   if (!checkType<YamlMap>(name, value)) {
     return false;
@@ -196,38 +395,38 @@ bool compilerOptsAutoValidator(List<String> name, dynamic value) {
         if (inckey == strings.includeCStdLib) {
           if (!checkType<bool>(
               [...name, oskey, inckey as String], value[oskey][inckey])) {
-            _result = false;
+            result = false;
           }
         } else {
           _logger.severe("Unknown key '$inckey' in '$name -> $oskey.");
-          _result = false;
+          result = false;
         }
       }
     } else {
       _logger.severe("Unknown key '$oskey' in '$name'.");
-      _result = false;
+      result = false;
     }
   }
-  return _result;
+  return result;
 }
 
-Headers headersExtractor(dynamic yamlConfig) {
+Headers headersExtractor(dynamic yamlConfig, String? configFilename) {
   final entryPoints = <String>[];
   final includeGlobs = <quiver.Glob>[];
   for (final key in (yamlConfig as YamlMap).keys) {
     if (key == strings.entryPoints) {
       for (final h in (yamlConfig[key] as YamlList)) {
-        final headerGlob = h as String;
+        final headerGlob = _normalizePath(h as String, configFilename);
         // Add file directly to header if it's not a Glob but a File.
         if (File(headerGlob).existsSync()) {
-          final osSpecificPath = _replaceSeparators(headerGlob);
+          final osSpecificPath = headerGlob;
           entryPoints.add(osSpecificPath);
           _logger.fine('Adding header/file: $headerGlob');
         } else {
           final glob = Glob(headerGlob);
           for (final file in glob.listFileSystemSync(const LocalFileSystem(),
               followLinks: true)) {
-            final fixedPath = _replaceSeparators(file.path);
+            final fixedPath = file.path;
             entryPoints.add(fixedPath);
             _logger.fine('Adding header/file: $fixedPath');
           }
@@ -237,7 +436,8 @@ Headers headersExtractor(dynamic yamlConfig) {
     if (key == strings.includeDirectives) {
       for (final h in (yamlConfig[key] as YamlList)) {
         final headerGlob = h as String;
-        includeGlobs.add(quiver.Glob(headerGlob));
+        final fixedGlob = _normalizePath(headerGlob, configFilename);
+        includeGlobs.add(quiver.Glob(fixedGlob));
       }
     }
   }
@@ -271,36 +471,6 @@ bool headersValidator(List<String> name, dynamic value) {
   }
 }
 
-String libclangDylibExtractor(dynamic value) => getDylibPath(value as String);
-
-bool libclangDylibValidator(List<String> name, dynamic value) {
-  if (!checkType<String>(name, value)) {
-    return false;
-  } else {
-    final dylibPath = getDylibPath(value as String);
-    if (!File(dylibPath).existsSync()) {
-      _logger.severe(
-          'Dynamic library: $dylibPath does not exist or is corrupt, input folder: $value.');
-      return false;
-    } else {
-      return true;
-    }
-  }
-}
-
-String getDylibPath(String dylibParentFoler) {
-  dylibParentFoler = _replaceSeparators(dylibParentFoler);
-  String dylibPath;
-  if (Platform.isMacOS) {
-    dylibPath = p.join(dylibParentFoler, strings.libclang_dylib_macos);
-  } else if (Platform.isWindows) {
-    dylibPath = p.join(dylibParentFoler, strings.libclang_dylib_windows);
-  } else {
-    dylibPath = p.join(dylibParentFoler, strings.libclang_dylib_linux);
-  }
-  return dylibPath;
-}
-
 /// Returns location of dynamic library by searching default locations. Logs
 /// error and throws an Exception if not found.
 String findDylibAtDefaultLocations() {
@@ -310,8 +480,28 @@ String findDylibAtDefaultLocations() {
       k = findLibclangDylib(l);
       if (k != null) return k;
     }
+    Process.runSync('ldconfig', ['-p']);
+    final ldConfigResult = Process.runSync('ldconfig', ['-p']);
+    if (ldConfigResult.exitCode == 0) {
+      final lines = (ldConfigResult.stdout as String).split('\n');
+      final paths = [
+        for (final line in lines)
+          if (line.contains('libclang')) line.split(' => ')[1],
+      ];
+      for (final location in paths) {
+        if (File(location).existsSync()) {
+          return location;
+        }
+      }
+    }
   } else if (Platform.isWindows) {
-    for (final l in strings.windowsDylibLocations) {
+    final dylibLocations = strings.windowsDylibLocations.toList();
+    final userHome = Platform.environment['USERPROFILE'];
+    if (userHome != null) {
+      dylibLocations
+          .add(p.join(userHome, 'scoop', 'apps', 'llvm', 'current', 'bin'));
+    }
+    for (final l in dylibLocations) {
       k = findLibclangDylib(l);
       if (k != null) return k;
     }
@@ -319,6 +509,23 @@ String findDylibAtDefaultLocations() {
     for (final l in strings.macOsDylibLocations) {
       k = findLibclangDylib(l);
       if (k != null) return k;
+    }
+    final findLibraryResult =
+        Process.runSync('xcodebuild', ['-find-library', 'libclang.dylib']);
+    if (findLibraryResult.exitCode == 0) {
+      final location = (findLibraryResult.stdout as String).split('\n').first;
+      if (File(location).existsSync()) {
+        return location;
+      }
+    }
+    final xcodePathResult = Process.runSync('xcode-select', ['-print-path']);
+    if (xcodePathResult.exitCode == 0) {
+      final xcodePath = (xcodePathResult.stdout as String).split('\n').first;
+      final location =
+          p.join(xcodePath, strings.xcodeDylibLocation, strings.dylibFileName);
+      if (File(location).existsSync()) {
+        return location;
+      }
     }
   } else {
     throw Exception('Unsupported Platform.');
@@ -378,10 +585,118 @@ bool llvmPathValidator(List<String> name, dynamic value) {
   return true;
 }
 
-String outputExtractor(dynamic value) => _replaceSeparators(value as String);
+OutputConfig outputExtractor(
+    dynamic value, String? configFilename, PackageConfig? packageConfig) {
+  if (value is String) {
+    return OutputConfig(_normalizePath(value, configFilename), null);
+  }
+  value = value as YamlMap;
+  return OutputConfig(
+    _normalizePath((value)[strings.bindings] as String, configFilename),
+    value.containsKey(strings.symbolFile)
+        ? symbolFileOutputExtractor(
+            value[strings.symbolFile], configFilename, packageConfig)
+        : null,
+  );
+}
 
-bool outputValidator(List<String> name, dynamic value) =>
-    checkType<String>(name, value);
+bool outputValidator(List<String> name, dynamic value) {
+  if (value is String) {
+    return true;
+  } else if (value is YamlMap) {
+    final keys = value.keys;
+    var result = true;
+    for (final key in keys) {
+      if (key == strings.bindings) {
+        if (!checkType<String>([...name, key as String], value[key])) {
+          result = false;
+        }
+      } else if (key == strings.symbolFile) {
+        result = symbolFileOutputValidator(
+            [...name, strings.symbolFile], value[key]);
+      } else {
+        result = false;
+        _logger.severe("Unknown key '$key' in '$name'.");
+      }
+    }
+    return result;
+  } else {
+    _logger.severe(
+        "Expected value of key '${name.join(' -> ')}' to be a String or Map.");
+    return false;
+  }
+}
+
+SymbolFile symbolFileOutputExtractor(
+    dynamic value, String? configFilename, PackageConfig? packageConfig) {
+  value = value as YamlMap;
+  var output = value[strings.output] as String;
+  if (Uri.parse(output).scheme != "package") {
+    _logger.warning(
+        'Consider using a Package Uri for ${strings.symbolFile} -> ${strings.output}: $output so that external packages can use it.');
+    output = _normalizePath(output, configFilename);
+  } else {
+    output = packageConfig!.resolve(Uri.parse(output))!.toFilePath();
+  }
+  final importPath = value[strings.importPath] as String;
+  if (Uri.parse(importPath).scheme != "package") {
+    _logger.warning(
+        'Consider using a Package Uri for ${strings.symbolFile} -> ${strings.importPath}: $importPath so that external packages can use it.');
+  }
+  return SymbolFile(importPath, output);
+}
+
+bool symbolFileOutputValidator(List<String> name, dynamic value) {
+  if (!checkType<YamlMap>(name, value)) {
+    return false;
+  }
+  if (!(value as YamlMap).containsKey(strings.output)) {
+    _logger.severe("Required '$name -> ${strings.output}'.");
+    return false;
+  }
+  if (!(value).containsKey(strings.importPath)) {
+    _logger.severe("Required '$name -> ${strings.importPath}'.");
+    return false;
+  }
+  for (final key in value.keys) {
+    if (key == strings.output || key == strings.importPath) {
+      if (!checkType<String>([...name, key as String], value[key])) {
+        return false;
+      }
+    } else {
+      _logger.severe("Unknown key '$key' in '$name'.");
+      return false;
+    }
+  }
+  return true;
+}
+
+Language languageExtractor(dynamic value) {
+  if (value == strings.langC) {
+    return Language.c;
+  } else if (value == strings.langObjC) {
+    return Language.objc;
+  }
+  return Language.c;
+}
+
+bool languageValidator(List<String> name, dynamic value) {
+  if (value is String) {
+    if (value == strings.langC) {
+      return true;
+    }
+    if (value == strings.langObjC) {
+      _logger.severe('Objective C support is EXPERIMENTAL. The API may change '
+          'in a breaking way without notice.');
+      return true;
+    }
+    _logger.severe("'$name' must be one of the following - "
+        "{${strings.langC}, ${strings.langObjC}}");
+    return false;
+  }
+  _logger.severe("Expected value of key '$name' to be a String.");
+  return false;
+}
 
 /// Returns true if [str] is not a full name.
 ///
@@ -505,41 +820,42 @@ Declaration declarationConfigExtractor(dynamic yamlMap) {
 }
 
 bool declarationConfigValidator(List<String> name, dynamic value) {
-  var _result = true;
+  var result = true;
   if (value is YamlMap) {
     for (final key in value.keys) {
       if (key == strings.include || key == strings.exclude) {
         if (!checkType<YamlList>([...name, key as String], value[key])) {
-          _result = false;
+          result = false;
         }
       } else if (key == strings.rename) {
         if (!checkType<YamlMap>([...name, key as String], value[key])) {
-          _result = false;
+          result = false;
         } else {
-          for (final subkey in value[key].keys) {
+          for (final subkey in (value[key] as YamlMap).keys) {
             if (!checkType<String>(
                 [...name, key, subkey as String], value[key][subkey])) {
-              _result = false;
+              result = false;
             }
           }
         }
       } else if (key == strings.memberRename) {
         if (!checkType<YamlMap>([...name, key as String], value[key])) {
-          _result = false;
+          result = false;
         } else {
-          for (final declNameKey in value[key].keys) {
+          for (final declNameKey in (value[key] as YamlMap).keys) {
             if (!checkType<YamlMap>([...name, key, declNameKey as String],
                 value[key][declNameKey])) {
-              _result = false;
+              result = false;
             } else {
-              for (final memberNameKey in value[key][declNameKey].keys) {
+              for (final memberNameKey
+                  in ((value[key] as YamlMap)[declNameKey] as YamlMap).keys) {
                 if (!checkType<String>([
                   ...name,
                   key,
                   declNameKey,
                   memberNameKey as String,
                 ], value[key][declNameKey][memberNameKey])) {
-                  _result = false;
+                  result = false;
                 }
               }
             }
@@ -547,17 +863,17 @@ bool declarationConfigValidator(List<String> name, dynamic value) {
         }
       } else if (key == strings.symbolAddress) {
         if (!checkType<YamlMap>([...name, key as String], value[key])) {
-          _result = false;
+          result = false;
         } else {
-          for (final subkey in value[key].keys) {
+          for (final subkey in (value[key] as YamlMap).keys) {
             if (subkey == strings.include || subkey == strings.exclude) {
               if (!checkType<YamlList>(
                   [...name, key, subkey as String], value[key][subkey])) {
-                _result = false;
+                result = false;
               }
             } else {
               _logger.severe("Unknown key '$subkey' in '$name -> $key'.");
-              _result = false;
+              result = false;
             }
           }
         }
@@ -565,59 +881,59 @@ bool declarationConfigValidator(List<String> name, dynamic value) {
     }
   } else {
     _logger.severe("Expected value '$name' to be a Map.");
-    _result = false;
+    result = false;
   }
-  return _result;
+  return result;
 }
 
 Includer exposeFunctionTypeExtractor(dynamic value) =>
     _extractIncluderFromYaml(value);
 
 bool exposeFunctionTypeValidator(List<String> name, dynamic value) {
-  var _result = true;
+  var result = true;
 
   if (!checkType<YamlMap>(name, value)) {
-    _result = false;
+    result = false;
   } else {
     final mp = value as YamlMap;
     for (final key in mp.keys) {
       if (key == strings.include || key == strings.exclude) {
         if (!checkType<YamlList>([...name, key as String], value[key])) {
-          _result = false;
+          result = false;
         }
       } else {
         _logger.severe("Unknown subkey '$key' in '$name'.");
-        _result = false;
+        result = false;
       }
     }
   }
 
-  return _result;
+  return result;
 }
 
 Includer leafFunctionExtractor(dynamic value) =>
     _extractIncluderFromYaml(value);
 
 bool leafFunctionValidator(List<String> name, dynamic value) {
-  var _result = true;
+  var result = true;
 
   if (!checkType<YamlMap>(name, value)) {
-    _result = false;
+    result = false;
   } else {
     final mp = value as YamlMap;
     for (final key in mp.keys) {
       if (key == strings.include || key == strings.exclude) {
         if (!checkType<YamlList>([...name, key as String], value[key])) {
-          _result = false;
+          result = false;
         }
       } else {
         _logger.severe("Unknown subkey '$key' in '$name'.");
-        _result = false;
+        result = false;
       }
     }
   }
 
-  return _result;
+  return result;
 }
 
 SupportedNativeType nativeSupportedType(int value, {bool signed = true}) {
@@ -741,7 +1057,7 @@ bool dependencyOnlyValidator(List<String> name, dynamic value) {
 
 StructPackingOverride structPackingOverrideExtractor(dynamic value) {
   final matcherMap = <RegExp, int?>{};
-  for (final key in value.keys) {
+  for (final key in (value as YamlMap).keys) {
     matcherMap[RegExp(key as String, dotAll: true)] =
         strings.packingValuesMap[value[key]];
   }
@@ -749,19 +1065,48 @@ StructPackingOverride structPackingOverrideExtractor(dynamic value) {
 }
 
 bool structPackingOverrideValidator(List<String> name, dynamic value) {
-  var _result = true;
+  var result = true;
 
   if (!checkType<YamlMap>([...name], value)) {
-    _result = false;
+    result = false;
   } else {
-    for (final key in value.keys) {
+    for (final key in (value as YamlMap).keys) {
       if (!(strings.packingValuesMap.keys.contains(value[key]))) {
         _logger.severe(
             "'$name -> $key' must be one of the following - ${strings.packingValuesMap.keys.toList()}");
-        _result = false;
+        result = false;
       }
     }
   }
 
-  return _result;
+  return result;
+}
+
+FfiNativeConfig ffiNativeExtractor(dynamic yamlConfig) {
+  final yamlMap = yamlConfig as YamlMap?;
+  return FfiNativeConfig(
+    enabled: true,
+    asset: yamlMap?[strings.ffiNativeAsset] as String?,
+  );
+}
+
+bool ffiNativeValidator(List<String> name, dynamic yamlConfig) {
+  if (!checkType<YamlMap?>(name, yamlConfig)) {
+    return false;
+  }
+  if (yamlConfig == null) {
+    // Empty means no asset name.
+    return true;
+  }
+  for (final key in (yamlConfig as YamlMap).keys) {
+    if (!checkType<String>([...name, key as String], yamlConfig[key])) {
+      return false;
+    }
+    if (key != strings.ffiNativeAsset) {
+      _logger.severe("'$name -> $key' must be one of the following - ${[
+        strings.ffiNativeAsset
+      ]}");
+    }
+  }
+  return true;
 }

@@ -1,0 +1,13 @@
+name: NullableTestObjCLibrary
+description: 'Tests calling Objective-C methods'
+language: objc
+output: 'nullable_bindings.dart'
+exclude-all-by-default: true
+objc-interfaces:
+  include:
+    - NullableInterface
+headers:
+  entry-points:
+    - 'nullable_test.m'
+preamble: |
+  // ignore_for_file: camel_case_types, non_constant_identifier_names, unused_element, unused_field

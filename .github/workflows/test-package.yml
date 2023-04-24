@@ -13,49 +13,105 @@ env:
   PUB_ENVIRONMENT: bot.github
 
 jobs:
-  # Check code formatting and static analysis on a single OS (linux).
+  # Check code formatting and static analysis on a single OS (macos).
   analyze:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     strategy:
       fail-fast: false
       matrix:
-        sdk: [2.14.0]
+        sdk: [stable]
     steps:
-      - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v1.0
+      - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3
+      - uses: dart-lang/setup-dart@d6a63dab3335f427404425de0fbfed4686d93c4f
         with:
           sdk: ${{ matrix.sdk }}
       - id: install
         name: Install dependencies
-        run: dart pub get
+        run: dart pub get && dart pub get --directory="example/shared_bindings"
       - name: Check formatting
         run: dart format --output=none --set-exit-if-changed .
         if: always() && steps.install.outcome == 'success'
+      - name: Build test dylib and bindings
+        run: dart test/setup.dart
       - name: Analyze code
         run: dart analyze --fatal-infos
         if: always() && steps.install.outcome == 'success'
 
-  test:
+  test-linux:
     needs: analyze
-    # This job requires clang-10 which is the default on 20.04
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v1.0
+      - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3
+      - uses: dart-lang/setup-dart@d6a63dab3335f427404425de0fbfed4686d93c4f
         with:
-          sdk: 2.14.0
+          sdk: stable
       - name: Install dependencies
         run: dart pub get
-      - name: Install libclang-10-dev
-        run: sudo apt-get install libclang-10-dev
-      - name: Build test dylib
-        run: cd test/native_test && dart build_test_dylib.dart && cd ../..
+      - name: Install libclang-14-dev
+        run: sudo apt-get install libclang-14-dev
+      - name: Build test dylib and bindings
+        run: dart test/setup.dart
       - name: Run VM tests
-        run: dart test --platform vm
+        run: dart test --platform vm --concurrency=1
+
+  test-mac:
+    needs: analyze
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3
+      - uses: dart-lang/setup-dart@d6a63dab3335f427404425de0fbfed4686d93c4f
+        with:
+          sdk: stable
+      - name: Install dependencies
+        run: dart pub get
+      - name: Build test dylib and bindings
+        run: dart test/setup.dart
+      - name: Run VM tests
+        run: dart test --platform vm --concurrency=1
       - name: Collect coverage
         run: ./tool/coverage.sh
       - name: Upload coverage
-        uses: coverallsapp/github-action@v1.1.2
+        uses: coverallsapp/github-action@67662d24394fd74bffcf7b462d1b432814159afd
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: lcov.info
+
+  test-windows:
+    needs: analyze
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3
+      - uses: dart-lang/setup-dart@d6a63dab3335f427404425de0fbfed4686d93c4f
+        with:
+          sdk: stable
+      - name: Install dependencies
+        run: dart pub get
+      - name: Build test dylib and bindings
+        run: dart test/setup.dart
+      - name: Run VM tests
+        run: dart test --platform vm --concurrency=1
+
+  # Sanity check the latest `flutter create --template plugin_ffi`.
+  # This will break if we change the Flutter template or the generated code.
+  # But, getting libclang on the LUCI infrastructure has proven to be
+  # non-trivial. See discussion on
+  # https://github.com/flutter/flutter/issues/105513.
+  # If we need to change the generated code, we should temporarily disable this
+  # test, or temporarily disable the requirement for all bots to be green to
+  # merge PRs.
+  # Running this sanity check on one OS should be sufficient. Chosing Windows
+  # because it is the most likely to break.
+  test-windows-flutter:
+    needs: analyze
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3
+      - uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
+        with:
+          channel: 'master'
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Build test dylib and bindings
+        run: dart test/setup.dart
+      - name: Run VM tests
+        run: flutter pub run test test_flutter/ --platform vm

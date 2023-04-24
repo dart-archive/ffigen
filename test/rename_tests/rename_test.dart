@@ -3,11 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/config_provider.dart';
 import 'package:ffigen/src/header_parser.dart' as parser;
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:test/test.dart';
-import 'package:yaml/yaml.dart' as yaml;
 
 import '../test_utils.dart';
 
@@ -22,7 +20,7 @@ void main() {
     setUpAll(() {
       logWarnings();
       expected = expectedLibrary();
-      actual = parser.parse(Config.fromYaml(yaml.loadYaml('''
+      actual = parser.parse(testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Rename Test'
 ${strings.output}: 'unused'
@@ -78,7 +76,7 @@ ${strings.macros}:
 ${strings.typedefs}:
   ${strings.rename}:
     'Struct5_Alias': 'Struct5_Alias_Renamed'
-    ''') as yaml.YamlMap));
+    '''));
     });
 
     test('Function addPrefix', () {
@@ -161,109 +159,109 @@ ${strings.typedefs}:
 }
 
 Library expectedLibrary() {
-  final struc1 = Struc(name: '${structPrefix}Struct1');
-  final struc2 = Struc(name: 'Struct2');
-  final struc3 = Struc(name: 'Struct3');
+  final struct1 = Struct(name: '${structPrefix}Struct1');
+  final struct2 = Struct(name: 'Struct2');
+  final struct3 = Struct(name: 'Struct3');
   return Library(
     name: 'Bindings',
     bindings: [
       Func(
         name: '${functionPrefix}func1',
         originalName: 'func1',
-        returnType: Type.nativeType(
+        returnType: NativeType(
           SupportedNativeType.Void,
         ),
         parameters: [
           Parameter(
             name: 's',
-            type: Type.pointer(Type.struct(struc1)),
+            type: PointerType(struct1),
           ),
         ],
       ),
       Func(
         name: 'func2',
         originalName: 'test_func2',
-        returnType: Type.nativeType(
+        returnType: NativeType(
           SupportedNativeType.Void,
         ),
         parameters: [
           Parameter(
             name: 's',
-            type: Type.pointer(Type.struct(struc2)),
+            type: PointerType(struct2),
           ),
         ],
       ),
       Func(
         name: 'func3',
         originalName: 'fullMatch_func3',
-        returnType: Type.nativeType(
+        returnType: NativeType(
           SupportedNativeType.Void,
         ),
         parameters: [
           Parameter(
             name: 's',
-            type: Type.pointer(Type.struct(struc3)),
+            type: PointerType(struct3),
           ),
         ],
       ),
       Func(
         name: '${functionPrefix}memberRename_func4',
         originalName: 'memberRename_func4',
-        returnType: Type.nativeType(
+        returnType: NativeType(
           SupportedNativeType.Void,
         ),
         parameters: [
           Parameter(
             name: 'underscore',
-            type: Type.nativeType(SupportedNativeType.Int32),
+            type: intType,
           ),
           Parameter(
             name: 'fullMatchSuccess',
-            type: Type.nativeType(SupportedNativeType.Float),
+            type: floatType,
           ),
           Parameter(
             name: 'unnamed',
-            type: Type.nativeType(SupportedNativeType.Int32),
+            type: intType,
           ),
         ],
       ),
       Func(
         name: '${functionPrefix}typedefRenameFunc',
         originalName: 'typedefRenameFunc',
-        returnType: Type.nativeType(
+        returnType: NativeType(
           SupportedNativeType.Void,
         ),
         parameters: [
           Parameter(
             name: 's',
-            type: Type.typealias(Typealias(
+            type: Typealias(
                 name: 'Struct5_Alias_Renamed',
-                type: Type.struct(Struc(name: '${structPrefix}Struct5')))),
+                type: Struct(name: '${structPrefix}Struct5')),
           ),
         ],
       ),
-      struc1,
-      struc2,
-      struc3,
-      Struc(
+      struct1,
+      struct2,
+      struct3,
+      Struct(
         name: '${structPrefix}MemberRenameStruct4',
         members: [
           Member(
             name: 'underscore',
-            type: Type.nativeType(SupportedNativeType.Int32),
+            type: intType,
           ),
           Member(
             name: 'fullMatchSuccess',
-            type: Type.nativeType(SupportedNativeType.Float),
+            type: floatType,
           ),
         ],
       ),
-      Struc(
+      Struct(
         name: '${structPrefix}AnyMatchStruct5',
         members: [
           Member(
             name: 'underscore',
-            type: Type.nativeType(SupportedNativeType.Int32),
+            type: intType,
           ),
         ],
       ),

@@ -3,12 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/config_provider.dart';
 import 'package:ffigen/src/header_parser.dart' as parser;
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
 import 'package:test/test.dart';
-import 'package:yaml/yaml.dart' as yaml;
 
 import '../test_utils.dart';
 
@@ -19,7 +17,7 @@ void main() {
     setUpAll(() {
       logWarnings(Level.SEVERE);
       actual = parser.parse(
-        Config.fromYaml(yaml.loadYaml('''
+        testConfig('''
 ${strings.name}: 'Bindings'
 ${strings.output}: 'unused'
 
@@ -32,21 +30,21 @@ ${strings.structs}:
   ${strings.exclude}:
     - ExcludedStruct
     - _ExcludedStruct
-${strings.typedefmap}:
-  'SpecifiedTypeAsIntPtr': 'IntPtr'
-
+${strings.typeMap}:
+  ${strings.typeMapTypedefs}:
+    'SpecifiedTypeAsIntPtr':
+        lib: 'ffi'
+        c-type: 'IntPtr'
+        dart-type: 'int'
 ${strings.preamble}: |
   // ignore_for_file: unused_element, unused_field
-        ''') as yaml.YamlMap),
+        '''),
       );
     });
 
     test('Expected Bindings', () {
-      matchLibraryWithExpected(actual, [
-        'test',
-        'debug_generated',
-        'header_parser_typedef_test_output.dart'
-      ], [
+      matchLibraryWithExpected(
+          actual, 'header_parser_typedef_test_output.dart', [
         'test',
         'header_parser_tests',
         'expected_bindings',

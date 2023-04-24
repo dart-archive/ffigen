@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator.dart';
+import 'package:ffigen/src/config_provider/config_types.dart';
 
 import 'binding_string.dart';
 import 'utils.dart';
@@ -10,11 +11,14 @@ import 'writer.dart';
 
 /// A binding for C function.
 ///
-/// For a C function -
+/// For example, take the following C function.
+///
 /// ```c
 /// int sum(int a, int b);
 /// ```
-/// The Generated dart code is -
+///
+/// The generated Dart code for this function (without `FfiNative`) is as follows.
+///
 /// ```dart
 /// int sum(int a, int b) {
 ///   return _sum(a, b);
@@ -26,14 +30,24 @@ import 'writer.dart';
 ///
 /// typedef _dart_sum = int Function(int a, int b);
 /// ```
+///
+/// When using `FfiNative`, the code is as follows.
+///
+/// ```dart
+/// @ffi.FfiNative<ffi.Int32 Function(ffi.Int32 a, ffi.Int32 b)>('sum')
+/// external int sum(int a, int b);
+/// ```
 class Func extends LookUpBinding {
   final FunctionType functionType;
   final bool exposeSymbolAddress;
   final bool exposeFunctionTypedefs;
   final bool isLeaf;
+  final FfiNativeConfig ffiNativeConfig;
+  late final String funcPointerName;
 
   /// Contains typealias for function type if [exposeFunctionTypedefs] is true.
-  Typealias? _exposedCFunctionTypealias, _exposedDartFunctionTypealias;
+  Typealias? _exposedCFunctionTypealias;
+  Typealias? _exposedDartFunctionTypealias;
 
   /// [originalName] is looked up in dynamic library, if not
   /// provided, takes the value of [name].
@@ -47,6 +61,8 @@ class Func extends LookUpBinding {
     this.exposeSymbolAddress = false,
     this.exposeFunctionTypedefs = false,
     this.isLeaf = false,
+    bool isInternal = false,
+    this.ffiNativeConfig = const FfiNativeConfig(enabled: false),
   })  : functionType = FunctionType(
           returnType: returnType,
           parameters: parameters ?? const [],
@@ -56,6 +72,7 @@ class Func extends LookUpBinding {
           originalName: originalName,
           name: name,
           dartDoc: dartDoc,
+          isInternal: isInternal,
         ) {
     for (var i = 0; i < functionType.parameters.length; i++) {
       if (functionType.parameters[i].name.trim() == '') {
@@ -68,12 +85,14 @@ class Func extends LookUpBinding {
     if (exposeFunctionTypedefs) {
       _exposedCFunctionTypealias = Typealias(
         name: 'Native$upperCaseName',
-        type: Type.functionType(functionType),
+        type: functionType,
+        isInternal: true,
       );
       _exposedDartFunctionTypealias = Typealias(
         name: 'Dart$upperCaseName',
-        type: Type.functionType(functionType),
+        type: functionType,
         useDartType: true,
+        isInternal: true,
       );
     }
   }
@@ -83,7 +102,7 @@ class Func extends LookUpBinding {
     final s = StringBuffer();
     final enclosingFuncName = name;
     final funcVarName = w.wrapperLevelUniqueNamer.makeUnique('_$name');
-    final funcPointerName = w.wrapperLevelUniqueNamer.makeUnique('_${name}Ptr');
+    funcPointerName = w.wrapperLevelUniqueNamer.makeUnique('_${name}Ptr');
 
     if (dartDoc != null) {
       s.write(makeDartDoc(dartDoc!));
@@ -93,45 +112,6 @@ class Func extends LookUpBinding {
     for (final p in functionType.parameters) {
       p.name = paramNamer.makeUnique(p.name);
     }
-    // Write enclosing function.
-    if (w.dartBool &&
-        functionType.returnType.getBaseTypealiasType().broadType ==
-            BroadType.Boolean) {
-      // Use bool return type in enclosing function.
-      s.write('bool $enclosingFuncName(\n');
-    } else {
-      s.write(
-          '${functionType.returnType.getDartType(w)} $enclosingFuncName(\n');
-    }
-    for (final p in functionType.parameters) {
-      if (w.dartBool &&
-          p.type.getBaseTypealiasType().broadType == BroadType.Boolean) {
-        // Use bool parameter type in enclosing function.
-        s.write('  bool ${p.name},\n');
-      } else {
-        s.write('  ${p.type.getDartType(w)} ${p.name},\n');
-      }
-    }
-    s.write(') {\n');
-    s.write('return $funcVarName');
-
-    s.write('(\n');
-    for (final p in functionType.parameters) {
-      if (w.dartBool &&
-          p.type.getBaseTypealiasType().broadType == BroadType.Boolean) {
-        // Convert bool parameter to int before calling.
-        s.write('    ${p.name}?1:0,\n');
-      } else {
-        s.write('    ${p.name},\n');
-      }
-    }
-    if (w.dartBool && functionType.returnType.broadType == BroadType.Boolean) {
-      // Convert int return type to bool.
-      s.write('  )!=0;\n');
-    } else {
-      s.write('  );\n');
-    }
-    s.write('}\n');
 
     final cType = exposeFunctionTypedefs
         ? _exposedCFunctionTypealias!.name
@@ -140,21 +120,53 @@ class Func extends LookUpBinding {
         ? _exposedDartFunctionTypealias!.name
         : functionType.getDartType(w, writeArgumentNames: false);
 
-    if (exposeSymbolAddress) {
-      // Add to SymbolAddress in writer.
-      w.symbolAddressWriter.addSymbol(
-        type:
-            '${w.ffiLibraryPrefix}.Pointer<${w.ffiLibraryPrefix}.NativeFunction<$cType>>',
-        name: name,
-        ptrName: funcPointerName,
-      );
+    if (ffiNativeConfig.enabled) {
+      final assetString = ffiNativeConfig.asset != null
+          ? ", asset: '${ffiNativeConfig.asset}'"
+          : '';
+      final isLeafString = isLeaf ? ', isLeaf: true' : '';
+      s.write(
+          "@${w.ffiLibraryPrefix}.FfiNative<$cType>('$originalName'$assetString$isLeafString)\n");
+
+      s.write(
+          'external ${functionType.returnType.getDartType(w)} $enclosingFuncName(\n');
+      for (final p in functionType.parameters) {
+        s.write('  ${p.type.getDartType(w)} ${p.name},\n');
+      }
+      s.write(');\n\n');
+    } else {
+      // Write enclosing function.
+      s.write(
+          '${functionType.returnType.getDartType(w)} $enclosingFuncName(\n');
+      for (final p in functionType.parameters) {
+        s.write('  ${p.type.getDartType(w)} ${p.name},\n');
+      }
+      s.write(') {\n');
+      s.write('return $funcVarName');
+
+      s.write('(\n');
+      for (final p in functionType.parameters) {
+        s.write('    ${p.name},\n');
+      }
+      s.write('  );\n');
+      s.write('}\n');
+
+      if (exposeSymbolAddress) {
+        // Add to SymbolAddress in writer.
+        w.symbolAddressWriter.addSymbol(
+          type:
+              '${w.ffiLibraryPrefix}.Pointer<${w.ffiLibraryPrefix}.NativeFunction<$cType>>',
+          name: name,
+          ptrName: funcPointerName,
+        );
+      }
+      // Write function pointer.
+      s.write(
+          "late final $funcPointerName = ${w.lookupFuncIdentifier}<${w.ffiLibraryPrefix}.NativeFunction<$cType>>('$originalName');\n");
+      final isLeafString = isLeaf ? 'isLeaf:true' : '';
+      s.write(
+          'late final $funcVarName = $funcPointerName.asFunction<$dartType>($isLeafString);\n\n');
     }
-    // Write function pointer.
-    s.write(
-        "late final $funcPointerName = ${w.lookupFuncIdentifier}<${w.ffiLibraryPrefix}.NativeFunction<$cType>>('$originalName');\n");
-    final isLeafString = isLeaf ? 'isLeaf:true' : '';
-    s.write(
-        'late final $funcVarName = $funcPointerName.asFunction<$dartType>($isLeafString);\n\n');
 
     return BindingString(type: BindingStringType.func, string: s.toString());
   }
@@ -180,9 +192,7 @@ class Parameter {
 
   Parameter({String? originalName, this.name = '', required Type type})
       : originalName = originalName ?? name,
-        // A type with broadtype [BroadType.NativeFunction] is wrapped with a
-        // pointer because this is a shorthand used in C for Pointer to function.
-        type = type.getBaseTypealiasType().broadType == BroadType.NativeFunction
-            ? Type.pointer(type)
-            : type;
+        // A [NativeFunc] is wrapped with a pointer because this is a shorthand
+        // used in C for Pointer to function.
+        type = type.typealiasType is NativeFunc ? PointerType(type) : type;
 }

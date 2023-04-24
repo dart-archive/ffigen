@@ -35,34 +35,34 @@ Func? parseFunctionDeclaration(clang_types.CXCursor cursor) {
     final parameters = _getParameters(cursor, funcName);
 
     if (clang.clang_Cursor_isFunctionInlined(cursor) != 0) {
-      _logger.fine(
-          '---- Removed Function, reason: inline function: ${cursor.completeStringRepr()}');
+      _logger.fine('---- Removed Function, reason: inline function: '
+          '${cursor.completeStringRepr()}');
       _logger.warning(
           "Skipped Function '$funcName', inline functions are not supported.");
-      return _stack
-          .pop()
-          .func; // Returning null so that [addToBindings] function excludes this.
+      // Returning null so that [addToBindings] function excludes this.
+      return _stack.pop().func;
     }
 
     if (rt.isIncompleteCompound || _stack.top.incompleteStructParameter) {
       _logger.fine(
-          '---- Removed Function, reason: Incomplete struct pass/return by value: ${cursor.completeStringRepr()}');
+          '---- Removed Function, reason: Incomplete struct pass/return by '
+          'value: ${cursor.completeStringRepr()}');
       _logger.warning(
-          "Skipped Function '$funcName', Incomplete struct pass/return by value not supported.");
-      return _stack
-          .pop()
-          .func; // Returning null so that [addToBindings] function excludes this.
+          "Skipped Function '$funcName', Incomplete struct pass/return by "
+          'value not supported.');
+      // Returning null so that [addToBindings] function excludes this.
+      return _stack.pop().func;
     }
 
-    if (rt.getBaseType().broadType == BroadType.Unimplemented ||
+    if (rt.baseType is UnimplementedType ||
         _stack.top.unimplementedParameterType) {
-      _logger.fine(
-          '---- Removed Function, reason: unsupported return type or parameter type: ${cursor.completeStringRepr()}');
+      _logger.fine('---- Removed Function, reason: unsupported return type or '
+          'parameter type: ${cursor.completeStringRepr()}');
       _logger.warning(
-          "Skipped Function '$funcName', function has unsupported return type or parameter type.");
-      return _stack
-          .pop()
-          .func; // Returning null so that [addToBindings] function excludes this.
+          "Skipped Function '$funcName', function has unsupported return type "
+          'or parameter type.');
+      // Returning null so that [addToBindings] function excludes this.
+      return _stack.pop().func;
     }
 
     _stack.top.func = Func(
@@ -80,6 +80,7 @@ Func? parseFunctionDeclaration(clang_types.CXCursor cursor) {
       exposeFunctionTypedefs:
           config.exposeFunctionTypedefs.shouldInclude(funcName),
       isLeaf: config.leafFunctions.shouldInclude(funcName),
+      ffiNativeConfig: config.ffiNativeConfig,
     );
     bindingsIndex.addFuncToSeen(funcUsr, _stack.top.func!);
   } else if (bindingsIndex.isSeenFunc(funcUsr)) {
@@ -105,9 +106,8 @@ List<Parameter> _getParameters(clang_types.CXCursor cursor, String funcName) {
     final pt = _getParameterType(paramCursor);
     if (pt.isIncompleteCompound) {
       _stack.top.incompleteStructParameter = true;
-    } else if (pt.getBaseType().broadType == BroadType.Unimplemented) {
-      _logger
-          .finer('Unimplemented type: ${pt.getBaseType().unimplementedReason}');
+    } else if (pt.baseType is UnimplementedType) {
+      _logger.finer('Unimplemented type: ${pt.baseType}');
       _stack.top.unimplementedParameterType = true;
     }
 
@@ -127,5 +127,5 @@ List<Parameter> _getParameters(clang_types.CXCursor cursor, String funcName) {
 }
 
 Type _getParameterType(clang_types.CXCursor cursor) {
-  return cursor.type().toCodeGenType();
+  return cursor.toCodeGenType();
 }

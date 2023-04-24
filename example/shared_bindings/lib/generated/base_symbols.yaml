@@ -1,0 +1,22 @@
+format_version: 1.0.0
+files:
+  package:shared_bindings/generated/base_gen.dart:
+    used-config:
+      ffi-native: false
+    symbols:
+      c:@E@BaseEnum:
+        name: BaseEnum
+      c:@F@base_func1:
+        name: base_func1
+      c:@S@BaseStruct1:
+        name: BaseStruct1
+      c:@S@BaseStruct2:
+        name: BaseStruct2
+      c:@U@BaseUnion1:
+        name: BaseUnion1
+      c:@U@BaseUnion2:
+        name: BaseUnion2
+      c:base.h@T@BaseTypedef1:
+        name: BaseTypedef1
+      c:base.h@T@BaseTypedef2:
+        name: BaseTypedef2

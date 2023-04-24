@@ -1,0 +1,10 @@
+name: NativeLibrary
+ffi-native:
+  # asset: 'assetname' # (optional)
+description: Bindings to `headers/example.h`.
+output: 'generated_bindings.dart'
+headers:
+  entry-points:
+    - 'headers/example.h'
+preamble: |
+  // ignore_for_file: deprecated_member_use

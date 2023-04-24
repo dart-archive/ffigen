@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 import 'dart:io';
 
-import 'package:ffigen/src/code_generator/type.dart';
+import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/header_parser/clang_bindings/clang_bindings.dart'
     as clang;
 
@@ -29,6 +29,25 @@ String get dynamicLibParentName => Platform.isWindows ? 'bin' : 'lib';
 
 const output = 'output';
 
+// Sub-keys of output.
+const bindings = "bindings";
+const symbolFile = 'symbol-file';
+
+const language = 'language';
+
+// String mappings for the Language enum.
+const langC = 'c';
+const langObjC = 'objc';
+
+// Clang command line args for Objective C.
+const clangLangObjC = ['-x', 'objective-c'];
+const clangObjCBoolDefine = '__OBJC_BOOL_IS_BOOL';
+const clangInclude = '-include';
+
+// Special objective C types.
+const objcBOOL = 'BOOL';
+const objcInstanceType = 'instancetype';
+
 const headers = 'headers';
 
 // Sub-fields of headers
@@ -52,6 +71,9 @@ const unnamedEnums = 'unnamed-enums';
 const globals = 'globals';
 const macros = 'macros';
 const typedefs = 'typedefs';
+const objcInterfaces = 'objc-interfaces';
+
+const excludeAllByDefault = 'exclude-all-by-default';
 
 // Sub-fields of Declarations.
 const include = 'include';
@@ -63,6 +85,9 @@ const symbolAddress = 'symbol-address';
 // Nested under `functions`
 const exposeFunctionTypedefs = 'expose-typedefs';
 const leafFunctions = 'leaf';
+
+// Sub-fields of ObjC interfaces.
+const objcModule = 'module';
 
 const dependencyOnly = 'dependency-only';
 // Values for `compoundDependencies`.
@@ -78,9 +103,6 @@ const Map<Object, int?> packingValuesMap = {
   8: 8,
   16: 16,
 };
-
-const sizemap = 'size-map';
-const typedefmap = 'typedef-map';
 
 // Sizemap values.
 const SChar = 'char';
@@ -110,6 +132,50 @@ const sizemap_native_mapping = <String, int>{
   Enum: clang.CXTypeKind.CXType_Enum
 };
 
+// Library imports.
+const libraryImports = 'library-imports';
+
+// Sub Keys of symbol file.
+const symbols = 'symbols';
+
+// Symbol file yaml.
+const formatVersion = "format_version";
+
+/// Current symbol file format version.
+///
+/// This is generated when generating any symbol file. When importing any other
+/// symbol file, this version is compared according to `semantic` versioning
+/// to determine compatibility.
+const symbolFileFormatVersion = "1.0.0";
+const files = "files";
+const usedConfig = "used-config";
+
+const import = 'import';
+const defaultSymbolFileImportPrefix = 'imp';
+
+// Sub keys of import.
+const symbolFilesImport = 'symbol-files';
+// Sub-Sub keys of symbolFilesImport.
+const importPath = 'import-path';
+
+final predefinedLibraryImports = {
+  ffiImport.name: ffiImport,
+  ffiPkgImport.name: ffiPkgImport
+};
+
+const typeMap = 'type-map';
+
+// Sub-fields for type-map.
+const typeMapTypedefs = 'typedefs';
+const typeMapStructs = 'structs';
+const typeMapUnions = 'unions';
+const typeMapNativeTypes = 'native-types';
+
+// Sub-sub-keys for fields under typeMap.
+const lib = 'lib';
+const cType = 'c-type';
+const dartType = 'dart-type';
+
 const supportedNativeType_mappings = <String, SupportedNativeType>{
   'Void': SupportedNativeType.Void,
   'Uint8': SupportedNativeType.Uint8,
@@ -128,7 +194,6 @@ const supportedNativeType_mappings = <String, SupportedNativeType>{
 // Boolean flags.
 const sort = 'sort';
 const useSupportedTypedefs = 'use-supported-typedefs';
-const dartBool = 'dart-bool';
 const useDartHandle = 'use-dart-handle';
 
 const comments = 'comments';
@@ -156,19 +221,33 @@ const libclang_dylib_macos = 'libclang.dylib';
 const libclang_dylib_windows = 'libclang.dll';
 
 // Dynamic library default locations.
-const linuxDylibLocations = [
+const linuxDylibLocations = {
   '/usr/lib/llvm-9/lib/',
   '/usr/lib/llvm-10/lib/',
   '/usr/lib/llvm-11/lib/',
+  '/usr/lib/llvm-12/lib/',
+  '/usr/lib/llvm-13/lib/',
+  '/usr/lib/llvm-14/lib/',
+  '/usr/lib/llvm-15/lib/',
   '/usr/lib/',
   '/usr/lib64/',
-];
-const windowsDylibLocations = [
+};
+const windowsDylibLocations = {
   r'C:\Program Files\LLVM\bin\',
-];
-const macOsDylibLocations = [
+};
+const macOsDylibLocations = {
+  // Default Xcode commandline tools installation.
+  '/Library/Developer/CommandLineTools/usr/',
+  // Default path for LLVM installed with apt-get.
   '/usr/local/opt/llvm/lib/',
-];
+  // Default path for LLVM installed with brew.
+  '/opt/homebrew/opt/llvm/lib/',
+  // Default Xcode installation.
+  // Last because it does not include ObjectiveC headers by default.
+  // See https://github.com/dart-lang/ffigen/pull/402#issuecomment-1154348670.
+  '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/',
+};
+const xcodeDylibLocation = 'Toolchains/XcodeDefault.xctoolchain/usr/lib/';
 
 // Writen doubles.
 const doubleInfinity = 'double.infinity';
@@ -177,3 +256,19 @@ const doubleNaN = 'double.nan';
 
 /// USR for struct `_Dart_Handle`.
 const dartHandleUsr = 'c:@S@_Dart_Handle';
+
+const ffiNative = 'ffi-native';
+const ffiNativeAsset = 'asset';
+
+Directory? _tmpDir;
+
+/// A path to a unique temporary directory that should be used for files meant
+/// to be discarded after the current execution is finished.
+String get tmpDir {
+  if (Platform.environment.containsKey('TEST_TMPDIR')) {
+    return Platform.environment['TEST_TMPDIR']!;
+  }
+
+  _tmpDir ??= Directory.systemTemp.createTempSync();
+  return _tmpDir!.path;
+}

@@ -11,13 +11,13 @@
 
 name: Clang
 description: Holds bindings to LibClang.
-output: 'lib/src/header_parser/clang_bindings/clang_bindings.dart'
+output: '../lib/src/header_parser/clang_bindings/clang_bindings.dart'
 compiler-opts:
   - '-Ithird_party/libclang/include'
   - '-Wno-nullability-completeness'
 headers:
   entry-points:
-    - 'third_party/libclang/include/clang-c/Index.h'
+    - '../third_party/libclang/include/clang-c/Index.h'
   include-directives:
     - '**wrapper.c'
     - '**Index.h'
@@ -39,6 +39,9 @@ enums:
     - CXDiagnosticDisplayOptions
     - CXTranslationUnit_Flags
     - CXEvalResultKind
+    - CXObjCPropertyAttrKind
+    - CXTypeNullabilityKind
+    - CXTypeLayoutError
 
 structs:
   include:
@@ -88,6 +91,7 @@ functions:
     - clang_Cursor_getArgument
     - clang_getNumArgTypes
     - clang_getArgType
+    - clang_getCursorResultType
     - clang_getEnumConstantDeclValue
     - clang_equalRanges
     - clang_Cursor_getCommentRange
@@ -109,3 +113,10 @@ functions:
     - clang_getCursorDefinition
     - clang_Cursor_isNull
     - clang_Cursor_hasAttrs
+    - clang_Type_getObjCObjectBaseType
+    - clang_Cursor_getObjCPropertyAttributes
+    - clang_Cursor_getObjCPropertyGetterName
+    - clang_Cursor_getObjCPropertySetterName
+    - clang_Type_getNullability
+    - clang_Location_isInSystemHeader
+    - clang_getClangVersion
