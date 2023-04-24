@@ -3,11 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/config_provider.dart';
 import 'package:ffigen/src/header_parser.dart' as parser;
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:test/test.dart';
-import 'package:yaml/yaml.dart' as yaml;
 
 import '../test_utils.dart';
 
@@ -19,7 +17,7 @@ void main() {
       logWarnings();
       expected = expectedLibrary();
       actual = parser.parse(
-        Config.fromYaml(yaml.loadYaml('''
+        testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Globals Test'
 ${strings.output}: 'unused'
@@ -37,7 +35,7 @@ ${strings.globals}:
       - pointerToLongDouble
       - globalStruct
 ${strings.compilerOpts}: '-Wno-nullability-completeness'
-        ''') as yaml.YamlMap),
+        '''),
       );
     });
 
@@ -66,34 +64,32 @@ ${strings.compilerOpts}: '-Wno-nullability-completeness'
 }
 
 Library expectedLibrary() {
-  final globalStruc = Struc(name: 'EmptyStruct');
+  final globalStruct = Struct(name: 'EmptyStruct');
   return Library(
     name: 'Bindings',
     bindings: [
-      Global(type: Type.boolean(), name: 'coolGlobal'),
+      Global(type: BooleanType(), name: 'coolGlobal'),
       Global(
-        type: Type.nativeType(SupportedNativeType.Int32),
+        type: NativeType(SupportedNativeType.Int32),
         name: 'myInt',
         exposeSymbolAddress: true,
       ),
       Global(
-        type: Type.pointer(Type.nativeType(SupportedNativeType.Int32)),
+        type: PointerType(NativeType(SupportedNativeType.Int32)),
         name: 'aGlobalPointer',
         exposeSymbolAddress: true,
       ),
-      globalStruc,
+      globalStruct,
       Global(
         name: 'globalStruct',
-        type: Type.struct(globalStruc),
+        type: globalStruct,
         exposeSymbolAddress: true,
       ),
       Global(
         name: 'globalStruct_from_alias',
-        type: Type.typealias(
-          Typealias(
-            name: 'EmptyStruct_Alias',
-            type: Type.struct(globalStruc),
-          ),
+        type: Typealias(
+          name: 'EmptyStruct_Alias',
+          type: globalStruct,
         ),
         exposeSymbolAddress: true,
       )

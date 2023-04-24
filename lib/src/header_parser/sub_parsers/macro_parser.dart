@@ -15,10 +15,15 @@ import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
-import '../data.dart';
 import '../utils.dart';
 
 final _logger = Logger('ffigen.header_parser.macro_parser');
+
+Pointer<
+        NativeFunction<
+            Int32 Function(
+                clang_types.CXCursor, clang_types.CXCursor, Pointer<Void>)>>?
+    _macroVariablevisitorPtr;
 
 /// Adds a macro definition to be parsed later.
 void saveMacroDefinition(clang_types.CXCursor cursor) {
@@ -61,7 +66,10 @@ List<Constant>? parseSavedMacros() {
   final index = clang.clang_createIndex(0, 0);
   Pointer<Pointer<Utf8>> clangCmdArgs = nullptr;
   var cmdLen = 0;
-  clangCmdArgs = createDynamicStringArray(config.compilerOpts);
+
+  final compilerOpts = config.compilerOpts;
+  clangCmdArgs = createDynamicStringArray(compilerOpts);
+
   cmdLen = config.compilerOpts.length;
   final tu = clang.clang_parseTranslationUnit(
     index,
@@ -76,11 +84,13 @@ List<Constant>? parseSavedMacros() {
   if (tu == nullptr) {
     _logger.severe('Unable to parse Macros.');
   } else {
+    logTuDiagnostics(tu, _logger, file.path, logLevel: Level.FINEST);
     final rootCursor = clang.clang_getTranslationUnitCursor(tu);
 
     final resultCode = clang.clang_visitChildren(
       rootCursor,
-      Pointer.fromFunction(_macroVariablevisitor, exceptional_visitor_return),
+      _macroVariablevisitorPtr ??= Pointer.fromFunction(
+          _macroVariablevisitor, exceptional_visitor_return),
       nullptr,
     );
 
@@ -173,7 +183,7 @@ late Set<String> _macroVarNames;
 
 /// Creates a temporary file for parsing macros in current directory.
 File createFileForMacros() {
-  final fileNameBase = 'temp_for_macros';
+  final fileNameBase = p.join(strings.tmpDir, 'temp_for_macros');
   final fileExt = 'hpp';
 
   // Find a filename which doesn't already exist.
@@ -181,18 +191,20 @@ File createFileForMacros() {
   var i = 0;
   while (file.existsSync()) {
     i++;
-    file = File('${fileNameBase.split('.')[0]}_$i.$fileExt');
+    file = File('${fileNameBase}_$i.$fileExt');
   }
 
   // Create file.
   file.createSync();
-  // Save generted name.
+
+  // Save generated name.
   _generatedFileBaseName = p.basename(file.path);
 
   // Write file contents.
   final sb = StringBuffer();
   for (final h in config.headers.entryPoints) {
-    sb.writeln('#include "$h"');
+    final fullHeaderPath = File(h).absolute.path;
+    sb.writeln('#include "$fullHeaderPath"');
   }
 
   _macroVarNames = {};
@@ -239,7 +251,7 @@ class MacroVariableString {
 /// E.g- For a string "Hello\nWorld", The new line character is converted to \n.
 /// Note: The string is considered to be Utf8, but is treated as Extended ASCII,
 /// if the conversion fails.
-String _getWrittenRepresentation(String macroName, Pointer<Int8> strPtr) {
+String _getWrittenRepresentation(String macroName, Pointer<Char> strPtr) {
   final sb = StringBuffer();
   try {
     // Consider string to be Utf8 encoded by default.

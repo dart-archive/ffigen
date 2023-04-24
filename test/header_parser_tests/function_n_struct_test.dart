@@ -3,12 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/config_provider.dart';
 import 'package:ffigen/src/header_parser.dart' as parser;
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
 import 'package:test/test.dart';
-import 'package:yaml/yaml.dart' as yaml;
 
 import '../test_utils.dart';
 
@@ -20,7 +18,7 @@ void main() {
       logWarnings(Level.SEVERE);
       expected = expectedLibrary();
       actual = parser.parse(
-        Config.fromYaml(yaml.loadYaml('''
+        testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Function And Struct Test'
 ${strings.output}: 'unused'
@@ -28,7 +26,7 @@ ${strings.output}: 'unused'
 ${strings.headers}:
   ${strings.entryPoints}:
     - 'test/header_parser_tests/function_n_struct.h'
-        ''') as yaml.YamlMap),
+        '''),
       );
     });
 
@@ -48,13 +46,13 @@ ${strings.headers}:
           expected.getBindingAsString('Struct2'));
     });
     test('Struct3 flexible array member', () {
-      expect((actual.getBinding('Struct3') as Struc).members.isEmpty, true);
+      expect((actual.getBinding('Struct3') as Struct).members.isEmpty, true);
     });
     test('Struct4 bit field member', () {
-      expect((actual.getBinding('Struct4') as Struc).members.isEmpty, true);
+      expect((actual.getBinding('Struct4') as Struct).members.isEmpty, true);
     });
     test('Struct5 incompleted struct member', () {
-      expect((actual.getBinding('Struct5') as Struc).members.isEmpty, true);
+      expect((actual.getBinding('Struct5') as Struct).members.isEmpty, true);
     });
     test('Struct6 typedef constant array', () {
       expect(actual.getBindingAsString('Struct6'),
@@ -68,63 +66,56 @@ ${strings.headers}:
 }
 
 Library expectedLibrary() {
-  final struc1 = Struc(name: 'Struct1', members: [
+  final struct1 = Struct(name: 'Struct1', members: [
     Member(
       name: 'a',
-      type: Type.nativeType(SupportedNativeType.Int32),
+      type: intType,
     ),
   ]);
-  final struc2 = Struc(name: 'Struct2', members: [
+  final struct2 = Struct(name: 'Struct2', members: [
     Member(
       name: 'a',
-      type: Type.struct(struc1),
+      type: struct1,
     ),
   ]);
-  final struc3 = Struc(name: 'Struct3');
+  final struct3 = Struct(name: 'Struct3');
   return Library(
     name: 'Bindings',
     bindings: [
-      struc1,
-      struc2,
-      struc3,
+      struct1,
+      struct2,
+      struct3,
       Func(
         name: 'func1',
         parameters: [
-          Parameter(name: 's', type: Type.pointer(Type.struct(struc2))),
+          Parameter(name: 's', type: PointerType(struct2)),
         ],
-        returnType: Type.nativeType(
+        returnType: NativeType(
           SupportedNativeType.Void,
         ),
       ),
       Func(
         name: 'func2',
         parameters: [
-          Parameter(name: 's', type: Type.pointer(Type.struct(struc3))),
+          Parameter(name: 's', type: PointerType(struct3)),
         ],
-        returnType: Type.nativeType(
+        returnType: NativeType(
           SupportedNativeType.Void,
         ),
       ),
       Func(
         name: 'func3',
         parameters: [
-          Parameter(
-              name: 'a',
-              type: Type.pointer(Type.nativeType(SupportedNativeType.Int32))),
+          Parameter(name: 'a', type: PointerType(intType)),
         ],
-        returnType: Type.nativeType(
+        returnType: NativeType(
           SupportedNativeType.Void,
         ),
       ),
-      Struc(name: 'Struct4'),
-      Struc(name: 'Struct5'),
-      Struc(name: 'Struct6', members: [
-        Member(
-            name: 'a',
-            type: Type.constantArray(
-                2,
-                Type.constantArray(
-                    10, Type.nativeType(SupportedNativeType.Int32))))
+      Struct(name: 'Struct4'),
+      Struct(name: 'Struct5'),
+      Struct(name: 'Struct6', members: [
+        Member(name: 'a', type: ConstantArray(2, ConstantArray(10, intType)))
       ]),
     ],
   );

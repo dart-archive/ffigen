@@ -5,9 +5,13 @@
 include: package:lints/recommended.yaml
 
 analyzer:
-  strong-mode:
-    implicit-casts: false
-    implicit-dynamic: false
+  exclude:
+    - 'test/**_expected*'
+    # Goldens cannot be generated outside MacOS causing analysis errors.
+    - test/native_objc_test/** 
+  language:
+    strict-casts: true
+    strict-inference: true
 
 linter:
   rules:

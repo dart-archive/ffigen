@@ -9,6 +9,7 @@ import 'package:args/args.dart';
 import 'package:cli_util/cli_logging.dart' show Ansi;
 import 'package:ffigen/ffigen.dart';
 import 'package:logging/logging.dart';
+import 'package:package_config/package_config.dart';
 import 'package:yaml/yaml.dart' as yaml;
 
 final _logger = Logger('ffigen.ffigen');
@@ -34,7 +35,7 @@ String errorPen(String str) {
   return '${_ansi.red}$str${_ansi.none}';
 }
 
-void main(List<String> args) {
+void main(List<String> args) async {
   // Parses the cmd args. This will print usage and exit if --help was passed.
   final argResult = getArgResults(args);
 
@@ -44,7 +45,7 @@ void main(List<String> args) {
   // Create a config object.
   Config config;
   try {
-    config = getConfig(argResult);
+    config = getConfig(argResult, await findPackageConfig(Directory.current));
   } on FormatException {
     _logger.severe('Please fix configuration errors and re-run the tool.');
     exit(1);
@@ -58,17 +59,25 @@ void main(List<String> args) {
   library.generateFile(gen);
   _logger
       .info(successPen('Finished, Bindings generated in ${gen.absolute.path}'));
+
+  if (config.symbolFile != null) {
+    final symbolFileGen = File(config.symbolFile!.output);
+    library.generateSymbolOutputFile(
+        symbolFileGen, config.symbolFile!.importPath);
+    _logger.info(successPen(
+        'Finished, Symbol Output generated in ${symbolFileGen.absolute.path}'));
+  }
 }
 
-Config getConfig(ArgResults result) {
+Config getConfig(ArgResults result, PackageConfig? packageConfig) {
   _logger.info('Running in ${Directory.current}');
   Config config;
 
   // Parse config from yaml.
   if (result.wasParsed(conf)) {
-    config = getConfigFromCustomYaml(result[conf] as String);
+    config = getConfigFromCustomYaml(result[conf] as String, packageConfig);
   } else {
-    config = getConfigFromPubspec();
+    config = getConfigFromPubspec(packageConfig);
   }
 
   // Add compiler options from command line.
@@ -82,7 +91,7 @@ Config getConfig(ArgResults result) {
 }
 
 /// Extracts configuration from pubspec file.
-Config getConfigFromPubspec() {
+Config getConfigFromPubspec(PackageConfig? packageConfig) {
   final pubspecFile = File(pubspecName);
 
   if (!pubspecFile.existsSync()) {
@@ -101,11 +110,12 @@ Config getConfigFromPubspec() {
     _logger.severe("Couldn't find an entry for '$configKey' in $pubspecName.");
     exit(1);
   }
-  return Config.fromYaml(bindingsConfigMap);
+  return Config.fromYaml(bindingsConfigMap,
+      filename: pubspecFile.path, packageConfig: packageConfig);
 }
 
 /// Extracts configuration from a custom yaml file.
-Config getConfigFromCustomYaml(String yamlPath) {
+Config getConfigFromCustomYaml(String yamlPath, PackageConfig? packageConfig) {
   final yamlFile = File(yamlPath);
 
   if (!yamlFile.existsSync()) {
@@ -113,11 +123,7 @@ Config getConfigFromCustomYaml(String yamlPath) {
     exit(1);
   }
 
-  // Throws a [YamlException] if it's unable to parse the Yaml.
-  final bindingsConfigMap =
-      yaml.loadYaml(yamlFile.readAsStringSync()) as yaml.YamlMap;
-
-  return Config.fromYaml(bindingsConfigMap);
+  return Config.fromFile(yamlFile, packageConfig: packageConfig);
 }
 
 /// Parses the cmd line arguments.

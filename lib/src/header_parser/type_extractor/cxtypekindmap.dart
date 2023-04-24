@@ -3,28 +3,23 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator.dart' show SupportedNativeType;
-import 'package:ffigen/src/header_parser/clang_bindings/clang_bindings.dart'
-    as clang;
+import 'package:ffigen/src/code_generator/imports.dart';
 
-/// Utility to convert CXType to [code_generator.Type].
-///
-/// Key: CXTypekindEnum, Value: TypeString for code_generator
-var cxTypeKindToSupportedNativeTypes = <int, SupportedNativeType>{
-  clang.CXTypeKind.CXType_Void: SupportedNativeType.Void,
-  clang.CXTypeKind.CXType_UChar: SupportedNativeType.Uint8,
-  clang.CXTypeKind.CXType_UShort: SupportedNativeType.Uint16,
-  clang.CXTypeKind.CXType_UInt: SupportedNativeType.Uint32,
-  clang.CXTypeKind.CXType_ULong: SupportedNativeType.Uint64,
-  clang.CXTypeKind.CXType_ULongLong: SupportedNativeType.Uint64,
-  clang.CXTypeKind.CXType_SChar: SupportedNativeType.Int8,
-  clang.CXTypeKind.CXType_Short: SupportedNativeType.Int16,
-  clang.CXTypeKind.CXType_Int: SupportedNativeType.Int32,
-  clang.CXTypeKind.CXType_Long: SupportedNativeType.Int64,
-  clang.CXTypeKind.CXType_LongLong: SupportedNativeType.Int64,
-  clang.CXTypeKind.CXType_Float: SupportedNativeType.Float,
-  clang.CXTypeKind.CXType_Double: SupportedNativeType.Double,
-  clang.CXTypeKind.CXType_Char_S: SupportedNativeType.Int8,
-  clang.CXTypeKind.CXType_Char_U: SupportedNativeType.Uint8,
+var cxTypeKindToImportedTypes = <String, ImportedType>{
+  'void': voidType,
+  'unsigned char': unsignedCharType,
+  'signed char': signedCharType,
+  'char': charType,
+  'unsigned short': unsignedShortType,
+  'short': shortType,
+  'unsigned int': unsignedIntType,
+  'int': intType,
+  'unsigned long': unsignedLongType,
+  'long': longType,
+  'unsigned long long': unsignedLongLongType,
+  'long long': longLongType,
+  'float': floatType,
+  'double': doubleType,
 };
 
 var suportedTypedefToSuportedNativeType = <String, SupportedNativeType>{
@@ -37,4 +32,10 @@ var suportedTypedefToSuportedNativeType = <String, SupportedNativeType>{
   'int32_t': SupportedNativeType.Int32,
   'int64_t': SupportedNativeType.Int64,
   'intptr_t': SupportedNativeType.IntPtr,
+  'uintptr_t': SupportedNativeType.UintPtr,
+};
+
+var supportedTypedefToImportedType = <String, ImportedType>{
+  'size_t': sizeType,
+  'wchar_t': wCharType,
 };

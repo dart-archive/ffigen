@@ -10,16 +10,22 @@ import 'package:ffigen/src/header_parser/includer.dart';
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
-import '../data.dart';
 import '../utils.dart';
 
 final _logger = Logger('ffigen.header_parser.unnamed_enumdecl_parser');
+
+Pointer<
+        NativeFunction<
+            Int32 Function(
+                clang_types.CXCursor, clang_types.CXCursor, Pointer<Void>)>>?
+    _unnamedenumCursorVisitorPtr;
 
 /// Saves unnamed enums.
 void saveUnNamedEnum(clang_types.CXCursor cursor) {
   final resultCode = clang.clang_visitChildren(
     cursor,
-    Pointer.fromFunction(_unnamedenumCursorVisitor, exceptional_visitor_return),
+    _unnamedenumCursorVisitorPtr ??= Pointer.fromFunction(
+        _unnamedenumCursorVisitor, exceptional_visitor_return),
     nullptr,
   );
 
@@ -40,6 +46,9 @@ int _unnamedenumCursorVisitor(clang_types.CXCursor cursor,
         if (shouldIncludeUnnamedEnumConstant(cursor.usr(), cursor.spelling())) {
           _addUnNamedEnumConstant(cursor);
         }
+        break;
+      case clang_types.CXCursorKind.CXCursor_UnexposedAttr:
+        // Ignore.
         break;
       default:
         _logger.severe('Invalid enum constant.');

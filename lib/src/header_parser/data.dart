@@ -4,7 +4,8 @@
 
 import 'dart:ffi';
 
-import 'package:ffigen/src/code_generator.dart' show Constant;
+import 'package:ffigen/src/code_generator.dart'
+    show Constant, ObjCBuiltInFunctions;
 import 'package:ffigen/src/config_provider.dart' show Config;
 import 'clang_bindings/clang_bindings.dart' show Clang;
 
@@ -19,6 +20,10 @@ late Config _config;
 /// Holds clang functions.
 Clang get clang => _clang;
 late Clang _clang;
+
+// Cursor index.
+CursorIndex get cursorIndex => _cursorIndex;
+CursorIndex _cursorIndex = CursorIndex();
 
 // Tracks seen status for bindings
 BindingsIndex get bindingsIndex => _bindingsIndex;
@@ -36,11 +41,17 @@ Map<String, Macro> _savedMacros = {};
 List<Constant> get unnamedEnumConstants => _unnamedEnumConstants;
 List<Constant> _unnamedEnumConstants = [];
 
+/// Built in functions used by the Objective C bindings.
+ObjCBuiltInFunctions get objCBuiltInFunctions => _objCBuiltInFunctions;
+late ObjCBuiltInFunctions _objCBuiltInFunctions;
+
 void initializeGlobals({required Config config}) {
   _config = config;
   _clang = Clang(DynamicLibrary.open(config.libclangDylib));
   _incrementalNamer = IncrementalNamer();
   _savedMacros = {};
   _unnamedEnumConstants = [];
+  _cursorIndex = CursorIndex();
   _bindingsIndex = BindingsIndex();
+  _objCBuiltInFunctions = ObjCBuiltInFunctions();
 }

@@ -10,11 +10,16 @@ import 'package:ffigen/src/header_parser/sub_parsers/unnamed_enumdecl_parser.dar
 import 'package:logging/logging.dart';
 
 import '../clang_bindings/clang_bindings.dart' as clang_types;
-import '../data.dart';
 import '../includer.dart';
 import '../utils.dart';
 
 final _logger = Logger('ffigen.header_parser.enumdecl_parser');
+
+Pointer<
+        NativeFunction<
+            Int32 Function(
+                clang_types.CXCursor, clang_types.CXCursor, Pointer<Void>)>>?
+    _enumCursorVisitorPtr;
 
 /// Holds temporary information regarding [EnumClass] while parsing.
 class _ParsedEnum {
@@ -27,7 +32,6 @@ final _stack = Stack<_ParsedEnum>();
 /// Parses an enum declaration.
 EnumClass? parseEnumDeclaration(
   clang_types.CXCursor cursor, {
-
   /// Option to ignore declaration filter (Useful in case of extracting
   /// declarations when they are passed/returned by an included function.)
   bool ignoreFilter = false,
@@ -35,9 +39,7 @@ EnumClass? parseEnumDeclaration(
   _stack.push(_ParsedEnum());
 
   // Parse the cursor definition instead, if this is a forward declaration.
-  if (isForwardDeclaration(cursor)) {
-    cursor = clang.clang_getCursorDefinition(cursor);
-  }
+  cursor = cursorIndex.getDefinition(cursor);
 
   final enumUsr = cursor.usr();
   final String enumName;
@@ -54,8 +56,7 @@ EnumClass? parseEnumDeclaration(
   if (enumName.isEmpty) {
     _logger.fine('Saving anonymous enum.');
     saveUnNamedEnum(cursor);
-  } else if ((ignoreFilter || shouldIncludeEnumClass(enumUsr, enumName)) &&
-      (!bindingsIndex.isSeenEnumClass(enumUsr))) {
+  } else if (ignoreFilter || shouldIncludeEnumClass(enumUsr, enumName)) {
     _logger.fine('++++ Adding Enum: ${cursor.completeStringRepr()}');
     _stack.top.enumClass = EnumClass(
       usr: enumUsr,
@@ -63,11 +64,7 @@ EnumClass? parseEnumDeclaration(
       originalName: enumName,
       name: config.enumClassDecl.renameUsingConfig(enumName),
     );
-    bindingsIndex.addEnumClassToSeen(enumUsr, _stack.top.enumClass!);
     _addEnumConstant(cursor);
-  }
-  if (bindingsIndex.isSeenEnumClass(enumUsr)) {
-    _stack.top.enumClass = bindingsIndex.getSeenEnumClass(enumUsr);
   }
 
   return _stack.pop().enumClass;
@@ -76,7 +73,8 @@ EnumClass? parseEnumDeclaration(
 void _addEnumConstant(clang_types.CXCursor cursor) {
   final resultCode = clang.clang_visitChildren(
     cursor,
-    Pointer.fromFunction(_enumCursorVisitor, exceptional_visitor_return),
+    _enumCursorVisitorPtr ??=
+        Pointer.fromFunction(_enumCursorVisitor, exceptional_visitor_return),
     nullptr,
   );
 
@@ -94,6 +92,9 @@ int _enumCursorVisitor(clang_types.CXCursor cursor, clang_types.CXCursor parent,
     switch (clang.clang_getCursorKind(cursor)) {
       case clang_types.CXCursorKind.CXCursor_EnumConstantDecl:
         _addEnumConstantToEnumClass(cursor);
+        break;
+      case clang_types.CXCursorKind.CXCursor_UnexposedAttr:
+        // Ignore.
         break;
       default:
         _logger.fine('invalid enum constant');

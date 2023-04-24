@@ -1,0 +1,74 @@
+output: 'generated_bindings.dart'
+
+# This will sort the bindings alphabetically.
+# sort: true
+
+# This is required if LLVM can't be found in default locations by ffigen.
+# llvm-path:
+#   - '/usr/local/opt/llvm'
+
+# Bash style Glob matching is also supported.
+# TODO(11): Globs dont work on windows if they begin with '.' or '..'.
+headers:
+  entry-points:
+    - ../../third_party/libclang/include/clang-c/Index.h
+  include-directives: # use glob syntax to match with header file path.
+    - '**CXString.h'
+    - '**Index.h'
+
+compiler-opts:
+  - '-I../../third_party/libclang/include'
+  - '-I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/'
+  - '-Wno-nullability-completeness'
+functions:
+  include:
+    - 'clang_.*' # Can be a regexp, '.' matches any character.
+  symbol-address:
+    include:
+      - 'clang_.*' # Symbol Address for these functions will be exposed via addresses.
+  expose-typedefs:
+    include:
+      - 'clang_.*' # Typedefs for Native and Dart type for these functions will be generated.
+structs:
+  include:
+      - 'CX.*'
+enums:
+  include:
+    - 'CXTypeKind' # Full names are given higher priority than regexp.
+    - 'CXGlobalOptFlags'
+
+library-imports:
+  custom_import: 'custom_import.dart'
+
+# These can be used to map any typedef to a specific native type.
+type-map:
+  typedefs:
+    'time_t':
+      lib: 'ffi'
+      c-type: 'Int64'
+      dart-type: 'int'
+  structs:
+    'CXCursorSetImpl':
+      lib: 'custom_import'
+      c-type: 'CXCursorSetImpl'
+      dart-type: 'CXCursorSetImpl'
+
+# Default is 'NativeLibrary'
+name: 'LibClang'
+
+description: 'Holds bindings to LibClang.'
+
+# Doc Comments for generated binings.
+# Comments can be disabled by using comments: false
+comments:
+  style: doxygen # Options - doxygen(default) / any.
+  length: full # Options - brief / full(default).
+
+# The header of the file, this is pasted as it is.
+preamble: |
+  // Part of the LLVM Project, under the Apache License v2.0 with LLVM
+  // Exceptions.
+  // See https://llvm.org/LICENSE.txt for license information.
+  // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
+  // ignore_for_file: camel_case_types, non_constant_identifier_names

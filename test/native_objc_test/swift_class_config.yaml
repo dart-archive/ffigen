@@ -1,0 +1,15 @@
+name: SwiftClassTestLibrary
+description: 'Tests Swift classes'
+language: objc
+output: 'swift_class_bindings.dart'
+exclude-all-by-default: true
+objc-interfaces:
+  include:
+    - MySwiftClass
+  module:
+    'MySwiftClass': 'swift_class_test'
+headers:
+  entry-points:
+    - 'swift_class_test-Swift.h'
+preamble: |
+  // ignore_for_file: camel_case_types, non_constant_identifier_names, unused_element, unused_field

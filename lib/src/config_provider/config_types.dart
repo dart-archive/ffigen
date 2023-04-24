@@ -9,6 +9,8 @@ import 'package:quiver/pattern.dart' as quiver;
 
 import 'path_finder.dart';
 
+enum Language { c, objc }
+
 class CommentType {
   CommentStyle style;
   CommentLength length;
@@ -27,6 +29,7 @@ class CommentType {
 }
 
 enum CommentStyle { doxygen, any }
+
 enum CommentLength { none, brief, full }
 
 enum CompoundDependencies { full, opaque }
@@ -153,7 +156,8 @@ class Declaration {
       _memberRenamer.rename(declaration, member);
 
   /// Checks if a name is allowed by a filter.
-  bool shouldInclude(String name) => _includer.shouldInclude(name);
+  bool shouldInclude(String name, bool excludeAllByDefault) =>
+      _includer.shouldInclude(name, excludeAllByDefault);
 
   /// Checks if the symbol address should be included for this name.
   bool shouldIncludeSymbolAddress(String name) =>
@@ -232,7 +236,7 @@ class Includer {
   /// Returns true if [name] is allowed.
   ///
   /// Exclude overrides include.
-  bool shouldInclude(String name) {
+  bool shouldInclude(String name, [bool excludeAllByDefault = false]) {
     if (_excludeFull.contains(name)) {
       return false;
     }
@@ -258,7 +262,8 @@ class Includer {
     if (_includeMatchers.isNotEmpty || _includeFull.isNotEmpty) {
       return false;
     } else {
-      return true;
+      // Otherwise, fall back to the default behavior for empty filters.
+      return !excludeAllByDefault;
     }
   }
 }
@@ -367,4 +372,54 @@ class CompilerOptsAuto {
 
     return [];
   }
+}
+
+class _ObjCModulePrefixerEntry {
+  final RegExp pattern;
+  final String moduleName;
+
+  _ObjCModulePrefixerEntry(this.pattern, this.moduleName);
+}
+
+/// Handles applying module prefixes to ObjC classes.
+class ObjCModulePrefixer {
+  final _prefixes = <_ObjCModulePrefixerEntry>[];
+
+  ObjCModulePrefixer(Map<String, String> prefixes) {
+    for (final entry in prefixes.entries) {
+      _prefixes.add(_ObjCModulePrefixerEntry(RegExp(entry.key), entry.value));
+    }
+  }
+
+  /// If any of the prefixing patterns match, applies that module prefix.
+  /// Otherwise returns the class name unmodified.
+  String applyPrefix(String className) {
+    for (final entry in _prefixes) {
+      if (quiver.matchesFull(entry.pattern, className)) {
+        return '${entry.moduleName}.$className';
+      }
+    }
+    return className;
+  }
+}
+
+class FfiNativeConfig {
+  final bool enabled;
+  final String? asset;
+
+  const FfiNativeConfig({required this.enabled, this.asset});
+}
+
+class SymbolFile {
+  final String importPath;
+  final String output;
+
+  SymbolFile(this.importPath, this.output);
+}
+
+class OutputConfig {
+  final String output;
+  final SymbolFile? symbolFile;
+
+  OutputConfig(this.output, this.symbolFile);
 }

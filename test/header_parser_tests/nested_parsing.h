@@ -40,3 +40,23 @@ struct Struct5{
     // Incomplete struct array.
     struct EmptyStruct b[3];
 };
+
+struct Struct6
+{
+    // An anonymous, unnamed union.
+    union
+    {
+        float a;
+    };
+
+    // An unnamed union.
+    union
+    {
+        float b;
+    } c;
+
+    union
+    {
+        float d;
+    } e;
+};

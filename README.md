@@ -4,7 +4,16 @@
 
 Binding generator for [FFI](https://dart.dev/guides/libraries/c-interop) bindings.
 
-> Note: ffigen only supports parsing `C` headers.
+> Note: ffigen only supports parsing `C` headers, not `C++` headers.
+
+This bindings generator can be used to call C code -- or code in another
+language that compiles to C modules that follow the C calling convention --
+such as Go or Rust. For more details, see:
+https://dart.dev/guides/libraries/c-interop
+
+ffigen also has experimental support for calling ObjC and Swift code;
+for details see:
+https://dart.dev/guides/libraries/objective-c-interop
 
 ## Example
 
@@ -22,13 +31,14 @@ ffigen:
 ```
 Output (_generated_bindings.dart_).
 ```dart
+import 'dart:ffi' as ffi;
 class NativeLibrary {
-  final Pointer<T> Function<T extends NativeType>(String symbolName)
+  final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
       _lookup;
-  NativeLibrary(DynamicLibrary dynamicLibrary)
+  NativeLibrary(ffi.DynamicLibrary dynamicLibrary)
       : _lookup = dynamicLibrary.lookup;
   NativeLibrary.fromLookup(
-      Pointer<T> Function<T extends NativeType>(String symbolName)
+      ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
           lookup)
       : _lookup = lookup;
 
@@ -36,12 +46,14 @@ class NativeLibrary {
     return _sum(a, b);
   }
 
-  late final _sumPtr = _lookup<ffi.NativeFunction<ffi.Int32 Function(ffi.Int32, ffi.Int32)>>('sum');
-  late final _sum = _sum_ptr.asFunction<int Function(int, int)>();
+  late final _sumPtr = _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Int)>>('sum');
+  late final _sum = _sumPtr.asFunction<int Function(int, int)>();
+}
 }
 ```
 ## Using this package
 - Add `ffigen` under `dev_dependencies` in your `pubspec.yaml` (run `dart pub add -d ffigen`).
+- Add `package:ffi` under `dependencies` in your `pubspec.yaml` (run `dart pub add ffi`).
 - Install LLVM (see [Installing LLVM](#installing-llvm)).
 - Configurations must be provided in `pubspec.yaml` or in a custom YAML file (see [configurations](#configurations)).
 - Run the tool- `dart run ffigen`.
@@ -89,6 +101,12 @@ The following configuration options are available-
 
 ```yaml
 output: 'generated_bindings.dart'
+```
+or
+```yaml
+output:
+  bindings: 'generated_bindings.dart'
+  ... 
 ```
   </td>
   </tr>
@@ -182,7 +200,10 @@ compiler-opts-automatic:
   </td>
   </tr>
   <tr>
-    <td>functions<br><br>structs<br><br>unions<br><br>enums<br><br>unnamed-enums<br><br>macros<br><br>globals</td>
+    <td>
+      functions<br><br>structs<br><br>unions<br><br>enums<br><br>
+      unnamed-enums<br><br>macros<br><br>globals
+    </td>
     <td>Filters for declarations.<br><b>Default: all are included.</b><br><br>
     Options -<br>
     - Include/Exclude declarations.<br>
@@ -385,25 +406,13 @@ sort: true
   </tr>
   <tr>
     <td>use-supported-typedefs</td>
-    <td>Should automatically map typedefs, E.g uint8_t => Uint8, int16_t => Int16 etc.<br>
+    <td>Should automatically map typedefs, E.g uint8_t => Uint8, int16_t => Int16, size_t => Size etc.<br>
     <b>Default: true</b>
     </td>
     <td>
 
 ```yaml
 use-supported-typedefs: true
-```
-  </td>
-  </tr>
-  <tr>
-    <td>dart-bool</td>
-    <td>Should generate dart `bool` instead of Uint8 for c99 bool in functions.<br>
-    <b>Default: true</b>
-    </td>
-    <td>
-
-```yaml
-dart-bool: true
 ```
   </td>
   </tr>
@@ -420,6 +429,21 @@ use-dart-handle: true
   </td>
   </tr>
   <tr>
+    <td>exclude-all-by-default</td>
+    <td>
+      When a declaration filter (eg `functions:` or `structs:`) is empty or
+      unset, it defaults to including everything. If this flag is enabled, the
+      default behavior is to exclude everything instead.<br>
+      <b>Default: false</b>
+    </td>
+    <td>
+
+```yaml
+exclude-all-by-default: true
+```
+  </td>
+  </tr>
+  <tr>
     <td>preamble</td>
     <td>Raw header of the file, pasted as-it-is.</td>
     <td>
@@ -431,63 +455,204 @@ preamble: |
 </td>
   </tr>
   <tr>
-    <td>typedef-map</td>
-    <td>Map typedefs to Native Types.<br> Values can only be
-    <i>Void, Uint8, Int8, Uint16, Int16, Uint32, Int32, Uint64, Int64, IntPtr, Float and Double.</i>
+    <td>library-imports</td>
+    <td>Specify library imports for use in type-map.<br><br>
+    Note: ffi (dart:ffi) is already available as a predefined import.
     </td>
     <td>
 
 ```yaml
-typedef-map:
-  'my_custom_type': 'IntPtr'
-  'size_t': 'Int64'
+library-imports:
+  custom_lib: 'package:some_pkg/some_file.dart'
 ```
   </td>
   </tr>
   <tr>
-    <td>size-map</td>
-    <td>Size of integers to use (in bytes).<br>
-    <b>The defaults (see example) <i>may</i> not be portable on all OS.
-    Do not change these unless absolutely sure.</b>
+    <td>type-map</td>
+    <td>Map types like integers, typedefs, structs,  unions to any other type.<br><br>
+    <b>Sub-fields</b> - <i>typedefs</i>, <i>structs</i>, <i>unions</i>, <i>ints</i><br><br>
+    <b><i>lib</i></b> must be specified in <i>library-imports</i> or be one of a predefined import.
     </td>
     <td>
 
 ```yaml
-# These are optional and also default,
-# Omitting any and the default
-# will be used.
-size-map:
-  char: 1
-  unsigned char: 1
-  short: 2
-  unsigned short: 2
-  int: 4
-  unsigned int: 4
-  long: 8
-  unsigned long: 8
-  long long: 8
-  unsigned long long: 8
-  enum: 4
+type-map:
+  'native-types': # Targets native types.
+    'char':
+      'lib': 'pkg_ffi' # predefined import.
+      'c-type': 'Char'
+      # For native-types dart-type can be be int, double or float
+      # but same otherwise.
+      'dart-type': 'int'
+    'int':
+      'lib': 'custom_lib'
+      'c-type': 'CustomType4'
+      'dart-type': 'int'
+  'typedefs': # Targets typedefs.
+    'my_type1':
+      'lib': 'custom_lib'
+      'c-type': 'CustomType'
+      'dart-type': 'CustomType'
+  'structs': # Targets structs.
+    'my_type2':
+      'lib': 'custom_lib'
+      'c-type': 'CustomType2'
+      'dart-type': 'CustomType2'
+  'unions': # Targets unions.
+    'my_type3':
+      'lib': 'custom_lib'
+      'c-type': 'CustomType3'
+      'dart-type': 'CustomType3'
 ```
   </td>
+  </tr>
+  <tr>
+    <td>ffi-native</td>
+    <td>
+      <b>WARNING:</b> FfiNative support is EXPERIMENTAL. The API may change
+      in a breaking way without notice.
+      <br><br>
+      Generate `@FfiNative` bindings instead of bindings using `DynamicLibrary` or `lookup`.
+    </td>
+    <td>
+
+```yaml
+ffi-native:
+  asset: 'myasset' # Optional.
+```
+  </td>
+  </tr>
+  <tr>
+    <td>language</td>
+    <td>
+      <b>WARNING:</b> Other language support is EXPERIMENTAL. The API may change
+      in a breaking way without notice.
+      <br><br>
+      Choose the input langauge. Must be one of 'c', or 'objc'. Defaults to 'c'.
+    </td>
+    <td>
+
+```yaml
+language: 'objc'
+```
+  </td>
+  </tr>
+  <tr>
+    <td>output -> symbol-file</td>
+    <td>Generates a symbol file yaml containing all types defined in the generated output.</td>
+    <td>
+
+```yaml
+output:
+  ...
+  symbol-file:
+    # Although file paths are supported here, prefer Package Uri's here
+    # so that other pacakges can use them.
+    output: 'package:some_pkg/symbols.yaml'
+    import-path: 'package:some_pkg/base.dart'
+```
+</td>
+  </tr>
+  <tr>
+    <td>import -> symbol-files</td>
+    <td>Import symbols from a symbol file. Used for sharing type definitions from other pacakges.</td>
+    <td>
+
+```yaml
+import:
+  symbol-files:
+    # Both package Uri and file paths are supported here.
+    - 'package:some_pkg/symbols.yaml'
+    - 'path/to/some/symbol_file.yaml'
+```
+</td>
   </tr>
 </tbody>
 </table>
 
-## Limitations
-1. Multi OS support for types such as long. [Issue #7](https://github.com/dart-lang/ffigen/issues/7)
+### Objective-C config options
+
+<table>
+<thead>
+  <tr>
+    <th>Key</th>
+    <th>Explaination</th>
+    <th>Example</th>
+  </tr>
+  <colgroup>
+    <col>
+    <col style="width: 100px;">
+  </colgroup>
+</thead>
+<tbody>
+  <tr>
+    <td>
+      objc-interfaces
+    </td>
+    <td>
+      Filters for interface declarations. This option works the same as other
+      declaration filters like `functions` and `structs`.
+    </td>
+    <td>
+
+```yaml
+objc-interfaces:
+  include:
+    # Includes a specific interface.
+    - 'MyInterface'
+    # Includes all interfaces starting with "NS".
+    - 'NS.*'
+  exclude:
+    # Override the above NS.* inclusion, to exclude NSURL.
+    - 'NSURL'
+  rename:
+    # Removes '_' prefix from interface names.
+    '_(.*)': '$1'
+```
+
+  </td>
+  </tr>
+
+  <tr>
+    <td>
+      objc-interfaces -> module
+    </td>
+    <td>
+      Adds a module prefix to the class name when loading the class
+      from the dylib. This is only relevent for ObjC headers that are generated
+      wrappers for a Swift library. See example/swift for more information.
+    </td>
+    <td>
+
+```yaml
+headers:
+  entry-points:
+    # Generated by swiftc to wrap foo_lib.swift.
+    - 'foo_lib-Swift.h'
+objc-interfaces:
+  include:
+    # Eg, foo_lib contains a set of classes prefixed with FL.
+    - 'FL.*'
+  module:
+    # Use 'foo_lib' as the module name for all the FL.* classes.
+    # We don't match .* here because other classes like NSString
+    # shouldn't be given a module prefix.
+    'FL.*': 'foo_lib'
+```
+
+  </td>
+  </tr>
+</tbody>
+</table>
 
 ## Trying out examples
 1. `cd examples/<example_u_want_to_run>`, Run `dart pub get`.
 2. Run `dart run ffigen`.
 
 ## Running Tests
-1. Dynamic library for some tests need to be built before running the examples.
-  1. `cd test/native_test`.
-  2. Run `dart build_test_dylib.dart`.
 
-Run tests from the root of the package with `dart run test`.
-> Note: If llvm is not installed in one of the default locations, tests may fail.
+See [test/README.md](test/README.md)
+
 ## FAQ
 ### Can ffigen be used for removing underscores or renaming declarations?
 Ffigen supports **regexp based renaming**, the regexp must be a
@@ -537,11 +702,6 @@ Note: exclude overrides include.
 
 Ffigen treats `char*` just as any other pointer,(`Pointer<Int8>`).
 To convert these to/from `String`, you can use [package:ffi](https://pub.dev/packages/ffi). Use `ptr.cast<Utf8>().toDartString()` to convert `char*` to dart `string` and `"str".toNativeUtf8()` to convert `string` to `char*`.
-### How does ffigen handle C99 bool data type?
-
-Although `dart:ffi` doesn't have a NativeType for `bool`, they can be implemented as `Uint8`.
-Ffigen generates dart `bool` for function parameters and return type by default.
-To disable this, and use `int` instead, set `dart-bool: false` in configurations.
 
 ### How are unnamed enums handled?
 
@@ -619,6 +779,12 @@ The following typedefs are not generated -
   - They refer to a struct/union having the same name as itself.
   - They refer to a boolean, enum, inline array, Handle or any unsupported type.
 
+### How are macros handled?
+
+`ffigen` uses `clang`'s own compiler frontend to parse and traverse the `C` header files. `ffigen` expands the macros using `clang`'s macro expansion and then traverses the expanded code. To do this, `ffigen` generates temporary files in a system tmp directory.
+
+A custom temporary directory can be specified by setting the `TEST_TMPDIR` environment variable.
+
 ### What are these logs generated by ffigen and how to fix them?
 
 Ffigen can sometimes generate a lot of logs, especially when it's parsing a lot of code.
@@ -637,3 +803,16 @@ Ffigen can sometimes generate a lot of logs, especially when it's parsing a lot 
     Level options are - `[all, fine, info (default), warning, severe]`.
     The `all` and `fine` will print a ton of logs are meant for debugging
     purposes only.
+
+### How can type definitions be shared?
+
+Ffigen can share type definitions using symbol files.
+- A package can generate a symbol file using the `output -> symbol-file` config.
+- And another package can then import this, using `import -> symbol-files` config.
+- Doing so will reuse all the types such as Struct/Unions, and will automatically
+ exclude generating other types (E.g functions, enums, macros).
+
+Checkout `examples/shared_bindings` for details.
+
+For manually reusing definitions from another package, the `library-imports`
+and `type-map` config can be used.

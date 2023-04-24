@@ -1,0 +1,14 @@
+name: IsInstanceTestObjCLibrary
+description: 'Tests isInstance'
+language: objc
+output: 'is_instance_bindings.dart'
+exclude-all-by-default: true
+objc-interfaces:
+  include:
+    - ChildClass
+    - UnrelatedClass
+headers:
+  entry-points:
+    - 'is_instance_test.m'
+preamble: |
+  // ignore_for_file: camel_case_types, non_constant_identifier_names, unused_element, unused_field

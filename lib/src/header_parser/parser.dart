@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:ffi/ffi.dart';
 import 'package:ffigen/src/code_generator.dart';
@@ -28,9 +29,9 @@ Library parse(Config c) {
     name: config.wrapperName,
     description: config.wrapperDocComment,
     header: config.preamble,
-    dartBool: config.dartBool,
     sort: config.sort,
     packingOverride: config.structPackingOverride,
+    libraryImports: c.libraryImports.values.toSet(),
   );
 
   return library;
@@ -55,17 +56,25 @@ List<Binding> parseToBindings() {
   final index = clang.clang_createIndex(0, 0);
 
   Pointer<Pointer<Utf8>> clangCmdArgs = nullptr;
-  var cmdLen = 0;
+  final compilerOpts = <String>[
+    // Add compiler opt for comment parsing for clang based on config.
+    if (config.commentType.length != CommentLength.none &&
+        config.commentType.style == CommentStyle.any)
+      strings.fparseAllComments,
 
-  /// Add compiler opt for comment parsing for clang based on config.
-  if (config.commentType.length != CommentLength.none &&
-      config.commentType.style == CommentStyle.any) {
-    config.compilerOpts.add(strings.fparseAllComments);
-  }
+    // If the config targets Objective C, add a compiler opt for it.
+    if (config.language == Language.objc) ...[
+      ...strings.clangLangObjC,
+      ..._findObjectiveCSysroot(),
+    ],
 
-  _logger.fine('CompilerOpts used: ${config.compilerOpts}');
-  clangCmdArgs = createDynamicStringArray(config.compilerOpts);
-  cmdLen = config.compilerOpts.length;
+    // Add the user options last so they can override any other options.
+    ...config.compilerOpts
+  ];
+
+  _logger.fine('CompilerOpts used: $compilerOpts');
+  clangCmdArgs = createDynamicStringArray(compilerOpts);
+  final cmdLen = compilerOpts.length;
 
   // Contains all bindings. A set ensures we never have duplicates.
   final bindings = <Binding>{};
@@ -73,6 +82,9 @@ List<Binding> parseToBindings() {
   // Log all headers for user.
   _logger.info('Input Headers: ${config.headers.entryPoints}');
 
+  final tuList = <Pointer<clang_types.CXTranslationUnitImpl>>[];
+
+  // Parse all translation units from entry points.
   for (final headerLocation in config.headers.entryPoints) {
     _logger.fine('Creating TranslationUnit for header: $headerLocation');
 
@@ -96,11 +108,24 @@ List<Binding> parseToBindings() {
     }
 
     logTuDiagnostics(tu, _logger, headerLocation);
-    final rootCursor = clang.clang_getTranslationUnitCursor(tu);
+    tuList.add(tu);
+  }
 
+  final tuCursors =
+      tuList.map((tu) => clang.clang_getTranslationUnitCursor(tu));
+
+  // Build usr to CXCusror map from translation units.
+  for (final rootCursor in tuCursors) {
+    buildUsrCursorDefinitionMap(rootCursor);
+  }
+
+  // Parse definitions from translation units.
+  for (final rootCursor in tuCursors) {
     bindings.addAll(parseTranslationUnit(rootCursor));
+  }
 
-    // Cleanup.
+  // Dispose translation units.
+  for (final tu in tuList) {
     clang.clang_disposeTranslationUnit(tu);
   }
 
@@ -110,7 +135,19 @@ List<Binding> parseToBindings() {
   // Parse all saved macros.
   bindings.addAll(parseSavedMacros()!);
 
-  clangCmdArgs.dispose(config.compilerOpts.length);
+  clangCmdArgs.dispose(cmdLen);
   clang.clang_disposeIndex(index);
   return bindings.toList();
+}
+
+List<String> _findObjectiveCSysroot() {
+  final result = Process.runSync('xcrun', ['--show-sdk-path']);
+  if (result.exitCode == 0) {
+    for (final line in (result.stdout as String).split('\n')) {
+      if (line.isNotEmpty) {
+        return ['-isysroot', line];
+      }
+    }
+  }
+  return [];
 }

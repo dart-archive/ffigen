@@ -13,12 +13,14 @@ import 'clang_bindings/clang_bindings.dart' as clang_types;
 import 'data.dart';
 import 'type_extractor/extractor.dart';
 
+final _logger = Logger('ffigen.header_parser.utils');
+
 const exceptional_visitor_return =
     clang_types.CXChildVisitResult.CXChildVisit_Break;
 
 /// Check [resultCode] of [clang.clang_visitChildren_wrap].
 ///
-/// Throws exception if resultCode is not 0.
+/// Throws exception if resultCode is not [exceptional_visitor_return].
 void visitChildrenResultChecker(int resultCode) {
   if (resultCode != exceptional_visitor_return) {
     throw Exception(
@@ -28,16 +30,13 @@ void visitChildrenResultChecker(int resultCode) {
 
 /// Logs the warnings/errors returned by clang for a translation unit.
 void logTuDiagnostics(
-  Pointer<clang_types.CXTranslationUnitImpl> tu,
-  Logger logger,
-  String header,
-) {
+    Pointer<clang_types.CXTranslationUnitImpl> tu, Logger logger, String header,
+    {Level logLevel = Level.SEVERE}) {
   final total = clang.clang_getNumDiagnostics(tu);
   if (total == 0) {
     return;
   }
-
-  logger.severe('Header $header: Total errors/warnings: $total.');
+  logger.log(logLevel, 'Header $header: Total errors/warnings: $total.');
   for (var i = 0; i < total; i++) {
     final diag = clang.clang_getDiagnostic(tu, i);
     final cxstring = clang.clang_formatDiagnostic(
@@ -48,7 +47,7 @@ void logTuDiagnostics(
           clang_types
               .CXDiagnosticDisplayOptions.CXDiagnostic_DisplayCategoryName,
     );
-    logger.severe('    ' + cxstring.toStringAndDispose());
+    logger.log(logLevel, '    ${cxstring.toStringAndDispose()}');
     clang.clang_disposeDiagnostic(diag);
   }
 }
@@ -81,6 +80,11 @@ extension CXCursorExt on clang_types.CXCursor {
         .toStringAndDispose();
   }
 
+  /// Get code_gen [Type] representation of [clang_types.CXType].
+  Type toCodeGenType() {
+    return getCodeGenType(type(), originalCursor: this);
+  }
+
   /// for debug: returns [spelling] [kind] [kindSpelling] [type] [typeSpelling].
   String completeStringRepr() {
     final cxtype = type();
@@ -89,35 +93,69 @@ extension CXCursorExt on clang_types.CXCursor {
     return s;
   }
 
-  /// Dispose type using [type.dispose].
+  /// Type associated with the pointer if any. Type will have kind
+  /// [clang.CXTypeKind.CXType_Invalid] otherwise.
   clang_types.CXType type() {
     return clang.clang_getCursorType(this);
   }
 
-  /// Only valid for [clang.CXCursorKind.CXCursor_FunctionDecl].
-  ///
-  /// Dispose type using [type.dispose].
+  /// Determine whether the given cursor
+  /// represents an anonymous record declaration.
+  bool isAnonymousRecordDecl() {
+    return clang.clang_Cursor_isAnonymousRecordDecl(this) == 1;
+  }
+
+  /// Only valid for [clang.CXCursorKind.CXCursor_FunctionDecl]. Type will have
+  /// kind [clang.CXTypeKind.CXType_Invalid] otherwise.
   clang_types.CXType returnType() {
     return clang.clang_getResultType(type());
   }
 
+  /// Returns the file name of the file that the cursor is inside.
   String sourceFileName() {
     final cxsource = clang.clang_getCursorLocation(this);
     final cxfilePtr = calloc<Pointer<Void>>();
-    final line = calloc<Uint32>();
-    final column = calloc<Uint32>();
-    final offset = calloc<Uint32>();
 
     // Puts the values in these pointers.
-    clang.clang_getFileLocation(cxsource, cxfilePtr, line, column, offset);
+    clang.clang_getFileLocation(cxsource, cxfilePtr, nullptr, nullptr, nullptr);
     final s = clang.clang_getFileName(cxfilePtr.value).toStringAndDispose();
 
     calloc.free(cxfilePtr);
-    calloc.free(line);
-    calloc.free(column);
-    calloc.free(offset);
     return s;
   }
+
+  /// Returns whether the file that the cursor is inside is a system header.
+  bool isInSystemHeader() {
+    final location = clang.clang_getCursorLocation(this);
+    return clang.clang_Location_isInSystemHeader(location) != 0;
+  }
+
+  /// Recursively print the AST, for debugging.
+  void printAst([int maxDepth = 3]) {
+    _printAstVisitorMaxDepth = maxDepth;
+    _printAstVisitor(this, this, Pointer<Void>.fromAddress(0));
+  }
+}
+
+Pointer<
+        NativeFunction<
+            Int32 Function(
+                clang_types.CXCursor, clang_types.CXCursor, Pointer<Void>)>>?
+    _printAstVisitorPtr;
+int _printAstVisitorMaxDepth = 0;
+int _printAstVisitor(clang_types.CXCursor cursor, clang_types.CXCursor parent,
+    Pointer<Void> clientData) {
+  final depth = clientData.address;
+  if (depth > _printAstVisitorMaxDepth) {
+    return clang_types.CXChildVisitResult.CXChildVisit_Break;
+  }
+  print(('  ' * depth) + cursor.completeStringRepr());
+  clang.clang_visitChildren(
+      cursor,
+      _printAstVisitorPtr ??=
+          Pointer.fromFunction(_printAstVisitor, exceptional_visitor_return),
+      Pointer<Void>.fromAddress(depth + 1));
+  return clang_types.CXChildVisitResult.CXChildVisit_Continue;
 }
 
 const commentPrefix = '/// ';
@@ -212,11 +250,6 @@ String? removeRawCommentMarkups(String? string) {
   }
 
   return sb.toString().trim();
-}
-
-bool isForwardDeclaration(clang_types.CXCursor cursor) {
-  return clang.clang_Cursor_isNull(clang.clang_getCursorDefinition(cursor)) ==
-      0;
 }
 
 extension CXTypeExt on clang_types.CXType {
@@ -329,134 +362,85 @@ class Macro {
 /// Tracks if a binding is 'seen' or not.
 class BindingsIndex {
   // Tracks if bindings are already seen, Map key is USR obtained from libclang.
-  final Map<String, Struc> _structs = {};
-  final Map<String, Union> _unions = {};
+  final Map<String, Type> _declaredTypes = {};
   final Map<String, Func> _functions = {};
-  final Map<String, EnumClass> _enumClass = {};
   final Map<String, Constant> _unnamedEnumConstants = {};
   final Map<String, String> _macros = {};
   final Map<String, Global> _globals = {};
+  final Map<String, ObjCBlock> _objcBlocks = {};
 
   /// Contains usr for typedefs which cannot be generated.
   final Set<String> _unsupportedTypealiases = {};
-  final Map<String, Typealias> _typealiases = {};
 
   /// Index for headers.
   final Map<String, bool> _headerCache = {};
 
-  bool isSeenStruct(String usr) {
-    return _structs.containsKey(usr);
+  bool isSeenType(String usr) => _declaredTypes.containsKey(usr);
+  void addTypeToSeen(String usr, Type type) => _declaredTypes[usr] = type;
+  Type? getSeenType(String usr) => _declaredTypes[usr];
+  bool isSeenFunc(String usr) => _functions.containsKey(usr);
+  void addFuncToSeen(String usr, Func func) => _functions[usr] = func;
+  Func? getSeenFunc(String usr) => _functions[usr];
+  bool isSeenUnnamedEnumConstant(String usr) =>
+      _unnamedEnumConstants.containsKey(usr);
+  void addUnnamedEnumConstantToSeen(String usr, Constant enumConstant) =>
+      _unnamedEnumConstants[usr] = enumConstant;
+  Constant? getSeenUnnamedEnumConstant(String usr) =>
+      _unnamedEnumConstants[usr];
+  bool isSeenGlobalVar(String usr) => _globals.containsKey(usr);
+  void addGlobalVarToSeen(String usr, Global global) => _globals[usr] = global;
+  Global? getSeenGlobalVar(String usr) => _globals[usr];
+  bool isSeenMacro(String usr) => _macros.containsKey(usr);
+  void addMacroToSeen(String usr, String macro) => _macros[usr] = macro;
+  String? getSeenMacro(String usr) => _macros[usr];
+  bool isSeenUnsupportedTypealias(String usr) =>
+      _unsupportedTypealiases.contains(usr);
+  void addUnsupportedTypealiasToSeen(String usr) =>
+      _unsupportedTypealiases.add(usr);
+  bool isSeenHeader(String source) => _headerCache.containsKey(source);
+  void addHeaderToSeen(String source, bool includeStatus) =>
+      _headerCache[source] = includeStatus;
+  bool? getSeenHeaderStatus(String source) => _headerCache[source];
+  void addObjCBlockToSeen(String key, ObjCBlock t) => _objcBlocks[key] = t;
+  ObjCBlock? getSeenObjCBlock(String key) => _objcBlocks[key];
+}
+
+class CursorIndex {
+  final _usrCursorDefinition = <String, clang_types.CXCursor>{};
+
+  /// Returns the Cursor definition (if found) or itself.
+  clang_types.CXCursor getDefinition(clang_types.CXCursor cursor) {
+    final cursorDefinition = clang.clang_getCursorDefinition(cursor);
+    if (clang.clang_Cursor_isNull(cursorDefinition) == 0) {
+      return cursorDefinition;
+    } else {
+      final usr = cursor.usr();
+      if (_usrCursorDefinition.containsKey(usr)) {
+        return _usrCursorDefinition[cursor.usr()]!;
+      } else {
+        _logger.warning(
+            "No definition found for declaration - ${cursor.completeStringRepr()}");
+        return cursor;
+      }
+    }
   }
 
-  void addStructToSeen(String usr, Compound struc) {
-    _structs[usr] = struc as Struc;
-  }
-
-  Struc? getSeenStruct(String usr) {
-    return _structs[usr];
-  }
-
-  bool isSeenUnion(String usr) {
-    return _unions.containsKey(usr);
-  }
-
-  void addUnionToSeen(String usr, Compound union) {
-    _unions[usr] = union as Union;
-  }
-
-  Union? getSeenUnion(String usr) {
-    return _unions[usr];
-  }
-
-  bool isSeenFunc(String usr) {
-    return _functions.containsKey(usr);
-  }
-
-  void addFuncToSeen(String usr, Func func) {
-    _functions[usr] = func;
-  }
-
-  Func? getSeenFunc(String usr) {
-    return _functions[usr];
-  }
-
-  bool isSeenEnumClass(String usr) {
-    return _enumClass.containsKey(usr);
-  }
-
-  void addEnumClassToSeen(String usr, EnumClass enumClass) {
-    _enumClass[usr] = enumClass;
-  }
-
-  EnumClass? getSeenEnumClass(String usr) {
-    return _enumClass[usr];
-  }
-
-  bool isSeenUnnamedEnumConstant(String usr) {
-    return _unnamedEnumConstants.containsKey(usr);
-  }
-
-  void addUnnamedEnumConstantToSeen(String usr, Constant enumConstant) {
-    _unnamedEnumConstants[usr] = enumConstant;
-  }
-
-  Constant? getSeenUnnamedEnumConstant(String usr) {
-    return _unnamedEnumConstants[usr];
-  }
-
-  bool isSeenGlobalVar(String usr) {
-    return _globals.containsKey(usr);
-  }
-
-  void addGlobalVarToSeen(String usr, Global global) {
-    _globals[usr] = global;
-  }
-
-  Global? getSeenGlobalVar(String usr) {
-    return _globals[usr];
-  }
-
-  bool isSeenMacro(String usr) {
-    return _macros.containsKey(usr);
-  }
-
-  void addMacroToSeen(String usr, String macro) {
-    _macros[usr] = macro;
-  }
-
-  String? getSeenMacro(String usr) {
-    return _macros[usr];
-  }
-
-  bool isSeenTypealias(String usr) {
-    return _typealiases.containsKey(usr);
-  }
-
-  void addTypealiasToSeen(String usr, Typealias t) {
-    _typealiases[usr] = t;
-  }
-
-  bool isSeenUnsupportedTypealias(String usr) {
-    return _unsupportedTypealiases.contains(usr);
-  }
-
-  void addUnsupportedTypealiasToSeen(String usr) {
-    _unsupportedTypealiases.add(usr);
-  }
-
-  Typealias? getSeenTypealias(String usr) {
-    return _typealiases[usr];
-  }
-
-  bool isSeenHeader(String source) {
-    return _headerCache.containsKey(source);
-  }
-
-  void addHeaderToSeen(String source, bool includeStatus) {
-    _headerCache[source] = includeStatus;
-  }
-
-  bool? getSeenHeaderStatus(String source) {
-    return _headerCache[source];
+  /// Saves cursor definition based on its kind.
+  void saveDefinition(clang_types.CXCursor cursor) {
+    switch (cursor.kind) {
+      case clang_types.CXCursorKind.CXCursor_StructDecl:
+      case clang_types.CXCursorKind.CXCursor_UnionDecl:
+      case clang_types.CXCursorKind.CXCursor_EnumDecl:
+        final usr = cursor.usr();
+        if (!_usrCursorDefinition.containsKey(usr)) {
+          final cursorDefinition = clang.clang_getCursorDefinition(cursor);
+          if (clang.clang_Cursor_isNull(cursorDefinition) == 0) {
+            _usrCursorDefinition[usr] = cursorDefinition;
+          } else {
+            _logger.finest(
+                "Missing cursor definition in current translation unit: ${cursor.completeStringRepr()}");
+          }
+        }
+    }
   }
 }

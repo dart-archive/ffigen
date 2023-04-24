@@ -3,12 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:ffigen/src/code_generator.dart';
-import 'package:ffigen/src/config_provider.dart';
 import 'package:ffigen/src/header_parser.dart' as parser;
 import 'package:ffigen/src/strings.dart' as strings;
 import 'package:logging/logging.dart';
 import 'package:test/test.dart';
-import 'package:yaml/yaml.dart' as yaml;
 
 import '../test_utils.dart';
 
@@ -20,7 +18,7 @@ void main() {
       logWarnings(Level.WARNING);
       expected = expectedLibrary();
       actual = parser.parse(
-        Config.fromYaml(yaml.loadYaml('''
+        testConfig('''
 ${strings.name}: 'NativeLibrary'
 ${strings.description}: 'Macros Test'
 ${strings.output}: 'unused'
@@ -29,7 +27,7 @@ ${strings.headers}:
     - 'test/header_parser_tests/macros.h'
   ${strings.includeDirectives}:
     - '**macros.h'
-        ''') as yaml.YamlMap),
+        '''),
       );
     });
     test('Total bindings count', () {
@@ -98,6 +96,18 @@ ${strings.headers}:
       expect(actual.getBindingAsString('TEST16'),
           expected.getBindingAsString('TEST16'));
     });
+    test('TEST17', () {
+      expect(actual.getBindingAsString('TEST17'),
+          expected.getBindingAsString('TEST17'));
+    });
+    test('TEST18', () {
+      expect(actual.getBindingAsString('TEST18'),
+          expected.getBindingAsString('TEST18'));
+    });
+    test('TEST19', () {
+      expect(actual.getBindingAsString('TEST19'),
+          expected.getBindingAsString('TEST19'));
+    });
   });
 }
 
@@ -125,6 +135,9 @@ Library expectedLibrary() {
           rawType: 'double',
           rawValue: strings.doubleNegativeInfinity),
       Constant(name: 'TEST16', rawType: 'double', rawValue: strings.doubleNaN),
+      Constant(name: 'TEST17', rawType: 'int', rawValue: "0"),
+      Constant(name: 'TEST18', rawType: 'int', rawValue: "4"),
+      Constant(name: 'TEST19', rawType: 'int', rawValue: "8"),
     ],
   );
 }
