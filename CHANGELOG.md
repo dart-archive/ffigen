@@ -1,3 +1,7 @@
+# 7.2.11
+
+- Fix invalid struct/enum member references due to multiple anonymous struct/enum in a declaration.
+
 # 7.2.10
 
 - Generate parameter names in function pointer fields and typedefs.
