@@ -134,9 +134,9 @@ extension CXCursorExt on clang_types.CXCursor {
 
     // Puts the values in these pointers.
     clang.clang_getFileLocation(cxsource, nullptr, nullptr, nullptr, cxOffset);
-
+    final offset = cxOffset.value;
     calloc.free(cxOffset);
-    return cxOffset.value;
+    return offset;
   }
 
   /// Returns whether the file that the cursor is inside is a system header.
