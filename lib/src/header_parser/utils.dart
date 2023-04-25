@@ -134,6 +134,8 @@ extension CXCursorExt on clang_types.CXCursor {
 
     // Puts the values in these pointers.
     clang.clang_getFileLocation(cxsource, nullptr, nullptr, nullptr, cxOffset);
+
+    calloc.free(cxOffset);
     return cxOffset.value;
   }
 
