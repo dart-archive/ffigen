@@ -63,3 +63,19 @@ final class Union3 extends ffi.Opaque {}
 final class Union4 extends ffi.Opaque {}
 
 final class Union5 extends ffi.Opaque {}
+
+final class Union6 extends ffi.Union {
+  external UnnamedUnion1 unnamed;
+
+  external UnnamedUnion2 unnamed1;
+}
+
+final class UnnamedUnion1 extends ffi.Union {
+  @ffi.Float()
+  external double a;
+}
+
+final class UnnamedUnion2 extends ffi.Union {
+  @ffi.Float()
+  external double b;
+}
