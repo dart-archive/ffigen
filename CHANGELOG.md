@@ -1,3 +1,7 @@
+# 8.0.0-dev.1
+
+- Fix invalid struct/enum member references due to multiple anonymous struct/enum in a declaration.
+
 # 8.0.0-dev.0
 
 - Adds `final` class modifier to generated sub types `Struct`, `Union` and
@@ -9,6 +13,9 @@
   `Opaque` sub types is already disallowed by `dart:ffi` pre 3.0, so adding the
   `final` keyword is not a breaking change.
 - Bumps SDK lowerbound to 3.0.
+# 7.2.11
+
+- Fix invalid struct/enum member references due to multiple anonymous struct/enum in a declaration.
 
 # 7.2.10
 
