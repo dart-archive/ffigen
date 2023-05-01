@@ -13,7 +13,8 @@ class FunctionType extends Type {
   final List<Parameter> parameters;
   final List<Parameter> varArgParameters;
 
-  /// Get all the parameters for generating the dart type.
+  /// Get all the parameters for generating the dart type. This includes both
+  /// [parameters] and [varArgParameters].
   List<Parameter> get dartTypeParameters => parameters + varArgParameters;
 
   FunctionType({

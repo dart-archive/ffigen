@@ -341,42 +341,41 @@ String makePostfixFromRawVarArgType(List<String> rawVarArgType) {
   return rawVarArgType
       .map((e) => e
           .replaceAll('*', 'Ptr')
-          .replaceAll(r'\s', '')
-          .replaceAll('_t', '')
+          .replaceAll(RegExp(r'_t$'), '')
           .replaceAll(' ', '')
-          .replaceAll('[^A-Za-z0-9]', ''))
+          .replaceAll(RegExp('[^A-Za-z0-9_]'), ''))
       .map((e) => e.length > 1 ? '${e[0].toUpperCase()}${e.substring(1)}' : e)
       .join('');
 }
 
 Type makeTypeFromRawVarArgType(
     String rawVarArgType, Map<String, LibraryImport> libraryImportsMap) {
-  rawVarArgType = rawVarArgType.trim();
+  Type baseType;
+  var rawBaseType = rawVarArgType.trim();
+  // Split the raw type based on pointer usage. E.g -
+  // int => [int]
+  // char* => [char,*]
+  // ffi.Hello ** => [ffi.Hello,**]
   final typeStringRegexp = RegExp(r'([a-zA-Z0-9_\s\.]+)(\**)$');
-  if (!typeStringRegexp.hasMatch(rawVarArgType)) {
+  if (!typeStringRegexp.hasMatch(rawBaseType)) {
     throw Exception('Cannot parse variadic argument type - $rawVarArgType.');
   }
-  final regExpMatch = typeStringRegexp.firstMatch(rawVarArgType)!;
+  final regExpMatch = typeStringRegexp.firstMatch(rawBaseType)!;
   final groups = regExpMatch.groups([1, 2]);
-  rawVarArgType = groups[0]!;
-  final pointerCount = groups[1]!.length;
-  // Handle pointers.
-  if (cxTypeKindToImportedTypes.containsKey(rawVarArgType)) {
-    return makePointerToType(
-        cxTypeKindToImportedTypes[rawVarArgType]!, pointerCount);
-  } else if (supportedTypedefToImportedType.containsKey(rawVarArgType)) {
-    return makePointerToType(
-        supportedTypedefToImportedType[rawVarArgType]!, pointerCount);
-  } else if (suportedTypedefToSuportedNativeType.containsKey(rawVarArgType)) {
-    return makePointerToType(
-        NativeType(suportedTypedefToSuportedNativeType[rawVarArgType]!),
-        pointerCount);
+  rawBaseType = groups[0]!;
+  // Handle basic supported types.
+  if (cxTypeKindToImportedTypes.containsKey(rawBaseType)) {
+    baseType = cxTypeKindToImportedTypes[rawBaseType]!;
+  } else if (supportedTypedefToImportedType.containsKey(rawBaseType)) {
+    baseType = supportedTypedefToImportedType[rawBaseType]!;
+  } else if (suportedTypedefToSuportedNativeType.containsKey(rawBaseType)) {
+    baseType = NativeType(suportedTypedefToSuportedNativeType[rawBaseType]!);
   } else {
-    final rawVarArgTypeSplit = rawVarArgType.split('.');
+    // Use library import if specified (E.g - ffi.UintPtr or custom.MyStruct)
+    final rawVarArgTypeSplit = rawBaseType.split('.');
     if (rawVarArgTypeSplit.length == 1) {
       final typeName = rawVarArgTypeSplit[0].replaceAll(' ', '');
-      return makePointerToType(
-          SelfImportedType(typeName, typeName), pointerCount);
+      baseType = SelfImportedType(typeName, typeName);
     } else if (rawVarArgTypeSplit.length == 2) {
       final lib = rawVarArgTypeSplit[0];
       final libraryImport = strings.predefinedLibraryImports[lib] ??
@@ -385,13 +384,16 @@ Type makeTypeFromRawVarArgType(
         throw Exception('Please declare $lib in library-imports.');
       }
       final typeName = rawVarArgTypeSplit[1].replaceAll(' ', '');
-      return makePointerToType(
-          ImportedType(libraryImport, typeName, typeName), pointerCount);
+      baseType = ImportedType(libraryImport, typeName, typeName);
     } else {
       throw Exception(
           'Invalid type $rawVarArgType : Expected 0 or 1 .(dot) separators.');
     }
   }
+
+  // Handle pointers
+  final pointerCount = groups[1]!.length;
+  return makePointerToType(baseType, pointerCount);
 }
 
 Map<String, List<VarArgFunction>> makeVarArgFunctionsMapping(

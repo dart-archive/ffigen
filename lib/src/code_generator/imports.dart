@@ -59,12 +59,10 @@ class SelfImportedType extends Type {
   SelfImportedType(this.cType, this.dartType, [this.defaultValue]);
 
   @override
-  String getCType(Writer w) {
-    return cType;
-  }
+  String getCType(Writer w) => cType;
 
   @override
-  String getDartType(Writer w) => cType == dartType ? getCType(w) : dartType;
+  String getDartType(Writer w) => dartType;
 
   @override
   String toString() => cType;
