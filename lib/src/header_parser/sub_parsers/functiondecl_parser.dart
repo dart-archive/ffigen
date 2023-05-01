@@ -15,6 +15,8 @@ final _logger = Logger('ffigen.header_parser.functiondecl_parser');
 
 /// Holds temporary information regarding [Func] while parsing.
 class _ParserFunc {
+  /// Multiple values are since there may be more than one instance of the
+  /// same base C function with different variadic arguments.
   List<Func> funcs = [];
   bool incompleteStructParameter = false;
   bool unimplementedParameterType = false;
@@ -65,12 +67,16 @@ List<Func>? parseFunctionDeclaration(clang_types.CXCursor cursor) {
       // Returning null so that [addToBindings] function excludes this.
       return _stack.pop().funcs;
     }
-    final varArgFunctions = <VarArgFunction>[];
-    if (config.varArgFunctions.containsKey(funcName) &&
-        clang.clang_isFunctionTypeVariadic(cursor.type()) == 1) {
-      varArgFunctions.addAll(config.varArgFunctions[funcName]!);
-    } else {
-      varArgFunctions.add(VarArgFunction('', []));
+
+    // Initialized with a single value with no prefix and empty var args.
+    var varArgFunctions = [VarArgFunction('', [])];
+    if (clang.clang_isFunctionTypeVariadic(cursor.type()) == 1) {
+      if (config.varArgFunctions.containsKey(funcName)) {
+        varArgFunctions = config.varArgFunctions[funcName]!;
+      } else {
+        _logger.warning(
+            "Skipping variadic-argument config for function $funcName since its not variadic.");
+      }
     }
     for (final vaFunc in varArgFunctions) {
       _stack.top.funcs.add(Func(

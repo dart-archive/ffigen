@@ -4,7 +4,12 @@
 
 int myfunc(int a, ...);
 void myfunc2(char a, char b, ...);
+void myfunc3(long a, ...);
 
 struct SA {
+    int a;
+};
+
+struct Struct_WithLong_Name_test {
     int a;
 };
