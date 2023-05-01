@@ -335,6 +335,26 @@ functions:
   </td>
   </tr>
   <tr>
+    <td>functions -> variadic-arguments</td>
+    <td>Generate multiple functions with different variadic arguments.<br>
+    <b>Default: var args for any function are ignored.</b>
+    </td>
+    <td>
+
+```yaml
+functions:
+  variadic-arguments:
+    myfunc:
+      // Native C types are supported
+      - [int, unsigned char, long*, float**]
+      // Common C typedefs (stddef.h) are supported too
+      - [uint8_t, intptr_t, size_t, wchar_t*]
+      // Structs/Unions/Typedefs from generated code or a library import can be referred too.
+      - [MyStruct*, my_custom_lib.CustomUnion]
+```
+  </td>
+  </tr>
+  <tr>
     <td>structs -> pack</td>
     <td>Override the @Packed(X) annotation for generated structs.<br><br>
     <i>Options - none, 1, 2, 4, 8, 16</i><br>

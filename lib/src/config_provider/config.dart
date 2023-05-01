@@ -53,6 +53,10 @@ class Config {
   List<String> get compilerOpts => _compilerOpts;
   late List<String> _compilerOpts;
 
+  /// VarArg function handling.
+  Map<String, List<VarArgFunction>> get varArgFunctions => _varArgFunctions;
+  late Map<String, List<VarArgFunction>> _varArgFunctions = {};
+
   /// Declaration config for Functions.
   Declaration get functionDecl => _functionDecl;
   late Declaration _functionDecl;
@@ -444,6 +448,17 @@ class Config {
         extractedResult: (dynamic result) {
           _nativeTypeMappings = makeImportTypeMapping(
               result as Map<String, List<String>>, _libraryImports);
+        },
+      ),
+      [strings.functions, strings.varArgFunctions]:
+          Specification<Map<String, List<RawVarArgFunction>>>(
+        requirement: Requirement.no,
+        validator: varArgFunctionConfigValidator,
+        extractor: varArgFunctionConfigExtractor,
+        defaultValue: () => <String, List<RawVarArgFunction>>{},
+        extractedResult: (dynamic result) {
+          _varArgFunctions = makeVarArgFunctionsMapping(
+              result as Map<String, List<RawVarArgFunction>>, _libraryImports);
         },
       ),
       [strings.excludeAllByDefault]: Specification<bool>(

@@ -792,6 +792,21 @@ class Clang {
       _clang_Type_getObjCObjectBaseTypePtr
           .asFunction<CXType Function(CXType)>();
 
+  /// Return 1 if the CXType is a variadic function type, and 0 otherwise.
+  int clang_isFunctionTypeVariadic(
+    CXType T,
+  ) {
+    return _clang_isFunctionTypeVariadic(
+      T,
+    );
+  }
+
+  late final _clang_isFunctionTypeVariadicPtr =
+      _lookup<ffi.NativeFunction<ffi.UnsignedInt Function(CXType)>>(
+          'clang_isFunctionTypeVariadic');
+  late final _clang_isFunctionTypeVariadic =
+      _clang_isFunctionTypeVariadicPtr.asFunction<int Function(CXType)>();
+
   /// Retrieve the return type associated with a given cursor.
   ///
   /// This only returns a valid type if the cursor refers to a function or method.

@@ -5,6 +5,7 @@
 /// Contains all the neccesary classes required by config.
 import 'dart:io';
 
+import 'package:ffigen/src/code_generator.dart';
 import 'package:quiver/pattern.dart' as quiver;
 
 import 'path_finder.dart';
@@ -422,4 +423,18 @@ class OutputConfig {
   final SymbolFile? symbolFile;
 
   OutputConfig(this.output, this.symbolFile);
+}
+
+class RawVarArgFunction {
+  String? postfix;
+  final List<String> rawTypeStrings;
+
+  RawVarArgFunction(this.postfix, this.rawTypeStrings);
+}
+
+class VarArgFunction {
+  final String postfix;
+  final List<Type> types;
+
+  VarArgFunction(this.postfix, this.types);
 }

@@ -1,3 +1,7 @@
+# 8.0.0-dev.3
+
+- Added support for variadic functions using config `functions -> variadic-arguments`.
+
 # 8.0.0-dev.2
 
 - Use `@Native` syntax instead of deprecated `@FfiNative` syntax.

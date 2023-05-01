@@ -57,13 +57,13 @@ String _normalizeGeneratedCode(
 /// This will not delete the actual debug file incase [expect] throws an error.
 void matchLibraryWithExpected(
     Library library, String pathForActual, List<String> pathToExpected,
-    {String Function(String)? codeNormalizer}) {
+    {String Function(String)? codeNormalizer, bool format = true}) {
   _matchFileWithExpected(
     library: library,
     pathForActual: pathForActual,
     pathToExpected: pathToExpected,
     fileWriter: ({required Library library, required File file}) =>
-        library.generateFile(file),
+        library.generateFile(file, format: format),
     codeNormalizer: codeNormalizer,
   );
 }
