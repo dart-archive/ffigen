@@ -1,6 +1,6 @@
-# FfiNatives example
+# Natives example
 
-A simple example generating `FfiNative` bindings for a very small header file (`headers/example.h`).
+A simple example generating `Native` bindings for a very small header file (`headers/example.h`).
 
 ## Generating bindings
 At the root of this example (`example/simple`), run -

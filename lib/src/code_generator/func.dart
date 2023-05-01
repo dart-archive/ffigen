@@ -31,10 +31,10 @@ import 'writer.dart';
 /// typedef _dart_sum = int Function(int a, int b);
 /// ```
 ///
-/// When using `FfiNative`, the code is as follows.
+/// When using `Native`, the code is as follows.
 ///
 /// ```dart
-/// @ffi.FfiNative<ffi.Int32 Function(ffi.Int32 a, ffi.Int32 b)>('sum')
+/// @ffi.Native<ffi.Int32 Function(ffi.Int32 a, ffi.Int32 b)>('sum')
 /// external int sum(int a, int b);
 /// ```
 class Func extends LookUpBinding {
@@ -126,7 +126,7 @@ class Func extends LookUpBinding {
           : '';
       final isLeafString = isLeaf ? ', isLeaf: true' : '';
       s.write(
-          "@${w.ffiLibraryPrefix}.FfiNative<$cType>('$originalName'$assetString$isLeafString)\n");
+          "@${w.ffiLibraryPrefix}.Native<$cType>(symbol: '$originalName'$assetString$isLeafString)\n");
 
       s.write(
           'external ${functionType.returnType.getDartType(w)} $enclosingFuncName(\n');

@@ -509,10 +509,10 @@ type-map:
   <tr>
     <td>ffi-native</td>
     <td>
-      <b>WARNING:</b> FfiNative support is EXPERIMENTAL. The API may change
+      <b>WARNING:</b> Native support is EXPERIMENTAL. The API may change
       in a breaking way without notice.
       <br><br>
-      Generate `@FfiNative` bindings instead of bindings using `DynamicLibrary` or `lookup`.
+      Generate `@Native` bindings instead of bindings using `DynamicLibrary` or `lookup`.
     </td>
     <td>
 

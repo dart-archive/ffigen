@@ -1,3 +1,8 @@
+# 8.0.0-dev.2
+
+- Use `@Native` syntax instead of deprecated `@FfiNative` syntax.
+
+
 # 8.0.0-dev.1
 
 - Fix invalid struct/enum member references due to multiple anonymous struct/enum in a declaration.
