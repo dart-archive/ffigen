@@ -861,17 +861,17 @@ bool varArgFunctionConfigValidator(List<String> name, dynamic value) {
   if (!checkType<YamlMap>(name, value)) {
     return false;
   }
-  var _result = true;
+  var result = true;
   for (final key in (value as YamlMap).keys) {
     final list = value[key as String];
     if (!checkType<YamlList>([...name, key], list)) {
-      _result = false;
+      result = false;
       continue;
     }
     (list as YamlList).asMap().forEach((idx, subList) {
       if (subList is YamlMap) {
         if (!subList.containsKey(strings.types)) {
-          _result = false;
+          result = false;
           _logger.severe('Missing required key - ${[
             ...name,
             key,
@@ -884,15 +884,15 @@ bool varArgFunctionConfigValidator(List<String> name, dynamic value) {
           if (subkey == strings.postfix) {
             if (!checkType<String>(
                 [...name, key, idx.toString(), subkey], subvalue)) {
-              _result = false;
+              result = false;
             }
           } else if (subkey == strings.types) {
             if (!checkType<YamlList>(
                 [...name, key, idx.toString(), subkey], subvalue)) {
-              _result = false;
+              result = false;
             }
           } else {
-            _result = false;
+            result = false;
             _logger.severe('Unknown key - ${[
               ...name,
               key,
@@ -902,7 +902,7 @@ bool varArgFunctionConfigValidator(List<String> name, dynamic value) {
           }
         });
       } else if (subList is! YamlList) {
-        _result = false;
+        result = false;
         _logger.severe('Expected ${[
           ...name,
           key,
@@ -911,7 +911,7 @@ bool varArgFunctionConfigValidator(List<String> name, dynamic value) {
       }
     });
   }
-  return _result;
+  return result;
 }
 
 Declaration declarationConfigExtractor(dynamic yamlMap) {
