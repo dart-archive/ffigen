@@ -5,7 +5,7 @@
 name: c_json_example
 
 environment:
-  sdk: ">=3.0.0-417.0.dev <4.0.0"
+  sdk: ">=3.0.0-417 <4.0.0"
 
 dependencies:
   ffi: ^2.0.1
