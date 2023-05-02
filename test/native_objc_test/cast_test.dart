@@ -40,6 +40,11 @@ void main() {
       expect(fromCast, testInstance!);
     });
 
+    test('pointers are equal', () {
+      final meAsInt = testInstance!.meAsInt();
+      expect(testInstance!.pointer.address, meAsInt);
+    });
+
     test('equality equals', () {
       final meAsInt = testInstance!.meAsInt();
       final fromCast = Castaway.castFromPointer(

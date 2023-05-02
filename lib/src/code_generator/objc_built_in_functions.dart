@@ -242,6 +242,9 @@ class $name implements ${w.ffiLibraryPrefix}.Finalizable {
 
   @override
   int get hashCode => _id.hashCode;
+
+  /// Return a pointer to this object.
+  $idType get pointer => _id;
 }
 ''');
   }
