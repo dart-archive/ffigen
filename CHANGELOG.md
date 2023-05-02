@@ -1,3 +1,7 @@
+# 8.0.0
+
+- Stable release for Dart 3.0 with support for class modifers, variadic arguments, and `@Native`s.
+
 # 8.0.0-dev.3
 
 - Added support for variadic functions using config `functions -> variadic-arguments`.
