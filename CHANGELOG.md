@@ -1,6 +1,6 @@
 # 8.0.1
 
-- Fixe invalid code generated due to anonymous structs/unions with unsupported types.
+- Fixed invalid code generated due to anonymous structs/unions with unsupported types.
 
 # 8.0.0
 
