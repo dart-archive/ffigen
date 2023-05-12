@@ -79,3 +79,5 @@ final class UnnamedUnion2 extends ffi.Union {
   @ffi.Float()
   external double b;
 }
+
+final class Union7 extends ffi.Opaque {}

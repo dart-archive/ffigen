@@ -46,6 +46,21 @@ union Union6
     };
 };
 
+// Multiple anonymous declarations with incomplete members
+union Union7
+{
+    union
+    {
+        float a;
+    };
+
+    union
+    {
+        float b;
+        int c[];
+    };
+};
+
 void func1(union Union2 *s);
 
 // Incomplete array parameter will be treated as a pointer.

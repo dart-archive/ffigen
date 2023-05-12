@@ -1,3 +1,7 @@
+# 8.0.1
+
+- Fixed invalid code generated due to anonymous structs/unions with unsupported types.
+
 # 8.0.0
 
 - Stable release for Dart 3.0 with support for class modifers, variadic arguments, and `@Native`s.
