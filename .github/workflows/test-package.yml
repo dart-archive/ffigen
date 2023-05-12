@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sdk: [3.0.0-417.0.dev] # TODO(#554)
+        sdk: [3.0.0]
     steps:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
       - uses: dart-lang/setup-dart@d6a63dab3335f427404425de0fbfed4686d93c4f
@@ -44,7 +44,7 @@ jobs:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
       - uses: dart-lang/setup-dart@d6a63dab3335f427404425de0fbfed4686d93c4f
         with:
-          sdk: 3.0.0-417.0.dev # TODO(#554)
+          sdk: 3.0.0
       - name: Install dependencies
         run: dart pub get
       - name: Install libclang-14-dev
@@ -61,7 +61,7 @@ jobs:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
       - uses: dart-lang/setup-dart@d6a63dab3335f427404425de0fbfed4686d93c4f
         with:
-          sdk: 3.0.0-417.0.dev # TODO(#554)
+          sdk: 3.0.0
       - name: Install dependencies
         run: dart pub get
       - name: Build test dylib and bindings
@@ -83,7 +83,7 @@ jobs:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
       - uses: dart-lang/setup-dart@d6a63dab3335f427404425de0fbfed4686d93c4f
         with:
-          sdk: 3.0.0-417.0.dev # TODO(#554)
+          sdk: 3.0.0
       - name: Install dependencies
         run: dart pub get
       - name: Build test dylib and bindings
