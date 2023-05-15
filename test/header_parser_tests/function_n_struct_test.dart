@@ -58,6 +58,9 @@ ${strings.headers}:
       expect(actual.getBindingAsString('Struct6'),
           expected.getBindingAsString('Struct6'));
     });
+    test('Struct7 zero length array (extension on flexible array member)', () {
+      expect((actual.getBinding('Struct7') as Struct).members.isEmpty, true);
+    });
     test('func3 constant typedef array parameter', () {
       expect(actual.getBindingAsString('func3'),
           expected.getBindingAsString('func3'));

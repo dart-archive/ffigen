@@ -118,10 +118,13 @@ Type getCodeGenType(
       return _extractFromFunctionProto(cxtype, cursor: originalCursor);
     case clang_types.CXTypeKind
           .CXType_ConstantArray: // Primarily used for constant array in struct members.
-      return ConstantArray(
-        clang.clang_getNumElements(cxtype),
-        clang.clang_getArrayElementType(cxtype).toCodeGenType(),
-      );
+      final numElements = clang.clang_getNumElements(cxtype);
+      final elementType =
+          clang.clang_getArrayElementType(cxtype).toCodeGenType();
+      // Handle numElements being 0 as an incomplete array.
+      return numElements == 0
+          ? IncompleteArray(elementType)
+          : ConstantArray(numElements, elementType);
     case clang_types.CXTypeKind
           .CXType_IncompleteArray: // Primarily used for incomplete array in function parameters.
       return IncompleteArray(

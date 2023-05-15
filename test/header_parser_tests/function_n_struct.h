@@ -40,6 +40,14 @@ struct Struct6
     arr10 a[2];
 };
 
+// All members should be removed, Zero-length arrays are equivalent to
+// flexible arrays members (by an extension) are not supported.
+struct Struct7
+{
+    int a;
+    int b[0]; // Flexible array member.
+};
+
 void func1(struct Struct2 *s);
 
 // Incomplete array parameter will be treated as a pointer.
