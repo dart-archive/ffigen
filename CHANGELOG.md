@@ -1,4 +1,4 @@
-# 8.0.1
+# 8.0.2
 
 - Fixed invalid code generated due to zero-length arrays in structs/union.
 
