@@ -120,6 +120,7 @@ Library expectedLibrary() {
       Struct(name: 'Struct6', members: [
         Member(name: 'a', type: ConstantArray(2, ConstantArray(10, intType)))
       ]),
+      Struct(name: 'Struct7'),
     ],
   );
 }
