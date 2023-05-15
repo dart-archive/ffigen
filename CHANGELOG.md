@@ -1,3 +1,7 @@
+# 8.0.2
+
+- Fixed invalid code generated due to zero-length arrays in structs/union.
+
 # 8.0.1
 
 - Fixed invalid code generated due to anonymous structs/unions with unsupported types.
