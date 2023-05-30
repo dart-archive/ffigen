@@ -65,7 +65,9 @@ Jump to [FAQ](#faq).
 
 #### Linux
 1. Install libclangdev.
+
    With apt-get: `sudo apt-get install libclang-dev`.
+
    With dnf: `sudo dnf install clang-devel`.
 
 #### Windows
