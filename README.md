@@ -65,14 +65,8 @@ Jump to [FAQ](#faq).
 
 #### Linux
 1. Install libclangdev.
-
-##### Ubuntu
-
-`sudo apt-get install libclang-dev`.
-
-##### Fedora
-
-`sudo dnf install clang-devel`
+   With apt-get: `sudo apt-get install libclang-dev`.
+   With dnf: `sudo dnf install clang-devel`.
 
 #### Windows
 1. Install Visual Studio with C++ development support.
