@@ -63,8 +63,16 @@ Jump to [FAQ](#faq).
 ## Installing LLVM
 `package:ffigen` uses LLVM. Install LLVM (9+) in the following way.
 
-#### ubuntu/linux
-1. Install libclangdev - `sudo apt-get install libclang-dev`.
+#### Linux
+1. Install libclangdev.
+
+##### Ubuntu
+
+`sudo apt-get install libclang-dev`.
+
+##### Fedora
+
+`sudo dnf install clang-devel`
 
 #### Windows
 1. Install Visual Studio with C++ development support.
