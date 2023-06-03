@@ -1,0 +1,404 @@
+{
+    "$id": "https://json.schemastore.org/ffigen",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "description": "Configuration for generating dart ffi bindings via ffigen",
+    "type": "object",
+    "properties": {
+        "output": {
+            "oneOf": [
+                {
+                    "$ref": "#/$defs/outputBindings"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "bindings": {
+                            "$ref": "#/$defs/outputBindings"
+                        },
+                        "symbol-file": {
+                            "$ref": "#/$defs/outputSymbolFile"
+                        }
+                    },
+                    "required": [
+                        "bindings"
+                    ]
+                }
+            ]
+        },
+        "llvm-path": {
+            "description": "Path to llvm folder or the libclang dynamic library.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "headers": {
+            "description": "Input header files",
+            "type": "object",
+            "properties": {
+                "entry-points": {
+                    "description": "Header entry-points to start parsing C files. Supports Glob syntax.",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "include-directives": {
+                    "description": "Header include-directives from which declarations to generate. Supports Glob syntax.",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "entry-points"
+            ]
+        },
+        "name": {
+            "description": "Name of generated class.",
+            "type": "string"
+        },
+        "description": {
+            "description": "Dart Doc for generated class.",
+            "type": "string"
+        },
+        "compilerOpts": {
+            "description": "Pass compiler options to clang.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "compilerOptsAutomatic": {
+            "description": "Tries to automatically find and add C standard library path to compiler-opts on macos",
+            "type": "object",
+            "properties": {
+                "macos": {
+                    "type": "object",
+                    "properties": {
+                        "include-c-standard-library": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
+        "functions": {
+            "allOf": [
+                {
+                    "$ref": "#/$defs/includeExcludeRenameProperties"
+                }
+            ],
+            "type": "object",
+            "properties": {
+                "symbol-address": {
+                    "$ref": "#/$defs/includeExcludeProperties"
+                },
+                "expose-typedefs": {
+                    "$ref": "#/$defs/includeExcludeProperties"
+                },
+                "leaf": {
+                    "$ref": "#/$defs/includeExcludeProperties"
+                }
+            }
+        },
+        "typedefs": {
+            "$ref": "#/$defs/includeExcludeRenameProperties"
+        },
+        "unnamed-enums": {
+            "$ref": "#/$defs/includeExcludeRenameProperties"
+        },
+        "macros": {
+            "$ref": "#/$defs/includeExcludeRenameProperties"
+        },
+        "globals": {
+            "allOf": [
+                {
+                    "$ref": "#/$defs/includeExcludeRenameProperties"
+                }
+            ],
+            "type": "object",
+            "properties": {
+                "symbol-address": {
+                    "$ref": "#/$defs/includeExcludeProperties"
+                }
+            }
+        },
+        "enums": {
+            "$ref": "#/$defs/includeExcludeRenameMemberProperties"
+        },
+        "structs": {
+            "allOf": [
+                {
+                    "$ref": "#/$defs/compound"
+                }
+            ],
+            "type": "object",
+            "properties": {
+                "pack": {
+                    "type": "object",
+                    "patternProperties": {
+                        ".*": {
+                            "enum": [
+                                null,
+                                1,
+                                2,
+                                4,
+                                8,
+                                16
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "unions": {
+            "$ref": "#/$defs/compound"
+        },
+        "comments": {
+            "description": "Extract documentation comments for declarations.",
+            "anyOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "style": {
+                            "enum": [
+                                "doxygen",
+                                "any"
+                            ]
+                        },
+                        "length": {
+                            "enum": [
+                                "brief",
+                                "full"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "type": "boolean"
+                }
+            ]
+        },
+        "sort": {
+            "description": "Sort the bindings according to name.",
+            "type": "boolean"
+        },
+        "use-supported-typedefs": {
+            "description": "Should automatically map typedefs, E.g uint8_t => Uint8, int16_t => Int16, size_t => Size etc",
+            "type": "boolean"
+        },
+        "use-dart-handle": {
+            "description": "Should map `Dart_Handle` to `Handle`.",
+            "type": "boolean"
+        },
+        "exclude-all-by-default": {
+            "description": "When a declaration filter (eg `functions:` or `structs:`) is empty or unset, it defaults to including everything. If this flag is enabled, the default behavior is to exclude everything instead.",
+            "type": "boolean"
+        },
+        "preamble": {
+            "description": "Raw header of the file, pasted as-it-is.",
+            "type": "string"
+        },
+        "library-imports": {
+            "description": "Specify library imports for use in type-map.",
+            "type": "object"
+        },
+        "type-map": {
+            "description": "Map types like integers, typedefs, structs, unions to any other type.",
+            "type": "object",
+            "properties": {
+                "native-types": {
+                    "$ref": "#/$defs/mappedTypes"
+                },
+                "typedefs": {
+                    "$ref": "#/$defs/mappedTypes"
+                },
+                "structs": {
+                    "$ref": "#/$defs/mappedTypes"
+                },
+                "unions": {
+                    "$ref": "#/$defs/mappedTypes"
+                }
+            }
+        },
+        "ffi-native": {
+            "properties": {
+                "assets": {
+                    "asset": "string"
+                }
+            }
+        },
+        "language": {
+            "enum": [
+                "c",
+                "objc"
+            ]
+        },
+        "import": {
+            "description": "Import symbols from a symbol file.",
+            "type": "object",
+            "properties": {
+                "symbol-files": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "objc-interfaces": {
+            "allOf": [
+                {
+                    "$ref": "#/$defs/includeExcludeRenameProperties"
+                }
+            ],
+            "type": "object",
+            "properties": {
+                "module": {
+                    "description": "Adds a module prefix to the class name when loading the class from the dylib. This is only relevent for ObjC headers that are generated wrappers for a Swift library.",
+                    "type": "object",
+                    "patternProperties": {
+                        ".*": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "required": [
+        "output",
+        "headers"
+    ],
+    "$defs": {
+        "outputBindings": {
+            "description": "Output path of the generated bindings.",
+            "type": "string"
+        },
+        "outputSymbolFile": {
+            "description": "Generates a symbol file yaml containing all types defined in the generated output.",
+            "type": "object",
+            "properties": {
+                "output": {
+                    "description": "Output path of the generated symbol file.",
+                    "type": "string"
+                },
+                "import-path": {
+                    "description": "Import path for the dart bindings symbols.",
+                    "type": "string"
+                }
+            }
+        },
+        "includeExcludeProperties": {
+            "type": "object",
+            "properties": {
+                "include": {
+                    "description": "Match declarations to include. Supports Regexps.",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "regex"
+                    }
+                },
+                "exclude": {
+                    "description": "Match declarations to exclude (overrides include). Supports Regexps.",
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "regex"
+                    }
+                }
+            }
+        },
+        "renameProperties": {
+            "type": "object",
+            "properties": {
+                "rename": {
+                    "description": "Match and rename declarations. Supports Regexps group based replacement.",
+                    "type": "object",
+                    "patternProperties": {
+                        ".+": {
+                            "type": "string",
+                            "format": "regex"
+                        }
+                    }
+                }
+            }
+        },
+        "memberRenameProperties": {
+            "type": "object",
+            "properties": {
+                "member-rename": {
+                    "description": "Match and rename declaration members. Supports Regexps group based replacement.",
+                    "type": "object",
+                    "patternProperties": {
+                        ".+": {
+                            "type": "string",
+                            "format": "regex"
+                        }
+                    }
+                }
+            }
+        },
+        "includeExcludeRenameProperties": {
+            "allOf": [
+                {
+                    "$ref": "#/$defs/includeExcludeProperties"
+                },
+                {
+                    "$ref": "#/$defs/renameProperties"
+                }
+            ]
+        },
+        "includeExcludeRenameMemberProperties": {
+            "allOf": [
+                {
+                    "$ref": "#/$defs/includeExcludeProperties"
+                },
+                {
+                    "$ref": "#/$defs/renameProperties"
+                },
+                {
+                    "$ref": "#/$defs/memberRenameProperties"
+                }
+            ]
+        },
+        "compound": {
+            "allOf": [
+                {
+                    "$ref": "#/$defs/includeExcludeRenameMemberProperties"
+                }
+            ],
+            "type": "object",
+            "properties": {
+                "dependency-only": {
+                    "enum": [
+                        "full",
+                        "opaque"
+                    ]
+                }
+            }
+        },
+        "mappedTypes": {
+            "type": "object",
+            "patternProperties": {
+                ".*": {
+                    "type": "object",
+                    "properties": {
+                        "lib": {
+                            "type": "string"
+                        },
+                        "c-type": {
+                            "type": "string"
+                        },
+                        "dart-type": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

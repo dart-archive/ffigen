@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=../../ffigen.schema.json
+
 name: NativeLibrary
 description: Bindings to `headers/example.h`.
 output: 'generated_bindings.dart'
