@@ -78,8 +78,8 @@ abstract class Schema<E> {
   }
 }
 
-class FixedMapSchema<CE> extends Schema<Map<String, CE>> {
-  final Map<String, Schema> keys;
+class FixedMapSchema<CE> extends Schema<Map<dynamic, CE>> {
+  final Map<dynamic, Schema> keys;
   final List<String> requiredKeys;
 
   FixedMapSchema({
@@ -103,10 +103,10 @@ class FixedMapSchema<CE> extends Schema<Map<String, CE>> {
     }
 
     var result = true;
-    final inputMap = (o.value as YamlMap).cast<String, dynamic>();
+    final inputMap = (o.value as YamlMap);
 
     for (final MapEntry(key: key, value: value) in keys.entries) {
-      final path = [...o.path, key];
+      final path = [...o.path, key.toString()];
       if (!inputMap.containsKey(key)) {
         if (log) {
           _logger.severe("Unknown key - '${[...o.path, key].join(' -> ')}'.");
@@ -137,11 +137,11 @@ class FixedMapSchema<CE> extends Schema<Map<String, CE>> {
       throw SchemaExtractionError(o);
     }
 
-    final inputMap = (o.value as YamlMap).cast<String, dynamic>();
-    final childExtracts = <String, CE>{};
+    final inputMap = (o.value as YamlMap);
+    final childExtracts = <dynamic, CE>{};
 
     for (final MapEntry(key: key, value: value) in keys.entries) {
-      final path = [...o.path, key];
+      final path = [...o.path, key.toString()];
       if (!inputMap.containsKey(key)) {
         continue;
       }
@@ -165,18 +165,19 @@ class FixedMapSchema<CE> extends Schema<Map<String, CE>> {
     return {
       "type": "object",
       if (keys.isNotEmpty)
-        "properties":
-            keys.map((key, value) => MapEntry(key, value.getRefOrSchema(defs))),
-      if (requiredKeys.isNotEmpty) "required": requiredKeys
+        "properties": {
+          for (final kv in keys.entries) kv.key: kv.value.getRefOrSchema(defs)
+        },
+      if (requiredKeys.isNotEmpty) "required": requiredKeys,
     };
   }
 }
 
-class DynamicMapSchema<CE> extends Schema<Map<String, CE>> {
-  final Schema valueSchema;
+class DynamicMapSchema<CE> extends Schema<Map<dynamic, CE>> {
+  final List<({String keyRegexp, Schema valueSchema})> keyValueSchemas;
 
   DynamicMapSchema({
-    required this.valueSchema,
+    required this.keyValueSchemas,
     super.extractor,
     super.defName,
   });
@@ -188,11 +189,21 @@ class DynamicMapSchema<CE> extends Schema<Map<String, CE>> {
     }
 
     var result = true;
-    final inputMap = (o.value as YamlMap).cast<String, dynamic>();
+    final inputMap = (o.value as YamlMap);
 
     for (final MapEntry(key: key, value: value) in inputMap.entries) {
-      final schemaNode = SchemaNode(path: [...o.path, key], value: value);
-      if (!valueSchema.validateNode(schemaNode, log: log)) {
+      final schemaNode =
+          SchemaNode(path: [...o.path, key.toString()], value: value);
+      var keyValueMatch = false;
+      for (final (keyRegexp: keyRegexp, valueSchema: valueSchema)
+          in keyValueSchemas) {
+        if (RegExp(keyRegexp).hasMatch(key.toString()) &&
+            valueSchema.validateNode(schemaNode, log: log)) {
+          keyValueMatch = true;
+          break;
+        }
+      }
+      if (!keyValueMatch) {
         result = false;
         continue;
       }
@@ -207,14 +218,24 @@ class DynamicMapSchema<CE> extends Schema<Map<String, CE>> {
       throw SchemaExtractionError(o);
     }
 
-    final inputMap = (o.value as YamlMap).cast<String, dynamic>();
-    final childExtracts = <String, CE>{};
+    final inputMap = (o.value as YamlMap);
+    final childExtracts = <dynamic, CE>{};
     for (final MapEntry(key: key, value: value) in inputMap.entries) {
-      final schemaNode = SchemaNode(path: [...o.path, key], value: value);
-      if (!valueSchema.validateNode(schemaNode, log: false)) {
+      final schemaNode =
+          SchemaNode(path: [...o.path, key.toString()], value: value);
+      var keyValueMatch = false;
+      for (final (keyRegexp: keyRegexp, valueSchema: valueSchema)
+          in keyValueSchemas) {
+        if (RegExp(keyRegexp).hasMatch(key.toString()) &&
+            valueSchema.validateNode(schemaNode, log: false)) {
+          childExtracts[key] = valueSchema.extractNode(schemaNode).value as CE;
+          keyValueMatch = true;
+          break;
+        }
+      }
+      if (!keyValueMatch) {
         throw SchemaExtractionError(schemaNode);
       }
-      childExtracts[key] = valueSchema.extractNode(schemaNode) as CE;
     }
 
     return o.withValue(childExtracts).extractOrRaw(extractor);
@@ -224,7 +245,11 @@ class DynamicMapSchema<CE> extends Schema<Map<String, CE>> {
   Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
     return {
       "type": "object",
-      "patternProperties": {".*": valueSchema.getRefOrSchema(defs)}
+      "patternProperties": {
+        for (final (keyRegexp: keyRegexp, valueSchema: valueSchema)
+            in keyValueSchemas)
+          keyRegexp: valueSchema.getRefOrSchema(defs)
+      }
     };
   }
 }
@@ -308,6 +333,34 @@ class StringSchema extends Schema<String> {
   }
 }
 
+class IntegerSchema extends Schema<int> {
+  IntegerSchema({
+    super.extractor,
+    super.defName,
+  });
+
+  @override
+  bool validateNode(SchemaNode o, {bool log = true}) {
+    if (!o.checkType<int>(log: log)) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  SchemaNode extractNode(SchemaNode o) {
+    if (!o.checkType<int>(log: false)) {
+      throw SchemaExtractionError(o);
+    }
+    return o.withValue(o.value as int).extractOrRaw(extractor);
+  }
+
+  @override
+  Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
+    return {"type": "integer"};
+  }
+}
+
 class BooleanSchema extends Schema<bool> {
   BooleanSchema({
     super.extractor,
@@ -359,7 +412,9 @@ class OneOfSchema<E> extends Schema<E> {
   SchemaNode extractNode(SchemaNode o) {
     for (final schema in childSchemas) {
       if (schema.validateNode(o, log: false)) {
-        return o.withValue(schema.extractNode(o) as E).extractOrRaw(extractor);
+        return o
+            .withValue(schema.extractNode(o).value as E)
+            .extractOrRaw(extractor);
       }
     }
     throw SchemaExtractionError(o);
@@ -413,6 +468,17 @@ void main() {
         },
         extractor: (node) => extractMap[node.pathString] = node.value,
       ),
+      "functions": FixedMapSchema<dynamic>(keys: {
+        "include": ListSchema<String>(childSchema: StringSchema()),
+        "exclude": ListSchema<String>(childSchema: StringSchema()),
+        "rename": DynamicMapSchema<dynamic>(keyValueSchemas: [
+          (
+            keyRegexp: r"^.*$",
+            valueSchema:
+                OneOfSchema(childSchemas: [StringSchema(), IntegerSchema()]),
+          )
+        ])
+      }),
     },
   );
   _logger.onRecord.listen((event) => print(event));
@@ -423,6 +489,10 @@ output: 'generated_bindings.dart'
 headers:
   entry-points:
     - 'headers/example.h'
+functions:
+  rename:
+    a: b
+    0: 1
 """);
 
   print("validate: ${testSchema.validate(yaml)}");
