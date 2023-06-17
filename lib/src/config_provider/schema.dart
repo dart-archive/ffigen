@@ -361,6 +361,40 @@ class IntegerSchema extends Schema<int> {
   }
 }
 
+class EnumSchema<CE> extends Schema<CE> {
+  Set<CE> allowedValues;
+  EnumSchema({
+    required this.allowedValues,
+    super.extractor,
+    super.defName,
+  });
+
+  @override
+  bool validateNode(SchemaNode o, {bool log = true}) {
+    if (!allowedValues.contains(o.value)) {
+      if (log) {
+        _logger.severe(
+            "'${o.pathString}' must be one of the following - $allowedValues (Got ${o.value})");
+      }
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  SchemaNode extractNode(SchemaNode o) {
+    if (!allowedValues.contains(o.value)) {
+      throw SchemaExtractionError(o);
+    }
+    return o.withValue(o.value as CE).extractOrRaw(extractor);
+  }
+
+  @override
+  Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
+    return {"enum": allowedValues.toList()};
+  }
+}
+
 class BooleanSchema extends Schema<bool> {
   BooleanSchema({
     super.extractor,
@@ -468,7 +502,7 @@ void main() {
         },
         extractor: (node) => extractMap[node.pathString] = node.value,
       ),
-      "functions": FixedMapSchema<dynamic>(keys: {
+      "structs": FixedMapSchema<dynamic>(keys: {
         "include": ListSchema<String>(childSchema: StringSchema()),
         "exclude": ListSchema<String>(childSchema: StringSchema()),
         "rename": DynamicMapSchema<dynamic>(keyValueSchemas: [
@@ -476,6 +510,13 @@ void main() {
             keyRegexp: r"^.*$",
             valueSchema:
                 OneOfSchema(childSchemas: [StringSchema(), IntegerSchema()]),
+          )
+        ]),
+        "pack": DynamicMapSchema<dynamic>(keyValueSchemas: [
+          (
+            keyRegexp: r"^.*$",
+            valueSchema:
+                EnumSchema<dynamic>(allowedValues: {null, 1, 2, 4, 8, 16}),
           )
         ])
       }),
@@ -489,10 +530,12 @@ output: 'generated_bindings.dart'
 headers:
   entry-points:
     - 'headers/example.h'
-functions:
+structs:
   rename:
     a: b
     0: 1
+  pack:
+    'ABCD': 2
 """);
 
   print("validate: ${testSchema.validate(yaml)}");
