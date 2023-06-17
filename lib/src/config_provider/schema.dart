@@ -105,12 +105,17 @@ class FixedMapSchema<CE> extends Schema<Map<dynamic, CE>> {
     var result = true;
     final inputMap = (o.value as YamlMap);
 
+    for (final requiredKey in requiredKeys) {
+      if (!inputMap.containsKey(requiredKey)) {
+        _logger.severe(
+            "Key '${[...o.path, requiredKey].join(' -> ')}' is required.");
+        result = false;
+      }
+    }
+
     for (final MapEntry(key: key, value: value) in keys.entries) {
       final path = [...o.path, key.toString()];
       if (!inputMap.containsKey(key)) {
-        if (log) {
-          _logger.severe("Unknown key - '${[...o.path, key].join(' -> ')}'.");
-        }
         continue;
       }
       final schemaNode = SchemaNode(path: path, value: inputMap[key]);
@@ -120,11 +125,11 @@ class FixedMapSchema<CE> extends Schema<Map<dynamic, CE>> {
       }
     }
 
-    for (final requiredKey in requiredKeys) {
-      if (!inputMap.containsKey(requiredKey)) {
-        _logger.severe(
-            "Key '${[...o.path, requiredKey].join(' -> ')}' is required.");
-        result = false;
+    for (final key in inputMap.keys) {
+      if (!keys.containsKey(key)) {
+        if (log) {
+          _logger.severe("Unknown key - '${[...o.path, key].join(' -> ')}'.");
+        }
       }
     }
 
@@ -140,6 +145,13 @@ class FixedMapSchema<CE> extends Schema<Map<dynamic, CE>> {
     final inputMap = (o.value as YamlMap);
     final childExtracts = <dynamic, CE>{};
 
+    for (final requiredKey in requiredKeys) {
+      if (!inputMap.containsKey(requiredKey)) {
+        throw SchemaExtractionError(
+            null, "Invalid schema, missing required key - $requiredKey.");
+      }
+    }
+
     for (final MapEntry(key: key, value: value) in keys.entries) {
       final path = [...o.path, key.toString()];
       if (!inputMap.containsKey(key)) {
@@ -150,12 +162,6 @@ class FixedMapSchema<CE> extends Schema<Map<dynamic, CE>> {
         throw SchemaExtractionError(schemaNode);
       }
       childExtracts[key] = value.extractNode(schemaNode).value as CE;
-    }
-    for (final requiredKey in requiredKeys) {
-      if (!inputMap.containsKey(requiredKey)) {
-        throw SchemaExtractionError(
-            null, "Invalid schema, missing required key - $requiredKey.");
-      }
     }
     return o.withValue(childExtracts).extractOrRaw(extractor);
   }
@@ -434,9 +440,18 @@ class OneOfSchema<E> extends Schema<E> {
 
   @override
   bool validateNode(SchemaNode o, {bool log = true}) {
+    // Running first time with no logs.
     for (final schema in childSchemas) {
-      if (schema.validateNode(o, log: log)) {
+      if (schema.validateNode(o, log: false)) {
         return true;
+      }
+    }
+    // No schema matched, running again to print logs this time.
+    if (log) {
+      for (final schema in childSchemas) {
+        if (schema.validateNode(o, log: log)) {
+          return true;
+        }
       }
     }
     return false;
