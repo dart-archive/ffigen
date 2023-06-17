@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:ffigen/src/config_provider/config_types.dart';
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart';
@@ -35,8 +37,8 @@ class SchemaNode<E> {
 }
 
 class SchemaExtractionError extends Error {
-  SchemaNode? item;
-  String message;
+  final SchemaNode? item;
+  final String message;
   SchemaExtractionError(this.item, [this.message = "Invalid Schema"]);
 
   @override
@@ -49,12 +51,23 @@ class SchemaExtractionError extends Error {
 }
 
 abstract class Schema<E> {
+  String? defName;
   dynamic Function(SchemaNode<E> node)? extractor;
-  Schema({required this.extractor});
+  Schema({required this.extractor, this.defName});
 
   bool validateNode(SchemaNode o, {bool log = true});
 
   SchemaNode extractNode(SchemaNode o);
+
+  Map<String, dynamic> getRefOrSchema(Map<String, dynamic> defs) {
+    if (defName == null) {
+      return generateJsonSchema(defs);
+    }
+    defs.putIfAbsent(defName!, () => generateJsonSchema(defs));
+    return {r"$ref": "#/\$defs/$defName"};
+  }
+
+  Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs);
 
   bool validate(dynamic value) {
     return validateNode(SchemaNode(path: [], value: value));
@@ -73,6 +86,7 @@ class FixedMapSchema<CE> extends Schema<Map<String, CE>> {
     required this.keys,
     this.requiredKeys = const [],
     super.extractor,
+    super.defName,
   }) {
     final unknownKeys =
         requiredKeys.where((element) => !keys.containsKey(element)).toList();
@@ -145,6 +159,17 @@ class FixedMapSchema<CE> extends Schema<Map<String, CE>> {
     }
     return o.withValue(childExtracts).extractOrRaw(extractor);
   }
+
+  @override
+  Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
+    return {
+      "type": "object",
+      if (keys.isNotEmpty)
+        "properties":
+            keys.map((key, value) => MapEntry(key, value.getRefOrSchema(defs))),
+      if (requiredKeys.isNotEmpty) "required": requiredKeys
+    };
+  }
 }
 
 class DynamicMapSchema<CE> extends Schema<Map<String, CE>> {
@@ -153,6 +178,7 @@ class DynamicMapSchema<CE> extends Schema<Map<String, CE>> {
   DynamicMapSchema({
     required this.valueSchema,
     super.extractor,
+    super.defName,
   });
 
   @override
@@ -193,6 +219,14 @@ class DynamicMapSchema<CE> extends Schema<Map<String, CE>> {
 
     return o.withValue(childExtracts).extractOrRaw(extractor);
   }
+
+  @override
+  Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
+    return {
+      "type": "object",
+      "patternProperties": {".*": valueSchema.getRefOrSchema(defs)}
+    };
+  }
 }
 
 class ListSchema<CE> extends Schema<List<CE>> {
@@ -201,6 +235,7 @@ class ListSchema<CE> extends Schema<List<CE>> {
   ListSchema({
     required this.childSchema,
     super.extractor,
+    super.defName,
   });
 
   @override
@@ -238,11 +273,17 @@ class ListSchema<CE> extends Schema<List<CE>> {
     }
     return o.withValue(childExtracts).extractOrRaw(extractor);
   }
+
+  @override
+  Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
+    return {"type": "array", "items": childSchema.getRefOrSchema(defs)};
+  }
 }
 
 class StringSchema extends Schema<String> {
   StringSchema({
     super.extractor,
+    super.defName,
   });
 
   @override
@@ -260,11 +301,17 @@ class StringSchema extends Schema<String> {
     }
     return o.withValue(o.value as String).extractOrRaw(extractor);
   }
+
+  @override
+  Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
+    return {"type": "string"};
+  }
 }
 
 class BooleanSchema extends Schema<bool> {
   BooleanSchema({
     super.extractor,
+    super.defName,
   });
 
   @override
@@ -282,19 +329,25 @@ class BooleanSchema extends Schema<bool> {
     }
     return o.withValue(o.value as bool).extractOrRaw(extractor);
   }
+
+  @override
+  Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
+    return {"type": "boolean"};
+  }
 }
 
 class OneOfSchema<E> extends Schema<E> {
-  final List<Schema> children;
+  final List<Schema> childSchemas;
 
   OneOfSchema({
-    required this.children,
+    required this.childSchemas,
     super.extractor,
+    super.defName,
   });
 
   @override
   bool validateNode(SchemaNode o, {bool log = true}) {
-    for (final schema in children) {
+    for (final schema in childSchemas) {
       if (schema.validateNode(o, log: log)) {
         return true;
       }
@@ -304,12 +357,20 @@ class OneOfSchema<E> extends Schema<E> {
 
   @override
   SchemaNode extractNode(SchemaNode o) {
-    for (final schema in children) {
+    for (final schema in childSchemas) {
       if (schema.validateNode(o, log: false)) {
         return o.withValue(schema.extractNode(o) as E).extractOrRaw(extractor);
       }
     }
     throw SchemaExtractionError(o);
+  }
+
+  @override
+  Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
+    return {
+      r"$oneOf":
+          childSchemas.map((child) => child.getRefOrSchema(defs)).toList()
+    };
   }
 }
 
@@ -324,13 +385,16 @@ void main() {
         extractor: (node) => extractMap[node.pathString] = node.value,
       ),
       "output": OneOfSchema(
-        children: [
+        childSchemas: [
           StringSchema(
+            defName: "outputBindings",
             extractor: (node) => extractMap[node.pathString] = node.value,
           ),
           FixedMapSchema(
             keys: {
-              "bindings": StringSchema(),
+              "bindings": StringSchema(
+                defName: "outputBindings",
+              ),
               "symbol-file": FixedMapSchema<dynamic>(keys: {
                 "output": StringSchema(),
                 "import-path": StringSchema(),
@@ -361,7 +425,18 @@ headers:
     - 'headers/example.h'
 """);
 
-  print(testSchema.validate(yaml));
-  print(testSchema.extract(yaml).value);
-  print(extractMap);
+  print("validate: ${testSchema.validate(yaml)}");
+  print("extract: ${testSchema.extract(yaml).value}");
+  print("extractMap: $extractMap");
+  final defs = <String, dynamic>{};
+  final jsonSchema = testSchema.generateJsonSchema(defs);
+  print("jsonschema object: $jsonSchema");
+  print("defs: $defs");
+  final jsonSchemaJson = jsonEncode({
+    r"$id": "test",
+    r"$schema": "https://json-schema.org/draft/2020-12/schema",
+    ...jsonSchema,
+    r"$defs": defs,
+  });
+  print("jsonschema file: $jsonSchemaJson");
 }
