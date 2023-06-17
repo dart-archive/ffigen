@@ -9,8 +9,16 @@ class SchemaNode<E> {
   final E value;
 
   SchemaNode({required this.path, required this.value});
+
   SchemaNode<T> withValue<T>(T value) {
     return SchemaNode<T>(path: path, value: value);
+  }
+
+  SchemaNode extractOrRaw(dynamic Function(SchemaNode<E> value)? extractor) {
+    if (extractor != null) {
+      return this.withValue(extractor.call(this));
+    }
+    return this;
   }
 
   String get pathString => path.join(" -> ");
@@ -24,14 +32,6 @@ class SchemaNode<E> {
     }
     return true;
   }
-}
-
-SchemaNode extractOrRaw<E>(
-    dynamic Function(SchemaNode<E> value)? extractor, SchemaNode<E> rawValue) {
-  if (extractor != null) {
-    return rawValue.withValue(extractor.call(rawValue));
-  }
-  return rawValue;
 }
 
 class SchemaExtractionError extends Error {
@@ -52,9 +52,17 @@ abstract class Schema<E> {
   dynamic Function(SchemaNode<E> node)? extractor;
   Schema({required this.extractor});
 
-  bool validateSchema(SchemaNode o, {bool log = true});
+  bool validateNode(SchemaNode o, {bool log = true});
 
-  SchemaNode extract(SchemaNode o);
+  SchemaNode extractNode(SchemaNode o);
+
+  bool validate(dynamic value) {
+    return validateNode(SchemaNode(path: [], value: value));
+  }
+
+  SchemaNode extract(dynamic value) {
+    return extractNode(SchemaNode(path: [], value: value));
+  }
 }
 
 class FixedMapSchema<CE> extends Schema<Map<String, CE>> {
@@ -75,7 +83,7 @@ class FixedMapSchema<CE> extends Schema<Map<String, CE>> {
   }
 
   @override
-  bool validateSchema(SchemaNode o, {bool log = true}) {
+  bool validateNode(SchemaNode o, {bool log = true}) {
     if (!o.checkType<YamlMap>(log: log)) {
       return false;
     }
@@ -92,7 +100,7 @@ class FixedMapSchema<CE> extends Schema<Map<String, CE>> {
         continue;
       }
       final schemaNode = SchemaNode(path: path, value: inputMap[key]);
-      if (!value.validateSchema(schemaNode, log: log)) {
+      if (!value.validateNode(schemaNode, log: log)) {
         result = false;
         continue;
       }
@@ -110,7 +118,7 @@ class FixedMapSchema<CE> extends Schema<Map<String, CE>> {
   }
 
   @override
-  SchemaNode extract(SchemaNode o) {
+  SchemaNode extractNode(SchemaNode o) {
     if (!o.checkType<YamlMap>(log: false)) {
       throw SchemaExtractionError(o);
     }
@@ -124,10 +132,10 @@ class FixedMapSchema<CE> extends Schema<Map<String, CE>> {
         continue;
       }
       final schemaNode = SchemaNode(path: path, value: inputMap[key]);
-      if (!value.validateSchema(schemaNode, log: false)) {
+      if (!value.validateNode(schemaNode, log: false)) {
         throw SchemaExtractionError(schemaNode);
       }
-      childExtracts[key] = value.extract(schemaNode).value as CE;
+      childExtracts[key] = value.extractNode(schemaNode).value as CE;
     }
     for (final requiredKey in requiredKeys) {
       if (!inputMap.containsKey(requiredKey)) {
@@ -135,8 +143,7 @@ class FixedMapSchema<CE> extends Schema<Map<String, CE>> {
             null, "Invalid schema, missing required key - $requiredKey.");
       }
     }
-
-    return extractOrRaw<Map<String, CE>>(extractor, o.withValue(childExtracts));
+    return o.withValue(childExtracts).extractOrRaw(extractor);
   }
 }
 
@@ -149,7 +156,7 @@ class DynamicMapSchema<CE> extends Schema<Map<String, CE>> {
   });
 
   @override
-  bool validateSchema(SchemaNode o, {bool log = true}) {
+  bool validateNode(SchemaNode o, {bool log = true}) {
     if (!o.checkType<YamlMap>(log: log)) {
       return false;
     }
@@ -159,7 +166,7 @@ class DynamicMapSchema<CE> extends Schema<Map<String, CE>> {
 
     for (final MapEntry(key: key, value: value) in inputMap.entries) {
       final schemaNode = SchemaNode(path: [...o.path, key], value: value);
-      if (!valueSchema.validateSchema(schemaNode, log: log)) {
+      if (!valueSchema.validateNode(schemaNode, log: log)) {
         result = false;
         continue;
       }
@@ -169,7 +176,7 @@ class DynamicMapSchema<CE> extends Schema<Map<String, CE>> {
   }
 
   @override
-  SchemaNode extract(SchemaNode o) {
+  SchemaNode extractNode(SchemaNode o) {
     if (!o.checkType<YamlMap>(log: false)) {
       throw SchemaExtractionError(o);
     }
@@ -178,13 +185,13 @@ class DynamicMapSchema<CE> extends Schema<Map<String, CE>> {
     final childExtracts = <String, CE>{};
     for (final MapEntry(key: key, value: value) in inputMap.entries) {
       final schemaNode = SchemaNode(path: [...o.path, key], value: value);
-      if (!valueSchema.validateSchema(schemaNode, log: false)) {
+      if (!valueSchema.validateNode(schemaNode, log: false)) {
         throw SchemaExtractionError(schemaNode);
       }
-      childExtracts[key] = valueSchema.extract(schemaNode) as CE;
+      childExtracts[key] = valueSchema.extractNode(schemaNode) as CE;
     }
 
-    return extractOrRaw(extractor, o.withValue(childExtracts));
+    return o.withValue(childExtracts).extractOrRaw(extractor);
   }
 }
 
@@ -197,7 +204,7 @@ class ListSchema<CE> extends Schema<List<CE>> {
   });
 
   @override
-  bool validateSchema(SchemaNode o, {bool log = true}) {
+  bool validateNode(SchemaNode o, {bool log = true}) {
     if (!o.checkType<YamlList>(log: log)) {
       return false;
     }
@@ -205,7 +212,7 @@ class ListSchema<CE> extends Schema<List<CE>> {
     var result = true;
     for (final (i, input) in inputList.indexed) {
       final schemaNode = SchemaNode(path: [...o.path, "[$i]"], value: input);
-      if (!childSchema.validateSchema(schemaNode, log: log)) {
+      if (!childSchema.validateNode(schemaNode, log: log)) {
         result = false;
         continue;
       }
@@ -215,7 +222,7 @@ class ListSchema<CE> extends Schema<List<CE>> {
   }
 
   @override
-  SchemaNode extract(SchemaNode o) {
+  SchemaNode extractNode(SchemaNode o) {
     if (!o.checkType<YamlList>(log: false)) {
       throw SchemaExtractionError(o);
     }
@@ -224,12 +231,12 @@ class ListSchema<CE> extends Schema<List<CE>> {
     for (final (i, input) in inputList.indexed) {
       final schemaNode =
           SchemaNode(path: [...o.path, i.toString()], value: input);
-      if (!childSchema.validateSchema(schemaNode, log: false)) {
+      if (!childSchema.validateNode(schemaNode, log: false)) {
         throw SchemaExtractionError(schemaNode);
       }
-      childExtracts.add(childSchema.extract(schemaNode).value as CE);
+      childExtracts.add(childSchema.extractNode(schemaNode).value as CE);
     }
-    return extractOrRaw(extractor, o.withValue(childExtracts));
+    return o.withValue(childExtracts).extractOrRaw(extractor);
   }
 }
 
@@ -239,7 +246,7 @@ class StringSchema extends Schema<String> {
   });
 
   @override
-  bool validateSchema(SchemaNode o, {bool log = true}) {
+  bool validateNode(SchemaNode o, {bool log = true}) {
     if (!o.checkType<String>(log: log)) {
       return false;
     }
@@ -247,11 +254,11 @@ class StringSchema extends Schema<String> {
   }
 
   @override
-  SchemaNode extract(SchemaNode o) {
+  SchemaNode extractNode(SchemaNode o) {
     if (!o.checkType<String>(log: false)) {
       throw SchemaExtractionError(o);
     }
-    return extractOrRaw(extractor, o.withValue(o.value as String));
+    return o.withValue(o.value as String).extractOrRaw(extractor);
   }
 }
 
@@ -261,7 +268,7 @@ class BooleanSchema extends Schema<bool> {
   });
 
   @override
-  bool validateSchema(SchemaNode o, {bool log = true}) {
+  bool validateNode(SchemaNode o, {bool log = true}) {
     if (!o.checkType<bool>(log: log)) {
       return false;
     }
@@ -269,11 +276,11 @@ class BooleanSchema extends Schema<bool> {
   }
 
   @override
-  SchemaNode extract(SchemaNode o) {
+  SchemaNode extractNode(SchemaNode o) {
     if (!o.checkType<bool>(log: false)) {
       throw SchemaExtractionError(o);
     }
-    return extractOrRaw(extractor, o.withValue(o.value as bool));
+    return o.withValue(o.value as bool).extractOrRaw(extractor);
   }
 }
 
@@ -286,9 +293,9 @@ class OneOfSchema<E> extends Schema<E> {
   });
 
   @override
-  bool validateSchema(SchemaNode o, {bool log = true}) {
+  bool validateNode(SchemaNode o, {bool log = true}) {
     for (final schema in children) {
-      if (schema.validateSchema(o, log: log)) {
+      if (schema.validateNode(o, log: log)) {
         return true;
       }
     }
@@ -296,10 +303,10 @@ class OneOfSchema<E> extends Schema<E> {
   }
 
   @override
-  SchemaNode extract(SchemaNode o) {
+  SchemaNode extractNode(SchemaNode o) {
     for (final schema in children) {
-      if (schema.validateSchema(o, log: false)) {
-        return extractOrRaw(extractor, o.withValue(schema.extract(o) as E));
+      if (schema.validateNode(o, log: false)) {
+        return o.withValue(schema.extractNode(o) as E).extractOrRaw(extractor);
       }
     }
     throw SchemaExtractionError(o);
@@ -354,7 +361,7 @@ headers:
     - 'headers/example.h'
 """);
 
-  print(testSchema.validateSchema(SchemaNode(path: [], value: yaml)));
-  print(testSchema.extract(SchemaNode(path: [], value: yaml)).value);
+  print(testSchema.validate(yaml));
+  print(testSchema.extract(yaml).value);
   print(extractMap);
 }
