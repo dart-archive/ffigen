@@ -278,6 +278,6 @@ String get tmpDir {
   return _tmpDir!.path;
 }
 
-const ffigenJsonSchemaIndent = '    ';
+const ffigenJsonSchemaIndent = '  ';
 const ffigenJsonSchemaId = "https://json.schemastore.org/ffigen";
 const ffigenJsonSchemaFileName = "ffigen.schema.json";
