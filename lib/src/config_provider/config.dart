@@ -719,7 +719,7 @@ class Config {
                 (
                   keyRegexp: '.*',
                   valueSchema: EnumSchema(
-                    allowedValues: {'none', null, 1, 2, 4, 8, 16},
+                    allowedValues: {'none', 1, 2, 4, 8, 16},
                     transform: (node) =>
                         node.value == 'none' ? null : node.value,
                   ),
