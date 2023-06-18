@@ -34,12 +34,19 @@ class SchemaNode<E> {
     return SchemaNode<T>(path: path, value: value);
   }
 
-  /// Transforms this SchemaNode with a nullable [extractor] or return itself.
-  SchemaNode extractOrThis(dynamic Function(SchemaNode<E> value)? extractor) {
+  /// Transforms this SchemaNode with a nullable [extractor] or return itself
+  /// and calls the [result] callback
+  SchemaNode extractOrThis(
+    dynamic Function(SchemaNode<E> value)? extractor,
+    void Function(SchemaNode node)? result,
+  ) {
+    SchemaNode returnValue;
     if (extractor != null) {
-      return this.withValue(extractor.call(this));
+      returnValue = this.withValue(extractor.call(this));
     }
-    return this;
+    returnValue = this;
+    result?.call(returnValue);
+    return returnValue;
   }
 
   /// Returns true if [value] is of Type [T].
@@ -71,30 +78,58 @@ class SchemaExtractionError extends Error {
 
 /// Base class for all Schemas to extend.
 abstract class Schema<E> {
-  String? defName;
-  dynamic Function(SchemaNode<E> node)? extractor;
-  Schema({required this.extractor, this.defName});
+  /// Used to generate and refer the reference definition generated in json
+  /// schema. Must be unique for a nested Schema.
+  String? schemaDefName;
+
+  /// Used to generate the description field in json schema.
+  String? schemaDescription;
+
+  /// Used to transform the payload to another type before passing to parent
+  /// nodes and [result].
+  dynamic Function(SchemaNode<E> node)? transform;
+
+  /// Passed to parent nodes and result (only if required by parent)
+  E? Function(SchemaNode node)? defaultValue;
+
+  void Function(SchemaNode node)? result;
+  Schema({
+    /// Used
+    this.schemaDefName,
+    this.schemaDescription,
+    this.transform,
+    this.defaultValue,
+    this.result,
+  });
 
   bool validateNode(SchemaNode o, {bool log = true});
 
   SchemaNode extractNode(SchemaNode o);
 
-  Map<String, dynamic> getRefOrSchema(Map<String, dynamic> defs) {
-    if (defName == null) {
-      return generateJsonSchema(defs);
-    }
-    defs.putIfAbsent(defName!, () => generateJsonSchema(defs));
-    return {r"$ref": "#/\$defs/$defName"};
+  Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs);
+
+  /// Returns default value or null for a node. Calls [result] if value is
+  /// not null.
+  E? getDefaultValue(SchemaNode o) {
+    final v = defaultValue?.call(o);
+    if (v != null) result?.call(o.withValue(v));
+    return v;
   }
 
-  Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs);
+  Map<String, dynamic> getRefOrSchema(Map<String, dynamic> defs) {
+    if (schemaDefName == null) {
+      return generateJsonSchema(defs);
+    }
+    defs.putIfAbsent(schemaDefName!, () => generateJsonSchema(defs));
+    return {r"$ref": "#/\$defs/$schemaDefName"};
+  }
 
   /// Run validation on an object [value].
   bool validate(dynamic value) {
     return validateNode(SchemaNode(path: [], value: value));
   }
 
-  /// Extract SchemaNode from [value]. This will call the [extractor] for all
+  /// Extract SchemaNode from [value]. This will call the [transform] for all
   /// underlying Schemas if valid.
   /// Should ideally only be called if [validate] returns True. Throws
   /// [SchemaExtractionError] if any validation fails.
@@ -111,8 +146,11 @@ class FixedMapSchema<CE> extends Schema<Map<dynamic, CE>> {
   FixedMapSchema({
     required this.keys,
     this.requiredKeys = const [],
-    super.extractor,
-    super.defName,
+    super.schemaDefName,
+    super.schemaDescription,
+    super.transform,
+    super.defaultValue,
+    super.result,
   }) {
     final unknownKeys =
         requiredKeys.where((element) => !keys.containsKey(element)).toList();
@@ -120,6 +158,20 @@ class FixedMapSchema<CE> extends Schema<Map<dynamic, CE>> {
       throw ArgumentError(
           "Invalid requiredKeys: $unknownKeys, requiredKeys must be a subset of keys");
     }
+
+    // Get default values of underlying keys if [defaultValue] is not specified
+    // for this.
+    super.defaultValue ??= (SchemaNode o) {
+      final result = <dynamic, CE>{};
+      for (final MapEntry(key: key, value: value) in keys.entries) {
+        final defaultValue = value.getDefaultValue(
+            SchemaNode(path: [...o.path, key.toString()], value: value));
+        if (defaultValue != null) {
+          result[key] = defaultValue as CE;
+        }
+      }
+      return result.isEmpty ? null : result;
+    };
   }
 
   @override
@@ -181,6 +233,12 @@ class FixedMapSchema<CE> extends Schema<Map<dynamic, CE>> {
     for (final MapEntry(key: key, value: value) in keys.entries) {
       final path = [...o.path, key.toString()];
       if (!inputMap.containsKey(key)) {
+        // No value specified, fill in with default value instead.
+        final defaultValue =
+            value.getDefaultValue(SchemaNode(path: path, value: null));
+        if (defaultValue != null) {
+          childExtracts[key] = defaultValue as CE;
+        }
         continue;
       }
       final schemaNode = SchemaNode(path: path, value: inputMap[key]);
@@ -189,13 +247,14 @@ class FixedMapSchema<CE> extends Schema<Map<dynamic, CE>> {
       }
       childExtracts[key] = value.extractNode(schemaNode).value as CE;
     }
-    return o.withValue(childExtracts).extractOrThis(extractor);
+    return o.withValue(childExtracts).extractOrThis(transform, result);
   }
 
   @override
   Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
     return {
       "type": "object",
+      if (schemaDescription != null) "description": schemaDescription!,
       if (keys.isNotEmpty)
         "properties": {
           for (final kv in keys.entries) kv.key: kv.value.getRefOrSchema(defs)
@@ -212,8 +271,11 @@ class DynamicMapSchema<CE> extends Schema<Map<dynamic, CE>> {
 
   DynamicMapSchema({
     required this.keyValueSchemas,
-    super.extractor,
-    super.defName,
+    super.schemaDefName,
+    super.schemaDescription,
+    super.transform,
+    super.defaultValue,
+    super.result,
   });
 
   @override
@@ -289,18 +351,20 @@ class DynamicMapSchema<CE> extends Schema<Map<dynamic, CE>> {
       }
     }
 
-    return o.withValue(childExtracts).extractOrThis(extractor);
+    return o.withValue(childExtracts).extractOrThis(transform, result);
   }
 
   @override
   Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
     return {
       "type": "object",
-      "patternProperties": {
-        for (final (keyRegexp: keyRegexp, valueSchema: valueSchema)
-            in keyValueSchemas)
-          keyRegexp: valueSchema.getRefOrSchema(defs)
-      }
+      if (schemaDescription != null) "description": schemaDescription!,
+      if (keyValueSchemas.isNotEmpty)
+        "patternProperties": {
+          for (final (keyRegexp: keyRegexp, valueSchema: valueSchema)
+              in keyValueSchemas)
+            keyRegexp: valueSchema.getRefOrSchema(defs)
+        }
     };
   }
 }
@@ -311,8 +375,11 @@ class ListSchema<CE> extends Schema<List<CE>> {
 
   ListSchema({
     required this.childSchema,
-    super.extractor,
-    super.defName,
+    super.schemaDefName,
+    super.schemaDescription,
+    super.transform,
+    super.defaultValue,
+    super.result,
   });
 
   @override
@@ -348,20 +415,27 @@ class ListSchema<CE> extends Schema<List<CE>> {
       }
       childExtracts.add(childSchema.extractNode(schemaNode).value as CE);
     }
-    return o.withValue(childExtracts).extractOrThis(extractor);
+    return o.withValue(childExtracts).extractOrThis(transform, result);
   }
 
   @override
   Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
-    return {"type": "array", "items": childSchema.getRefOrSchema(defs)};
+    return {
+      "type": "array",
+      if (schemaDescription != null) "description": schemaDescription!,
+      "items": childSchema.getRefOrSchema(defs),
+    };
   }
 }
 
 /// Schema for a String.
 class StringSchema extends Schema<String> {
   StringSchema({
-    super.extractor,
-    super.defName,
+    super.schemaDefName,
+    super.schemaDescription,
+    super.transform,
+    super.defaultValue,
+    super.result,
   });
 
   @override
@@ -377,20 +451,26 @@ class StringSchema extends Schema<String> {
     if (!o.checkType<String>(log: false)) {
       throw SchemaExtractionError(o);
     }
-    return o.withValue(o.value as String).extractOrThis(extractor);
+    return o.withValue(o.value as String).extractOrThis(transform, result);
   }
 
   @override
   Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
-    return {"type": "string"};
+    return {
+      "type": "string",
+      if (schemaDescription != null) "description": schemaDescription!,
+    };
   }
 }
 
 /// Schema for an Int.
 class IntSchema extends Schema<int> {
   IntSchema({
-    super.extractor,
-    super.defName,
+    super.schemaDefName,
+    super.schemaDescription,
+    super.transform,
+    super.defaultValue,
+    super.result,
   });
 
   @override
@@ -406,12 +486,15 @@ class IntSchema extends Schema<int> {
     if (!o.checkType<int>(log: false)) {
       throw SchemaExtractionError(o);
     }
-    return o.withValue(o.value as int).extractOrThis(extractor);
+    return o.withValue(o.value as int).extractOrThis(transform, result);
   }
 
   @override
   Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
-    return {"type": "integer"};
+    return {
+      "type": "integer",
+      if (schemaDescription != null) "description": schemaDescription!,
+    };
   }
 }
 
@@ -420,8 +503,11 @@ class EnumSchema<CE> extends Schema<CE> {
   Set<CE> allowedValues;
   EnumSchema({
     required this.allowedValues,
-    super.extractor,
-    super.defName,
+    super.schemaDefName,
+    super.schemaDescription,
+    super.transform,
+    super.defaultValue,
+    super.result,
   });
 
   @override
@@ -441,20 +527,26 @@ class EnumSchema<CE> extends Schema<CE> {
     if (!allowedValues.contains(o.value)) {
       throw SchemaExtractionError(o);
     }
-    return o.withValue(o.value as CE).extractOrThis(extractor);
+    return o.withValue(o.value as CE).extractOrThis(transform, result);
   }
 
   @override
   Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
-    return {"enum": allowedValues.toList()};
+    return {
+      "enum": allowedValues.toList(),
+      if (schemaDescription != null) "description": schemaDescription!,
+    };
   }
 }
 
 /// Schema for a bool.
 class BoolSchema extends Schema<bool> {
   BoolSchema({
-    super.extractor,
-    super.defName,
+    super.schemaDefName,
+    super.schemaDescription,
+    super.transform,
+    super.defaultValue,
+    super.result,
   });
 
   @override
@@ -470,12 +562,15 @@ class BoolSchema extends Schema<bool> {
     if (!o.checkType<bool>(log: false)) {
       throw SchemaExtractionError(o);
     }
-    return o.withValue(o.value as bool).extractOrThis(extractor);
+    return o.withValue(o.value as bool).extractOrThis(transform, result);
   }
 
   @override
   Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
-    return {"type": "boolean"};
+    return {
+      "type": "boolean",
+      if (schemaDescription != null) "description": schemaDescription!,
+    };
   }
 }
 
@@ -485,8 +580,11 @@ class OneOfSchema<E> extends Schema<E> {
 
   OneOfSchema({
     required this.childSchemas,
-    super.extractor,
-    super.defName,
+    super.schemaDefName,
+    super.schemaDescription,
+    super.transform,
+    super.defaultValue,
+    super.result,
   });
 
   @override
@@ -516,7 +614,7 @@ class OneOfSchema<E> extends Schema<E> {
       if (schema.validateNode(o, log: false)) {
         return o
             .withValue(schema.extractNode(o).value as E)
-            .extractOrThis(extractor);
+            .extractOrThis(transform, result);
       }
     }
     throw SchemaExtractionError(o);
@@ -525,8 +623,9 @@ class OneOfSchema<E> extends Schema<E> {
   @override
   Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
     return {
+      if (schemaDescription != null) "description": schemaDescription!,
       r"$oneOf":
-          childSchemas.map((child) => child.getRefOrSchema(defs)).toList()
+          childSchemas.map((child) => child.getRefOrSchema(defs)).toList(),
     };
   }
 }
@@ -536,21 +635,21 @@ void main() {
   final testSchema = FixedMapSchema<dynamic>(
     keys: {
       "name": StringSchema(
-        extractor: (node) => extractMap[node.pathString] = node.value,
+        result: (node) => extractMap[node.pathString] = node.value,
       ),
       "description": StringSchema(
-        extractor: (node) => extractMap[node.pathString] = node.value,
+        result: (node) => extractMap[node.pathString] = node.value,
       ),
       "output": OneOfSchema(
         childSchemas: [
           StringSchema(
-            defName: "outputBindings",
-            extractor: (node) => extractMap[node.pathString] = node.value,
+            schemaDefName: "outputBindings",
+            transform: (node) => extractMap[node.pathString] = node.value,
           ),
           FixedMapSchema(
             keys: {
               "bindings": StringSchema(
-                defName: "outputBindings",
+                schemaDefName: "outputBindings",
               ),
               "symbol-file": FixedMapSchema<dynamic>(keys: {
                 "output": StringSchema(),
@@ -558,8 +657,9 @@ void main() {
               })
             },
             requiredKeys: ["bindings"],
-            extractor: (node) =>
+            transform: (node) =>
                 OutputConfig(node.value["bindings"] as String, null),
+            result: (node) => extractMap[node.pathString] = node.value,
           )
         ],
       ),
@@ -568,7 +668,7 @@ void main() {
           "entry-points": ListSchema<String>(childSchema: StringSchema()),
           "include-directives": ListSchema<String>(childSchema: StringSchema()),
         },
-        extractor: (node) => extractMap[node.pathString] = node.value,
+        result: (node) => extractMap[node.pathString] = node.value,
       ),
       "structs": FixedMapSchema<dynamic>(keys: {
         "include": ListSchema<String>(childSchema: StringSchema()),
@@ -588,6 +688,20 @@ void main() {
           )
         ])
       }),
+      "comments": FixedMapSchema<dynamic>(
+        keys: {
+          "style": EnumSchema(
+            allowedValues: {"any", "doxygen"},
+            defaultValue: (node) => "doxygen",
+          ),
+          "length": EnumSchema(
+            allowedValues: {"brief", "full"},
+            defaultValue: (node) => "brief",
+            result: (node) => extractMap[node.pathString] = node.value,
+          ),
+        },
+        result: (node) => extractMap[node.pathString] = node.value,
+      ),
     },
   );
   _logger.onRecord.listen((event) => print(event));
