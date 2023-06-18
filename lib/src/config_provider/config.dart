@@ -593,9 +593,9 @@ class Config {
               keys: {
                 strings.bindings: StringSchema(),
                 strings.symbolFile: FixedMapSchema<String>(
-                  requiredKeys: [strings.name, strings.importPath],
+                  requiredKeys: [strings.output, strings.importPath],
                   keys: {
-                    strings.name: StringSchema(),
+                    strings.output: StringSchema(),
                     strings.importPath: StringSchema()
                   },
                 )
@@ -673,7 +673,10 @@ class Config {
               keyValueSchemas: [
                 (
                   keyRegexp: ".*",
-                  valueSchema: ListSchema<String>(childSchema: StringSchema())
+                  valueSchema: ListSchema<List<String>>(
+                    childSchema:
+                        ListSchema<String>(childSchema: StringSchema()),
+                  )
                 )
               ],
               defaultValue: (node) => <String, List<RawVarArgFunction>>{},
@@ -705,7 +708,9 @@ class Config {
                 (
                   keyRegexp: '.*',
                   valueSchema: EnumSchema(
-                    allowedValues: {null, 1, 2, 4, 8, 16},
+                    allowedValues: {'none', null, 1, 2, 4, 8, 16},
+                    transform: (node) =>
+                        node.value == 'none' ? null : node.value,
                   ),
                 )
               ],
@@ -905,7 +910,16 @@ class Config {
           defaultValue: (node) => true,
           result: (node) => _useDartHandle = node.value as bool,
         ),
-        strings.ffiNative: BoolSchema(
+        strings.ffiNative: OneOfSchema(
+          childSchemas: [
+            EnumSchema(allowedValues: {null}),
+            FixedMapSchema<dynamic>(
+              requiredKeys: [strings.ffiNativeAsset],
+              keys: {
+                strings.ffiNativeAsset: StringSchema(),
+              },
+            )
+          ],
           transform: (node) => ffiNativeExtractor(node.rawValue),
           defaultValue: (node) => FfiNativeConfig(enabled: false),
           result: (node) => _ffiNativeConfig = (node.value) as FfiNativeConfig,
