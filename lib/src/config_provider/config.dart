@@ -185,7 +185,7 @@ class Config {
     final configspecs = Config._(filename, packageConfig);
     _logger.finest('Config Map: $map');
 
-    final ffigenSchema = configspecs.getRootSchema();
+    final ffigenSchema = configspecs._getRootSchema();
     final result = ffigenSchema.validate(map);
     if (!result) {
       throw FormatException('Invalid configurations provided.');
@@ -202,6 +202,12 @@ class Config {
 
     return Config.fromYaml(configYaml,
         filename: file.path, packageConfig: packageConfig);
+  }
+
+  /// Returns the root Schema object.
+  static Schema getsRootSchema() {
+    final configspecs = Config._(null, null);
+    return configspecs._getRootSchema();
   }
 
   /// Add compiler options for clang. If [highPriority] is true these are added
@@ -575,7 +581,7 @@ class Config {
   //   };
   // }
 
-  Schema getRootSchema() {
+  Schema _getRootSchema() {
     return FixedMapSchema<dynamic>(
       requiredKeys: [strings.output, strings.headers],
       keys: {

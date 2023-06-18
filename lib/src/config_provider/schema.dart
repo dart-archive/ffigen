@@ -118,7 +118,26 @@ abstract class Schema<E> {
 
   SchemaNode extractNode(SchemaNode o);
 
-  Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs);
+  Map<String, dynamic> generateJsonSchemaNode(Map<String, dynamic> defs);
+
+  Map<String, dynamic> getJsonRefOrSchemaNode(Map<String, dynamic> defs) {
+    if (schemaDefName == null) {
+      return generateJsonSchemaNode(defs);
+    }
+    defs.putIfAbsent(schemaDefName!, () => generateJsonSchemaNode(defs));
+    return {r"$ref": "#/\$defs/$schemaDefName"};
+  }
+
+  Map<String, dynamic> generateJsonSchema(String schemaId) {
+    final defs = <String, dynamic>{};
+    final schemaMap = generateJsonSchemaNode(defs);
+    return {
+      r"$id": schemaId,
+      r"$schema": "https://json-schema.org/draft/2020-12/schema",
+      ...schemaMap,
+      r"$defs": defs,
+    };
+  }
 
   /// Returns default value or null for a node. Calls [result] if value is
   /// not null.
@@ -126,14 +145,6 @@ abstract class Schema<E> {
     final v = defaultValue?.call(o.withValue(null, null));
     if (v != null) result?.call(o.withValue(v, null));
     return v;
-  }
-
-  Map<String, dynamic> getRefOrSchema(Map<String, dynamic> defs) {
-    if (schemaDefName == null) {
-      return generateJsonSchema(defs);
-    }
-    defs.putIfAbsent(schemaDefName!, () => generateJsonSchema(defs));
-    return {r"$ref": "#/\$defs/$schemaDefName"};
   }
 
   /// Run validation on an object [value].
@@ -267,13 +278,14 @@ class FixedMapSchema<CE> extends Schema<Map<dynamic, CE>> {
   }
 
   @override
-  Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
+  Map<String, dynamic> generateJsonSchemaNode(Map<String, dynamic> defs) {
     return {
       "type": "object",
       if (schemaDescription != null) "description": schemaDescription!,
       if (keys.isNotEmpty)
         "properties": {
-          for (final kv in keys.entries) kv.key: kv.value.getRefOrSchema(defs)
+          for (final kv in keys.entries)
+            kv.key: kv.value.getJsonRefOrSchemaNode(defs)
         },
       if (requiredKeys.isNotEmpty) "required": requiredKeys,
     };
@@ -373,7 +385,7 @@ class DynamicMapSchema<CE> extends Schema<Map<dynamic, CE>> {
   }
 
   @override
-  Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
+  Map<String, dynamic> generateJsonSchemaNode(Map<String, dynamic> defs) {
     return {
       "type": "object",
       if (schemaDescription != null) "description": schemaDescription!,
@@ -381,7 +393,7 @@ class DynamicMapSchema<CE> extends Schema<Map<dynamic, CE>> {
         "patternProperties": {
           for (final (keyRegexp: keyRegexp, valueSchema: valueSchema)
               in keyValueSchemas)
-            keyRegexp: valueSchema.getRefOrSchema(defs)
+            keyRegexp: valueSchema.getJsonRefOrSchemaNode(defs)
         }
     };
   }
@@ -439,11 +451,11 @@ class ListSchema<CE> extends Schema<List<CE>> {
   }
 
   @override
-  Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
+  Map<String, dynamic> generateJsonSchemaNode(Map<String, dynamic> defs) {
     return {
       "type": "array",
       if (schemaDescription != null) "description": schemaDescription!,
-      "items": childSchema.getRefOrSchema(defs),
+      "items": childSchema.getJsonRefOrSchemaNode(defs),
     };
   }
 }
@@ -477,7 +489,7 @@ class StringSchema extends Schema<String> {
   }
 
   @override
-  Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
+  Map<String, dynamic> generateJsonSchemaNode(Map<String, dynamic> defs) {
     return {
       "type": "string",
       if (schemaDescription != null) "description": schemaDescription!,
@@ -514,7 +526,7 @@ class IntSchema extends Schema<int> {
   }
 
   @override
-  Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
+  Map<String, dynamic> generateJsonSchemaNode(Map<String, dynamic> defs) {
     return {
       "type": "integer",
       if (schemaDescription != null) "description": schemaDescription!,
@@ -557,7 +569,7 @@ class EnumSchema<CE> extends Schema<CE> {
   }
 
   @override
-  Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
+  Map<String, dynamic> generateJsonSchemaNode(Map<String, dynamic> defs) {
     return {
       "enum": allowedValues.toList(),
       if (schemaDescription != null) "description": schemaDescription!,
@@ -594,7 +606,7 @@ class BoolSchema extends Schema<bool> {
   }
 
   @override
-  Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
+  Map<String, dynamic> generateJsonSchemaNode(Map<String, dynamic> defs) {
     return {
       "type": "boolean",
       if (schemaDescription != null) "description": schemaDescription!,
@@ -649,11 +661,12 @@ class OneOfSchema<E> extends Schema<E> {
   }
 
   @override
-  Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs) {
+  Map<String, dynamic> generateJsonSchemaNode(Map<String, dynamic> defs) {
     return {
       if (schemaDescription != null) "description": schemaDescription!,
-      r"$oneOf":
-          childSchemas.map((child) => child.getRefOrSchema(defs)).toList(),
+      r"$oneOf": childSchemas
+          .map((child) => child.getJsonRefOrSchemaNode(defs))
+          .toList(),
     };
   }
 }
@@ -760,7 +773,7 @@ structs:
   print("extract: ${testSchema.extract(yaml).value}");
   print("extractMap: $extractMap");
   final defs = <String, dynamic>{};
-  final jsonSchema = testSchema.generateJsonSchema(defs);
+  final jsonSchema = testSchema.generateJsonSchemaNode(defs);
   print("jsonschema object: $jsonSchema");
   print("defs: $defs");
   final jsonSchemaJson = jsonEncode({
