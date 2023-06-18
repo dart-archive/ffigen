@@ -182,7 +182,9 @@ class FixedMapSchema<CE> extends Schema<Map<dynamic, CE>> {
           result[key] = defaultValue as CE;
         }
       }
-      return result.isEmpty ? null : result;
+      return result.isEmpty
+          ? null
+          : o.withValue(result, null).transformOrThis(transform, null).value;
     };
   }
 

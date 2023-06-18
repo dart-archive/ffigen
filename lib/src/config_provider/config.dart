@@ -4,6 +4,7 @@
 
 /// Validates the yaml input by the user, prints useful info for the user
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:ffigen/src/code_generator.dart';
@@ -13,6 +14,7 @@ import 'package:yaml/yaml.dart';
 
 import '../strings.dart' as strings;
 import 'config_types.dart';
+import 'schema.dart';
 import 'spec_utils.dart';
 
 final _logger = Logger('ffigen.config_provider.config');
@@ -184,14 +186,13 @@ class Config {
     final configspecs = Config._(filename, packageConfig);
     _logger.finest('Config Map: $map');
 
-    final specs = configspecs._getSpecs();
-
-    final result = configspecs._checkConfigs(map, specs);
+    final ffigenSchema = configspecs.getRootSchema();
+    final result = ffigenSchema.validate(map);
     if (!result) {
       throw FormatException('Invalid configurations provided.');
     }
 
-    configspecs._extract(map, specs);
+    ffigenSchema.extract(map);
     return configspecs;
   }
 
@@ -573,5 +574,444 @@ class Config {
             _ffiNativeConfig = result as FfiNativeConfig,
       )
     };
+  }
+
+  Schema getRootSchema() {
+    return FixedMapSchema<dynamic>(
+      requiredKeys: [strings.output, strings.headers],
+      keys: {
+        strings.llvmPath: ListSchema<String>(
+          childSchema: StringSchema(),
+          transform: (node) => llvmPathExtractor(YamlList.wrap(node.value)),
+          defaultValue: (node) => findDylibAtDefaultLocations(),
+          result: (node) => _libclangDylib = node.value as String,
+        ),
+        strings.output: OneOfSchema<dynamic>(
+          childSchemas: [
+            StringSchema(),
+            FixedMapSchema<dynamic>(
+              requiredKeys: [strings.bindings],
+              keys: {
+                strings.bindings: StringSchema(),
+                strings.symbolFile: FixedMapSchema<String>(
+                  requiredKeys: [strings.name, strings.importPath],
+                  keys: {
+                    strings.name: StringSchema(),
+                    strings.importPath: StringSchema()
+                  },
+                )
+              },
+            )
+          ],
+          transform: (node) =>
+              outputExtractor(node.rawValue, filename, packageConfig),
+          result: (node) {
+            _output = (node.value as OutputConfig).output;
+            _symbolFile = (node.value as OutputConfig).symbolFile;
+          },
+        ),
+        strings.language: EnumSchema<String>(
+          allowedValues: {strings.langC, strings.langObjC},
+          transform: (node) =>
+              (node.value == strings.langObjC) ? Language.objc : Language.c,
+          defaultValue: (node) => Language.c,
+          result: (node) => _language = node.value as Language,
+        ),
+        strings.headers: FixedMapSchema<List<String>>(
+          requiredKeys: [strings.entryPoints],
+          keys: {
+            strings.entryPoints:
+                ListSchema<String>(childSchema: StringSchema()),
+            strings.includeDirectives:
+                ListSchema<String>(childSchema: StringSchema()),
+          },
+          transform: (node) => headersExtractor(node.rawValue, filename),
+          result: (node) => _headers = node.value as Headers,
+        ),
+        strings.compilerOpts: OneOfSchema(
+          childSchemas: [
+            StringSchema(),
+            ListSchema<String>(childSchema: StringSchema())
+          ],
+          transform: (node) => compilerOptsExtractor(node.rawValue),
+          defaultValue: (node) => <String>[],
+          result: (node) => _compilerOpts = node.value as List<String>,
+        ),
+        strings.compilerOptsAuto: FixedMapSchema<dynamic>(
+          keys: {
+            strings.macos: FixedMapSchema<dynamic>(
+              keys: {
+                strings.includeCStdLib: BoolSchema(),
+              },
+            )
+          },
+          transform: (node) => compilerOptsAutoExtractor(node.rawValue),
+          defaultValue: (node) => CompilerOptsAuto(),
+          result: (node) => _compilerOpts
+              .addAll((node.value as CompilerOptsAuto).extractCompilerOpts()),
+        ),
+        strings.libraryImports: DynamicMapSchema<String>(
+          keyValueSchemas: [
+            (keyRegexp: ".*", valueSchema: StringSchema()),
+          ],
+          transform: (node) => libraryImportsExtractor(node.rawValue),
+          defaultValue: (node) => <String, LibraryImport>{},
+          result: (node) =>
+              _libraryImports = (node.value) as Map<String, LibraryImport>,
+        ),
+        strings.functions: FixedMapSchema<dynamic>(
+          keys: {
+            ...includeExcludeProperties(),
+            ...renameProperties(),
+            strings.symbolAddress: includeExcludeObject(),
+            strings.exposeFunctionTypedefs: includeExcludeObject(
+              defaultValue: (node) => Includer.excludeByDefault(),
+            ),
+            strings.leafFunctions: includeExcludeObject(
+              defaultValue: (node) => Includer.excludeByDefault(),
+            ),
+            strings.varArgFunctions: DynamicMapSchema<dynamic>(
+              keyValueSchemas: [
+                (
+                  keyRegexp: ".*",
+                  valueSchema: ListSchema<String>(childSchema: StringSchema())
+                )
+              ],
+              defaultValue: (node) => <String, List<RawVarArgFunction>>{},
+              transform: (node) => varArgFunctionConfigExtractor(node.rawValue),
+              result: (node) {
+                _varArgFunctions = makeVarArgFunctionsMapping(
+                    node.value as Map<String, List<RawVarArgFunction>>,
+                    _libraryImports);
+              },
+            )
+          },
+          result: (node) {
+            _functionDecl =
+                declarationConfigExtractor(node.rawValue ?? YamlMap());
+            _exposeFunctionTypedefs =
+                (node.value as Map)[strings.exposeFunctionTypedefs] as Includer;
+            _leafFunctions =
+                (node.value as Map)[strings.leafFunctions] as Includer;
+          },
+        ),
+        strings.structs: FixedMapSchema<dynamic>(
+          keys: {
+            ...includeExcludeProperties(),
+            ...renameProperties(),
+            ...memberRenameProperties(),
+            strings.dependencyOnly: dependencyOnlyObject(),
+            strings.structPack: DynamicMapSchema<dynamic>(
+              keyValueSchemas: [
+                (
+                  keyRegexp: '.*',
+                  valueSchema: EnumSchema(
+                    allowedValues: {null, 1, 2, 4, 8, 16},
+                  ),
+                )
+              ],
+              transform: (node) =>
+                  structPackingOverrideExtractor(node.rawValue),
+              defaultValue: (node) => StructPackingOverride(),
+              result: (node) =>
+                  _structPackingOverride = node.value as StructPackingOverride,
+            )
+          },
+          result: (node) {
+            _structDecl =
+                declarationConfigExtractor(node.rawValue ?? YamlMap());
+            _structDependencies = (node.value as Map)[strings.dependencyOnly]
+                as CompoundDependencies;
+          },
+        ),
+        strings.unions: FixedMapSchema<dynamic>(
+          keys: {
+            ...includeExcludeProperties(),
+            ...renameProperties(),
+            ...memberRenameProperties(),
+            strings.dependencyOnly: dependencyOnlyObject(),
+          },
+          result: (node) {
+            _unionDecl = declarationConfigExtractor(node.rawValue ?? YamlMap());
+            _unionDependencies = (node.value as Map)[strings.dependencyOnly]
+                as CompoundDependencies;
+          },
+        ),
+        strings.enums: FixedMapSchema<dynamic>(
+          keys: {
+            ...includeExcludeProperties(),
+            ...renameProperties(),
+            ...memberRenameProperties(),
+          },
+          result: (node) {
+            _enumClassDecl =
+                declarationConfigExtractor(node.rawValue ?? YamlMap());
+          },
+        ),
+        strings.unnamedEnums: FixedMapSchema<dynamic>(
+          keys: {
+            ...includeExcludeProperties(),
+            ...renameProperties(),
+          },
+          result: (node) {
+            _unnamedEnumConstants =
+                declarationConfigExtractor(node.rawValue ?? YamlMap());
+          },
+        ),
+        strings.globals: FixedMapSchema<dynamic>(
+          keys: {
+            ...includeExcludeProperties(),
+            ...renameProperties(),
+          },
+          result: (node) {
+            _globals = declarationConfigExtractor(node.rawValue ?? YamlMap());
+          },
+        ),
+        strings.macros: FixedMapSchema<dynamic>(
+          keys: {
+            ...includeExcludeProperties(),
+            ...renameProperties(),
+          },
+          result: (node) {
+            _macroDecl = declarationConfigExtractor(node.rawValue ?? YamlMap());
+          },
+        ),
+        strings.typedefs: FixedMapSchema<dynamic>(
+          keys: {
+            ...includeExcludeProperties(),
+            ...renameProperties(),
+          },
+          result: (node) {
+            _typedefs = declarationConfigExtractor(node.rawValue ?? YamlMap());
+          },
+        ),
+        strings.objcInterfaces: FixedMapSchema<dynamic>(
+          keys: {
+            ...includeExcludeProperties(),
+            ...renameProperties(),
+            ...memberRenameProperties(),
+            strings.objcModule: objcInterfaceModuleObject(),
+          },
+          result: (node) {
+            _objcInterfaces =
+                declarationConfigExtractor(node.rawValue ?? YamlMap());
+            _objcModulePrefixer =
+                (node.value as Map)[strings.objcModule] as ObjCModulePrefixer;
+          },
+        ),
+        strings.import: FixedMapSchema<dynamic>(
+          keys: {
+            strings.symbolFilesImport: ListSchema<String>(
+              childSchema: StringSchema(),
+              transform: (node) => symbolFileImportExtractor(
+                  node.rawValue, _libraryImports, filename, packageConfig),
+              defaultValue: (node) => <String, ImportedType>{},
+              result: (node) =>
+                  _usrTypeMappings = node.value as Map<String, ImportedType>,
+            ),
+          },
+        ),
+        strings.typeMap: FixedMapSchema<dynamic>(
+          keys: {
+            strings.typeMapTypedefs: mappedTypeObject(),
+            strings.typeMapStructs: mappedTypeObject(),
+            strings.typeMapUnions: mappedTypeObject(),
+            strings.typeMapNativeTypes: mappedTypeObject(),
+          },
+          result: (node) {
+            _typedefTypeMappings = makeImportTypeMapping(
+              (node.value[strings.typeMapTypedefs])
+                  as Map<String, List<String>>,
+              _libraryImports,
+            );
+            _structTypeMappings = makeImportTypeMapping(
+              (node.value[strings.typeMapStructs]) as Map<String, List<String>>,
+              _libraryImports,
+            );
+            _unionTypeMappings = makeImportTypeMapping(
+              (node.value[strings.typeMapUnions]) as Map<String, List<String>>,
+              _libraryImports,
+            );
+            _nativeTypeMappings = makeImportTypeMapping(
+              (node.value[strings.typeMapNativeTypes])
+                  as Map<String, List<String>>,
+              _libraryImports,
+            );
+          },
+        ),
+        strings.excludeAllByDefault: BoolSchema(
+          defaultValue: (node) => false,
+          result: (node) => _excludeAllByDefault = node.value as bool,
+        ),
+        strings.sort: BoolSchema(
+          defaultValue: (node) => false,
+          result: (node) => _sort = node.value as bool,
+        ),
+        strings.useSupportedTypedefs: BoolSchema(
+          defaultValue: (node) => true,
+          result: (node) => _useSupportedTypedefs = node.value as bool,
+        ),
+        strings.comments: OneOfSchema(
+          childSchemas: [
+            BoolSchema(
+              transform: (node) =>
+                  (node.value == true) ? CommentType.def() : CommentType.none(),
+            ),
+            FixedMapSchema<dynamic>(
+              keys: {
+                strings.style: EnumSchema(
+                  allowedValues: {strings.doxygen, strings.any},
+                  transform: (node) => node.value == strings.doxygen
+                      ? CommentStyle.doxygen
+                      : CommentStyle.any,
+                  defaultValue: (node) => CommentStyle.doxygen,
+                ),
+                strings.length: EnumSchema(
+                  allowedValues: {strings.brief, strings.full},
+                  transform: (node) => node.value == strings.brief
+                      ? CommentLength.brief
+                      : CommentLength.full,
+                  defaultValue: (node) => CommentLength.full,
+                )
+              },
+              transform: (node) => CommentType(
+                (node.value)[strings.style] as CommentStyle,
+                (node.value)[strings.length] as CommentLength,
+              ),
+            ),
+          ],
+          defaultValue: (node) => CommentType.def(),
+          result: (node) => _commentType = node.value as CommentType,
+        ),
+        strings.name: StringSchema(
+          defaultValue: (node) {
+            _logger.warning(
+                "Prefer adding Key '${node.pathString}' to your config.");
+            return 'NativeLibrary';
+          },
+          result: (node) => _wrapperName = node.value as String,
+        ),
+        strings.description: StringSchema(
+          defaultValue: (node) {
+            _logger.warning(
+                "Prefer adding Key '${node.pathString}' to your config.");
+            return null;
+          },
+          result: (node) => _wrapperDocComment = node.value as String?,
+        ),
+        strings.preamble: StringSchema(
+          result: (node) => _preamble = node.value as String?,
+        ),
+        strings.useDartHandle: BoolSchema(
+          defaultValue: (node) => true,
+          result: (node) => _useDartHandle = node.value as bool,
+        ),
+        strings.ffiNative: BoolSchema(
+          transform: (node) => ffiNativeExtractor(node.rawValue),
+          defaultValue: (node) => FfiNativeConfig(enabled: false),
+          result: (node) => _ffiNativeConfig = (node.value) as FfiNativeConfig,
+        ),
+      },
+    );
+  }
+
+  Map<String, Schema> includeExcludeProperties() {
+    return {
+      strings.include: ListSchema<String>(
+        schemaDefName: "include",
+        childSchema: StringSchema(),
+      ),
+      strings.exclude: ListSchema<String>(
+        schemaDefName: "exclude",
+        childSchema: StringSchema(),
+        defaultValue: (node) => <String>[],
+      ),
+    };
+  }
+
+  Map<String, Schema> renameProperties() {
+    return {
+      strings.rename: DynamicMapSchema<String>(
+        schemaDefName: "rename",
+        keyValueSchemas: [
+          (keyRegexp: ".+", valueSchema: StringSchema()),
+        ],
+      ),
+    };
+  }
+
+  Map<String, Schema> memberRenameProperties() {
+    return {
+      strings.memberRename: DynamicMapSchema<dynamic>(
+        schemaDefName: "memberRename",
+        keyValueSchemas: [
+          (
+            keyRegexp: ".+",
+            valueSchema: DynamicMapSchema<String>(
+              keyValueSchemas: [(keyRegexp: ".+", valueSchema: StringSchema())],
+            ),
+          ),
+        ],
+      ),
+    };
+  }
+
+  FixedMapSchema<List<String>> includeExcludeObject(
+      {dynamic Function(SchemaNode<void> node)? defaultValue}) {
+    return FixedMapSchema<List<String>>(
+      schemaDefName: "includeExclude",
+      keys: {
+        ...includeExcludeProperties(),
+      },
+      transform: (node) => extractIncluderFromYaml(node.rawValue ?? YamlMap()),
+      defaultValue: defaultValue,
+    );
+  }
+
+  EnumSchema dependencyOnlyObject() {
+    return EnumSchema(
+      schemaDefName: "dependencyOnly",
+      allowedValues: {
+        strings.fullCompoundDependencies,
+        strings.opaqueCompoundDependencies,
+      },
+      defaultValue: (node) => CompoundDependencies.full,
+      transform: (node) => node.value == strings.opaqueCompoundDependencies
+          ? CompoundDependencies.opaque
+          : CompoundDependencies.full,
+    );
+  }
+
+  DynamicMapSchema mappedTypeObject() {
+    return DynamicMapSchema(
+      schemaDefName: "mappedTypes",
+      keyValueSchemas: [
+        (
+          keyRegexp: ".*",
+          valueSchema: FixedMapSchema<String>(
+            requiredKeys: [strings.lib, strings.cType, strings.dartType],
+            keys: {
+              strings.lib: StringSchema(),
+              strings.cType: StringSchema(),
+              strings.dartType: StringSchema(),
+            },
+          )
+        )
+      ],
+      defaultValue: (node) => <String, List<String>>{},
+      transform: (node) => typeMapExtractor(node.rawValue),
+    );
+  }
+
+  DynamicMapSchema objcInterfaceModuleObject() {
+    return DynamicMapSchema(
+      schemaDefName: "objcInterfaceModule",
+      keyValueSchemas: [
+        (keyRegexp: ".*", valueSchema: StringSchema()),
+      ],
+      transform: (node) =>
+          ObjCModulePrefixer(node.value.cast<String, String>()),
+      defaultValue: (node) => ObjCModulePrefixer({}),
+    );
   }
 }

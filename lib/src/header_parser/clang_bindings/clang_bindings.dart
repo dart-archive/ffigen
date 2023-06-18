@@ -2593,7 +2593,9 @@ abstract class CXChildVisitResult {
 /// The visitor should return one of the \c CXChildVisitResult values
 /// to direct clang_visitCursorChildren().
 typedef CXCursorVisitor = ffi.Pointer<
-    ffi.NativeFunction<ffi.Int32 Function(CXCursor, CXCursor, CXClientData)>>;
+    ffi.NativeFunction<
+        ffi.Int32 Function(
+            CXCursor cursor, CXCursor parent, CXClientData client_data)>>;
 
 /// Opaque pointer representing client data that will be passed through
 /// to various callbacks and visitors.

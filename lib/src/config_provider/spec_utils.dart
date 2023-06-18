@@ -798,7 +798,7 @@ bool languageValidator(List<String> name, dynamic value) {
 bool isFullDeclarationName(String str) =>
     quiver.matchesFull(RegExp('[a-zA-Z_0-9]*'), str);
 
-Includer _extractIncluderFromYaml(dynamic yamlMap) {
+Includer extractIncluderFromYaml(dynamic yamlMap) {
   final includeMatchers = <RegExp>[],
       includeFull = <String>{},
       excludeMatchers = <RegExp>[],
@@ -922,11 +922,11 @@ Declaration declarationConfigExtractor(dynamic yamlMap) {
   final memberRenamePatterns = <RegExpMemberRenamer>[];
   final memberRenamerFull = <String, Renamer>{};
 
-  final includer = _extractIncluderFromYaml(yamlMap);
+  final includer = extractIncluderFromYaml(yamlMap);
 
   Includer? symbolIncluder;
   if (yamlMap[strings.symbolAddress] != null) {
-    symbolIncluder = _extractIncluderFromYaml(yamlMap[strings.symbolAddress]);
+    symbolIncluder = extractIncluderFromYaml(yamlMap[strings.symbolAddress]);
   }
 
   final rename = (yamlMap[strings.rename] as YamlMap?)?.cast<String, String>();
@@ -1060,7 +1060,7 @@ bool declarationConfigValidator(List<String> name, dynamic value) {
 }
 
 Includer exposeFunctionTypeExtractor(dynamic value) =>
-    _extractIncluderFromYaml(value);
+    extractIncluderFromYaml(value);
 
 bool exposeFunctionTypeValidator(List<String> name, dynamic value) {
   var result = true;
@@ -1084,8 +1084,7 @@ bool exposeFunctionTypeValidator(List<String> name, dynamic value) {
   return result;
 }
 
-Includer leafFunctionExtractor(dynamic value) =>
-    _extractIncluderFromYaml(value);
+Includer leafFunctionExtractor(dynamic value) => extractIncluderFromYaml(value);
 
 bool leafFunctionValidator(List<String> name, dynamic value) {
   var result = true;
