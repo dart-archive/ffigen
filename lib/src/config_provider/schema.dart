@@ -18,13 +18,29 @@ class SchemaNode<E> {
   /// E.g - "path -> to -> arr -> [1] -> item"
   String get pathString => path.join(" -> ");
 
+  /// Contains the underlying node value after all transformations and
+  /// default values have been applied.
   final E value;
 
-  SchemaNode({required this.path, required this.value});
+  /// Contains the raw underlying node value. Would be null for fields populated
+  /// but default values
+  final dynamic rawValue;
+
+  SchemaNode({
+    required this.path,
+    required this.value,
+    dynamic rawValue,
+    bool nullRawValue = false,
+  }) : rawValue = nullRawValue ? null : (rawValue ?? value);
 
   /// Copy object with a different value.
-  SchemaNode<T> withValue<T>(T value) {
-    return SchemaNode<T>(path: path, value: value);
+  SchemaNode<T> withValue<T>(T value, dynamic rawValue) {
+    return SchemaNode<T>(
+      path: path,
+      value: value,
+      rawValue: rawValue,
+      nullRawValue: rawValue == null,
+    );
   }
 
   /// Transforms this SchemaNode with a nullable [transform] or return itself
@@ -35,7 +51,7 @@ class SchemaNode<E> {
   ) {
     SchemaNode returnValue;
     if (transform != null) {
-      returnValue = this.withValue(transform.call(this));
+      returnValue = this.withValue(transform.call(this), rawValue);
     }
     returnValue = this;
     resultCallback?.call(returnValue);
@@ -108,8 +124,8 @@ abstract class Schema<E> {
   /// Returns default value or null for a node. Calls [result] if value is
   /// not null.
   dynamic getDefaultValue(SchemaNode o) {
-    final v = defaultValue?.call(o.withValue(null));
-    if (v != null) result?.call(o.withValue(v));
+    final v = defaultValue?.call(o.withValue(null, null));
+    if (v != null) result?.call(o.withValue(v, null));
     return v;
   }
 
@@ -244,7 +260,9 @@ class FixedMapSchema<CE> extends Schema<Map<dynamic, CE>> {
       }
       childExtracts[key] = value.extractNode(schemaNode).value as CE;
     }
-    return o.withValue(childExtracts).transformOrThis(transform, result);
+    return o
+        .withValue(childExtracts, o.rawValue)
+        .transformOrThis(transform, result);
   }
 
   @override
@@ -348,7 +366,9 @@ class DynamicMapSchema<CE> extends Schema<Map<dynamic, CE>> {
       }
     }
 
-    return o.withValue(childExtracts).transformOrThis(transform, result);
+    return o
+        .withValue(childExtracts, o.rawValue)
+        .transformOrThis(transform, result);
   }
 
   @override
@@ -412,7 +432,9 @@ class ListSchema<CE> extends Schema<List<CE>> {
       }
       childExtracts.add(childSchema.extractNode(schemaNode).value as CE);
     }
-    return o.withValue(childExtracts).transformOrThis(transform, result);
+    return o
+        .withValue(childExtracts, o.rawValue)
+        .transformOrThis(transform, result);
   }
 
   @override
@@ -448,7 +470,9 @@ class StringSchema extends Schema<String> {
     if (!o.checkType<String>(log: false)) {
       throw SchemaExtractionError(o);
     }
-    return o.withValue(o.value as String).transformOrThis(transform, result);
+    return o
+        .withValue(o.value as String, o.rawValue)
+        .transformOrThis(transform, result);
   }
 
   @override
@@ -483,7 +507,9 @@ class IntSchema extends Schema<int> {
     if (!o.checkType<int>(log: false)) {
       throw SchemaExtractionError(o);
     }
-    return o.withValue(o.value as int).transformOrThis(transform, result);
+    return o
+        .withValue(o.value as int, o.rawValue)
+        .transformOrThis(transform, result);
   }
 
   @override
@@ -524,7 +550,9 @@ class EnumSchema<CE> extends Schema<CE> {
     if (!allowedValues.contains(o.value)) {
       throw SchemaExtractionError(o);
     }
-    return o.withValue(o.value as CE).transformOrThis(transform, result);
+    return o
+        .withValue(o.value as CE, o.rawValue)
+        .transformOrThis(transform, result);
   }
 
   @override
@@ -559,7 +587,9 @@ class BoolSchema extends Schema<bool> {
     if (!o.checkType<bool>(log: false)) {
       throw SchemaExtractionError(o);
     }
-    return o.withValue(o.value as bool).transformOrThis(transform, result);
+    return o
+        .withValue(o.value as bool, o.rawValue)
+        .transformOrThis(transform, result);
   }
 
   @override
@@ -610,7 +640,7 @@ class OneOfSchema<E> extends Schema<E> {
     for (final schema in childSchemas) {
       if (schema.validateNode(o, log: false)) {
         return o
-            .withValue(schema.extractNode(o).value as E)
+            .withValue(schema.extractNode(o).value as E, o.rawValue)
             .transformOrThis(transform, result);
       }
     }
@@ -630,77 +660,86 @@ class OneOfSchema<E> extends Schema<E> {
 void main() {
   final extractMap = <String, dynamic>{};
   final testSchema = FixedMapSchema<dynamic>(
-    keys: {
-      "name": StringSchema(
-        result: (node) => extractMap[node.pathString] = node.value,
-      ),
-      "description": StringSchema(
-        result: (node) => extractMap[node.pathString] = node.value,
-      ),
-      "output": OneOfSchema(
-        childSchemas: [
-          StringSchema(
-            schemaDefName: "outputBindings",
-            transform: (node) => extractMap[node.pathString] = node.value,
-          ),
-          FixedMapSchema(
-            keys: {
-              "bindings": StringSchema(
-                schemaDefName: "outputBindings",
-              ),
-              "symbol-file": FixedMapSchema<dynamic>(keys: {
-                "output": StringSchema(),
-                "import-path": StringSchema(),
-              })
-            },
-            requiredKeys: ["bindings"],
-            transform: (node) =>
-                OutputConfig(node.value["bindings"] as String, null),
-            result: (node) => extractMap[node.pathString] = node.value,
-          )
-        ],
-      ),
-      "headers": FixedMapSchema<List<String>>(
-        keys: {
-          "entry-points": ListSchema<String>(childSchema: StringSchema()),
-          "include-directives": ListSchema<String>(childSchema: StringSchema()),
-        },
-        result: (node) => extractMap[node.pathString] = node.value,
-      ),
-      "structs": FixedMapSchema<dynamic>(keys: {
-        "include": ListSchema<String>(childSchema: StringSchema()),
-        "exclude": ListSchema<String>(childSchema: StringSchema()),
-        "rename": DynamicMapSchema<dynamic>(keyValueSchemas: [
-          (
-            keyRegexp: r"^.+$",
-            valueSchema:
-                OneOfSchema(childSchemas: [StringSchema(), IntSchema()]),
-          )
-        ]),
-        "pack": DynamicMapSchema<dynamic>(keyValueSchemas: [
-          (
-            keyRegexp: r"^.+$",
-            valueSchema:
-                EnumSchema<dynamic>(allowedValues: {null, 1, 2, 4, 8, 16}),
-          )
-        ])
-      }),
-      "comments": FixedMapSchema<dynamic>(
-        keys: {
-          "style": EnumSchema(
-            allowedValues: {"any", "doxygen"},
-            defaultValue: (node) => "doxygen",
-          ),
-          "length": EnumSchema(
-            allowedValues: {"brief", "full"},
-            defaultValue: (node) => "brief",
-            result: (node) => extractMap[node.pathString] = node.value,
-          ),
-        },
-        result: (node) => extractMap[node.pathString] = node.value,
-      ),
-    },
-  );
+      keys: {
+        "name": StringSchema(
+          result: (node) => extractMap[node.pathString] = node.value,
+        ),
+        "description": StringSchema(
+          result: (node) => extractMap[node.pathString] = node.value,
+        ),
+        "output": OneOfSchema(
+          childSchemas: [
+            StringSchema(
+              schemaDefName: "outputBindings",
+              transform: (node) => extractMap[node.pathString] = node.value,
+            ),
+            FixedMapSchema(
+              keys: {
+                "bindings": StringSchema(
+                  schemaDefName: "outputBindings",
+                ),
+                "symbol-file": FixedMapSchema<dynamic>(keys: {
+                  "output": StringSchema(),
+                  "import-path": StringSchema(),
+                })
+              },
+              requiredKeys: ["bindings"],
+              transform: (node) =>
+                  OutputConfig(node.value["bindings"] as String, null),
+              result: (node) => extractMap[node.pathString] = node.value,
+            )
+          ],
+        ),
+        "headers": FixedMapSchema<List<String>>(
+          keys: {
+            "entry-points": ListSchema<String>(childSchema: StringSchema()),
+            "include-directives":
+                ListSchema<String>(childSchema: StringSchema()),
+          },
+          result: (node) => extractMap[node.pathString] = node.value,
+        ),
+        "structs": FixedMapSchema<dynamic>(keys: {
+          "include": ListSchema<String>(childSchema: StringSchema()),
+          "exclude": ListSchema<String>(childSchema: StringSchema()),
+          "rename": DynamicMapSchema<dynamic>(keyValueSchemas: [
+            (
+              keyRegexp: r"^.+$",
+              valueSchema:
+                  OneOfSchema(childSchemas: [StringSchema(), IntSchema()]),
+            )
+          ]),
+          "pack": DynamicMapSchema<dynamic>(keyValueSchemas: [
+            (
+              keyRegexp: r"^.+$",
+              valueSchema:
+                  EnumSchema<dynamic>(allowedValues: {null, 1, 2, 4, 8, 16}),
+            )
+          ])
+        }),
+        "comments": FixedMapSchema<dynamic>(
+          keys: {
+            "style": EnumSchema(
+              allowedValues: {"any", "doxygen"},
+              defaultValue: (node) => "doxygen",
+            ),
+            "length": EnumSchema(
+              allowedValues: {"brief", "full"},
+              defaultValue: (node) => "brief",
+              result: (node) => extractMap[node.pathString] = node.value,
+            ),
+          },
+          result: (node) {
+            print("comments rawValue: ${node.rawValue}");
+            print("comments value: ${node.value}");
+            extractMap[node.pathString] = node.value;
+          },
+        ),
+      },
+      result: (node) {
+        print("root rawValue: ${node.rawValue}");
+        print("root value: ${node.value}");
+        extractMap[node.pathString] = node.value;
+      });
   _logger.onRecord.listen((event) => print(event));
   final yaml = loadYaml("""
 name: NativeLibrary
