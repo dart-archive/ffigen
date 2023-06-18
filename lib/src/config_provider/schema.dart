@@ -49,11 +49,10 @@ class SchemaNode<E> {
     dynamic Function(SchemaNode<E> value)? transform,
     void Function(SchemaNode node)? resultCallback,
   ) {
-    SchemaNode returnValue;
+    SchemaNode returnValue = this;
     if (transform != null) {
       returnValue = this.withValue(transform.call(this), rawValue);
     }
-    returnValue = this;
     resultCallback?.call(returnValue);
     return returnValue;
   }
