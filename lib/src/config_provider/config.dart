@@ -673,9 +673,20 @@ class Config {
               keyValueSchemas: [
                 (
                   keyRegexp: ".*",
-                  valueSchema: ListSchema<List<String>>(
-                    childSchema:
+                  valueSchema: ListSchema<dynamic>(
+                    childSchema: OneOfSchema(
+                      childSchemas: [
                         ListSchema<String>(childSchema: StringSchema()),
+                        FixedMapSchema<dynamic>(
+                          requiredKeys: [strings.types],
+                          keys: {
+                            strings.types:
+                                ListSchema<String>(childSchema: StringSchema()),
+                            strings.postfix: StringSchema(),
+                          },
+                        )
+                      ],
+                    ),
                   )
                 )
               ],
