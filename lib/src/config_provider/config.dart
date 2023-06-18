@@ -4,7 +4,6 @@
 
 /// Validates the yaml input by the user, prints useful info for the user
 
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:ffigen/src/code_generator.dart';
@@ -217,364 +216,364 @@ class Config {
   }
 
   /// Validates Yaml according to given specs.
-  bool _checkConfigs(YamlMap map, Map<List<String>, Specification> specs) {
-    var result = true;
-    for (final key in specs.keys) {
-      final spec = specs[key];
-      if (checkKeyInYaml(key, map)) {
-        result = result && spec!.validator(key, getKeyValueFromYaml(key, map));
-      } else if (spec!.requirement == Requirement.yes) {
-        _logger.severe("Key '$key' is required.");
-        result = false;
-      } else if (spec.requirement == Requirement.prefer) {
-        _logger.warning("Prefer adding Key '$key' to your config.");
-      }
-    }
-    // Warn about unknown keys.
-    warnUnknownKeys(specs.keys.toList(), map);
+  // bool _checkConfigs(YamlMap map, Map<List<String>, Specification> specs) {
+  //   var result = true;
+  //   for (final key in specs.keys) {
+  //     final spec = specs[key];
+  //     if (checkKeyInYaml(key, map)) {
+  //       result = result && spec!.validator(key, getKeyValueFromYaml(key, map));
+  //     } else if (spec!.requirement == Requirement.yes) {
+  //       _logger.severe("Key '$key' is required.");
+  //       result = false;
+  //     } else if (spec.requirement == Requirement.prefer) {
+  //       _logger.warning("Prefer adding Key '$key' to your config.");
+  //     }
+  //   }
+  //   // Warn about unknown keys.
+  //   warnUnknownKeys(specs.keys.toList(), map);
 
-    return result;
-  }
+  //   return result;
+  // }
 
   /// Extracts variables from Yaml according to given specs.
   ///
   /// Validation must be done beforehand, using [_checkConfigs].
-  void _extract(YamlMap map, Map<List<String>, Specification> specs) {
-    for (final key in specs.keys) {
-      final spec = specs[key];
-      if (checkKeyInYaml(key, map)) {
-        spec!.extractedResult(spec.extractor(getKeyValueFromYaml(key, map)));
-      } else {
-        spec!.extractedResult(spec.defaultValue?.call());
-      }
-    }
-  }
+  // void _extract(YamlMap map, Map<List<String>, Specification> specs) {
+  //   for (final key in specs.keys) {
+  //     final spec = specs[key];
+  //     if (checkKeyInYaml(key, map)) {
+  //       spec!.extractedResult(spec.extractor(getKeyValueFromYaml(key, map)));
+  //     } else {
+  //       spec!.extractedResult(spec.defaultValue?.call());
+  //     }
+  //   }
+  // }
 
   /// Returns map of various specifications avaialble for our tool.
   ///
   /// Key: Name, Value: [Specification]
-  Map<List<String>, Specification> _getSpecs() {
-    return <List<String>, Specification>{
-      [strings.llvmPath]: Specification<String>(
-        requirement: Requirement.no,
-        validator: llvmPathValidator,
-        extractor: llvmPathExtractor,
-        defaultValue: () => findDylibAtDefaultLocations(),
-        extractedResult: (dynamic result) {
-          _libclangDylib = result as String;
-        },
-      ),
-      [strings.output]: Specification<OutputConfig>(
-        requirement: Requirement.yes,
-        validator: outputValidator,
-        extractor: (dynamic value) =>
-            outputExtractor(value, filename, packageConfig),
-        extractedResult: (dynamic result) {
-          _output = (result as OutputConfig).output;
-          _symbolFile = result.symbolFile;
-        },
-      ),
-      [strings.language]: Specification<Language>(
-        requirement: Requirement.no,
-        validator: languageValidator,
-        extractor: languageExtractor,
-        defaultValue: () => Language.c,
-        extractedResult: (dynamic result) => _language = result as Language,
-      ),
-      [strings.headers]: Specification<Headers>(
-        requirement: Requirement.yes,
-        validator: headersValidator,
-        extractor: (dynamic value) => headersExtractor(value, filename),
-        extractedResult: (dynamic result) => _headers = result as Headers,
-      ),
-      [strings.compilerOpts]: Specification<List<String>>(
-        requirement: Requirement.no,
-        validator: compilerOptsValidator,
-        extractor: compilerOptsExtractor,
-        defaultValue: () => [],
-        extractedResult: (dynamic result) =>
-            _compilerOpts = result as List<String>,
-      ),
-      [strings.compilerOptsAuto]: Specification<CompilerOptsAuto>(
-          requirement: Requirement.no,
-          validator: compilerOptsAutoValidator,
-          extractor: compilerOptsAutoExtractor,
-          defaultValue: () => CompilerOptsAuto(),
-          extractedResult: (dynamic result) {
-            _compilerOpts
-                .addAll((result as CompilerOptsAuto).extractCompilerOpts());
-          }),
-      [strings.functions]: Specification<Declaration>(
-        requirement: Requirement.no,
-        validator: declarationConfigValidator,
-        extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
-        extractedResult: (dynamic result) {
-          _functionDecl = result as Declaration;
-        },
-      ),
-      [strings.structs]: Specification<Declaration>(
-        requirement: Requirement.no,
-        validator: declarationConfigValidator,
-        extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
-        extractedResult: (dynamic result) {
-          _structDecl = result as Declaration;
-        },
-      ),
-      [strings.unions]: Specification<Declaration>(
-        requirement: Requirement.no,
-        validator: declarationConfigValidator,
-        extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
-        extractedResult: (dynamic result) {
-          _unionDecl = result as Declaration;
-        },
-      ),
-      [strings.enums]: Specification<Declaration>(
-        requirement: Requirement.no,
-        validator: declarationConfigValidator,
-        extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
-        extractedResult: (dynamic result) {
-          _enumClassDecl = result as Declaration;
-        },
-      ),
-      [strings.unnamedEnums]: Specification<Declaration>(
-        requirement: Requirement.no,
-        validator: declarationConfigValidator,
-        extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
-        extractedResult: (dynamic result) =>
-            _unnamedEnumConstants = result as Declaration,
-      ),
-      [strings.globals]: Specification<Declaration>(
-        requirement: Requirement.no,
-        validator: declarationConfigValidator,
-        extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
-        extractedResult: (dynamic result) {
-          _globals = result as Declaration;
-        },
-      ),
-      [strings.macros]: Specification<Declaration>(
-        requirement: Requirement.no,
-        validator: declarationConfigValidator,
-        extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
-        extractedResult: (dynamic result) {
-          _macroDecl = result as Declaration;
-        },
-      ),
-      [strings.typedefs]: Specification<Declaration>(
-        requirement: Requirement.no,
-        validator: declarationConfigValidator,
-        extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
-        extractedResult: (dynamic result) {
-          _typedefs = result as Declaration;
-        },
-      ),
-      [strings.objcInterfaces]: Specification<Declaration>(
-        requirement: Requirement.no,
-        validator: declarationConfigValidator,
-        extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
-        extractedResult: (dynamic result) {
-          _objcInterfaces = result as Declaration;
-        },
-      ),
-      [strings.objcInterfaces, strings.objcModule]:
-          Specification<Map<String, String>>(
-        requirement: Requirement.no,
-        validator: stringStringMapValidator,
-        extractor: stringStringMapExtractor,
-        defaultValue: () => <String, String>{},
-        extractedResult: (dynamic result) => _objcModulePrefixer =
-            ObjCModulePrefixer(result as Map<String, String>),
-      ),
-      [strings.libraryImports]: Specification<Map<String, LibraryImport>>(
-        validator: libraryImportsValidator,
-        extractor: libraryImportsExtractor,
-        defaultValue: () => <String, LibraryImport>{},
-        extractedResult: (dynamic result) {
-          _libraryImports = result as Map<String, LibraryImport>;
-        },
-      ),
-      [strings.import, strings.symbolFilesImport]:
-          Specification<Map<String, ImportedType>>(
-        validator: symbolFileImportValidator,
-        extractor: (value) => symbolFileImportExtractor(
-            value, _libraryImports, filename, packageConfig),
-        defaultValue: () => <String, ImportedType>{},
-        extractedResult: (dynamic result) {
-          _usrTypeMappings = result as Map<String, ImportedType>;
-        },
-      ),
-      [strings.typeMap, strings.typeMapTypedefs]:
-          Specification<Map<String, List<String>>>(
-        validator: typeMapValidator,
-        extractor: typeMapExtractor,
-        defaultValue: () => <String, List<String>>{},
-        extractedResult: (dynamic result) {
-          _typedefTypeMappings = makeImportTypeMapping(
-              result as Map<String, List<String>>, _libraryImports);
-        },
-      ),
-      [strings.typeMap, strings.typeMapStructs]:
-          Specification<Map<String, List<String>>>(
-        validator: typeMapValidator,
-        extractor: typeMapExtractor,
-        defaultValue: () => <String, List<String>>{},
-        extractedResult: (dynamic result) {
-          _structTypeMappings = makeImportTypeMapping(
-              result as Map<String, List<String>>, _libraryImports);
-        },
-      ),
-      [strings.typeMap, strings.typeMapUnions]:
-          Specification<Map<String, List<String>>>(
-        validator: typeMapValidator,
-        extractor: typeMapExtractor,
-        defaultValue: () => <String, List<String>>{},
-        extractedResult: (dynamic result) {
-          _unionTypeMappings = makeImportTypeMapping(
-              result as Map<String, List<String>>, _libraryImports);
-        },
-      ),
-      [strings.typeMap, strings.typeMapNativeTypes]:
-          Specification<Map<String, List<String>>>(
-        validator: typeMapValidator,
-        extractor: typeMapExtractor,
-        defaultValue: () => <String, List<String>>{},
-        extractedResult: (dynamic result) {
-          _nativeTypeMappings = makeImportTypeMapping(
-              result as Map<String, List<String>>, _libraryImports);
-        },
-      ),
-      [strings.functions, strings.varArgFunctions]:
-          Specification<Map<String, List<RawVarArgFunction>>>(
-        requirement: Requirement.no,
-        validator: varArgFunctionConfigValidator,
-        extractor: varArgFunctionConfigExtractor,
-        defaultValue: () => <String, List<RawVarArgFunction>>{},
-        extractedResult: (dynamic result) {
-          _varArgFunctions = makeVarArgFunctionsMapping(
-              result as Map<String, List<RawVarArgFunction>>, _libraryImports);
-        },
-      ),
-      [strings.excludeAllByDefault]: Specification<bool>(
-        requirement: Requirement.no,
-        validator: booleanValidator,
-        extractor: booleanExtractor,
-        defaultValue: () => false,
-        extractedResult: (dynamic result) =>
-            _excludeAllByDefault = result as bool,
-      ),
-      [strings.sort]: Specification<bool>(
-        requirement: Requirement.no,
-        validator: booleanValidator,
-        extractor: booleanExtractor,
-        defaultValue: () => false,
-        extractedResult: (dynamic result) => _sort = result as bool,
-      ),
-      [strings.useSupportedTypedefs]: Specification<bool>(
-        requirement: Requirement.no,
-        validator: booleanValidator,
-        extractor: booleanExtractor,
-        defaultValue: () => true,
-        extractedResult: (dynamic result) =>
-            _useSupportedTypedefs = result as bool,
-      ),
-      [strings.comments]: Specification<CommentType>(
-        requirement: Requirement.no,
-        validator: commentValidator,
-        extractor: commentExtractor,
-        defaultValue: () => CommentType.def(),
-        extractedResult: (dynamic result) =>
-            _commentType = result as CommentType,
-      ),
-      [strings.structs, strings.dependencyOnly]:
-          Specification<CompoundDependencies>(
-        requirement: Requirement.no,
-        validator: dependencyOnlyValidator,
-        extractor: dependencyOnlyExtractor,
-        defaultValue: () => CompoundDependencies.full,
-        extractedResult: (dynamic result) =>
-            _structDependencies = result as CompoundDependencies,
-      ),
-      [strings.unions, strings.dependencyOnly]:
-          Specification<CompoundDependencies>(
-        requirement: Requirement.no,
-        validator: dependencyOnlyValidator,
-        extractor: dependencyOnlyExtractor,
-        defaultValue: () => CompoundDependencies.full,
-        extractedResult: (dynamic result) =>
-            _unionDependencies = result as CompoundDependencies,
-      ),
-      [strings.structs, strings.structPack]:
-          Specification<StructPackingOverride>(
-        requirement: Requirement.no,
-        validator: structPackingOverrideValidator,
-        extractor: structPackingOverrideExtractor,
-        defaultValue: () => StructPackingOverride(),
-        extractedResult: (dynamic result) =>
-            _structPackingOverride = result as StructPackingOverride,
-      ),
-      [strings.name]: Specification<String>(
-        requirement: Requirement.prefer,
-        validator: dartClassNameValidator,
-        extractor: stringExtractor,
-        defaultValue: () => 'NativeLibrary',
-        extractedResult: (dynamic result) => _wrapperName = result as String,
-      ),
-      [strings.description]: Specification<String?>(
-        requirement: Requirement.prefer,
-        validator: nonEmptyStringValidator,
-        extractor: stringExtractor,
-        defaultValue: () => null,
-        extractedResult: (dynamic result) =>
-            _wrapperDocComment = result as String?,
-      ),
-      [strings.preamble]: Specification<String?>(
-        requirement: Requirement.no,
-        validator: nonEmptyStringValidator,
-        extractor: stringExtractor,
-        extractedResult: (dynamic result) => _preamble = result as String?,
-      ),
-      [strings.useDartHandle]: Specification<bool>(
-        requirement: Requirement.no,
-        validator: booleanValidator,
-        extractor: booleanExtractor,
-        defaultValue: () => true,
-        extractedResult: (dynamic result) => _useDartHandle = result as bool,
-      ),
-      [strings.functions, strings.exposeFunctionTypedefs]:
-          Specification<Includer>(
-        requirement: Requirement.no,
-        validator: exposeFunctionTypeValidator,
-        extractor: exposeFunctionTypeExtractor,
-        defaultValue: () => Includer.excludeByDefault(),
-        extractedResult: (dynamic result) =>
-            _exposeFunctionTypedefs = result as Includer,
-      ),
-      [strings.functions, strings.leafFunctions]: Specification<Includer>(
-        requirement: Requirement.no,
-        validator: leafFunctionValidator,
-        extractor: leafFunctionExtractor,
-        defaultValue: () => Includer.excludeByDefault(),
-        extractedResult: (dynamic result) =>
-            _leafFunctions = result as Includer,
-      ),
-      [strings.ffiNative]: Specification<FfiNativeConfig>(
-        requirement: Requirement.no,
-        validator: ffiNativeValidator,
-        extractor: ffiNativeExtractor,
-        defaultValue: () => FfiNativeConfig(enabled: false),
-        extractedResult: (dynamic result) =>
-            _ffiNativeConfig = result as FfiNativeConfig,
-      )
-    };
-  }
+  // Map<List<String>, Specification> _getSpecs() {
+  //   return <List<String>, Specification>{
+  //     [strings.llvmPath]: Specification<String>(
+  //       requirement: Requirement.no,
+  //       validator: llvmPathValidator,
+  //       extractor: llvmPathExtractor,
+  //       defaultValue: () => findDylibAtDefaultLocations(),
+  //       extractedResult: (dynamic result) {
+  //         _libclangDylib = result as String;
+  //       },
+  //     ),
+  //     [strings.output]: Specification<OutputConfig>(
+  //       requirement: Requirement.yes,
+  //       validator: outputValidator,
+  //       extractor: (dynamic value) =>
+  //           outputExtractor(value, filename, packageConfig),
+  //       extractedResult: (dynamic result) {
+  //         _output = (result as OutputConfig).output;
+  //         _symbolFile = result.symbolFile;
+  //       },
+  //     ),
+  //     [strings.language]: Specification<Language>(
+  //       requirement: Requirement.no,
+  //       validator: languageValidator,
+  //       extractor: languageExtractor,
+  //       defaultValue: () => Language.c,
+  //       extractedResult: (dynamic result) => _language = result as Language,
+  //     ),
+  //     [strings.headers]: Specification<Headers>(
+  //       requirement: Requirement.yes,
+  //       validator: headersValidator,
+  //       extractor: (dynamic value) => headersExtractor(value, filename),
+  //       extractedResult: (dynamic result) => _headers = result as Headers,
+  //     ),
+  //     [strings.compilerOpts]: Specification<List<String>>(
+  //       requirement: Requirement.no,
+  //       validator: compilerOptsValidator,
+  //       extractor: compilerOptsExtractor,
+  //       defaultValue: () => [],
+  //       extractedResult: (dynamic result) =>
+  //           _compilerOpts = result as List<String>,
+  //     ),
+  //     [strings.compilerOptsAuto]: Specification<CompilerOptsAuto>(
+  //         requirement: Requirement.no,
+  //         validator: compilerOptsAutoValidator,
+  //         extractor: compilerOptsAutoExtractor,
+  //         defaultValue: () => CompilerOptsAuto(),
+  //         extractedResult: (dynamic result) {
+  //           _compilerOpts
+  //               .addAll((result as CompilerOptsAuto).extractCompilerOpts());
+  //         }),
+  //     [strings.functions]: Specification<Declaration>(
+  //       requirement: Requirement.no,
+  //       validator: declarationConfigValidator,
+  //       extractor: declarationConfigExtractor,
+  //       defaultValue: () => Declaration(),
+  //       extractedResult: (dynamic result) {
+  //         _functionDecl = result as Declaration;
+  //       },
+  //     ),
+  //     [strings.structs]: Specification<Declaration>(
+  //       requirement: Requirement.no,
+  //       validator: declarationConfigValidator,
+  //       extractor: declarationConfigExtractor,
+  //       defaultValue: () => Declaration(),
+  //       extractedResult: (dynamic result) {
+  //         _structDecl = result as Declaration;
+  //       },
+  //     ),
+  //     [strings.unions]: Specification<Declaration>(
+  //       requirement: Requirement.no,
+  //       validator: declarationConfigValidator,
+  //       extractor: declarationConfigExtractor,
+  //       defaultValue: () => Declaration(),
+  //       extractedResult: (dynamic result) {
+  //         _unionDecl = result as Declaration;
+  //       },
+  //     ),
+  //     [strings.enums]: Specification<Declaration>(
+  //       requirement: Requirement.no,
+  //       validator: declarationConfigValidator,
+  //       extractor: declarationConfigExtractor,
+  //       defaultValue: () => Declaration(),
+  //       extractedResult: (dynamic result) {
+  //         _enumClassDecl = result as Declaration;
+  //       },
+  //     ),
+  //     [strings.unnamedEnums]: Specification<Declaration>(
+  //       requirement: Requirement.no,
+  //       validator: declarationConfigValidator,
+  //       extractor: declarationConfigExtractor,
+  //       defaultValue: () => Declaration(),
+  //       extractedResult: (dynamic result) =>
+  //           _unnamedEnumConstants = result as Declaration,
+  //     ),
+  //     [strings.globals]: Specification<Declaration>(
+  //       requirement: Requirement.no,
+  //       validator: declarationConfigValidator,
+  //       extractor: declarationConfigExtractor,
+  //       defaultValue: () => Declaration(),
+  //       extractedResult: (dynamic result) {
+  //         _globals = result as Declaration;
+  //       },
+  //     ),
+  //     [strings.macros]: Specification<Declaration>(
+  //       requirement: Requirement.no,
+  //       validator: declarationConfigValidator,
+  //       extractor: declarationConfigExtractor,
+  //       defaultValue: () => Declaration(),
+  //       extractedResult: (dynamic result) {
+  //         _macroDecl = result as Declaration;
+  //       },
+  //     ),
+  //     [strings.typedefs]: Specification<Declaration>(
+  //       requirement: Requirement.no,
+  //       validator: declarationConfigValidator,
+  //       extractor: declarationConfigExtractor,
+  //       defaultValue: () => Declaration(),
+  //       extractedResult: (dynamic result) {
+  //         _typedefs = result as Declaration;
+  //       },
+  //     ),
+  //     [strings.objcInterfaces]: Specification<Declaration>(
+  //       requirement: Requirement.no,
+  //       validator: declarationConfigValidator,
+  //       extractor: declarationConfigExtractor,
+  //       defaultValue: () => Declaration(),
+  //       extractedResult: (dynamic result) {
+  //         _objcInterfaces = result as Declaration;
+  //       },
+  //     ),
+  //     [strings.objcInterfaces, strings.objcModule]:
+  //         Specification<Map<String, String>>(
+  //       requirement: Requirement.no,
+  //       validator: stringStringMapValidator,
+  //       extractor: stringStringMapExtractor,
+  //       defaultValue: () => <String, String>{},
+  //       extractedResult: (dynamic result) => _objcModulePrefixer =
+  //           ObjCModulePrefixer(result as Map<String, String>),
+  //     ),
+  //     [strings.libraryImports]: Specification<Map<String, LibraryImport>>(
+  //       validator: libraryImportsValidator,
+  //       extractor: libraryImportsExtractor,
+  //       defaultValue: () => <String, LibraryImport>{},
+  //       extractedResult: (dynamic result) {
+  //         _libraryImports = result as Map<String, LibraryImport>;
+  //       },
+  //     ),
+  //     [strings.import, strings.symbolFilesImport]:
+  //         Specification<Map<String, ImportedType>>(
+  //       validator: symbolFileImportValidator,
+  //       extractor: (value) => symbolFileImportExtractor(
+  //           value, _libraryImports, filename, packageConfig),
+  //       defaultValue: () => <String, ImportedType>{},
+  //       extractedResult: (dynamic result) {
+  //         _usrTypeMappings = result as Map<String, ImportedType>;
+  //       },
+  //     ),
+  //     [strings.typeMap, strings.typeMapTypedefs]:
+  //         Specification<Map<String, List<String>>>(
+  //       validator: typeMapValidator,
+  //       extractor: typeMapExtractor,
+  //       defaultValue: () => <String, List<String>>{},
+  //       extractedResult: (dynamic result) {
+  //         _typedefTypeMappings = makeImportTypeMapping(
+  //             result as Map<String, List<String>>, _libraryImports);
+  //       },
+  //     ),
+  //     [strings.typeMap, strings.typeMapStructs]:
+  //         Specification<Map<String, List<String>>>(
+  //       validator: typeMapValidator,
+  //       extractor: typeMapExtractor,
+  //       defaultValue: () => <String, List<String>>{},
+  //       extractedResult: (dynamic result) {
+  //         _structTypeMappings = makeImportTypeMapping(
+  //             result as Map<String, List<String>>, _libraryImports);
+  //       },
+  //     ),
+  //     [strings.typeMap, strings.typeMapUnions]:
+  //         Specification<Map<String, List<String>>>(
+  //       validator: typeMapValidator,
+  //       extractor: typeMapExtractor,
+  //       defaultValue: () => <String, List<String>>{},
+  //       extractedResult: (dynamic result) {
+  //         _unionTypeMappings = makeImportTypeMapping(
+  //             result as Map<String, List<String>>, _libraryImports);
+  //       },
+  //     ),
+  //     [strings.typeMap, strings.typeMapNativeTypes]:
+  //         Specification<Map<String, List<String>>>(
+  //       validator: typeMapValidator,
+  //       extractor: typeMapExtractor,
+  //       defaultValue: () => <String, List<String>>{},
+  //       extractedResult: (dynamic result) {
+  //         _nativeTypeMappings = makeImportTypeMapping(
+  //             result as Map<String, List<String>>, _libraryImports);
+  //       },
+  //     ),
+  //     [strings.functions, strings.varArgFunctions]:
+  //         Specification<Map<String, List<RawVarArgFunction>>>(
+  //       requirement: Requirement.no,
+  //       validator: varArgFunctionConfigValidator,
+  //       extractor: varArgFunctionConfigExtractor,
+  //       defaultValue: () => <String, List<RawVarArgFunction>>{},
+  //       extractedResult: (dynamic result) {
+  //         _varArgFunctions = makeVarArgFunctionsMapping(
+  //             result as Map<String, List<RawVarArgFunction>>, _libraryImports);
+  //       },
+  //     ),
+  //     [strings.excludeAllByDefault]: Specification<bool>(
+  //       requirement: Requirement.no,
+  //       validator: booleanValidator,
+  //       extractor: booleanExtractor,
+  //       defaultValue: () => false,
+  //       extractedResult: (dynamic result) =>
+  //           _excludeAllByDefault = result as bool,
+  //     ),
+  //     [strings.sort]: Specification<bool>(
+  //       requirement: Requirement.no,
+  //       validator: booleanValidator,
+  //       extractor: booleanExtractor,
+  //       defaultValue: () => false,
+  //       extractedResult: (dynamic result) => _sort = result as bool,
+  //     ),
+  //     [strings.useSupportedTypedefs]: Specification<bool>(
+  //       requirement: Requirement.no,
+  //       validator: booleanValidator,
+  //       extractor: booleanExtractor,
+  //       defaultValue: () => true,
+  //       extractedResult: (dynamic result) =>
+  //           _useSupportedTypedefs = result as bool,
+  //     ),
+  //     [strings.comments]: Specification<CommentType>(
+  //       requirement: Requirement.no,
+  //       validator: commentValidator,
+  //       extractor: commentExtractor,
+  //       defaultValue: () => CommentType.def(),
+  //       extractedResult: (dynamic result) =>
+  //           _commentType = result as CommentType,
+  //     ),
+  //     [strings.structs, strings.dependencyOnly]:
+  //         Specification<CompoundDependencies>(
+  //       requirement: Requirement.no,
+  //       validator: dependencyOnlyValidator,
+  //       extractor: dependencyOnlyExtractor,
+  //       defaultValue: () => CompoundDependencies.full,
+  //       extractedResult: (dynamic result) =>
+  //           _structDependencies = result as CompoundDependencies,
+  //     ),
+  //     [strings.unions, strings.dependencyOnly]:
+  //         Specification<CompoundDependencies>(
+  //       requirement: Requirement.no,
+  //       validator: dependencyOnlyValidator,
+  //       extractor: dependencyOnlyExtractor,
+  //       defaultValue: () => CompoundDependencies.full,
+  //       extractedResult: (dynamic result) =>
+  //           _unionDependencies = result as CompoundDependencies,
+  //     ),
+  //     [strings.structs, strings.structPack]:
+  //         Specification<StructPackingOverride>(
+  //       requirement: Requirement.no,
+  //       validator: structPackingOverrideValidator,
+  //       extractor: structPackingOverrideExtractor,
+  //       defaultValue: () => StructPackingOverride(),
+  //       extractedResult: (dynamic result) =>
+  //           _structPackingOverride = result as StructPackingOverride,
+  //     ),
+  //     [strings.name]: Specification<String>(
+  //       requirement: Requirement.prefer,
+  //       validator: dartClassNameValidator,
+  //       extractor: stringExtractor,
+  //       defaultValue: () => 'NativeLibrary',
+  //       extractedResult: (dynamic result) => _wrapperName = result as String,
+  //     ),
+  //     [strings.description]: Specification<String?>(
+  //       requirement: Requirement.prefer,
+  //       validator: nonEmptyStringValidator,
+  //       extractor: stringExtractor,
+  //       defaultValue: () => null,
+  //       extractedResult: (dynamic result) =>
+  //           _wrapperDocComment = result as String?,
+  //     ),
+  //     [strings.preamble]: Specification<String?>(
+  //       requirement: Requirement.no,
+  //       validator: nonEmptyStringValidator,
+  //       extractor: stringExtractor,
+  //       extractedResult: (dynamic result) => _preamble = result as String?,
+  //     ),
+  //     [strings.useDartHandle]: Specification<bool>(
+  //       requirement: Requirement.no,
+  //       validator: booleanValidator,
+  //       extractor: booleanExtractor,
+  //       defaultValue: () => true,
+  //       extractedResult: (dynamic result) => _useDartHandle = result as bool,
+  //     ),
+  //     [strings.functions, strings.exposeFunctionTypedefs]:
+  //         Specification<Includer>(
+  //       requirement: Requirement.no,
+  //       validator: exposeFunctionTypeValidator,
+  //       extractor: exposeFunctionTypeExtractor,
+  //       defaultValue: () => Includer.excludeByDefault(),
+  //       extractedResult: (dynamic result) =>
+  //           _exposeFunctionTypedefs = result as Includer,
+  //     ),
+  //     [strings.functions, strings.leafFunctions]: Specification<Includer>(
+  //       requirement: Requirement.no,
+  //       validator: leafFunctionValidator,
+  //       extractor: leafFunctionExtractor,
+  //       defaultValue: () => Includer.excludeByDefault(),
+  //       extractedResult: (dynamic result) =>
+  //           _leafFunctions = result as Includer,
+  //     ),
+  //     [strings.ffiNative]: Specification<FfiNativeConfig>(
+  //       requirement: Requirement.no,
+  //       validator: ffiNativeValidator,
+  //       extractor: ffiNativeExtractor,
+  //       defaultValue: () => FfiNativeConfig(enabled: false),
+  //       extractedResult: (dynamic result) =>
+  //           _ffiNativeConfig = result as FfiNativeConfig,
+  //     )
+  //   };
+  // }
 
   Schema getRootSchema() {
     return FixedMapSchema<dynamic>(
