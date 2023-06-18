@@ -85,7 +85,7 @@ abstract class Schema<E> {
   /// Passed to parent nodes and result (only if required by parent)
   ///
   /// SchemaNode<void> is used since value should not be accessed here.
-  E? Function(SchemaNode<void> node)? defaultValue;
+  dynamic Function(SchemaNode<void> node)? defaultValue;
 
   /// Called when final result is prepared via [extractNode] or
   /// [getDefaultValue].
@@ -107,7 +107,7 @@ abstract class Schema<E> {
 
   /// Returns default value or null for a node. Calls [result] if value is
   /// not null.
-  E? getDefaultValue(SchemaNode o) {
+  dynamic getDefaultValue(SchemaNode o) {
     final v = defaultValue?.call(o.withValue(null));
     if (v != null) result?.call(o.withValue(v));
     return v;
