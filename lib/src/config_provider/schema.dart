@@ -6,13 +6,6 @@ import 'package:yaml/yaml.dart';
 
 final _logger = Logger('ffigen.config_provider.config');
 
-/// A Schema Node is a container for the [path] and the [value] of schema.
-///
-/// During validation, [value] is always the raw underlying object.
-/// During extraction. [value] can either be the raw underlying object or
-/// the value retuned by the Schema extractor.
-///
-
 /// A container object for a Schema Object.
 class SchemaNode<E> {
   /// The path to this node.
@@ -34,18 +27,18 @@ class SchemaNode<E> {
     return SchemaNode<T>(path: path, value: value);
   }
 
-  /// Transforms this SchemaNode with a nullable [extractor] or return itself
+  /// Transforms this SchemaNode with a nullable [transform] or return itself
   /// and calls the [result] callback
-  SchemaNode extractOrThis(
-    dynamic Function(SchemaNode<E> value)? extractor,
-    void Function(SchemaNode node)? result,
+  SchemaNode transformOrThis(
+    dynamic Function(SchemaNode<E> value)? transform,
+    void Function(SchemaNode node)? resultCallback,
   ) {
     SchemaNode returnValue;
-    if (extractor != null) {
-      returnValue = this.withValue(extractor.call(this));
+    if (transform != null) {
+      returnValue = this.withValue(transform.call(this));
     }
     returnValue = this;
-    result?.call(returnValue);
+    resultCallback?.call(returnValue);
     return returnValue;
   }
 
@@ -90,9 +83,13 @@ abstract class Schema<E> {
   dynamic Function(SchemaNode<E> node)? transform;
 
   /// Passed to parent nodes and result (only if required by parent)
-  E? Function(SchemaNode node)? defaultValue;
+  ///
+  /// SchemaNode<void> is used since value should not be accessed here.
+  E? Function(SchemaNode<void> node)? defaultValue;
 
-  void Function(SchemaNode node)? result;
+  /// Called when final result is prepared via [extractNode] or
+  /// [getDefaultValue].
+  void Function(SchemaNode<dynamic> node)? result;
   Schema({
     /// Used
     this.schemaDefName,
@@ -111,7 +108,7 @@ abstract class Schema<E> {
   /// Returns default value or null for a node. Calls [result] if value is
   /// not null.
   E? getDefaultValue(SchemaNode o) {
-    final v = defaultValue?.call(o);
+    final v = defaultValue?.call(o.withValue(null));
     if (v != null) result?.call(o.withValue(v));
     return v;
   }
@@ -247,7 +244,7 @@ class FixedMapSchema<CE> extends Schema<Map<dynamic, CE>> {
       }
       childExtracts[key] = value.extractNode(schemaNode).value as CE;
     }
-    return o.withValue(childExtracts).extractOrThis(transform, result);
+    return o.withValue(childExtracts).transformOrThis(transform, result);
   }
 
   @override
@@ -351,7 +348,7 @@ class DynamicMapSchema<CE> extends Schema<Map<dynamic, CE>> {
       }
     }
 
-    return o.withValue(childExtracts).extractOrThis(transform, result);
+    return o.withValue(childExtracts).transformOrThis(transform, result);
   }
 
   @override
@@ -415,7 +412,7 @@ class ListSchema<CE> extends Schema<List<CE>> {
       }
       childExtracts.add(childSchema.extractNode(schemaNode).value as CE);
     }
-    return o.withValue(childExtracts).extractOrThis(transform, result);
+    return o.withValue(childExtracts).transformOrThis(transform, result);
   }
 
   @override
@@ -451,7 +448,7 @@ class StringSchema extends Schema<String> {
     if (!o.checkType<String>(log: false)) {
       throw SchemaExtractionError(o);
     }
-    return o.withValue(o.value as String).extractOrThis(transform, result);
+    return o.withValue(o.value as String).transformOrThis(transform, result);
   }
 
   @override
@@ -486,7 +483,7 @@ class IntSchema extends Schema<int> {
     if (!o.checkType<int>(log: false)) {
       throw SchemaExtractionError(o);
     }
-    return o.withValue(o.value as int).extractOrThis(transform, result);
+    return o.withValue(o.value as int).transformOrThis(transform, result);
   }
 
   @override
@@ -527,7 +524,7 @@ class EnumSchema<CE> extends Schema<CE> {
     if (!allowedValues.contains(o.value)) {
       throw SchemaExtractionError(o);
     }
-    return o.withValue(o.value as CE).extractOrThis(transform, result);
+    return o.withValue(o.value as CE).transformOrThis(transform, result);
   }
 
   @override
@@ -562,7 +559,7 @@ class BoolSchema extends Schema<bool> {
     if (!o.checkType<bool>(log: false)) {
       throw SchemaExtractionError(o);
     }
-    return o.withValue(o.value as bool).extractOrThis(transform, result);
+    return o.withValue(o.value as bool).transformOrThis(transform, result);
   }
 
   @override
@@ -614,7 +611,7 @@ class OneOfSchema<E> extends Schema<E> {
       if (schema.validateNode(o, log: false)) {
         return o
             .withValue(schema.extractNode(o).value as E)
-            .extractOrThis(transform, result);
+            .transformOrThis(transform, result);
       }
     }
     throw SchemaExtractionError(o);
