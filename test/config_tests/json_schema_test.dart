@@ -18,8 +18,9 @@ void main() {
           JsonEncoder.withIndent(strings.ffigenJsonSchemaIndent).convert(
         Config.getsRootSchema().generateJsonSchema(strings.ffigenJsonSchemaId),
       );
-      final expectedJsonSchema =
-          File(strings.ffigenJsonSchemaFileName).readAsStringSync();
+      final expectedJsonSchema = File(strings.ffigenJsonSchemaFileName)
+          .readAsStringSync()
+          .replaceAll('\r\n', '\n');
       expect(actualJsonSchema, expectedJsonSchema);
     });
   });
