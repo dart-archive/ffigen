@@ -115,12 +115,11 @@ void _warnUnknownKeysInMap(Map<String, dynamic> allowedKeyMap,
 }
 
 Map<String, LibraryImport> libraryImportsExtractor(
-    Map<String, String> yamlConfig) {
+    Map<String, String>? typeMap) {
   final resultMap = <String, LibraryImport>{};
-  final typeMap = yamlConfig as YamlMap?;
   if (typeMap != null) {
     for (final typeName in typeMap.keys) {
-      resultMap[typeName as String] =
+      resultMap[typeName] =
           LibraryImport(typeName, typeMap[typeName] as String);
     }
   }
@@ -527,7 +526,7 @@ OutputConfig outputExtractor(
 
 SymbolFile symbolFileOutputExtractor(
     dynamic value, String? configFilename, PackageConfig? packageConfig) {
-  value = value as YamlMap;
+  value = value as Map;
   var output = value[strings.output] as String;
   if (Uri.parse(output).scheme != "package") {
     _logger.warning(

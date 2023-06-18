@@ -114,6 +114,9 @@
                 "rename": {
                     "$ref": "#/$defs/rename"
                 },
+                "member-rename": {
+                    "$ref": "#/$defs/memberRename"
+                },
                 "symbol-address": {
                     "$ref": "#/$defs/includeExclude"
                 },
@@ -257,6 +260,9 @@
                 },
                 "rename": {
                     "$ref": "#/$defs/rename"
+                },
+                "symbol-address": {
+                    "$ref": "#/$defs/includeExclude"
                 }
             }
         },
@@ -422,8 +428,21 @@
         "rename": {
             "type": "object",
             "patternProperties": {
-                ".+": {
+                ".*": {
                     "type": "string"
+                }
+            }
+        },
+        "memberRename": {
+            "type": "object",
+            "patternProperties": {
+                ".*": {
+                    "type": "object",
+                    "patternProperties": {
+                        ".*": {
+                            "type": "string"
+                        }
+                    }
                 }
             }
         },
@@ -435,19 +454,6 @@
                 },
                 "exclude": {
                     "$ref": "#/$defs/exclude"
-                }
-            }
-        },
-        "memberRename": {
-            "type": "object",
-            "patternProperties": {
-                ".+": {
-                    "type": "object",
-                    "patternProperties": {
-                        ".+": {
-                            "type": "string"
-                        }
-                    }
                 }
             }
         },

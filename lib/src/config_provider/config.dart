@@ -321,6 +321,7 @@ class Config {
           keys: {
             ...includeExcludeProperties(),
             ...renameProperties(),
+            ...memberRenameProperties(),
             strings.symbolAddress: includeExcludeObject(),
             strings.exposeFunctionTypedefs: includeExcludeObject(
               defaultValue: (node) => Includer.excludeByDefault(),
@@ -435,6 +436,7 @@ class Config {
           keys: {
             ...includeExcludeProperties(),
             ...renameProperties(),
+            strings.symbolAddress: includeExcludeObject(),
           },
           result: (node) {
             _globals = declarationConfigExtractor(node.rawValue ?? YamlMap());
@@ -618,7 +620,7 @@ class Config {
       strings.rename: DynamicMapSchema<String>(
         schemaDefName: "rename",
         keyValueSchemas: [
-          (keyRegexp: ".+", valueSchema: StringSchema()),
+          (keyRegexp: ".*", valueSchema: StringSchema()),
         ],
       ),
     };
@@ -630,9 +632,9 @@ class Config {
         schemaDefName: "memberRename",
         keyValueSchemas: [
           (
-            keyRegexp: ".+",
+            keyRegexp: ".*",
             valueSchema: DynamicMapSchema<String>(
-              keyValueSchemas: [(keyRegexp: ".+", valueSchema: StringSchema())],
+              keyValueSchemas: [(keyRegexp: ".*", valueSchema: StringSchema())],
             ),
           ),
         ],
