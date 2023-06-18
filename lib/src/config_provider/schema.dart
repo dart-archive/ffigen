@@ -6,24 +6,43 @@ import 'package:yaml/yaml.dart';
 
 final _logger = Logger('ffigen.config_provider.config');
 
+/// A Schema Node is a container for the [path] and the [value] of schema.
+///
+/// During validation, [value] is always the raw underlying object.
+/// During extraction. [value] can either be the raw underlying object or
+/// the value retuned by the Schema extractor.
+///
+
+/// A container object for a Schema Object.
 class SchemaNode<E> {
+  /// The path to this node.
+  ///
+  /// E.g - ["path", "to", "arr", "[1]", "item"]
   final List<String> path;
+
+  /// Get a string representation for path.
+  ///
+  /// E.g - "path -> to -> arr -> [1] -> item"
+  String get pathString => path.join(" -> ");
+
   final E value;
 
   SchemaNode({required this.path, required this.value});
 
+  /// Copy object with a different value.
   SchemaNode<T> withValue<T>(T value) {
     return SchemaNode<T>(path: path, value: value);
   }
 
-  SchemaNode extractOrRaw(dynamic Function(SchemaNode<E> value)? extractor) {
+  /// Transforms this SchemaNode with a nullable [extractor] or return itself.
+  SchemaNode extractOrThis(dynamic Function(SchemaNode<E> value)? extractor) {
     if (extractor != null) {
       return this.withValue(extractor.call(this));
     }
     return this;
   }
 
-  String get pathString => path.join(" -> ");
+  /// Returns true if [value] is of Type [T].
   bool checkType<T>({bool log = true}) {
     if (value is! T) {
       if (log) {
@@ -50,6 +69,7 @@ class SchemaExtractionError extends Error {
   }
 }
 
+/// Base class for all Schemas to extend.
 abstract class Schema<E> {
   String? defName;
   dynamic Function(SchemaNode<E> node)? extractor;
@@ -69,15 +89,21 @@ abstract class Schema<E> {
 
   Map<String, dynamic> generateJsonSchema(Map<String, dynamic> defs);
 
+  /// Run validation on an object [value].
   bool validate(dynamic value) {
     return validateNode(SchemaNode(path: [], value: value));
   }
 
+  /// Extract SchemaNode from [value]. This will call the [extractor] for all
+  /// underlying Schemas if valid.
+  /// Should ideally only be called if [validate] returns True. Throws
+  /// [SchemaExtractionError] if any validation fails.
   SchemaNode extract(dynamic value) {
     return extractNode(SchemaNode(path: [], value: value));
   }
 }
 
+/// Schema for a Map which has a fixed set of known keys.
 class FixedMapSchema<CE> extends Schema<Map<dynamic, CE>> {
   final Map<dynamic, Schema> keys;
   final List<String> requiredKeys;
@@ -163,7 +189,7 @@ class FixedMapSchema<CE> extends Schema<Map<dynamic, CE>> {
       }
       childExtracts[key] = value.extractNode(schemaNode).value as CE;
     }
-    return o.withValue(childExtracts).extractOrRaw(extractor);
+    return o.withValue(childExtracts).extractOrThis(extractor);
   }
 
   @override
@@ -179,7 +205,9 @@ class FixedMapSchema<CE> extends Schema<Map<dynamic, CE>> {
   }
 }
 
+/// Schema for a Map that can have any number of keys.
 class DynamicMapSchema<CE> extends Schema<Map<dynamic, CE>> {
+  /// [keyRegexp] will convert it's input to a String before matching.
   final List<({String keyRegexp, Schema valueSchema})> keyValueSchemas;
 
   DynamicMapSchema({
@@ -201,17 +229,34 @@ class DynamicMapSchema<CE> extends Schema<Map<dynamic, CE>> {
       final schemaNode =
           SchemaNode(path: [...o.path, key.toString()], value: value);
       var keyValueMatch = false;
+
+      /// Running first time with no logs.
       for (final (keyRegexp: keyRegexp, valueSchema: valueSchema)
           in keyValueSchemas) {
-        if (RegExp(keyRegexp).hasMatch(key.toString()) &&
-            valueSchema.validateNode(schemaNode, log: log)) {
+        if (RegExp(keyRegexp, dotAll: true).hasMatch(key.toString()) &&
+            valueSchema.validateNode(schemaNode, log: false)) {
           keyValueMatch = true;
           break;
         }
       }
       if (!keyValueMatch) {
         result = false;
-        continue;
+        // No schema matched, running again to print logs this time.
+        if (log) {
+          _logger.severe(
+              "'${schemaNode.pathString}' must match atleast one of the allowed key regex and schema.");
+          for (final (keyRegexp: keyRegexp, valueSchema: valueSchema)
+              in keyValueSchemas) {
+            if (!RegExp(keyRegexp, dotAll: true).hasMatch(key.toString())) {
+              _logger.severe(
+                  "'${schemaNode.pathString}' does not match regex - '$keyRegexp' (Input - $key)");
+              continue;
+            }
+            if (valueSchema.validateNode(schemaNode, log: log)) {
+              continue;
+            }
+          }
+        }
       }
     }
 
@@ -232,7 +277,7 @@ class DynamicMapSchema<CE> extends Schema<Map<dynamic, CE>> {
       var keyValueMatch = false;
       for (final (keyRegexp: keyRegexp, valueSchema: valueSchema)
           in keyValueSchemas) {
-        if (RegExp(keyRegexp).hasMatch(key.toString()) &&
+        if (RegExp(keyRegexp, dotAll: true).hasMatch(key.toString()) &&
             valueSchema.validateNode(schemaNode, log: false)) {
           childExtracts[key] = valueSchema.extractNode(schemaNode).value as CE;
           keyValueMatch = true;
@@ -244,7 +289,7 @@ class DynamicMapSchema<CE> extends Schema<Map<dynamic, CE>> {
       }
     }
 
-    return o.withValue(childExtracts).extractOrRaw(extractor);
+    return o.withValue(childExtracts).extractOrThis(extractor);
   }
 
   @override
@@ -260,6 +305,7 @@ class DynamicMapSchema<CE> extends Schema<Map<dynamic, CE>> {
   }
 }
 
+/// Schema for a List.
 class ListSchema<CE> extends Schema<List<CE>> {
   final Schema childSchema;
 
@@ -302,7 +348,7 @@ class ListSchema<CE> extends Schema<List<CE>> {
       }
       childExtracts.add(childSchema.extractNode(schemaNode).value as CE);
     }
-    return o.withValue(childExtracts).extractOrRaw(extractor);
+    return o.withValue(childExtracts).extractOrThis(extractor);
   }
 
   @override
@@ -311,6 +357,7 @@ class ListSchema<CE> extends Schema<List<CE>> {
   }
 }
 
+/// Schema for a String.
 class StringSchema extends Schema<String> {
   StringSchema({
     super.extractor,
@@ -330,7 +377,7 @@ class StringSchema extends Schema<String> {
     if (!o.checkType<String>(log: false)) {
       throw SchemaExtractionError(o);
     }
-    return o.withValue(o.value as String).extractOrRaw(extractor);
+    return o.withValue(o.value as String).extractOrThis(extractor);
   }
 
   @override
@@ -339,8 +386,9 @@ class StringSchema extends Schema<String> {
   }
 }
 
-class IntegerSchema extends Schema<int> {
-  IntegerSchema({
+/// Schema for an Int.
+class IntSchema extends Schema<int> {
+  IntSchema({
     super.extractor,
     super.defName,
   });
@@ -358,7 +406,7 @@ class IntegerSchema extends Schema<int> {
     if (!o.checkType<int>(log: false)) {
       throw SchemaExtractionError(o);
     }
-    return o.withValue(o.value as int).extractOrRaw(extractor);
+    return o.withValue(o.value as int).extractOrThis(extractor);
   }
 
   @override
@@ -367,6 +415,7 @@ class IntegerSchema extends Schema<int> {
   }
 }
 
+/// Schema for an object where only specific values are allowed.
 class EnumSchema<CE> extends Schema<CE> {
   Set<CE> allowedValues;
   EnumSchema({
@@ -392,7 +441,7 @@ class EnumSchema<CE> extends Schema<CE> {
     if (!allowedValues.contains(o.value)) {
       throw SchemaExtractionError(o);
     }
-    return o.withValue(o.value as CE).extractOrRaw(extractor);
+    return o.withValue(o.value as CE).extractOrThis(extractor);
   }
 
   @override
@@ -401,8 +450,9 @@ class EnumSchema<CE> extends Schema<CE> {
   }
 }
 
-class BooleanSchema extends Schema<bool> {
-  BooleanSchema({
+/// Schema for a bool.
+class BoolSchema extends Schema<bool> {
+  BoolSchema({
     super.extractor,
     super.defName,
   });
@@ -420,7 +470,7 @@ class BooleanSchema extends Schema<bool> {
     if (!o.checkType<bool>(log: false)) {
       throw SchemaExtractionError(o);
     }
-    return o.withValue(o.value as bool).extractOrRaw(extractor);
+    return o.withValue(o.value as bool).extractOrThis(extractor);
   }
 
   @override
@@ -429,6 +479,7 @@ class BooleanSchema extends Schema<bool> {
   }
 }
 
+/// Schema which checks if atleast one of the underlying Schema matches.
 class OneOfSchema<E> extends Schema<E> {
   final List<Schema> childSchemas;
 
@@ -448,6 +499,8 @@ class OneOfSchema<E> extends Schema<E> {
     }
     // No schema matched, running again to print logs this time.
     if (log) {
+      _logger.severe(
+          "'${o.pathString}' must match atleast one of the allowed schema -");
       for (final schema in childSchemas) {
         if (schema.validateNode(o, log: log)) {
           return true;
@@ -463,7 +516,7 @@ class OneOfSchema<E> extends Schema<E> {
       if (schema.validateNode(o, log: false)) {
         return o
             .withValue(schema.extractNode(o).value as E)
-            .extractOrRaw(extractor);
+            .extractOrThis(extractor);
       }
     }
     throw SchemaExtractionError(o);
@@ -522,14 +575,14 @@ void main() {
         "exclude": ListSchema<String>(childSchema: StringSchema()),
         "rename": DynamicMapSchema<dynamic>(keyValueSchemas: [
           (
-            keyRegexp: r"^.*$",
+            keyRegexp: r"^.+$",
             valueSchema:
-                OneOfSchema(childSchemas: [StringSchema(), IntegerSchema()]),
+                OneOfSchema(childSchemas: [StringSchema(), IntSchema()]),
           )
         ]),
         "pack": DynamicMapSchema<dynamic>(keyValueSchemas: [
           (
-            keyRegexp: r"^.*$",
+            keyRegexp: r"^.+$",
             valueSchema:
                 EnumSchema<dynamic>(allowedValues: {null, 1, 2, 4, 8, 16}),
           )
@@ -548,9 +601,8 @@ headers:
 structs:
   rename:
     a: b
-    0: 1
   pack:
-    'ABCD': 2
+    a: 2
 """);
 
   print("validate: ${testSchema.validate(yaml)}");
