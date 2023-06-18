@@ -14,9 +14,12 @@ import 'package:ffigen/src/strings.dart' as strings;
 
 void main() async {
   final actualJsonSchema =
-      JsonEncoder.withIndent(strings.ffigenJsonSchemaIndent).convert(
-    Config.getsRootSchema().generateJsonSchema(strings.ffigenJsonSchemaId),
-  );
+      JsonEncoder.withIndent(strings.ffigenJsonSchemaIndent)
+          .convert(
+            Config.getsRootSchema()
+                .generateJsonSchema(strings.ffigenJsonSchemaId),
+          )
+          .replaceAll("\r\n", "\n");
 
   final file = File(strings.ffigenJsonSchemaFileName);
   if (!await file.exists()) {
