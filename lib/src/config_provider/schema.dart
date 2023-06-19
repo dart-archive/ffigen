@@ -462,17 +462,28 @@ class ListSchema<CE> extends Schema<List<CE>> {
 
 /// Schema for a String.
 class StringSchema extends Schema<String> {
+  final String? pattern;
+  final RegExp? _regexp;
+
   StringSchema({
     super.schemaDefName,
     super.schemaDescription,
     super.transform,
     super.defaultValue,
     super.result,
-  });
+    this.pattern,
+  }) : _regexp = pattern == null ? null : RegExp(pattern, dotAll: true);
 
   @override
   bool validateNode(SchemaNode o, {bool log = true}) {
     if (!o.checkType<String>(log: log)) {
+      return false;
+    }
+    if (_regexp != null && !_regexp!.hasMatch(o.value as String)) {
+      if (log) {
+        _logger.severe(
+            "Expected value of key '${o.pathString}' to match pattern $pattern (Input - ${o.value}).");
+      }
       return false;
     }
     return true;
@@ -493,6 +504,7 @@ class StringSchema extends Schema<String> {
     return {
       "type": "string",
       if (schemaDescription != null) "description": schemaDescription!,
+      if (pattern != null) "pattern": pattern,
     };
   }
 }

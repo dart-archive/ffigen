@@ -727,26 +727,6 @@ SupportedNativeType nativeSupportedType(int value, {bool signed = true}) {
   }
 }
 
-bool nonEmptyStringValidator(List<String> name, dynamic value) {
-  if (value is String && value.isNotEmpty) {
-    return true;
-  } else {
-    _logger.severe("Expected value of key '$name' to be a non-empty String.");
-    return false;
-  }
-}
-
-bool dartClassNameValidator(List<String> name, dynamic value) {
-  if (value is String &&
-      quiver.matchesFull(RegExp('[a-zA-Z]+[_a-zA-Z0-9]*'), value)) {
-    return true;
-  } else {
-    _logger.severe(
-        "Expected value of key '$name' to be a valid public class name.");
-    return false;
-  }
-}
-
 StructPackingOverride structPackingOverrideExtractor(
     Map<dynamic, dynamic> value) {
   final matcherMap = <RegExp, int?>{};

@@ -319,14 +319,14 @@ class Config {
         ),
         strings.functions: FixedMapSchema<dynamic>(
           keys: {
-            ...includeExcludeProperties(),
-            ...renameProperties(),
-            ...memberRenameProperties(),
-            strings.symbolAddress: includeExcludeObject(),
-            strings.exposeFunctionTypedefs: includeExcludeObject(
+            ..._includeExcludeProperties(),
+            ..._renameProperties(),
+            ..._memberRenameProperties(),
+            strings.symbolAddress: _includeExcludeObject(),
+            strings.exposeFunctionTypedefs: _includeExcludeObject(
               defaultValue: (node) => Includer.excludeByDefault(),
             ),
-            strings.leafFunctions: includeExcludeObject(
+            strings.leafFunctions: _includeExcludeObject(
               defaultValue: (node) => Includer.excludeByDefault(),
             ),
             strings.varArgFunctions: DynamicMapSchema<dynamic>(
@@ -370,10 +370,10 @@ class Config {
         ),
         strings.structs: FixedMapSchema<dynamic>(
           keys: {
-            ...includeExcludeProperties(),
-            ...renameProperties(),
-            ...memberRenameProperties(),
-            strings.dependencyOnly: dependencyOnlyObject(),
+            ..._includeExcludeProperties(),
+            ..._renameProperties(),
+            ..._memberRenameProperties(),
+            strings.dependencyOnly: _dependencyOnlyObject(),
             strings.structPack: DynamicMapSchema<dynamic>(
               keyValueSchemas: [
                 (
@@ -400,10 +400,10 @@ class Config {
         ),
         strings.unions: FixedMapSchema<dynamic>(
           keys: {
-            ...includeExcludeProperties(),
-            ...renameProperties(),
-            ...memberRenameProperties(),
-            strings.dependencyOnly: dependencyOnlyObject(),
+            ..._includeExcludeProperties(),
+            ..._renameProperties(),
+            ..._memberRenameProperties(),
+            strings.dependencyOnly: _dependencyOnlyObject(),
           },
           result: (node) {
             _unionDecl = declarationConfigExtractor(node.rawValue ?? YamlMap());
@@ -413,9 +413,9 @@ class Config {
         ),
         strings.enums: FixedMapSchema<dynamic>(
           keys: {
-            ...includeExcludeProperties(),
-            ...renameProperties(),
-            ...memberRenameProperties(),
+            ..._includeExcludeProperties(),
+            ..._renameProperties(),
+            ..._memberRenameProperties(),
           },
           result: (node) {
             _enumClassDecl =
@@ -424,8 +424,8 @@ class Config {
         ),
         strings.unnamedEnums: FixedMapSchema<dynamic>(
           keys: {
-            ...includeExcludeProperties(),
-            ...renameProperties(),
+            ..._includeExcludeProperties(),
+            ..._renameProperties(),
           },
           result: (node) {
             _unnamedEnumConstants =
@@ -434,9 +434,9 @@ class Config {
         ),
         strings.globals: FixedMapSchema<dynamic>(
           keys: {
-            ...includeExcludeProperties(),
-            ...renameProperties(),
-            strings.symbolAddress: includeExcludeObject(),
+            ..._includeExcludeProperties(),
+            ..._renameProperties(),
+            strings.symbolAddress: _includeExcludeObject(),
           },
           result: (node) {
             _globals = declarationConfigExtractor(node.rawValue ?? YamlMap());
@@ -444,8 +444,8 @@ class Config {
         ),
         strings.macros: FixedMapSchema<dynamic>(
           keys: {
-            ...includeExcludeProperties(),
-            ...renameProperties(),
+            ..._includeExcludeProperties(),
+            ..._renameProperties(),
           },
           result: (node) {
             _macroDecl = declarationConfigExtractor(node.rawValue ?? YamlMap());
@@ -453,8 +453,8 @@ class Config {
         ),
         strings.typedefs: FixedMapSchema<dynamic>(
           keys: {
-            ...includeExcludeProperties(),
-            ...renameProperties(),
+            ..._includeExcludeProperties(),
+            ..._renameProperties(),
           },
           result: (node) {
             _typedefs = declarationConfigExtractor(node.rawValue ?? YamlMap());
@@ -462,10 +462,10 @@ class Config {
         ),
         strings.objcInterfaces: FixedMapSchema<dynamic>(
           keys: {
-            ...includeExcludeProperties(),
-            ...renameProperties(),
-            ...memberRenameProperties(),
-            strings.objcModule: objcInterfaceModuleObject(),
+            ..._includeExcludeProperties(),
+            ..._renameProperties(),
+            ..._memberRenameProperties(),
+            strings.objcModule: _objcInterfaceModuleObject(),
           },
           result: (node) {
             _objcInterfaces =
@@ -488,10 +488,10 @@ class Config {
         ),
         strings.typeMap: FixedMapSchema<dynamic>(
           keys: {
-            strings.typeMapTypedefs: mappedTypeObject(),
-            strings.typeMapStructs: mappedTypeObject(),
-            strings.typeMapUnions: mappedTypeObject(),
-            strings.typeMapNativeTypes: mappedTypeObject(),
+            strings.typeMapTypedefs: _mappedTypeObject(),
+            strings.typeMapStructs: _mappedTypeObject(),
+            strings.typeMapUnions: _mappedTypeObject(),
+            strings.typeMapNativeTypes: _mappedTypeObject(),
           },
           result: (node) {
             _typedefTypeMappings = makeImportTypeMapping(
@@ -558,17 +558,15 @@ class Config {
           defaultValue: (node) => CommentType.def(),
           result: (node) => _commentType = node.value as CommentType,
         ),
-        strings.name: StringSchema(
+        strings.name: _dartClassNameStringSchema(
           defaultValue: (node) {
-            // TODO: replace dartClassNameValidator
             _logger.warning(
                 "Prefer adding Key '${node.pathString}' to your config.");
             return 'NativeLibrary';
           },
           result: (node) => _wrapperName = node.value as String,
         ),
-        strings.description: StringSchema(
-          // TODO: replace nonEmptyStringValidator
+        strings.description: _nonEmptyStringSchema(
           defaultValue: (node) {
             _logger.warning(
                 "Prefer adding Key '${node.pathString}' to your config.");
@@ -601,7 +599,31 @@ class Config {
     );
   }
 
-  Map<String, Schema> includeExcludeProperties() {
+  StringSchema _nonEmptyStringSchema({
+    dynamic Function(SchemaNode<void>)? defaultValue,
+    void Function(SchemaNode<dynamic>)? result,
+  }) {
+    return StringSchema(
+      schemaDefName: 'nonEmptyString',
+      pattern: r'.+',
+      defaultValue: defaultValue,
+      result: result,
+    );
+  }
+
+  StringSchema _dartClassNameStringSchema({
+    dynamic Function(SchemaNode<void>)? defaultValue,
+    void Function(SchemaNode<dynamic>)? result,
+  }) {
+    return StringSchema(
+      schemaDefName: 'publicDartVar',
+      pattern: r'^[a-zA-Z]+[_a-zA-Z0-9]*$',
+      defaultValue: defaultValue,
+      result: result,
+    );
+  }
+
+  Map<String, Schema> _includeExcludeProperties() {
     return {
       strings.include: ListSchema<String>(
         schemaDefName: "include",
@@ -615,7 +637,7 @@ class Config {
     };
   }
 
-  Map<String, Schema> renameProperties() {
+  Map<String, Schema> _renameProperties() {
     return {
       strings.rename: DynamicMapSchema<String>(
         schemaDefName: "rename",
@@ -626,7 +648,7 @@ class Config {
     };
   }
 
-  Map<String, Schema> memberRenameProperties() {
+  Map<String, Schema> _memberRenameProperties() {
     return {
       strings.memberRename: DynamicMapSchema<dynamic>(
         schemaDefName: "memberRename",
@@ -642,19 +664,19 @@ class Config {
     };
   }
 
-  FixedMapSchema<List<String>> includeExcludeObject(
+  FixedMapSchema<List<String>> _includeExcludeObject(
       {dynamic Function(SchemaNode<void> node)? defaultValue}) {
     return FixedMapSchema<List<String>>(
       schemaDefName: "includeExclude",
       keys: {
-        ...includeExcludeProperties(),
+        ..._includeExcludeProperties(),
       },
       transform: (node) => extractIncluderFromYaml(node.rawValue ?? YamlMap()),
       defaultValue: defaultValue,
     );
   }
 
-  EnumSchema dependencyOnlyObject() {
+  EnumSchema _dependencyOnlyObject() {
     return EnumSchema(
       schemaDefName: "dependencyOnly",
       allowedValues: {
@@ -668,7 +690,7 @@ class Config {
     );
   }
 
-  DynamicMapSchema mappedTypeObject() {
+  DynamicMapSchema _mappedTypeObject() {
     return DynamicMapSchema(
       schemaDefName: "mappedTypes",
       keyValueSchemas: [
@@ -689,7 +711,7 @@ class Config {
     );
   }
 
-  DynamicMapSchema objcInterfaceModuleObject() {
+  DynamicMapSchema _objcInterfaceModuleObject() {
     return DynamicMapSchema(
       schemaDefName: "objcInterfaceModule",
       keyValueSchemas: [
