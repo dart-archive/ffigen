@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:ffigen/src/config_provider/config_types.dart';
 import 'package:logging/logging.dart';
 import 'package:yaml/yaml.dart';
 
@@ -97,20 +94,13 @@ abstract class Schema<E> {
   /// nodes and [result].
   dynamic Function(SchemaNode<E> node)? transform;
 
-  /// Passed to parent nodes and result (only if required by parent)
-  ///
-  /// SchemaNode<void> is used since value should not be accessed here.
-  dynamic Function(SchemaNode<void> node)? defaultValue;
-
-  /// Called when final result is prepared via [extractNode] or
-  /// [getDefaultValue].
+  /// Called when final result is prepared via [extractNode].
   void Function(SchemaNode<dynamic> node)? result;
   Schema({
     /// Used
     this.schemaDefName,
     this.schemaDescription,
     this.transform,
-    this.defaultValue,
     this.result,
   });
 
@@ -139,14 +129,6 @@ abstract class Schema<E> {
     };
   }
 
-  /// Returns default value or null for a node. Calls [result] if value is
-  /// not null.
-  dynamic getDefaultValue(SchemaNode o) {
-    final v = defaultValue?.call(o.withValue(null, null));
-    if (v != null) result?.call(o.withValue(v, null));
-    return v;
-  }
-
   /// Run validation on an object [value].
   bool validate(dynamic value) {
     return validateNode(SchemaNode(path: [], value: value));
@@ -161,43 +143,38 @@ abstract class Schema<E> {
   }
 }
 
+class FixedMapKey {
+  final String key;
+  final Schema valueSchema;
+  final dynamic Function(SchemaNode o)? defaultValue;
+  void Function(SchemaNode<dynamic> node)? resultOrDefault;
+  final bool required;
+
+  FixedMapKey({
+    required this.key,
+    required this.valueSchema,
+    this.defaultValue,
+    this.resultOrDefault,
+    this.required = false,
+  });
+}
+
 /// Schema for a Map which has a fixed set of known keys.
 class FixedMapSchema<CE> extends Schema<Map<dynamic, CE>> {
-  final Map<dynamic, Schema> keys;
-  final List<String> requiredKeys;
+  final List<FixedMapKey> keys;
+  final Set<String> allKeys;
+  final Set<String> requiredKeys;
 
   FixedMapSchema({
     required this.keys,
-    this.requiredKeys = const [],
     super.schemaDefName,
     super.schemaDescription,
     super.transform,
-    super.defaultValue,
     super.result,
-  }) {
-    final unknownKeys =
-        requiredKeys.where((element) => !keys.containsKey(element)).toList();
-    if (unknownKeys.isNotEmpty) {
-      throw ArgumentError(
-          "Invalid requiredKeys: $unknownKeys, requiredKeys must be a subset of keys");
-    }
-
-    // Get default values of underlying keys if [defaultValue] is not specified
-    // for this.
-    super.defaultValue ??= (SchemaNode o) {
-      final result = <dynamic, CE>{};
-      for (final MapEntry(key: key, value: value) in keys.entries) {
-        final defaultValue = value.getDefaultValue(
-            SchemaNode(path: [...o.path, key.toString()], value: value));
-        if (defaultValue != null) {
-          result[key] = defaultValue as CE;
-        }
-      }
-      return result.isEmpty
-          ? null
-          : o.withValue(result, null).transformOrThis(transform, null).value;
-    };
-  }
+  })  : requiredKeys = {
+          for (final kv in keys.where((kv) => kv.required)) kv.key
+        },
+        allKeys = {for (final kv in keys) kv.key};
 
   @override
   bool validateNode(SchemaNode o, {bool log = true}) {
@@ -216,20 +193,20 @@ class FixedMapSchema<CE> extends Schema<Map<dynamic, CE>> {
       }
     }
 
-    for (final MapEntry(key: key, value: value) in keys.entries) {
-      final path = [...o.path, key.toString()];
-      if (!inputMap.containsKey(key)) {
+    for (final entry in keys) {
+      final path = [...o.path, entry.key.toString()];
+      if (!inputMap.containsKey(entry.key)) {
         continue;
       }
-      final schemaNode = SchemaNode(path: path, value: inputMap[key]);
-      if (!value.validateNode(schemaNode, log: log)) {
+      final schemaNode = SchemaNode(path: path, value: inputMap[entry.key]);
+      if (!entry.valueSchema.validateNode(schemaNode, log: log)) {
         result = false;
         continue;
       }
     }
 
     for (final key in inputMap.keys) {
-      if (!keys.containsKey(key)) {
+      if (!allKeys.contains(key)) {
         if (log) {
           _logger.severe("Unknown key - '${[...o.path, key].join(' -> ')}'.");
         }
@@ -237,6 +214,35 @@ class FixedMapSchema<CE> extends Schema<Map<dynamic, CE>> {
     }
 
     return result;
+  }
+
+  dynamic _getAllDefaults(SchemaNode o) {
+    final result = <dynamic, CE>{};
+    for (final entry in keys) {
+      final path = [...o.path, entry.key];
+      if (entry.defaultValue != null) {
+        result[entry.key] =
+            entry.defaultValue!.call(SchemaNode(path: path, value: null)) as CE;
+      } else if (entry.valueSchema is FixedMapSchema) {
+        final defaultValue = (entry.valueSchema as FixedMapSchema)
+            ._getAllDefaults(SchemaNode(path: path, value: null));
+        if (defaultValue != null) {
+          result[entry.key] = (entry.valueSchema as FixedMapSchema)
+              ._getAllDefaults(SchemaNode(path: path, value: null)) as CE;
+        }
+      }
+      if (result.containsKey(entry.key) && entry.resultOrDefault != null) {
+        // Call resultOrDefault hook for FixedMapKey.
+        entry.resultOrDefault!.call(SchemaNode(
+            path: path, value: result[entry.key], nullRawValue: true));
+      }
+    }
+    return result.isEmpty
+        ? null
+        : o
+            .withValue(result, null)
+            .transformOrThis(transform, this.result)
+            .value;
   }
 
   @override
@@ -255,22 +261,37 @@ class FixedMapSchema<CE> extends Schema<Map<dynamic, CE>> {
       }
     }
 
-    for (final MapEntry(key: key, value: value) in keys.entries) {
-      final path = [...o.path, key.toString()];
-      if (!inputMap.containsKey(key)) {
+    for (final entry in keys) {
+      final path = [...o.path, entry.key.toString()];
+      if (!inputMap.containsKey(entry.key)) {
         // No value specified, fill in with default value instead.
-        final defaultValue =
-            value.getDefaultValue(SchemaNode(path: path, value: null));
-        if (defaultValue != null) {
-          childExtracts[key] = defaultValue as CE;
+        if (entry.defaultValue != null) {
+          childExtracts[entry.key] = entry.defaultValue!
+              .call(SchemaNode(path: path, value: null)) as CE;
+        } else if (entry.valueSchema is FixedMapSchema) {
+          final defaultValue = (entry.valueSchema as FixedMapSchema)
+              ._getAllDefaults(SchemaNode(path: path, value: null));
+          if (defaultValue != null) {
+            childExtracts[entry.key] = (entry.valueSchema as FixedMapSchema)
+                ._getAllDefaults(SchemaNode(path: path, value: null)) as CE;
+          }
         }
-        continue;
+      } else {
+        // Extract value from node.
+        final schemaNode = SchemaNode(path: path, value: inputMap[entry.key]);
+        if (!entry.valueSchema.validateNode(schemaNode, log: false)) {
+          throw SchemaExtractionError(schemaNode);
+        }
+        childExtracts[entry.key] =
+            entry.valueSchema.extractNode(schemaNode).value as CE;
       }
-      final schemaNode = SchemaNode(path: path, value: inputMap[key]);
-      if (!value.validateNode(schemaNode, log: false)) {
-        throw SchemaExtractionError(schemaNode);
+
+      if (childExtracts.containsKey(entry.key) &&
+          entry.resultOrDefault != null) {
+        // Call resultOrDefault hook for FixedMapKey.
+        entry.resultOrDefault!.call(SchemaNode(
+            path: path, value: childExtracts[entry.key], nullRawValue: true));
       }
-      childExtracts[key] = value.extractNode(schemaNode).value as CE;
     }
     return o
         .withValue(childExtracts, o.rawValue)
@@ -284,10 +305,10 @@ class FixedMapSchema<CE> extends Schema<Map<dynamic, CE>> {
       if (schemaDescription != null) "description": schemaDescription!,
       if (keys.isNotEmpty)
         "properties": {
-          for (final kv in keys.entries)
-            kv.key: kv.value.getJsonRefOrSchemaNode(defs)
+          for (final kv in keys)
+            kv.key: kv.valueSchema.getJsonRefOrSchemaNode(defs)
         },
-      if (requiredKeys.isNotEmpty) "required": requiredKeys,
+      if (requiredKeys.isNotEmpty) "required": requiredKeys.toList(),
     };
   }
 }
@@ -302,7 +323,6 @@ class DynamicMapSchema<CE> extends Schema<Map<dynamic, CE>> {
     super.schemaDefName,
     super.schemaDescription,
     super.transform,
-    super.defaultValue,
     super.result,
   });
 
@@ -408,7 +428,6 @@ class ListSchema<CE> extends Schema<List<CE>> {
     super.schemaDefName,
     super.schemaDescription,
     super.transform,
-    super.defaultValue,
     super.result,
   });
 
@@ -469,7 +488,6 @@ class StringSchema extends Schema<String> {
     super.schemaDefName,
     super.schemaDescription,
     super.transform,
-    super.defaultValue,
     super.result,
     this.pattern,
   }) : _regexp = pattern == null ? null : RegExp(pattern, dotAll: true);
@@ -515,7 +533,6 @@ class IntSchema extends Schema<int> {
     super.schemaDefName,
     super.schemaDescription,
     super.transform,
-    super.defaultValue,
     super.result,
   });
 
@@ -554,7 +571,6 @@ class EnumSchema<CE> extends Schema<CE> {
     super.schemaDefName,
     super.schemaDescription,
     super.transform,
-    super.defaultValue,
     super.result,
   });
 
@@ -595,7 +611,6 @@ class BoolSchema extends Schema<bool> {
     super.schemaDefName,
     super.schemaDescription,
     super.transform,
-    super.defaultValue,
     super.result,
   });
 
@@ -635,7 +650,6 @@ class OneOfSchema<E> extends Schema<E> {
     super.schemaDefName,
     super.schemaDescription,
     super.transform,
-    super.defaultValue,
     super.result,
   });
 
@@ -681,118 +695,4 @@ class OneOfSchema<E> extends Schema<E> {
           .toList(),
     };
   }
-}
-
-void main() {
-  final extractMap = <String, dynamic>{};
-  final testSchema = FixedMapSchema<dynamic>(
-      keys: {
-        "name": StringSchema(
-          result: (node) => extractMap[node.pathString] = node.value,
-        ),
-        "description": StringSchema(
-          result: (node) => extractMap[node.pathString] = node.value,
-        ),
-        "output": OneOfSchema(
-          childSchemas: [
-            StringSchema(
-              schemaDefName: "outputBindings",
-              transform: (node) => extractMap[node.pathString] = node.value,
-            ),
-            FixedMapSchema(
-              keys: {
-                "bindings": StringSchema(
-                  schemaDefName: "outputBindings",
-                ),
-                "symbol-file": FixedMapSchema<dynamic>(keys: {
-                  "output": StringSchema(),
-                  "import-path": StringSchema(),
-                })
-              },
-              requiredKeys: ["bindings"],
-              transform: (node) =>
-                  OutputConfig(node.value["bindings"] as String, null),
-              result: (node) => extractMap[node.pathString] = node.value,
-            )
-          ],
-        ),
-        "headers": FixedMapSchema<List<String>>(
-          keys: {
-            "entry-points": ListSchema<String>(childSchema: StringSchema()),
-            "include-directives":
-                ListSchema<String>(childSchema: StringSchema()),
-          },
-          result: (node) => extractMap[node.pathString] = node.value,
-        ),
-        "structs": FixedMapSchema<dynamic>(keys: {
-          "include": ListSchema<String>(childSchema: StringSchema()),
-          "exclude": ListSchema<String>(childSchema: StringSchema()),
-          "rename": DynamicMapSchema<dynamic>(keyValueSchemas: [
-            (
-              keyRegexp: r"^.+$",
-              valueSchema:
-                  OneOfSchema(childSchemas: [StringSchema(), IntSchema()]),
-            )
-          ]),
-          "pack": DynamicMapSchema<dynamic>(keyValueSchemas: [
-            (
-              keyRegexp: r"^.+$",
-              valueSchema:
-                  EnumSchema<dynamic>(allowedValues: {null, 1, 2, 4, 8, 16}),
-            )
-          ])
-        }),
-        "comments": FixedMapSchema<dynamic>(
-          keys: {
-            "style": EnumSchema(
-              allowedValues: {"any", "doxygen"},
-              defaultValue: (node) => "doxygen",
-            ),
-            "length": EnumSchema(
-              allowedValues: {"brief", "full"},
-              defaultValue: (node) => "brief",
-              result: (node) => extractMap[node.pathString] = node.value,
-            ),
-          },
-          result: (node) {
-            print("comments rawValue: ${node.rawValue}");
-            print("comments value: ${node.value}");
-            extractMap[node.pathString] = node.value;
-          },
-        ),
-      },
-      result: (node) {
-        print("root rawValue: ${node.rawValue}");
-        print("root value: ${node.value}");
-        extractMap[node.pathString] = node.value;
-      });
-  _logger.onRecord.listen((event) => print(event));
-  final yaml = loadYaml("""
-name: NativeLibrary
-description: Bindings to `headers/example.h`.
-output: 'generated_bindings.dart'
-headers:
-  entry-points:
-    - 'headers/example.h'
-structs:
-  rename:
-    a: b
-  pack:
-    a: 2
-""");
-
-  print("validate: ${testSchema.validate(yaml)}");
-  print("extract: ${testSchema.extract(yaml).value}");
-  print("extractMap: $extractMap");
-  final defs = <String, dynamic>{};
-  final jsonSchema = testSchema.generateJsonSchemaNode(defs);
-  print("jsonschema object: $jsonSchema");
-  print("defs: $defs");
-  final jsonSchemaJson = jsonEncode({
-    r"$id": "test",
-    r"$schema": "https://json-schema.org/draft/2020-12/schema",
-    ...jsonSchema,
-    r"$defs": defs,
-  });
-  print("jsonschema file: $jsonSchemaJson");
 }

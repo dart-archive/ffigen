@@ -12,19 +12,19 @@
     "output": {
       "$oneOf": [
         {
-          "type": "string"
+          "$ref": "#/$defs/filePath"
         },
         {
           "type": "object",
           "properties": {
             "bindings": {
-              "type": "string"
+              "$ref": "#/$defs/filePath"
             },
             "symbol-file": {
               "type": "object",
               "properties": {
                 "output": {
-                  "type": "string"
+                  "$ref": "#/$defs/filePath"
                 },
                 "import-path": {
                   "type": "string"
@@ -106,10 +106,10 @@
       "type": "object",
       "properties": {
         "include": {
-          "$ref": "#/$defs/include"
+          "$ref": "#/$defs/fullMatchOrRegexpList"
         },
         "exclude": {
-          "$ref": "#/$defs/exclude"
+          "$ref": "#/$defs/fullMatchOrRegexpList"
         },
         "rename": {
           "$ref": "#/$defs/rename"
@@ -167,10 +167,10 @@
       "type": "object",
       "properties": {
         "include": {
-          "$ref": "#/$defs/include"
+          "$ref": "#/$defs/fullMatchOrRegexpList"
         },
         "exclude": {
-          "$ref": "#/$defs/exclude"
+          "$ref": "#/$defs/fullMatchOrRegexpList"
         },
         "rename": {
           "$ref": "#/$defs/rename"
@@ -202,10 +202,10 @@
       "type": "object",
       "properties": {
         "include": {
-          "$ref": "#/$defs/include"
+          "$ref": "#/$defs/fullMatchOrRegexpList"
         },
         "exclude": {
-          "$ref": "#/$defs/exclude"
+          "$ref": "#/$defs/fullMatchOrRegexpList"
         },
         "rename": {
           "$ref": "#/$defs/rename"
@@ -222,10 +222,10 @@
       "type": "object",
       "properties": {
         "include": {
-          "$ref": "#/$defs/include"
+          "$ref": "#/$defs/fullMatchOrRegexpList"
         },
         "exclude": {
-          "$ref": "#/$defs/exclude"
+          "$ref": "#/$defs/fullMatchOrRegexpList"
         },
         "rename": {
           "$ref": "#/$defs/rename"
@@ -239,10 +239,10 @@
       "type": "object",
       "properties": {
         "include": {
-          "$ref": "#/$defs/include"
+          "$ref": "#/$defs/fullMatchOrRegexpList"
         },
         "exclude": {
-          "$ref": "#/$defs/exclude"
+          "$ref": "#/$defs/fullMatchOrRegexpList"
         },
         "rename": {
           "$ref": "#/$defs/rename"
@@ -253,10 +253,10 @@
       "type": "object",
       "properties": {
         "include": {
-          "$ref": "#/$defs/include"
+          "$ref": "#/$defs/fullMatchOrRegexpList"
         },
         "exclude": {
-          "$ref": "#/$defs/exclude"
+          "$ref": "#/$defs/fullMatchOrRegexpList"
         },
         "rename": {
           "$ref": "#/$defs/rename"
@@ -270,10 +270,10 @@
       "type": "object",
       "properties": {
         "include": {
-          "$ref": "#/$defs/include"
+          "$ref": "#/$defs/fullMatchOrRegexpList"
         },
         "exclude": {
-          "$ref": "#/$defs/exclude"
+          "$ref": "#/$defs/fullMatchOrRegexpList"
         },
         "rename": {
           "$ref": "#/$defs/rename"
@@ -284,10 +284,10 @@
       "type": "object",
       "properties": {
         "include": {
-          "$ref": "#/$defs/include"
+          "$ref": "#/$defs/fullMatchOrRegexpList"
         },
         "exclude": {
-          "$ref": "#/$defs/exclude"
+          "$ref": "#/$defs/fullMatchOrRegexpList"
         },
         "rename": {
           "$ref": "#/$defs/rename"
@@ -298,10 +298,10 @@
       "type": "object",
       "properties": {
         "include": {
-          "$ref": "#/$defs/include"
+          "$ref": "#/$defs/fullMatchOrRegexpList"
         },
         "exclude": {
-          "$ref": "#/$defs/exclude"
+          "$ref": "#/$defs/fullMatchOrRegexpList"
         },
         "rename": {
           "$ref": "#/$defs/rename"
@@ -376,10 +376,10 @@
       ]
     },
     "name": {
-      "type": "string"
+      "$ref": "#/$defs/publicDartClass"
     },
     "description": {
-      "type": "string"
+      "$ref": "#/$defs/nonEmptyString"
     },
     "preamble": {
       "type": "string"
@@ -413,13 +413,11 @@
     "headers"
   ],
   "$defs": {
-    "include": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
+    "filePath": {
+      "type": "string",
+      "description": "A file path"
     },
-    "exclude": {
+    "fullMatchOrRegexpList": {
       "type": "array",
       "items": {
         "type": "string"
@@ -450,10 +448,10 @@
       "type": "object",
       "properties": {
         "include": {
-          "$ref": "#/$defs/include"
+          "$ref": "#/$defs/fullMatchOrRegexpList"
         },
         "exclude": {
-          "$ref": "#/$defs/exclude"
+          "$ref": "#/$defs/fullMatchOrRegexpList"
         }
       }
     },
@@ -486,14 +484,18 @@
             "dart-type": {
               "type": "string"
             }
-          },
-          "required": [
-            "lib",
-            "c-type",
-            "dart-type"
-          ]
+          }
         }
       }
+    },
+    "publicDartClass": {
+      "type": "string",
+      "description": "A public dart class name.",
+      "pattern": "^[a-zA-Z]+[_a-zA-Z0-9]*$"
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "pattern": ".+"
     }
   }
 }
