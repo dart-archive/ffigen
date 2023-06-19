@@ -222,7 +222,7 @@ class Config {
   }
 
   Schema _getRootSchema() {
-    return FixedMapSchema<dynamic>(
+    return FixedMapSchema(
       keys: [
         FixedMapKey(
           key: strings.llvmPath,
@@ -236,10 +236,10 @@ class Config {
         FixedMapKey(
             key: strings.output,
             required: true,
-            valueSchema: OneOfSchema<dynamic>(
+            valueSchema: OneOfSchema(
               childSchemas: [
                 _filePathStringSchema(),
-                FixedMapSchema<dynamic>(
+                FixedMapSchema(
                   keys: [
                     FixedMapKey(
                       key: strings.bindings,
@@ -275,7 +275,7 @@ class Config {
             )),
         FixedMapKey(
           key: strings.language,
-          valueSchema: EnumSchema<String>(
+          valueSchema: EnumSchema(
             allowedValues: {strings.langC, strings.langObjC},
             transform: (node) {
               if ((node.value == strings.langObjC)) {
@@ -327,7 +327,7 @@ class Config {
               keys: [
                 FixedMapKey(
                   key: strings.macos,
-                  valueSchema: FixedMapSchema<dynamic>(
+                  valueSchema: FixedMapSchema(
                     keys: [
                       FixedMapKey(
                         key: strings.includeCStdLib,
@@ -339,8 +339,8 @@ class Config {
                 )
               ],
               transform: (node) => CompilerOptsAuto(
-                macIncludeStdLib:
-                    (node.value)[strings.macos][strings.includeCStdLib] as bool,
+                macIncludeStdLib: (node.value)[strings.macos]
+                    ?[strings.includeCStdLib] as bool,
               ),
               result: (node) => _compilerOpts.addAll(
                   (node.value as CompilerOptsAuto).extractCompilerOpts()),
@@ -360,7 +360,7 @@ class Config {
         ),
         FixedMapKey(
             key: strings.functions,
-            valueSchema: FixedMapSchema<dynamic>(
+            valueSchema: FixedMapSchema(
               keys: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
@@ -382,15 +382,15 @@ class Config {
                 ),
                 FixedMapKey(
                   key: strings.varArgFunctions,
-                  valueSchema: DynamicMapSchema<dynamic>(
+                  valueSchema: DynamicMapSchema(
                     keyValueSchemas: [
                       (
                         keyRegexp: ".*",
-                        valueSchema: ListSchema<dynamic>(
+                        valueSchema: ListSchema(
                           childSchema: OneOfSchema(
                             childSchemas: [
                               ListSchema<String>(childSchema: StringSchema()),
-                              FixedMapSchema<dynamic>(
+                              FixedMapSchema(
                                 keys: [
                                   FixedMapKey(
                                     key: strings.types,
@@ -431,7 +431,7 @@ class Config {
             )),
         FixedMapKey(
             key: strings.structs,
-            valueSchema: FixedMapSchema<dynamic>(
+            valueSchema: FixedMapSchema(
               keys: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
@@ -439,7 +439,7 @@ class Config {
                 _dependencyOnlyFixedMapKey(),
                 FixedMapKey(
                   key: strings.structPack,
-                  valueSchema: DynamicMapSchema<dynamic>(
+                  valueSchema: DynamicMapSchema(
                     keyValueSchemas: [
                       (
                         keyRegexp: '.*',
@@ -467,7 +467,7 @@ class Config {
             )),
         FixedMapKey(
             key: strings.unions,
-            valueSchema: FixedMapSchema<dynamic>(
+            valueSchema: FixedMapSchema(
               keys: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
@@ -483,7 +483,7 @@ class Config {
             )),
         FixedMapKey(
             key: strings.enums,
-            valueSchema: FixedMapSchema<dynamic>(
+            valueSchema: FixedMapSchema(
               keys: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
@@ -496,7 +496,7 @@ class Config {
             )),
         FixedMapKey(
             key: strings.unnamedEnums,
-            valueSchema: FixedMapSchema<dynamic>(
+            valueSchema: FixedMapSchema(
               keys: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
@@ -508,7 +508,7 @@ class Config {
             )),
         FixedMapKey(
             key: strings.globals,
-            valueSchema: FixedMapSchema<dynamic>(
+            valueSchema: FixedMapSchema(
               keys: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
@@ -525,7 +525,7 @@ class Config {
             )),
         FixedMapKey(
             key: strings.macros,
-            valueSchema: FixedMapSchema<dynamic>(
+            valueSchema: FixedMapSchema(
               keys: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
@@ -537,7 +537,7 @@ class Config {
             )),
         FixedMapKey(
             key: strings.typedefs,
-            valueSchema: FixedMapSchema<dynamic>(
+            valueSchema: FixedMapSchema(
               keys: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
@@ -549,7 +549,7 @@ class Config {
             )),
         FixedMapKey(
             key: strings.objcInterfaces,
-            valueSchema: FixedMapSchema<dynamic>(
+            valueSchema: FixedMapSchema(
               keys: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
@@ -569,7 +569,7 @@ class Config {
             )),
         FixedMapKey(
             key: strings.import,
-            valueSchema: FixedMapSchema<dynamic>(
+            valueSchema: FixedMapSchema(
               keys: [
                 FixedMapKey(
                   key: strings.symbolFilesImport,
@@ -586,7 +586,7 @@ class Config {
             )),
         FixedMapKey(
             key: strings.typeMap,
-            valueSchema: FixedMapSchema<dynamic>(
+            valueSchema: FixedMapSchema(
               keys: [
                 FixedMapKey(
                   key: strings.typeMapTypedefs,
@@ -659,7 +659,7 @@ class Config {
                     ? CommentType.def()
                     : CommentType.none(),
               ),
-              FixedMapSchema<dynamic>(
+              FixedMapSchema(
                 keys: [
                   FixedMapKey(
                     key: strings.style,
@@ -728,7 +728,7 @@ class Config {
           valueSchema: OneOfSchema(
             childSchemas: [
               EnumSchema(allowedValues: {null}),
-              FixedMapSchema<dynamic>(
+              FixedMapSchema(
                 keys: [
                   FixedMapKey(
                     key: strings.ffiNativeAsset,
@@ -809,7 +809,7 @@ class Config {
     return [
       FixedMapKey(
         key: strings.memberRename,
-        valueSchema: DynamicMapSchema<dynamic>(
+        valueSchema: DynamicMapSchema(
           schemaDefName: "memberRename",
           keyValueSchemas: [
             (

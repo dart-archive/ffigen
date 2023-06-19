@@ -143,11 +143,11 @@ abstract class Schema<E> {
   }
 }
 
-class FixedMapKey {
+class FixedMapKey<DE extends dynamic> {
   final String key;
   final Schema valueSchema;
   final dynamic Function(SchemaNode o)? defaultValue;
-  void Function(SchemaNode<dynamic> node)? resultOrDefault;
+  void Function(SchemaNode<DE> node)? resultOrDefault;
   final bool required;
 
   FixedMapKey({
@@ -160,7 +160,7 @@ class FixedMapKey {
 }
 
 /// Schema for a Map which has a fixed set of known keys.
-class FixedMapSchema<CE> extends Schema<Map<dynamic, CE>> {
+class FixedMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
   final List<FixedMapKey> keys;
   final Set<String> allKeys;
   final Set<String> requiredKeys;
@@ -314,7 +314,7 @@ class FixedMapSchema<CE> extends Schema<Map<dynamic, CE>> {
 }
 
 /// Schema for a Map that can have any number of keys.
-class DynamicMapSchema<CE> extends Schema<Map<dynamic, CE>> {
+class DynamicMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
   /// [keyRegexp] will convert it's input to a String before matching.
   final List<({String keyRegexp, Schema valueSchema})> keyValueSchemas;
 
@@ -420,7 +420,7 @@ class DynamicMapSchema<CE> extends Schema<Map<dynamic, CE>> {
 }
 
 /// Schema for a List.
-class ListSchema<CE> extends Schema<List<CE>> {
+class ListSchema<CE extends dynamic> extends Schema<List<CE>> {
   final Schema childSchema;
 
   ListSchema({
@@ -564,7 +564,7 @@ class IntSchema extends Schema<int> {
 }
 
 /// Schema for an object where only specific values are allowed.
-class EnumSchema<CE> extends Schema<CE> {
+class EnumSchema<CE extends dynamic> extends Schema<CE> {
   Set<CE> allowedValues;
   EnumSchema({
     required this.allowedValues,
@@ -642,7 +642,7 @@ class BoolSchema extends Schema<bool> {
 }
 
 /// Schema which checks if atleast one of the underlying Schema matches.
-class OneOfSchema<E> extends Schema<E> {
+class OneOfSchema<E extends dynamic> extends Schema<E> {
   final List<Schema> childSchemas;
 
   OneOfSchema({
