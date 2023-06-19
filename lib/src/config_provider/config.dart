@@ -327,6 +327,7 @@ class Config {
             keyValueSchemas: [
               (keyRegexp: ".*", valueSchema: StringSchema()),
             ],
+            customValidation: _libraryImportsPredefinedValidation,
             transform: (node) => libraryImportsExtractor(node.value.cast()),
           ),
           defaultValue: (node) => <String, LibraryImport>{},
@@ -656,6 +657,20 @@ class Config {
         ),
       ],
     );
+  }
+
+  bool _libraryImportsPredefinedValidation(SchemaNode node) {
+    if (node.value is YamlMap) {
+      return (node.value as YamlMap).keys.where((key) {
+        if (strings.predefinedLibraryImports.containsKey(key)) {
+          _logger.severe(
+              '${node.pathString} -> $key should not collide with any predefined imports - ${strings.predefinedLibraryImports.keys}.');
+          return true;
+        }
+        return false;
+      }).isEmpty;
+    }
+    return true;
   }
 
   OneOfSchema<dynamic> _commentSchema() {

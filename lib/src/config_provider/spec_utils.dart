@@ -126,23 +126,6 @@ Map<String, LibraryImport> libraryImportsExtractor(
   return resultMap;
 }
 
-bool libraryImportsValidator(List<String> name, dynamic yamlConfig) {
-  if (!checkType<YamlMap>(name, yamlConfig)) {
-    return false;
-  }
-  for (final key in (yamlConfig as YamlMap).keys) {
-    if (!checkType<String>([...name, key as String], yamlConfig[key])) {
-      return false;
-    }
-    if (strings.predefinedLibraryImports.containsKey(key)) {
-      _logger.severe(
-          'library-import -> $key should not collide with any predefined imports - ${strings.predefinedLibraryImports.keys}.');
-      return false;
-    }
-  }
-  return true;
-}
-
 void loadImportedTypes(YamlMap fileConfig,
     Map<String, ImportedType> usrTypeMappings, LibraryImport libraryImport) {
   final symbols = fileConfig['symbols'] as YamlMap;

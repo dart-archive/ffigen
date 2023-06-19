@@ -90,6 +90,9 @@ abstract class Schema<E> {
   /// Used to generate the description field in json schema.
   String? schemaDescription;
 
+  /// Custom validation hook, called post schema validation if successful.
+  bool Function(SchemaNode node)? customValidation;
+
   /// Used to transform the payload to another type before passing to parent
   /// nodes and [result].
   dynamic Function(SchemaNode<E> node)? transform;
@@ -98,10 +101,11 @@ abstract class Schema<E> {
   void Function(SchemaNode<dynamic> node)? result;
   Schema({
     /// Used
-    this.schemaDefName,
-    this.schemaDescription,
-    this.transform,
-    this.result,
+    required this.schemaDefName,
+    required this.schemaDescription,
+    required this.customValidation,
+    required this.transform,
+    required this.result,
   });
 
   bool validateNode(SchemaNode o, {bool log = true});
@@ -169,6 +173,7 @@ class FixedMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
     required this.keys,
     super.schemaDefName,
     super.schemaDescription,
+    super.customValidation,
     super.transform,
     super.result,
   })  : requiredKeys = {
@@ -213,6 +218,9 @@ class FixedMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
       }
     }
 
+    if (!result && customValidation != null) {
+      return customValidation!.call(o);
+    }
     return result;
   }
 
@@ -322,6 +330,7 @@ class DynamicMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
     required this.keyValueSchemas,
     super.schemaDefName,
     super.schemaDescription,
+    super.customValidation,
     super.transform,
     super.result,
   });
@@ -370,6 +379,9 @@ class DynamicMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
       }
     }
 
+    if (!result && customValidation != null) {
+      return customValidation!.call(o);
+    }
     return result;
   }
 
@@ -427,6 +439,7 @@ class ListSchema<CE extends dynamic> extends Schema<List<CE>> {
     required this.childSchema,
     super.schemaDefName,
     super.schemaDescription,
+    super.customValidation,
     super.transform,
     super.result,
   });
@@ -446,6 +459,9 @@ class ListSchema<CE extends dynamic> extends Schema<List<CE>> {
       }
     }
 
+    if (!result && customValidation != null) {
+      return customValidation!.call(o);
+    }
     return result;
   }
 
@@ -487,6 +503,7 @@ class StringSchema extends Schema<String> {
   StringSchema({
     super.schemaDefName,
     super.schemaDescription,
+    super.customValidation,
     super.transform,
     super.result,
     this.pattern,
@@ -503,6 +520,9 @@ class StringSchema extends Schema<String> {
             "Expected value of key '${o.pathString}' to match pattern $pattern (Input - ${o.value}).");
       }
       return false;
+    }
+    if (customValidation != null) {
+      return customValidation!.call(o);
     }
     return true;
   }
@@ -532,6 +552,7 @@ class IntSchema extends Schema<int> {
   IntSchema({
     super.schemaDefName,
     super.schemaDescription,
+    super.customValidation,
     super.transform,
     super.result,
   });
@@ -540,6 +561,9 @@ class IntSchema extends Schema<int> {
   bool validateNode(SchemaNode o, {bool log = true}) {
     if (!o.checkType<int>(log: log)) {
       return false;
+    }
+    if (customValidation != null) {
+      return customValidation!.call(o);
     }
     return true;
   }
@@ -570,6 +594,7 @@ class EnumSchema<CE extends dynamic> extends Schema<CE> {
     required this.allowedValues,
     super.schemaDefName,
     super.schemaDescription,
+    super.customValidation,
     super.transform,
     super.result,
   });
@@ -582,6 +607,9 @@ class EnumSchema<CE extends dynamic> extends Schema<CE> {
             "'${o.pathString}' must be one of the following - $allowedValues (Got ${o.value})");
       }
       return false;
+    }
+    if (customValidation != null) {
+      return customValidation!.call(o);
     }
     return true;
   }
@@ -610,6 +638,7 @@ class BoolSchema extends Schema<bool> {
   BoolSchema({
     super.schemaDefName,
     super.schemaDescription,
+    super.customValidation,
     super.transform,
     super.result,
   });
@@ -618,6 +647,9 @@ class BoolSchema extends Schema<bool> {
   bool validateNode(SchemaNode o, {bool log = true}) {
     if (!o.checkType<bool>(log: log)) {
       return false;
+    }
+    if (customValidation != null) {
+      return customValidation!.call(o);
     }
     return true;
   }
@@ -649,6 +681,7 @@ class OneOfSchema<E extends dynamic> extends Schema<E> {
     required this.childSchemas,
     super.schemaDefName,
     super.schemaDescription,
+    super.customValidation,
     super.transform,
     super.result,
   });
@@ -658,6 +691,9 @@ class OneOfSchema<E extends dynamic> extends Schema<E> {
     // Running first time with no logs.
     for (final schema in childSchemas) {
       if (schema.validateNode(o, log: false)) {
+        if (customValidation != null) {
+          return customValidation!.call(o);
+        }
         return true;
       }
     }
@@ -666,9 +702,7 @@ class OneOfSchema<E extends dynamic> extends Schema<E> {
       _logger.severe(
           "'${o.pathString}' must match atleast one of the allowed schema -");
       for (final schema in childSchemas) {
-        if (schema.validateNode(o, log: log)) {
-          return true;
-        }
+        schema.validateNode(o, log: log);
       }
     }
     return false;
