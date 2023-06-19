@@ -239,32 +239,7 @@ class Config {
             valueSchema: OneOfSchema(
               childSchemas: [
                 _filePathStringSchema(),
-                FixedMapSchema(
-                  keys: [
-                    FixedMapKey(
-                      key: strings.bindings,
-                      valueSchema: _filePathStringSchema(),
-                      required: true,
-                    ),
-                    FixedMapKey(
-                      key: strings.symbolFile,
-                      valueSchema: FixedMapSchema<String>(
-                        keys: [
-                          FixedMapKey(
-                            key: strings.output,
-                            valueSchema: _filePathStringSchema(),
-                            required: true,
-                          ),
-                          FixedMapKey(
-                            key: strings.importPath,
-                            valueSchema: StringSchema(),
-                            required: true,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                )
+                _outputFullSchema(),
               ],
               transform: (node) =>
                   outputExtractor(node.value, filename, packageConfig),
@@ -382,36 +357,7 @@ class Config {
                 ),
                 FixedMapKey(
                   key: strings.varArgFunctions,
-                  valueSchema: DynamicMapSchema(
-                    keyValueSchemas: [
-                      (
-                        keyRegexp: ".*",
-                        valueSchema: ListSchema(
-                          childSchema: OneOfSchema(
-                            childSchemas: [
-                              ListSchema<String>(childSchema: StringSchema()),
-                              FixedMapSchema(
-                                keys: [
-                                  FixedMapKey(
-                                    key: strings.types,
-                                    valueSchema: ListSchema<String>(
-                                        childSchema: StringSchema()),
-                                    required: true,
-                                  ),
-                                  FixedMapKey(
-                                    key: strings.postfix,
-                                    valueSchema: StringSchema(),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        )
-                      )
-                    ],
-                    transform: (node) =>
-                        varArgFunctionConfigExtractor(node.value),
-                  ),
+                  valueSchema: _functionVarArgsSchema(),
                   defaultValue: (node) => <String, List<RawVarArgFunction>>{},
                   resultOrDefault: (node) {
                     _varArgFunctions = makeVarArgFunctionsMapping(
@@ -652,43 +598,7 @@ class Config {
         ),
         FixedMapKey(
           key: strings.comments,
-          valueSchema: OneOfSchema(
-            childSchemas: [
-              BoolSchema(
-                transform: (node) => (node.value == true)
-                    ? CommentType.def()
-                    : CommentType.none(),
-              ),
-              FixedMapSchema(
-                keys: [
-                  FixedMapKey(
-                    key: strings.style,
-                    valueSchema: EnumSchema(
-                      allowedValues: {strings.doxygen, strings.any},
-                      transform: (node) => node.value == strings.doxygen
-                          ? CommentStyle.doxygen
-                          : CommentStyle.any,
-                    ),
-                    defaultValue: (node) => CommentStyle.doxygen,
-                  ),
-                  FixedMapKey(
-                    key: strings.length,
-                    valueSchema: EnumSchema(
-                      allowedValues: {strings.brief, strings.full},
-                      transform: (node) => node.value == strings.brief
-                          ? CommentLength.brief
-                          : CommentLength.full,
-                    ),
-                    defaultValue: (node) => CommentLength.full,
-                  ),
-                ],
-                transform: (node) => CommentType(
-                  (node.value)[strings.style] as CommentStyle,
-                  (node.value)[strings.length] as CommentLength,
-                ),
-              ),
-            ],
-          ),
+          valueSchema: _commentSchema(),
           defaultValue: (node) => CommentType.def(),
           resultOrDefault: (node) => _commentType = node.value as CommentType,
         ),
@@ -743,6 +653,106 @@ class Config {
           defaultValue: (node) => FfiNativeConfig(enabled: false),
           resultOrDefault: (node) =>
               _ffiNativeConfig = (node.value) as FfiNativeConfig,
+        ),
+      ],
+    );
+  }
+
+  OneOfSchema<dynamic> _commentSchema() {
+    return OneOfSchema(
+      childSchemas: [
+        BoolSchema(
+          transform: (node) =>
+              (node.value == true) ? CommentType.def() : CommentType.none(),
+        ),
+        FixedMapSchema(
+          keys: [
+            FixedMapKey(
+              key: strings.style,
+              valueSchema: EnumSchema(
+                allowedValues: {strings.doxygen, strings.any},
+                transform: (node) => node.value == strings.doxygen
+                    ? CommentStyle.doxygen
+                    : CommentStyle.any,
+              ),
+              defaultValue: (node) => CommentStyle.doxygen,
+            ),
+            FixedMapKey(
+              key: strings.length,
+              valueSchema: EnumSchema(
+                allowedValues: {strings.brief, strings.full},
+                transform: (node) => node.value == strings.brief
+                    ? CommentLength.brief
+                    : CommentLength.full,
+              ),
+              defaultValue: (node) => CommentLength.full,
+            ),
+          ],
+          transform: (node) => CommentType(
+            (node.value)[strings.style] as CommentStyle,
+            (node.value)[strings.length] as CommentLength,
+          ),
+        ),
+      ],
+    );
+  }
+
+  DynamicMapSchema<Object?> _functionVarArgsSchema() {
+    return DynamicMapSchema(
+      keyValueSchemas: [
+        (
+          keyRegexp: ".*",
+          valueSchema: ListSchema(
+            childSchema: OneOfSchema(
+              childSchemas: [
+                ListSchema<String>(childSchema: StringSchema()),
+                FixedMapSchema(
+                  keys: [
+                    FixedMapKey(
+                      key: strings.types,
+                      valueSchema:
+                          ListSchema<String>(childSchema: StringSchema()),
+                      required: true,
+                    ),
+                    FixedMapKey(
+                      key: strings.postfix,
+                      valueSchema: StringSchema(),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          )
+        )
+      ],
+      transform: (node) => varArgFunctionConfigExtractor(node.value),
+    );
+  }
+
+  FixedMapSchema<dynamic> _outputFullSchema() {
+    return FixedMapSchema(
+      keys: [
+        FixedMapKey(
+          key: strings.bindings,
+          valueSchema: _filePathStringSchema(),
+          required: true,
+        ),
+        FixedMapKey(
+          key: strings.symbolFile,
+          valueSchema: FixedMapSchema<String>(
+            keys: [
+              FixedMapKey(
+                key: strings.output,
+                valueSchema: _filePathStringSchema(),
+                required: true,
+              ),
+              FixedMapKey(
+                key: strings.importPath,
+                valueSchema: StringSchema(),
+                required: true,
+              ),
+            ],
+          ),
         ),
       ],
     );
