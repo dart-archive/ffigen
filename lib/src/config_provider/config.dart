@@ -367,8 +367,8 @@ class Config {
                 ),
               ],
               result: (node) {
-                _functionDecl =
-                    declarationConfigExtractor(node.rawValue ?? YamlMap());
+                _functionDecl = declarationConfigExtractor(
+                    node.value as Map<dynamic, dynamic>);
                 _exposeFunctionTypedefs = (node.value
                     as Map)[strings.exposeFunctionTypedefs] as Includer;
                 _leafFunctions =
@@ -405,8 +405,8 @@ class Config {
                 ),
               ],
               result: (node) {
-                _structDecl =
-                    declarationConfigExtractor(node.rawValue ?? YamlMap());
+                _structDecl = declarationConfigExtractor(
+                    node.value as Map<dynamic, dynamic>);
                 _structDependencies = (node.value
                     as Map)[strings.dependencyOnly] as CompoundDependencies;
               },
@@ -421,8 +421,8 @@ class Config {
                 _dependencyOnlyFixedMapKey(),
               ],
               result: (node) {
-                _unionDecl =
-                    declarationConfigExtractor(node.rawValue ?? YamlMap());
+                _unionDecl = declarationConfigExtractor(
+                    node.value as Map<dynamic, dynamic>);
                 _unionDependencies = (node.value as Map)[strings.dependencyOnly]
                     as CompoundDependencies;
               },
@@ -436,8 +436,8 @@ class Config {
                 ..._memberRenameProperties(),
               ],
               result: (node) {
-                _enumClassDecl =
-                    declarationConfigExtractor(node.rawValue ?? YamlMap());
+                _enumClassDecl = declarationConfigExtractor(
+                    node.value as Map<dynamic, dynamic>);
               },
             )),
         FixedMapKey(
@@ -448,8 +448,8 @@ class Config {
                 ..._renameProperties(),
               ],
               result: (node) {
-                _unnamedEnumConstants =
-                    declarationConfigExtractor(node.rawValue ?? YamlMap());
+                _unnamedEnumConstants = declarationConfigExtractor(
+                    node.value as Map<dynamic, dynamic>);
               },
             )),
         FixedMapKey(
@@ -465,8 +465,8 @@ class Config {
                 )
               ],
               result: (node) {
-                _globals =
-                    declarationConfigExtractor(node.rawValue ?? YamlMap());
+                _globals = declarationConfigExtractor(
+                    node.value as Map<dynamic, dynamic>);
               },
             )),
         FixedMapKey(
@@ -477,8 +477,8 @@ class Config {
                 ..._renameProperties(),
               ],
               result: (node) {
-                _macroDecl =
-                    declarationConfigExtractor(node.rawValue ?? YamlMap());
+                _macroDecl = declarationConfigExtractor(
+                    node.value as Map<dynamic, dynamic>);
               },
             )),
         FixedMapKey(
@@ -489,8 +489,8 @@ class Config {
                 ..._renameProperties(),
               ],
               result: (node) {
-                _typedefs =
-                    declarationConfigExtractor(node.rawValue ?? YamlMap());
+                _typedefs = declarationConfigExtractor(
+                    node.value as Map<dynamic, dynamic>);
               },
             )),
         FixedMapKey(
@@ -507,8 +507,8 @@ class Config {
                 )
               ],
               result: (node) {
-                _objcInterfaces =
-                    declarationConfigExtractor(node.rawValue ?? YamlMap());
+                _objcInterfaces = declarationConfigExtractor(
+                    node.value as Map<dynamic, dynamic>);
                 _objcModulePrefixer = (node.value as Map)[strings.objcModule]
                     as ObjCModulePrefixer;
               },
@@ -833,7 +833,7 @@ class Config {
     return [
       FixedMapKey(
         key: strings.memberRename,
-        valueSchema: DynamicMapSchema(
+        valueSchema: DynamicMapSchema<Map<dynamic, String>>(
           schemaDefName: "memberRename",
           keyValueSchemas: [
             (
@@ -856,7 +856,7 @@ class Config {
       keys: [
         ..._includeExcludeProperties(),
       ],
-      transform: (node) => extractIncluderFromYaml(node.rawValue ?? YamlMap()),
+      transform: (node) => extractIncluderFromYaml(node.value),
     );
   }
 

@@ -39,81 +39,6 @@ String _normalizePath(String path, String? configFilename) {
       skipNormalization ? path : p.join(p.dirname(configFilename), path));
 }
 
-/// Checks if type of value is [T], logs an error if it's not.
-///
-/// [key] is printed as `'item1 -> item2 => item3'` in log message.
-bool checkType<T>(List<String> keys, dynamic value) {
-  if (value is! T) {
-    _logger.severe(
-        "Expected value of key '${keys.join(' -> ')}' to be of type '$T'.");
-    return false;
-  }
-  return true;
-}
-
-/// Checks if there are nested [key] in [map].
-bool checkKeyInYaml(List<String> key, YamlMap map) {
-  dynamic last = map;
-  for (final k in key) {
-    if (last is YamlMap) {
-      if (!last.containsKey(k)) return false;
-      last = last[k];
-    } else {
-      return false;
-    }
-  }
-  // The entry for the last key may be null.
-  return true;
-}
-
-/// Extracts value of nested [key] from [map].
-dynamic getKeyValueFromYaml(List<String> key, YamlMap map) {
-  if (checkKeyInYaml(key, map)) {
-    dynamic last = map;
-    for (final k in key) {
-      last = last[k];
-    }
-    return last;
-  }
-
-  return null;
-}
-
-/// Recursively checks the keys in [configKeyMap] from [allowedKeyList].
-void warnUnknownKeys(List<List<String>> allowedKeyList, YamlMap configKeyMap) {
-  final allowedKeyMap = <String, dynamic>{};
-  for (final specKeys in allowedKeyList) {
-    var item = allowedKeyMap;
-    for (final specSubKey in specKeys) {
-      item.putIfAbsent(specSubKey, () => <String, dynamic>{});
-      item = item[specSubKey] as Map<String, dynamic>;
-    }
-    // Add empty key to mark that any sub-keys of this key are allowed.
-    item[''] = <String, dynamic>{};
-  }
-  _warnUnknownKeysInMap(allowedKeyMap, configKeyMap, <dynamic>[]);
-}
-
-/// Recursive function to check a key set in a configKeyMap.
-void _warnUnknownKeysInMap(Map<String, dynamic> allowedKeyMap,
-    dynamic configKeyMap, List<dynamic> prev) {
-  if (allowedKeyMap.containsKey('') || configKeyMap is! YamlMap) {
-    return;
-  }
-  for (final key in configKeyMap.keys) {
-    if (allowedKeyMap.containsKey(key)) {
-      prev.add(key);
-      _warnUnknownKeysInMap(
-          allowedKeyMap[key] as Map<String, dynamic>, configKeyMap[key], prev);
-      prev.removeLast();
-    } else {
-      prev.add(key);
-      _logger.warning('Unknown key - ${prev.join(' -> ')}.');
-      prev.removeLast();
-    }
-  }
-}
-
 Map<String, LibraryImport> libraryImportsExtractor(
     Map<String, String>? typeMap) {
   final resultMap = <String, LibraryImport>{};
@@ -526,13 +451,13 @@ SymbolFile symbolFileOutputExtractor(
 bool isFullDeclarationName(String str) =>
     quiver.matchesFull(RegExp('[a-zA-Z_0-9]*'), str);
 
-Includer extractIncluderFromYaml(dynamic yamlMap) {
+Includer extractIncluderFromYaml(Map<dynamic, dynamic> yamlMap) {
   final includeMatchers = <RegExp>[],
       includeFull = <String>{},
       excludeMatchers = <RegExp>[],
       excludeFull = <String>{};
 
-  final include = (yamlMap[strings.include] as YamlList?)?.cast<String>();
+  final include = yamlMap[strings.include] as List<String>?;
   if (include != null) {
     if (include.isEmpty) {
       return Includer.excludeByDefault();
@@ -546,7 +471,7 @@ Includer extractIncluderFromYaml(dynamic yamlMap) {
     }
   }
 
-  final exclude = (yamlMap[strings.exclude] as YamlList?)?.cast<String>();
+  final exclude = yamlMap[strings.exclude] as List<String>?;
   if (exclude != null) {
     for (final str in exclude) {
       if (isFullDeclarationName(str)) {
@@ -587,8 +512,7 @@ Map<String, List<RawVarArgFunction>> varArgFunctionConfigExtractor(
   return result;
 }
 
-// TODO: maybe remove yaml dependency
-Declaration declarationConfigExtractor(dynamic yamlMap) {
+Declaration declarationConfigExtractor(Map<dynamic, dynamic> yamlMap) {
   final renamePatterns = <RegExpRenamer>[];
   final renameFull = <String, String>{};
   final memberRenamePatterns = <RegExpMemberRenamer>[];
@@ -596,15 +520,13 @@ Declaration declarationConfigExtractor(dynamic yamlMap) {
 
   final includer = extractIncluderFromYaml(yamlMap);
 
-  Includer? symbolIncluder;
-  if (yamlMap[strings.symbolAddress] != null) {
-    symbolIncluder = extractIncluderFromYaml(yamlMap[strings.symbolAddress]);
-  }
+  final symbolIncluder = yamlMap[strings.symbolAddress] as Includer?;
 
-  final rename = (yamlMap[strings.rename] as YamlMap?)?.cast<String, String>();
+  final rename = yamlMap[strings.rename] as Map<dynamic, String>?;
 
   if (rename != null) {
-    for (final str in rename.keys) {
+    for (final key in rename.keys) {
+      final str = key.toString();
       if (isFullDeclarationName(str)) {
         renameFull[str] = rename[str]!;
       } else {
@@ -615,20 +537,22 @@ Declaration declarationConfigExtractor(dynamic yamlMap) {
   }
 
   final memberRename =
-      (yamlMap[strings.memberRename] as YamlMap?)?.cast<String, YamlMap>();
+      yamlMap[strings.memberRename] as Map<dynamic, Map<dynamic, String>>?;
 
   if (memberRename != null) {
-    for (final decl in memberRename.keys) {
+    for (final key in memberRename.keys) {
+      final decl = key.toString();
       final renamePatterns = <RegExpRenamer>[];
       final renameFull = <String, String>{};
 
-      final memberRenameMap = memberRename[decl]!.cast<String, String>();
+      final memberRenameMap = memberRename[decl]!;
       for (final member in memberRenameMap.keys) {
-        if (isFullDeclarationName(member)) {
-          renameFull[member] = memberRenameMap[member]!;
+        final memberStr = member.toString();
+        if (isFullDeclarationName(memberStr)) {
+          renameFull[memberStr] = memberRenameMap[member]!;
         } else {
           renamePatterns.add(RegExpRenamer(
-              RegExp(member, dotAll: true), memberRenameMap[member]!));
+              RegExp(memberStr, dotAll: true), memberRenameMap[member]!));
         }
       }
       if (isFullDeclarationName(decl)) {
@@ -664,46 +588,6 @@ Declaration declarationConfigExtractor(dynamic yamlMap) {
   );
 }
 
-Includer leafFunctionExtractor(dynamic value) => extractIncluderFromYaml(value);
-
-bool leafFunctionValidator(List<String> name, dynamic value) {
-  var result = true;
-
-  if (!checkType<YamlMap>(name, value)) {
-    result = false;
-  } else {
-    final mp = value as YamlMap;
-    for (final key in mp.keys) {
-      if (key == strings.include || key == strings.exclude) {
-        if (!checkType<YamlList>([...name, key as String], value[key])) {
-          result = false;
-        }
-      } else {
-        _logger.severe("Unknown subkey '$key' in '$name'.");
-        result = false;
-      }
-    }
-  }
-
-  return result;
-}
-
-SupportedNativeType nativeSupportedType(int value, {bool signed = true}) {
-  switch (value) {
-    case 1:
-      return signed ? SupportedNativeType.Int8 : SupportedNativeType.Uint8;
-    case 2:
-      return signed ? SupportedNativeType.Int16 : SupportedNativeType.Uint16;
-    case 4:
-      return signed ? SupportedNativeType.Int32 : SupportedNativeType.Uint32;
-    case 8:
-      return signed ? SupportedNativeType.Int64 : SupportedNativeType.Uint64;
-    default:
-      throw Exception(
-          'Unsupported value given to sizemap, Allowed values for sizes are: 1, 2, 4, 8');
-  }
-}
-
 StructPackingOverride structPackingOverrideExtractor(
     Map<dynamic, dynamic> value) {
   final matcherMap = <RegExp, int?>{};
@@ -720,25 +604,4 @@ FfiNativeConfig ffiNativeExtractor(dynamic yamlConfig) {
     enabled: true,
     asset: yamlMap?[strings.ffiNativeAsset] as String?,
   );
-}
-
-bool ffiNativeValidator(List<String> name, dynamic yamlConfig) {
-  if (!checkType<YamlMap?>(name, yamlConfig)) {
-    return false;
-  }
-  if (yamlConfig == null) {
-    // Empty means no asset name.
-    return true;
-  }
-  for (final key in (yamlConfig as YamlMap).keys) {
-    if (!checkType<String>([...name, key as String], yamlConfig[key])) {
-      return false;
-    }
-    if (key != strings.ffiNativeAsset) {
-      _logger.severe("'$name -> $key' must be one of the following - ${[
-        strings.ffiNativeAsset
-      ]}");
-    }
-  }
-  return true;
 }
