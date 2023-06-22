@@ -284,9 +284,11 @@ class Config {
             )),
         FixedMapKey(
           key: strings.compilerOpts,
-          valueSchema: OneOfSchema(
+          valueSchema: OneOfSchema<List<String>>(
             childSchemas: [
-              StringSchema(),
+              StringSchema(
+                transform: (node) => [node.value],
+              ),
               ListSchema<String>(childSchema: StringSchema())
             ],
             transform: (node) => compilerOptsExtractor(node.value),
@@ -318,7 +320,6 @@ class Config {
               result: (node) => _compilerOpts.addAll(
                   (node.value as CompilerOptsAuto).extractCompilerOpts()),
             )),
-        // TODO: needs custom validation like libraryImportsValidator
         FixedMapKey(
           key: strings.libraryImports,
           valueSchema: DynamicMapSchema<String>(

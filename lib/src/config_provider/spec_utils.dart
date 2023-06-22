@@ -332,16 +332,10 @@ List<String> compilerOptsToList(String compilerOpts) {
   return list;
 }
 
-List<String> compilerOptsExtractor(dynamic value) {
-  if (value is String) {
-    return compilerOptsToList(value);
-  }
-
+List<String> compilerOptsExtractor(List<String> value) {
   final list = <String>[];
-  for (final el in (value as List)) {
-    if (el is String) {
-      list.addAll(compilerOptsToList(el));
-    }
+  for (final el in (value)) {
+    list.addAll(compilerOptsToList(el));
   }
   return list;
 }
