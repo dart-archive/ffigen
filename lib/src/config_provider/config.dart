@@ -23,12 +23,10 @@ final _logger = Logger('ffigen.config_provider.config');
 /// Handles validation, extraction of configurations from a yaml file.
 class Config {
   /// Input filename.
-  String? get filename => _filename;
-  String? _filename;
+  final String? filename;
 
   /// Package config.
-  PackageConfig? get packageConfig => _packageConfig;
-  PackageConfig? _packageConfig;
+  final PackageConfig? packageConfig;
 
   /// Location for llvm/lib folder.
   String get libclangDylib => _libclangDylib;
@@ -177,22 +175,22 @@ class Config {
   FfiNativeConfig get ffiNativeConfig => _ffiNativeConfig;
   late FfiNativeConfig _ffiNativeConfig;
 
-  Config._(this._filename, this._packageConfig);
+  Config._({required this.filename, required this.packageConfig});
 
   /// Create config from Yaml map.
   factory Config.fromYaml(YamlMap map,
       {String? filename, PackageConfig? packageConfig}) {
-    final configspecs = Config._(filename, packageConfig);
+    final config = Config._(filename: filename, packageConfig: packageConfig);
     _logger.finest('Config Map: $map');
 
-    final ffigenSchema = configspecs._getRootSchema();
+    final ffigenSchema = config._getRootSchema();
     final result = ffigenSchema.validate(map);
     if (!result) {
       throw FormatException('Invalid configurations provided.');
     }
 
     ffigenSchema.extract(map);
-    return configspecs;
+    return config;
   }
 
   /// Create config from a file.
@@ -206,7 +204,7 @@ class Config {
 
   /// Returns the root Schema object.
   static Schema getsRootSchema() {
-    final configspecs = Config._(null, null);
+    final configspecs = Config._(filename: null, packageConfig: null);
     return configspecs._getRootSchema();
   }
 
