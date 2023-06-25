@@ -1,3 +1,7 @@
+# 9.0.0
+
+- Updated validation logic to be more strict.
+
 # 8.0.2
 
 - Fixed invalid code generated due to zero-length arrays in structs/union.
