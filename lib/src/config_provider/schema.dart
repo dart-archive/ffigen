@@ -186,12 +186,12 @@ class FixedMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
 
   @override
   bool _validateNode(SchemaNode o, {bool log = true}) {
-    if (!o.checkType<YamlMap>(log: log)) {
+    if (!o.checkType<Map>(log: log)) {
       return false;
     }
 
     var result = true;
-    final inputMap = (o.value as YamlMap);
+    final inputMap = (o.value as Map);
 
     for (final requiredKey in requiredKeys) {
       if (!inputMap.containsKey(requiredKey)) {
@@ -260,11 +260,11 @@ class FixedMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
 
   @override
   SchemaNode _extractNode(SchemaNode o) {
-    if (!o.checkType<YamlMap>(log: false)) {
+    if (!o.checkType<Map>(log: false)) {
       throw SchemaExtractionError(o);
     }
 
-    final inputMap = (o.value as YamlMap);
+    final inputMap = (o.value as Map);
     final childExtracts = <dynamic, CE>{};
 
     for (final requiredKey in requiredKeys) {
@@ -343,12 +343,12 @@ class DynamicMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
 
   @override
   bool _validateNode(SchemaNode o, {bool log = true}) {
-    if (!o.checkType<YamlMap>(log: log)) {
+    if (!o.checkType<Map>(log: log)) {
       return false;
     }
 
     var result = true;
-    final inputMap = (o.value as YamlMap);
+    final inputMap = (o.value as Map);
 
     for (final MapEntry(key: key, value: value) in inputMap.entries) {
       final schemaNode =
@@ -393,11 +393,11 @@ class DynamicMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
 
   @override
   SchemaNode _extractNode(SchemaNode o) {
-    if (!o.checkType<YamlMap>(log: false)) {
+    if (!o.checkType<Map>(log: false)) {
       throw SchemaExtractionError(o);
     }
 
-    final inputMap = (o.value as YamlMap);
+    final inputMap = (o.value as Map);
     final childExtracts = <dynamic, CE>{};
     for (final MapEntry(key: key, value: value) in inputMap.entries) {
       final schemaNode =
