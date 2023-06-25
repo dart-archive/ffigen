@@ -23,4 +23,6 @@ void main() async {
     throw Exception("File '${file.absolute.path}' does not exist.");
   }
   await file.writeAsString(actualJsonSchema);
+
+  print("Generated json schema: ${file.absolute.path}");
 }

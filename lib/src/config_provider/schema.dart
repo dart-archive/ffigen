@@ -168,6 +168,7 @@ class FixedMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
   final List<FixedMapKey> keys;
   final Set<String> allKeys;
   final Set<String> requiredKeys;
+  final bool unknownWarning;
 
   FixedMapSchema({
     required this.keys,
@@ -176,6 +177,7 @@ class FixedMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
     super.customValidation,
     super.transform,
     super.result,
+    this.unknownWarning = true,
   })  : requiredKeys = {
           for (final kv in keys.where((kv) => kv.required)) kv.key
         },
@@ -192,8 +194,10 @@ class FixedMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
 
     for (final requiredKey in requiredKeys) {
       if (!inputMap.containsKey(requiredKey)) {
-        _logger.severe(
-            "Key '${[...o.path, requiredKey].join(' -> ')}' is required.");
+        if (log) {
+          _logger.severe(
+              "Key '${[...o.path, requiredKey].join(' -> ')}' is required.");
+        }
         result = false;
       }
     }
@@ -210,9 +214,9 @@ class FixedMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
       }
     }
 
-    for (final key in inputMap.keys) {
-      if (!allKeys.contains(key)) {
-        if (log) {
+    if (unknownWarning && log) {
+      for (final key in inputMap.keys) {
+        if (!allKeys.contains(key)) {
           _logger.severe("Unknown key - '${[...o.path, key].join(' -> ')}'.");
         }
       }
@@ -310,6 +314,7 @@ class FixedMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
   Map<String, dynamic> generateJsonSchemaNode(Map<String, dynamic> defs) {
     return {
       "type": "object",
+      if (unknownWarning) "additionalProperties": false,
       if (schemaDescription != null) "description": schemaDescription!,
       if (keys.isNotEmpty)
         "properties": {

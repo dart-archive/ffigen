@@ -2,6 +2,7 @@
   "$id": "https://json.schemastore.org/ffigen",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
+  "additionalProperties": false,
   "properties": {
     "llvm-path": {
       "type": "array",
@@ -16,12 +17,14 @@
         },
         {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "bindings": {
               "$ref": "#/$defs/filePath"
             },
             "symbol-file": {
               "type": "object",
+              "additionalProperties": false,
               "properties": {
                 "output": {
                   "$ref": "#/$defs/filePath"
@@ -50,6 +53,7 @@
     },
     "headers": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "entry-points": {
           "type": "array",
@@ -83,9 +87,11 @@
     },
     "compiler-opts-automatic": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "macos": {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "include-c-standard-library": {
               "type": "boolean"
@@ -104,6 +110,7 @@
     },
     "functions": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "include": {
           "$ref": "#/$defs/fullMatchOrRegexpList"
@@ -141,6 +148,7 @@
                   },
                   {
                     "type": "object",
+                    "additionalProperties": false,
                     "properties": {
                       "types": {
                         "type": "array",
@@ -165,6 +173,7 @@
     },
     "structs": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "include": {
           "$ref": "#/$defs/fullMatchOrRegexpList"
@@ -200,6 +209,7 @@
     },
     "unions": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "include": {
           "$ref": "#/$defs/fullMatchOrRegexpList"
@@ -220,6 +230,7 @@
     },
     "enums": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "include": {
           "$ref": "#/$defs/fullMatchOrRegexpList"
@@ -237,6 +248,7 @@
     },
     "unnamed-enums": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "include": {
           "$ref": "#/$defs/fullMatchOrRegexpList"
@@ -251,6 +263,7 @@
     },
     "globals": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "include": {
           "$ref": "#/$defs/fullMatchOrRegexpList"
@@ -268,6 +281,7 @@
     },
     "macros": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "include": {
           "$ref": "#/$defs/fullMatchOrRegexpList"
@@ -282,6 +296,7 @@
     },
     "typedefs": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "include": {
           "$ref": "#/$defs/fullMatchOrRegexpList"
@@ -296,6 +311,7 @@
     },
     "objc-interfaces": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "include": {
           "$ref": "#/$defs/fullMatchOrRegexpList"
@@ -316,6 +332,7 @@
     },
     "import": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "symbol-files": {
           "type": "array",
@@ -327,6 +344,7 @@
     },
     "type-map": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "typedefs": {
           "$ref": "#/$defs/mappedTypes"
@@ -358,6 +376,7 @@
         },
         {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "style": {
               "enum": [
@@ -396,6 +415,7 @@
         },
         {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "asset": {
               "type": "string"
@@ -446,6 +466,7 @@
     },
     "includeExclude": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "include": {
           "$ref": "#/$defs/fullMatchOrRegexpList"
@@ -474,6 +495,7 @@
       "patternProperties": {
         ".*": {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "lib": {
               "type": "string"
