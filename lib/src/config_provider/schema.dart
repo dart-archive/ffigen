@@ -97,10 +97,9 @@ abstract class Schema<E> {
   /// nodes and [result].
   dynamic Function(SchemaNode<E> node)? transform;
 
-  /// Called when final result is prepared via [extractNode].
+  /// Called when final result is prepared via [_extractNode].
   void Function(SchemaNode<dynamic> node)? result;
   Schema({
-    /// Used
     required this.schemaDefName,
     required this.schemaDescription,
     required this.customValidation,
@@ -108,23 +107,25 @@ abstract class Schema<E> {
     required this.result,
   });
 
-  bool validateNode(SchemaNode o, {bool log = true});
+  bool _validateNode(SchemaNode o, {bool log = true});
 
-  SchemaNode extractNode(SchemaNode o);
+  SchemaNode _extractNode(SchemaNode o);
 
-  Map<String, dynamic> generateJsonSchemaNode(Map<String, dynamic> defs);
+  /// Schema objects should call [_getJsonRefOrSchemaNode] instead to get the
+  /// child json schema.
+  Map<String, dynamic> _generateJsonSchemaNode(Map<String, dynamic> defs);
 
-  Map<String, dynamic> getJsonRefOrSchemaNode(Map<String, dynamic> defs) {
+  Map<String, dynamic> _getJsonRefOrSchemaNode(Map<String, dynamic> defs) {
     if (schemaDefName == null) {
-      return generateJsonSchemaNode(defs);
+      return _generateJsonSchemaNode(defs);
     }
-    defs.putIfAbsent(schemaDefName!, () => generateJsonSchemaNode(defs));
+    defs.putIfAbsent(schemaDefName!, () => _generateJsonSchemaNode(defs));
     return {r"$ref": "#/\$defs/$schemaDefName"};
   }
 
   Map<String, dynamic> generateJsonSchema(String schemaId) {
     final defs = <String, dynamic>{};
-    final schemaMap = generateJsonSchemaNode(defs);
+    final schemaMap = _generateJsonSchemaNode(defs);
     return {
       r"$id": schemaId,
       r"$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -135,7 +136,7 @@ abstract class Schema<E> {
 
   /// Run validation on an object [value].
   bool validate(dynamic value) {
-    return validateNode(SchemaNode(path: [], value: value));
+    return _validateNode(SchemaNode(path: [], value: value));
   }
 
   /// Extract SchemaNode from [value]. This will call the [transform] for all
@@ -143,7 +144,7 @@ abstract class Schema<E> {
   /// Should ideally only be called if [validate] returns True. Throws
   /// [SchemaExtractionError] if any validation fails.
   SchemaNode extract(dynamic value) {
-    return extractNode(SchemaNode(path: [], value: value));
+    return _extractNode(SchemaNode(path: [], value: value));
   }
 }
 
@@ -184,7 +185,7 @@ class FixedMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
         allKeys = {for (final kv in keys) kv.key};
 
   @override
-  bool validateNode(SchemaNode o, {bool log = true}) {
+  bool _validateNode(SchemaNode o, {bool log = true}) {
     if (!o.checkType<YamlMap>(log: log)) {
       return false;
     }
@@ -208,7 +209,7 @@ class FixedMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
         continue;
       }
       final schemaNode = SchemaNode(path: path, value: inputMap[entry.key]);
-      if (!entry.valueSchema.validateNode(schemaNode, log: log)) {
+      if (!entry.valueSchema._validateNode(schemaNode, log: log)) {
         result = false;
         continue;
       }
@@ -258,7 +259,7 @@ class FixedMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
   }
 
   @override
-  SchemaNode extractNode(SchemaNode o) {
+  SchemaNode _extractNode(SchemaNode o) {
     if (!o.checkType<YamlMap>(log: false)) {
       throw SchemaExtractionError(o);
     }
@@ -291,11 +292,11 @@ class FixedMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
       } else {
         // Extract value from node.
         final schemaNode = SchemaNode(path: path, value: inputMap[entry.key]);
-        if (!entry.valueSchema.validateNode(schemaNode, log: false)) {
+        if (!entry.valueSchema._validateNode(schemaNode, log: false)) {
           throw SchemaExtractionError(schemaNode);
         }
         childExtracts[entry.key] =
-            entry.valueSchema.extractNode(schemaNode).value as CE;
+            entry.valueSchema._extractNode(schemaNode).value as CE;
       }
 
       if (childExtracts.containsKey(entry.key) &&
@@ -311,7 +312,7 @@ class FixedMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
   }
 
   @override
-  Map<String, dynamic> generateJsonSchemaNode(Map<String, dynamic> defs) {
+  Map<String, dynamic> _generateJsonSchemaNode(Map<String, dynamic> defs) {
     return {
       "type": "object",
       if (unknownWarning) "additionalProperties": false,
@@ -319,7 +320,7 @@ class FixedMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
       if (keys.isNotEmpty)
         "properties": {
           for (final kv in keys)
-            kv.key: kv.valueSchema.getJsonRefOrSchemaNode(defs)
+            kv.key: kv.valueSchema._getJsonRefOrSchemaNode(defs)
         },
       if (requiredKeys.isNotEmpty) "required": requiredKeys.toList(),
     };
@@ -341,7 +342,7 @@ class DynamicMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
   });
 
   @override
-  bool validateNode(SchemaNode o, {bool log = true}) {
+  bool _validateNode(SchemaNode o, {bool log = true}) {
     if (!o.checkType<YamlMap>(log: log)) {
       return false;
     }
@@ -358,7 +359,7 @@ class DynamicMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
       for (final (keyRegexp: keyRegexp, valueSchema: valueSchema)
           in keyValueSchemas) {
         if (RegExp(keyRegexp, dotAll: true).hasMatch(key.toString()) &&
-            valueSchema.validateNode(schemaNode, log: false)) {
+            valueSchema._validateNode(schemaNode, log: false)) {
           keyValueMatch = true;
           break;
         }
@@ -376,7 +377,7 @@ class DynamicMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
                   "'${schemaNode.pathString}' does not match regex - '$keyRegexp' (Input - $key)");
               continue;
             }
-            if (valueSchema.validateNode(schemaNode, log: log)) {
+            if (valueSchema._validateNode(schemaNode, log: log)) {
               continue;
             }
           }
@@ -391,7 +392,7 @@ class DynamicMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
   }
 
   @override
-  SchemaNode extractNode(SchemaNode o) {
+  SchemaNode _extractNode(SchemaNode o) {
     if (!o.checkType<YamlMap>(log: false)) {
       throw SchemaExtractionError(o);
     }
@@ -405,8 +406,8 @@ class DynamicMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
       for (final (keyRegexp: keyRegexp, valueSchema: valueSchema)
           in keyValueSchemas) {
         if (RegExp(keyRegexp, dotAll: true).hasMatch(key.toString()) &&
-            valueSchema.validateNode(schemaNode, log: false)) {
-          childExtracts[key] = valueSchema.extractNode(schemaNode).value as CE;
+            valueSchema._validateNode(schemaNode, log: false)) {
+          childExtracts[key] = valueSchema._extractNode(schemaNode).value as CE;
           keyValueMatch = true;
           break;
         }
@@ -422,7 +423,7 @@ class DynamicMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
   }
 
   @override
-  Map<String, dynamic> generateJsonSchemaNode(Map<String, dynamic> defs) {
+  Map<String, dynamic> _generateJsonSchemaNode(Map<String, dynamic> defs) {
     return {
       "type": "object",
       if (schemaDescription != null) "description": schemaDescription!,
@@ -430,7 +431,7 @@ class DynamicMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
         "patternProperties": {
           for (final (keyRegexp: keyRegexp, valueSchema: valueSchema)
               in keyValueSchemas)
-            keyRegexp: valueSchema.getJsonRefOrSchemaNode(defs)
+            keyRegexp: valueSchema._getJsonRefOrSchemaNode(defs)
         }
     };
   }
@@ -450,7 +451,7 @@ class ListSchema<CE extends dynamic> extends Schema<List<CE>> {
   });
 
   @override
-  bool validateNode(SchemaNode o, {bool log = true}) {
+  bool _validateNode(SchemaNode o, {bool log = true}) {
     if (!o.checkType<YamlList>(log: log)) {
       return false;
     }
@@ -458,7 +459,7 @@ class ListSchema<CE extends dynamic> extends Schema<List<CE>> {
     var result = true;
     for (final (i, input) in inputList.indexed) {
       final schemaNode = SchemaNode(path: [...o.path, "[$i]"], value: input);
-      if (!childSchema.validateNode(schemaNode, log: log)) {
+      if (!childSchema._validateNode(schemaNode, log: log)) {
         result = false;
         continue;
       }
@@ -471,7 +472,7 @@ class ListSchema<CE extends dynamic> extends Schema<List<CE>> {
   }
 
   @override
-  SchemaNode extractNode(SchemaNode o) {
+  SchemaNode _extractNode(SchemaNode o) {
     if (!o.checkType<YamlList>(log: false)) {
       throw SchemaExtractionError(o);
     }
@@ -480,10 +481,10 @@ class ListSchema<CE extends dynamic> extends Schema<List<CE>> {
     for (final (i, input) in inputList.indexed) {
       final schemaNode =
           SchemaNode(path: [...o.path, i.toString()], value: input);
-      if (!childSchema.validateNode(schemaNode, log: false)) {
+      if (!childSchema._validateNode(schemaNode, log: false)) {
         throw SchemaExtractionError(schemaNode);
       }
-      childExtracts.add(childSchema.extractNode(schemaNode).value as CE);
+      childExtracts.add(childSchema._extractNode(schemaNode).value as CE);
     }
     return o
         .withValue(childExtracts, o.rawValue)
@@ -491,11 +492,11 @@ class ListSchema<CE extends dynamic> extends Schema<List<CE>> {
   }
 
   @override
-  Map<String, dynamic> generateJsonSchemaNode(Map<String, dynamic> defs) {
+  Map<String, dynamic> _generateJsonSchemaNode(Map<String, dynamic> defs) {
     return {
       "type": "array",
       if (schemaDescription != null) "description": schemaDescription!,
-      "items": childSchema.getJsonRefOrSchemaNode(defs),
+      "items": childSchema._getJsonRefOrSchemaNode(defs),
     };
   }
 }
@@ -515,7 +516,7 @@ class StringSchema extends Schema<String> {
   }) : _regexp = pattern == null ? null : RegExp(pattern, dotAll: true);
 
   @override
-  bool validateNode(SchemaNode o, {bool log = true}) {
+  bool _validateNode(SchemaNode o, {bool log = true}) {
     if (!o.checkType<String>(log: log)) {
       return false;
     }
@@ -533,7 +534,7 @@ class StringSchema extends Schema<String> {
   }
 
   @override
-  SchemaNode extractNode(SchemaNode o) {
+  SchemaNode _extractNode(SchemaNode o) {
     if (!o.checkType<String>(log: false)) {
       throw SchemaExtractionError(o);
     }
@@ -543,7 +544,7 @@ class StringSchema extends Schema<String> {
   }
 
   @override
-  Map<String, dynamic> generateJsonSchemaNode(Map<String, dynamic> defs) {
+  Map<String, dynamic> _generateJsonSchemaNode(Map<String, dynamic> defs) {
     return {
       "type": "string",
       if (schemaDescription != null) "description": schemaDescription!,
@@ -563,7 +564,7 @@ class IntSchema extends Schema<int> {
   });
 
   @override
-  bool validateNode(SchemaNode o, {bool log = true}) {
+  bool _validateNode(SchemaNode o, {bool log = true}) {
     if (!o.checkType<int>(log: log)) {
       return false;
     }
@@ -574,7 +575,7 @@ class IntSchema extends Schema<int> {
   }
 
   @override
-  SchemaNode extractNode(SchemaNode o) {
+  SchemaNode _extractNode(SchemaNode o) {
     if (!o.checkType<int>(log: false)) {
       throw SchemaExtractionError(o);
     }
@@ -584,7 +585,7 @@ class IntSchema extends Schema<int> {
   }
 
   @override
-  Map<String, dynamic> generateJsonSchemaNode(Map<String, dynamic> defs) {
+  Map<String, dynamic> _generateJsonSchemaNode(Map<String, dynamic> defs) {
     return {
       "type": "integer",
       if (schemaDescription != null) "description": schemaDescription!,
@@ -605,7 +606,7 @@ class EnumSchema<CE extends dynamic> extends Schema<CE> {
   });
 
   @override
-  bool validateNode(SchemaNode o, {bool log = true}) {
+  bool _validateNode(SchemaNode o, {bool log = true}) {
     if (!allowedValues.contains(o.value)) {
       if (log) {
         _logger.severe(
@@ -620,7 +621,7 @@ class EnumSchema<CE extends dynamic> extends Schema<CE> {
   }
 
   @override
-  SchemaNode extractNode(SchemaNode o) {
+  SchemaNode _extractNode(SchemaNode o) {
     if (!allowedValues.contains(o.value)) {
       throw SchemaExtractionError(o);
     }
@@ -630,7 +631,7 @@ class EnumSchema<CE extends dynamic> extends Schema<CE> {
   }
 
   @override
-  Map<String, dynamic> generateJsonSchemaNode(Map<String, dynamic> defs) {
+  Map<String, dynamic> _generateJsonSchemaNode(Map<String, dynamic> defs) {
     return {
       "enum": allowedValues.toList(),
       if (schemaDescription != null) "description": schemaDescription!,
@@ -649,7 +650,7 @@ class BoolSchema extends Schema<bool> {
   });
 
   @override
-  bool validateNode(SchemaNode o, {bool log = true}) {
+  bool _validateNode(SchemaNode o, {bool log = true}) {
     if (!o.checkType<bool>(log: log)) {
       return false;
     }
@@ -660,7 +661,7 @@ class BoolSchema extends Schema<bool> {
   }
 
   @override
-  SchemaNode extractNode(SchemaNode o) {
+  SchemaNode _extractNode(SchemaNode o) {
     if (!o.checkType<bool>(log: false)) {
       throw SchemaExtractionError(o);
     }
@@ -670,7 +671,7 @@ class BoolSchema extends Schema<bool> {
   }
 
   @override
-  Map<String, dynamic> generateJsonSchemaNode(Map<String, dynamic> defs) {
+  Map<String, dynamic> _generateJsonSchemaNode(Map<String, dynamic> defs) {
     return {
       "type": "boolean",
       if (schemaDescription != null) "description": schemaDescription!,
@@ -692,10 +693,10 @@ class OneOfSchema<E extends dynamic> extends Schema<E> {
   });
 
   @override
-  bool validateNode(SchemaNode o, {bool log = true}) {
+  bool _validateNode(SchemaNode o, {bool log = true}) {
     // Running first time with no logs.
     for (final schema in childSchemas) {
-      if (schema.validateNode(o, log: false)) {
+      if (schema._validateNode(o, log: false)) {
         if (customValidation != null) {
           return customValidation!.call(o);
         }
@@ -707,18 +708,18 @@ class OneOfSchema<E extends dynamic> extends Schema<E> {
       _logger.severe(
           "'${o.pathString}' must match atleast one of the allowed schema -");
       for (final schema in childSchemas) {
-        schema.validateNode(o, log: log);
+        schema._validateNode(o, log: log);
       }
     }
     return false;
   }
 
   @override
-  SchemaNode extractNode(SchemaNode o) {
+  SchemaNode _extractNode(SchemaNode o) {
     for (final schema in childSchemas) {
-      if (schema.validateNode(o, log: false)) {
+      if (schema._validateNode(o, log: false)) {
         return o
-            .withValue(schema.extractNode(o).value as E, o.rawValue)
+            .withValue(schema._extractNode(o).value as E, o.rawValue)
             .transformOrThis(transform, result);
       }
     }
@@ -726,11 +727,11 @@ class OneOfSchema<E extends dynamic> extends Schema<E> {
   }
 
   @override
-  Map<String, dynamic> generateJsonSchemaNode(Map<String, dynamic> defs) {
+  Map<String, dynamic> _generateJsonSchemaNode(Map<String, dynamic> defs) {
     return {
       if (schemaDescription != null) "description": schemaDescription!,
       r"$oneOf": childSchemas
-          .map((child) => child.getJsonRefOrSchemaNode(defs))
+          .map((child) => child._getJsonRefOrSchemaNode(defs))
           .toList(),
     };
   }
