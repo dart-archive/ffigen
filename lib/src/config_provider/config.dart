@@ -12,8 +12,8 @@ import 'package:package_config/package_config_types.dart';
 import 'package:yaml/yaml.dart';
 
 import '../strings.dart' as strings;
-import 'config_types.dart';
 import 'config_spec.dart';
+import 'config_types.dart';
 import 'spec_utils.dart';
 
 final _logger = Logger('ffigen.config_provider.config');
