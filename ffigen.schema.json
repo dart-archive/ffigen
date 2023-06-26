@@ -1,5 +1,6 @@
 {
   "$id": "https://json.schemastore.org/ffigen",
+  "$comment": "This file is generated. To regenerate run: dart tool/generate_json_schema.dart in github.com/dart-lang/ffigen",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "additionalProperties": false,

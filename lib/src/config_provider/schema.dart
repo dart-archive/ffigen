@@ -21,17 +21,17 @@ class SchemaNode<E> {
 
   /// Contains the raw underlying node value. Would be null for fields populated
   /// but default values
-  final dynamic rawValue;
+  final Object? rawValue;
 
   SchemaNode({
     required this.path,
     required this.value,
-    dynamic rawValue,
+    Object? rawValue,
     bool nullRawValue = false,
   }) : rawValue = nullRawValue ? null : (rawValue ?? value);
 
   /// Copy object with a different value.
-  SchemaNode<T> withValue<T>(T value, dynamic rawValue) {
+  SchemaNode<T> withValue<T>(T value, Object? rawValue) {
     return SchemaNode<T>(
       path: path,
       value: value,
@@ -82,7 +82,7 @@ class SchemaExtractionError extends Error {
 }
 
 /// Base class for all Schemas to extend.
-abstract class Schema<E> {
+abstract class Schema<E extends Object?> {
   /// Used to generate and refer the reference definition generated in json
   /// schema. Must be unique for a nested Schema.
   String? schemaDefName;
@@ -98,7 +98,7 @@ abstract class Schema<E> {
   dynamic Function(SchemaNode<E> node)? transform;
 
   /// Called when final result is prepared via [_extractNode].
-  void Function(SchemaNode<dynamic> node)? result;
+  void Function(SchemaNode<Object?> node)? result;
   Schema({
     required this.schemaDefName,
     required this.schemaDescription,
@@ -128,6 +128,8 @@ abstract class Schema<E> {
     final schemaMap = _generateJsonSchemaNode(defs);
     return {
       r"$id": schemaId,
+      r"$comment":
+          "This file is generated. To regenerate run: dart tool/generate_json_schema.dart in github.com/dart-lang/ffigen",
       r"$schema": "https://json-schema.org/draft/2020-12/schema",
       ...schemaMap,
       r"$defs": defs,
@@ -148,14 +150,14 @@ abstract class Schema<E> {
   }
 }
 
-class FixedMapKey<DE extends dynamic> {
+class FixedMapEntry<DE extends Object?> {
   final String key;
   final Schema valueSchema;
   final dynamic Function(SchemaNode o)? defaultValue;
   void Function(SchemaNode<DE> node)? resultOrDefault;
   final bool required;
 
-  FixedMapKey({
+  FixedMapEntry({
     required this.key,
     required this.valueSchema,
     this.defaultValue,
@@ -165,11 +167,11 @@ class FixedMapKey<DE extends dynamic> {
 }
 
 /// Schema for a Map which has a fixed set of known keys.
-class FixedMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
-  final List<FixedMapKey> keys;
+class FixedMapSchema<CE extends Object?> extends Schema<Map<dynamic, CE>> {
+  final List<FixedMapEntry> keys;
   final Set<String> allKeys;
   final Set<String> requiredKeys;
-  final bool unknownWarning;
+  final bool additionalProperties;
 
   FixedMapSchema({
     required this.keys,
@@ -178,7 +180,7 @@ class FixedMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
     super.customValidation,
     super.transform,
     super.result,
-    this.unknownWarning = true,
+    this.additionalProperties = false,
   })  : requiredKeys = {
           for (final kv in keys.where((kv) => kv.required)) kv.key
         },
@@ -215,7 +217,7 @@ class FixedMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
       }
     }
 
-    if (unknownWarning && log) {
+    if (!additionalProperties && log) {
       for (final key in inputMap.keys) {
         if (!allKeys.contains(key)) {
           _logger.severe("Unknown key - '${[...o.path, key].join(' -> ')}'.");
@@ -315,7 +317,7 @@ class FixedMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
   Map<String, dynamic> _generateJsonSchemaNode(Map<String, dynamic> defs) {
     return {
       "type": "object",
-      if (unknownWarning) "additionalProperties": false,
+      if (!additionalProperties) "additionalProperties": false,
       if (schemaDescription != null) "description": schemaDescription!,
       if (keys.isNotEmpty)
         "properties": {
@@ -328,7 +330,7 @@ class FixedMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
 }
 
 /// Schema for a Map that can have any number of keys.
-class DynamicMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
+class DynamicMapSchema<CE extends Object?> extends Schema<Map<dynamic, CE>> {
   /// [keyRegexp] will convert it's input to a String before matching.
   final List<({String keyRegexp, Schema valueSchema})> keyValueSchemas;
 
@@ -438,7 +440,7 @@ class DynamicMapSchema<CE extends dynamic> extends Schema<Map<dynamic, CE>> {
 }
 
 /// Schema for a List.
-class ListSchema<CE extends dynamic> extends Schema<List<CE>> {
+class ListSchema<CE extends Object?> extends Schema<List<CE>> {
   final Schema childSchema;
 
   ListSchema({
@@ -594,7 +596,7 @@ class IntSchema extends Schema<int> {
 }
 
 /// Schema for an object where only specific values are allowed.
-class EnumSchema<CE extends dynamic> extends Schema<CE> {
+class EnumSchema<CE extends Object?> extends Schema<CE> {
   Set<CE> allowedValues;
   EnumSchema({
     required this.allowedValues,
@@ -680,7 +682,7 @@ class BoolSchema extends Schema<bool> {
 }
 
 /// Schema which checks if atleast one of the underlying Schema matches.
-class OneOfSchema<E extends dynamic> extends Schema<E> {
+class OneOfSchema<E extends Object?> extends Schema<E> {
   final List<Schema> childSchemas;
 
   OneOfSchema({

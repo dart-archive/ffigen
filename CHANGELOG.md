@@ -1,6 +1,6 @@
 # 9.0.0
 
-- Updated validation logic to be more strict.
+- Added a JSON schema for FFIgen config files.
 
 # 8.0.2
 
