@@ -3,8 +3,8 @@ import 'package:yaml/yaml.dart';
 
 final _logger = Logger('ffigen.config_provider.config');
 
-/// A container object for a Schema Object.
-class SchemaNode<E> {
+/// A container object for a ConfigSpec Object.
+class ConfigSpecNode<E> {
   /// The path to this node.
   ///
   /// E.g - ["path", "to", "arr", "[1]", "item"]
@@ -23,7 +23,7 @@ class SchemaNode<E> {
   /// but default values
   final Object? rawValue;
 
-  SchemaNode({
+  ConfigSpecNode({
     required this.path,
     required this.value,
     Object? rawValue,
@@ -31,8 +31,8 @@ class SchemaNode<E> {
   }) : rawValue = nullRawValue ? null : (rawValue ?? value);
 
   /// Copy object with a different value.
-  SchemaNode<T> withValue<T>(T value, Object? rawValue) {
-    return SchemaNode<T>(
+  ConfigSpecNode<T> withValue<T>(T value, Object? rawValue) {
+    return ConfigSpecNode<T>(
       path: path,
       value: value,
       rawValue: rawValue,
@@ -42,11 +42,11 @@ class SchemaNode<E> {
 
   /// Transforms this SchemaNode with a nullable [transform] or return itself
   /// and calls the [result] callback
-  SchemaNode transformOrThis(
-    dynamic Function(SchemaNode<E> value)? transform,
-    void Function(SchemaNode node)? resultCallback,
+  ConfigSpecNode transformOrThis(
+    dynamic Function(ConfigSpecNode<E> value)? transform,
+    void Function(ConfigSpecNode node)? resultCallback,
   ) {
-    SchemaNode returnValue = this;
+    ConfigSpecNode returnValue = this;
     if (transform != null) {
       returnValue = this.withValue(transform.call(this), rawValue);
     }
@@ -67,10 +67,10 @@ class SchemaNode<E> {
   }
 }
 
-class SchemaExtractionError extends Error {
-  final SchemaNode? item;
+class ConfigSpecExtractionError extends Error {
+  final ConfigSpecNode? item;
   final String message;
-  SchemaExtractionError(this.item, [this.message = "Invalid Schema"]);
+  ConfigSpecExtractionError(this.item, [this.message = "Invalid Schema"]);
 
   @override
   String toString() {
@@ -82,7 +82,7 @@ class SchemaExtractionError extends Error {
 }
 
 /// Base class for all Schemas to extend.
-abstract class Schema<E extends Object?> {
+abstract class ConfigSpec<E extends Object?> {
   /// Used to generate and refer the reference definition generated in json
   /// schema. Must be unique for a nested Schema.
   String? schemaDefName;
@@ -91,15 +91,15 @@ abstract class Schema<E extends Object?> {
   String? schemaDescription;
 
   /// Custom validation hook, called post schema validation if successful.
-  bool Function(SchemaNode node)? customValidation;
+  bool Function(ConfigSpecNode node)? customValidation;
 
   /// Used to transform the payload to another type before passing to parent
   /// nodes and [result].
-  dynamic Function(SchemaNode<E> node)? transform;
+  dynamic Function(ConfigSpecNode<E> node)? transform;
 
   /// Called when final result is prepared via [_extractNode].
-  void Function(SchemaNode<Object?> node)? result;
-  Schema({
+  void Function(ConfigSpecNode<Object?> node)? result;
+  ConfigSpec({
     required this.schemaDefName,
     required this.schemaDescription,
     required this.customValidation,
@@ -107,9 +107,9 @@ abstract class Schema<E extends Object?> {
     required this.result,
   });
 
-  bool _validateNode(SchemaNode o, {bool log = true});
+  bool _validateNode(ConfigSpecNode o, {bool log = true});
 
-  SchemaNode _extractNode(SchemaNode o);
+  ConfigSpecNode _extractNode(ConfigSpecNode o);
 
   /// Schema objects should call [_getJsonRefOrSchemaNode] instead to get the
   /// child json schema.
@@ -138,43 +138,44 @@ abstract class Schema<E extends Object?> {
 
   /// Run validation on an object [value].
   bool validate(dynamic value) {
-    return _validateNode(SchemaNode(path: [], value: value));
+    return _validateNode(ConfigSpecNode(path: [], value: value));
   }
 
   /// Extract SchemaNode from [value]. This will call the [transform] for all
   /// underlying Schemas if valid.
   /// Should ideally only be called if [validate] returns True. Throws
-  /// [SchemaExtractionError] if any validation fails.
-  SchemaNode extract(dynamic value) {
-    return _extractNode(SchemaNode(path: [], value: value));
+  /// [ConfigSpecExtractionError] if any validation fails.
+  ConfigSpecNode extract(dynamic value) {
+    return _extractNode(ConfigSpecNode(path: [], value: value));
   }
 }
 
 class FixedMapEntry<DE extends Object?> {
   final String key;
-  final Schema valueSchema;
-  final dynamic Function(SchemaNode o)? defaultValue;
-  void Function(SchemaNode<DE> node)? resultOrDefault;
+  final ConfigSpec valueConfigSpec;
+  final dynamic Function(ConfigSpecNode o)? defaultValue;
+  void Function(ConfigSpecNode<DE> node)? resultOrDefault;
   final bool required;
 
   FixedMapEntry({
     required this.key,
-    required this.valueSchema,
+    required this.valueConfigSpec,
     this.defaultValue,
     this.resultOrDefault,
     this.required = false,
   });
 }
 
-/// Schema for a Map which has a fixed set of known keys.
-class FixedMapSchema<CE extends Object?> extends Schema<Map<dynamic, CE>> {
-  final List<FixedMapEntry> keys;
+/// ConfigSpec for a Map which has a fixed set of known keys.
+class FixedMapConfigSpec<CE extends Object?>
+    extends ConfigSpec<Map<dynamic, CE>> {
+  final List<FixedMapEntry> entries;
   final Set<String> allKeys;
   final Set<String> requiredKeys;
   final bool additionalProperties;
 
-  FixedMapSchema({
-    required this.keys,
+  FixedMapConfigSpec({
+    required this.entries,
     super.schemaDefName,
     super.schemaDescription,
     super.customValidation,
@@ -182,12 +183,12 @@ class FixedMapSchema<CE extends Object?> extends Schema<Map<dynamic, CE>> {
     super.result,
     this.additionalProperties = false,
   })  : requiredKeys = {
-          for (final kv in keys.where((kv) => kv.required)) kv.key
+          for (final kv in entries.where((kv) => kv.required)) kv.key
         },
-        allKeys = {for (final kv in keys) kv.key};
+        allKeys = {for (final kv in entries) kv.key};
 
   @override
-  bool _validateNode(SchemaNode o, {bool log = true}) {
+  bool _validateNode(ConfigSpecNode o, {bool log = true}) {
     if (!o.checkType<Map>(log: log)) {
       return false;
     }
@@ -205,13 +206,14 @@ class FixedMapSchema<CE extends Object?> extends Schema<Map<dynamic, CE>> {
       }
     }
 
-    for (final entry in keys) {
+    for (final entry in entries) {
       final path = [...o.path, entry.key.toString()];
       if (!inputMap.containsKey(entry.key)) {
         continue;
       }
-      final schemaNode = SchemaNode(path: path, value: inputMap[entry.key]);
-      if (!entry.valueSchema._validateNode(schemaNode, log: log)) {
+      final configSpecNode =
+          ConfigSpecNode(path: path, value: inputMap[entry.key]);
+      if (!entry.valueConfigSpec._validateNode(configSpecNode, log: log)) {
         result = false;
         continue;
       }
@@ -231,24 +233,24 @@ class FixedMapSchema<CE extends Object?> extends Schema<Map<dynamic, CE>> {
     return result;
   }
 
-  dynamic _getAllDefaults(SchemaNode o) {
+  dynamic _getAllDefaults(ConfigSpecNode o) {
     final result = <dynamic, CE>{};
-    for (final entry in keys) {
+    for (final entry in entries) {
       final path = [...o.path, entry.key];
       if (entry.defaultValue != null) {
-        result[entry.key] =
-            entry.defaultValue!.call(SchemaNode(path: path, value: null)) as CE;
-      } else if (entry.valueSchema is FixedMapSchema) {
-        final defaultValue = (entry.valueSchema as FixedMapSchema)
-            ._getAllDefaults(SchemaNode(path: path, value: null));
+        result[entry.key] = entry.defaultValue!
+            .call(ConfigSpecNode(path: path, value: null)) as CE;
+      } else if (entry.valueConfigSpec is FixedMapConfigSpec) {
+        final defaultValue = (entry.valueConfigSpec as FixedMapConfigSpec)
+            ._getAllDefaults(ConfigSpecNode(path: path, value: null));
         if (defaultValue != null) {
-          result[entry.key] = (entry.valueSchema as FixedMapSchema)
-              ._getAllDefaults(SchemaNode(path: path, value: null)) as CE;
+          result[entry.key] = (entry.valueConfigSpec as FixedMapConfigSpec)
+              ._getAllDefaults(ConfigSpecNode(path: path, value: null)) as CE;
         }
       }
       if (result.containsKey(entry.key) && entry.resultOrDefault != null) {
         // Call resultOrDefault hook for FixedMapKey.
-        entry.resultOrDefault!.call(SchemaNode(
+        entry.resultOrDefault!.call(ConfigSpecNode(
             path: path, value: result[entry.key], nullRawValue: true));
       }
     }
@@ -261,9 +263,9 @@ class FixedMapSchema<CE extends Object?> extends Schema<Map<dynamic, CE>> {
   }
 
   @override
-  SchemaNode _extractNode(SchemaNode o) {
+  ConfigSpecNode _extractNode(ConfigSpecNode o) {
     if (!o.checkType<Map>(log: false)) {
-      throw SchemaExtractionError(o);
+      throw ConfigSpecExtractionError(o);
     }
 
     final inputMap = (o.value as Map);
@@ -271,40 +273,42 @@ class FixedMapSchema<CE extends Object?> extends Schema<Map<dynamic, CE>> {
 
     for (final requiredKey in requiredKeys) {
       if (!inputMap.containsKey(requiredKey)) {
-        throw SchemaExtractionError(
-            null, "Invalid schema, missing required key - $requiredKey.");
+        throw ConfigSpecExtractionError(
+            null, "Invalid config spec, missing required key - $requiredKey.");
       }
     }
 
-    for (final entry in keys) {
+    for (final entry in entries) {
       final path = [...o.path, entry.key.toString()];
       if (!inputMap.containsKey(entry.key)) {
         // No value specified, fill in with default value instead.
         if (entry.defaultValue != null) {
           childExtracts[entry.key] = entry.defaultValue!
-              .call(SchemaNode(path: path, value: null)) as CE;
-        } else if (entry.valueSchema is FixedMapSchema) {
-          final defaultValue = (entry.valueSchema as FixedMapSchema)
-              ._getAllDefaults(SchemaNode(path: path, value: null));
+              .call(ConfigSpecNode(path: path, value: null)) as CE;
+        } else if (entry.valueConfigSpec is FixedMapConfigSpec) {
+          final defaultValue = (entry.valueConfigSpec as FixedMapConfigSpec)
+              ._getAllDefaults(ConfigSpecNode(path: path, value: null));
           if (defaultValue != null) {
-            childExtracts[entry.key] = (entry.valueSchema as FixedMapSchema)
-                ._getAllDefaults(SchemaNode(path: path, value: null)) as CE;
+            childExtracts[entry.key] = (entry.valueConfigSpec
+                    as FixedMapConfigSpec)
+                ._getAllDefaults(ConfigSpecNode(path: path, value: null)) as CE;
           }
         }
       } else {
         // Extract value from node.
-        final schemaNode = SchemaNode(path: path, value: inputMap[entry.key]);
-        if (!entry.valueSchema._validateNode(schemaNode, log: false)) {
-          throw SchemaExtractionError(schemaNode);
+        final configSpecNode =
+            ConfigSpecNode(path: path, value: inputMap[entry.key]);
+        if (!entry.valueConfigSpec._validateNode(configSpecNode, log: false)) {
+          throw ConfigSpecExtractionError(configSpecNode);
         }
         childExtracts[entry.key] =
-            entry.valueSchema._extractNode(schemaNode).value as CE;
+            entry.valueConfigSpec._extractNode(configSpecNode).value as CE;
       }
 
       if (childExtracts.containsKey(entry.key) &&
           entry.resultOrDefault != null) {
         // Call resultOrDefault hook for FixedMapKey.
-        entry.resultOrDefault!.call(SchemaNode(
+        entry.resultOrDefault!.call(ConfigSpecNode(
             path: path, value: childExtracts[entry.key], nullRawValue: true));
       }
     }
@@ -319,23 +323,25 @@ class FixedMapSchema<CE extends Object?> extends Schema<Map<dynamic, CE>> {
       "type": "object",
       if (!additionalProperties) "additionalProperties": false,
       if (schemaDescription != null) "description": schemaDescription!,
-      if (keys.isNotEmpty)
+      if (entries.isNotEmpty)
         "properties": {
-          for (final kv in keys)
-            kv.key: kv.valueSchema._getJsonRefOrSchemaNode(defs)
+          for (final kv in entries)
+            kv.key: kv.valueConfigSpec._getJsonRefOrSchemaNode(defs)
         },
       if (requiredKeys.isNotEmpty) "required": requiredKeys.toList(),
     };
   }
 }
 
-/// Schema for a Map that can have any number of keys.
-class DynamicMapSchema<CE extends Object?> extends Schema<Map<dynamic, CE>> {
+/// ConfigSpec for a Map that can have any number of keys.
+class DynamicMapConfigSpec<CE extends Object?>
+    extends ConfigSpec<Map<dynamic, CE>> {
   /// [keyRegexp] will convert it's input to a String before matching.
-  final List<({String keyRegexp, Schema valueSchema})> keyValueSchemas;
+  final List<({String keyRegexp, ConfigSpec valueConfigSpec})>
+      keyValueConfigSpecs;
 
-  DynamicMapSchema({
-    required this.keyValueSchemas,
+  DynamicMapConfigSpec({
+    required this.keyValueConfigSpecs,
     super.schemaDefName,
     super.schemaDescription,
     super.customValidation,
@@ -344,7 +350,7 @@ class DynamicMapSchema<CE extends Object?> extends Schema<Map<dynamic, CE>> {
   });
 
   @override
-  bool _validateNode(SchemaNode o, {bool log = true}) {
+  bool _validateNode(ConfigSpecNode o, {bool log = true}) {
     if (!o.checkType<Map>(log: log)) {
       return false;
     }
@@ -353,15 +359,15 @@ class DynamicMapSchema<CE extends Object?> extends Schema<Map<dynamic, CE>> {
     final inputMap = (o.value as Map);
 
     for (final MapEntry(key: key, value: value) in inputMap.entries) {
-      final schemaNode =
-          SchemaNode(path: [...o.path, key.toString()], value: value);
+      final configSpecNode =
+          ConfigSpecNode(path: [...o.path, key.toString()], value: value);
       var keyValueMatch = false;
 
       /// Running first time with no logs.
-      for (final (keyRegexp: keyRegexp, valueSchema: valueSchema)
-          in keyValueSchemas) {
+      for (final (keyRegexp: keyRegexp, valueConfigSpec: valueConfigSpec)
+          in keyValueConfigSpecs) {
         if (RegExp(keyRegexp, dotAll: true).hasMatch(key.toString()) &&
-            valueSchema._validateNode(schemaNode, log: false)) {
+            valueConfigSpec._validateNode(configSpecNode, log: false)) {
           keyValueMatch = true;
           break;
         }
@@ -371,15 +377,15 @@ class DynamicMapSchema<CE extends Object?> extends Schema<Map<dynamic, CE>> {
         // No schema matched, running again to print logs this time.
         if (log) {
           _logger.severe(
-              "'${schemaNode.pathString}' must match atleast one of the allowed key regex and schema.");
-          for (final (keyRegexp: keyRegexp, valueSchema: valueSchema)
-              in keyValueSchemas) {
+              "'${configSpecNode.pathString}' must match atleast one of the allowed key regex and schema.");
+          for (final (keyRegexp: keyRegexp, valueConfigSpec: valueConfigSpec)
+              in keyValueConfigSpecs) {
             if (!RegExp(keyRegexp, dotAll: true).hasMatch(key.toString())) {
               _logger.severe(
-                  "'${schemaNode.pathString}' does not match regex - '$keyRegexp' (Input - $key)");
+                  "'${configSpecNode.pathString}' does not match regex - '$keyRegexp' (Input - $key)");
               continue;
             }
-            if (valueSchema._validateNode(schemaNode, log: log)) {
+            if (valueConfigSpec._validateNode(configSpecNode, log: log)) {
               continue;
             }
           }
@@ -394,28 +400,29 @@ class DynamicMapSchema<CE extends Object?> extends Schema<Map<dynamic, CE>> {
   }
 
   @override
-  SchemaNode _extractNode(SchemaNode o) {
+  ConfigSpecNode _extractNode(ConfigSpecNode o) {
     if (!o.checkType<Map>(log: false)) {
-      throw SchemaExtractionError(o);
+      throw ConfigSpecExtractionError(o);
     }
 
     final inputMap = (o.value as Map);
     final childExtracts = <dynamic, CE>{};
     for (final MapEntry(key: key, value: value) in inputMap.entries) {
-      final schemaNode =
-          SchemaNode(path: [...o.path, key.toString()], value: value);
+      final configSpecNode =
+          ConfigSpecNode(path: [...o.path, key.toString()], value: value);
       var keyValueMatch = false;
-      for (final (keyRegexp: keyRegexp, valueSchema: valueSchema)
-          in keyValueSchemas) {
+      for (final (keyRegexp: keyRegexp, valueConfigSpec: valueConfigSpec)
+          in keyValueConfigSpecs) {
         if (RegExp(keyRegexp, dotAll: true).hasMatch(key.toString()) &&
-            valueSchema._validateNode(schemaNode, log: false)) {
-          childExtracts[key] = valueSchema._extractNode(schemaNode).value as CE;
+            valueConfigSpec._validateNode(configSpecNode, log: false)) {
+          childExtracts[key] =
+              valueConfigSpec._extractNode(configSpecNode).value as CE;
           keyValueMatch = true;
           break;
         }
       }
       if (!keyValueMatch) {
-        throw SchemaExtractionError(schemaNode);
+        throw ConfigSpecExtractionError(configSpecNode);
       }
     }
 
@@ -429,19 +436,19 @@ class DynamicMapSchema<CE extends Object?> extends Schema<Map<dynamic, CE>> {
     return {
       "type": "object",
       if (schemaDescription != null) "description": schemaDescription!,
-      if (keyValueSchemas.isNotEmpty)
+      if (keyValueConfigSpecs.isNotEmpty)
         "patternProperties": {
-          for (final (keyRegexp: keyRegexp, valueSchema: valueSchema)
-              in keyValueSchemas)
-            keyRegexp: valueSchema._getJsonRefOrSchemaNode(defs)
+          for (final (keyRegexp: keyRegexp, valueConfigSpec: valueConfigSpec)
+              in keyValueConfigSpecs)
+            keyRegexp: valueConfigSpec._getJsonRefOrSchemaNode(defs)
         }
     };
   }
 }
 
-/// Schema for a List.
-class ListSchema<CE extends Object?> extends Schema<List<CE>> {
-  final Schema childSchema;
+/// ConfigSpec for a List.
+class ListSchema<CE extends Object?> extends ConfigSpec<List<CE>> {
+  final ConfigSpec childSchema;
 
   ListSchema({
     required this.childSchema,
@@ -453,15 +460,16 @@ class ListSchema<CE extends Object?> extends Schema<List<CE>> {
   });
 
   @override
-  bool _validateNode(SchemaNode o, {bool log = true}) {
+  bool _validateNode(ConfigSpecNode o, {bool log = true}) {
     if (!o.checkType<YamlList>(log: log)) {
       return false;
     }
     final inputList = (o.value as YamlList).cast<dynamic>();
     var result = true;
     for (final (i, input) in inputList.indexed) {
-      final schemaNode = SchemaNode(path: [...o.path, "[$i]"], value: input);
-      if (!childSchema._validateNode(schemaNode, log: log)) {
+      final configSpecNode =
+          ConfigSpecNode(path: [...o.path, "[$i]"], value: input);
+      if (!childSchema._validateNode(configSpecNode, log: log)) {
         result = false;
         continue;
       }
@@ -474,19 +482,19 @@ class ListSchema<CE extends Object?> extends Schema<List<CE>> {
   }
 
   @override
-  SchemaNode _extractNode(SchemaNode o) {
+  ConfigSpecNode _extractNode(ConfigSpecNode o) {
     if (!o.checkType<YamlList>(log: false)) {
-      throw SchemaExtractionError(o);
+      throw ConfigSpecExtractionError(o);
     }
     final inputList = (o.value as YamlList).cast<dynamic>();
     final childExtracts = <CE>[];
     for (final (i, input) in inputList.indexed) {
-      final schemaNode =
-          SchemaNode(path: [...o.path, i.toString()], value: input);
-      if (!childSchema._validateNode(schemaNode, log: false)) {
-        throw SchemaExtractionError(schemaNode);
+      final configSpecNode =
+          ConfigSpecNode(path: [...o.path, i.toString()], value: input);
+      if (!childSchema._validateNode(configSpecNode, log: false)) {
+        throw ConfigSpecExtractionError(configSpecNode);
       }
-      childExtracts.add(childSchema._extractNode(schemaNode).value as CE);
+      childExtracts.add(childSchema._extractNode(configSpecNode).value as CE);
     }
     return o
         .withValue(childExtracts, o.rawValue)
@@ -503,12 +511,12 @@ class ListSchema<CE extends Object?> extends Schema<List<CE>> {
   }
 }
 
-/// Schema for a String.
-class StringSchema extends Schema<String> {
+/// ConfigSpec for a String.
+class StringConfigSpec extends ConfigSpec<String> {
   final String? pattern;
   final RegExp? _regexp;
 
-  StringSchema({
+  StringConfigSpec({
     super.schemaDefName,
     super.schemaDescription,
     super.customValidation,
@@ -518,7 +526,7 @@ class StringSchema extends Schema<String> {
   }) : _regexp = pattern == null ? null : RegExp(pattern, dotAll: true);
 
   @override
-  bool _validateNode(SchemaNode o, {bool log = true}) {
+  bool _validateNode(ConfigSpecNode o, {bool log = true}) {
     if (!o.checkType<String>(log: log)) {
       return false;
     }
@@ -536,9 +544,9 @@ class StringSchema extends Schema<String> {
   }
 
   @override
-  SchemaNode _extractNode(SchemaNode o) {
+  ConfigSpecNode _extractNode(ConfigSpecNode o) {
     if (!o.checkType<String>(log: false)) {
-      throw SchemaExtractionError(o);
+      throw ConfigSpecExtractionError(o);
     }
     return o
         .withValue(o.value as String, o.rawValue)
@@ -555,9 +563,9 @@ class StringSchema extends Schema<String> {
   }
 }
 
-/// Schema for an Int.
-class IntSchema extends Schema<int> {
-  IntSchema({
+/// ConfigSpec for an Int.
+class IntConfigSpec extends ConfigSpec<int> {
+  IntConfigSpec({
     super.schemaDefName,
     super.schemaDescription,
     super.customValidation,
@@ -566,7 +574,7 @@ class IntSchema extends Schema<int> {
   });
 
   @override
-  bool _validateNode(SchemaNode o, {bool log = true}) {
+  bool _validateNode(ConfigSpecNode o, {bool log = true}) {
     if (!o.checkType<int>(log: log)) {
       return false;
     }
@@ -577,9 +585,9 @@ class IntSchema extends Schema<int> {
   }
 
   @override
-  SchemaNode _extractNode(SchemaNode o) {
+  ConfigSpecNode _extractNode(ConfigSpecNode o) {
     if (!o.checkType<int>(log: false)) {
-      throw SchemaExtractionError(o);
+      throw ConfigSpecExtractionError(o);
     }
     return o
         .withValue(o.value as int, o.rawValue)
@@ -595,10 +603,10 @@ class IntSchema extends Schema<int> {
   }
 }
 
-/// Schema for an object where only specific values are allowed.
-class EnumSchema<CE extends Object?> extends Schema<CE> {
+/// ConfigSpec for an object where only specific values are allowed.
+class EnumConfigSpec<CE extends Object?> extends ConfigSpec<CE> {
   Set<CE> allowedValues;
-  EnumSchema({
+  EnumConfigSpec({
     required this.allowedValues,
     super.schemaDefName,
     super.schemaDescription,
@@ -608,7 +616,7 @@ class EnumSchema<CE extends Object?> extends Schema<CE> {
   });
 
   @override
-  bool _validateNode(SchemaNode o, {bool log = true}) {
+  bool _validateNode(ConfigSpecNode o, {bool log = true}) {
     if (!allowedValues.contains(o.value)) {
       if (log) {
         _logger.severe(
@@ -623,9 +631,9 @@ class EnumSchema<CE extends Object?> extends Schema<CE> {
   }
 
   @override
-  SchemaNode _extractNode(SchemaNode o) {
+  ConfigSpecNode _extractNode(ConfigSpecNode o) {
     if (!allowedValues.contains(o.value)) {
-      throw SchemaExtractionError(o);
+      throw ConfigSpecExtractionError(o);
     }
     return o
         .withValue(o.value as CE, o.rawValue)
@@ -641,9 +649,9 @@ class EnumSchema<CE extends Object?> extends Schema<CE> {
   }
 }
 
-/// Schema for a bool.
-class BoolSchema extends Schema<bool> {
-  BoolSchema({
+/// ConfigSpec for a bool.
+class BoolConfigSpec extends ConfigSpec<bool> {
+  BoolConfigSpec({
     super.schemaDefName,
     super.schemaDescription,
     super.customValidation,
@@ -652,7 +660,7 @@ class BoolSchema extends Schema<bool> {
   });
 
   @override
-  bool _validateNode(SchemaNode o, {bool log = true}) {
+  bool _validateNode(ConfigSpecNode o, {bool log = true}) {
     if (!o.checkType<bool>(log: log)) {
       return false;
     }
@@ -663,9 +671,9 @@ class BoolSchema extends Schema<bool> {
   }
 
   @override
-  SchemaNode _extractNode(SchemaNode o) {
+  ConfigSpecNode _extractNode(ConfigSpecNode o) {
     if (!o.checkType<bool>(log: false)) {
-      throw SchemaExtractionError(o);
+      throw ConfigSpecExtractionError(o);
     }
     return o
         .withValue(o.value as bool, o.rawValue)
@@ -682,11 +690,11 @@ class BoolSchema extends Schema<bool> {
 }
 
 /// Schema which checks if atleast one of the underlying Schema matches.
-class OneOfSchema<E extends Object?> extends Schema<E> {
-  final List<Schema> childSchemas;
+class OneOfConfigSpec<E extends Object?> extends ConfigSpec<E> {
+  final List<ConfigSpec> childConfigSpecs;
 
-  OneOfSchema({
-    required this.childSchemas,
+  OneOfConfigSpec({
+    required this.childConfigSpecs,
     super.schemaDefName,
     super.schemaDescription,
     super.customValidation,
@@ -695,10 +703,10 @@ class OneOfSchema<E extends Object?> extends Schema<E> {
   });
 
   @override
-  bool _validateNode(SchemaNode o, {bool log = true}) {
+  bool _validateNode(ConfigSpecNode o, {bool log = true}) {
     // Running first time with no logs.
-    for (final schema in childSchemas) {
-      if (schema._validateNode(o, log: false)) {
+    for (final spec in childConfigSpecs) {
+      if (spec._validateNode(o, log: false)) {
         if (customValidation != null) {
           return customValidation!.call(o);
         }
@@ -709,30 +717,30 @@ class OneOfSchema<E extends Object?> extends Schema<E> {
     if (log) {
       _logger.severe(
           "'${o.pathString}' must match atleast one of the allowed schema -");
-      for (final schema in childSchemas) {
-        schema._validateNode(o, log: log);
+      for (final spec in childConfigSpecs) {
+        spec._validateNode(o, log: log);
       }
     }
     return false;
   }
 
   @override
-  SchemaNode _extractNode(SchemaNode o) {
-    for (final schema in childSchemas) {
-      if (schema._validateNode(o, log: false)) {
+  ConfigSpecNode _extractNode(ConfigSpecNode o) {
+    for (final spec in childConfigSpecs) {
+      if (spec._validateNode(o, log: false)) {
         return o
-            .withValue(schema._extractNode(o).value as E, o.rawValue)
+            .withValue(spec._extractNode(o).value as E, o.rawValue)
             .transformOrThis(transform, result);
       }
     }
-    throw SchemaExtractionError(o);
+    throw ConfigSpecExtractionError(o);
   }
 
   @override
   Map<String, dynamic> _generateJsonSchemaNode(Map<String, dynamic> defs) {
     return {
       if (schemaDescription != null) "description": schemaDescription!,
-      r"$oneOf": childSchemas
+      r"$oneOf": childConfigSpecs
           .map((child) => child._getJsonRefOrSchemaNode(defs))
           .toList(),
     };

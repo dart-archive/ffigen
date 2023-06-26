@@ -13,7 +13,7 @@ import 'package:yaml/yaml.dart';
 
 import '../strings.dart' as strings;
 import 'config_types.dart';
-import 'schema.dart';
+import 'config_spec.dart';
 import 'spec_utils.dart';
 
 final _logger = Logger('ffigen.config_provider.config');
@@ -203,7 +203,7 @@ class Config {
   }
 
   /// Returns the root Schema object.
-  static Schema getsRootSchema() {
+  static ConfigSpec getsRootSchema() {
     final configspecs = Config._(filename: null, packageConfig: null);
     return configspecs._getRootSchema();
   }
@@ -219,13 +219,13 @@ class Config {
     }
   }
 
-  Schema _getRootSchema() {
-    return FixedMapSchema(
-      keys: [
+  ConfigSpec _getRootSchema() {
+    return FixedMapConfigSpec(
+      entries: [
         FixedMapEntry(
           key: strings.llvmPath,
-          valueSchema: ListSchema<String>(
-            childSchema: StringSchema(),
+          valueConfigSpec: ListSchema<String>(
+            childSchema: StringConfigSpec(),
             transform: (node) => llvmPathExtractor(node.value),
           ),
           defaultValue: (node) => findDylibAtDefaultLocations(),
@@ -234,8 +234,8 @@ class Config {
         FixedMapEntry(
             key: strings.output,
             required: true,
-            valueSchema: OneOfSchema(
-              childSchemas: [
+            valueConfigSpec: OneOfConfigSpec(
+              childConfigSpecs: [
                 _filePathStringSchema(),
                 _outputFullSchema(),
               ],
@@ -248,7 +248,7 @@ class Config {
             )),
         FixedMapEntry(
           key: strings.language,
-          valueSchema: EnumSchema(
+          valueConfigSpec: EnumConfigSpec(
             allowedValues: {strings.langC, strings.langObjC},
             transform: (node) {
               if ((node.value == strings.langObjC)) {
@@ -267,16 +267,18 @@ class Config {
         FixedMapEntry(
             key: strings.headers,
             required: true,
-            valueSchema: FixedMapSchema<List<String>>(
-              keys: [
+            valueConfigSpec: FixedMapConfigSpec<List<String>>(
+              entries: [
                 FixedMapEntry(
                   key: strings.entryPoints,
-                  valueSchema: ListSchema<String>(childSchema: StringSchema()),
+                  valueConfigSpec:
+                      ListSchema<String>(childSchema: StringConfigSpec()),
                   required: true,
                 ),
                 FixedMapEntry(
                   key: strings.includeDirectives,
-                  valueSchema: ListSchema<String>(childSchema: StringSchema()),
+                  valueConfigSpec:
+                      ListSchema<String>(childSchema: StringConfigSpec()),
                 ),
               ],
               transform: (node) => headersExtractor(node.value, filename),
@@ -284,12 +286,12 @@ class Config {
             )),
         FixedMapEntry(
           key: strings.compilerOpts,
-          valueSchema: OneOfSchema<List<String>>(
-            childSchemas: [
-              StringSchema(
+          valueConfigSpec: OneOfConfigSpec<List<String>>(
+            childConfigSpecs: [
+              StringConfigSpec(
                 transform: (node) => [node.value],
               ),
-              ListSchema<String>(childSchema: StringSchema())
+              ListSchema<String>(childSchema: StringConfigSpec())
             ],
             transform: (node) => compilerOptsExtractor(node.value),
           ),
@@ -298,15 +300,15 @@ class Config {
         ),
         FixedMapEntry(
             key: strings.compilerOptsAuto,
-            valueSchema: FixedMapSchema<dynamic>(
-              keys: [
+            valueConfigSpec: FixedMapConfigSpec<dynamic>(
+              entries: [
                 FixedMapEntry(
                   key: strings.macos,
-                  valueSchema: FixedMapSchema(
-                    keys: [
+                  valueConfigSpec: FixedMapConfigSpec(
+                    entries: [
                       FixedMapEntry(
                         key: strings.includeCStdLib,
-                        valueSchema: BoolSchema(),
+                        valueConfigSpec: BoolConfigSpec(),
                         defaultValue: (node) => true,
                       )
                     ],
@@ -322,9 +324,9 @@ class Config {
             )),
         FixedMapEntry(
           key: strings.libraryImports,
-          valueSchema: DynamicMapSchema<String>(
-            keyValueSchemas: [
-              (keyRegexp: ".*", valueSchema: StringSchema()),
+          valueConfigSpec: DynamicMapConfigSpec<String>(
+            keyValueConfigSpecs: [
+              (keyRegexp: ".*", valueConfigSpec: StringConfigSpec()),
             ],
             customValidation: _libraryImportsPredefinedValidation,
             transform: (node) => libraryImportsExtractor(node.value.cast()),
@@ -335,29 +337,29 @@ class Config {
         ),
         FixedMapEntry(
             key: strings.functions,
-            valueSchema: FixedMapSchema(
-              keys: [
+            valueConfigSpec: FixedMapConfigSpec(
+              entries: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
                 ..._memberRenameProperties(),
                 FixedMapEntry(
                   key: strings.symbolAddress,
-                  valueSchema: _includeExcludeObject(),
+                  valueConfigSpec: _includeExcludeObject(),
                   defaultValue: (node) => Includer.excludeByDefault(),
                 ),
                 FixedMapEntry(
                   key: strings.exposeFunctionTypedefs,
-                  valueSchema: _includeExcludeObject(),
+                  valueConfigSpec: _includeExcludeObject(),
                   defaultValue: (node) => Includer.excludeByDefault(),
                 ),
                 FixedMapEntry(
                   key: strings.leafFunctions,
-                  valueSchema: _includeExcludeObject(),
+                  valueConfigSpec: _includeExcludeObject(),
                   defaultValue: (node) => Includer.excludeByDefault(),
                 ),
                 FixedMapEntry(
                   key: strings.varArgFunctions,
-                  valueSchema: _functionVarArgsSchema(),
+                  valueConfigSpec: _functionVarArgsSchema(),
                   defaultValue: (node) => <String, List<RawVarArgFunction>>{},
                   resultOrDefault: (node) {
                     _varArgFunctions = makeVarArgFunctionsMapping(
@@ -377,19 +379,19 @@ class Config {
             )),
         FixedMapEntry(
             key: strings.structs,
-            valueSchema: FixedMapSchema(
-              keys: [
+            valueConfigSpec: FixedMapConfigSpec(
+              entries: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
                 ..._memberRenameProperties(),
                 _dependencyOnlyFixedMapKey(),
                 FixedMapEntry(
                   key: strings.structPack,
-                  valueSchema: DynamicMapSchema(
-                    keyValueSchemas: [
+                  valueConfigSpec: DynamicMapConfigSpec(
+                    keyValueConfigSpecs: [
                       (
                         keyRegexp: '.*',
-                        valueSchema: EnumSchema(
+                        valueConfigSpec: EnumConfigSpec(
                           allowedValues: {'none', 1, 2, 4, 8, 16},
                           transform: (node) =>
                               node.value == 'none' ? null : node.value,
@@ -413,8 +415,8 @@ class Config {
             )),
         FixedMapEntry(
             key: strings.unions,
-            valueSchema: FixedMapSchema(
-              keys: [
+            valueConfigSpec: FixedMapConfigSpec(
+              entries: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
                 ..._memberRenameProperties(),
@@ -429,8 +431,8 @@ class Config {
             )),
         FixedMapEntry(
             key: strings.enums,
-            valueSchema: FixedMapSchema(
-              keys: [
+            valueConfigSpec: FixedMapConfigSpec(
+              entries: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
                 ..._memberRenameProperties(),
@@ -442,8 +444,8 @@ class Config {
             )),
         FixedMapEntry(
             key: strings.unnamedEnums,
-            valueSchema: FixedMapSchema(
-              keys: [
+            valueConfigSpec: FixedMapConfigSpec(
+              entries: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
               ],
@@ -454,13 +456,13 @@ class Config {
             )),
         FixedMapEntry(
             key: strings.globals,
-            valueSchema: FixedMapSchema(
-              keys: [
+            valueConfigSpec: FixedMapConfigSpec(
+              entries: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
                 FixedMapEntry(
                   key: strings.symbolAddress,
-                  valueSchema: _includeExcludeObject(),
+                  valueConfigSpec: _includeExcludeObject(),
                   defaultValue: (node) => Includer.excludeByDefault(),
                 )
               ],
@@ -471,8 +473,8 @@ class Config {
             )),
         FixedMapEntry(
             key: strings.macros,
-            valueSchema: FixedMapSchema(
-              keys: [
+            valueConfigSpec: FixedMapConfigSpec(
+              entries: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
               ],
@@ -483,8 +485,8 @@ class Config {
             )),
         FixedMapEntry(
             key: strings.typedefs,
-            valueSchema: FixedMapSchema(
-              keys: [
+            valueConfigSpec: FixedMapConfigSpec(
+              entries: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
               ],
@@ -495,14 +497,14 @@ class Config {
             )),
         FixedMapEntry(
             key: strings.objcInterfaces,
-            valueSchema: FixedMapSchema(
-              keys: [
+            valueConfigSpec: FixedMapConfigSpec(
+              entries: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
                 ..._memberRenameProperties(),
                 FixedMapEntry(
                   key: strings.objcModule,
-                  valueSchema: _objcInterfaceModuleObject(),
+                  valueConfigSpec: _objcInterfaceModuleObject(),
                   defaultValue: (node) => ObjCModulePrefixer({}),
                 )
               ],
@@ -515,12 +517,12 @@ class Config {
             )),
         FixedMapEntry(
             key: strings.import,
-            valueSchema: FixedMapSchema(
-              keys: [
+            valueConfigSpec: FixedMapConfigSpec(
+              entries: [
                 FixedMapEntry(
                   key: strings.symbolFilesImport,
-                  valueSchema: ListSchema<String>(
-                    childSchema: StringSchema(),
+                  valueConfigSpec: ListSchema<String>(
+                    childSchema: StringConfigSpec(),
                     transform: (node) => symbolFileImportExtractor(
                         node.value, _libraryImports, filename, packageConfig),
                   ),
@@ -532,26 +534,26 @@ class Config {
             )),
         FixedMapEntry(
             key: strings.typeMap,
-            valueSchema: FixedMapSchema(
-              keys: [
+            valueConfigSpec: FixedMapConfigSpec(
+              entries: [
                 FixedMapEntry(
                   key: strings.typeMapTypedefs,
-                  valueSchema: _mappedTypeObject(),
+                  valueConfigSpec: _mappedTypeObject(),
                   defaultValue: (node) => <String, List<String>>{},
                 ),
                 FixedMapEntry(
                   key: strings.typeMapStructs,
-                  valueSchema: _mappedTypeObject(),
+                  valueConfigSpec: _mappedTypeObject(),
                   defaultValue: (node) => <String, List<String>>{},
                 ),
                 FixedMapEntry(
                   key: strings.typeMapUnions,
-                  valueSchema: _mappedTypeObject(),
+                  valueConfigSpec: _mappedTypeObject(),
                   defaultValue: (node) => <String, List<String>>{},
                 ),
                 FixedMapEntry(
                   key: strings.typeMapNativeTypes,
-                  valueSchema: _mappedTypeObject(),
+                  valueConfigSpec: _mappedTypeObject(),
                   defaultValue: (node) => <String, List<String>>{},
                 ),
               ],
@@ -581,31 +583,31 @@ class Config {
             )),
         FixedMapEntry(
           key: strings.excludeAllByDefault,
-          valueSchema: BoolSchema(),
+          valueConfigSpec: BoolConfigSpec(),
           defaultValue: (node) => false,
           resultOrDefault: (node) => _excludeAllByDefault = node.value as bool,
         ),
         FixedMapEntry(
           key: strings.sort,
-          valueSchema: BoolSchema(),
+          valueConfigSpec: BoolConfigSpec(),
           defaultValue: (node) => false,
           resultOrDefault: (node) => _sort = node.value as bool,
         ),
         FixedMapEntry(
           key: strings.useSupportedTypedefs,
-          valueSchema: BoolSchema(),
+          valueConfigSpec: BoolConfigSpec(),
           defaultValue: (node) => true,
           resultOrDefault: (node) => _useSupportedTypedefs = node.value as bool,
         ),
         FixedMapEntry(
           key: strings.comments,
-          valueSchema: _commentSchema(),
+          valueConfigSpec: _commentSchema(),
           defaultValue: (node) => CommentType.def(),
           resultOrDefault: (node) => _commentType = node.value as CommentType,
         ),
         FixedMapEntry(
           key: strings.name,
-          valueSchema: _dartClassNameStringSchema(),
+          valueConfigSpec: _dartClassNameStringSchema(),
           defaultValue: (node) {
             _logger.warning(
                 "Prefer adding Key '${node.pathString}' to your config.");
@@ -615,7 +617,7 @@ class Config {
         ),
         FixedMapEntry(
           key: strings.description,
-          valueSchema: _nonEmptyStringSchema(),
+          valueConfigSpec: _nonEmptyStringSchema(),
           defaultValue: (node) {
             _logger.warning(
                 "Prefer adding Key '${node.pathString}' to your config.");
@@ -625,25 +627,25 @@ class Config {
         ),
         FixedMapEntry(
             key: strings.preamble,
-            valueSchema: StringSchema(
+            valueConfigSpec: StringConfigSpec(
               result: (node) => _preamble = node.value as String?,
             )),
         FixedMapEntry(
           key: strings.useDartHandle,
-          valueSchema: BoolSchema(),
+          valueConfigSpec: BoolConfigSpec(),
           defaultValue: (node) => true,
           resultOrDefault: (node) => _useDartHandle = node.value as bool,
         ),
         FixedMapEntry(
           key: strings.ffiNative,
-          valueSchema: OneOfSchema(
-            childSchemas: [
-              EnumSchema(allowedValues: {null}),
-              FixedMapSchema(
-                keys: [
+          valueConfigSpec: OneOfConfigSpec(
+            childConfigSpecs: [
+              EnumConfigSpec(allowedValues: {null}),
+              FixedMapConfigSpec(
+                entries: [
                   FixedMapEntry(
                     key: strings.ffiNativeAsset,
-                    valueSchema: StringSchema(),
+                    valueConfigSpec: StringConfigSpec(),
                     required: true,
                   )
                 ],
@@ -659,7 +661,7 @@ class Config {
     );
   }
 
-  bool _libraryImportsPredefinedValidation(SchemaNode node) {
+  bool _libraryImportsPredefinedValidation(ConfigSpecNode node) {
     if (node.value is YamlMap) {
       return (node.value as YamlMap).keys.where((key) {
         if (strings.predefinedLibraryImports.containsKey(key)) {
@@ -673,18 +675,18 @@ class Config {
     return true;
   }
 
-  OneOfSchema<dynamic> _commentSchema() {
-    return OneOfSchema(
-      childSchemas: [
-        BoolSchema(
+  OneOfConfigSpec<dynamic> _commentSchema() {
+    return OneOfConfigSpec(
+      childConfigSpecs: [
+        BoolConfigSpec(
           transform: (node) =>
               (node.value == true) ? CommentType.def() : CommentType.none(),
         ),
-        FixedMapSchema(
-          keys: [
+        FixedMapConfigSpec(
+          entries: [
             FixedMapEntry(
               key: strings.style,
-              valueSchema: EnumSchema(
+              valueConfigSpec: EnumConfigSpec(
                 allowedValues: {strings.doxygen, strings.any},
                 transform: (node) => node.value == strings.doxygen
                     ? CommentStyle.doxygen
@@ -694,7 +696,7 @@ class Config {
             ),
             FixedMapEntry(
               key: strings.length,
-              valueSchema: EnumSchema(
+              valueConfigSpec: EnumConfigSpec(
                 allowedValues: {strings.brief, strings.full},
                 transform: (node) => node.value == strings.brief
                     ? CommentLength.brief
@@ -712,26 +714,26 @@ class Config {
     );
   }
 
-  DynamicMapSchema<Object?> _functionVarArgsSchema() {
-    return DynamicMapSchema(
-      keyValueSchemas: [
+  DynamicMapConfigSpec<Object?> _functionVarArgsSchema() {
+    return DynamicMapConfigSpec(
+      keyValueConfigSpecs: [
         (
           keyRegexp: ".*",
-          valueSchema: ListSchema(
-            childSchema: OneOfSchema(
-              childSchemas: [
-                ListSchema<String>(childSchema: StringSchema()),
-                FixedMapSchema(
-                  keys: [
+          valueConfigSpec: ListSchema(
+            childSchema: OneOfConfigSpec(
+              childConfigSpecs: [
+                ListSchema<String>(childSchema: StringConfigSpec()),
+                FixedMapConfigSpec(
+                  entries: [
                     FixedMapEntry(
                       key: strings.types,
-                      valueSchema:
-                          ListSchema<String>(childSchema: StringSchema()),
+                      valueConfigSpec:
+                          ListSchema<String>(childSchema: StringConfigSpec()),
                       required: true,
                     ),
                     FixedMapEntry(
                       key: strings.postfix,
-                      valueSchema: StringSchema(),
+                      valueConfigSpec: StringConfigSpec(),
                     ),
                   ],
                 )
@@ -744,26 +746,26 @@ class Config {
     );
   }
 
-  FixedMapSchema<dynamic> _outputFullSchema() {
-    return FixedMapSchema(
-      keys: [
+  FixedMapConfigSpec<dynamic> _outputFullSchema() {
+    return FixedMapConfigSpec(
+      entries: [
         FixedMapEntry(
           key: strings.bindings,
-          valueSchema: _filePathStringSchema(),
+          valueConfigSpec: _filePathStringSchema(),
           required: true,
         ),
         FixedMapEntry(
           key: strings.symbolFile,
-          valueSchema: FixedMapSchema<String>(
-            keys: [
+          valueConfigSpec: FixedMapConfigSpec<String>(
+            entries: [
               FixedMapEntry(
                 key: strings.output,
-                valueSchema: _filePathStringSchema(),
+                valueConfigSpec: _filePathStringSchema(),
                 required: true,
               ),
               FixedMapEntry(
                 key: strings.importPath,
-                valueSchema: StringSchema(),
+                valueConfigSpec: StringConfigSpec(),
                 required: true,
               ),
             ],
@@ -773,22 +775,22 @@ class Config {
     );
   }
 
-  StringSchema _filePathStringSchema() {
-    return StringSchema(
+  StringConfigSpec _filePathStringSchema() {
+    return StringConfigSpec(
       schemaDefName: 'filePath',
       schemaDescription: "A file path",
     );
   }
 
-  StringSchema _nonEmptyStringSchema() {
-    return StringSchema(
+  StringConfigSpec _nonEmptyStringSchema() {
+    return StringConfigSpec(
       schemaDefName: 'nonEmptyString',
       pattern: r'.+',
     );
   }
 
-  StringSchema _dartClassNameStringSchema() {
-    return StringSchema(
+  StringConfigSpec _dartClassNameStringSchema() {
+    return StringConfigSpec(
       schemaDefName: 'publicDartClass',
       schemaDescription: "A public dart class name.",
       pattern: r'^[a-zA-Z]+[_a-zA-Z0-9]*$',
@@ -799,11 +801,11 @@ class Config {
     return [
       FixedMapEntry(
         key: strings.include,
-        valueSchema: _fullMatchOrRegexpList(),
+        valueConfigSpec: _fullMatchOrRegexpList(),
       ),
       FixedMapEntry(
         key: strings.exclude,
-        valueSchema: _fullMatchOrRegexpList(),
+        valueConfigSpec: _fullMatchOrRegexpList(),
         defaultValue: (node) => <String>[],
       ),
     ];
@@ -812,7 +814,7 @@ class Config {
   ListSchema<String> _fullMatchOrRegexpList() {
     return ListSchema<String>(
       schemaDefName: "fullMatchOrRegexpList",
-      childSchema: StringSchema(),
+      childSchema: StringConfigSpec(),
     );
   }
 
@@ -820,10 +822,10 @@ class Config {
     return [
       FixedMapEntry(
         key: strings.rename,
-        valueSchema: DynamicMapSchema<String>(
+        valueConfigSpec: DynamicMapConfigSpec<String>(
           schemaDefName: "rename",
-          keyValueSchemas: [
-            (keyRegexp: ".*", valueSchema: StringSchema()),
+          keyValueConfigSpecs: [
+            (keyRegexp: ".*", valueConfigSpec: StringConfigSpec()),
           ],
         ),
       ),
@@ -834,14 +836,14 @@ class Config {
     return [
       FixedMapEntry(
         key: strings.memberRename,
-        valueSchema: DynamicMapSchema<Map<dynamic, String>>(
+        valueConfigSpec: DynamicMapConfigSpec<Map<dynamic, String>>(
           schemaDefName: "memberRename",
-          keyValueSchemas: [
+          keyValueConfigSpecs: [
             (
               keyRegexp: ".*",
-              valueSchema: DynamicMapSchema<String>(
-                keyValueSchemas: [
-                  (keyRegexp: ".*", valueSchema: StringSchema())
+              valueConfigSpec: DynamicMapConfigSpec<String>(
+                keyValueConfigSpecs: [
+                  (keyRegexp: ".*", valueConfigSpec: StringConfigSpec())
                 ],
               ),
             ),
@@ -851,10 +853,10 @@ class Config {
     ];
   }
 
-  FixedMapSchema<List<String>> _includeExcludeObject() {
-    return FixedMapSchema<List<String>>(
+  FixedMapConfigSpec<List<String>> _includeExcludeObject() {
+    return FixedMapConfigSpec<List<String>>(
       schemaDefName: "includeExclude",
-      keys: [
+      entries: [
         ..._includeExcludeProperties(),
       ],
       transform: (node) => extractIncluderFromYaml(node.value),
@@ -864,7 +866,7 @@ class Config {
   FixedMapEntry _dependencyOnlyFixedMapKey() {
     return FixedMapEntry(
       key: strings.dependencyOnly,
-      valueSchema: EnumSchema(
+      valueConfigSpec: EnumConfigSpec(
         schemaDefName: "dependencyOnly",
         allowedValues: {
           strings.fullCompoundDependencies,
@@ -878,16 +880,19 @@ class Config {
     );
   }
 
-  DynamicMapSchema _mappedTypeObject() {
-    return DynamicMapSchema(
+  DynamicMapConfigSpec _mappedTypeObject() {
+    return DynamicMapConfigSpec(
       schemaDefName: "mappedTypes",
-      keyValueSchemas: [
+      keyValueConfigSpecs: [
         (
           keyRegexp: ".*",
-          valueSchema: FixedMapSchema<String>(keys: [
-            FixedMapEntry(key: strings.lib, valueSchema: StringSchema()),
-            FixedMapEntry(key: strings.cType, valueSchema: StringSchema()),
-            FixedMapEntry(key: strings.dartType, valueSchema: StringSchema()),
+          valueConfigSpec: FixedMapConfigSpec<String>(entries: [
+            FixedMapEntry(
+                key: strings.lib, valueConfigSpec: StringConfigSpec()),
+            FixedMapEntry(
+                key: strings.cType, valueConfigSpec: StringConfigSpec()),
+            FixedMapEntry(
+                key: strings.dartType, valueConfigSpec: StringConfigSpec()),
           ]),
         )
       ],
@@ -895,11 +900,11 @@ class Config {
     );
   }
 
-  DynamicMapSchema _objcInterfaceModuleObject() {
-    return DynamicMapSchema(
+  DynamicMapConfigSpec _objcInterfaceModuleObject() {
+    return DynamicMapConfigSpec(
       schemaDefName: "objcInterfaceModule",
-      keyValueSchemas: [
-        (keyRegexp: ".*", valueSchema: StringSchema()),
+      keyValueConfigSpecs: [
+        (keyRegexp: ".*", valueConfigSpec: StringConfigSpec()),
       ],
       transform: (node) =>
           ObjCModulePrefixer(node.value.cast<String, String>()),
