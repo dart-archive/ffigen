@@ -4,7 +4,7 @@ import 'package:yaml/yaml.dart';
 final _logger = Logger('ffigen.config_provider.config');
 
 /// A container object for a ConfigSpec Object.
-class ConfigSpecNode<E> {
+class ConfigSpecNode<TE> {
   /// The path to this node.
   ///
   /// E.g - ["path", "to", "arr", "[1]", "item"]
@@ -17,7 +17,7 @@ class ConfigSpecNode<E> {
 
   /// Contains the underlying node value after all transformations and
   /// default values have been applied.
-  final E value;
+  final TE value;
 
   /// Contains the raw underlying node value. Would be null for fields populated
   /// but default values
@@ -43,7 +43,7 @@ class ConfigSpecNode<E> {
   /// Transforms this SchemaNode with a nullable [transform] or return itself
   /// and calls the [result] callback
   ConfigSpecNode<RE> transformOrThis<RE extends Object?>(
-    RE Function(ConfigSpecNode<E> value)? transform,
+    RE Function(ConfigSpecNode<TE> value)? transform,
     void Function(ConfigSpecNode<RE> node)? resultCallback,
   ) {
     ConfigSpecNode<RE> returnValue;
@@ -185,8 +185,9 @@ class FixedMapEntry {
 
 /// ConfigSpec for a Map which has a fixed set of known keys.
 ///
-/// CE is used to cast the child values, RE is the return type of transform and
-/// the input for result.
+/// [CE] typecasts result from entries->{}->valueConfigSpec.
+///
+/// [RE] typecasts result returned by this node.
 class FixedMapConfigSpec<CE extends Object?, RE extends Object?>
     extends ConfigSpec<Map<dynamic, CE>, RE> {
   final List<FixedMapEntry> entries;
@@ -354,6 +355,10 @@ class FixedMapConfigSpec<CE extends Object?, RE extends Object?>
 }
 
 /// ConfigSpec for a Map that can have any number of keys.
+///
+/// [CE] typecasts result from keyValueConfigSpecs->{}->valueConfigSpec.
+///
+/// [RE] typecasts result returned by this node.
 class DynamicMapConfigSpec<CE extends Object?, RE extends Object?>
     extends ConfigSpec<Map<dynamic, CE>, RE> {
   /// [keyRegexp] will convert it's input to a String before matching.
@@ -467,6 +472,10 @@ class DynamicMapConfigSpec<CE extends Object?, RE extends Object?>
 }
 
 /// ConfigSpec for a List.
+///
+/// [CE] typecasts result from childSchema.
+///
+/// [RE] typecasts result returned by this node.
 class ListSchema<CE extends Object?, RE extends Object?>
     extends ConfigSpec<List<CE>, RE> {
   final ConfigSpec childSchema;
@@ -533,6 +542,8 @@ class ListSchema<CE extends Object?, RE extends Object?>
 }
 
 /// ConfigSpec for a String.
+///
+/// [RE] typecasts result returned by this node.
 class StringConfigSpec<RE extends Object?> extends ConfigSpec<String, RE> {
   final String? pattern;
   final RegExp? _regexp;
@@ -585,6 +596,8 @@ class StringConfigSpec<RE extends Object?> extends ConfigSpec<String, RE> {
 }
 
 /// ConfigSpec for an Int.
+///
+/// [RE] typecasts result returned by this node.
 class IntConfigSpec<RE extends Object?> extends ConfigSpec<int, RE> {
   IntConfigSpec({
     super.schemaDefName,
@@ -625,6 +638,9 @@ class IntConfigSpec<RE extends Object?> extends ConfigSpec<int, RE> {
 }
 
 /// ConfigSpec for an object where only specific values are allowed.
+/// [CE] is the type for elements in [allowedValues].
+///
+/// [RE] typecasts result returned by this node.
 class EnumConfigSpec<CE extends Object?, RE extends Object?>
     extends ConfigSpec<CE, RE> {
   Set<CE> allowedValues;
@@ -672,6 +688,8 @@ class EnumConfigSpec<CE extends Object?, RE extends Object?>
 }
 
 /// ConfigSpec for a bool.
+///
+/// [RE] typecasts result returned by this node.
 class BoolConfigSpec<RE> extends ConfigSpec<bool, RE> {
   BoolConfigSpec({
     super.schemaDefName,
@@ -712,8 +730,12 @@ class BoolConfigSpec<RE> extends ConfigSpec<bool, RE> {
 }
 
 /// ConfigSpec that requires atleast one underlying match.
-class OneOfConfigSpec<E extends Object?, RE extends Object?>
-    extends ConfigSpec<E, RE> {
+///
+/// [TE] typecasts the result returned by the the first valid [childConfigSpecs].
+///
+/// [RE] typecasts result returned by this node.
+class OneOfConfigSpec<TE extends Object?, RE extends Object?>
+    extends ConfigSpec<TE, RE> {
   final List<ConfigSpec> childConfigSpecs;
 
   OneOfConfigSpec({
@@ -752,7 +774,7 @@ class OneOfConfigSpec<E extends Object?, RE extends Object?>
     for (final spec in childConfigSpecs) {
       if (spec._validateNode(o, log: false)) {
         return o
-            .withValue(spec._extractNode(o).value as E, o.rawValue)
+            .withValue(spec._extractNode(o).value as TE, o.rawValue)
             .transformOrThis(transform, result);
       }
     }
