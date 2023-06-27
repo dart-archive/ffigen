@@ -799,7 +799,7 @@ class Config {
     );
   }
 
-  List<FixedMapEntry<List<String>>> _includeExcludeProperties() {
+  List<FixedMapEntry> _includeExcludeProperties() {
     return [
       FixedMapEntry(
         key: strings.include,
@@ -867,7 +867,7 @@ class Config {
     );
   }
 
-  FixedMapEntry<CompoundDependencies> _dependencyOnlyFixedMapKey() {
+  FixedMapEntry _dependencyOnlyFixedMapKey() {
     return FixedMapEntry(
       key: strings.dependencyOnly,
       valueConfigSpec: EnumConfigSpec<String, CompoundDependencies>(

@@ -167,11 +167,11 @@ abstract class ConfigSpec<TE extends Object?, RE extends Object?> {
   }
 }
 
-class FixedMapEntry<DE extends Object?> {
+class FixedMapEntry {
   final String key;
   final ConfigSpec valueConfigSpec;
-  final DE Function(ConfigSpecNode<void> o)? defaultValue;
-  void Function(ConfigSpecNode<DE> node)? resultOrDefault;
+  final Object? Function(ConfigSpecNode<void> o)? defaultValue;
+  void Function(ConfigSpecNode<Object?> node)? resultOrDefault;
   final bool required;
 
   FixedMapEntry({
