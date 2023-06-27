@@ -224,7 +224,7 @@ class Config {
       entries: [
         FixedMapEntry(
           key: strings.llvmPath,
-          valueConfigSpec: ListSchema<String>(
+          valueConfigSpec: ListSchema<String, String>(
             childSchema: StringConfigSpec(),
             transform: (node) => llvmPathExtractor(node.value),
           ),
@@ -267,31 +267,31 @@ class Config {
         FixedMapEntry(
             key: strings.headers,
             required: true,
-            valueConfigSpec: FixedMapConfigSpec<List<String>>(
+            valueConfigSpec: FixedMapConfigSpec<List<String>, Headers>(
               entries: [
                 FixedMapEntry(
                   key: strings.entryPoints,
-                  valueConfigSpec:
-                      ListSchema<String>(childSchema: StringConfigSpec()),
+                  valueConfigSpec: ListSchema<String, List<String>>(
+                      childSchema: StringConfigSpec()),
                   required: true,
                 ),
                 FixedMapEntry(
                   key: strings.includeDirectives,
-                  valueConfigSpec:
-                      ListSchema<String>(childSchema: StringConfigSpec()),
+                  valueConfigSpec: ListSchema<String, List<String>>(
+                      childSchema: StringConfigSpec()),
                 ),
               ],
               transform: (node) => headersExtractor(node.value, filename),
-              result: (node) => _headers = node.value as Headers,
+              result: (node) => _headers = node.value,
             )),
         FixedMapEntry(
           key: strings.compilerOpts,
-          valueConfigSpec: OneOfConfigSpec<List<String>>(
+          valueConfigSpec: OneOfConfigSpec<List<String>, List<String>>(
             childConfigSpecs: [
               StringConfigSpec(
                 transform: (node) => [node.value],
               ),
-              ListSchema<String>(childSchema: StringConfigSpec())
+              ListSchema<String, List<String>>(childSchema: StringConfigSpec())
             ],
             transform: (node) => compilerOptsExtractor(node.value),
           ),
@@ -300,7 +300,7 @@ class Config {
         ),
         FixedMapEntry(
             key: strings.compilerOptsAuto,
-            valueConfigSpec: FixedMapConfigSpec<dynamic>(
+            valueConfigSpec: FixedMapConfigSpec(
               entries: [
                 FixedMapEntry(
                   key: strings.macos,
@@ -316,15 +316,16 @@ class Config {
                 )
               ],
               transform: (node) => CompilerOptsAuto(
-                macIncludeStdLib: (node.value)[strings.macos]
-                    ?[strings.includeCStdLib] as bool,
+                macIncludeStdLib: ((node.value)[strings.macos]
+                    as Map?)?[strings.includeCStdLib] as bool,
               ),
               result: (node) => _compilerOpts.addAll(
                   (node.value as CompilerOptsAuto).extractCompilerOpts()),
             )),
         FixedMapEntry(
           key: strings.libraryImports,
-          valueConfigSpec: DynamicMapConfigSpec<String>(
+          valueConfigSpec:
+              DynamicMapConfigSpec<String, Map<String, LibraryImport>>(
             keyValueConfigSpecs: [
               (keyRegexp: ".*", valueConfigSpec: StringConfigSpec()),
             ],
@@ -521,7 +522,8 @@ class Config {
               entries: [
                 FixedMapEntry(
                   key: strings.symbolFilesImport,
-                  valueConfigSpec: ListSchema<String>(
+                  valueConfigSpec:
+                      ListSchema<String, Map<String, ImportedType>>(
                     childSchema: StringConfigSpec(),
                     transform: (node) => symbolFileImportExtractor(
                         node.value, _libraryImports, filename, packageConfig),
@@ -675,7 +677,7 @@ class Config {
     return true;
   }
 
-  OneOfConfigSpec<dynamic> _commentSchema() {
+  OneOfConfigSpec _commentSchema() {
     return OneOfConfigSpec(
       childConfigSpecs: [
         BoolConfigSpec(
@@ -714,7 +716,7 @@ class Config {
     );
   }
 
-  DynamicMapConfigSpec<Object?> _functionVarArgsSchema() {
+  DynamicMapConfigSpec _functionVarArgsSchema() {
     return DynamicMapConfigSpec(
       keyValueConfigSpecs: [
         (
@@ -722,13 +724,13 @@ class Config {
           valueConfigSpec: ListSchema(
             childSchema: OneOfConfigSpec(
               childConfigSpecs: [
-                ListSchema<String>(childSchema: StringConfigSpec()),
+                ListSchema(childSchema: StringConfigSpec()),
                 FixedMapConfigSpec(
                   entries: [
                     FixedMapEntry(
                       key: strings.types,
-                      valueConfigSpec:
-                          ListSchema<String>(childSchema: StringConfigSpec()),
+                      valueConfigSpec: ListSchema<String, List<String>>(
+                          childSchema: StringConfigSpec()),
                       required: true,
                     ),
                     FixedMapEntry(
@@ -746,7 +748,7 @@ class Config {
     );
   }
 
-  FixedMapConfigSpec<dynamic> _outputFullSchema() {
+  FixedMapConfigSpec _outputFullSchema() {
     return FixedMapConfigSpec(
       entries: [
         FixedMapEntry(
@@ -756,7 +758,7 @@ class Config {
         ),
         FixedMapEntry(
           key: strings.symbolFile,
-          valueConfigSpec: FixedMapConfigSpec<String>(
+          valueConfigSpec: FixedMapConfigSpec(
             entries: [
               FixedMapEntry(
                 key: strings.output,
@@ -797,7 +799,7 @@ class Config {
     );
   }
 
-  List<FixedMapEntry> _includeExcludeProperties() {
+  List<FixedMapEntry<List<String>>> _includeExcludeProperties() {
     return [
       FixedMapEntry(
         key: strings.include,
@@ -811,8 +813,8 @@ class Config {
     ];
   }
 
-  ListSchema<String> _fullMatchOrRegexpList() {
-    return ListSchema<String>(
+  ListSchema<String, List<String>> _fullMatchOrRegexpList() {
+    return ListSchema(
       schemaDefName: "fullMatchOrRegexpList",
       childSchema: StringConfigSpec(),
     );
@@ -822,7 +824,7 @@ class Config {
     return [
       FixedMapEntry(
         key: strings.rename,
-        valueConfigSpec: DynamicMapConfigSpec<String>(
+        valueConfigSpec: DynamicMapConfigSpec<String, dynamic>(
           schemaDefName: "rename",
           keyValueConfigSpecs: [
             (keyRegexp: ".*", valueConfigSpec: StringConfigSpec()),
@@ -836,12 +838,14 @@ class Config {
     return [
       FixedMapEntry(
         key: strings.memberRename,
-        valueConfigSpec: DynamicMapConfigSpec<Map<dynamic, String>>(
+        valueConfigSpec: DynamicMapConfigSpec<Map<dynamic, String>,
+            Map<dynamic, Map<dynamic, String>>>(
           schemaDefName: "memberRename",
           keyValueConfigSpecs: [
             (
               keyRegexp: ".*",
-              valueConfigSpec: DynamicMapConfigSpec<String>(
+              valueConfigSpec:
+                  DynamicMapConfigSpec<String, Map<dynamic, String>>(
                 keyValueConfigSpecs: [
                   (keyRegexp: ".*", valueConfigSpec: StringConfigSpec())
                 ],
@@ -853,8 +857,8 @@ class Config {
     ];
   }
 
-  FixedMapConfigSpec<List<String>> _includeExcludeObject() {
-    return FixedMapConfigSpec<List<String>>(
+  FixedMapConfigSpec<List<String>, Includer> _includeExcludeObject() {
+    return FixedMapConfigSpec(
       schemaDefName: "includeExclude",
       entries: [
         ..._includeExcludeProperties(),
@@ -863,10 +867,10 @@ class Config {
     );
   }
 
-  FixedMapEntry _dependencyOnlyFixedMapKey() {
+  FixedMapEntry<CompoundDependencies> _dependencyOnlyFixedMapKey() {
     return FixedMapEntry(
       key: strings.dependencyOnly,
-      valueConfigSpec: EnumConfigSpec(
+      valueConfigSpec: EnumConfigSpec<String, CompoundDependencies>(
         schemaDefName: "dependencyOnly",
         allowedValues: {
           strings.fullCompoundDependencies,
@@ -886,7 +890,7 @@ class Config {
       keyValueConfigSpecs: [
         (
           keyRegexp: ".*",
-          valueConfigSpec: FixedMapConfigSpec<String>(entries: [
+          valueConfigSpec: FixedMapConfigSpec(entries: [
             FixedMapEntry(
                 key: strings.lib, valueConfigSpec: StringConfigSpec()),
             FixedMapEntry(

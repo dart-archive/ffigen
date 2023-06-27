@@ -42,13 +42,15 @@ class ConfigSpecNode<E> {
 
   /// Transforms this SchemaNode with a nullable [transform] or return itself
   /// and calls the [result] callback
-  ConfigSpecNode transformOrThis(
-    dynamic Function(ConfigSpecNode<E> value)? transform,
-    void Function(ConfigSpecNode node)? resultCallback,
+  ConfigSpecNode<RE> transformOrThis<RE extends Object?>(
+    RE Function(ConfigSpecNode<E> value)? transform,
+    void Function(ConfigSpecNode<RE> node)? resultCallback,
   ) {
-    ConfigSpecNode returnValue = this;
+    ConfigSpecNode<RE> returnValue;
     if (transform != null) {
       returnValue = this.withValue(transform.call(this), rawValue);
+    } else {
+      returnValue = this.withValue(this.value as RE, rawValue);
     }
     resultCallback?.call(returnValue);
     return returnValue;
@@ -82,7 +84,22 @@ class ConfigSpecExtractionError extends Error {
 }
 
 /// Base class for all Schemas to extend.
-abstract class ConfigSpec<E extends Object?> {
+///
+/// [TE] - type input for [transform], [RE] - type input for [result].
+///
+/// Validation -
+///
+/// - [customValidation] is called after the ConfigSpec hierarchical validations
+/// are completed.
+///
+/// Extraction -
+///
+/// - The data is first validated, if invalid it throws a
+/// ConfigSpecExtractionError.
+/// - The extracted data from the child(s) is collected and the value is
+/// transformed via [transform] (if specified).
+/// - Finally the [result] closure is called (if specified).
+abstract class ConfigSpec<TE extends Object?, RE extends Object?> {
   /// Used to generate and refer the reference definition generated in json
   /// schema. Must be unique for a nested Schema.
   String? schemaDefName;
@@ -95,10 +112,10 @@ abstract class ConfigSpec<E extends Object?> {
 
   /// Used to transform the payload to another type before passing to parent
   /// nodes and [result].
-  dynamic Function(ConfigSpecNode<E> node)? transform;
+  RE Function(ConfigSpecNode<TE> node)? transform;
 
   /// Called when final result is prepared via [_extractNode].
-  void Function(ConfigSpecNode<Object?> node)? result;
+  void Function(ConfigSpecNode<RE> node)? result;
   ConfigSpec({
     required this.schemaDefName,
     required this.schemaDescription,
@@ -109,7 +126,7 @@ abstract class ConfigSpec<E extends Object?> {
 
   bool _validateNode(ConfigSpecNode o, {bool log = true});
 
-  ConfigSpecNode _extractNode(ConfigSpecNode o);
+  ConfigSpecNode<RE> _extractNode(ConfigSpecNode o);
 
   /// Schema objects should call [_getJsonRefOrSchemaNode] instead to get the
   /// child json schema.
@@ -153,7 +170,7 @@ abstract class ConfigSpec<E extends Object?> {
 class FixedMapEntry<DE extends Object?> {
   final String key;
   final ConfigSpec valueConfigSpec;
-  final dynamic Function(ConfigSpecNode o)? defaultValue;
+  final DE Function(ConfigSpecNode<void> o)? defaultValue;
   void Function(ConfigSpecNode<DE> node)? resultOrDefault;
   final bool required;
 
@@ -167,8 +184,11 @@ class FixedMapEntry<DE extends Object?> {
 }
 
 /// ConfigSpec for a Map which has a fixed set of known keys.
-class FixedMapConfigSpec<CE extends Object?>
-    extends ConfigSpec<Map<dynamic, CE>> {
+///
+/// CE is used to cast the child values, RE is the return type of transform and
+/// the input for result.
+class FixedMapConfigSpec<CE extends Object?, RE extends Object?>
+    extends ConfigSpec<Map<dynamic, CE>, RE> {
   final List<FixedMapEntry> entries;
   final Set<String> allKeys;
   final Set<String> requiredKeys;
@@ -263,7 +283,7 @@ class FixedMapConfigSpec<CE extends Object?>
   }
 
   @override
-  ConfigSpecNode _extractNode(ConfigSpecNode o) {
+  ConfigSpecNode<RE> _extractNode(ConfigSpecNode o) {
     if (!o.checkType<Map>(log: false)) {
       throw ConfigSpecExtractionError(o);
     }
@@ -334,8 +354,8 @@ class FixedMapConfigSpec<CE extends Object?>
 }
 
 /// ConfigSpec for a Map that can have any number of keys.
-class DynamicMapConfigSpec<CE extends Object?>
-    extends ConfigSpec<Map<dynamic, CE>> {
+class DynamicMapConfigSpec<CE extends Object?, RE extends Object?>
+    extends ConfigSpec<Map<dynamic, CE>, RE> {
   /// [keyRegexp] will convert it's input to a String before matching.
   final List<({String keyRegexp, ConfigSpec valueConfigSpec})>
       keyValueConfigSpecs;
@@ -400,7 +420,7 @@ class DynamicMapConfigSpec<CE extends Object?>
   }
 
   @override
-  ConfigSpecNode _extractNode(ConfigSpecNode o) {
+  ConfigSpecNode<RE> _extractNode(ConfigSpecNode o) {
     if (!o.checkType<Map>(log: false)) {
       throw ConfigSpecExtractionError(o);
     }
@@ -447,7 +467,8 @@ class DynamicMapConfigSpec<CE extends Object?>
 }
 
 /// ConfigSpec for a List.
-class ListSchema<CE extends Object?> extends ConfigSpec<List<CE>> {
+class ListSchema<CE extends Object?, RE extends Object?>
+    extends ConfigSpec<List<CE>, RE> {
   final ConfigSpec childSchema;
 
   ListSchema({
@@ -482,7 +503,7 @@ class ListSchema<CE extends Object?> extends ConfigSpec<List<CE>> {
   }
 
   @override
-  ConfigSpecNode _extractNode(ConfigSpecNode o) {
+  ConfigSpecNode<RE> _extractNode(ConfigSpecNode o) {
     if (!o.checkType<YamlList>(log: false)) {
       throw ConfigSpecExtractionError(o);
     }
@@ -512,7 +533,7 @@ class ListSchema<CE extends Object?> extends ConfigSpec<List<CE>> {
 }
 
 /// ConfigSpec for a String.
-class StringConfigSpec extends ConfigSpec<String> {
+class StringConfigSpec<RE extends Object?> extends ConfigSpec<String, RE> {
   final String? pattern;
   final RegExp? _regexp;
 
@@ -544,7 +565,7 @@ class StringConfigSpec extends ConfigSpec<String> {
   }
 
   @override
-  ConfigSpecNode _extractNode(ConfigSpecNode o) {
+  ConfigSpecNode<RE> _extractNode(ConfigSpecNode o) {
     if (!o.checkType<String>(log: false)) {
       throw ConfigSpecExtractionError(o);
     }
@@ -564,7 +585,7 @@ class StringConfigSpec extends ConfigSpec<String> {
 }
 
 /// ConfigSpec for an Int.
-class IntConfigSpec extends ConfigSpec<int> {
+class IntConfigSpec<RE extends Object?> extends ConfigSpec<int, RE> {
   IntConfigSpec({
     super.schemaDefName,
     super.schemaDescription,
@@ -585,7 +606,7 @@ class IntConfigSpec extends ConfigSpec<int> {
   }
 
   @override
-  ConfigSpecNode _extractNode(ConfigSpecNode o) {
+  ConfigSpecNode<RE> _extractNode(ConfigSpecNode o) {
     if (!o.checkType<int>(log: false)) {
       throw ConfigSpecExtractionError(o);
     }
@@ -604,7 +625,8 @@ class IntConfigSpec extends ConfigSpec<int> {
 }
 
 /// ConfigSpec for an object where only specific values are allowed.
-class EnumConfigSpec<CE extends Object?> extends ConfigSpec<CE> {
+class EnumConfigSpec<CE extends Object?, RE extends Object?>
+    extends ConfigSpec<CE, RE> {
   Set<CE> allowedValues;
   EnumConfigSpec({
     required this.allowedValues,
@@ -631,7 +653,7 @@ class EnumConfigSpec<CE extends Object?> extends ConfigSpec<CE> {
   }
 
   @override
-  ConfigSpecNode _extractNode(ConfigSpecNode o) {
+  ConfigSpecNode<RE> _extractNode(ConfigSpecNode o) {
     if (!allowedValues.contains(o.value)) {
       throw ConfigSpecExtractionError(o);
     }
@@ -650,7 +672,7 @@ class EnumConfigSpec<CE extends Object?> extends ConfigSpec<CE> {
 }
 
 /// ConfigSpec for a bool.
-class BoolConfigSpec extends ConfigSpec<bool> {
+class BoolConfigSpec<RE> extends ConfigSpec<bool, RE> {
   BoolConfigSpec({
     super.schemaDefName,
     super.schemaDescription,
@@ -671,7 +693,7 @@ class BoolConfigSpec extends ConfigSpec<bool> {
   }
 
   @override
-  ConfigSpecNode _extractNode(ConfigSpecNode o) {
+  ConfigSpecNode<RE> _extractNode(ConfigSpecNode o) {
     if (!o.checkType<bool>(log: false)) {
       throw ConfigSpecExtractionError(o);
     }
@@ -690,7 +712,8 @@ class BoolConfigSpec extends ConfigSpec<bool> {
 }
 
 /// Schema which checks if atleast one of the underlying Schema matches.
-class OneOfConfigSpec<E extends Object?> extends ConfigSpec<E> {
+class OneOfConfigSpec<E extends Object?, RE extends Object?>
+    extends ConfigSpec<E, RE> {
   final List<ConfigSpec> childConfigSpecs;
 
   OneOfConfigSpec({
@@ -725,7 +748,7 @@ class OneOfConfigSpec<E extends Object?> extends ConfigSpec<E> {
   }
 
   @override
-  ConfigSpecNode _extractNode(ConfigSpecNode o) {
+  ConfigSpecNode<RE> _extractNode(ConfigSpecNode o) {
     for (final spec in childConfigSpecs) {
       if (spec._validateNode(o, log: false)) {
         return o
