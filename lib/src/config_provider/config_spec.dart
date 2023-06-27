@@ -711,7 +711,7 @@ class BoolConfigSpec<RE> extends ConfigSpec<bool, RE> {
   }
 }
 
-/// Schema which checks if atleast one of the underlying Schema matches.
+/// ConfigSpec that requires atleast one underlying match.
 class OneOfConfigSpec<E extends Object?, RE extends Object?>
     extends ConfigSpec<E, RE> {
   final List<ConfigSpec> childConfigSpecs;
