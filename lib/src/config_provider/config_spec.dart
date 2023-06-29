@@ -183,6 +183,8 @@ class FixedMapEntry {
   });
 }
 
+enum AdditionalProperties { Allow, Warn, Error }
+
 /// ConfigSpec for a Map which has a fixed set of known keys.
 ///
 /// [CE] typecasts result from entries->{}->valueConfigSpec.
@@ -193,7 +195,7 @@ class FixedMapConfigSpec<CE extends Object?, RE extends Object?>
   final List<FixedMapEntry> entries;
   final Set<String> allKeys;
   final Set<String> requiredKeys;
-  final bool additionalProperties;
+  final AdditionalProperties additionalProperties;
 
   FixedMapConfigSpec({
     required this.entries,
@@ -202,7 +204,7 @@ class FixedMapConfigSpec<CE extends Object?, RE extends Object?>
     super.customValidation,
     super.transform,
     super.result,
-    this.additionalProperties = false,
+    this.additionalProperties = AdditionalProperties.Warn,
   })  : requiredKeys = {
           for (final kv in entries.where((kv) => kv.required)) kv.key
         },
@@ -240,10 +242,15 @@ class FixedMapConfigSpec<CE extends Object?, RE extends Object?>
       }
     }
 
-    if (!additionalProperties && log) {
+    if (additionalProperties != AdditionalProperties.Allow) {
       for (final key in inputMap.keys) {
         if (!allKeys.contains(key)) {
-          _logger.severe("Unknown key - '${[...o.path, key].join(' -> ')}'.");
+          if (log) {
+            _logger.severe("Unknown key - '${[...o.path, key].join(' -> ')}'.");
+          }
+          if (additionalProperties == AdditionalProperties.Error) {
+            result = false;
+          }
         }
       }
     }
@@ -333,6 +340,16 @@ class FixedMapConfigSpec<CE extends Object?, RE extends Object?>
             path: path, value: childExtracts[entry.key], nullRawValue: true));
       }
     }
+
+    if (additionalProperties == AdditionalProperties.Error) {
+      for (final key in inputMap.keys) {
+        if (!allKeys.contains(key)) {
+          throw ConfigSpecExtractionError(
+              o, "Invalid schema: additional properties not allowed.");
+        }
+      }
+    }
+
     return o
         .withValue(childExtracts, o.rawValue)
         .transformOrThis(transform, result);
@@ -342,7 +359,8 @@ class FixedMapConfigSpec<CE extends Object?, RE extends Object?>
   Map<String, dynamic> _generateJsonSchemaNode(Map<String, dynamic> defs) {
     return {
       "type": "object",
-      if (!additionalProperties) "additionalProperties": false,
+      if (additionalProperties != AdditionalProperties.Allow)
+        "additionalProperties": false,
       if (schemaDescription != null) "description": schemaDescription!,
       if (entries.isNotEmpty)
         "properties": {
