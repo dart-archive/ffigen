@@ -664,7 +664,7 @@ class Config {
     );
   }
 
-  bool _libraryImportsPredefinedValidation(ConfigSpecNode node) {
+  bool _libraryImportsPredefinedValidation(ConfigValue node) {
     if (node.value is YamlMap) {
       return (node.value as YamlMap).keys.where((key) {
         if (strings.predefinedLibraryImports.containsKey(key)) {
