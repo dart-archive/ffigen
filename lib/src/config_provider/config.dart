@@ -183,13 +183,13 @@ class Config {
     final config = Config._(filename: filename, packageConfig: packageConfig);
     _logger.finest('Config Map: $map');
 
-    final ffigenSchema = config._getRootSchema();
-    final result = ffigenSchema.validate(map);
+    final ffigenConfigSpec = config._getRootConfigSpec();
+    final result = ffigenConfigSpec.validate(map);
     if (!result) {
       throw FormatException('Invalid configurations provided.');
     }
 
-    ffigenSchema.extract(map);
+    ffigenConfigSpec.extract(map);
     return config;
   }
 
@@ -202,10 +202,10 @@ class Config {
         filename: file.path, packageConfig: packageConfig);
   }
 
-  /// Returns the root Schema object.
-  static ConfigSpec getsRootSchema() {
+  /// Returns the root ConfigSpec object.
+  static ConfigSpec getsRootConfigSpec() {
     final configspecs = Config._(filename: null, packageConfig: null);
-    return configspecs._getRootSchema();
+    return configspecs._getRootConfigSpec();
   }
 
   /// Add compiler options for clang. If [highPriority] is true these are added
@@ -219,13 +219,13 @@ class Config {
     }
   }
 
-  ConfigSpec _getRootSchema() {
+  ConfigSpec _getRootConfigSpec() {
     return FixedMapConfigSpec(
       entries: [
         FixedMapEntry(
           key: strings.llvmPath,
-          valueConfigSpec: ListSchema<String, String>(
-            childSchema: StringConfigSpec(),
+          valueConfigSpec: ListConfigSpec<String, String>(
+            childConfigSpec: StringConfigSpec(),
             transform: (node) => llvmPathExtractor(node.value),
           ),
           defaultValue: (node) => findDylibAtDefaultLocations(),
@@ -236,8 +236,8 @@ class Config {
             required: true,
             valueConfigSpec: OneOfConfigSpec(
               childConfigSpecs: [
-                _filePathStringSchema(),
-                _outputFullSchema(),
+                _filePathStringConfigSpec(),
+                _outputFullConfigSpec(),
               ],
               transform: (node) =>
                   outputExtractor(node.value, filename, packageConfig),
@@ -271,14 +271,14 @@ class Config {
               entries: [
                 FixedMapEntry(
                   key: strings.entryPoints,
-                  valueConfigSpec: ListSchema<String, List<String>>(
-                      childSchema: StringConfigSpec()),
+                  valueConfigSpec: ListConfigSpec<String, List<String>>(
+                      childConfigSpec: StringConfigSpec()),
                   required: true,
                 ),
                 FixedMapEntry(
                   key: strings.includeDirectives,
-                  valueConfigSpec: ListSchema<String, List<String>>(
-                      childSchema: StringConfigSpec()),
+                  valueConfigSpec: ListConfigSpec<String, List<String>>(
+                      childConfigSpec: StringConfigSpec()),
                 ),
               ],
               transform: (node) => headersExtractor(node.value, filename),
@@ -291,7 +291,8 @@ class Config {
               StringConfigSpec(
                 transform: (node) => [node.value],
               ),
-              ListSchema<String, List<String>>(childSchema: StringConfigSpec())
+              ListConfigSpec<String, List<String>>(
+                  childConfigSpec: StringConfigSpec())
             ],
             transform: (node) => compilerOptsExtractor(node.value),
           ),
@@ -360,7 +361,7 @@ class Config {
                 ),
                 FixedMapEntry(
                   key: strings.varArgFunctions,
-                  valueConfigSpec: _functionVarArgsSchema(),
+                  valueConfigSpec: _functionVarArgsConfigSpec(),
                   defaultValue: (node) => <String, List<RawVarArgFunction>>{},
                   resultOrDefault: (node) {
                     _varArgFunctions = makeVarArgFunctionsMapping(
@@ -523,8 +524,8 @@ class Config {
                 FixedMapEntry(
                   key: strings.symbolFilesImport,
                   valueConfigSpec:
-                      ListSchema<String, Map<String, ImportedType>>(
-                    childSchema: StringConfigSpec(),
+                      ListConfigSpec<String, Map<String, ImportedType>>(
+                    childConfigSpec: StringConfigSpec(),
                     transform: (node) => symbolFileImportExtractor(
                         node.value, _libraryImports, filename, packageConfig),
                   ),
@@ -603,13 +604,13 @@ class Config {
         ),
         FixedMapEntry(
           key: strings.comments,
-          valueConfigSpec: _commentSchema(),
+          valueConfigSpec: _commentConfigSpec(),
           defaultValue: (node) => CommentType.def(),
           resultOrDefault: (node) => _commentType = node.value as CommentType,
         ),
         FixedMapEntry(
           key: strings.name,
-          valueConfigSpec: _dartClassNameStringSchema(),
+          valueConfigSpec: _dartClassNameStringConfigSpec(),
           defaultValue: (node) {
             _logger.warning(
                 "Prefer adding Key '${node.pathString}' to your config.");
@@ -619,7 +620,7 @@ class Config {
         ),
         FixedMapEntry(
           key: strings.description,
-          valueConfigSpec: _nonEmptyStringSchema(),
+          valueConfigSpec: _nonEmptyStringConfigSpec(),
           defaultValue: (node) {
             _logger.warning(
                 "Prefer adding Key '${node.pathString}' to your config.");
@@ -677,7 +678,7 @@ class Config {
     return true;
   }
 
-  OneOfConfigSpec _commentSchema() {
+  OneOfConfigSpec _commentConfigSpec() {
     return OneOfConfigSpec(
       childConfigSpecs: [
         BoolConfigSpec(
@@ -716,21 +717,21 @@ class Config {
     );
   }
 
-  DynamicMapConfigSpec _functionVarArgsSchema() {
+  DynamicMapConfigSpec _functionVarArgsConfigSpec() {
     return DynamicMapConfigSpec(
       keyValueConfigSpecs: [
         (
           keyRegexp: ".*",
-          valueConfigSpec: ListSchema(
-            childSchema: OneOfConfigSpec(
+          valueConfigSpec: ListConfigSpec(
+            childConfigSpec: OneOfConfigSpec(
               childConfigSpecs: [
-                ListSchema(childSchema: StringConfigSpec()),
+                ListConfigSpec(childConfigSpec: StringConfigSpec()),
                 FixedMapConfigSpec(
                   entries: [
                     FixedMapEntry(
                       key: strings.types,
-                      valueConfigSpec: ListSchema<String, List<String>>(
-                          childSchema: StringConfigSpec()),
+                      valueConfigSpec: ListConfigSpec<String, List<String>>(
+                          childConfigSpec: StringConfigSpec()),
                       required: true,
                     ),
                     FixedMapEntry(
@@ -748,12 +749,12 @@ class Config {
     );
   }
 
-  FixedMapConfigSpec _outputFullSchema() {
+  FixedMapConfigSpec _outputFullConfigSpec() {
     return FixedMapConfigSpec(
       entries: [
         FixedMapEntry(
           key: strings.bindings,
-          valueConfigSpec: _filePathStringSchema(),
+          valueConfigSpec: _filePathStringConfigSpec(),
           required: true,
         ),
         FixedMapEntry(
@@ -762,7 +763,7 @@ class Config {
             entries: [
               FixedMapEntry(
                 key: strings.output,
-                valueConfigSpec: _filePathStringSchema(),
+                valueConfigSpec: _filePathStringConfigSpec(),
                 required: true,
               ),
               FixedMapEntry(
@@ -777,21 +778,21 @@ class Config {
     );
   }
 
-  StringConfigSpec _filePathStringSchema() {
+  StringConfigSpec _filePathStringConfigSpec() {
     return StringConfigSpec(
       schemaDefName: 'filePath',
       schemaDescription: "A file path",
     );
   }
 
-  StringConfigSpec _nonEmptyStringSchema() {
+  StringConfigSpec _nonEmptyStringConfigSpec() {
     return StringConfigSpec(
       schemaDefName: 'nonEmptyString',
       pattern: r'.+',
     );
   }
 
-  StringConfigSpec _dartClassNameStringSchema() {
+  StringConfigSpec _dartClassNameStringConfigSpec() {
     return StringConfigSpec(
       schemaDefName: 'publicDartClass',
       schemaDescription: "A public dart class name.",
@@ -813,10 +814,10 @@ class Config {
     ];
   }
 
-  ListSchema<String, List<String>> _fullMatchOrRegexpList() {
-    return ListSchema(
+  ListConfigSpec<String, List<String>> _fullMatchOrRegexpList() {
+    return ListConfigSpec(
       schemaDefName: "fullMatchOrRegexpList",
-      childSchema: StringConfigSpec(),
+      childConfigSpec: StringConfigSpec(),
     );
   }
 

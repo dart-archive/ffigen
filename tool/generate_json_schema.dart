@@ -15,7 +15,7 @@ import 'package:ffigen/src/strings.dart' as strings;
 void main() async {
   final actualJsonSchema =
       JsonEncoder.withIndent(strings.ffigenJsonSchemaIndent).convert(
-    Config.getsRootSchema().generateJsonSchema(strings.ffigenJsonSchemaId),
+    Config.getsRootConfigSpec().generateJsonSchema(strings.ffigenJsonSchemaId),
   );
 
   final file = File(strings.ffigenJsonSchemaFileName);

@@ -40,7 +40,7 @@ class ConfigSpecNode<TE> {
     );
   }
 
-  /// Transforms this SchemaNode with a nullable [transform] or return itself
+  /// Transforms this with a nullable [transform] or return itself
   /// and calls the [result] callback
   ConfigSpecNode<RE> transformOrThis<RE extends Object?>(
     RE Function(ConfigSpecNode<TE> value)? transform,
@@ -72,7 +72,7 @@ class ConfigSpecNode<TE> {
 class ConfigSpecExtractionError extends Error {
   final ConfigSpecNode? item;
   final String message;
-  ConfigSpecExtractionError(this.item, [this.message = "Invalid Schema"]);
+  ConfigSpecExtractionError(this.item, [this.message = "Invalid ConfigSpec"]);
 
   @override
   String toString() {
@@ -83,7 +83,7 @@ class ConfigSpecExtractionError extends Error {
   }
 }
 
-/// Base class for all Schemas to extend.
+/// Base class for all ConfigSpecs to extend.
 ///
 /// [TE] - type input for [transform], [RE] - type input for [result].
 ///
@@ -107,7 +107,7 @@ abstract class ConfigSpec<TE extends Object?, RE extends Object?> {
   /// Used to generate the description field in json schema.
   String? schemaDescription;
 
-  /// Custom validation hook, called post schema validation if successful.
+  /// Custom validation hook, called post validation if successful.
   bool Function(ConfigSpecNode node)? customValidation;
 
   /// Used to transform the payload to another type before passing to parent
@@ -128,7 +128,7 @@ abstract class ConfigSpec<TE extends Object?, RE extends Object?> {
 
   ConfigSpecNode<RE> _extractNode(ConfigSpecNode o);
 
-  /// Schema objects should call [_getJsonRefOrSchemaNode] instead to get the
+  /// ConfigSpec objects should call [_getJsonRefOrSchemaNode] instead to get the
   /// child json schema.
   Map<String, dynamic> _generateJsonSchemaNode(Map<String, dynamic> defs);
 
@@ -158,8 +158,8 @@ abstract class ConfigSpec<TE extends Object?, RE extends Object?> {
     return _validateNode(ConfigSpecNode(path: [], value: value));
   }
 
-  /// Extract SchemaNode from [value]. This will call the [transform] for all
-  /// underlying Schemas if valid.
+  /// Extract ConfigSpecNode from [value]. This will call the [transform] for all
+  /// underlying ConfigSpecs if valid.
   /// Should ideally only be called if [validate] returns True. Throws
   /// [ConfigSpecExtractionError] if any validation fails.
   ConfigSpecNode extract(dynamic value) {
@@ -345,7 +345,7 @@ class FixedMapConfigSpec<CE extends Object?, RE extends Object?>
       for (final key in inputMap.keys) {
         if (!allKeys.contains(key)) {
           throw ConfigSpecExtractionError(
-              o, "Invalid schema: additional properties not allowed.");
+              o, "Invalid ConfigSpec: additional properties not allowed.");
         }
       }
     }
@@ -417,10 +417,10 @@ class DynamicMapConfigSpec<CE extends Object?, RE extends Object?>
       }
       if (!keyValueMatch) {
         result = false;
-        // No schema matched, running again to print logs this time.
+        // No configSpec matched, running again to print logs this time.
         if (log) {
           _logger.severe(
-              "'${configSpecNode.pathString}' must match atleast one of the allowed key regex and schema.");
+              "'${configSpecNode.pathString}' must match atleast one of the allowed key regex and configSpec.");
           for (final (keyRegexp: keyRegexp, valueConfigSpec: valueConfigSpec)
               in keyValueConfigSpecs) {
             if (!RegExp(keyRegexp, dotAll: true).hasMatch(key.toString())) {
@@ -491,15 +491,15 @@ class DynamicMapConfigSpec<CE extends Object?, RE extends Object?>
 
 /// ConfigSpec for a List.
 ///
-/// [CE] typecasts result from childSchema.
+/// [CE] typecasts result from [childConfigSpec].
 ///
 /// [RE] typecasts result returned by this node.
-class ListSchema<CE extends Object?, RE extends Object?>
+class ListConfigSpec<CE extends Object?, RE extends Object?>
     extends ConfigSpec<List<CE>, RE> {
-  final ConfigSpec childSchema;
+  final ConfigSpec childConfigSpec;
 
-  ListSchema({
-    required this.childSchema,
+  ListConfigSpec({
+    required this.childConfigSpec,
     super.schemaDefName,
     super.schemaDescription,
     super.customValidation,
@@ -517,7 +517,7 @@ class ListSchema<CE extends Object?, RE extends Object?>
     for (final (i, input) in inputList.indexed) {
       final configSpecNode =
           ConfigSpecNode(path: [...o.path, "[$i]"], value: input);
-      if (!childSchema._validateNode(configSpecNode, log: log)) {
+      if (!childConfigSpec._validateNode(configSpecNode, log: log)) {
         result = false;
         continue;
       }
@@ -539,10 +539,11 @@ class ListSchema<CE extends Object?, RE extends Object?>
     for (final (i, input) in inputList.indexed) {
       final configSpecNode =
           ConfigSpecNode(path: [...o.path, i.toString()], value: input);
-      if (!childSchema._validateNode(configSpecNode, log: false)) {
+      if (!childConfigSpec._validateNode(configSpecNode, log: false)) {
         throw ConfigSpecExtractionError(configSpecNode);
       }
-      childExtracts.add(childSchema._extractNode(configSpecNode).value as CE);
+      childExtracts
+          .add(childConfigSpec._extractNode(configSpecNode).value as CE);
     }
     return o
         .withValue(childExtracts, o.rawValue)
@@ -554,7 +555,7 @@ class ListSchema<CE extends Object?, RE extends Object?>
     return {
       "type": "array",
       if (schemaDescription != null) "description": schemaDescription!,
-      "items": childSchema._getJsonRefOrSchemaNode(defs),
+      "items": childConfigSpec._getJsonRefOrSchemaNode(defs),
     };
   }
 }
@@ -776,10 +777,10 @@ class OneOfConfigSpec<TE extends Object?, RE extends Object?>
         return true;
       }
     }
-    // No schema matched, running again to print logs this time.
+    // No configSpec matched, running again to print logs this time.
     if (log) {
       _logger.severe(
-          "'${o.pathString}' must match atleast one of the allowed schema -");
+          "'${o.pathString}' must match atleast one of the allowed configSpec -");
       for (final spec in childConfigSpecs) {
         spec._validateNode(o, log: log);
       }

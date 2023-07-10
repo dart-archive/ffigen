@@ -17,13 +17,14 @@ late Library actual, expected;
 
 void main() {
   group('json_schema_test', () {
-    final schema =
-        Config.getsRootSchema().generateJsonSchema(strings.ffigenJsonSchemaId);
+    final schema = Config.getsRootConfigSpec()
+        .generateJsonSchema(strings.ffigenJsonSchemaId);
 
     test('Schema Changes', () {
       final actualJsonSchema =
           JsonEncoder.withIndent(strings.ffigenJsonSchemaIndent).convert(
-        Config.getsRootSchema().generateJsonSchema(strings.ffigenJsonSchemaId),
+        Config.getsRootConfigSpec()
+            .generateJsonSchema(strings.ffigenJsonSchemaId),
       );
       final expectedJsonSchema = File(strings.ffigenJsonSchemaFileName)
           .readAsStringSync()
