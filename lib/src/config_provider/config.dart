@@ -220,9 +220,9 @@ class Config {
   }
 
   ConfigSpec _getRootConfigSpec() {
-    return FixedMapConfigSpec(
+    return HeterogeneousMapConfigSpec(
       entries: [
-        FixedMapEntry(
+        HeterogeneousMapEntry(
           key: strings.llvmPath,
           valueConfigSpec: ListConfigSpec<String, String>(
             childConfigSpec: StringConfigSpec(),
@@ -231,7 +231,7 @@ class Config {
           defaultValue: (node) => findDylibAtDefaultLocations(),
           resultOrDefault: (node) => _libclangDylib = node.value as String,
         ),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
             key: strings.output,
             required: true,
             valueConfigSpec: OneOfConfigSpec(
@@ -246,7 +246,7 @@ class Config {
                 _symbolFile = (node.value as OutputConfig).symbolFile;
               },
             )),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
           key: strings.language,
           valueConfigSpec: EnumConfigSpec(
             allowedValues: {strings.langC, strings.langObjC},
@@ -264,18 +264,18 @@ class Config {
           defaultValue: (node) => Language.c,
           resultOrDefault: (node) => _language = node.value as Language,
         ),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
             key: strings.headers,
             required: true,
-            valueConfigSpec: FixedMapConfigSpec<List<String>, Headers>(
+            valueConfigSpec: HeterogeneousMapConfigSpec<List<String>, Headers>(
               entries: [
-                FixedMapEntry(
+                HeterogeneousMapEntry(
                   key: strings.entryPoints,
                   valueConfigSpec: ListConfigSpec<String, List<String>>(
                       childConfigSpec: StringConfigSpec()),
                   required: true,
                 ),
-                FixedMapEntry(
+                HeterogeneousMapEntry(
                   key: strings.includeDirectives,
                   valueConfigSpec: ListConfigSpec<String, List<String>>(
                       childConfigSpec: StringConfigSpec()),
@@ -284,7 +284,7 @@ class Config {
               transform: (node) => headersExtractor(node.value, filename),
               result: (node) => _headers = node.value,
             )),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
           key: strings.compilerOpts,
           valueConfigSpec: OneOfConfigSpec<List<String>, List<String>>(
             childConfigSpecs: [
@@ -299,15 +299,15 @@ class Config {
           defaultValue: (node) => <String>[],
           resultOrDefault: (node) => _compilerOpts = node.value as List<String>,
         ),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
             key: strings.compilerOptsAuto,
-            valueConfigSpec: FixedMapConfigSpec(
+            valueConfigSpec: HeterogeneousMapConfigSpec(
               entries: [
-                FixedMapEntry(
+                HeterogeneousMapEntry(
                   key: strings.macos,
-                  valueConfigSpec: FixedMapConfigSpec(
+                  valueConfigSpec: HeterogeneousMapConfigSpec(
                     entries: [
-                      FixedMapEntry(
+                      HeterogeneousMapEntry(
                         key: strings.includeCStdLib,
                         valueConfigSpec: BoolConfigSpec(),
                         defaultValue: (node) => true,
@@ -323,10 +323,9 @@ class Config {
               result: (node) => _compilerOpts.addAll(
                   (node.value as CompilerOptsAuto).extractCompilerOpts()),
             )),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
           key: strings.libraryImports,
-          valueConfigSpec:
-              DynamicMapConfigSpec<String, Map<String, LibraryImport>>(
+          valueConfigSpec: MapConfigSpec<String, Map<String, LibraryImport>>(
             keyValueConfigSpecs: [
               (keyRegexp: ".*", valueConfigSpec: StringConfigSpec()),
             ],
@@ -337,29 +336,29 @@ class Config {
           resultOrDefault: (node) =>
               _libraryImports = (node.value) as Map<String, LibraryImport>,
         ),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
             key: strings.functions,
-            valueConfigSpec: FixedMapConfigSpec(
+            valueConfigSpec: HeterogeneousMapConfigSpec(
               entries: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
                 ..._memberRenameProperties(),
-                FixedMapEntry(
+                HeterogeneousMapEntry(
                   key: strings.symbolAddress,
                   valueConfigSpec: _includeExcludeObject(),
                   defaultValue: (node) => Includer.excludeByDefault(),
                 ),
-                FixedMapEntry(
+                HeterogeneousMapEntry(
                   key: strings.exposeFunctionTypedefs,
                   valueConfigSpec: _includeExcludeObject(),
                   defaultValue: (node) => Includer.excludeByDefault(),
                 ),
-                FixedMapEntry(
+                HeterogeneousMapEntry(
                   key: strings.leafFunctions,
                   valueConfigSpec: _includeExcludeObject(),
                   defaultValue: (node) => Includer.excludeByDefault(),
                 ),
-                FixedMapEntry(
+                HeterogeneousMapEntry(
                   key: strings.varArgFunctions,
                   valueConfigSpec: _functionVarArgsConfigSpec(),
                   defaultValue: (node) => <String, List<RawVarArgFunction>>{},
@@ -379,17 +378,17 @@ class Config {
                     (node.value as Map)[strings.leafFunctions] as Includer;
               },
             )),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
             key: strings.structs,
-            valueConfigSpec: FixedMapConfigSpec(
+            valueConfigSpec: HeterogeneousMapConfigSpec(
               entries: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
                 ..._memberRenameProperties(),
-                _dependencyOnlyFixedMapKey(),
-                FixedMapEntry(
+                _dependencyOnlyHeterogeneousMapKey(),
+                HeterogeneousMapEntry(
                   key: strings.structPack,
-                  valueConfigSpec: DynamicMapConfigSpec(
+                  valueConfigSpec: MapConfigSpec(
                     keyValueConfigSpecs: [
                       (
                         keyRegexp: '.*',
@@ -415,14 +414,14 @@ class Config {
                     as Map)[strings.dependencyOnly] as CompoundDependencies;
               },
             )),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
             key: strings.unions,
-            valueConfigSpec: FixedMapConfigSpec(
+            valueConfigSpec: HeterogeneousMapConfigSpec(
               entries: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
                 ..._memberRenameProperties(),
-                _dependencyOnlyFixedMapKey(),
+                _dependencyOnlyHeterogeneousMapKey(),
               ],
               result: (node) {
                 _unionDecl = declarationConfigExtractor(
@@ -431,9 +430,9 @@ class Config {
                     as CompoundDependencies;
               },
             )),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
             key: strings.enums,
-            valueConfigSpec: FixedMapConfigSpec(
+            valueConfigSpec: HeterogeneousMapConfigSpec(
               entries: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
@@ -444,9 +443,9 @@ class Config {
                     node.value as Map<dynamic, dynamic>);
               },
             )),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
             key: strings.unnamedEnums,
-            valueConfigSpec: FixedMapConfigSpec(
+            valueConfigSpec: HeterogeneousMapConfigSpec(
               entries: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
@@ -456,13 +455,13 @@ class Config {
                     node.value as Map<dynamic, dynamic>);
               },
             )),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
             key: strings.globals,
-            valueConfigSpec: FixedMapConfigSpec(
+            valueConfigSpec: HeterogeneousMapConfigSpec(
               entries: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
-                FixedMapEntry(
+                HeterogeneousMapEntry(
                   key: strings.symbolAddress,
                   valueConfigSpec: _includeExcludeObject(),
                   defaultValue: (node) => Includer.excludeByDefault(),
@@ -473,9 +472,9 @@ class Config {
                     node.value as Map<dynamic, dynamic>);
               },
             )),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
             key: strings.macros,
-            valueConfigSpec: FixedMapConfigSpec(
+            valueConfigSpec: HeterogeneousMapConfigSpec(
               entries: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
@@ -485,9 +484,9 @@ class Config {
                     node.value as Map<dynamic, dynamic>);
               },
             )),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
             key: strings.typedefs,
-            valueConfigSpec: FixedMapConfigSpec(
+            valueConfigSpec: HeterogeneousMapConfigSpec(
               entries: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
@@ -497,14 +496,14 @@ class Config {
                     node.value as Map<dynamic, dynamic>);
               },
             )),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
             key: strings.objcInterfaces,
-            valueConfigSpec: FixedMapConfigSpec(
+            valueConfigSpec: HeterogeneousMapConfigSpec(
               entries: [
                 ..._includeExcludeProperties(),
                 ..._renameProperties(),
                 ..._memberRenameProperties(),
-                FixedMapEntry(
+                HeterogeneousMapEntry(
                   key: strings.objcModule,
                   valueConfigSpec: _objcInterfaceModuleObject(),
                   defaultValue: (node) => ObjCModulePrefixer({}),
@@ -517,11 +516,11 @@ class Config {
                     as ObjCModulePrefixer;
               },
             )),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
             key: strings.import,
-            valueConfigSpec: FixedMapConfigSpec(
+            valueConfigSpec: HeterogeneousMapConfigSpec(
               entries: [
-                FixedMapEntry(
+                HeterogeneousMapEntry(
                   key: strings.symbolFilesImport,
                   valueConfigSpec:
                       ListConfigSpec<String, Map<String, ImportedType>>(
@@ -535,26 +534,26 @@ class Config {
                 )
               ],
             )),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
             key: strings.typeMap,
-            valueConfigSpec: FixedMapConfigSpec(
+            valueConfigSpec: HeterogeneousMapConfigSpec(
               entries: [
-                FixedMapEntry(
+                HeterogeneousMapEntry(
                   key: strings.typeMapTypedefs,
                   valueConfigSpec: _mappedTypeObject(),
                   defaultValue: (node) => <String, List<String>>{},
                 ),
-                FixedMapEntry(
+                HeterogeneousMapEntry(
                   key: strings.typeMapStructs,
                   valueConfigSpec: _mappedTypeObject(),
                   defaultValue: (node) => <String, List<String>>{},
                 ),
-                FixedMapEntry(
+                HeterogeneousMapEntry(
                   key: strings.typeMapUnions,
                   valueConfigSpec: _mappedTypeObject(),
                   defaultValue: (node) => <String, List<String>>{},
                 ),
-                FixedMapEntry(
+                HeterogeneousMapEntry(
                   key: strings.typeMapNativeTypes,
                   valueConfigSpec: _mappedTypeObject(),
                   defaultValue: (node) => <String, List<String>>{},
@@ -584,31 +583,31 @@ class Config {
                 );
               },
             )),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
           key: strings.excludeAllByDefault,
           valueConfigSpec: BoolConfigSpec(),
           defaultValue: (node) => false,
           resultOrDefault: (node) => _excludeAllByDefault = node.value as bool,
         ),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
           key: strings.sort,
           valueConfigSpec: BoolConfigSpec(),
           defaultValue: (node) => false,
           resultOrDefault: (node) => _sort = node.value as bool,
         ),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
           key: strings.useSupportedTypedefs,
           valueConfigSpec: BoolConfigSpec(),
           defaultValue: (node) => true,
           resultOrDefault: (node) => _useSupportedTypedefs = node.value as bool,
         ),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
           key: strings.comments,
           valueConfigSpec: _commentConfigSpec(),
           defaultValue: (node) => CommentType.def(),
           resultOrDefault: (node) => _commentType = node.value as CommentType,
         ),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
           key: strings.name,
           valueConfigSpec: _dartClassNameStringConfigSpec(),
           defaultValue: (node) {
@@ -618,7 +617,7 @@ class Config {
           },
           resultOrDefault: (node) => _wrapperName = node.value as String,
         ),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
           key: strings.description,
           valueConfigSpec: _nonEmptyStringConfigSpec(),
           defaultValue: (node) {
@@ -628,25 +627,25 @@ class Config {
           },
           resultOrDefault: (node) => _wrapperDocComment = node.value as String?,
         ),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
             key: strings.preamble,
             valueConfigSpec: StringConfigSpec(
               result: (node) => _preamble = node.value as String?,
             )),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
           key: strings.useDartHandle,
           valueConfigSpec: BoolConfigSpec(),
           defaultValue: (node) => true,
           resultOrDefault: (node) => _useDartHandle = node.value as bool,
         ),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
           key: strings.ffiNative,
           valueConfigSpec: OneOfConfigSpec(
             childConfigSpecs: [
               EnumConfigSpec(allowedValues: {null}),
-              FixedMapConfigSpec(
+              HeterogeneousMapConfigSpec(
                 entries: [
-                  FixedMapEntry(
+                  HeterogeneousMapEntry(
                     key: strings.ffiNativeAsset,
                     valueConfigSpec: StringConfigSpec(),
                     required: true,
@@ -685,9 +684,9 @@ class Config {
           transform: (node) =>
               (node.value == true) ? CommentType.def() : CommentType.none(),
         ),
-        FixedMapConfigSpec(
+        HeterogeneousMapConfigSpec(
           entries: [
-            FixedMapEntry(
+            HeterogeneousMapEntry(
               key: strings.style,
               valueConfigSpec: EnumConfigSpec(
                 allowedValues: {strings.doxygen, strings.any},
@@ -697,7 +696,7 @@ class Config {
               ),
               defaultValue: (node) => CommentStyle.doxygen,
             ),
-            FixedMapEntry(
+            HeterogeneousMapEntry(
               key: strings.length,
               valueConfigSpec: EnumConfigSpec(
                 allowedValues: {strings.brief, strings.full},
@@ -717,8 +716,8 @@ class Config {
     );
   }
 
-  DynamicMapConfigSpec _functionVarArgsConfigSpec() {
-    return DynamicMapConfigSpec(
+  MapConfigSpec _functionVarArgsConfigSpec() {
+    return MapConfigSpec(
       keyValueConfigSpecs: [
         (
           keyRegexp: ".*",
@@ -726,15 +725,15 @@ class Config {
             childConfigSpec: OneOfConfigSpec(
               childConfigSpecs: [
                 ListConfigSpec(childConfigSpec: StringConfigSpec()),
-                FixedMapConfigSpec(
+                HeterogeneousMapConfigSpec(
                   entries: [
-                    FixedMapEntry(
+                    HeterogeneousMapEntry(
                       key: strings.types,
                       valueConfigSpec: ListConfigSpec<String, List<String>>(
                           childConfigSpec: StringConfigSpec()),
                       required: true,
                     ),
-                    FixedMapEntry(
+                    HeterogeneousMapEntry(
                       key: strings.postfix,
                       valueConfigSpec: StringConfigSpec(),
                     ),
@@ -749,24 +748,24 @@ class Config {
     );
   }
 
-  FixedMapConfigSpec _outputFullConfigSpec() {
-    return FixedMapConfigSpec(
+  HeterogeneousMapConfigSpec _outputFullConfigSpec() {
+    return HeterogeneousMapConfigSpec(
       entries: [
-        FixedMapEntry(
+        HeterogeneousMapEntry(
           key: strings.bindings,
           valueConfigSpec: _filePathStringConfigSpec(),
           required: true,
         ),
-        FixedMapEntry(
+        HeterogeneousMapEntry(
           key: strings.symbolFile,
-          valueConfigSpec: FixedMapConfigSpec(
+          valueConfigSpec: HeterogeneousMapConfigSpec(
             entries: [
-              FixedMapEntry(
+              HeterogeneousMapEntry(
                 key: strings.output,
                 valueConfigSpec: _filePathStringConfigSpec(),
                 required: true,
               ),
-              FixedMapEntry(
+              HeterogeneousMapEntry(
                 key: strings.importPath,
                 valueConfigSpec: StringConfigSpec(),
                 required: true,
@@ -800,13 +799,13 @@ class Config {
     );
   }
 
-  List<FixedMapEntry> _includeExcludeProperties() {
+  List<HeterogeneousMapEntry> _includeExcludeProperties() {
     return [
-      FixedMapEntry(
+      HeterogeneousMapEntry(
         key: strings.include,
         valueConfigSpec: _fullMatchOrRegexpList(),
       ),
-      FixedMapEntry(
+      HeterogeneousMapEntry(
         key: strings.exclude,
         valueConfigSpec: _fullMatchOrRegexpList(),
         defaultValue: (node) => <String>[],
@@ -821,11 +820,11 @@ class Config {
     );
   }
 
-  List<FixedMapEntry> _renameProperties() {
+  List<HeterogeneousMapEntry> _renameProperties() {
     return [
-      FixedMapEntry(
+      HeterogeneousMapEntry(
         key: strings.rename,
-        valueConfigSpec: DynamicMapConfigSpec<String, dynamic>(
+        valueConfigSpec: MapConfigSpec<String, dynamic>(
           schemaDefName: "rename",
           keyValueConfigSpecs: [
             (keyRegexp: ".*", valueConfigSpec: StringConfigSpec()),
@@ -835,18 +834,17 @@ class Config {
     ];
   }
 
-  List<FixedMapEntry> _memberRenameProperties() {
+  List<HeterogeneousMapEntry> _memberRenameProperties() {
     return [
-      FixedMapEntry(
+      HeterogeneousMapEntry(
         key: strings.memberRename,
-        valueConfigSpec: DynamicMapConfigSpec<Map<dynamic, String>,
+        valueConfigSpec: MapConfigSpec<Map<dynamic, String>,
             Map<dynamic, Map<dynamic, String>>>(
           schemaDefName: "memberRename",
           keyValueConfigSpecs: [
             (
               keyRegexp: ".*",
-              valueConfigSpec:
-                  DynamicMapConfigSpec<String, Map<dynamic, String>>(
+              valueConfigSpec: MapConfigSpec<String, Map<dynamic, String>>(
                 keyValueConfigSpecs: [
                   (keyRegexp: ".*", valueConfigSpec: StringConfigSpec())
                 ],
@@ -858,8 +856,8 @@ class Config {
     ];
   }
 
-  FixedMapConfigSpec<List<String>, Includer> _includeExcludeObject() {
-    return FixedMapConfigSpec(
+  HeterogeneousMapConfigSpec<List<String>, Includer> _includeExcludeObject() {
+    return HeterogeneousMapConfigSpec(
       schemaDefName: "includeExclude",
       entries: [
         ..._includeExcludeProperties(),
@@ -868,8 +866,8 @@ class Config {
     );
   }
 
-  FixedMapEntry _dependencyOnlyFixedMapKey() {
-    return FixedMapEntry(
+  HeterogeneousMapEntry _dependencyOnlyHeterogeneousMapKey() {
+    return HeterogeneousMapEntry(
       key: strings.dependencyOnly,
       valueConfigSpec: EnumConfigSpec<String, CompoundDependencies>(
         schemaDefName: "dependencyOnly",
@@ -885,18 +883,18 @@ class Config {
     );
   }
 
-  DynamicMapConfigSpec _mappedTypeObject() {
-    return DynamicMapConfigSpec(
+  MapConfigSpec _mappedTypeObject() {
+    return MapConfigSpec(
       schemaDefName: "mappedTypes",
       keyValueConfigSpecs: [
         (
           keyRegexp: ".*",
-          valueConfigSpec: FixedMapConfigSpec(entries: [
-            FixedMapEntry(
+          valueConfigSpec: HeterogeneousMapConfigSpec(entries: [
+            HeterogeneousMapEntry(
                 key: strings.lib, valueConfigSpec: StringConfigSpec()),
-            FixedMapEntry(
+            HeterogeneousMapEntry(
                 key: strings.cType, valueConfigSpec: StringConfigSpec()),
-            FixedMapEntry(
+            HeterogeneousMapEntry(
                 key: strings.dartType, valueConfigSpec: StringConfigSpec()),
           ]),
         )
@@ -905,8 +903,8 @@ class Config {
     );
   }
 
-  DynamicMapConfigSpec _objcInterfaceModuleObject() {
-    return DynamicMapConfigSpec(
+  MapConfigSpec _objcInterfaceModuleObject() {
+    return MapConfigSpec(
       schemaDefName: "objcInterfaceModule",
       keyValueConfigSpecs: [
         (keyRegexp: ".*", valueConfigSpec: StringConfigSpec()),

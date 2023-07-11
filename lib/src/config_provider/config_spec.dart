@@ -170,14 +170,14 @@ class ConfigSpecExtractionError extends Error {
   }
 }
 
-class FixedMapEntry {
+class HeterogeneousMapEntry {
   final String key;
   final ConfigSpec valueConfigSpec;
   final Object? Function(ConfigValue<void> o)? defaultValue;
   void Function(ConfigValue<Object?> node)? resultOrDefault;
   final bool required;
 
-  FixedMapEntry({
+  HeterogeneousMapEntry({
     required this.key,
     required this.valueConfigSpec,
     this.defaultValue,
@@ -193,14 +193,14 @@ enum AdditionalProperties { Allow, Warn, Error }
 /// [CE] typecasts result from entries->{}->valueConfigSpec.
 ///
 /// [RE] typecasts result returned by this node.
-class FixedMapConfigSpec<CE extends Object?, RE extends Object?>
+class HeterogeneousMapConfigSpec<CE extends Object?, RE extends Object?>
     extends ConfigSpec<Map<dynamic, CE>, RE> {
-  final List<FixedMapEntry> entries;
+  final List<HeterogeneousMapEntry> entries;
   final Set<String> allKeys;
   final Set<String> requiredKeys;
   final AdditionalProperties additionalProperties;
 
-  FixedMapConfigSpec({
+  HeterogeneousMapConfigSpec({
     required this.entries,
     super.schemaDefName,
     super.schemaDescription,
@@ -271,16 +271,18 @@ class FixedMapConfigSpec<CE extends Object?, RE extends Object?>
       if (entry.defaultValue != null) {
         result[entry.key] = entry.defaultValue!
             .call(ConfigValue(path: path, value: null)) as CE;
-      } else if (entry.valueConfigSpec is FixedMapConfigSpec) {
-        final defaultValue = (entry.valueConfigSpec as FixedMapConfigSpec)
-            ._getAllDefaults(ConfigValue(path: path, value: null));
+      } else if (entry.valueConfigSpec is HeterogeneousMapConfigSpec) {
+        final defaultValue =
+            (entry.valueConfigSpec as HeterogeneousMapConfigSpec)
+                ._getAllDefaults(ConfigValue(path: path, value: null));
         if (defaultValue != null) {
-          result[entry.key] = (entry.valueConfigSpec as FixedMapConfigSpec)
-              ._getAllDefaults(ConfigValue(path: path, value: null)) as CE;
+          result[entry.key] =
+              (entry.valueConfigSpec as HeterogeneousMapConfigSpec)
+                  ._getAllDefaults(ConfigValue(path: path, value: null)) as CE;
         }
       }
       if (result.containsKey(entry.key) && entry.resultOrDefault != null) {
-        // Call resultOrDefault hook for FixedMapKey.
+        // Call resultOrDefault hook for HeterogeneousMapEntry.
         entry.resultOrDefault!.call(ConfigValue(
             path: path, value: result[entry.key], nullRawValue: true));
       }
@@ -316,12 +318,13 @@ class FixedMapConfigSpec<CE extends Object?, RE extends Object?>
         if (entry.defaultValue != null) {
           childExtracts[entry.key] = entry.defaultValue!
               .call(ConfigValue(path: path, value: null)) as CE;
-        } else if (entry.valueConfigSpec is FixedMapConfigSpec) {
-          final defaultValue = (entry.valueConfigSpec as FixedMapConfigSpec)
-              ._getAllDefaults(ConfigValue(path: path, value: null));
+        } else if (entry.valueConfigSpec is HeterogeneousMapConfigSpec) {
+          final defaultValue =
+              (entry.valueConfigSpec as HeterogeneousMapConfigSpec)
+                  ._getAllDefaults(ConfigValue(path: path, value: null));
           if (defaultValue != null) {
             childExtracts[entry.key] = (entry.valueConfigSpec
-                    as FixedMapConfigSpec)
+                    as HeterogeneousMapConfigSpec)
                 ._getAllDefaults(ConfigValue(path: path, value: null)) as CE;
           }
         }
@@ -338,7 +341,7 @@ class FixedMapConfigSpec<CE extends Object?, RE extends Object?>
 
       if (childExtracts.containsKey(entry.key) &&
           entry.resultOrDefault != null) {
-        // Call resultOrDefault hook for FixedMapKey.
+        // Call resultOrDefault hook for HeterogeneousMapEntry.
         entry.resultOrDefault!.call(ConfigValue(
             path: path, value: childExtracts[entry.key], nullRawValue: true));
       }
@@ -380,7 +383,7 @@ class FixedMapConfigSpec<CE extends Object?, RE extends Object?>
 /// [CE] typecasts result from keyValueConfigSpecs->{}->valueConfigSpec.
 ///
 /// [RE] typecasts result returned by this node.
-class DynamicMapConfigSpec<CE extends Object?, RE extends Object?>
+class MapConfigSpec<CE extends Object?, RE extends Object?>
     extends ConfigSpec<Map<dynamic, CE>, RE> {
   /// Both [keyRegexp] - [valueConfigSpec] pair is used to match a set of
   /// key-value input. Atleast one entry must match against an input for it
@@ -390,7 +393,7 @@ class DynamicMapConfigSpec<CE extends Object?, RE extends Object?>
   final List<({String keyRegexp, ConfigSpec valueConfigSpec})>
       keyValueConfigSpecs;
 
-  DynamicMapConfigSpec({
+  MapConfigSpec({
     required this.keyValueConfigSpecs,
     super.schemaDefName,
     super.schemaDescription,
