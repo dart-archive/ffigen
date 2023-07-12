@@ -277,3 +277,7 @@ String get tmpDir {
   _tmpDir ??= Directory.systemTemp.createTempSync();
   return _tmpDir!.path;
 }
+
+const ffigenJsonSchemaIndent = '  ';
+const ffigenJsonSchemaId = "https://json.schemastore.org/ffigen";
+const ffigenJsonSchemaFileName = "ffigen.schema.json";

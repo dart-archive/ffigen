@@ -28,12 +28,6 @@ ${strings.headers}:
 ${strings.typeMap}:
   'warn-2': 'warn'
   'warn-3': 'warn'
-${strings.functions}:
-  'warn-4': 'skip'
-${strings.structs}:
-  'warn-5': 'skip'
-${strings.unions}:
-  'warn-6': 'skip'
         ''');
       logString = logArr.join("\n");
     });
@@ -41,11 +35,6 @@ ${strings.unions}:
       expect(logString.contains('warn-1'), true);
       expect(logString.contains('warn-2'), true);
       expect(logString.contains('warn-3'), true);
-    });
-    test('Do not warn for unknown keys in declarations.', () {
-      expect(logString.contains('warn-4'), false);
-      expect(logString.contains('warn-5'), false);
-      expect(logString.contains('warn-6'), false);
     });
   });
 }

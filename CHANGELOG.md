@@ -1,3 +1,7 @@
+# 9.0.0
+
+- Added a JSON schema for FFIgen config files.
+
 # 8.0.2
 
 - Fixed invalid code generated due to zero-length arrays in structs/union.

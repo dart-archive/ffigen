@@ -2,6 +2,8 @@
 # for details. All rights reserved. Use of this source code is governed by a
 # BSD-style license that can be found in the LICENSE file.
 
+# yaml-language-server: $schema=../../../ffigen.schema.json
+
 name: NativeLibraryA
 description: Bindings to `headers/a.h`.
 output: '../lib/generated/a_gen.dart'
