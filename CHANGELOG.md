@@ -1,3 +1,7 @@
+# 9.0.1
+
+- Fix doc comment missing on struct/union array fields.
+
 # 9.0.0
 
 - Added a JSON schema for FFIgen config files.

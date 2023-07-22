@@ -134,17 +134,17 @@ abstract class Compound extends BindingType {
     const depth = '  ';
     for (final m in members) {
       m.name = localUniqueNamer.makeUnique(m.name);
+      if (m.dartDoc != null) {
+        s.write('$depth/// ');
+        s.writeAll(m.dartDoc!.split('\n'), '\n$depth/// ');
+        s.write('\n');
+      }
       if (m.type is ConstantArray) {
         s.write('$depth@${w.ffiLibraryPrefix}.Array.multi(');
         s.write('${_getArrayDimensionLengths(m.type)})\n');
         s.write('${depth}external ${_getInlineArrayTypeString(m.type, w)} ');
         s.write('${m.name};\n\n');
       } else {
-        if (m.dartDoc != null) {
-          s.write('$depth/// ');
-          s.writeAll(m.dartDoc!.split('\n'), '\n$depth/// ');
-          s.write('\n');
-        }
         if (!sameDartAndCType(m.type, w)) {
           s.write('$depth@${m.type.getCType(w)}()\n');
         }
