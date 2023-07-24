@@ -24,6 +24,6 @@ struct Com4{
     /* Single line field comment. */
     float b;
 
-    /* Comment on array member */
+    /* Comment on array member. */
     int c[3];
 };
