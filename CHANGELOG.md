@@ -1,3 +1,7 @@
+# 9.0.2
+
+- Allow extern inline functions to be generated.
+
 # 9.0.1
 
 - Fix doc comment missing on struct/union array fields.
