@@ -948,6 +948,24 @@ class Clang {
       _clang_Cursor_isAnonymousRecordDeclPtr
           .asFunction<int Function(CXCursor)>();
 
+  /// Returns the storage class for a function or variable declaration.
+  ///
+  /// If the passed in Cursor is not a function or variable declaration,
+  /// CX_SC_Invalid is returned else the storage class.
+  int clang_Cursor_getStorageClass(
+    CXCursor arg0,
+  ) {
+    return _clang_Cursor_getStorageClass(
+      arg0,
+    );
+  }
+
+  late final _clang_Cursor_getStorageClassPtr =
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>(
+          'clang_Cursor_getStorageClass');
+  late final _clang_Cursor_getStorageClass =
+      _clang_Cursor_getStorageClassPtr.asFunction<int Function(CXCursor)>();
+
   /// Visit the children of a particular cursor.
   ///
   /// This function visits all the direct children of the given cursor,
@@ -2562,6 +2580,19 @@ abstract class CXTypeLayoutError {
 
   /// The type is undeduced.
   static const int CXTypeLayoutError_Undeduced = -6;
+}
+
+/// Represents the storage classes as declared in the source. CX_SC_Invalid
+/// was added for the case that the passed cursor in not a declaration.
+abstract class CX_StorageClass {
+  static const int CX_SC_Invalid = 0;
+  static const int CX_SC_None = 1;
+  static const int CX_SC_Extern = 2;
+  static const int CX_SC_Static = 3;
+  static const int CX_SC_PrivateExtern = 4;
+  static const int CX_SC_OpenCLWorkGroupLocal = 5;
+  static const int CX_SC_Auto = 6;
+  static const int CX_SC_Register = 7;
 }
 
 /// Describes how the traversal of the children of a particular
