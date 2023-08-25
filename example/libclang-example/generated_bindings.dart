@@ -205,8 +205,8 @@ class LibClang {
   }
 
   late final _clang_CXIndex_setInvocationEmissionPathOptionPtr = _lookup<
-          ffi.NativeFunction<
-              NativeClang_CXIndex_setInvocationEmissionPathOption>>(
+          ffi
+          .NativeFunction<NativeClang_CXIndex_setInvocationEmissionPathOption>>(
       'clang_CXIndex_setInvocationEmissionPathOption');
   late final _clang_CXIndex_setInvocationEmissionPathOption =
       _clang_CXIndex_setInvocationEmissionPathOptionPtr
@@ -2938,8 +2938,8 @@ class LibClang {
   }
 
   late final _clang_Cursor_getTemplateArgumentUnsignedValuePtr = _lookup<
-          ffi.NativeFunction<
-              NativeClang_Cursor_getTemplateArgumentUnsignedValue>>(
+          ffi
+          .NativeFunction<NativeClang_Cursor_getTemplateArgumentUnsignedValue>>(
       'clang_Cursor_getTemplateArgumentUnsignedValue');
   late final _clang_Cursor_getTemplateArgumentUnsignedValue =
       _clang_Cursor_getTemplateArgumentUnsignedValuePtr
@@ -4849,8 +4849,8 @@ class LibClang {
   }
 
   late final _clang_CXXConstructor_isConvertingConstructorPtr = _lookup<
-          ffi.NativeFunction<
-              NativeClang_CXXConstructor_isConvertingConstructor>>(
+          ffi
+          .NativeFunction<NativeClang_CXXConstructor_isConvertingConstructor>>(
       'clang_CXXConstructor_isConvertingConstructor');
   late final _clang_CXXConstructor_isConvertingConstructor =
       _clang_CXXConstructor_isConvertingConstructorPtr
@@ -6850,8 +6850,8 @@ class _SymbolAddresses {
       get clang_CXIndex_getGlobalOptions =>
           _library._clang_CXIndex_getGlobalOptionsPtr;
   ffi.Pointer<
-          ffi.NativeFunction<
-              NativeClang_CXIndex_setInvocationEmissionPathOption>>
+          ffi
+          .NativeFunction<NativeClang_CXIndex_setInvocationEmissionPathOption>>
       get clang_CXIndex_setInvocationEmissionPathOption =>
           _library._clang_CXIndex_setInvocationEmissionPathOptionPtr;
   ffi.Pointer<ffi.NativeFunction<NativeClang_getFileName>>
@@ -7148,8 +7148,8 @@ class _SymbolAddresses {
       get clang_Cursor_getTemplateArgumentValue =>
           _library._clang_Cursor_getTemplateArgumentValuePtr;
   ffi.Pointer<
-          ffi.NativeFunction<
-              NativeClang_Cursor_getTemplateArgumentUnsignedValue>>
+          ffi
+          .NativeFunction<NativeClang_Cursor_getTemplateArgumentUnsignedValue>>
       get clang_Cursor_getTemplateArgumentUnsignedValue =>
           _library._clang_Cursor_getTemplateArgumentUnsignedValuePtr;
   ffi.Pointer<ffi.NativeFunction<NativeClang_equalTypes>>
@@ -7406,8 +7406,8 @@ class _SymbolAddresses {
       get clang_Module_getTopLevelHeader =>
           _library._clang_Module_getTopLevelHeaderPtr;
   ffi.Pointer<
-          ffi.NativeFunction<
-              NativeClang_CXXConstructor_isConvertingConstructor>>
+          ffi
+          .NativeFunction<NativeClang_CXXConstructor_isConvertingConstructor>>
       get clang_CXXConstructor_isConvertingConstructor =>
           _library._clang_CXXConstructor_isConvertingConstructorPtr;
   ffi.Pointer<ffi.NativeFunction<NativeClang_CXXConstructor_isCopyConstructor>>
@@ -11104,8 +11104,8 @@ typedef DartClang_indexLoc_getCXSourceLocation = CXSourceLocation Function(
 /// The visitor should return one of the \c CXVisitorResult values
 /// to direct \c clang_Type_visitFields.
 typedef CXFieldVisitor = ffi.Pointer<
-    ffi.NativeFunction<
-        ffi.Int32 Function(CXCursor C, CXClientData client_data)>>;
+    ffi
+    .NativeFunction<ffi.Int32 Function(CXCursor C, CXClientData client_data)>>;
 typedef NativeClang_Type_visitFields = ffi.UnsignedInt Function(
     CXType T, CXFieldVisitor visitor, CXClientData client_data);
 typedef DartClang_Type_visitFields = int Function(
