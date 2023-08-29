@@ -2,7 +2,7 @@
 
 - Add support for ObjC Blocks that can be invoked from any thread, using
   NativeCallable.listener.
-- Bump min SDK version to 3.1.
+- Bump min SDK version to 3.2.
 
 # 9.0.1
 
