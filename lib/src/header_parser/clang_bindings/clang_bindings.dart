@@ -1097,9 +1097,9 @@ class Clang {
   }
 
   late final _clang_Cursor_getObjCPropertyAttributesPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.UnsignedInt Function(CXCursor,
-              ffi.UnsignedInt)>>('clang_Cursor_getObjCPropertyAttributes');
+          ffi
+          .NativeFunction<ffi.UnsignedInt Function(CXCursor, ffi.UnsignedInt)>>(
+      'clang_Cursor_getObjCPropertyAttributes');
   late final _clang_Cursor_getObjCPropertyAttributes =
       _clang_Cursor_getObjCPropertyAttributesPtr
           .asFunction<int Function(CXCursor, int)>();

@@ -54,8 +54,9 @@ class CJson {
   }
 
   late final _cJSON_ParsePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<cJSON> Function(ffi.Pointer<ffi.Char>)>>('cJSON_Parse');
+          ffi
+          .NativeFunction<ffi.Pointer<cJSON> Function(ffi.Pointer<ffi.Char>)>>(
+      'cJSON_Parse');
   late final _cJSON_Parse = _cJSON_ParsePtr
       .asFunction<ffi.Pointer<cJSON> Function(ffi.Pointer<ffi.Char>)>();
 
@@ -90,8 +91,9 @@ class CJson {
   }
 
   late final _cJSON_PrintPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(ffi.Pointer<cJSON>)>>('cJSON_Print');
+          ffi
+          .NativeFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<cJSON>)>>(
+      'cJSON_Print');
   late final _cJSON_Print = _cJSON_PrintPtr
       .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<cJSON>)>();
 
@@ -104,9 +106,9 @@ class CJson {
   }
 
   late final _cJSON_PrintUnformattedPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<cJSON>)>>('cJSON_PrintUnformatted');
+          ffi
+          .NativeFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<cJSON>)>>(
+      'cJSON_PrintUnformatted');
   late final _cJSON_PrintUnformatted = _cJSON_PrintUnformattedPtr
       .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<cJSON>)>();
 
@@ -267,9 +269,9 @@ class CJson {
   }
 
   late final _cJSON_GetStringValuePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<cJSON>)>>('cJSON_GetStringValue');
+          ffi
+          .NativeFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<cJSON>)>>(
+      'cJSON_GetStringValue');
   late final _cJSON_GetStringValue = _cJSON_GetStringValuePtr
       .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<cJSON>)>();
 
@@ -480,9 +482,9 @@ class CJson {
   }
 
   late final _cJSON_CreateStringPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<cJSON> Function(
-              ffi.Pointer<ffi.Char>)>>('cJSON_CreateString');
+          ffi
+          .NativeFunction<ffi.Pointer<cJSON> Function(ffi.Pointer<ffi.Char>)>>(
+      'cJSON_CreateString');
   late final _cJSON_CreateString = _cJSON_CreateStringPtr
       .asFunction<ffi.Pointer<cJSON> Function(ffi.Pointer<ffi.Char>)>();
 
@@ -495,9 +497,9 @@ class CJson {
   }
 
   late final _cJSON_CreateRawPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<cJSON> Function(
-              ffi.Pointer<ffi.Char>)>>('cJSON_CreateRaw');
+          ffi
+          .NativeFunction<ffi.Pointer<cJSON> Function(ffi.Pointer<ffi.Char>)>>(
+      'cJSON_CreateRaw');
   late final _cJSON_CreateRaw = _cJSON_CreateRawPtr
       .asFunction<ffi.Pointer<cJSON> Function(ffi.Pointer<ffi.Char>)>();
 
@@ -530,9 +532,9 @@ class CJson {
   }
 
   late final _cJSON_CreateStringReferencePtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<cJSON> Function(
-              ffi.Pointer<ffi.Char>)>>('cJSON_CreateStringReference');
+          ffi
+          .NativeFunction<ffi.Pointer<cJSON> Function(ffi.Pointer<ffi.Char>)>>(
+      'cJSON_CreateStringReference');
   late final _cJSON_CreateStringReference = _cJSON_CreateStringReferencePtr
       .asFunction<ffi.Pointer<cJSON> Function(ffi.Pointer<ffi.Char>)>();
 
@@ -1180,9 +1182,9 @@ class CJson {
   }
 
   late final _cJSON_SetNumberHelperPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Double Function(
-              ffi.Pointer<cJSON>, ffi.Double)>>('cJSON_SetNumberHelper');
+          ffi
+          .NativeFunction<ffi.Double Function(ffi.Pointer<cJSON>, ffi.Double)>>(
+      'cJSON_SetNumberHelper');
   late final _cJSON_SetNumberHelper = _cJSON_SetNumberHelperPtr
       .asFunction<double Function(ffi.Pointer<cJSON>, double)>();
 
@@ -1237,12 +1239,13 @@ final class cJSON extends ffi.Struct {
 }
 
 final class cJSON_Hooks extends ffi.Struct {
-  external ffi.Pointer<
-          ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Size sz)>>
+  external ffi
+      .Pointer<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Size sz)>>
       malloc_fn;
 
-  external ffi.Pointer<
-      ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void> ptr)>> free_fn;
+  external ffi
+      .Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void> ptr)>>
+      free_fn;
 }
 
 typedef cJSON_bool = ffi.Int;
