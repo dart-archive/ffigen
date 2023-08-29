@@ -36,8 +36,9 @@ List<Func>? parseFunctionDeclaration(clang_types.CXCursor cursor) {
 
     final rt = _getFunctionReturnType(cursor);
     final parameters = _getParameters(cursor, funcName);
-
-    if (clang.clang_Cursor_isFunctionInlined(cursor) != 0) {
+    if (clang.clang_Cursor_isFunctionInlined(cursor) != 0 &&
+        clang.clang_Cursor_getStorageClass(cursor) !=
+            clang_types.CX_StorageClass.CX_SC_Extern) {
       _logger.fine('---- Removed Function, reason: inline function: '
           '${cursor.completeStringRepr()}');
       _logger.warning(
@@ -70,8 +71,8 @@ List<Func>? parseFunctionDeclaration(clang_types.CXCursor cursor) {
 
     // Initialized with a single value with no prefix and empty var args.
     var varArgFunctions = [VarArgFunction('', [])];
-    if (clang.clang_isFunctionTypeVariadic(cursor.type()) == 1) {
-      if (config.varArgFunctions.containsKey(funcName)) {
+    if (config.varArgFunctions.containsKey(funcName)) {
+      if (clang.clang_isFunctionTypeVariadic(cursor.type()) == 1) {
         varArgFunctions = config.varArgFunctions[funcName]!;
       } else {
         _logger.warning(

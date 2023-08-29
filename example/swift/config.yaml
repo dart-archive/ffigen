@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=../../ffigen.schema.json
+
 name: SwiftLibrary
 description: Bindings for swift_api.
 language: objc

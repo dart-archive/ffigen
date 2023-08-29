@@ -64,28 +64,6 @@ class StructPackingOverride {
   }
 }
 
-/// Represents a single specification in configurations.
-///
-/// [E] is the return type of the extractedResult.
-class Specification<E> {
-  final bool Function(List<String> name, dynamic value) validator;
-  final E Function(dynamic map) extractor;
-  final E Function()? defaultValue;
-
-  final Requirement requirement;
-  final void Function(dynamic result) extractedResult;
-
-  Specification({
-    required this.extractedResult,
-    required this.validator,
-    required this.extractor,
-    this.defaultValue,
-    this.requirement = Requirement.no,
-  });
-}
-
-enum Requirement { yes, prefer, no }
-
 // Holds headers and filters for header.
 class Headers {
   /// Path to headers.

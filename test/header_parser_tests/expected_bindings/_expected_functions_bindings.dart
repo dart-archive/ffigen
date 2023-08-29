@@ -103,6 +103,20 @@ class NativeLibrary {
       void Function(ffi.Pointer<shortHand>,
           ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>)>();
 
+  void externInlineFunc(
+    int a,
+  ) {
+    return _externInlineFunc(
+      a,
+    );
+  }
+
+  late final _externInlineFuncPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int)>>(
+          'externInlineFunc');
+  late final _externInlineFunc =
+      _externInlineFuncPtr.asFunction<void Function(int)>();
+
   int diffChars(
     int a,
     int b,
