@@ -3,8 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 #import <Foundation/NSObject.h>
+#import <Foundation/NSThread.h>
 
 typedef int32_t (^IntBlock)(int32_t);
+typedef void (^VoidBlock)();
 
 // Wrapper around a block, so that our Dart code can test creating and invoking
 // blocks in Objective C code.
@@ -17,6 +19,8 @@ typedef int32_t (^IntBlock)(int32_t);
 - (int32_t)call:(int32_t)x;
 - (IntBlock)getBlock;
 - (void)pokeBlock;
++ (void)callOnSameThread:(VoidBlock)block;
++ (NSThread*)callOnNewThread:(VoidBlock)block;
 @end
 
 @implementation BlockTester
@@ -73,4 +77,13 @@ void* valid_block_isa = NULL;
   // Used to repro https://github.com/dart-lang/ffigen/issues/376
   [[myBlock retain] release];
 }
+
++ (void)callOnSameThread:(VoidBlock)block {
+  block();
+}
+
++ (NSThread*)callOnNewThread:(VoidBlock)block {
+  return [[NSThread alloc] initWithBlock: block];
+}
+
 @end

@@ -35,7 +35,7 @@ class ObjCBlock extends BindingType {
       params.add(Parameter(name: 'arg$i', type: argTypes[i]));
     }
 
-    final isVoid = returnType == NativeType(SupportedNativeType.Void);
+    final isVoid = returnType == voidType;
     final voidPtr = PointerType(voidType).getCType(w);
     final blockPtr = PointerType(builtInFunctions.blockStruct);
     final funcType = FunctionType(returnType: returnType, parameters: params);
@@ -55,6 +55,8 @@ class ObjCBlock extends BindingType {
         returnType: returnType,
         parameters: [Parameter(type: blockPtr, name: 'block'), ...params]);
     final natTrampFnType = NativeFunc(trampFuncType);
+    final nativeCallableType =
+        '${w.ffiLibraryPrefix}.NativeCallable<${trampFuncType.getCType(w)}>';
 
     // Write the function pointer based trampoline function.
     s.write(returnType.getDartType(w));
@@ -143,10 +145,10 @@ class $name extends _ObjCBlockBase {
   /// NativeCallable.listener for more details.
   $name.listener(${w.className} lib, ${funcType.getDartType(w)} fn) :
       this._(lib.${builtInFunctions.newBlock.name}(
-          _dartFuncListenerTrampoline ??= ${w.ffiLibraryPrefix}.NativeCallable.fromFunction<
-              ${trampFuncType.getCType(w)}>($closureListenerTrampoline
-                  $exceptionalReturn).cast(), $registerClosure(fn)), lib);
-  static $voidPtr? _dartFuncListenerTrampoline;
+          (_dartFuncListenerTrampoline ??= $nativeCallableType.listener($closureTrampoline
+                  $exceptionalReturn)..keepIsolateAlive = false).nativeFunction.cast(),
+          $registerClosure(fn)), lib);
+  static $nativeCallableType? _dartFuncListenerTrampoline;
 
 ''');
     }
