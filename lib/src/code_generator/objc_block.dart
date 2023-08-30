@@ -143,6 +143,9 @@ class $name extends _ObjCBlockBase {
   /// capabilities and limitations. This block can be invoked from any thread,
   /// but only supports void functions, and is not run synchronously. See
   /// NativeCallable.listener for more details.
+  ///
+  /// Note that unlike the default behavior of NativeCallable.listener, listener
+  /// blocks do not keep the isolate alive.
   $name.listener(${w.className} lib, ${funcType.getDartType(w)} fn) :
       this._(lib.${builtInFunctions.newBlock.name}(
           (_dartFuncListenerTrampoline ??= $nativeCallableType.listener($closureTrampoline
