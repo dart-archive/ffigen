@@ -35,7 +35,7 @@ class ObjCBlock extends BindingType {
       params.add(Parameter(name: 'arg$i', type: argTypes[i]));
     }
 
-    final isVoid = returnType == NativeType(SupportedNativeType.Void);
+    final isVoid = returnType == voidType;
     final voidPtr = PointerType(voidType).getCType(w);
     final blockPtr = PointerType(builtInFunctions.blockStruct);
     final funcType = FunctionType(returnType: returnType, parameters: params);
@@ -55,6 +55,8 @@ class ObjCBlock extends BindingType {
         returnType: returnType,
         parameters: [Parameter(type: blockPtr, name: 'block'), ...params]);
     final natTrampFnType = NativeFunc(trampFuncType);
+    final nativeCallableType =
+        '${w.ffiLibraryPrefix}.NativeCallable<${trampFuncType.getCType(w)}>';
 
     // Write the function pointer based trampoline function.
     s.write(returnType.getDartType(w));
@@ -107,6 +109,10 @@ class $name extends _ObjCBlockBase {
       super._(id, lib, retain: false, release: true);
 
   /// Creates a block from a C function pointer.
+  ///
+  /// This block must be invoked by native code running on the same thread as
+  /// the isolate that registered it. Invoking the block on the wrong thread
+  /// will result in a crash.
   $name.fromFunctionPointer(${w.className} lib, $natFnPtr ptr) :
       this._(lib.${builtInFunctions.newBlock.name}(
           _cFuncTrampoline ??= ${w.ffiLibraryPrefix}.Pointer.fromFunction<
@@ -115,13 +121,40 @@ class $name extends _ObjCBlockBase {
   static $voidPtr? _cFuncTrampoline;
 
   /// Creates a block from a Dart function.
+  ///
+  /// This block must be invoked by native code running on the same thread as
+  /// the isolate that registered it. Invoking the block on the wrong thread
+  /// will result in a crash.
   $name.fromFunction(${w.className} lib, ${funcType.getDartType(w)} fn) :
       this._(lib.${builtInFunctions.newBlock.name}(
           _dartFuncTrampoline ??= ${w.ffiLibraryPrefix}.Pointer.fromFunction<
               ${trampFuncType.getCType(w)}>($closureTrampoline
                   $exceptionalReturn).cast(), $registerClosure(fn)), lib);
   static $voidPtr? _dartFuncTrampoline;
+
 ''');
+
+    // Listener block constructor is only available for void blocks.
+    if (isVoid) {
+      s.write('''
+  /// Creates a listener block from a Dart function.
+  ///
+  /// This is based on FFI's NativeCallable.listener, and has the same
+  /// capabilities and limitations. This block can be invoked from any thread,
+  /// but only supports void functions, and is not run synchronously. See
+  /// NativeCallable.listener for more details.
+  ///
+  /// Note that unlike the default behavior of NativeCallable.listener, listener
+  /// blocks do not keep the isolate alive.
+  $name.listener(${w.className} lib, ${funcType.getDartType(w)} fn) :
+      this._(lib.${builtInFunctions.newBlock.name}(
+          (_dartFuncListenerTrampoline ??= $nativeCallableType.listener($closureTrampoline
+                  $exceptionalReturn)..keepIsolateAlive = false).nativeFunction.cast(),
+          $registerClosure(fn)), lib);
+  static $nativeCallableType? _dartFuncListenerTrampoline;
+
+''');
+    }
 
     // Call method.
     s.write('  ${returnType.getDartType(w)} call(');

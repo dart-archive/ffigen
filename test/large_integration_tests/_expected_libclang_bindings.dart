@@ -133,9 +133,9 @@ class LibClang {
   }
 
   late final _clang_VirtualFileOverlay_setCaseSensitivityPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int32 Function(CXVirtualFileOverlay,
-              ffi.Int)>>('clang_VirtualFileOverlay_setCaseSensitivity');
+          ffi
+          .NativeFunction<ffi.Int32 Function(CXVirtualFileOverlay, ffi.Int)>>(
+      'clang_VirtualFileOverlay_setCaseSensitivity');
   late final _clang_VirtualFileOverlay_setCaseSensitivity =
       _clang_VirtualFileOverlay_setCaseSensitivityPtr
           .asFunction<int Function(CXVirtualFileOverlay, int)>();
@@ -384,8 +384,8 @@ class LibClang {
   }
 
   late final _clang_CXIndex_setInvocationEmissionPathOptionPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Void Function(CXIndex, ffi.Pointer<ffi.Char>)>>(
+          ffi
+          .NativeFunction<ffi.Void Function(CXIndex, ffi.Pointer<ffi.Char>)>>(
       'clang_CXIndex_setInvocationEmissionPathOption');
   late final _clang_CXIndex_setInvocationEmissionPathOption =
       _clang_CXIndex_setInvocationEmissionPathOptionPtr
@@ -453,9 +453,9 @@ class LibClang {
   }
 
   late final _clang_isFileMultipleIncludeGuardedPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.UnsignedInt Function(CXTranslationUnit,
-              CXFile)>>('clang_isFileMultipleIncludeGuarded');
+          ffi
+          .NativeFunction<ffi.UnsignedInt Function(CXTranslationUnit, CXFile)>>(
+      'clang_isFileMultipleIncludeGuarded');
   late final _clang_isFileMultipleIncludeGuarded =
       _clang_isFileMultipleIncludeGuardedPtr
           .asFunction<int Function(CXTranslationUnit, CXFile)>();
@@ -943,9 +943,9 @@ class LibClang {
   }
 
   late final _clang_disposeSourceRangeListPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<CXSourceRangeList>)>>('clang_disposeSourceRangeList');
+          ffi
+          .NativeFunction<ffi.Void Function(ffi.Pointer<CXSourceRangeList>)>>(
+      'clang_disposeSourceRangeList');
   late final _clang_disposeSourceRangeList = _clang_disposeSourceRangeListPtr
       .asFunction<void Function(ffi.Pointer<CXSourceRangeList>)>();
 
@@ -3586,9 +3586,9 @@ class LibClang {
   }
 
   late final _clang_constructUSR_ObjCIvarPtr = _lookup<
-      ffi.NativeFunction<
-          CXString Function(
-              ffi.Pointer<ffi.Char>, CXString)>>('clang_constructUSR_ObjCIvar');
+          ffi
+          .NativeFunction<CXString Function(ffi.Pointer<ffi.Char>, CXString)>>(
+      'clang_constructUSR_ObjCIvar');
   late final _clang_constructUSR_ObjCIvar = _clang_constructUSR_ObjCIvarPtr
       .asFunction<CXString Function(ffi.Pointer<ffi.Char>, CXString)>();
 
@@ -3626,9 +3626,9 @@ class LibClang {
   }
 
   late final _clang_constructUSR_ObjCPropertyPtr = _lookup<
-      ffi.NativeFunction<
-          CXString Function(ffi.Pointer<ffi.Char>,
-              CXString)>>('clang_constructUSR_ObjCProperty');
+          ffi
+          .NativeFunction<CXString Function(ffi.Pointer<ffi.Char>, CXString)>>(
+      'clang_constructUSR_ObjCProperty');
   late final _clang_constructUSR_ObjCProperty =
       _clang_constructUSR_ObjCPropertyPtr
           .asFunction<CXString Function(ffi.Pointer<ffi.Char>, CXString)>();
@@ -3900,9 +3900,9 @@ class LibClang {
   }
 
   late final _clang_Cursor_getObjCPropertyAttributesPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.UnsignedInt Function(CXCursor,
-              ffi.UnsignedInt)>>('clang_Cursor_getObjCPropertyAttributes');
+          ffi
+          .NativeFunction<ffi.UnsignedInt Function(CXCursor, ffi.UnsignedInt)>>(
+      'clang_Cursor_getObjCPropertyAttributes');
   late final _clang_Cursor_getObjCPropertyAttributes =
       _clang_Cursor_getObjCPropertyAttributesPtr
           .asFunction<int Function(CXCursor, int)>();
@@ -4595,9 +4595,9 @@ class LibClang {
   }
 
   late final _clang_getTokenExtentPtr = _lookup<
-      ffi.NativeFunction<
-          CXSourceRange Function(
-              CXTranslationUnit, CXToken)>>('clang_getTokenExtent');
+          ffi
+          .NativeFunction<CXSourceRange Function(CXTranslationUnit, CXToken)>>(
+      'clang_getTokenExtent');
   late final _clang_getTokenExtent = _clang_getTokenExtentPtr
       .asFunction<CXSourceRange Function(CXTranslationUnit, CXToken)>();
 
@@ -8225,8 +8225,8 @@ abstract class CXIndexOptFlags {
 
 /// Visitor invoked for each field found by a traversal.
 typedef CXFieldVisitor = ffi.Pointer<
-    ffi.NativeFunction<
-        ffi.Int32 Function(CXCursor C, CXClientData client_data)>>;
+    ffi
+    .NativeFunction<ffi.Int32 Function(CXCursor C, CXClientData client_data)>>;
 
 const int CINDEX_VERSION_MAJOR = 0;
 

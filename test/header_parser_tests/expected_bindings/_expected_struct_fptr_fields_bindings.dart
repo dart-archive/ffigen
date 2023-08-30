@@ -8,7 +8,7 @@ final class S extends ffi.Struct {
   external ffi.Pointer<ffi.NativeFunction<ffi.Int Function()>> func1;
 
   external ffi
-          .Pointer<ffi.NativeFunction<ffi.Int Function(ffi.Int a, ffi.Int b)>>
+      .Pointer<ffi.NativeFunction<ffi.Int Function(ffi.Int a, ffi.Int b)>>
       comparator;
 
   external ffi.Pointer<
@@ -53,8 +53,8 @@ final class S extends ffi.Struct {
 
   @ffi.Array.multi([2])
   external ffi.Array<
-          ffi.Pointer<
-              ffi.NativeFunction<ffi.Void Function(ffi.Char, ffi.Char)>>>
+          ffi
+          .Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Char, ffi.Char)>>>
       manyFunctions;
 
   external ffi.Pointer<

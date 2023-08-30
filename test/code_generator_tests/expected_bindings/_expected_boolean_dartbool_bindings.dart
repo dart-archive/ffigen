@@ -29,8 +29,9 @@ class Bindings {
   }
 
   late final _test1Ptr = _lookup<
-      ffi.NativeFunction<
-          ffi.Bool Function(ffi.Bool, ffi.Pointer<ffi.Bool>)>>('test1');
+          ffi
+          .NativeFunction<ffi.Bool Function(ffi.Bool, ffi.Pointer<ffi.Bool>)>>(
+      'test1');
   late final _test1 =
       _test1Ptr.asFunction<bool Function(bool, ffi.Pointer<ffi.Bool>)>();
 }
