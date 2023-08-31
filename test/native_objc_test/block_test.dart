@@ -15,6 +15,10 @@ import '../test_utils.dart';
 import 'block_bindings.dart';
 import 'util.dart';
 
+// The generated block names are stable but verbose, so typedef them.
+typedef IntBlock = ObjCBlock_Int32_Int32;
+typedef VoidBlock = ObjCBlock_ffiVoid;
+
 void main() {
   late BlockTestObjCLibrary lib;
   late void Function(Pointer<Char>, Pointer<Void>) executeInternalCommand;
@@ -52,8 +56,8 @@ void main() {
     });
 
     test('Block from function pointer', () {
-      final block = ObjCBlock1.fromFunctionPointer(
-          lib, Pointer.fromFunction(_add100, 999));
+      final block =
+          IntBlock.fromFunctionPointer(lib, Pointer.fromFunction(_add100, 999));
       final blockTester = BlockTester.makeFromBlock_(lib, block);
       blockTester.pokeBlock();
       expect(blockTester.call_(123), 223);
@@ -65,7 +69,7 @@ void main() {
     }
 
     test('Block from function', () {
-      final block = ObjCBlock1.fromFunction(lib, makeAdder(4000));
+      final block = IntBlock.fromFunction(lib, makeAdder(4000));
       final blockTester = BlockTester.makeFromBlock_(lib, block);
       blockTester.pokeBlock();
       expect(blockTester.call_(123), 4123);
@@ -75,7 +79,7 @@ void main() {
     test('Listener block same thread', () async {
       final hasRun = Completer();
       int value = 0;
-      final block = ObjCBlock.listener(lib, () {
+      final block = VoidBlock.listener(lib, () {
         value = 123;
         hasRun.complete();
       });
@@ -89,7 +93,7 @@ void main() {
     test('Listener block new thread', () async {
       final hasRun = Completer();
       int value = 0;
-      final block = ObjCBlock.listener(lib, () {
+      final block = VoidBlock.listener(lib, () {
         value = 123;
         hasRun.complete();
       });
@@ -102,8 +106,8 @@ void main() {
     });
 
     Pointer<Void> funcPointerBlockRefCountTest() {
-      final block = ObjCBlock1.fromFunctionPointer(
-          lib, Pointer.fromFunction(_add100, 999));
+      final block =
+          IntBlock.fromFunctionPointer(lib, Pointer.fromFunction(_add100, 999));
       expect(BlockTester.getBlockRetainCount_(lib, block.pointer.cast()), 1);
       return block.pointer.cast();
     }
@@ -115,7 +119,7 @@ void main() {
     });
 
     Pointer<Void> funcBlockRefCountTest() {
-      final block = ObjCBlock1.fromFunction(lib, makeAdder(4000));
+      final block = IntBlock.fromFunction(lib, makeAdder(4000));
       expect(BlockTester.getBlockRetainCount_(lib, block.pointer.cast()), 1);
       return block.pointer.cast();
     }
@@ -127,7 +131,7 @@ void main() {
     });
 
     test('Block fields have sensible values', () {
-      final block = ObjCBlock1.fromFunction(lib, makeAdder(4000));
+      final block = IntBlock.fromFunction(lib, makeAdder(4000));
       final blockPtr = block.pointer;
       expect(blockPtr.ref.isa, isNot(0));
       expect(blockPtr.ref.flags, isNot(0)); // Set by Block_copy.

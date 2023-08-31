@@ -18,12 +18,12 @@ class ObjCBlock extends BindingType {
     required List<Type> argTypes,
     required ObjCBuiltInFunctions builtInFunctions,
   }) : this._(
-      usr: usr,
-      name: _getBlockName(returnType, argTypes),
-      returnType: returnType,
-      argTypes: argTypes,
-      builtInFunctions: builtInFunctions,
-      );
+          usr: usr,
+          name: _getBlockName(returnType, argTypes),
+          returnType: returnType,
+          argTypes: argTypes,
+          builtInFunctions: builtInFunctions,
+        );
 
   ObjCBlock._({
     required String usr,
@@ -37,11 +37,15 @@ class ObjCBlock extends BindingType {
           name: name,
         );
 
-  static final _illegalNameChar = RegExp(r'[^0-9a-zA-Z]');
-  static String _typeName(Type type) =>
-      type.toString().replaceAll(_illegalNameChar, ''); // .getDartType(w)
+  // Generates a human readable name for the block based on the args and return
+  // type. These names will be pretty verbose and unweildy, but they're at least
+  // sensible and stable. Users can always add their own typedef with a simpler
+  // name if necessary.
   static String _getBlockName(Type returnType, List<Type> argTypes) =>
-      'ObjCBlock_${_typeName(returnType)}_${argTypes.map(_typeName).join('_')}';
+      'ObjCBlock_${[returnType, ...argTypes].map(_typeName).join('_')}';
+  static String _typeName(Type type) =>
+      type.toString().replaceAll(_illegalNameChar, '');
+  static final _illegalNameChar = RegExp(r'[^0-9a-zA-Z]');
 
   @override
   BindingString toBindingString(Writer w) {
