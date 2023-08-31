@@ -119,6 +119,8 @@ Future<void> clean(List<String> testNames) async {
 }
 
 Future<void> main(List<String> arguments) async {
+  // Allow running this script directly from any path (or an IDE).
+  Directory.current = Platform.script.resolve('.').toFilePath();
   if (!Platform.isMacOS) {
     throw OSError('Objective C tests are only supported on MacOS');
   }
