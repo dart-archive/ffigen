@@ -591,7 +591,7 @@ class StringConfigSpec<RE extends Object?> extends ConfigSpec<String, RE> {
     if (!o.checkType<String>(log: log)) {
       return false;
     }
-    if (_regexp != null && !_regexp.hasMatch(o.value as String)) {
+    if (!(_regexp?.hasMatch(o.value as String) ?? true)) {
       if (log) {
         _logger.severe(
             "Expected value of key '${o.pathString}' to match pattern $pattern (Input - ${o.value}).");
