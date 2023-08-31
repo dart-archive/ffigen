@@ -14,6 +14,19 @@ class ObjCBlock extends BindingType {
 
   ObjCBlock({
     required String usr,
+    required Type returnType,
+    required List<Type> argTypes,
+    required ObjCBuiltInFunctions builtInFunctions,
+  }) : this._(
+      usr: usr,
+      name: _getBlockName(returnType, argTypes),
+      returnType: returnType,
+      argTypes: argTypes,
+      builtInFunctions: builtInFunctions,
+      );
+
+  ObjCBlock._({
+    required String usr,
     required String name,
     required this.returnType,
     required this.argTypes,
@@ -23,6 +36,12 @@ class ObjCBlock extends BindingType {
           originalName: name,
           name: name,
         );
+
+  static final _illegalNameChar = RegExp(r'[^0-9a-zA-Z]');
+  static String _typeName(Type type) =>
+      type.toString().replaceAll(_illegalNameChar, ''); // .getDartType(w)
+  static String _getBlockName(Type returnType, List<Type> argTypes) =>
+      'ObjCBlock_${_typeName(returnType)}_${argTypes.map(_typeName).join('_')}';
 
   @override
   BindingString toBindingString(Writer w) {
