@@ -92,8 +92,14 @@ $voidPtr $registerClosure(Function fn) {
       s.write(', ${params[i].type.getDartType(w)} ${params[i].name}');
     }
     s.write(') {\n');
-    s.write('  ${isVoid ? '' : 'return '}$closureRegistry['
-        'block.ref.target.address]!(');
+    s.write('  ${isVoid ? '' : 'return '}');
+    s.write('($closureRegistry[block.ref.target.address]');
+    s.write(' as ${returnType.getDartType(w)} Function(');
+    for (int i = 0; i < params.length; ++i) {
+      s.write('${i == 0 ? '' : ', '}${params[i].type.getDartType(w)}');
+    }
+    s.write('))');
+    s.write('(');
     for (int i = 0; i < params.length; ++i) {
       s.write('${i == 0 ? '' : ', '}${params[i].name}');
     }
