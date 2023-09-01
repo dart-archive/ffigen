@@ -101,6 +101,14 @@ void main() {
       expect(value, 123);
     });
 
+    test('Float block', () {
+      final block = ObjCBlock2.fromFunction(lib, (double x) {
+        return x + 4.56;
+      });
+      expect(block(1.23), closeTo(5.79, 1e-6));
+      expect(BlockTester.callFloatBlock_(lib, block), closeTo(5.79, 1e-6));
+    });
+
     Pointer<Void> funcPointerBlockRefCountTest() {
       final block = ObjCBlock1.fromFunctionPointer(
           lib, Pointer.fromFunction(_add100, 999));
