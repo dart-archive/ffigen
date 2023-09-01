@@ -36,8 +36,8 @@ class NativeType extends Type {
     SupportedNativeType.Uint16: NativeType._('Uint16', 'int', '0'),
     SupportedNativeType.Uint32: NativeType._('Uint32', 'int', '0'),
     SupportedNativeType.Uint64: NativeType._('Uint64', 'int', '0'),
-    SupportedNativeType.Float: NativeType._('Float', 'double', '0'),
-    SupportedNativeType.Double: NativeType._('Double', 'double', '0'),
+    SupportedNativeType.Float: NativeType._('Float', 'double', '0.0'),
+    SupportedNativeType.Double: NativeType._('Double', 'double', '0.0'),
     SupportedNativeType.IntPtr: NativeType._('IntPtr', 'int', '0'),
     SupportedNativeType.UintPtr: NativeType._('UintPtr', 'int', '0'),
   };

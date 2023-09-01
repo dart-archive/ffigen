@@ -6,6 +6,7 @@
 #import <Foundation/NSThread.h>
 
 typedef int32_t (^IntBlock)(int32_t);
+typedef float (^FloatBlock)(float);
 typedef void (^VoidBlock)();
 
 // Wrapper around a block, so that our Dart code can test creating and invoking
@@ -21,6 +22,7 @@ typedef void (^VoidBlock)();
 - (void)pokeBlock;
 + (void)callOnSameThread:(VoidBlock)block;
 + (NSThread*)callOnNewThread:(VoidBlock)block;
++ (float)callFloatBlock:(FloatBlock)block;
 @end
 
 @implementation BlockTester
@@ -84,6 +86,10 @@ void* valid_block_isa = NULL;
 
 + (NSThread*)callOnNewThread:(VoidBlock)block {
   return [[NSThread alloc] initWithBlock: block];
+}
+
++ (float)callFloatBlock:(FloatBlock)block {
+  return block(1.23);
 }
 
 @end
