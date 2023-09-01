@@ -9,6 +9,8 @@
 #    dart run ffigen --config tool/libclang_config.yaml
 # ===============================================================
 
+# yaml-language-server: $schema=../ffigen.schema.json
+
 name: Clang
 description: Holds bindings to LibClang.
 output: '../lib/src/header_parser/clang_bindings/clang_bindings.dart'
@@ -91,6 +93,8 @@ functions:
     - clang_Cursor_getArgument
     - clang_getNumArgTypes
     - clang_getArgType
+    - clang_isFunctionTypeVariadic
+    - clang_Cursor_getStorageClass
     - clang_getCursorResultType
     - clang_getEnumConstantDeclValue
     - clang_equalRanges

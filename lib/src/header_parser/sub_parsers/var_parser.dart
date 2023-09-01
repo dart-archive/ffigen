@@ -34,8 +34,8 @@ Global? parseVarDeclaration(clang_types.CXCursor cursor) {
   }
 
   if (config.ffiNativeConfig.enabled) {
-    _logger.warning(
-        "Skipped global variable '$name', not supported in FfiNatives.");
+    _logger
+        .warning("Skipped global variable '$name', not supported in Natives.");
     return null;
   }
 

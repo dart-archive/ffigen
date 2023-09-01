@@ -1,6 +1,6 @@
 [![pub package](https://img.shields.io/pub/v/ffigen.svg)](https://pub.dev/packages/ffigen)
 [![Build Status](https://github.com/dart-lang/ffigen/workflows/Dart%20CI/badge.svg)](https://github.com/dart-lang/ffigen/actions?query=workflow%3A"Dart+CI")
-[![Coverage Status](https://coveralls.io/repos/github/dart-lang/ffigen/badge.svg?branch=master)](https://coveralls.io/github/dart-lang/ffigen?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/dart-lang/ffigen/badge.svg?branch=main)](https://coveralls.io/github/dart-lang/ffigen?branch=main)
 
 Binding generator for [FFI](https://dart.dev/guides/libraries/c-interop) bindings.
 
@@ -63,8 +63,12 @@ Jump to [FAQ](#faq).
 ## Installing LLVM
 `package:ffigen` uses LLVM. Install LLVM (9+) in the following way.
 
-#### ubuntu/linux
-1. Install libclangdev - `sudo apt-get install libclang-dev`.
+#### Linux
+1. Install libclangdev.
+
+   With apt-get: `sudo apt-get install libclang-dev`.
+
+   With dnf: `sudo dnf install clang-devel`.
 
 #### Windows
 1. Install Visual Studio with C++ development support.
@@ -335,6 +339,26 @@ functions:
   </td>
   </tr>
   <tr>
+    <td>functions -> variadic-arguments</td>
+    <td>Generate multiple functions with different variadic arguments.<br>
+    <b>Default: var args for any function are ignored.</b>
+    </td>
+    <td>
+
+```yaml
+functions:
+  variadic-arguments:
+    myfunc:
+      // Native C types are supported
+      - [int, unsigned char, long*, float**]
+      // Common C typedefs (stddef.h) are supported too
+      - [uint8_t, intptr_t, size_t, wchar_t*]
+      // Structs/Unions/Typedefs from generated code or a library import can be referred too.
+      - [MyStruct*, my_custom_lib.CustomUnion]
+```
+  </td>
+  </tr>
+  <tr>
     <td>structs -> pack</td>
     <td>Override the @Packed(X) annotation for generated structs.<br><br>
     <i>Options - none, 1, 2, 4, 8, 16</i><br>
@@ -509,10 +533,10 @@ type-map:
   <tr>
     <td>ffi-native</td>
     <td>
-      <b>WARNING:</b> FfiNative support is EXPERIMENTAL. The API may change
+      <b>WARNING:</b> Native support is EXPERIMENTAL. The API may change
       in a breaking way without notice.
       <br><br>
-      Generate `@FfiNative` bindings instead of bindings using `DynamicLibrary` or `lookup`.
+      Generate `@Native` bindings instead of bindings using `DynamicLibrary` or `lookup`.
     </td>
     <td>
 

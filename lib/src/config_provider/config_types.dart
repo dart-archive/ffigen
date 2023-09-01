@@ -5,6 +5,7 @@
 /// Contains all the neccesary classes required by config.
 import 'dart:io';
 
+import 'package:ffigen/src/code_generator.dart';
 import 'package:quiver/pattern.dart' as quiver;
 
 import 'path_finder.dart';
@@ -62,28 +63,6 @@ class StructPackingOverride {
     return null;
   }
 }
-
-/// Represents a single specification in configurations.
-///
-/// [E] is the return type of the extractedResult.
-class Specification<E> {
-  final bool Function(List<String> name, dynamic value) validator;
-  final E Function(dynamic map) extractor;
-  final E Function()? defaultValue;
-
-  final Requirement requirement;
-  final void Function(dynamic result) extractedResult;
-
-  Specification({
-    required this.extractedResult,
-    required this.validator,
-    required this.extractor,
-    this.defaultValue,
-    this.requirement = Requirement.no,
-  });
-}
-
-enum Requirement { yes, prefer, no }
 
 // Holds headers and filters for header.
 class Headers {
@@ -422,4 +401,18 @@ class OutputConfig {
   final SymbolFile? symbolFile;
 
   OutputConfig(this.output, this.symbolFile);
+}
+
+class RawVarArgFunction {
+  String? postfix;
+  final List<String> rawTypeStrings;
+
+  RawVarArgFunction(this.postfix, this.rawTypeStrings);
+}
+
+class VarArgFunction {
+  final String postfix;
+  final List<Type> types;
+
+  VarArgFunction(this.postfix, this.types);
 }

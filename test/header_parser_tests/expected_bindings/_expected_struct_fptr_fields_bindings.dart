@@ -4,7 +4,7 @@
 // ignore_for_file: type=lint
 import 'dart:ffi' as ffi;
 
-class S extends ffi.Struct {
+final class S extends ffi.Struct {
   external ffi.Pointer<ffi.NativeFunction<ffi.Int Function()>> func1;
 
   external ffi

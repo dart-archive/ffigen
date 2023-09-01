@@ -6,9 +6,9 @@ import 'dart:ffi' as ffi;
 
 /// Just a test struct
 /// heres another line
-class NoMember extends ffi.Opaque {}
+final class NoMember extends ffi.Opaque {}
 
-class WithPrimitiveMember extends ffi.Struct {
+final class WithPrimitiveMember extends ffi.Struct {
   @ffi.Int32()
   external int a;
 
@@ -19,7 +19,7 @@ class WithPrimitiveMember extends ffi.Struct {
   external int c;
 }
 
-class WithPointerMember extends ffi.Struct {
+final class WithPointerMember extends ffi.Struct {
   external ffi.Pointer<ffi.Int32> a;
 
   external ffi.Pointer<ffi.Pointer<ffi.Double>> b;
@@ -28,7 +28,7 @@ class WithPointerMember extends ffi.Struct {
   external int c;
 }
 
-class WithIntPtrUintPtr extends ffi.Struct {
+final class WithIntPtrUintPtr extends ffi.Struct {
   external ffi.Pointer<ffi.UintPtr> a;
 
   external ffi.Pointer<ffi.Pointer<ffi.IntPtr>> b;

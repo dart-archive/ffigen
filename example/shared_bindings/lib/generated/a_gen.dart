@@ -65,22 +65,22 @@ class NativeLibraryA {
       .asFunction<void Function(BaseStruct2, BaseUnion2, BaseTypedef2)>();
 }
 
-class BaseStruct1 extends ffi.Struct {
+final class BaseStruct1 extends ffi.Struct {
   @ffi.Int()
   external int a;
 }
 
-class BaseUnion1 extends ffi.Union {
+final class BaseUnion1 extends ffi.Union {
   @ffi.Int()
   external int a;
 }
 
-class BaseStruct2 extends ffi.Struct {
+final class BaseStruct2 extends ffi.Struct {
   @ffi.Int()
   external int a;
 }
 
-class BaseUnion2 extends ffi.Union {
+final class BaseUnion2 extends ffi.Union {
   @ffi.Int()
   external int a;
 }
@@ -93,12 +93,12 @@ abstract class BaseEnum {
 typedef BaseTypedef1 = BaseStruct1;
 typedef BaseTypedef2 = BaseStruct2;
 
-class A_Struct1 extends ffi.Struct {
+final class A_Struct1 extends ffi.Struct {
   @ffi.Int()
   external int a;
 }
 
-class A_Union1 extends ffi.Union {
+final class A_Union1 extends ffi.Union {
   @ffi.Int()
   external int a;
 }

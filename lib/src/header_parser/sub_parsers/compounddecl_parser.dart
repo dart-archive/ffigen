@@ -294,11 +294,14 @@ int _compoundMembersVisitor(clang_types.CXCursor cursor,
         break;
       case clang_types.CXCursorKind.CXCursor_UnionDecl:
       case clang_types.CXCursorKind.CXCursor_StructDecl:
-        final mt = cursor.toCodeGenType();
-
         // If the union/struct are anonymous, then we need to add them now,
         // otherwise they will be added in the next iteration.
         if (!cursor.isAnonymousRecordDecl()) break;
+
+        final mt = cursor.toCodeGenType();
+        if (mt.isIncompleteCompound) {
+          parsed.incompleteCompoundMember = true;
+        }
 
         // Anonymous members are always unnamed. To avoid environment-
         // dependent naming issues with the generated code, we explicitly

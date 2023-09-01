@@ -85,6 +85,11 @@ const symbolAddress = 'symbol-address';
 // Nested under `functions`
 const exposeFunctionTypedefs = 'expose-typedefs';
 const leafFunctions = 'leaf';
+const varArgFunctions = 'variadic-arguments';
+
+// Nested under varArg entries
+const postfix = "postfix";
+const types = "types";
 
 // Sub-fields of ObjC interfaces.
 const objcModule = 'module';
@@ -272,3 +277,7 @@ String get tmpDir {
   _tmpDir ??= Directory.systemTemp.createTempSync();
   return _tmpDir!.path;
 }
+
+const ffigenJsonSchemaIndent = '  ';
+const ffigenJsonSchemaId = "https://json.schemastore.org/ffigen";
+const ffigenJsonSchemaFileName = "ffigen.schema.json";

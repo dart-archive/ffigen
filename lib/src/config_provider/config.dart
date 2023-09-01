@@ -12,6 +12,7 @@ import 'package:package_config/package_config_types.dart';
 import 'package:yaml/yaml.dart';
 
 import '../strings.dart' as strings;
+import 'config_spec.dart';
 import 'config_types.dart';
 import 'spec_utils.dart';
 
@@ -22,12 +23,10 @@ final _logger = Logger('ffigen.config_provider.config');
 /// Handles validation, extraction of configurations from a yaml file.
 class Config {
   /// Input filename.
-  String? get filename => _filename;
-  String? _filename;
+  final String? filename;
 
   /// Package config.
-  PackageConfig? get packageConfig => _packageConfig;
-  PackageConfig? _packageConfig;
+  final PackageConfig? packageConfig;
 
   /// Location for llvm/lib folder.
   String get libclangDylib => _libclangDylib;
@@ -52,6 +51,10 @@ class Config {
   /// CommandLine Arguments to pass to clang_compiler.
   List<String> get compilerOpts => _compilerOpts;
   late List<String> _compilerOpts;
+
+  /// VarArg function handling.
+  Map<String, List<VarArgFunction>> get varArgFunctions => _varArgFunctions;
+  late Map<String, List<VarArgFunction>> _varArgFunctions = {};
 
   /// Declaration config for Functions.
   Declaration get functionDecl => _functionDecl;
@@ -172,23 +175,22 @@ class Config {
   FfiNativeConfig get ffiNativeConfig => _ffiNativeConfig;
   late FfiNativeConfig _ffiNativeConfig;
 
-  Config._(this._filename, this._packageConfig);
+  Config._({required this.filename, required this.packageConfig});
 
   /// Create config from Yaml map.
   factory Config.fromYaml(YamlMap map,
       {String? filename, PackageConfig? packageConfig}) {
-    final configspecs = Config._(filename, packageConfig);
+    final config = Config._(filename: filename, packageConfig: packageConfig);
     _logger.finest('Config Map: $map');
 
-    final specs = configspecs._getSpecs();
-
-    final result = configspecs._checkConfigs(map, specs);
+    final ffigenConfigSpec = config._getRootConfigSpec();
+    final result = ffigenConfigSpec.validate(map);
     if (!result) {
       throw FormatException('Invalid configurations provided.');
     }
 
-    configspecs._extract(map, specs);
-    return configspecs;
+    ffigenConfigSpec.extract(map);
+    return config;
   }
 
   /// Create config from a file.
@@ -198,6 +200,12 @@ class Config {
 
     return Config.fromYaml(configYaml,
         filename: file.path, packageConfig: packageConfig);
+  }
+
+  /// Returns the root ConfigSpec object.
+  static ConfigSpec getsRootConfigSpec() {
+    final configspecs = Config._(filename: null, packageConfig: null);
+    return configspecs._getRootConfigSpec();
   }
 
   /// Add compiler options for clang. If [highPriority] is true these are added
@@ -211,352 +219,698 @@ class Config {
     }
   }
 
-  /// Validates Yaml according to given specs.
-  bool _checkConfigs(YamlMap map, Map<List<String>, Specification> specs) {
-    var result = true;
-    for (final key in specs.keys) {
-      final spec = specs[key];
-      if (checkKeyInYaml(key, map)) {
-        result = result && spec!.validator(key, getKeyValueFromYaml(key, map));
-      } else if (spec!.requirement == Requirement.yes) {
-        _logger.severe("Key '$key' is required.");
-        result = false;
-      } else if (spec.requirement == Requirement.prefer) {
-        _logger.warning("Prefer adding Key '$key' to your config.");
-      }
-    }
-    // Warn about unknown keys.
-    warnUnknownKeys(specs.keys.toList(), map);
-
-    return result;
+  ConfigSpec _getRootConfigSpec() {
+    return HeterogeneousMapConfigSpec(
+      entries: [
+        HeterogeneousMapEntry(
+          key: strings.llvmPath,
+          valueConfigSpec: ListConfigSpec<String, String>(
+            childConfigSpec: StringConfigSpec(),
+            transform: (node) => llvmPathExtractor(node.value),
+          ),
+          defaultValue: (node) => findDylibAtDefaultLocations(),
+          resultOrDefault: (node) => _libclangDylib = node.value as String,
+        ),
+        HeterogeneousMapEntry(
+            key: strings.output,
+            required: true,
+            valueConfigSpec: OneOfConfigSpec(
+              childConfigSpecs: [
+                _filePathStringConfigSpec(),
+                _outputFullConfigSpec(),
+              ],
+              transform: (node) =>
+                  outputExtractor(node.value, filename, packageConfig),
+              result: (node) {
+                _output = (node.value as OutputConfig).output;
+                _symbolFile = (node.value as OutputConfig).symbolFile;
+              },
+            )),
+        HeterogeneousMapEntry(
+          key: strings.language,
+          valueConfigSpec: EnumConfigSpec(
+            allowedValues: {strings.langC, strings.langObjC},
+            transform: (node) {
+              if ((node.value == strings.langObjC)) {
+                _logger.severe(
+                    'Objective C support is EXPERIMENTAL. The API may change '
+                    'in a breaking way without notice.');
+                return Language.objc;
+              } else {
+                return Language.c;
+              }
+            },
+          ),
+          defaultValue: (node) => Language.c,
+          resultOrDefault: (node) => _language = node.value as Language,
+        ),
+        HeterogeneousMapEntry(
+            key: strings.headers,
+            required: true,
+            valueConfigSpec: HeterogeneousMapConfigSpec<List<String>, Headers>(
+              entries: [
+                HeterogeneousMapEntry(
+                  key: strings.entryPoints,
+                  valueConfigSpec: ListConfigSpec<String, List<String>>(
+                      childConfigSpec: StringConfigSpec()),
+                  required: true,
+                ),
+                HeterogeneousMapEntry(
+                  key: strings.includeDirectives,
+                  valueConfigSpec: ListConfigSpec<String, List<String>>(
+                      childConfigSpec: StringConfigSpec()),
+                ),
+              ],
+              transform: (node) => headersExtractor(node.value, filename),
+              result: (node) => _headers = node.value,
+            )),
+        HeterogeneousMapEntry(
+          key: strings.compilerOpts,
+          valueConfigSpec: OneOfConfigSpec<List<String>, List<String>>(
+            childConfigSpecs: [
+              StringConfigSpec(
+                transform: (node) => [node.value],
+              ),
+              ListConfigSpec<String, List<String>>(
+                  childConfigSpec: StringConfigSpec())
+            ],
+            transform: (node) => compilerOptsExtractor(node.value),
+          ),
+          defaultValue: (node) => <String>[],
+          resultOrDefault: (node) => _compilerOpts = node.value as List<String>,
+        ),
+        HeterogeneousMapEntry(
+            key: strings.compilerOptsAuto,
+            valueConfigSpec: HeterogeneousMapConfigSpec(
+              entries: [
+                HeterogeneousMapEntry(
+                  key: strings.macos,
+                  valueConfigSpec: HeterogeneousMapConfigSpec(
+                    entries: [
+                      HeterogeneousMapEntry(
+                        key: strings.includeCStdLib,
+                        valueConfigSpec: BoolConfigSpec(),
+                        defaultValue: (node) => true,
+                      )
+                    ],
+                  ),
+                )
+              ],
+              transform: (node) => CompilerOptsAuto(
+                macIncludeStdLib: ((node.value)[strings.macos]
+                    as Map?)?[strings.includeCStdLib] as bool,
+              ),
+              result: (node) => _compilerOpts.addAll(
+                  (node.value as CompilerOptsAuto).extractCompilerOpts()),
+            )),
+        HeterogeneousMapEntry(
+          key: strings.libraryImports,
+          valueConfigSpec: MapConfigSpec<String, Map<String, LibraryImport>>(
+            keyValueConfigSpecs: [
+              (keyRegexp: ".*", valueConfigSpec: StringConfigSpec()),
+            ],
+            customValidation: _libraryImportsPredefinedValidation,
+            transform: (node) => libraryImportsExtractor(node.value.cast()),
+          ),
+          defaultValue: (node) => <String, LibraryImport>{},
+          resultOrDefault: (node) =>
+              _libraryImports = (node.value) as Map<String, LibraryImport>,
+        ),
+        HeterogeneousMapEntry(
+            key: strings.functions,
+            valueConfigSpec: HeterogeneousMapConfigSpec(
+              entries: [
+                ..._includeExcludeProperties(),
+                ..._renameProperties(),
+                ..._memberRenameProperties(),
+                HeterogeneousMapEntry(
+                  key: strings.symbolAddress,
+                  valueConfigSpec: _includeExcludeObject(),
+                  defaultValue: (node) => Includer.excludeByDefault(),
+                ),
+                HeterogeneousMapEntry(
+                  key: strings.exposeFunctionTypedefs,
+                  valueConfigSpec: _includeExcludeObject(),
+                  defaultValue: (node) => Includer.excludeByDefault(),
+                ),
+                HeterogeneousMapEntry(
+                  key: strings.leafFunctions,
+                  valueConfigSpec: _includeExcludeObject(),
+                  defaultValue: (node) => Includer.excludeByDefault(),
+                ),
+                HeterogeneousMapEntry(
+                  key: strings.varArgFunctions,
+                  valueConfigSpec: _functionVarArgsConfigSpec(),
+                  defaultValue: (node) => <String, List<RawVarArgFunction>>{},
+                  resultOrDefault: (node) {
+                    _varArgFunctions = makeVarArgFunctionsMapping(
+                        node.value as Map<String, List<RawVarArgFunction>>,
+                        _libraryImports);
+                  },
+                ),
+              ],
+              result: (node) {
+                _functionDecl = declarationConfigExtractor(
+                    node.value as Map<dynamic, dynamic>);
+                _exposeFunctionTypedefs = (node.value
+                    as Map)[strings.exposeFunctionTypedefs] as Includer;
+                _leafFunctions =
+                    (node.value as Map)[strings.leafFunctions] as Includer;
+              },
+            )),
+        HeterogeneousMapEntry(
+            key: strings.structs,
+            valueConfigSpec: HeterogeneousMapConfigSpec(
+              entries: [
+                ..._includeExcludeProperties(),
+                ..._renameProperties(),
+                ..._memberRenameProperties(),
+                _dependencyOnlyHeterogeneousMapKey(),
+                HeterogeneousMapEntry(
+                  key: strings.structPack,
+                  valueConfigSpec: MapConfigSpec(
+                    keyValueConfigSpecs: [
+                      (
+                        keyRegexp: '.*',
+                        valueConfigSpec: EnumConfigSpec(
+                          allowedValues: {'none', 1, 2, 4, 8, 16},
+                          transform: (node) =>
+                              node.value == 'none' ? null : node.value,
+                        ),
+                      )
+                    ],
+                    transform: (node) =>
+                        structPackingOverrideExtractor(node.value),
+                  ),
+                  defaultValue: (node) => StructPackingOverride(),
+                  resultOrDefault: (node) => _structPackingOverride =
+                      node.value as StructPackingOverride,
+                ),
+              ],
+              result: (node) {
+                _structDecl = declarationConfigExtractor(
+                    node.value as Map<dynamic, dynamic>);
+                _structDependencies = (node.value
+                    as Map)[strings.dependencyOnly] as CompoundDependencies;
+              },
+            )),
+        HeterogeneousMapEntry(
+            key: strings.unions,
+            valueConfigSpec: HeterogeneousMapConfigSpec(
+              entries: [
+                ..._includeExcludeProperties(),
+                ..._renameProperties(),
+                ..._memberRenameProperties(),
+                _dependencyOnlyHeterogeneousMapKey(),
+              ],
+              result: (node) {
+                _unionDecl = declarationConfigExtractor(
+                    node.value as Map<dynamic, dynamic>);
+                _unionDependencies = (node.value as Map)[strings.dependencyOnly]
+                    as CompoundDependencies;
+              },
+            )),
+        HeterogeneousMapEntry(
+            key: strings.enums,
+            valueConfigSpec: HeterogeneousMapConfigSpec(
+              entries: [
+                ..._includeExcludeProperties(),
+                ..._renameProperties(),
+                ..._memberRenameProperties(),
+              ],
+              result: (node) {
+                _enumClassDecl = declarationConfigExtractor(
+                    node.value as Map<dynamic, dynamic>);
+              },
+            )),
+        HeterogeneousMapEntry(
+            key: strings.unnamedEnums,
+            valueConfigSpec: HeterogeneousMapConfigSpec(
+              entries: [
+                ..._includeExcludeProperties(),
+                ..._renameProperties(),
+              ],
+              result: (node) {
+                _unnamedEnumConstants = declarationConfigExtractor(
+                    node.value as Map<dynamic, dynamic>);
+              },
+            )),
+        HeterogeneousMapEntry(
+            key: strings.globals,
+            valueConfigSpec: HeterogeneousMapConfigSpec(
+              entries: [
+                ..._includeExcludeProperties(),
+                ..._renameProperties(),
+                HeterogeneousMapEntry(
+                  key: strings.symbolAddress,
+                  valueConfigSpec: _includeExcludeObject(),
+                  defaultValue: (node) => Includer.excludeByDefault(),
+                )
+              ],
+              result: (node) {
+                _globals = declarationConfigExtractor(
+                    node.value as Map<dynamic, dynamic>);
+              },
+            )),
+        HeterogeneousMapEntry(
+            key: strings.macros,
+            valueConfigSpec: HeterogeneousMapConfigSpec(
+              entries: [
+                ..._includeExcludeProperties(),
+                ..._renameProperties(),
+              ],
+              result: (node) {
+                _macroDecl = declarationConfigExtractor(
+                    node.value as Map<dynamic, dynamic>);
+              },
+            )),
+        HeterogeneousMapEntry(
+            key: strings.typedefs,
+            valueConfigSpec: HeterogeneousMapConfigSpec(
+              entries: [
+                ..._includeExcludeProperties(),
+                ..._renameProperties(),
+              ],
+              result: (node) {
+                _typedefs = declarationConfigExtractor(
+                    node.value as Map<dynamic, dynamic>);
+              },
+            )),
+        HeterogeneousMapEntry(
+            key: strings.objcInterfaces,
+            valueConfigSpec: HeterogeneousMapConfigSpec(
+              entries: [
+                ..._includeExcludeProperties(),
+                ..._renameProperties(),
+                ..._memberRenameProperties(),
+                HeterogeneousMapEntry(
+                  key: strings.objcModule,
+                  valueConfigSpec: _objcInterfaceModuleObject(),
+                  defaultValue: (node) => ObjCModulePrefixer({}),
+                )
+              ],
+              result: (node) {
+                _objcInterfaces = declarationConfigExtractor(
+                    node.value as Map<dynamic, dynamic>);
+                _objcModulePrefixer = (node.value as Map)[strings.objcModule]
+                    as ObjCModulePrefixer;
+              },
+            )),
+        HeterogeneousMapEntry(
+            key: strings.import,
+            valueConfigSpec: HeterogeneousMapConfigSpec(
+              entries: [
+                HeterogeneousMapEntry(
+                  key: strings.symbolFilesImport,
+                  valueConfigSpec:
+                      ListConfigSpec<String, Map<String, ImportedType>>(
+                    childConfigSpec: StringConfigSpec(),
+                    transform: (node) => symbolFileImportExtractor(
+                        node.value, _libraryImports, filename, packageConfig),
+                  ),
+                  defaultValue: (node) => <String, ImportedType>{},
+                  resultOrDefault: (node) => _usrTypeMappings =
+                      node.value as Map<String, ImportedType>,
+                )
+              ],
+            )),
+        HeterogeneousMapEntry(
+            key: strings.typeMap,
+            valueConfigSpec: HeterogeneousMapConfigSpec(
+              entries: [
+                HeterogeneousMapEntry(
+                  key: strings.typeMapTypedefs,
+                  valueConfigSpec: _mappedTypeObject(),
+                  defaultValue: (node) => <String, List<String>>{},
+                ),
+                HeterogeneousMapEntry(
+                  key: strings.typeMapStructs,
+                  valueConfigSpec: _mappedTypeObject(),
+                  defaultValue: (node) => <String, List<String>>{},
+                ),
+                HeterogeneousMapEntry(
+                  key: strings.typeMapUnions,
+                  valueConfigSpec: _mappedTypeObject(),
+                  defaultValue: (node) => <String, List<String>>{},
+                ),
+                HeterogeneousMapEntry(
+                  key: strings.typeMapNativeTypes,
+                  valueConfigSpec: _mappedTypeObject(),
+                  defaultValue: (node) => <String, List<String>>{},
+                ),
+              ],
+              result: (node) {
+                final nodeValue = node.value as Map;
+                _typedefTypeMappings = makeImportTypeMapping(
+                  (nodeValue[strings.typeMapTypedefs])
+                      as Map<String, List<String>>,
+                  _libraryImports,
+                );
+                _structTypeMappings = makeImportTypeMapping(
+                  (nodeValue[strings.typeMapStructs])
+                      as Map<String, List<String>>,
+                  _libraryImports,
+                );
+                _unionTypeMappings = makeImportTypeMapping(
+                  (nodeValue[strings.typeMapUnions])
+                      as Map<String, List<String>>,
+                  _libraryImports,
+                );
+                _nativeTypeMappings = makeImportTypeMapping(
+                  (nodeValue[strings.typeMapNativeTypes])
+                      as Map<String, List<String>>,
+                  _libraryImports,
+                );
+              },
+            )),
+        HeterogeneousMapEntry(
+          key: strings.excludeAllByDefault,
+          valueConfigSpec: BoolConfigSpec(),
+          defaultValue: (node) => false,
+          resultOrDefault: (node) => _excludeAllByDefault = node.value as bool,
+        ),
+        HeterogeneousMapEntry(
+          key: strings.sort,
+          valueConfigSpec: BoolConfigSpec(),
+          defaultValue: (node) => false,
+          resultOrDefault: (node) => _sort = node.value as bool,
+        ),
+        HeterogeneousMapEntry(
+          key: strings.useSupportedTypedefs,
+          valueConfigSpec: BoolConfigSpec(),
+          defaultValue: (node) => true,
+          resultOrDefault: (node) => _useSupportedTypedefs = node.value as bool,
+        ),
+        HeterogeneousMapEntry(
+          key: strings.comments,
+          valueConfigSpec: _commentConfigSpec(),
+          defaultValue: (node) => CommentType.def(),
+          resultOrDefault: (node) => _commentType = node.value as CommentType,
+        ),
+        HeterogeneousMapEntry(
+          key: strings.name,
+          valueConfigSpec: _dartClassNameStringConfigSpec(),
+          defaultValue: (node) {
+            _logger.warning(
+                "Prefer adding Key '${node.pathString}' to your config.");
+            return 'NativeLibrary';
+          },
+          resultOrDefault: (node) => _wrapperName = node.value as String,
+        ),
+        HeterogeneousMapEntry(
+          key: strings.description,
+          valueConfigSpec: _nonEmptyStringConfigSpec(),
+          defaultValue: (node) {
+            _logger.warning(
+                "Prefer adding Key '${node.pathString}' to your config.");
+            return null;
+          },
+          resultOrDefault: (node) => _wrapperDocComment = node.value as String?,
+        ),
+        HeterogeneousMapEntry(
+            key: strings.preamble,
+            valueConfigSpec: StringConfigSpec(
+              result: (node) => _preamble = node.value as String?,
+            )),
+        HeterogeneousMapEntry(
+          key: strings.useDartHandle,
+          valueConfigSpec: BoolConfigSpec(),
+          defaultValue: (node) => true,
+          resultOrDefault: (node) => _useDartHandle = node.value as bool,
+        ),
+        HeterogeneousMapEntry(
+          key: strings.ffiNative,
+          valueConfigSpec: OneOfConfigSpec(
+            childConfigSpecs: [
+              EnumConfigSpec(allowedValues: {null}),
+              HeterogeneousMapConfigSpec(
+                entries: [
+                  HeterogeneousMapEntry(
+                    key: strings.ffiNativeAsset,
+                    valueConfigSpec: StringConfigSpec(),
+                    required: true,
+                  )
+                ],
+              )
+            ],
+            transform: (node) => ffiNativeExtractor(node.value),
+          ),
+          defaultValue: (node) => FfiNativeConfig(enabled: false),
+          resultOrDefault: (node) =>
+              _ffiNativeConfig = (node.value) as FfiNativeConfig,
+        ),
+      ],
+    );
   }
 
-  /// Extracts variables from Yaml according to given specs.
-  ///
-  /// Validation must be done beforehand, using [_checkConfigs].
-  void _extract(YamlMap map, Map<List<String>, Specification> specs) {
-    for (final key in specs.keys) {
-      final spec = specs[key];
-      if (checkKeyInYaml(key, map)) {
-        spec!.extractedResult(spec.extractor(getKeyValueFromYaml(key, map)));
-      } else {
-        spec!.extractedResult(spec.defaultValue?.call());
-      }
+  bool _libraryImportsPredefinedValidation(ConfigValue node) {
+    if (node.value is YamlMap) {
+      return (node.value as YamlMap).keys.where((key) {
+        if (strings.predefinedLibraryImports.containsKey(key)) {
+          _logger.severe(
+              '${node.pathString} -> $key should not collide with any predefined imports - ${strings.predefinedLibraryImports.keys}.');
+          return true;
+        }
+        return false;
+      }).isEmpty;
     }
+    return true;
   }
 
-  /// Returns map of various specifications avaialble for our tool.
-  ///
-  /// Key: Name, Value: [Specification]
-  Map<List<String>, Specification> _getSpecs() {
-    return <List<String>, Specification>{
-      [strings.llvmPath]: Specification<String>(
-        requirement: Requirement.no,
-        validator: llvmPathValidator,
-        extractor: llvmPathExtractor,
-        defaultValue: () => findDylibAtDefaultLocations(),
-        extractedResult: (dynamic result) {
-          _libclangDylib = result as String;
+  OneOfConfigSpec _commentConfigSpec() {
+    return OneOfConfigSpec(
+      childConfigSpecs: [
+        BoolConfigSpec(
+          transform: (node) =>
+              (node.value == true) ? CommentType.def() : CommentType.none(),
+        ),
+        HeterogeneousMapConfigSpec(
+          entries: [
+            HeterogeneousMapEntry(
+              key: strings.style,
+              valueConfigSpec: EnumConfigSpec(
+                allowedValues: {strings.doxygen, strings.any},
+                transform: (node) => node.value == strings.doxygen
+                    ? CommentStyle.doxygen
+                    : CommentStyle.any,
+              ),
+              defaultValue: (node) => CommentStyle.doxygen,
+            ),
+            HeterogeneousMapEntry(
+              key: strings.length,
+              valueConfigSpec: EnumConfigSpec(
+                allowedValues: {strings.brief, strings.full},
+                transform: (node) => node.value == strings.brief
+                    ? CommentLength.brief
+                    : CommentLength.full,
+              ),
+              defaultValue: (node) => CommentLength.full,
+            ),
+          ],
+          transform: (node) => CommentType(
+            (node.value)[strings.style] as CommentStyle,
+            (node.value)[strings.length] as CommentLength,
+          ),
+        ),
+      ],
+    );
+  }
+
+  MapConfigSpec _functionVarArgsConfigSpec() {
+    return MapConfigSpec(
+      keyValueConfigSpecs: [
+        (
+          keyRegexp: ".*",
+          valueConfigSpec: ListConfigSpec(
+            childConfigSpec: OneOfConfigSpec(
+              childConfigSpecs: [
+                ListConfigSpec(childConfigSpec: StringConfigSpec()),
+                HeterogeneousMapConfigSpec(
+                  entries: [
+                    HeterogeneousMapEntry(
+                      key: strings.types,
+                      valueConfigSpec: ListConfigSpec<String, List<String>>(
+                          childConfigSpec: StringConfigSpec()),
+                      required: true,
+                    ),
+                    HeterogeneousMapEntry(
+                      key: strings.postfix,
+                      valueConfigSpec: StringConfigSpec(),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          )
+        )
+      ],
+      transform: (node) => varArgFunctionConfigExtractor(node.value),
+    );
+  }
+
+  HeterogeneousMapConfigSpec _outputFullConfigSpec() {
+    return HeterogeneousMapConfigSpec(
+      entries: [
+        HeterogeneousMapEntry(
+          key: strings.bindings,
+          valueConfigSpec: _filePathStringConfigSpec(),
+          required: true,
+        ),
+        HeterogeneousMapEntry(
+          key: strings.symbolFile,
+          valueConfigSpec: HeterogeneousMapConfigSpec(
+            entries: [
+              HeterogeneousMapEntry(
+                key: strings.output,
+                valueConfigSpec: _filePathStringConfigSpec(),
+                required: true,
+              ),
+              HeterogeneousMapEntry(
+                key: strings.importPath,
+                valueConfigSpec: StringConfigSpec(),
+                required: true,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  StringConfigSpec _filePathStringConfigSpec() {
+    return StringConfigSpec(
+      schemaDefName: 'filePath',
+      schemaDescription: "A file path",
+    );
+  }
+
+  StringConfigSpec _nonEmptyStringConfigSpec() {
+    return StringConfigSpec(
+      schemaDefName: 'nonEmptyString',
+      pattern: r'.+',
+    );
+  }
+
+  StringConfigSpec _dartClassNameStringConfigSpec() {
+    return StringConfigSpec(
+      schemaDefName: 'publicDartClass',
+      schemaDescription: "A public dart class name.",
+      pattern: r'^[a-zA-Z]+[_a-zA-Z0-9]*$',
+    );
+  }
+
+  List<HeterogeneousMapEntry> _includeExcludeProperties() {
+    return [
+      HeterogeneousMapEntry(
+        key: strings.include,
+        valueConfigSpec: _fullMatchOrRegexpList(),
+      ),
+      HeterogeneousMapEntry(
+        key: strings.exclude,
+        valueConfigSpec: _fullMatchOrRegexpList(),
+        defaultValue: (node) => <String>[],
+      ),
+    ];
+  }
+
+  ListConfigSpec<String, List<String>> _fullMatchOrRegexpList() {
+    return ListConfigSpec(
+      schemaDefName: "fullMatchOrRegexpList",
+      childConfigSpec: StringConfigSpec(),
+    );
+  }
+
+  List<HeterogeneousMapEntry> _renameProperties() {
+    return [
+      HeterogeneousMapEntry(
+        key: strings.rename,
+        valueConfigSpec: MapConfigSpec<String, dynamic>(
+          schemaDefName: "rename",
+          keyValueConfigSpecs: [
+            (keyRegexp: ".*", valueConfigSpec: StringConfigSpec()),
+          ],
+        ),
+      ),
+    ];
+  }
+
+  List<HeterogeneousMapEntry> _memberRenameProperties() {
+    return [
+      HeterogeneousMapEntry(
+        key: strings.memberRename,
+        valueConfigSpec: MapConfigSpec<Map<dynamic, String>,
+            Map<dynamic, Map<dynamic, String>>>(
+          schemaDefName: "memberRename",
+          keyValueConfigSpecs: [
+            (
+              keyRegexp: ".*",
+              valueConfigSpec: MapConfigSpec<String, Map<dynamic, String>>(
+                keyValueConfigSpecs: [
+                  (keyRegexp: ".*", valueConfigSpec: StringConfigSpec())
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ];
+  }
+
+  HeterogeneousMapConfigSpec<List<String>, Includer> _includeExcludeObject() {
+    return HeterogeneousMapConfigSpec(
+      schemaDefName: "includeExclude",
+      entries: [
+        ..._includeExcludeProperties(),
+      ],
+      transform: (node) => extractIncluderFromYaml(node.value),
+    );
+  }
+
+  HeterogeneousMapEntry _dependencyOnlyHeterogeneousMapKey() {
+    return HeterogeneousMapEntry(
+      key: strings.dependencyOnly,
+      valueConfigSpec: EnumConfigSpec<String, CompoundDependencies>(
+        schemaDefName: "dependencyOnly",
+        allowedValues: {
+          strings.fullCompoundDependencies,
+          strings.opaqueCompoundDependencies,
         },
+        transform: (node) => node.value == strings.opaqueCompoundDependencies
+            ? CompoundDependencies.opaque
+            : CompoundDependencies.full,
       ),
-      [strings.output]: Specification<OutputConfig>(
-        requirement: Requirement.yes,
-        validator: outputValidator,
-        extractor: (dynamic value) =>
-            outputExtractor(value, filename, packageConfig),
-        extractedResult: (dynamic result) {
-          _output = (result as OutputConfig).output;
-          _symbolFile = result.symbolFile;
-        },
-      ),
-      [strings.language]: Specification<Language>(
-        requirement: Requirement.no,
-        validator: languageValidator,
-        extractor: languageExtractor,
-        defaultValue: () => Language.c,
-        extractedResult: (dynamic result) => _language = result as Language,
-      ),
-      [strings.headers]: Specification<Headers>(
-        requirement: Requirement.yes,
-        validator: headersValidator,
-        extractor: (dynamic value) => headersExtractor(value, filename),
-        extractedResult: (dynamic result) => _headers = result as Headers,
-      ),
-      [strings.compilerOpts]: Specification<List<String>>(
-        requirement: Requirement.no,
-        validator: compilerOptsValidator,
-        extractor: compilerOptsExtractor,
-        defaultValue: () => [],
-        extractedResult: (dynamic result) =>
-            _compilerOpts = result as List<String>,
-      ),
-      [strings.compilerOptsAuto]: Specification<CompilerOptsAuto>(
-          requirement: Requirement.no,
-          validator: compilerOptsAutoValidator,
-          extractor: compilerOptsAutoExtractor,
-          defaultValue: () => CompilerOptsAuto(),
-          extractedResult: (dynamic result) {
-            _compilerOpts
-                .addAll((result as CompilerOptsAuto).extractCompilerOpts());
-          }),
-      [strings.functions]: Specification<Declaration>(
-        requirement: Requirement.no,
-        validator: declarationConfigValidator,
-        extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
-        extractedResult: (dynamic result) {
-          _functionDecl = result as Declaration;
-        },
-      ),
-      [strings.structs]: Specification<Declaration>(
-        requirement: Requirement.no,
-        validator: declarationConfigValidator,
-        extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
-        extractedResult: (dynamic result) {
-          _structDecl = result as Declaration;
-        },
-      ),
-      [strings.unions]: Specification<Declaration>(
-        requirement: Requirement.no,
-        validator: declarationConfigValidator,
-        extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
-        extractedResult: (dynamic result) {
-          _unionDecl = result as Declaration;
-        },
-      ),
-      [strings.enums]: Specification<Declaration>(
-        requirement: Requirement.no,
-        validator: declarationConfigValidator,
-        extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
-        extractedResult: (dynamic result) {
-          _enumClassDecl = result as Declaration;
-        },
-      ),
-      [strings.unnamedEnums]: Specification<Declaration>(
-        requirement: Requirement.no,
-        validator: declarationConfigValidator,
-        extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
-        extractedResult: (dynamic result) =>
-            _unnamedEnumConstants = result as Declaration,
-      ),
-      [strings.globals]: Specification<Declaration>(
-        requirement: Requirement.no,
-        validator: declarationConfigValidator,
-        extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
-        extractedResult: (dynamic result) {
-          _globals = result as Declaration;
-        },
-      ),
-      [strings.macros]: Specification<Declaration>(
-        requirement: Requirement.no,
-        validator: declarationConfigValidator,
-        extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
-        extractedResult: (dynamic result) {
-          _macroDecl = result as Declaration;
-        },
-      ),
-      [strings.typedefs]: Specification<Declaration>(
-        requirement: Requirement.no,
-        validator: declarationConfigValidator,
-        extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
-        extractedResult: (dynamic result) {
-          _typedefs = result as Declaration;
-        },
-      ),
-      [strings.objcInterfaces]: Specification<Declaration>(
-        requirement: Requirement.no,
-        validator: declarationConfigValidator,
-        extractor: declarationConfigExtractor,
-        defaultValue: () => Declaration(),
-        extractedResult: (dynamic result) {
-          _objcInterfaces = result as Declaration;
-        },
-      ),
-      [strings.objcInterfaces, strings.objcModule]:
-          Specification<Map<String, String>>(
-        requirement: Requirement.no,
-        validator: stringStringMapValidator,
-        extractor: stringStringMapExtractor,
-        defaultValue: () => <String, String>{},
-        extractedResult: (dynamic result) => _objcModulePrefixer =
-            ObjCModulePrefixer(result as Map<String, String>),
-      ),
-      [strings.libraryImports]: Specification<Map<String, LibraryImport>>(
-        validator: libraryImportsValidator,
-        extractor: libraryImportsExtractor,
-        defaultValue: () => <String, LibraryImport>{},
-        extractedResult: (dynamic result) {
-          _libraryImports = result as Map<String, LibraryImport>;
-        },
-      ),
-      [strings.import, strings.symbolFilesImport]:
-          Specification<Map<String, ImportedType>>(
-        validator: symbolFileImportValidator,
-        extractor: (value) => symbolFileImportExtractor(
-            value, _libraryImports, filename, packageConfig),
-        defaultValue: () => <String, ImportedType>{},
-        extractedResult: (dynamic result) {
-          _usrTypeMappings = result as Map<String, ImportedType>;
-        },
-      ),
-      [strings.typeMap, strings.typeMapTypedefs]:
-          Specification<Map<String, List<String>>>(
-        validator: typeMapValidator,
-        extractor: typeMapExtractor,
-        defaultValue: () => <String, List<String>>{},
-        extractedResult: (dynamic result) {
-          _typedefTypeMappings = makeImportTypeMapping(
-              result as Map<String, List<String>>, _libraryImports);
-        },
-      ),
-      [strings.typeMap, strings.typeMapStructs]:
-          Specification<Map<String, List<String>>>(
-        validator: typeMapValidator,
-        extractor: typeMapExtractor,
-        defaultValue: () => <String, List<String>>{},
-        extractedResult: (dynamic result) {
-          _structTypeMappings = makeImportTypeMapping(
-              result as Map<String, List<String>>, _libraryImports);
-        },
-      ),
-      [strings.typeMap, strings.typeMapUnions]:
-          Specification<Map<String, List<String>>>(
-        validator: typeMapValidator,
-        extractor: typeMapExtractor,
-        defaultValue: () => <String, List<String>>{},
-        extractedResult: (dynamic result) {
-          _unionTypeMappings = makeImportTypeMapping(
-              result as Map<String, List<String>>, _libraryImports);
-        },
-      ),
-      [strings.typeMap, strings.typeMapNativeTypes]:
-          Specification<Map<String, List<String>>>(
-        validator: typeMapValidator,
-        extractor: typeMapExtractor,
-        defaultValue: () => <String, List<String>>{},
-        extractedResult: (dynamic result) {
-          _nativeTypeMappings = makeImportTypeMapping(
-              result as Map<String, List<String>>, _libraryImports);
-        },
-      ),
-      [strings.excludeAllByDefault]: Specification<bool>(
-        requirement: Requirement.no,
-        validator: booleanValidator,
-        extractor: booleanExtractor,
-        defaultValue: () => false,
-        extractedResult: (dynamic result) =>
-            _excludeAllByDefault = result as bool,
-      ),
-      [strings.sort]: Specification<bool>(
-        requirement: Requirement.no,
-        validator: booleanValidator,
-        extractor: booleanExtractor,
-        defaultValue: () => false,
-        extractedResult: (dynamic result) => _sort = result as bool,
-      ),
-      [strings.useSupportedTypedefs]: Specification<bool>(
-        requirement: Requirement.no,
-        validator: booleanValidator,
-        extractor: booleanExtractor,
-        defaultValue: () => true,
-        extractedResult: (dynamic result) =>
-            _useSupportedTypedefs = result as bool,
-      ),
-      [strings.comments]: Specification<CommentType>(
-        requirement: Requirement.no,
-        validator: commentValidator,
-        extractor: commentExtractor,
-        defaultValue: () => CommentType.def(),
-        extractedResult: (dynamic result) =>
-            _commentType = result as CommentType,
-      ),
-      [strings.structs, strings.dependencyOnly]:
-          Specification<CompoundDependencies>(
-        requirement: Requirement.no,
-        validator: dependencyOnlyValidator,
-        extractor: dependencyOnlyExtractor,
-        defaultValue: () => CompoundDependencies.full,
-        extractedResult: (dynamic result) =>
-            _structDependencies = result as CompoundDependencies,
-      ),
-      [strings.unions, strings.dependencyOnly]:
-          Specification<CompoundDependencies>(
-        requirement: Requirement.no,
-        validator: dependencyOnlyValidator,
-        extractor: dependencyOnlyExtractor,
-        defaultValue: () => CompoundDependencies.full,
-        extractedResult: (dynamic result) =>
-            _unionDependencies = result as CompoundDependencies,
-      ),
-      [strings.structs, strings.structPack]:
-          Specification<StructPackingOverride>(
-        requirement: Requirement.no,
-        validator: structPackingOverrideValidator,
-        extractor: structPackingOverrideExtractor,
-        defaultValue: () => StructPackingOverride(),
-        extractedResult: (dynamic result) =>
-            _structPackingOverride = result as StructPackingOverride,
-      ),
-      [strings.name]: Specification<String>(
-        requirement: Requirement.prefer,
-        validator: dartClassNameValidator,
-        extractor: stringExtractor,
-        defaultValue: () => 'NativeLibrary',
-        extractedResult: (dynamic result) => _wrapperName = result as String,
-      ),
-      [strings.description]: Specification<String?>(
-        requirement: Requirement.prefer,
-        validator: nonEmptyStringValidator,
-        extractor: stringExtractor,
-        defaultValue: () => null,
-        extractedResult: (dynamic result) =>
-            _wrapperDocComment = result as String?,
-      ),
-      [strings.preamble]: Specification<String?>(
-        requirement: Requirement.no,
-        validator: nonEmptyStringValidator,
-        extractor: stringExtractor,
-        extractedResult: (dynamic result) => _preamble = result as String?,
-      ),
-      [strings.useDartHandle]: Specification<bool>(
-        requirement: Requirement.no,
-        validator: booleanValidator,
-        extractor: booleanExtractor,
-        defaultValue: () => true,
-        extractedResult: (dynamic result) => _useDartHandle = result as bool,
-      ),
-      [strings.functions, strings.exposeFunctionTypedefs]:
-          Specification<Includer>(
-        requirement: Requirement.no,
-        validator: exposeFunctionTypeValidator,
-        extractor: exposeFunctionTypeExtractor,
-        defaultValue: () => Includer.excludeByDefault(),
-        extractedResult: (dynamic result) =>
-            _exposeFunctionTypedefs = result as Includer,
-      ),
-      [strings.functions, strings.leafFunctions]: Specification<Includer>(
-        requirement: Requirement.no,
-        validator: leafFunctionValidator,
-        extractor: leafFunctionExtractor,
-        defaultValue: () => Includer.excludeByDefault(),
-        extractedResult: (dynamic result) =>
-            _leafFunctions = result as Includer,
-      ),
-      [strings.ffiNative]: Specification<FfiNativeConfig>(
-        requirement: Requirement.no,
-        validator: ffiNativeValidator,
-        extractor: ffiNativeExtractor,
-        defaultValue: () => FfiNativeConfig(enabled: false),
-        extractedResult: (dynamic result) =>
-            _ffiNativeConfig = result as FfiNativeConfig,
-      )
-    };
+      defaultValue: (node) => CompoundDependencies.full,
+    );
+  }
+
+  MapConfigSpec _mappedTypeObject() {
+    return MapConfigSpec(
+      schemaDefName: "mappedTypes",
+      keyValueConfigSpecs: [
+        (
+          keyRegexp: ".*",
+          valueConfigSpec: HeterogeneousMapConfigSpec(entries: [
+            HeterogeneousMapEntry(
+                key: strings.lib, valueConfigSpec: StringConfigSpec()),
+            HeterogeneousMapEntry(
+                key: strings.cType, valueConfigSpec: StringConfigSpec()),
+            HeterogeneousMapEntry(
+                key: strings.dartType, valueConfigSpec: StringConfigSpec()),
+          ]),
+        )
+      ],
+      transform: (node) => typeMapExtractor(node.value),
+    );
+  }
+
+  MapConfigSpec _objcInterfaceModuleObject() {
+    return MapConfigSpec(
+      schemaDefName: "objcInterfaceModule",
+      keyValueConfigSpecs: [
+        (keyRegexp: ".*", valueConfigSpec: StringConfigSpec()),
+      ],
+      transform: (node) =>
+          ObjCModulePrefixer(node.value.cast<String, String>()),
+    );
   }
 }

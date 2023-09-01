@@ -1,3 +1,48 @@
+# 9.0.1
+
+- Fix doc comment missing on struct/union array fields.
+- Allow extern inline functions to be generated.
+
+# 9.0.0
+
+- Added a JSON schema for FFIgen config files.
+
+# 8.0.2
+
+- Fixed invalid code generated due to zero-length arrays in structs/union.
+
+# 8.0.1
+
+- Fixed invalid code generated due to anonymous structs/unions with unsupported types.
+
+# 8.0.0
+
+- Stable release for Dart 3.0 with support for class modifers, variadic arguments, and `@Native`s.
+
+# 8.0.0-dev.3
+
+- Added support for variadic functions using config `functions -> variadic-arguments`.
+
+# 8.0.0-dev.2
+
+- Use `@Native` syntax instead of deprecated `@FfiNative` syntax.
+
+
+# 8.0.0-dev.1
+
+- Fix invalid struct/enum member references due to multiple anonymous struct/enum in a declaration.
+
+# 8.0.0-dev.0
+
+- Adds `final` class modifier to generated sub types `Struct`, `Union` and
+  `Opaque`. A class modifier is required in Dart 3.0 because the classes
+  `dart:ffi` as marked `base`.
+  When migrating a package that uses FFIgen, _and_ exposes the generated code in
+  the public API of the package, to Dart 3.0, that package does not
+  need a major version bump. Sub typing `Struct`, `Union` and
+  `Opaque` sub types is already disallowed by `dart:ffi` pre 3.0, so adding the
+  `final` keyword is not a breaking change.
+- Bumps SDK lowerbound to 3.0.
 # 7.2.11
 
 - Fix invalid struct/enum member references due to multiple anonymous struct/enum in a declaration.

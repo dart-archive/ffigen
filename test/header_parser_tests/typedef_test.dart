@@ -19,6 +19,7 @@ void main() {
       actual = parser.parse(
         testConfig('''
 ${strings.name}: 'Bindings'
+${strings.description}: 'Typedef Test'
 ${strings.output}: 'unused'
 
 ${strings.headers}:

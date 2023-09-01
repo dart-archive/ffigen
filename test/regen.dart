@@ -52,7 +52,7 @@ Future<void> main(List<String> args) async {
 
   final nativeTestConfig = File('test/native_test/config.yaml').absolute;
   final nativeTestOut =
-      File('test/native_test/native_test_bindings.dart').absolute;
+      File('test/native_test/_expected_native_test_bindings.dart').absolute;
   await withChDir(nativeTestConfig.path,
       () => _regenConfig(nativeTestConfig, nativeTestOut));
 

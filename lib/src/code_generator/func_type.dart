@@ -11,13 +11,19 @@ import 'writer.dart';
 class FunctionType extends Type {
   final Type returnType;
   final List<Parameter> parameters;
+  final List<Parameter> varArgParameters;
+
+  /// Get all the parameters for generating the dart type. This includes both
+  /// [parameters] and [varArgParameters].
+  List<Parameter> get dartTypeParameters => parameters + varArgParameters;
 
   FunctionType({
     required this.returnType,
     required this.parameters,
+    this.varArgParameters = const [],
   });
 
-  String _getTypeString(
+  String _getCacheKeyString(
       bool writeArgumentNames, String Function(Type) typeToString) {
     final sb = StringBuffer();
 
@@ -35,18 +41,51 @@ class FunctionType extends Type {
   }
 
   @override
-  String getCType(Writer w, {bool writeArgumentNames = true}) =>
-      _getTypeString(writeArgumentNames, (Type t) => t.getCType(w));
+  String getCType(Writer w, {bool writeArgumentNames = true}) {
+    final sb = StringBuffer();
+
+    // Write return Type.
+    sb.write(returnType.getCType(w));
+
+    // Write Function.
+    sb.write(' Function(');
+    sb.write((parameters).map<String>((p) {
+      return '${p.type.getCType(w)} ${writeArgumentNames ? p.name : ""}';
+    }).join(', '));
+    if (varArgParameters.isNotEmpty) {
+      sb.write(", ${w.ffiLibraryPrefix}.VarArgs<(");
+      sb.write((varArgParameters).map<String>((p) {
+        return '${p.type.getCType(w)} ${writeArgumentNames ? p.name : ""}';
+      }).join(', '));
+      sb.write(",)>");
+    }
+    sb.write(')');
+
+    return sb.toString();
+  }
 
   @override
-  String getDartType(Writer w, {bool writeArgumentNames = true}) =>
-      _getTypeString(writeArgumentNames, (Type t) => t.getDartType(w));
+  String getDartType(Writer w, {bool writeArgumentNames = true}) {
+    final sb = StringBuffer();
+
+    // Write return Type.
+    sb.write(returnType.getDartType(w));
+
+    // Write Function.
+    sb.write(' Function(');
+    sb.write(dartTypeParameters.map<String>((p) {
+      return '${p.type.getDartType(w)} ${writeArgumentNames ? p.name : ""}';
+    }).join(', '));
+    sb.write(')');
+
+    return sb.toString();
+  }
 
   @override
-  String toString() => _getTypeString(false, (Type t) => t.toString());
+  String toString() => _getCacheKeyString(false, (Type t) => t.toString());
 
   @override
-  String cacheKey() => _getTypeString(false, (Type t) => t.cacheKey());
+  String cacheKey() => _getCacheKeyString(false, (Type t) => t.cacheKey());
 
   @override
   void addDependencies(Set<Binding> dependencies) {

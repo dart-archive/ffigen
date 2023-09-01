@@ -792,6 +792,21 @@ class Clang {
       _clang_Type_getObjCObjectBaseTypePtr
           .asFunction<CXType Function(CXType)>();
 
+  /// Return 1 if the CXType is a variadic function type, and 0 otherwise.
+  int clang_isFunctionTypeVariadic(
+    CXType T,
+  ) {
+    return _clang_isFunctionTypeVariadic(
+      T,
+    );
+  }
+
+  late final _clang_isFunctionTypeVariadicPtr =
+      _lookup<ffi.NativeFunction<ffi.UnsignedInt Function(CXType)>>(
+          'clang_isFunctionTypeVariadic');
+  late final _clang_isFunctionTypeVariadic =
+      _clang_isFunctionTypeVariadicPtr.asFunction<int Function(CXType)>();
+
   /// Retrieve the return type associated with a given cursor.
   ///
   /// This only returns a valid type if the cursor refers to a function or method.
@@ -932,6 +947,24 @@ class Clang {
   late final _clang_Cursor_isAnonymousRecordDecl =
       _clang_Cursor_isAnonymousRecordDeclPtr
           .asFunction<int Function(CXCursor)>();
+
+  /// Returns the storage class for a function or variable declaration.
+  ///
+  /// If the passed in Cursor is not a function or variable declaration,
+  /// CX_SC_Invalid is returned else the storage class.
+  int clang_Cursor_getStorageClass(
+    CXCursor arg0,
+  ) {
+    return _clang_Cursor_getStorageClass(
+      arg0,
+    );
+  }
+
+  late final _clang_Cursor_getStorageClassPtr =
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(CXCursor)>>(
+          'clang_Cursor_getStorageClass');
+  late final _clang_Cursor_getStorageClass =
+      _clang_Cursor_getStorageClassPtr.asFunction<int Function(CXCursor)>();
 
   /// Visit the children of a particular cursor.
   ///
@@ -1310,21 +1343,21 @@ class Clang {
 /// the ownership of that string might differ from one call to the next.
 /// Use \c clang_getCString() to retrieve the string data and, once finished
 /// with the string data, call \c clang_disposeString() to free the string.
-class CXString extends ffi.Struct {
+final class CXString extends ffi.Struct {
   external ffi.Pointer<ffi.Void> data;
 
   @ffi.UnsignedInt()
   external int private_flags;
 }
 
-class CXTranslationUnitImpl extends ffi.Opaque {}
+final class CXTranslationUnitImpl extends ffi.Opaque {}
 
 /// Provides the contents of a file that has not yet been saved to disk.
 ///
 /// Each CXUnsavedFile instance provides the name of a file on the
 /// system along with the current contents of that file that have not
 /// yet been saved to disk.
-class CXUnsavedFile extends ffi.Struct {
+final class CXUnsavedFile extends ffi.Struct {
   /// The file whose contents have not yet been saved.
   ///
   /// This file must already exist in the file system.
@@ -1350,7 +1383,7 @@ typedef CXFile = ffi.Pointer<ffi.Void>;
 ///
 /// Use clang_getExpansionLocation() or clang_getSpellingLocation()
 /// to map a source location to a particular file, line, and column.
-class CXSourceLocation extends ffi.Struct {
+final class CXSourceLocation extends ffi.Struct {
   @ffi.Array.multi([2])
   external ffi.Array<ffi.Pointer<ffi.Void>> ptr_data;
 
@@ -1362,7 +1395,7 @@ class CXSourceLocation extends ffi.Struct {
 ///
 /// Use clang_getRangeStart() and clang_getRangeEnd() to retrieve the
 /// starting and end locations from a source range, respectively.
-class CXSourceRange extends ffi.Struct {
+final class CXSourceRange extends ffi.Struct {
   @ffi.Array.multi([2])
   external ffi.Array<ffi.Pointer<ffi.Void>> ptr_data;
 
@@ -2356,7 +2389,7 @@ abstract class CXCursorKind {
 /// translation unit. clang_getCursor() maps from a physical source location
 /// to the entity that resides at that location, allowing one to map from the
 /// source code into the AST.
-class CXCursor extends ffi.Struct {
+final class CXCursor extends ffi.Struct {
   @ffi.Int32()
   external int kind;
 
@@ -2498,7 +2531,7 @@ abstract class CXTypeKind {
 }
 
 /// The type of an element in the abstract syntax tree.
-class CXType extends ffi.Struct {
+final class CXType extends ffi.Struct {
   @ffi.Int32()
   external int kind;
 
@@ -2549,6 +2582,19 @@ abstract class CXTypeLayoutError {
   static const int CXTypeLayoutError_Undeduced = -6;
 }
 
+/// Represents the storage classes as declared in the source. CX_SC_Invalid
+/// was added for the case that the passed cursor in not a declaration.
+abstract class CX_StorageClass {
+  static const int CX_SC_Invalid = 0;
+  static const int CX_SC_None = 1;
+  static const int CX_SC_Extern = 2;
+  static const int CX_SC_Static = 3;
+  static const int CX_SC_PrivateExtern = 4;
+  static const int CX_SC_OpenCLWorkGroupLocal = 5;
+  static const int CX_SC_Auto = 6;
+  static const int CX_SC_Register = 7;
+}
+
 /// Describes how the traversal of the children of a particular
 /// cursor should proceed after visiting a particular child cursor.
 ///
@@ -2578,7 +2624,9 @@ abstract class CXChildVisitResult {
 /// The visitor should return one of the \c CXChildVisitResult values
 /// to direct clang_visitCursorChildren().
 typedef CXCursorVisitor = ffi.Pointer<
-    ffi.NativeFunction<ffi.Int32 Function(CXCursor, CXCursor, CXClientData)>>;
+    ffi.NativeFunction<
+        ffi.Int32 Function(
+            CXCursor cursor, CXCursor parent, CXClientData client_data)>>;
 
 /// Opaque pointer representing client data that will be passed through
 /// to various callbacks and visitors.

@@ -1,0 +1,524 @@
+{
+  "$id": "https://json.schemastore.org/ffigen",
+  "$comment": "This file is generated. To regenerate run: dart tool/generate_json_schema.dart in github.com/dart-lang/ffigen",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "llvm-path": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "output": {
+      "$oneOf": [
+        {
+          "$ref": "#/$defs/filePath"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "bindings": {
+              "$ref": "#/$defs/filePath"
+            },
+            "symbol-file": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "output": {
+                  "$ref": "#/$defs/filePath"
+                },
+                "import-path": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "output",
+                "import-path"
+              ]
+            }
+          },
+          "required": [
+            "bindings"
+          ]
+        }
+      ]
+    },
+    "language": {
+      "enum": [
+        "c",
+        "objc"
+      ]
+    },
+    "headers": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "entry-points": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "include-directives": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "entry-points"
+      ]
+    },
+    "compiler-opts": {
+      "$oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "compiler-opts-automatic": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "macos": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "include-c-standard-library": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "library-imports": {
+      "type": "object",
+      "patternProperties": {
+        ".*": {
+          "type": "string"
+        }
+      }
+    },
+    "functions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "include": {
+          "$ref": "#/$defs/fullMatchOrRegexpList"
+        },
+        "exclude": {
+          "$ref": "#/$defs/fullMatchOrRegexpList"
+        },
+        "rename": {
+          "$ref": "#/$defs/rename"
+        },
+        "member-rename": {
+          "$ref": "#/$defs/memberRename"
+        },
+        "symbol-address": {
+          "$ref": "#/$defs/includeExclude"
+        },
+        "expose-typedefs": {
+          "$ref": "#/$defs/includeExclude"
+        },
+        "leaf": {
+          "$ref": "#/$defs/includeExclude"
+        },
+        "variadic-arguments": {
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "type": "array",
+              "items": {
+                "$oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "types": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "postfix": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "types"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "structs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "include": {
+          "$ref": "#/$defs/fullMatchOrRegexpList"
+        },
+        "exclude": {
+          "$ref": "#/$defs/fullMatchOrRegexpList"
+        },
+        "rename": {
+          "$ref": "#/$defs/rename"
+        },
+        "member-rename": {
+          "$ref": "#/$defs/memberRename"
+        },
+        "dependency-only": {
+          "$ref": "#/$defs/dependencyOnly"
+        },
+        "pack": {
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "enum": [
+                "none",
+                1,
+                2,
+                4,
+                8,
+                16
+              ]
+            }
+          }
+        }
+      }
+    },
+    "unions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "include": {
+          "$ref": "#/$defs/fullMatchOrRegexpList"
+        },
+        "exclude": {
+          "$ref": "#/$defs/fullMatchOrRegexpList"
+        },
+        "rename": {
+          "$ref": "#/$defs/rename"
+        },
+        "member-rename": {
+          "$ref": "#/$defs/memberRename"
+        },
+        "dependency-only": {
+          "$ref": "#/$defs/dependencyOnly"
+        }
+      }
+    },
+    "enums": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "include": {
+          "$ref": "#/$defs/fullMatchOrRegexpList"
+        },
+        "exclude": {
+          "$ref": "#/$defs/fullMatchOrRegexpList"
+        },
+        "rename": {
+          "$ref": "#/$defs/rename"
+        },
+        "member-rename": {
+          "$ref": "#/$defs/memberRename"
+        }
+      }
+    },
+    "unnamed-enums": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "include": {
+          "$ref": "#/$defs/fullMatchOrRegexpList"
+        },
+        "exclude": {
+          "$ref": "#/$defs/fullMatchOrRegexpList"
+        },
+        "rename": {
+          "$ref": "#/$defs/rename"
+        }
+      }
+    },
+    "globals": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "include": {
+          "$ref": "#/$defs/fullMatchOrRegexpList"
+        },
+        "exclude": {
+          "$ref": "#/$defs/fullMatchOrRegexpList"
+        },
+        "rename": {
+          "$ref": "#/$defs/rename"
+        },
+        "symbol-address": {
+          "$ref": "#/$defs/includeExclude"
+        }
+      }
+    },
+    "macros": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "include": {
+          "$ref": "#/$defs/fullMatchOrRegexpList"
+        },
+        "exclude": {
+          "$ref": "#/$defs/fullMatchOrRegexpList"
+        },
+        "rename": {
+          "$ref": "#/$defs/rename"
+        }
+      }
+    },
+    "typedefs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "include": {
+          "$ref": "#/$defs/fullMatchOrRegexpList"
+        },
+        "exclude": {
+          "$ref": "#/$defs/fullMatchOrRegexpList"
+        },
+        "rename": {
+          "$ref": "#/$defs/rename"
+        }
+      }
+    },
+    "objc-interfaces": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "include": {
+          "$ref": "#/$defs/fullMatchOrRegexpList"
+        },
+        "exclude": {
+          "$ref": "#/$defs/fullMatchOrRegexpList"
+        },
+        "rename": {
+          "$ref": "#/$defs/rename"
+        },
+        "member-rename": {
+          "$ref": "#/$defs/memberRename"
+        },
+        "module": {
+          "$ref": "#/$defs/objcInterfaceModule"
+        }
+      }
+    },
+    "import": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "symbol-files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "type-map": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "typedefs": {
+          "$ref": "#/$defs/mappedTypes"
+        },
+        "structs": {
+          "$ref": "#/$defs/mappedTypes"
+        },
+        "unions": {
+          "$ref": "#/$defs/mappedTypes"
+        },
+        "native-types": {
+          "$ref": "#/$defs/mappedTypes"
+        }
+      }
+    },
+    "exclude-all-by-default": {
+      "type": "boolean"
+    },
+    "sort": {
+      "type": "boolean"
+    },
+    "use-supported-typedefs": {
+      "type": "boolean"
+    },
+    "comments": {
+      "$oneOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "style": {
+              "enum": [
+                "doxygen",
+                "any"
+              ]
+            },
+            "length": {
+              "enum": [
+                "brief",
+                "full"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "name": {
+      "$ref": "#/$defs/publicDartClass"
+    },
+    "description": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
+    "preamble": {
+      "type": "string"
+    },
+    "use-dart-handle": {
+      "type": "boolean"
+    },
+    "ffi-native": {
+      "$oneOf": [
+        {
+          "enum": [
+            null
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "asset": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "asset"
+          ]
+        }
+      ]
+    }
+  },
+  "required": [
+    "output",
+    "headers"
+  ],
+  "$defs": {
+    "filePath": {
+      "type": "string",
+      "description": "A file path"
+    },
+    "fullMatchOrRegexpList": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "rename": {
+      "type": "object",
+      "patternProperties": {
+        ".*": {
+          "type": "string"
+        }
+      }
+    },
+    "memberRename": {
+      "type": "object",
+      "patternProperties": {
+        ".*": {
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "includeExclude": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "include": {
+          "$ref": "#/$defs/fullMatchOrRegexpList"
+        },
+        "exclude": {
+          "$ref": "#/$defs/fullMatchOrRegexpList"
+        }
+      }
+    },
+    "dependencyOnly": {
+      "enum": [
+        "full",
+        "opaque"
+      ]
+    },
+    "objcInterfaceModule": {
+      "type": "object",
+      "patternProperties": {
+        ".*": {
+          "type": "string"
+        }
+      }
+    },
+    "mappedTypes": {
+      "type": "object",
+      "patternProperties": {
+        ".*": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "lib": {
+              "type": "string"
+            },
+            "c-type": {
+              "type": "string"
+            },
+            "dart-type": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "publicDartClass": {
+      "type": "string",
+      "description": "A public dart class name.",
+      "pattern": "^[a-zA-Z]+[_a-zA-Z0-9]*$"
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "pattern": ".+"
+    }
+  }
+}

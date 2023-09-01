@@ -56,7 +56,7 @@ int _rootCursorVisitor(clang_types.CXCursor cursor, clang_types.CXCursor parent,
       _logger.finest('rootCursorVisitor: ${cursor.completeStringRepr()}');
       switch (clang.clang_getCursorKind(cursor)) {
         case clang_types.CXCursorKind.CXCursor_FunctionDecl:
-          addToBindings(parseFunctionDeclaration(cursor));
+          addAllToBindings(parseFunctionDeclaration(cursor) as List<Binding>);
           break;
         case clang_types.CXCursorKind.CXCursor_StructDecl:
         case clang_types.CXCursorKind.CXCursor_UnionDecl:
@@ -93,6 +93,14 @@ void addToBindings(Binding? b) {
   if (b != null) {
     // This is a set, and hence will not have duplicates.
     _bindings.add(b);
+  }
+}
+
+/// Adds all binding if not empty.
+void addAllToBindings(List<Binding> b) {
+  if (b.isNotEmpty) {
+    // This is a set, and hence will not have duplicates.
+    _bindings.addAll(b);
   }
 }
 

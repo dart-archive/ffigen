@@ -6,6 +6,7 @@
 // ignore_for_file: type=lint
 import 'dart:ffi' as ffi;
 
+/// Typedef Test
 class Bindings {
   /// Holds the symbol lookup function.
   final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
@@ -84,7 +85,7 @@ class Bindings {
       _func4Ptr.asFunction<bool Function(ffi.Pointer<ffi.Bool>)>();
 }
 
-class Struct1 extends ffi.Struct {
+final class Struct1 extends ffi.Struct {
   external NamedFunctionProto named;
 
   external ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>> unnamed;
@@ -93,14 +94,14 @@ class Struct1 extends ffi.Struct {
 typedef NamedFunctionProto
     = ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>;
 
-class AnonymousStructInTypedef extends ffi.Opaque {}
+final class AnonymousStructInTypedef extends ffi.Opaque {}
 
-class _NamedStructInTypedef extends ffi.Opaque {}
+final class _NamedStructInTypedef extends ffi.Opaque {}
 
 typedef NTyperef1 = ExcludedStruct;
 typedef ExcludedStruct = _ExcludedStruct;
 
-class _ExcludedStruct extends ffi.Opaque {}
+final class _ExcludedStruct extends ffi.Opaque {}
 
 abstract class AnonymousEnumInTypedef {
   static const int a = 0;
@@ -112,9 +113,9 @@ abstract class _NamedEnumInTypedef {
 
 typedef NestingASpecifiedType = ffi.IntPtr;
 
-class Struct2 extends ffi.Opaque {}
+final class Struct2 extends ffi.Opaque {}
 
-class WithBoolAlias extends ffi.Struct {
+final class WithBoolAlias extends ffi.Struct {
   @ffi.Bool()
   external bool b;
 }

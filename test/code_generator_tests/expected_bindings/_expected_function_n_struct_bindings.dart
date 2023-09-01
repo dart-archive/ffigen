@@ -34,7 +34,7 @@ class Bindings {
       ffi.Pointer<SomeStruct> Function(ffi.Pointer<ffi.Pointer<SomeStruct>>)>();
 }
 
-class SomeStruct extends ffi.Struct {
+final class SomeStruct extends ffi.Struct {
   @ffi.Int32()
   external int a;
 

@@ -7,36 +7,36 @@
 import 'dart:ffi' as ffi;
 
 /// Adds 2 integers.
-@ffi.FfiNative<ffi.Int Function(ffi.Int, ffi.Int)>('sum')
+@ffi.Native<ffi.Int Function(ffi.Int, ffi.Int)>(symbol: 'sum')
 external int sum(
   int a,
   int b,
 );
 
 /// Subtracts 2 integers.
-@ffi.FfiNative<ffi.Int Function(ffi.Int, ffi.Int)>('subtract')
+@ffi.Native<ffi.Int Function(ffi.Int, ffi.Int)>(symbol: 'subtract')
 external int subtract(
   int a,
   int b,
 );
 
 /// Multiplies 2 integers, returns pointer to an integer,.
-@ffi.FfiNative<ffi.Pointer<ffi.Int> Function(ffi.Int, ffi.Int)>('multiply')
+@ffi.Native<ffi.Pointer<ffi.Int> Function(ffi.Int, ffi.Int)>(symbol: 'multiply')
 external ffi.Pointer<ffi.Int> multiply(
   int a,
   int b,
 );
 
 /// Divides 2 integers, returns pointer to a float.
-@ffi.FfiNative<ffi.Pointer<ffi.Float> Function(ffi.Int, ffi.Int)>('divide')
+@ffi.Native<ffi.Pointer<ffi.Float> Function(ffi.Int, ffi.Int)>(symbol: 'divide')
 external ffi.Pointer<ffi.Float> divide(
   int a,
   int b,
 );
 
 /// Divides 2 floats, returns a pointer to double.
-@ffi.FfiNative<ffi.Pointer<ffi.Double> Function(ffi.Float, ffi.Float)>(
-    'dividePrecision')
+@ffi.Native<ffi.Pointer<ffi.Double> Function(ffi.Float, ffi.Float)>(
+    symbol: 'dividePrecision')
 external ffi.Pointer<ffi.Double> dividePrecision(
   double a,
   double b,

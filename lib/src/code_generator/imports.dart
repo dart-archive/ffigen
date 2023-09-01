@@ -49,6 +49,25 @@ class ImportedType extends Type {
   String? getDefaultValue(Writer w, String nativeLib) => defaultValue;
 }
 
+/// An unchecked type similar to [ImportedType] which exists in the generated
+/// binding itself.
+class SelfImportedType extends Type {
+  final String cType;
+  final String dartType;
+  final String? defaultValue;
+
+  SelfImportedType(this.cType, this.dartType, [this.defaultValue]);
+
+  @override
+  String getCType(Writer w) => cType;
+
+  @override
+  String getDartType(Writer w) => dartType;
+
+  @override
+  String toString() => cType;
+}
+
 final ffiImport = LibraryImport('ffi', 'dart:ffi');
 final ffiPkgImport = LibraryImport('pkg_ffi', 'package:ffi/ffi.dart');
 

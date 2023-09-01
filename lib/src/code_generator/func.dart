@@ -31,10 +31,10 @@ import 'writer.dart';
 /// typedef _dart_sum = int Function(int a, int b);
 /// ```
 ///
-/// When using `FfiNative`, the code is as follows.
+/// When using `Native`, the code is as follows.
 ///
 /// ```dart
-/// @ffi.FfiNative<ffi.Int32 Function(ffi.Int32 a, ffi.Int32 b)>('sum')
+/// @ffi.Native<ffi.Int32 Function(ffi.Int32 a, ffi.Int32 b)>('sum')
 /// external int sum(int a, int b);
 /// ```
 class Func extends LookUpBinding {
@@ -58,6 +58,7 @@ class Func extends LookUpBinding {
     String? dartDoc,
     required Type returnType,
     List<Parameter>? parameters,
+    List<Parameter>? varArgParameters,
     this.exposeSymbolAddress = false,
     this.exposeFunctionTypedefs = false,
     this.isLeaf = false,
@@ -66,6 +67,7 @@ class Func extends LookUpBinding {
   })  : functionType = FunctionType(
           returnType: returnType,
           parameters: parameters ?? const [],
+          varArgParameters: varArgParameters ?? const [],
         ),
         super(
           usr: usr,
@@ -109,7 +111,7 @@ class Func extends LookUpBinding {
     }
     // Resolve name conflicts in function parameter names.
     final paramNamer = UniqueNamer({});
-    for (final p in functionType.parameters) {
+    for (final p in functionType.dartTypeParameters) {
       p.name = paramNamer.makeUnique(p.name);
     }
 
@@ -126,11 +128,11 @@ class Func extends LookUpBinding {
           : '';
       final isLeafString = isLeaf ? ', isLeaf: true' : '';
       s.write(
-          "@${w.ffiLibraryPrefix}.FfiNative<$cType>('$originalName'$assetString$isLeafString)\n");
+          "@${w.ffiLibraryPrefix}.Native<$cType>(symbol: '$originalName'$assetString$isLeafString)\n");
 
       s.write(
           'external ${functionType.returnType.getDartType(w)} $enclosingFuncName(\n');
-      for (final p in functionType.parameters) {
+      for (final p in functionType.dartTypeParameters) {
         s.write('  ${p.type.getDartType(w)} ${p.name},\n');
       }
       s.write(');\n\n');
@@ -138,14 +140,14 @@ class Func extends LookUpBinding {
       // Write enclosing function.
       s.write(
           '${functionType.returnType.getDartType(w)} $enclosingFuncName(\n');
-      for (final p in functionType.parameters) {
+      for (final p in functionType.dartTypeParameters) {
         s.write('  ${p.type.getDartType(w)} ${p.name},\n');
       }
       s.write(') {\n');
       s.write('return $funcVarName');
 
       s.write('(\n');
-      for (final p in functionType.parameters) {
+      for (final p in functionType.dartTypeParameters) {
         s.write('    ${p.name},\n');
       }
       s.write('  );\n');

@@ -139,9 +139,6 @@ class $name extends _ObjCBlockBase {
     s.write(''');
   }''');
 
-    // Get the pointer to the underlying block.
-    s.write('  ${blockPtr.getCType(w)} get pointer => _id;\n');
-
     s.write('}\n');
     return BindingString(
         type: BindingStringType.objcBlock, string: s.toString());
