@@ -2,6 +2,9 @@
 
 - Add support for ObjC Blocks that can be invoked from any thread, using
   NativeCallable.listener.
+- Fix invalid exceptional return value ObjCBlocks that return floats.
+- Fix return_of_invalid_type analysis error for ObjCBlocks.
+- Fix crash in ObjC methods and blocks that return structs by value.
 - Bump min SDK version to 3.2.0-114.0.dev.
 
 # 9.0.1

@@ -94,24 +94,18 @@ $objType $name(String name) {
     _blockReleaseFunc,
   );
 
-  // We need to load a separate instance of objc_msgSend for each signature.
-  final _msgSendFuncs = <String, Func>{};
-  Func getMsgSendFunc(Type returnType, List<ObjCMethodParam> params) {
+  // We need to load a separate instance of objc_msgSend for each signature. If
+  // the return type is a struct, we need to use objc_msgSend_stret instead, and
+  // for float return types we need objc_msgSend_fpret.
+  final _msgSendFuncs = <String, ObjCMsgSendFunc>{};
+  ObjCMsgSendFunc getMsgSendFunc(
+      Type returnType, List<ObjCMethodParam> params) {
     var key = returnType.cacheKey();
     for (final p in params) {
       key += ' ${p.type.cacheKey()}';
     }
-    return _msgSendFuncs[key] ??= Func(
-      name: '_objc_msgSend_${_msgSendFuncs.length}',
-      originalName: 'objc_msgSend',
-      returnType: returnType,
-      parameters: [
-        Parameter(name: 'obj', type: PointerType(objCObjectType)),
-        Parameter(name: 'sel', type: PointerType(objCSelType)),
-        for (final p in params) Parameter(name: p.name, type: p.type),
-      ],
-      isInternal: true,
-    );
+    return _msgSendFuncs[key] ??= ObjCMsgSendFunc(
+        '_objc_msgSend_${_msgSendFuncs.length}', returnType, params);
   }
 
   final _selObjects = <String, ObjCInternalGlobal>{};
@@ -285,8 +279,8 @@ class $name implements ${w.ffiLibraryPrefix}.Finalizable {
     _retainFunc.addDependencies(dependencies);
     _releaseFunc.addDependencies(dependencies);
     _releaseFinalizer.addDependencies(dependencies);
-    for (final func in _msgSendFuncs.values) {
-      func.addDependencies(dependencies);
+    for (final msgSendFunc in _msgSendFuncs.values) {
+      msgSendFunc.func.addDependencies(dependencies);
     }
     for (final sel in _selObjects.values) {
       sel.addDependencies(dependencies);
@@ -394,5 +388,52 @@ class ObjCInternalGlobal extends LookUpBinding {
     if (dependencies.contains(this)) return;
     dependencies.add(this);
     binding?.addDependencies(dependencies);
+  }
+}
+
+enum ObjCMsgSendVariant {
+  normal('objc_msgSend'),
+  stret('objc_msgSend_stret'),
+  fpret('objc_msgSend_fpret');
+
+  final String name;
+  const ObjCMsgSendVariant(this.name);
+
+  static ObjCMsgSendVariant fromReturnType(Type returnType) {
+    if (returnType is Compound && returnType.isStruct) {
+      return ObjCMsgSendVariant.stret;
+    } else if (returnType == floatType || returnType == doubleType) {
+      return ObjCMsgSendVariant.fpret;
+    }
+    return ObjCMsgSendVariant.normal;
+  }
+}
+
+/// A wrapper around the objc_msgSend function, or the stret or fpret variants.
+class ObjCMsgSendFunc {
+  final ObjCMsgSendVariant variant;
+  late final Func func;
+
+  ObjCMsgSendFunc(String name, Type returnType, List<ObjCMethodParam> params)
+      : variant = ObjCMsgSendVariant.fromReturnType(returnType) {
+    func = Func(
+      name: name,
+      originalName: variant.name,
+      returnType: isStret ? voidType : returnType,
+      parameters: [
+        if (isStret) Parameter(name: 'stret', type: PointerType(returnType)),
+        Parameter(name: 'obj', type: PointerType(objCObjectType)),
+        Parameter(name: 'sel', type: PointerType(objCSelType)),
+        for (final p in params) Parameter(name: p.name, type: p.type),
+      ],
+      isInternal: true,
+    );
+  }
+
+  String get name => func.name;
+  bool get isStret => variant == ObjCMsgSendVariant.stret;
+
+  void addDependencies(Set<Binding> dependencies) {
+    func.addDependencies(dependencies);
   }
 }

@@ -8,13 +8,14 @@
 import 'dart:ffi';
 import 'dart:io';
 
+import 'package:ffi/ffi.dart';
 import 'package:test/test.dart';
 import '../test_utils.dart';
 import 'method_bindings.dart';
 import 'util.dart';
 
 void main() {
-  MethodInterface? testInstance;
+  late MethodInterface testInstance;
   late MethodTestObjCLibrary lib;
 
   group('method calls', () {
@@ -29,19 +30,19 @@ void main() {
 
     group('Instance methods', () {
       test('No arguments', () {
-        expect(testInstance!.add(), 5);
+        expect(testInstance.add(), 5);
       });
 
       test('One argument', () {
-        expect(testInstance!.add_(23), 23);
+        expect(testInstance.add_(23), 23);
       });
 
       test('Two arguments', () {
-        expect(testInstance!.add_Y_(23, 17), 40);
+        expect(testInstance.add_Y_(23, 17), 40);
       });
 
       test('Three arguments', () {
-        expect(testInstance!.add_Y_Z_(23, 17, 60), 100);
+        expect(testInstance.add_Y_Z_(23, 17, 60), 100);
       });
     });
 
@@ -60,6 +61,36 @@ void main() {
 
       test('Three arguments', () {
         expect(MethodInterface.sub_Y_Z_(lib, 10, 7, 3), -20);
+      });
+    });
+
+    group('Regress #608', () {
+      test('Structs', () {
+        final inputPtr = calloc<Vec4>();
+        final input = inputPtr.ref;
+        input.x = 1.2;
+        input.y = 3.4;
+        input.z = 5.6;
+        input.w = 7.8;
+
+        final resultPtr = calloc<Vec4>();
+        final result = resultPtr.ref;
+        testInstance.twiddleVec4Components_(resultPtr, input);
+        expect(result.x, 3.4);
+        expect(result.y, 5.6);
+        expect(result.z, 7.8);
+        expect(result.w, 1.2);
+
+        calloc.free(inputPtr);
+        calloc.free(resultPtr);
+      });
+
+      test('Floats', () {
+        expect(testInstance.addFloats_Y_(1.23, 4.56), closeTo(5.79, 1e-6));
+      });
+
+      test('Doubles', () {
+        expect(testInstance.addDoubles_Y_(1.23, 4.56), closeTo(5.79, 1e-6));
       });
     });
   });
