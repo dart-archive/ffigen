@@ -5,8 +5,17 @@
 #import <Foundation/NSObject.h>
 #import <Foundation/NSThread.h>
 
+typedef struct {
+  double x;
+  double y;
+  double z;
+  double w;
+} Vec4;
+
 typedef int32_t (^IntBlock)(int32_t);
 typedef float (^FloatBlock)(float);
+typedef double (^DoubleBlock)(double);
+typedef Vec4 (^Vec4Block)(Vec4);
 typedef void (^VoidBlock)();
 
 // Wrapper around a block, so that our Dart code can test creating and invoking
@@ -23,6 +32,8 @@ typedef void (^VoidBlock)();
 + (void)callOnSameThread:(VoidBlock)block;
 + (NSThread*)callOnNewThread:(VoidBlock)block;
 + (float)callFloatBlock:(FloatBlock)block;
++ (double)callDoubleBlock:(DoubleBlock)block;
++ (Vec4)callVec4Block:(Vec4Block)block;
 @end
 
 @implementation BlockTester
@@ -90,6 +101,19 @@ void* valid_block_isa = NULL;
 
 + (float)callFloatBlock:(FloatBlock)block {
   return block(1.23);
+}
+
++ (double)callDoubleBlock:(DoubleBlock)block {
+  return block(1.23);
+}
+
++ (Vec4)callVec4Block:(Vec4Block)block {
+  Vec4 vec4;
+  vec4.x = 1.2;
+  vec4.y = 3.4;
+  vec4.z = 5.6;
+  vec4.w = 7.8;
+  return block(vec4);
 }
 
 @end

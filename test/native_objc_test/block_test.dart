@@ -109,6 +109,52 @@ void main() {
       expect(BlockTester.callFloatBlock_(lib, block), closeTo(5.79, 1e-6));
     });
 
+    test('Double block', () {
+      final block = ObjCBlock3.fromFunction(lib, (double x) {
+        return x + 4.56;
+      });
+      expect(block(1.23), closeTo(5.79, 1e-6));
+      expect(BlockTester.callDoubleBlock_(lib, block), closeTo(5.79, 1e-6));
+    });
+
+    test('Struct block', () {
+      final inputPtr = calloc<Vec4>();
+      final input = inputPtr.ref;
+      input.x = 1.2;
+      input.y = 3.4;
+      input.z = 5.6;
+      input.w = 7.8;
+
+      final tempPtr = calloc<Vec4>();
+      final temp = tempPtr.ref;
+      final block = ObjCBlock4.fromFunction(lib, (Vec4 v) {
+        // Twiddle the Vec4 components.
+        temp.x = v.y;
+        temp.y = v.z;
+        temp.z = v.w;
+        temp.w = v.x;
+        return temp;
+      });
+
+      final result1 = block(input);
+      expect(result1.x, 3.4);
+      expect(result1.y, 5.6);
+      expect(result1.z, 7.8);
+      expect(result1.w, 1.2);
+
+      final result2Ptr = calloc<Vec4>();
+      final result2 = result2Ptr.ref;
+      BlockTester.callVec4Block_(lib, result2Ptr, block);
+      expect(result2.x, 3.4);
+      expect(result2.y, 5.6);
+      expect(result2.z, 7.8);
+      expect(result2.w, 1.2);
+
+      calloc.free(inputPtr);
+      calloc.free(tempPtr);
+      calloc.free(result2Ptr);
+    });
+
     Pointer<Void> funcPointerBlockRefCountTest() {
       final block = ObjCBlock1.fromFunctionPointer(
           lib, Pointer.fromFunction(_add100, 999));

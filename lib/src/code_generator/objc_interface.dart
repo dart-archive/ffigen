@@ -46,7 +46,7 @@ class ObjCInterface extends BindingType {
   final ObjCBuiltInFunctions builtInFunctions;
   late final ObjCInternalGlobal _classObject;
   late final ObjCInternalGlobal _isKindOfClass;
-  late final Func _isKindOfClassMsgSend;
+  late final ObjCMsgSendFunc _isKindOfClassMsgSend;
 
   ObjCInterface({
     String? usr,
@@ -130,7 +130,14 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
     for (final m in methods.values) {
       final methodName = m._getDartMethodName(uniqueNamer);
       final isStatic = m.isClass;
-      final returnType = m.returnType;
+      final isStret = m.msgSend!.isStret;
+
+      var returnType = m.returnType;
+      var params = m.params;
+      if (isStret) {
+        params = [ObjCMethodParam(PointerType(returnType), 'stret'), ...params];
+        returnType = voidType;
+      }
 
       // The method declaration.
       if (m.dartDoc != null) {
@@ -159,7 +166,7 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
             s.write(methodName[0].toUpperCase() + methodName.substring(1));
             break;
         }
-        s.write(paramsToString(m.params, isStatic: true));
+        s.write(paramsToString(params, isStatic: true));
       } else {
         if (superType?.methods[m.originalName]?.sameAs(m) ?? false) {
           s.write('@override\n  ');
@@ -170,18 +177,25 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
             s.write(_getConvertedReturnType(
                 returnType, w, name, m.isNullableReturn));
             s.write(' $methodName');
-            s.write(paramsToString(m.params, isStatic: false));
+            s.write(paramsToString(params, isStatic: false));
             break;
           case ObjCMethodKind.propertyGetter:
-            // returnType get methodName
             s.write(_getConvertedReturnType(
                 returnType, w, name, m.isNullableReturn));
-            s.write(' get $methodName');
+            if (isStret) {
+              // void getMethodName(Pointer<returnType> stret, NativeLibrary _lib)
+              s.write(' get');
+              s.write(methodName[0].toUpperCase() + methodName.substring(1));
+              s.write(paramsToString(params, isStatic: false));
+            } else {
+              // returnType get methodName
+              s.write(' get $methodName');
+            }
             break;
           case ObjCMethodKind.propertySetter:
             // set methodName(...)
             s.write(' set $methodName');
-            s.write(paramsToString(m.params, isStatic: false));
+            s.write(paramsToString(params, isStatic: false));
             break;
         }
       }
@@ -192,10 +206,13 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
       final convertReturn = m.kind != ObjCMethodKind.propertySetter &&
           _needsConverting(returnType);
 
-      if (returnType != NativeType(SupportedNativeType.Void)) {
+      if (returnType != voidType) {
         s.write('    ${convertReturn ? 'final _ret = ' : 'return '}');
       }
       s.write('_lib.${m.msgSend!.name}(');
+      if (isStret) {
+        s.write('stret, ');
+      }
       s.write(isStatic ? '_lib.${_classObject.name}' : '_id');
       s.write(', _lib.${m.selObject!.name}');
       for (final p in m.params) {
@@ -427,7 +444,7 @@ class ObjCMethod {
   final bool isClass;
   bool returnsRetained = false;
   ObjCInternalGlobal? selObject;
-  Func? msgSend;
+  ObjCMsgSendFunc? msgSend;
 
   ObjCMethod({
     required this.originalName,

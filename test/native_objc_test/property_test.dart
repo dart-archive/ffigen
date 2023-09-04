@@ -8,13 +8,14 @@
 import 'dart:ffi';
 import 'dart:io';
 
+import 'package:ffi/ffi.dart';
 import 'package:test/test.dart';
 import '../test_utils.dart';
 import 'property_bindings.dart';
 import 'util.dart';
 
 void main() {
-  PropertyInterface? testInstance;
+  late PropertyInterface testInstance;
   late PropertyTestObjCLibrary lib;
 
   group('properties', () {
@@ -29,12 +30,12 @@ void main() {
 
     group('instance properties', () {
       test('read-only property', () {
-        expect(testInstance!.readOnlyProperty, 7);
+        expect(testInstance.readOnlyProperty, 7);
       });
 
       test('read-write property', () {
-        testInstance!.readWriteProperty = 23;
-        expect(testInstance!.readWriteProperty, 23);
+        testInstance.readWriteProperty = 23;
+        expect(testInstance.readWriteProperty, 23);
       });
     });
 
@@ -46,6 +47,39 @@ void main() {
       test('read-write property', () {
         PropertyInterface.setClassReadWriteProperty(lib, 101);
         expect(PropertyInterface.getClassReadWriteProperty(lib), 101);
+      });
+    });
+
+    group('Regress #608', () {
+      test('Structs', () {
+        final inputPtr = calloc<Vec4>();
+        final input = inputPtr.ref;
+        input.x = 1.2;
+        input.y = 3.4;
+        input.z = 5.6;
+        input.w = 7.8;
+
+        final resultPtr = calloc<Vec4>();
+        final result = resultPtr.ref;
+        testInstance.structProperty = input;
+        testInstance.getStructProperty(resultPtr);
+        expect(result.x, 1.2);
+        expect(result.y, 3.4);
+        expect(result.z, 5.6);
+        expect(result.w, 7.8);
+
+        calloc.free(inputPtr);
+        calloc.free(resultPtr);
+      });
+
+      test('Floats', () {
+        testInstance.floatProperty = 1.23;
+        expect(testInstance.floatProperty, closeTo(1.23, 1e-6));
+      });
+
+      test('Doubles', () {
+        testInstance.doubleProperty = 1.23;
+        expect(testInstance.doubleProperty, 1.23);
       });
     });
   });
