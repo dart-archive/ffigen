@@ -391,22 +391,34 @@ class ObjCInternalGlobal extends LookUpBinding {
   }
 }
 
+enum ObjCMsgSendVariant {
+  normal('objc_msgSend'),
+  stret('objc_msgSend_stret'),
+  fpret('objc_msgSend_fpret');
+
+  final String name;
+  const ObjCMsgSendVariant(this.name);
+
+  static ObjCMsgSendVariant fromReturnType(Type returnType) {
+    if (returnType is Compound && returnType.isStruct) {
+      return ObjCMsgSendVariant.stret;
+    } else if (returnType == floatType || returnType == doubleType) {
+      return ObjCMsgSendVariant.fpret;
+    }
+    return ObjCMsgSendVariant.normal;
+  }
+}
+
 /// A wrapper around the objc_msgSend function, or the stret or fpret variants.
 class ObjCMsgSendFunc {
-  final bool isStret;
+  final ObjCMsgSendVariant variant;
   late final Func func;
 
   ObjCMsgSendFunc(String name, Type returnType, List<ObjCMethodParam> params)
-      : isStret = returnType is Compound && returnType.isStruct {
-    String originalName = 'objc_msgSend';
-    if (isStret) {
-      originalName = 'objc_msgSend_stret';
-    } else if (returnType == floatType || returnType == doubleType) {
-      originalName = 'objc_msgSend_fpret';
-    }
+      : variant = ObjCMsgSendVariant.fromReturnType(returnType) {
     func = Func(
       name: name,
-      originalName: originalName,
+      originalName: variant.name,
       returnType: isStret ? voidType : returnType,
       parameters: [
         if (isStret) Parameter(name: 'stret', type: PointerType(returnType)),
@@ -419,6 +431,7 @@ class ObjCMsgSendFunc {
   }
 
   String get name => func.name;
+  bool get isStret => variant == ObjCMsgSendVariant.stret;
 
   void addDependencies(Set<Binding> dependencies) {
     func.addDependencies(dependencies);
