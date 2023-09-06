@@ -8,9 +8,9 @@ using `-emit-library`, and generate an Objective-C wrapper header using
 `-emit-objc-header-path filename.h`:
 
 ```shell
-swiftc -c swift_api.swift               \
-    -module-name swift_module           \
-    -emit-objc-header-path swift_api.h  \
+swiftc -c swift_api.swift                           \
+    -module-name swift_module                       \
+    -emit-objc-header-path third_party/swift_api.h  \
     -emit-library -o libswiftapi.dylib
 ```
 
@@ -43,7 +43,7 @@ need to set the language to objc, and set the entry-point to the header:
 language: objc
 headers:
   entry-points:
-    - 'swift_api.h'
+    - 'third_party/swift_api.h'
 ```
 
 Swift classes become Objective-C interfaces, so include them like this:
