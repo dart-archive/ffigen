@@ -86,8 +86,8 @@ final unsignedLongLongType =
     ImportedType(ffiImport, 'UnsignedLongLong', 'int', '0');
 final longLongType = ImportedType(ffiImport, 'LongLong', 'int', '0');
 
-final floatType = ImportedType(ffiImport, 'Float', 'double', '0');
-final doubleType = ImportedType(ffiImport, 'Double', 'double', '0');
+final floatType = ImportedType(ffiImport, 'Float', 'double', '0.0');
+final doubleType = ImportedType(ffiImport, 'Double', 'double', '0.0');
 
 final sizeType = ImportedType(ffiImport, 'Size', 'int', '0');
 final wCharType = ImportedType(ffiImport, 'WChar', 'int', '0');

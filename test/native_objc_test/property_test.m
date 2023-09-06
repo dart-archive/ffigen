@@ -2,6 +2,13 @@
 
 @class UndefinedTemplate<ObjectType>;
 
+typedef struct {
+  double x;
+  double y;
+  double z;
+  double w;
+} Vec4;
+
 @interface PropertyInterface : NSObject {
 }
 
@@ -10,6 +17,9 @@
 @property (class, readonly, copy) UndefinedTemplate<NSString *> *regressGH436;
 @property (class, readonly) int32_t classReadOnlyProperty;
 @property (class) int32_t classReadWriteProperty;
+@property float floatProperty;
+@property double doubleProperty;
+@property Vec4 structProperty;
 
 @end
 

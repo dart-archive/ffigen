@@ -31,7 +31,7 @@ void main() {
             '-module-name',
             'swift_module',
             '-emit-objc-header-path',
-            'swift_api.h',
+            'third_party/swift_api.h',
             '-emit-library',
             '-o',
             'libswiftapi.dylib',
