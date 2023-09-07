@@ -1,0 +1,47 @@
+# Copyright (c) 2023, the Dart project authors. Please see the AUTHORS file
+# for details. All rights reserved. Use of this source code is governed by a
+# BSD-style license that can be found in the LICENSE file.
+
+name: pedometer_example
+description: "iOS pedometer example."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.2.0-122.0.dev <4.0.0'
+
+dependencies:
+  intl: ^0.18.1
+  ffi: ^2.0.1
+  fl_chart: ^0.63.0
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  ffigen:
+    path: '../../'
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+ffigen:
+  name: PedometerBindings
+  description: "Bindings for CM pedometer"
+  language: objc
+  output: 'lib/pedometer_bindings_generated.dart'
+  compiler-opts:
+    - '-F/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks'
+    - '-mios-version-min=13.0'
+    - '-isysroot'
+    - '/Applications/Xcode-beta.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.2.sdk'
+  objc-interfaces:
+    include:
+    - "CMPedometer"
+    - "NSDate"
+    - "NSDateFormatter"
+  headers:
+    entry-points:
+      - "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreMotion.framework/Headers/CMPedometer.h"
