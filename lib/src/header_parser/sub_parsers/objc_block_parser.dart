@@ -32,7 +32,6 @@ ObjCBlock parseObjCBlock(clang_types.CXType cxtype) {
 
   return ObjCBlock(
     usr: usr.toString(),
-    name: 'ObjCBlock',
     returnType: returnType,
     argTypes: argTypes,
     builtInFunctions: objCBuiltInFunctions,
