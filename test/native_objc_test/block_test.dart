@@ -17,6 +17,9 @@ import 'util.dart';
 
 // The generated block names are stable but verbose, so typedef them.
 typedef IntBlock = ObjCBlock_Int32_Int32;
+typedef FloatBlock = ObjCBlock_ffiFloat_ffiFloat;
+typedef DoubleBlock = ObjCBlock_ffiDouble_ffiDouble;
+typedef Vec4Block = ObjCBlock_Vec4_Vec4;
 typedef VoidBlock = ObjCBlock_ffiVoid;
 
 void main() {
@@ -106,7 +109,7 @@ void main() {
     });
 
     test('Float block', () {
-      final block = ObjCBlock2.fromFunction(lib, (double x) {
+      final block = FloatBlock.fromFunction(lib, (double x) {
         return x + 4.56;
       });
       expect(block(1.23), closeTo(5.79, 1e-6));
@@ -114,7 +117,7 @@ void main() {
     });
 
     test('Double block', () {
-      final block = ObjCBlock3.fromFunction(lib, (double x) {
+      final block = DoubleBlock.fromFunction(lib, (double x) {
         return x + 4.56;
       });
       expect(block(1.23), closeTo(5.79, 1e-6));
@@ -131,7 +134,7 @@ void main() {
 
       final tempPtr = calloc<Vec4>();
       final temp = tempPtr.ref;
-      final block = ObjCBlock4.fromFunction(lib, (Vec4 v) {
+      final block = Vec4Block.fromFunction(lib, (Vec4 v) {
         // Twiddle the Vec4 components.
         temp.x = v.y;
         temp.y = v.z;
