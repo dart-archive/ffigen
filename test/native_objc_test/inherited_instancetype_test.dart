@@ -21,9 +21,11 @@ void main() {
   group('inheritedInstancetype', () {
     setUpAll(() {
       logWarnings();
-      final dylib = File('test/native_objc_test/inherited_instancetype_test.dylib');
+      final dylib =
+          File('test/native_objc_test/inherited_instancetype_test.dylib');
       verifySetupFile(dylib);
-      lib = InheritedInstancetypeTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
+      lib = InheritedInstancetypeTestObjCLibrary(
+          DynamicLibrary.open(dylib.absolute.path));
       generateBindingsForCoverage('inherited_instancetype');
     });
 
