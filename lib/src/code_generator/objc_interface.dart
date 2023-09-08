@@ -263,7 +263,7 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
 
     if (superType != null) {
       superType!.addDependencies(dependencies);
-      _copyClassMethodsFromSuperType();
+      _copyMethodsFromSuperType();
     }
 
     for (final m in methods.values) {
@@ -271,12 +271,17 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
     }
   }
 
-  void _copyClassMethodsFromSuperType() {
-    // Copy class methods from the super type, because Dart classes don't
-    // inherit static methods.
+  void _copyMethodsFromSuperType() {
+    // We need to copy certain methods from the super type:
+    //  - Class methods, because Dart classes don't inherit static methods.
+    //  - Methods that return instancetype, because the subclass's copy of the
+    //    method needs to return the subclass, not the super class.
+    //    Note: instancetype is only allowed as a return type, not an arg type.
     for (final m in superType!.methods.values) {
       if (m.isClass &&
           !_excludedNSObjectClassMethods.contains(m.originalName)) {
+        addMethod(m);
+      } else if (_isInstanceType(m.returnType)) {
         addMethod(m);
       }
     }
