@@ -5,7 +5,7 @@
 // Objective C support is only available on mac.
 @TestOn('mac-os')
 
-// Regression tests for https://github.com/dart-lang/ffigen/issues/486
+// Regression tests for https://github.com/dart-lang/ffigen/issues/486.
 
 import 'dart:ffi';
 import 'dart:io';
