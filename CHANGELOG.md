@@ -5,6 +5,7 @@
 - Fix invalid exceptional return value ObjCBlocks that return floats.
 - Fix return_of_invalid_type analysis error for ObjCBlocks.
 - Fix crash in ObjC methods and blocks that return structs by value.
+- Fix ObjC methods returning instancetype having the wrong type in sublasses.
 - Bump min SDK version to 3.2.0-114.0.dev.
 
 # 9.0.1
