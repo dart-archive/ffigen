@@ -32,32 +32,30 @@ void main() {
     final bindingsGeneratedCopyUri =
         libDirUri.resolve('${projectName}_bindings_generated_copy.dart');
 
-    await Task.serial([
-      RunProcess(
-        executable: 'flutter',
-        arguments: [
-          'create',
-          '--template=plugin_ffi',
-          projectName,
-        ],
-        workingDirectory: tempDirUri,
-      ),
-      Copy(
-        source: bindingsGeneratedUri,
-        target: bindingsGeneratedCopyUri,
-      ),
-      RunProcess(
-        executable: 'flutter',
-        arguments: [
-          'pub',
-          'run',
-          'ffigen',
-          '--config',
-          'ffigen.yaml',
-        ],
-        workingDirectory: projectDirUri,
-      ),
-    ]).run();
+    await runProcess(
+      executable: 'flutter',
+      arguments: [
+        'create',
+        '--template=plugin_ffi',
+        projectName,
+      ],
+      workingDirectory: tempDirUri,
+    );
+    await copyFile(
+      source: bindingsGeneratedUri,
+      target: bindingsGeneratedCopyUri,
+    );
+    await runProcess(
+      executable: 'flutter',
+      arguments: [
+        'pub',
+        'run',
+        'ffigen',
+        '--config',
+        'ffigen.yaml',
+      ],
+      workingDirectory: projectDirUri,
+    );
 
     final originalBindings = await readFileAsString(bindingsGeneratedCopyUri);
     final regeneratedBindings = await readFileAsString(bindingsGeneratedUri);
@@ -71,96 +69,56 @@ Future<String> readFileAsString(Uri uri) async {
   return contents.replaceAll('\r', '');
 }
 
-abstract class Task {
-  Future<void> run();
+Future<void> runProcess({
+  required List<String> arguments,
+  required String executable,
+  Uri? workingDirectory,
+  Map<String, String>? environment,
+  bool throwOnFailure = true,
+}) async {
+  // Excluding [workingDirectory].
+  final String commandString = [
+    if (workingDirectory != null) '(cd ${workingDirectory.path};',
+    ...?environment?.entries.map((entry) => '${entry.key}=${entry.value}'),
+    executable,
+    ...arguments.map((a) => a.contains(' ') ? "'$a'" : a),
+    if (workingDirectory != null) ')',
+  ].join(' ');
 
-  factory Task.serial(Iterable<Task> tasks) => _SerialTask(tasks);
-}
+  final workingDirectoryString = workingDirectory?.toFilePath();
 
-class _SerialTask implements Task {
-  final Iterable<Task> tasks;
-
-  _SerialTask(this.tasks);
-
-  @override
-  Future<void> run() async {
-    for (final task in tasks) {
-      await task.run();
-    }
-  }
-}
-
-class RunProcess implements Task {
-  final List<String> arguments;
-  final String executable;
-  final Uri? workingDirectory;
-  Map<String, String>? environment;
-  final bool throwOnFailure;
-
-  RunProcess({
-    required this.arguments,
-    required this.executable,
-    this.workingDirectory,
-    this.environment,
-    this.throwOnFailure = true,
+  print('Running `$commandString`.');
+  final process = await Process.start(executable, arguments,
+          runInShell: true,
+          includeParentEnvironment: true,
+          workingDirectory: workingDirectoryString,
+          environment: environment)
+      .then((process) {
+    process.stdout.transform(utf8.decoder).forEach((s) => print('  $s'));
+    process.stderr.transform(utf8.decoder).forEach((s) => print('  $s'));
+    return process;
   });
-
-  /// Excluding [workingDirectory].
-  String get commandString => [
-        if (workingDirectory != null) '(cd ${workingDirectory!.path};',
-        ...?environment?.entries.map((entry) => '${entry.key}=${entry.value}'),
-        executable,
-        ...arguments.map((a) => a.contains(' ') ? "'$a'" : a),
-        if (workingDirectory != null) ')',
-      ].join(' ');
-
-  @override
-  Future<void> run() async {
-    final workingDirectoryString = workingDirectory?.toFilePath();
-
-    print('Running `$commandString`.');
-    final process = await Process.start(executable, arguments,
-            runInShell: true,
-            includeParentEnvironment: true,
-            workingDirectory: workingDirectoryString,
-            environment: environment)
-        .then((process) {
-      process.stdout.transform(utf8.decoder).forEach((s) => print('  $s'));
-      process.stderr.transform(utf8.decoder).forEach((s) => print('  $s'));
-      return process;
-    });
-    final exitCode = await process.exitCode;
-    if (exitCode != 0) {
-      final message =
-          'Command `$commandString` failed with exit code $exitCode.';
-      print(message);
-      if (throwOnFailure) {
-        throw Exception(message);
-      }
-    }
-    print('Command `$commandString` done.');
-  }
-}
-
-class Copy implements Task {
-  final Uri source;
-  final Uri target;
-
-  Copy({
-    required this.source,
-    required this.target,
-  });
-
-  @override
-  Future<void> run() async {
-    final file = File.fromUri(source);
-    if (!await file.exists()) {
-      final message =
-          "File not in expected location: '${source.toFilePath()}'.";
-      print(message);
+  final exitCode = await process.exitCode;
+  if (exitCode != 0) {
+    final message = 'Command `$commandString` failed with exit code $exitCode.';
+    print(message);
+    if (throwOnFailure) {
       throw Exception(message);
     }
-    print('Copying ${source.toFilePath()} to ${target.toFilePath()}.');
-    await file.copy(target.toFilePath());
   }
+  print('Command `$commandString` done.');
+}
+
+Future<void> copyFile({
+  required Uri source,
+  required Uri target,
+}) async {
+  final file = File.fromUri(source);
+  if (!await file.exists()) {
+    final message = "File not in expected location: '${source.toFilePath()}'.";
+    print(message);
+    throw Exception(message);
+  }
+  print('Copying ${source.toFilePath()} to ${target.toFilePath()}.');
+  await file.copy(target.toFilePath());
 }
