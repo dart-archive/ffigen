@@ -93,6 +93,7 @@ final class Struct1 extends ffi.Struct {
 
 typedef NamedFunctionProto
     = ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>;
+typedef NamedFunctionProtoFunction = ffi.Void Function();
 
 final class AnonymousStructInTypedef extends ffi.Opaque {}
 

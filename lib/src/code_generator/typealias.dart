@@ -47,14 +47,28 @@ class Typealias extends BindingType {
     type.addDependencies(dependencies);
   }
 
+  String _getTypeString(Writer w, Type type) =>
+      _useDartType ? type.getDartType(w) : type.getCType(w);
+
+  static FunctionType? _getFunctionTypeFromPointer(Type type) {
+    if (type is! PointerType) return null;
+    final pointee = type.child;
+    if (pointee is! NativeFunc) return null;
+    return pointee.type;
+  }
+
   @override
   BindingString toBindingString(Writer w) {
     final sb = StringBuffer();
     if (dartDoc != null) {
       sb.write(makeDartDoc(dartDoc!));
     }
-    sb.write('typedef $name = ');
-    sb.write('${_useDartType ? type.getDartType(w) : type.getCType(w)};\n');
+    sb.write('typedef $name = ${_getTypeString(w, type)};\n');
+    final funcType = _getFunctionTypeFromPointer(type);
+    if (funcType != null) {
+      final funcName = w.topLevelUniqueNamer.makeUnique('${name}Function');
+      sb.write('typedef $funcName = ${_getTypeString(w, funcType)};\n');
+    }
     return BindingString(
         type: BindingStringType.typeDef, string: sb.toString());
   }
