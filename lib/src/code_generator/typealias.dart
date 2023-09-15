@@ -66,7 +66,7 @@ class Typealias extends BindingType {
     sb.write('typedef $name = ${_getTypeString(w, type)};\n');
     final funcType = _getFunctionTypeFromPointer(type);
     if (funcType != null) {
-      final funcName = w.topLevelUniqueNamer.makeUnique('${name}Function');
+      final funcName = w.topLevelUniqueNamer.makeUnique('${name}_function');
       sb.write('typedef $funcName = ${_getTypeString(w, funcType)};\n');
     }
     return BindingString(

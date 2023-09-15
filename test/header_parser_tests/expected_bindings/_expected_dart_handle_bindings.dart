@@ -70,6 +70,7 @@ class NativeLibrary {
 
 typedef Typedef1
     = ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Handle)>>;
+typedef Typedef1_function = ffi.Void Function(ffi.Handle);
 
 final class Struct1 extends ffi.Opaque {}
 

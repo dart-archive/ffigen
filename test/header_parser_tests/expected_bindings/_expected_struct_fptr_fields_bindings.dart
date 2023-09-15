@@ -70,3 +70,4 @@ final class S extends ffi.Struct {
 
 typedef ArithmeticOperation
     = ffi.Pointer<ffi.NativeFunction<ffi.Int Function(ffi.Int a, ffi.Int b)>>;
+typedef ArithmeticOperation_function = ffi.Int Function(ffi.Int a, ffi.Int b);
