@@ -122,7 +122,7 @@ class NativeFunc extends Type {
 
   FunctionType get type {
     if (_type is Typealias) {
-      return (_type as Typealias).typealiasType as FunctionType;
+      return _type.typealiasType as FunctionType;
     }
     return _type as FunctionType;
   }
