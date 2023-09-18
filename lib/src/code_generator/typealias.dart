@@ -18,19 +18,48 @@ class Typealias extends BindingType {
   final Type type;
   final bool _useDartType;
 
-  Typealias({
+  factory Typealias({
     String? usr,
     String? originalName,
     String? dartDoc,
     required String name,
-    required this.type,
+    required Type type,
 
     /// If true, the binding string uses Dart type instead of C type.
     ///
     /// E.g if C type is ffi.Void func(ffi.Int32), Dart type is void func(int).
     bool useDartType = false,
     bool isInternal = false,
-  })  : _useDartType = useDartType,
+  }) {
+    final funcType = _getFunctionTypeFromPointer(type);
+    if (funcType != null) {
+      type = PointerType(NativeFunc(Typealias._(
+        name: '${name}_function',
+        type: funcType,
+        useDartType: useDartType,
+        isInternal: isInternal,
+      )));
+    }
+    return Typealias._(
+      usr: usr,
+      originalName: originalName,
+      dartDoc: dartDoc,
+      name: name,
+      type: type,
+      useDartType: useDartType,
+      isInternal: isInternal,
+    );
+  }
+
+  Typealias._({
+    String? usr,
+    String? originalName,
+    String? dartDoc,
+    required String name,
+    required this.type,
+    bool useDartType = false,
+    bool isInternal = false,
+  }) : _useDartType = useDartType,
         super(
           usr: usr,
           name: name,
@@ -47,9 +76,6 @@ class Typealias extends BindingType {
     type.addDependencies(dependencies);
   }
 
-  String _getTypeString(Writer w, Type type) =>
-      _useDartType ? type.getDartType(w) : type.getCType(w);
-
   static FunctionType? _getFunctionTypeFromPointer(Type type) {
     if (type is! PointerType) return null;
     final pointee = type.child;
@@ -63,14 +89,8 @@ class Typealias extends BindingType {
     if (dartDoc != null) {
       sb.write(makeDartDoc(dartDoc!));
     }
-    String typeString = _getTypeString(w, type);
-    final funcType = _getFunctionTypeFromPointer(type);
-    if (funcType != null) {
-      final funcName = w.topLevelUniqueNamer.makeUnique('${name}_function');
-      sb.write('typedef $funcName = ${_getTypeString(w, funcType)};\n');
-      typeString = '${w.ffiLibraryPrefix}.Pointer<${w.ffiLibraryPrefix}.NativeFunction<$funcName>>';
-    }
-    sb.write('typedef $name = $typeString;\n');
+    sb.write('typedef $name = ');
+    sb.write('${_useDartType ? type.getDartType(w) : type.getCType(w)};\n');
     return BindingString(
         type: BindingStringType.typeDef, string: sb.toString());
   }
