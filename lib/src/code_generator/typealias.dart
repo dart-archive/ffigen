@@ -63,12 +63,14 @@ class Typealias extends BindingType {
     if (dartDoc != null) {
       sb.write(makeDartDoc(dartDoc!));
     }
-    sb.write('typedef $name = ${_getTypeString(w, type)};\n');
+    String typeString = _getTypeString(w, type);
     final funcType = _getFunctionTypeFromPointer(type);
     if (funcType != null) {
       final funcName = w.topLevelUniqueNamer.makeUnique('${name}_function');
       sb.write('typedef $funcName = ${_getTypeString(w, funcType)};\n');
+      typeString = '${w.ffiLibraryPrefix}.Pointer<${w.ffiLibraryPrefix}.NativeFunction<$funcName>>';
     }
+    sb.write('typedef $name = $typeString;\n');
     return BindingString(
         type: BindingStringType.typeDef, string: sb.toString());
   }
