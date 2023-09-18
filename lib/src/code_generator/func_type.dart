@@ -117,7 +117,7 @@ class NativeFunc extends Type {
   final Type _type;
 
   NativeFunc(this._type) {
-    assert(type is FunctionType);
+    assert(_type is FunctionType || _type is Typealias);
   }
 
   FunctionType get type {

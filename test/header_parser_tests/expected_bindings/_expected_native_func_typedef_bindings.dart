@@ -83,6 +83,6 @@ final class Struct2 extends ffi.Struct {
   external VoidFuncPointer constFuncPointer;
 }
 
-typedef VoidFuncPointer =
-    ffi.Pointer<ffi.NativeFunction<VoidFuncPointer_function>>;
+typedef VoidFuncPointer
+    = ffi.Pointer<ffi.NativeFunction<VoidFuncPointer_function>>;
 typedef VoidFuncPointer_function = ffi.Void Function();

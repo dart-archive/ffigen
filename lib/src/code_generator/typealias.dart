@@ -59,7 +59,7 @@ class Typealias extends BindingType {
     required this.type,
     bool useDartType = false,
     bool isInternal = false,
-  }) : _useDartType = useDartType,
+  })  : _useDartType = useDartType,
         super(
           usr: usr,
           name: name,
