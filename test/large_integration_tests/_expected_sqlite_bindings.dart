@@ -10855,7 +10855,8 @@ final class sqlite3_vfs extends ffi.Struct {
 typedef sqlite3_int64 = sqlite_int64;
 typedef sqlite_int64 = ffi.LongLong;
 typedef sqlite3_syscall_ptr
-    = ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>;
+    = ffi.Pointer<ffi.NativeFunction<sqlite3_syscall_ptr_function>>;
+typedef sqlite3_syscall_ptr_function = ffi.Void Function();
 
 final class sqlite3_mem_methods extends ffi.Struct {
   /// Memory allocation function
@@ -12008,14 +12009,14 @@ final class fts5_api extends ffi.Struct {
                   xDestroy)>> xCreateFunction;
 }
 
-typedef fts5_extension_function = ffi.Pointer<
-    ffi.NativeFunction<
-        ffi.Void Function(
-            ffi.Pointer<Fts5ExtensionApi> pApi,
-            ffi.Pointer<Fts5Context> pFts,
-            ffi.Pointer<sqlite3_context> pCtx,
-            ffi.Int nVal,
-            ffi.Pointer<ffi.Pointer<sqlite3_value>> apVal)>>;
+typedef fts5_extension_function
+    = ffi.Pointer<ffi.NativeFunction<fts5_extension_function_function>>;
+typedef fts5_extension_function_function = ffi.Void Function(
+    ffi.Pointer<Fts5ExtensionApi> pApi,
+    ffi.Pointer<Fts5Context> pFts,
+    ffi.Pointer<sqlite3_context> pCtx,
+    ffi.Int nVal,
+    ffi.Pointer<ffi.Pointer<sqlite3_value>> apVal);
 
 const String SQLITE_VERSION = '3.32.3';
 

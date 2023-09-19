@@ -113,26 +113,35 @@ class FunctionType extends Type {
 
 /// Represents a NativeFunction<Function>.
 class NativeFunc extends Type {
-  final FunctionType type;
+  // Either a FunctionType or a Typealias of a FunctionType.
+  final Type _type;
 
-  NativeFunc(this.type);
+  NativeFunc(this._type) {
+    assert(_type is FunctionType || _type is Typealias);
+  }
+
+  FunctionType get type {
+    if (_type is Typealias) {
+      return _type.typealiasType as FunctionType;
+    }
+    return _type as FunctionType;
+  }
 
   @override
   void addDependencies(Set<Binding> dependencies) {
-    type.addDependencies(dependencies);
+    _type.addDependencies(dependencies);
   }
 
   @override
   String getCType(Writer w) =>
-      '${w.ffiLibraryPrefix}.NativeFunction<${type.getCType(w)}>';
+      '${w.ffiLibraryPrefix}.NativeFunction<${_type.getCType(w)}>';
 
   @override
-  String getDartType(Writer w) =>
-      '${w.ffiLibraryPrefix}.NativeFunction<${type.getCType(w)}>';
+  String getDartType(Writer w) => getCType(w);
 
   @override
-  String toString() => 'NativeFunction<${type.toString()}>';
+  String toString() => 'NativeFunction<${_type.toString()}>';
 
   @override
-  String cacheKey() => 'NatFn(${type.cacheKey()})';
+  String cacheKey() => 'NatFn(${_type.cacheKey()})';
 }

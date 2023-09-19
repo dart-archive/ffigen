@@ -18,16 +18,45 @@ class Typealias extends BindingType {
   final Type type;
   final bool _useDartType;
 
-  Typealias({
+  factory Typealias({
+    String? usr,
+    String? originalName,
+    String? dartDoc,
+    required String name,
+    required Type type,
+
+    /// If true, the binding string uses Dart type instead of C type.
+    ///
+    /// E.g if C type is ffi.Void func(ffi.Int32), Dart type is void func(int).
+    bool useDartType = false,
+    bool isInternal = false,
+  }) {
+    final funcType = _getFunctionTypeFromPointer(type);
+    if (funcType != null) {
+      type = PointerType(NativeFunc(Typealias._(
+        name: '${name}_function',
+        type: funcType,
+        useDartType: useDartType,
+        isInternal: isInternal,
+      )));
+    }
+    return Typealias._(
+      usr: usr,
+      originalName: originalName,
+      dartDoc: dartDoc,
+      name: name,
+      type: type,
+      useDartType: useDartType,
+      isInternal: isInternal,
+    );
+  }
+
+  Typealias._({
     String? usr,
     String? originalName,
     String? dartDoc,
     required String name,
     required this.type,
-
-    /// If true, the binding string uses Dart type instead of C type.
-    ///
-    /// E.g if C type is ffi.Void func(ffi.Int32), Dart type is void func(int).
     bool useDartType = false,
     bool isInternal = false,
   })  : _useDartType = useDartType,
@@ -45,6 +74,13 @@ class Typealias extends BindingType {
 
     dependencies.add(this);
     type.addDependencies(dependencies);
+  }
+
+  static FunctionType? _getFunctionTypeFromPointer(Type type) {
+    if (type is! PointerType) return null;
+    final pointee = type.child;
+    if (pointee is! NativeFunc) return null;
+    return pointee.type;
   }
 
   @override
