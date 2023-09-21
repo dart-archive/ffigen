@@ -5,7 +5,6 @@
 import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 
-import '../strings.dart' as strings;
 import 'binding_string.dart';
 import 'utils.dart';
 import 'writer.dart';

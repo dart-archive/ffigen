@@ -41,7 +41,8 @@ class Typealias extends BindingType {
         isInternal: isInternal,
       )));
     }
-    if ((originalName ?? name) == strings.objcInstanceType && type is ObjCObjectPointer) {
+    if ((originalName ?? name) == strings.objcInstanceType &&
+        type is ObjCObjectPointer) {
       return ObjCInstanceType._(
         usr: usr,
         originalName: originalName,
@@ -152,12 +153,12 @@ class ObjCInstanceType extends Typealias {
     bool useDartType = false,
     bool isInternal = false,
   }) : super._(
-    usr: usr,
-    originalName: originalName,
-    dartDoc: dartDoc,
-    name: name,
-    type: type,
-    useDartType: useDartType,
-    isInternal: isInternal,
-    );
+          usr: usr,
+          originalName: originalName,
+          dartDoc: dartDoc,
+          name: name,
+          type: type,
+          useDartType: useDartType,
+          isInternal: isInternal,
+        );
 }
