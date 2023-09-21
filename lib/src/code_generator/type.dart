@@ -39,9 +39,14 @@ abstract class Type {
   /// passed to native code.
   String getCType(Writer w) => throw 'No mapping for type: $this';
 
-  /// Returns the Dart type of the Type. This is the user visible type that is
-  /// passed to Dart code.
+  /// Returns the Dart type of the Type. This is the type that is passed from
+  /// FFI to Dart code.
   String getDartType(Writer w) => getCType(w);
+
+  /// Returns the user type of the Type. This is the type that is presented to
+  /// users by the ffigened API to users. For C bindings this is always the same
+  /// as getDartType. For ObjC bindings this refers to the wrapper object.
+  String getUserType(Writer w) => getDartType(w);
 
   /// Returns the string representation of the Type, for debugging purposes
   /// only. This string should not be printed as generated code.
@@ -98,6 +103,9 @@ abstract class BindingType extends NoLookUpBinding implements Type {
 
   @override
   String getDartType(Writer w) => getCType(w);
+
+  @override
+  String getUserType(Writer w) => getDartType(w);
 
   @override
   String toString() => originalName;

@@ -4,6 +4,7 @@
 
 import 'package:ffigen/src/code_generator.dart';
 
+import '../strings.dart' as strings;
 import 'binding_string.dart';
 import 'utils.dart';
 import 'writer.dart';
@@ -39,6 +40,17 @@ class Typealias extends BindingType {
         useDartType: useDartType,
         isInternal: isInternal,
       )));
+    }
+    if ((originalName ?? name) == strings.objcInstanceType && type is ObjCObjectPointer) {
+      return ObjCInstanceType._(
+        usr: usr,
+        originalName: originalName,
+        dartDoc: dartDoc,
+        name: name,
+        type: type,
+        useDartType: useDartType,
+        isInternal: isInternal,
+      );
     }
     return Typealias._(
       usr: usr,
@@ -121,4 +133,31 @@ class Typealias extends BindingType {
   @override
   String? getDefaultValue(Writer w, String nativeLib) =>
       type.getDefaultValue(w, nativeLib);
+}
+
+/// Objective C's instancetype.
+///
+/// This is an alias for an NSObject* that is special cased in code generation.
+class ObjCInstanceType extends Typealias {
+  ObjCInstanceType._({
+    String? usr,
+    String? originalName,
+    String? dartDoc,
+    required String name,
+    required Type type,
+
+    /// If true, the binding string uses Dart type instead of C type.
+    ///
+    /// E.g if C type is ffi.Void func(ffi.Int32), Dart type is void func(int).
+    bool useDartType = false,
+    bool isInternal = false,
+  }) : super._(
+    usr: usr,
+    originalName: originalName,
+    dartDoc: dartDoc,
+    name: name,
+    type: type,
+    useDartType: useDartType,
+    isInternal: isInternal,
+    );
 }
