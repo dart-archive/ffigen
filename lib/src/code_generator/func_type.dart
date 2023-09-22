@@ -65,16 +65,16 @@ class FunctionType extends Type {
   }
 
   @override
-  String getDartType(Writer w, {bool writeArgumentNames = true}) {
+  String getFfiDartType(Writer w, {bool writeArgumentNames = true}) {
     final sb = StringBuffer();
 
     // Write return Type.
-    sb.write(returnType.getDartType(w));
+    sb.write(returnType.getFfiDartType(w));
 
     // Write Function.
     sb.write(' Function(');
     sb.write(dartTypeParameters.map<String>((p) {
-      return '${p.type.getDartType(w)} ${writeArgumentNames ? p.name : ""}';
+      return '${p.type.getFfiDartType(w)} ${writeArgumentNames ? p.name : ""}';
     }).join(', '));
     sb.write(')');
 
@@ -137,7 +137,7 @@ class NativeFunc extends Type {
       '${w.ffiLibraryPrefix}.NativeFunction<${_type.getCType(w)}>';
 
   @override
-  String getDartType(Writer w) => getCType(w);
+  String getFfiDartType(Writer w) => getCType(w);
 
   @override
   String toString() => 'NativeFunction<${_type.toString()}>';

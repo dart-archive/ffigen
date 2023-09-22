@@ -120,7 +120,7 @@ class Func extends LookUpBinding {
         : functionType.getCType(w, writeArgumentNames: false);
     final dartType = exposeFunctionTypedefs
         ? _exposedDartFunctionTypealias!.name
-        : functionType.getDartType(w, writeArgumentNames: false);
+        : functionType.getFfiDartType(w, writeArgumentNames: false);
 
     if (ffiNativeConfig.enabled) {
       final assetString = ffiNativeConfig.asset != null
@@ -131,17 +131,17 @@ class Func extends LookUpBinding {
           "@${w.ffiLibraryPrefix}.Native<$cType>(symbol: '$originalName'$assetString$isLeafString)\n");
 
       s.write(
-          'external ${functionType.returnType.getDartType(w)} $enclosingFuncName(\n');
+          'external ${functionType.returnType.getFfiDartType(w)} $enclosingFuncName(\n');
       for (final p in functionType.dartTypeParameters) {
-        s.write('  ${p.type.getDartType(w)} ${p.name},\n');
+        s.write('  ${p.type.getFfiDartType(w)} ${p.name},\n');
       }
       s.write(');\n\n');
     } else {
       // Write enclosing function.
       s.write(
-          '${functionType.returnType.getDartType(w)} $enclosingFuncName(\n');
+          '${functionType.returnType.getFfiDartType(w)} $enclosingFuncName(\n');
       for (final p in functionType.dartTypeParameters) {
-        s.write('  ${p.type.getDartType(w)} ${p.name},\n');
+        s.write('  ${p.type.getFfiDartType(w)} ${p.name},\n');
       }
       s.write(') {\n');
       s.write('return $funcVarName');

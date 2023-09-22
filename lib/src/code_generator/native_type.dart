@@ -54,7 +54,7 @@ class NativeType extends Type {
   String getCType(Writer w) => '${w.ffiLibraryPrefix}.$_cType';
 
   @override
-  String getDartType(Writer w) => _dartType;
+  String getFfiDartType(Writer w) => _dartType;
 
   @override
   String toString() => _cType;

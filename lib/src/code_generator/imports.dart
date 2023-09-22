@@ -40,7 +40,7 @@ class ImportedType extends Type {
   }
 
   @override
-  String getDartType(Writer w) => cType == dartType ? getCType(w) : dartType;
+  String getFfiDartType(Writer w) => cType == dartType ? getCType(w) : dartType;
 
   @override
   String toString() => '${libraryImport.name}.$cType';
@@ -62,7 +62,7 @@ class SelfImportedType extends Type {
   String getCType(Writer w) => cType;
 
   @override
-  String getDartType(Writer w) => dartType;
+  String getFfiDartType(Writer w) => dartType;
 
   @override
   String toString() => cType;

@@ -120,7 +120,7 @@ abstract class Compound extends BindingType {
     /// Marking type names because dart doesn't allow class member to have the
     /// same name as a type name used internally.
     for (final m in members) {
-      localUniqueNamer.markUsed(m.type.getDartType(w));
+      localUniqueNamer.markUsed(m.type.getFfiDartType(w));
     }
 
     /// Write @Packed(X) annotation if struct is packed.
@@ -148,7 +148,7 @@ abstract class Compound extends BindingType {
         if (!sameDartAndCType(m.type, w)) {
           s.write('$depth@${m.type.getCType(w)}()\n');
         }
-        s.write('${depth}external ${m.type.getDartType(w)} ${m.name};\n\n');
+        s.write('${depth}external ${m.type.getFfiDartType(w)} ${m.name};\n\n');
       }
     }
     s.write('}\n\n');

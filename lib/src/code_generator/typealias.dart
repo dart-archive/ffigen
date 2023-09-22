@@ -103,7 +103,7 @@ class Typealias extends BindingType {
       sb.write(makeDartDoc(dartDoc!));
     }
     sb.write('typedef $name = ');
-    sb.write('${_useDartType ? type.getDartType(w) : type.getCType(w)};\n');
+    sb.write('${_useDartType ? type.getFfiDartType(w) : type.getCType(w)};\n');
     return BindingString(
         type: BindingStringType.typeDef, string: sb.toString());
   }
@@ -118,13 +118,13 @@ class Typealias extends BindingType {
   String getCType(Writer w) => name;
 
   @override
-  String getDartType(Writer w) {
+  String getFfiDartType(Writer w) {
     // Typealias cannot be used by name in Dart types unless both the C and Dart
     // type of the underlying types are same.
     if (sameDartAndCType(type, w)) {
       return name;
     } else {
-      return type.getDartType(w);
+      return type.getFfiDartType(w);
     }
   }
 
