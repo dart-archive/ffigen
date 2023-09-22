@@ -139,6 +139,8 @@ class Typealias extends BindingType {
 /// Objective C's instancetype.
 ///
 /// This is an alias for an NSObject* that is special cased in code generation.
+/// It's only valid as the return type of a method, and always appears as the
+/// enclosing class's type, even in inherited methods.
 class ObjCInstanceType extends Typealias {
   ObjCInstanceType._({
     String? usr,
