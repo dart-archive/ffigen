@@ -223,7 +223,7 @@ class $name extends _ObjCBlockBase {
       PointerType(builtInFunctions.blockStruct).getCType(w);
 
   @override
-  String getUserType(Writer w) => name;
+  String getDartType(Writer w) => name;
 
   @override
   String toString() => '($returnType (^)(${argTypes.join(', ')}))';

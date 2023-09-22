@@ -78,5 +78,5 @@ class ObjCObjectPointer extends PointerType {
   ObjCObjectPointer._() : super._(objCObjectType);
 
   @override
-  String getUserType(Writer w) => 'NSObject';
+  String getDartType(Writer w) => 'NSObject';
 }

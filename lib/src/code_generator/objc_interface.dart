@@ -355,7 +355,7 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
   String getCType(Writer w) => PointerType(objCObjectType).getCType(w);
 
   @override
-  String getUserType(Writer w) => name;
+  String getDartType(Writer w) => name;
 
   // Utils for converting between the internal types passed to native code, and
   // the external types visible to the user. For example, ObjCInterfaces are
@@ -369,7 +369,7 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
 
   String _getConvertedType(Type type, Writer w, String enclosingClass) {
     if (type is ObjCInstanceType) return enclosingClass;
-    return type.getUserType(w);
+    return type.getDartType(w);
   }
 
   String _getConvertedReturnType(

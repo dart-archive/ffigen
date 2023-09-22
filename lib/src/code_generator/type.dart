@@ -46,7 +46,7 @@ abstract class Type {
   /// Returns the user type of the Type. This is the type that is presented to
   /// users by the ffigened API to users. For C bindings this is always the same
   /// as getFfiDartType. For ObjC bindings this refers to the wrapper object.
-  String getUserType(Writer w) => getFfiDartType(w);
+  String getDartType(Writer w) => getFfiDartType(w);
 
   /// Returns the string representation of the Type, for debugging purposes
   /// only. This string should not be printed as generated code.
@@ -105,7 +105,7 @@ abstract class BindingType extends NoLookUpBinding implements Type {
   String getFfiDartType(Writer w) => getCType(w);
 
   @override
-  String getUserType(Writer w) => getFfiDartType(w);
+  String getDartType(Writer w) => getFfiDartType(w);
 
   @override
   String toString() => originalName;
