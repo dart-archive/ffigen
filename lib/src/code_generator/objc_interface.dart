@@ -5,7 +5,6 @@
 import 'package:ffigen/src/code_generator.dart';
 import 'package:logging/logging.dart';
 
-import '../strings.dart' as strings;
 import 'binding_string.dart';
 import 'utils.dart';
 import 'writer.dart';
@@ -281,7 +280,7 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
       if (m.isClass &&
           !_excludedNSObjectClassMethods.contains(m.originalName)) {
         addMethod(m);
-      } else if (_isInstanceType(m.returnType)) {
+      } else if (m.returnType is ObjCInstanceType) {
         addMethod(m);
       }
     }
@@ -355,13 +354,8 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
   @override
   String getCType(Writer w) => PointerType(objCObjectType).getCType(w);
 
-  bool _isObject(Type type) =>
-      type is PointerType && type.child == objCObjectType;
-
-  bool _isInstanceType(Type type) =>
-      type is Typealias &&
-      type.originalName == strings.objcInstanceType &&
-      _isObject(type.type);
+  @override
+  String getDartType(Writer w) => name;
 
   // Utils for converting between the internal types passed to native code, and
   // the external types visible to the user. For example, ObjCInterfaces are
@@ -370,15 +364,11 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
   bool _needsConverting(Type type) =>
       type is ObjCInterface ||
       type is ObjCBlock ||
-      _isObject(type) ||
-      _isInstanceType(type);
+      type is ObjCObjectPointer ||
+      type is ObjCInstanceType;
 
   String _getConvertedType(Type type, Writer w, String enclosingClass) {
-    if (type is BooleanType) return 'bool';
-    if (type is ObjCInterface) return type.name;
-    if (type is ObjCBlock) return type.name;
-    if (_isObject(type)) return 'NSObject';
-    if (_isInstanceType(type)) return enclosingClass;
+    if (type is ObjCInstanceType) return enclosingClass;
     return type.getDartType(w);
   }
 
@@ -393,8 +383,8 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
 
   String _doArgConversion(ObjCMethodParam arg) {
     if (arg.type is ObjCInterface ||
-        _isObject(arg.type) ||
-        _isInstanceType(arg.type) ||
+        arg.type is ObjCObjectPointer ||
+        arg.type is ObjCInstanceType ||
         arg.type is ObjCBlock) {
       if (arg.isNullable) {
         return '${arg.name}?._id ?? ffi.nullptr';
@@ -415,10 +405,10 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
     if (type is ObjCBlock) {
       return '$prefix${type.name}._($value, $library)';
     }
-    if (_isObject(type)) {
+    if (type is ObjCObjectPointer) {
       return '${prefix}NSObject._($value, $library, $ownerFlags)';
     }
-    if (_isInstanceType(type)) {
+    if (type is ObjCInstanceType) {
       return '$prefix$enclosingClass._($value, $library, $ownerFlags)';
     }
     return prefix + value;

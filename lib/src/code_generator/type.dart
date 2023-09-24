@@ -39,9 +39,14 @@ abstract class Type {
   /// passed to native code.
   String getCType(Writer w) => throw 'No mapping for type: $this';
 
-  /// Returns the Dart type of the Type. This is the user visible type that is
-  /// passed to Dart code.
-  String getDartType(Writer w) => getCType(w);
+  /// Returns the Dart type of the Type. This is the type that is passed from
+  /// FFI to Dart code.
+  String getFfiDartType(Writer w) => getCType(w);
+
+  /// Returns the user type of the Type. This is the type that is presented to
+  /// users by the ffigened API to users. For C bindings this is always the same
+  /// as getFfiDartType. For ObjC bindings this refers to the wrapper object.
+  String getDartType(Writer w) => getFfiDartType(w);
 
   /// Returns the string representation of the Type, for debugging purposes
   /// only. This string should not be printed as generated code.
@@ -62,7 +67,7 @@ abstract class Type {
 }
 
 /// Function to check if the dart and C type string are same.
-bool sameDartAndCType(Type t, Writer w) => t.getCType(w) == t.getDartType(w);
+bool sameDartAndCType(Type t, Writer w) => t.getCType(w) == t.getFfiDartType(w);
 
 /// Base class for all Type bindings.
 ///
@@ -97,7 +102,10 @@ abstract class BindingType extends NoLookUpBinding implements Type {
   bool get isIncompleteCompound => false;
 
   @override
-  String getDartType(Writer w) => getCType(w);
+  String getFfiDartType(Writer w) => getCType(w);
+
+  @override
+  String getDartType(Writer w) => getFfiDartType(w);
 
   @override
   String toString() => originalName;

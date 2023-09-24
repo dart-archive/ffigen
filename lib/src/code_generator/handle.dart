@@ -16,7 +16,7 @@ class HandleType extends Type {
   String getCType(Writer w) => '${w.ffiLibraryPrefix}.Handle';
 
   @override
-  String getDartType(Writer w) => 'Object';
+  String getFfiDartType(Writer w) => 'Object';
 
   @override
   String toString() => 'Handle';

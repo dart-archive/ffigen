@@ -45,7 +45,7 @@ class Global extends LookUpBinding {
       s.write(makeDartDoc(dartDoc!));
     }
     final pointerName = w.wrapperLevelUniqueNamer.makeUnique('_$globalVarName');
-    final dartType = type.getDartType(w);
+    final dartType = type.getFfiDartType(w);
     final cType = type.getCType(w);
 
     s.write(

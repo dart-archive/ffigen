@@ -82,15 +82,15 @@ class ObjCBlock extends BindingType {
         '${w.ffiLibraryPrefix}.NativeCallable<${trampFuncType.getCType(w)}>';
 
     // Write the function pointer based trampoline function.
-    s.write(returnType.getDartType(w));
+    s.write(returnType.getFfiDartType(w));
     s.write(' $funcPtrTrampoline(${blockPtr.getCType(w)} block');
     for (int i = 0; i < params.length; ++i) {
-      s.write(', ${params[i].type.getDartType(w)} ${params[i].name}');
+      s.write(', ${params[i].type.getFfiDartType(w)} ${params[i].name}');
     }
     s.write(') {\n');
     s.write('  ${isVoid ? '' : 'return '}block.ref.target.cast<'
-        '${natFnType.getDartType(w)}>().asFunction<'
-        '${funcType.getDartType(w)}>()(');
+        '${natFnType.getFfiDartType(w)}>().asFunction<'
+        '${funcType.getFfiDartType(w)}>()(');
     for (int i = 0; i < params.length; ++i) {
       s.write('${i == 0 ? '' : ', '}${params[i].name}');
     }
@@ -109,17 +109,17 @@ $voidPtr $registerClosure(Function fn) {
 ''');
 
     // Write the closure based trampoline function.
-    s.write(returnType.getDartType(w));
+    s.write(returnType.getFfiDartType(w));
     s.write(' $closureTrampoline(${blockPtr.getCType(w)} block');
     for (int i = 0; i < params.length; ++i) {
-      s.write(', ${params[i].type.getDartType(w)} ${params[i].name}');
+      s.write(', ${params[i].type.getFfiDartType(w)} ${params[i].name}');
     }
     s.write(') {\n');
     s.write('  ${isVoid ? '' : 'return '}');
     s.write('($closureRegistry[block.ref.target.address]');
-    s.write(' as ${returnType.getDartType(w)} Function(');
+    s.write(' as ${returnType.getFfiDartType(w)} Function(');
     for (int i = 0; i < params.length; ++i) {
-      s.write('${i == 0 ? '' : ', '}${params[i].type.getDartType(w)}');
+      s.write('${i == 0 ? '' : ', '}${params[i].type.getFfiDartType(w)}');
     }
     s.write('))');
     s.write('(');
@@ -154,7 +154,7 @@ class $name extends _ObjCBlockBase {
   /// This block must be invoked by native code running on the same thread as
   /// the isolate that registered it. Invoking the block on the wrong thread
   /// will result in a crash.
-  $name.fromFunction(${w.className} lib, ${funcType.getDartType(w)} fn) :
+  $name.fromFunction(${w.className} lib, ${funcType.getFfiDartType(w)} fn) :
       this._(lib.${builtInFunctions.newBlock.name}(
           _dartFuncTrampoline ??= ${w.ffiLibraryPrefix}.Pointer.fromFunction<
               ${trampFuncType.getCType(w)}>($closureTrampoline
@@ -175,7 +175,7 @@ class $name extends _ObjCBlockBase {
   ///
   /// Note that unlike the default behavior of NativeCallable.listener, listener
   /// blocks do not keep the isolate alive.
-  $name.listener(${w.className} lib, ${funcType.getDartType(w)} fn) :
+  $name.listener(${w.className} lib, ${funcType.getFfiDartType(w)} fn) :
       this._(lib.${builtInFunctions.newBlock.name}(
           (_dartFuncListenerTrampoline ??= $nativeCallableType.listener($closureTrampoline
                   $exceptionalReturn)..keepIsolateAlive = false).nativeFunction.cast(),
@@ -186,15 +186,15 @@ class $name extends _ObjCBlockBase {
     }
 
     // Call method.
-    s.write('  ${returnType.getDartType(w)} call(');
+    s.write('  ${returnType.getFfiDartType(w)} call(');
     for (int i = 0; i < params.length; ++i) {
-      s.write('${i == 0 ? '' : ', '}${params[i].type.getDartType(w)}');
+      s.write('${i == 0 ? '' : ', '}${params[i].type.getFfiDartType(w)}');
       s.write(' ${params[i].name}');
     }
     s.write(''') {
     ${isVoid ? '' : 'return '}_id.ref.invoke.cast<
         ${natTrampFnType.getCType(w)}>().asFunction<
-            ${trampFuncType.getDartType(w)}>()(_id''');
+            ${trampFuncType.getFfiDartType(w)}>()(_id''');
     for (int i = 0; i < params.length; ++i) {
       s.write(', ${params[i].name}');
     }
@@ -221,6 +221,9 @@ class $name extends _ObjCBlockBase {
   @override
   String getCType(Writer w) =>
       PointerType(builtInFunctions.blockStruct).getCType(w);
+
+  @override
+  String getDartType(Writer w) => name;
 
   @override
   String toString() => '($returnType (^)(${argTypes.join(', ')}))';

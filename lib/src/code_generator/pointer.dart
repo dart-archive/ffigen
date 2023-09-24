@@ -9,7 +9,15 @@ import 'writer.dart';
 /// Represents a pointer.
 class PointerType extends Type {
   final Type child;
-  PointerType(this.child);
+
+  PointerType._(this.child);
+
+  factory PointerType(Type child) {
+    if (child == objCObjectType) {
+      return ObjCObjectPointer();
+    }
+    return PointerType._(child);
+  }
 
   @override
   void addDependencies(Set<Binding> dependencies) {
@@ -33,7 +41,7 @@ class PointerType extends Type {
 /// Represents a constant array, which has a fixed size.
 class ConstantArray extends PointerType {
   final int length;
-  ConstantArray(this.length, Type child) : super(child);
+  ConstantArray(this.length, Type child) : super._(child);
 
   @override
   Type get baseArrayType => child.baseArrayType;
@@ -50,7 +58,7 @@ class ConstantArray extends PointerType {
 
 /// Represents an incomplete array, which has an unknown size.
 class IncompleteArray extends PointerType {
-  IncompleteArray(Type child) : super(child);
+  IncompleteArray(Type child) : super._(child);
 
   @override
   Type get baseArrayType => child.baseArrayType;
@@ -60,4 +68,15 @@ class IncompleteArray extends PointerType {
 
   @override
   String cacheKey() => '${child.cacheKey()}[]';
+}
+
+/// A pointer to an NSObject.
+class ObjCObjectPointer extends PointerType {
+  factory ObjCObjectPointer() => _inst;
+
+  static final _inst = ObjCObjectPointer._();
+  ObjCObjectPointer._() : super._(objCObjectType);
+
+  @override
+  String getDartType(Writer w) => 'NSObject';
 }

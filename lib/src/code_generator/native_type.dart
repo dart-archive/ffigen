@@ -54,7 +54,7 @@ class NativeType extends Type {
   String getCType(Writer w) => '${w.ffiLibraryPrefix}.$_cType';
 
   @override
-  String getDartType(Writer w) => _dartType;
+  String getFfiDartType(Writer w) => _dartType;
 
   @override
   String toString() => _cType;
@@ -67,7 +67,6 @@ class NativeType extends Type {
 }
 
 class BooleanType extends NativeType {
-  // Booleans are treated as uint8.
   const BooleanType._() : super._('Bool', 'bool', 'false');
   static const _boolean = BooleanType._();
   factory BooleanType() => _boolean;
