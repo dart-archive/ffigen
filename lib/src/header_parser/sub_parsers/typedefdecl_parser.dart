@@ -77,6 +77,7 @@ Typealias? parseTypedefDeclaration(
         originalName: typedefName,
         name: config.typedefs.renameUsingConfig(typedefName),
         type: s,
+        useDartType: true,
         dartDoc: getCursorDocComment(cursor),
       );
     }

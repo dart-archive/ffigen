@@ -145,7 +145,7 @@ abstract class Compound extends BindingType {
         s.write('${depth}external ${_getInlineArrayTypeString(m.type, w)} ');
         s.write('${m.name};\n\n');
       } else {
-        if (!sameDartAndCType(m.type, w)) {
+        if (!sameFfiDartTypeAndCType(m.type, w)) {
           s.write('$depth@${m.type.getCType(w)}()\n');
         }
         s.write('${depth}external ${m.type.getFfiDartType(w)} ${m.name};\n\n');

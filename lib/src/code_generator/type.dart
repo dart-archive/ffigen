@@ -66,8 +66,13 @@ abstract class Type {
   String? getDefaultValue(Writer w, String nativeLib) => null;
 }
 
-/// Function to check if the dart and C type string are same.
-bool sameDartAndCType(Type t, Writer w) => t.getCType(w) == t.getFfiDartType(w);
+/// Function to check if the FFI Dart type and C type string are same.
+bool sameFfiDartTypeAndCType(Type t, Writer w) =>
+    t.getCType(w) == t.getFfiDartType(w);
+
+/// Function to check if the Dart type and C type string are same.
+bool sameDartTypeAndCType(Type t, Writer w) =>
+    t.getCType(w) == t.getDartType(w);
 
 /// Base class for all Type bindings.
 ///
