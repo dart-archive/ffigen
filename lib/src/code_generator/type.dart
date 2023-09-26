@@ -48,6 +48,26 @@ abstract class Type {
   /// as getFfiDartType. For ObjC bindings this refers to the wrapper object.
   String getDartType(Writer w) => getFfiDartType(w);
 
+  /// Converts a value from Dart type to FFI Dart type. Use this when taking an
+  /// arg from a user and converting it to something that can be passed to FFI.
+  String convertDartTypeToFfiDartType(Writer w, String value, {
+      String? nativeLib,
+      bool isNullable = false,
+  }) => value;
+
+  /// Converts a value from FFI Dart type to Dart type. Use this when returning
+  /// a value from FFI to the user.
+  String convertFfiDartTypeToDartType(Writer w, String value, {
+      String? nativeLib,
+      bool isNullable = false,
+      bool objcRetain = false,
+  }) => value;
+
+  /// Returns whether the above conversion functions require a reference to the
+  /// native library. If this method returns true, a non-null value must be
+  /// passed to the [nativeLib] argument of those functions.
+  bool convertRequiresNativeLib => false;
+
   /// Returns the string representation of the Type, for debugging purposes
   /// only. This string should not be printed as generated code.
   @override
