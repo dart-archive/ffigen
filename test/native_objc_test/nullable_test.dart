@@ -46,7 +46,7 @@ void main() {
       test('Null', () {
         expect(NullableInterface.returnNil_(lib, true), null);
       });
-    }, skip: "TODO(#334): enable this test");
+    });
 
     group('Nullable arguments', () {
       test('Not null', () {
