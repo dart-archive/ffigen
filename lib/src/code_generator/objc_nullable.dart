@@ -11,11 +11,14 @@ class ObjCNullable extends Type {
   Type child;
 
   ObjCNullable(this.child) {
-    assert(child is ObjCInterface ||
-        child is ObjCBlock ||
-        child is ObjCObjectPointer ||
-        child is ObjCInstanceType);
+    assert(isSupported(child));
   }
+
+  static bool isSupported(Type type) =>
+      type is ObjCInterface ||
+      type is ObjCBlock ||
+      type is ObjCObjectPointer ||
+      type is ObjCInstanceType;
 
   @override
   void addDependencies(Set<Binding> dependencies) {

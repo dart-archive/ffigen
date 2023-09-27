@@ -369,6 +369,9 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
 
   String _getConvertedType(Type type, Writer w, String enclosingClass) {
     if (type is ObjCInstanceType) return enclosingClass;
+    if (type is ObjCNullable && type.child is ObjCInstanceType) {
+      return '$enclosingClass?';
+    }
     return type.getDartType(w);
   }
 

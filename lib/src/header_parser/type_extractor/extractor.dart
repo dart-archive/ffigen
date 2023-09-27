@@ -141,7 +141,9 @@ Type getCodeGenType(
       );
       final isNullable = clang.clang_Type_getNullability(cxtype) ==
           clang_types.CXTypeNullabilityKind.CXTypeNullability_Nullable;
-      return isNullable ? ObjCNullable(innerType) : innerType;
+      return isNullable && ObjCNullable.isSupported(innerType)
+          ? ObjCNullable(innerType)
+          : innerType;
     default:
       var typeSpellKey =
           clang.clang_getTypeSpelling(cxtype).toStringAndDispose();
