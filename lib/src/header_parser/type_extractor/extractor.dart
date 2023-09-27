@@ -133,6 +133,7 @@ Type getCodeGenType(
     case clang_types.CXTypeKind.CXType_Bool:
       return BooleanType();
     case clang_types.CXTypeKind.CXType_Attributed:
+    case clang_types.CXTypeKind.CXType_Unexposed:
       final innerType = getCodeGenType(
         clang.clang_Type_getModifiedType(cxtype),
         ignoreFilter: ignoreFilter,
