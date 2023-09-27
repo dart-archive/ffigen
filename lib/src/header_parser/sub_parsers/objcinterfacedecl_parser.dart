@@ -204,8 +204,7 @@ void _parseProperty(clang_types.CXCursor cursor) {
         kind: ObjCMethodKind.propertySetter,
         isClass: isClass,
         returnType: NativeType(SupportedNativeType.Void));
-    setter.params
-        .add(ObjCMethodParam(fieldType, 'value'));
+    setter.params.add(ObjCMethodParam(fieldType, 'value'));
     itf.addMethod(setter);
   }
 }

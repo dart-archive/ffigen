@@ -4,8 +4,6 @@
 
 import 'package:ffigen/src/code_generator.dart';
 
-import 'binding_string.dart';
-import 'utils.dart';
 import 'writer.dart';
 
 /// An ObjC type annotated with nullable.

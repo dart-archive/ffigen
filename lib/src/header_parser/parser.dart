@@ -98,8 +98,8 @@ List<Binding> parseToBindings() {
       clang_types.CXTranslationUnit_Flags.CXTranslationUnit_SkipFunctionBodies |
           clang_types.CXTranslationUnit_Flags
               .CXTranslationUnit_DetailedPreprocessingRecord |
-          clang_types.CXTranslationUnit_Flags
-              .CXTranslationUnit_IncludeAttributedTypes,
+          clang_types
+              .CXTranslationUnit_Flags.CXTranslationUnit_IncludeAttributedTypes,
     );
 
     if (tu == nullptr) {
