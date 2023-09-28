@@ -76,10 +76,8 @@ class ObjCInterface extends BindingType {
       if (isStatic) {
         stringParams.add('${w.className} _lib');
       }
-      stringParams.addAll(params.map((p) =>
-          (_getConvertedType(p.type, w, name) +
-              (p.isNullable ? "? " : " ") +
-              p.name)));
+      stringParams.addAll(
+          params.map((p) => '${_getConvertedType(p.type, w, name)} ${p.name}'));
       return '(${stringParams.join(", ")})';
     }
 
@@ -146,8 +144,7 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
       s.write('  ');
       if (isStatic) {
         s.write('static ');
-        s.write(
-            _getConvertedReturnType(returnType, w, name, m.isNullableReturn));
+        s.write(_getConvertedType(returnType, w, name));
 
         switch (m.kind) {
           case ObjCMethodKind.method:
@@ -173,14 +170,12 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
         switch (m.kind) {
           case ObjCMethodKind.method:
             // returnType methodName(...)
-            s.write(_getConvertedReturnType(
-                returnType, w, name, m.isNullableReturn));
+            s.write(_getConvertedType(returnType, w, name));
             s.write(' $methodName');
             s.write(paramsToString(params, isStatic: false));
             break;
           case ObjCMethodKind.propertyGetter:
-            s.write(_getConvertedReturnType(
-                returnType, w, name, m.isNullableReturn));
+            s.write(_getConvertedType(returnType, w, name));
             if (isStret) {
               // void getMethodName(Pointer<returnType> stret, NativeLibrary _lib)
               s.write(' get');
@@ -219,8 +214,8 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
       }
       s.write(');\n');
       if (convertReturn) {
-        final result = _doReturnConversion(returnType, '_ret', name, '_lib',
-            m.isNullableReturn, m.isOwnedReturn);
+        final result = _doReturnConversion(
+            returnType, '_ret', name, '_lib', m.isOwnedReturn);
         s.write('    return $result;');
       }
 
@@ -263,6 +258,7 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
     if (superType != null) {
       superType!.addDependencies(dependencies);
       _copyMethodsFromSuperType();
+      _fixNullabilityOfOverriddenMethods();
     }
 
     for (final m in methods.values) {
@@ -280,11 +276,47 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
       if (m.isClass &&
           !_excludedNSObjectClassMethods.contains(m.originalName)) {
         addMethod(m);
-      } else if (m.returnType is ObjCInstanceType) {
+      } else if (_isInstanceType(m.returnType)) {
         addMethod(m);
       }
     }
   }
+
+  void _fixNullabilityOfOverriddenMethods() {
+    // ObjC ignores nullability when deciding if an override for an inherited
+    // method is valid. But in Dart it's invalid to override a method and change
+    // it's return type from non-null to nullable, or its arg type from nullable
+    // to non-null. So in these cases we have to make the non-null type
+    // nullable, to avoid Dart compile errors.
+    var superType_ = superType;
+    while (superType_ != null) {
+      for (final method in methods.values) {
+        final superMethod = superType_.methods[method.originalName];
+        if (superMethod != null && !superMethod.isClass && !method.isClass) {
+          if (superMethod.returnType.typealiasType is! ObjCNullable &&
+              method.returnType.typealiasType is ObjCNullable) {
+            superMethod.returnType = ObjCNullable(superMethod.returnType);
+          }
+          final numArgs = method.params.length < superMethod.params.length
+              ? method.params.length
+              : superMethod.params.length;
+          for (int i = 0; i < numArgs; ++i) {
+            final param = method.params[i];
+            final superParam = superMethod.params[i];
+            if (superParam.type.typealiasType is ObjCNullable &&
+                param.type.typealiasType is! ObjCNullable) {
+              param.type = ObjCNullable(param.type);
+            }
+          }
+        }
+      }
+      superType_ = superType_.superType;
+    }
+  }
+
+  static bool _isInstanceType(Type type) =>
+      type is ObjCInstanceType ||
+      (type is ObjCNullable && type.child is ObjCInstanceType);
 
   void addMethod(ObjCMethod method) {
     final oldMethod = methods[method.originalName];
@@ -365,39 +397,36 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
       type is ObjCInterface ||
       type is ObjCBlock ||
       type is ObjCObjectPointer ||
-      type is ObjCInstanceType;
+      type is ObjCInstanceType ||
+      type is ObjCNullable;
 
   String _getConvertedType(Type type, Writer w, String enclosingClass) {
     if (type is ObjCInstanceType) return enclosingClass;
+    if (type is ObjCNullable && type.child is ObjCInstanceType) {
+      return '$enclosingClass?';
+    }
     return type.getDartType(w);
   }
 
-  String _getConvertedReturnType(
-      Type type, Writer w, String enclosingClass, bool isNullableReturn) {
-    final result = _getConvertedType(type, w, enclosingClass);
-    if (isNullableReturn) {
-      return "$result?";
-    }
-    return result;
-  }
-
   String _doArgConversion(ObjCMethodParam arg) {
-    if (arg.type is ObjCInterface ||
+    if (arg.type is ObjCNullable) {
+      return '${arg.name}?._id ?? ffi.nullptr';
+    } else if (arg.type is ObjCInterface ||
         arg.type is ObjCObjectPointer ||
         arg.type is ObjCInstanceType ||
         arg.type is ObjCBlock) {
-      if (arg.isNullable) {
-        return '${arg.name}?._id ?? ffi.nullptr';
-      } else {
-        return '${arg.name}._id';
-      }
+      return '${arg.name}._id';
     }
     return arg.name;
   }
 
   String _doReturnConversion(Type type, String value, String enclosingClass,
-      String library, bool isNullable, bool isOwnedReturn) {
-    final prefix = isNullable ? '$value.address == 0 ? null : ' : '';
+      String library, bool isOwnedReturn) {
+    var prefix = '';
+    if (type is ObjCNullable) {
+      prefix = '$value.address == 0 ? null : ';
+      type = type.child;
+    }
     final ownerFlags = 'retain: ${!isOwnedReturn}, release: true';
     if (type is ObjCInterface) {
       return '$prefix${type.name}._($value, $library, $ownerFlags)';
@@ -432,8 +461,7 @@ class ObjCMethod {
   final String? dartDoc;
   final String originalName;
   final ObjCProperty? property;
-  final Type returnType;
-  final bool isNullableReturn;
+  Type returnType;
   final List<ObjCMethodParam> params;
   final ObjCMethodKind kind;
   final bool isClass;
@@ -448,7 +476,6 @@ class ObjCMethod {
     required this.kind,
     required this.isClass,
     required this.returnType,
-    this.isNullableReturn = false,
     List<ObjCMethodParam>? params_,
   }) : params = params_ ?? [];
 
@@ -488,7 +515,6 @@ class ObjCMethod {
 
   bool sameAs(ObjCMethod other) {
     if (originalName != other.originalName) return false;
-    if (isNullableReturn != other.isNullableReturn) return false;
     if (kind != other.kind) return false;
     if (isClass != other.isClass) return false;
     // msgSend is deduped by signature, so this check covers the signature.
@@ -501,11 +527,16 @@ class ObjCMethod {
       originalName.startsWith('new') ||
       originalName.startsWith('alloc') ||
       originalName.contains(_copyRegExp);
+
+  @override
+  String toString() => '$returnType $originalName(${params.join(', ')})';
 }
 
 class ObjCMethodParam {
-  final Type type;
+  Type type;
   final String name;
-  final bool isNullable;
-  ObjCMethodParam(this.type, this.name, {this.isNullable = false});
+  ObjCMethodParam(this.type, this.name);
+
+  @override
+  String toString() => '$type $name';
 }

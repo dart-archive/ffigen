@@ -97,7 +97,9 @@ List<Binding> parseToBindings() {
       0,
       clang_types.CXTranslationUnit_Flags.CXTranslationUnit_SkipFunctionBodies |
           clang_types.CXTranslationUnit_Flags
-              .CXTranslationUnit_DetailedPreprocessingRecord,
+              .CXTranslationUnit_DetailedPreprocessingRecord |
+          clang_types
+              .CXTranslationUnit_Flags.CXTranslationUnit_IncludeAttributedTypes,
     );
 
     if (tu == nullptr) {

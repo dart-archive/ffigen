@@ -116,8 +116,8 @@ Type getCodeGenType(
     case clang_types.CXTypeKind.CXType_FunctionNoProto:
       // Primarily used for function types with zero arguments.
       return _extractFromFunctionProto(cxtype, cursor: originalCursor);
-    case clang_types.CXTypeKind
-          .CXType_ConstantArray: // Primarily used for constant array in struct members.
+    case clang_types.CXTypeKind.CXType_ConstantArray:
+      // Primarily used for constant array in struct members.
       final numElements = clang.clang_getNumElements(cxtype);
       final elementType =
           clang.clang_getArrayElementType(cxtype).toCodeGenType();
@@ -125,13 +125,25 @@ Type getCodeGenType(
       return numElements == 0
           ? IncompleteArray(elementType)
           : ConstantArray(numElements, elementType);
-    case clang_types.CXTypeKind
-          .CXType_IncompleteArray: // Primarily used for incomplete array in function parameters.
+    case clang_types.CXTypeKind.CXType_IncompleteArray:
+      // Primarily used for incomplete array in function parameters.
       return IncompleteArray(
         clang.clang_getArrayElementType(cxtype).toCodeGenType(),
       );
     case clang_types.CXTypeKind.CXType_Bool:
       return BooleanType();
+    case clang_types.CXTypeKind.CXType_Attributed:
+    case clang_types.CXTypeKind.CXType_Unexposed:
+      final innerType = getCodeGenType(
+        clang.clang_Type_getModifiedType(cxtype),
+        ignoreFilter: ignoreFilter,
+        originalCursor: originalCursor,
+      );
+      final isNullable = clang.clang_Type_getNullability(cxtype) ==
+          clang_types.CXTypeNullabilityKind.CXTypeNullability_Nullable;
+      return isNullable && ObjCNullable.isSupported(innerType)
+          ? ObjCNullable(innerType)
+          : innerType;
     default:
       var typeSpellKey =
           clang.clang_getTypeSpelling(cxtype).toStringAndDispose();
