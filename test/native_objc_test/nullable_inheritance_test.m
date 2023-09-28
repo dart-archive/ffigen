@@ -35,6 +35,8 @@
 
 @interface NullableIntermediate : NullableBase {}
 @end
+@implementation NullableIntermediate
+@end
 
 @interface NullableChild : NullableIntermediate {}
 
