@@ -292,7 +292,7 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
     while (superType_ != null) {
       for (final method in methods.values) {
         final superMethod = superType_.methods[method.originalName];
-        if (superMethod != null) {
+        if (superMethod != null && !superMethod.isClass && !method.isClass) {
           if (superMethod.returnType.typealiasType is! ObjCNullable &&
               method.returnType.typealiasType is ObjCNullable) {
             superMethod.returnType = ObjCNullable(superMethod.returnType);
@@ -527,10 +527,16 @@ class ObjCMethod {
       originalName.startsWith('new') ||
       originalName.startsWith('alloc') ||
       originalName.contains(_copyRegExp);
+
+  @override
+  String toString() => '$returnType $originalName(${params.join(', ')})';
 }
 
 class ObjCMethodParam {
   Type type;
   final String name;
   ObjCMethodParam(this.type, this.name);
+
+  @override
+  String toString() => '$type $name';
 }
