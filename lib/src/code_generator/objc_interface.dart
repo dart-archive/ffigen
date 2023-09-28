@@ -293,15 +293,18 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
       for (final method in methods.values) {
         final superMethod = superType_.methods[method.originalName];
         if (superMethod != null) {
-          if (superMethod.returnType.typealiasType is! ObjCNullable && method.returnType.typealiasType is ObjCNullable) {
+          if (superMethod.returnType.typealiasType is! ObjCNullable &&
+              method.returnType.typealiasType is ObjCNullable) {
             superMethod.returnType = ObjCNullable(superMethod.returnType);
           }
-          final numArgs = method.params.length < superMethod.params.length ?
-              method.params.length : superMethod.params.length;
+          final numArgs = method.params.length < superMethod.params.length
+              ? method.params.length
+              : superMethod.params.length;
           for (int i = 0; i < numArgs; ++i) {
             final param = method.params[i];
             final superParam = superMethod.params[i];
-            if (superParam.type.typealiasType is ObjCNullable && param.type.typealiasType is! ObjCNullable) {
+            if (superParam.type.typealiasType is ObjCNullable &&
+                param.type.typealiasType is! ObjCNullable) {
               param.type = ObjCNullable(param.type);
             }
           }
