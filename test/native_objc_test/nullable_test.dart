@@ -15,9 +15,9 @@ import 'util.dart';
 
 void main() {
   late NullableTestObjCLibrary lib;
-  NullableInterface? nullableInterface;
-  NSObject? obj;
-  group('method calls', () {
+  late NullableInterface nullableInterface;
+  late NSObject obj;
+  group('Nullability', () {
     setUpAll(() {
       logWarnings();
       final dylib = File('test/native_objc_test/nullable_test.dylib');
@@ -30,12 +30,12 @@ void main() {
 
     group('Nullable property', () {
       test('Not null', () {
-        nullableInterface!.nullableObjectProperty = obj!;
-        expect(nullableInterface!.nullableObjectProperty, obj!);
+        nullableInterface.nullableObjectProperty = obj;
+        expect(nullableInterface.nullableObjectProperty, obj);
       });
       test('Null', () {
-        nullableInterface!.nullableObjectProperty = null;
-        expect(nullableInterface!.nullableObjectProperty, null);
+        nullableInterface.nullableObjectProperty = null;
+        expect(nullableInterface.nullableObjectProperty, null);
       });
     });
 
@@ -51,7 +51,7 @@ void main() {
     group('Nullable arguments', () {
       test('Not null', () {
         expect(
-            NullableInterface.isNullWithNullableNSObjectArg_(lib, obj!), false);
+            NullableInterface.isNullWithNullableNSObjectArg_(lib, obj), false);
       });
       test('Null', () {
         expect(
@@ -62,7 +62,7 @@ void main() {
     group('Not-nullable arguments', () {
       test('Not null', () {
         expect(
-            NullableInterface.isNullWithNotNullableNSObjectPtrArg_(lib, obj!),
+            NullableInterface.isNullWithNotNullableNSObjectPtrArg_(lib, obj),
             false);
       });
     });

@@ -258,6 +258,7 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
     if (superType != null) {
       superType!.addDependencies(dependencies);
       _copyMethodsFromSuperType();
+      _fixNullabilityOfOverriddenMethods();
     }
 
     for (final m in methods.values) {
@@ -278,6 +279,35 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
       } else if (_isInstanceType(m.returnType)) {
         addMethod(m);
       }
+    }
+  }
+
+  void _fixNullabilityOfOverriddenMethods() {
+    // ObjC ignores nullability when deciding if an override for an inherited
+    // method is valid. But in Dart it's invalid to override a method and change
+    // it's return type from non-null to nullable, or its arg type from nullable
+    // to non-null. So in these cases we have to make the non-null type
+    // nullable, to avoid Dart compile errors.
+    var superType_ = superType;
+    while (superType_ != null) {
+      for (final method in methods.values) {
+        final superMethod = superType_.methods[method.originalName];
+        if (superMethod != null) {
+          if (superMethod.returnType.typealiasType is! ObjCNullable && method.returnType.typealiasType is ObjCNullable) {
+            superMethod.returnType = ObjCNullable(superMethod.returnType);
+          }
+          final numArgs = method.params.length < superMethod.params.length ?
+              method.params.length : superMethod.params.length;
+          for (int i = 0; i < numArgs; ++i) {
+            final param = method.params[i];
+            final superParam = superMethod.params[i];
+            if (superParam.type.typealiasType is ObjCNullable && param.type.typealiasType is! ObjCNullable) {
+              param.type = ObjCNullable(param.type);
+            }
+          }
+        }
+      }
+      superType_ = superType_.superType;
     }
   }
 
@@ -428,7 +458,7 @@ class ObjCMethod {
   final String? dartDoc;
   final String originalName;
   final ObjCProperty? property;
-  final Type returnType;
+  Type returnType;
   final List<ObjCMethodParam> params;
   final ObjCMethodKind kind;
   final bool isClass;
@@ -497,7 +527,7 @@ class ObjCMethod {
 }
 
 class ObjCMethodParam {
-  final Type type;
+  Type type;
   final String name;
   ObjCMethodParam(this.type, this.name);
 }

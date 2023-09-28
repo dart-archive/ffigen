@@ -6,7 +6,8 @@ import 'package:ffigen/src/code_generator.dart';
 
 import 'writer.dart';
 
-/// An ObjC type annotated with nullable.
+/// An ObjC type annotated with nullable. Eg:
+/// +(nullable NSObject*) methodWithNullableResult;
 class ObjCNullable extends Type {
   Type child;
 
