@@ -10854,9 +10854,11 @@ final class sqlite3_vfs extends ffi.Struct {
 
 typedef sqlite3_int64 = sqlite_int64;
 typedef sqlite_int64 = ffi.LongLong;
+typedef sqlite_int64_dart = int;
 typedef sqlite3_syscall_ptr
     = ffi.Pointer<ffi.NativeFunction<sqlite3_syscall_ptr_function>>;
 typedef sqlite3_syscall_ptr_function = ffi.Void Function();
+typedef sqlite3_syscall_ptr_function_dart = void Function();
 
 final class sqlite3_mem_methods extends ffi.Struct {
   /// Memory allocation function
@@ -10899,6 +10901,7 @@ final class sqlite3_mem_methods extends ffi.Struct {
 
 typedef sqlite3_uint64 = sqlite_uint64;
 typedef sqlite_uint64 = ffi.UnsignedLongLong;
+typedef sqlite_uint64_dart = int;
 
 final class sqlite3_stmt extends ffi.Opaque {}
 
@@ -11507,6 +11510,7 @@ final class sqlite3_rtree_geometry extends ffi.Struct {
 }
 
 typedef sqlite3_rtree_dbl = ffi.Double;
+typedef sqlite3_rtree_dbl_dart = double;
 
 /// A pointer to a structure of the following type is passed as the
 /// argument to scored geometry callback registered using
@@ -12016,6 +12020,12 @@ typedef fts5_extension_function_function = ffi.Void Function(
     ffi.Pointer<Fts5Context> pFts,
     ffi.Pointer<sqlite3_context> pCtx,
     ffi.Int nVal,
+    ffi.Pointer<ffi.Pointer<sqlite3_value>> apVal);
+typedef fts5_extension_function_function_dart = void Function(
+    ffi.Pointer<Fts5ExtensionApi> pApi,
+    ffi.Pointer<Fts5Context> pFts,
+    ffi.Pointer<sqlite3_context> pCtx,
+    int nVal,
     ffi.Pointer<ffi.Pointer<sqlite3_value>> apVal);
 
 const String SQLITE_VERSION = '3.32.3';
