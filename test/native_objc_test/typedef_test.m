@@ -13,8 +13,7 @@
 typedef SomeClass* SomeClassPtr;
 
 @interface AnotherClass : NSObject {}
-@property SomeClassPtr property1;
-@property TypedefNotExplicitlyIncluded property2;
+@property SomeClassPtr property;
 @end
 
 @implementation AnotherClass

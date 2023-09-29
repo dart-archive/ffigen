@@ -93,7 +93,7 @@ class Func extends LookUpBinding {
       _exposedDartFunctionTypealias = Typealias(
         name: 'Dart$upperCaseName',
         type: functionType,
-        useDartType: true,
+        useFfiDartType: true,
         isInternal: true,
       );
     }

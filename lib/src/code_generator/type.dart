@@ -70,10 +70,6 @@ abstract class Type {
 bool sameFfiDartTypeAndCType(Type t, Writer w) =>
     t.getCType(w) == t.getFfiDartType(w);
 
-/// Function to check if the Dart type and C type string are same.
-bool sameDartTypeAndCType(Type t, Writer w) =>
-    t.getCType(w) == t.getDartType(w);
-
 /// Base class for all Type bindings.
 ///
 /// Since Dart doesn't have multiple inheritance, this type exists so that we
