@@ -3,13 +3,12 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:ffigen/ffigen.dart';
 import 'package:logging/logging.dart';
-import './test_utils.dart';
+import 'test_utils.dart';
 
 const usage = r'''Regenerates the Dart FFI bindings used in tests and examples.
 
@@ -19,11 +18,10 @@ e.g. with this command:
 $ dart run test/setup.dart && dart run test/regen.dart && dart test
 ''';
 
-Future<void> _regenConfig(
-    String yamlConfigPath, String bindingOutputPath) async {
+void _regenConfig(String yamlConfigPath, String bindingOutputPath) {
   final yamlConfig = File(yamlConfigPath).absolute;
   final bindingOutput = File(bindingOutputPath).absolute;
-  await withChDir(yamlConfig.path, () {
+  withChDir(yamlConfig.path, () {
     final config = testConfigFromPath(yamlConfig.path);
     final library = parse(config);
     library.generateFile(bindingOutput);
@@ -54,12 +52,12 @@ Future<void> main(List<String> args) async {
     print('${record.level.name}: ${record.time}: ${record.message}');
   });
 
-  await _regenConfig('test/native_test/config.yaml',
+  _regenConfig('test/native_test/config.yaml',
       'test/native_test/_expected_native_test_bindings.dart');
-  await _regenConfig('example/libclang-example/config.yaml',
+  _regenConfig('example/libclang-example/config.yaml',
       'example/libclang-example/generated_bindings.dart');
-  await _regenConfig(
+  _regenConfig(
       'example/simple/config.yaml', 'example/simple/generated_bindings.dart');
-  await _regenConfig('example/c_json/config.yaml',
+  _regenConfig('example/c_json/config.yaml',
       'example/c_json/cjson_generated_bindings.dart');
 }
