@@ -31,12 +31,12 @@ void main() {
       expect(
           output,
           contains(
-              'static NSURL fileURLWithPath_(AVFAudio _lib, NSString? path) {'));
+              'static NSURL fileURLWithPath_(AVFAudio _lib, NSString path) {'));
       expect(output, contains('class AVAudioPlayer extends NSObject {'));
       expect(
           output,
-          contains('AVAudioPlayer initWithContentsOfURL_error_('
-              'NSURL? url, ffi.Pointer<ffi.Pointer<ObjCObject>> outError) {'));
+          contains('AVAudioPlayer? initWithContentsOfURL_error_('
+              'NSURL url, ffi.Pointer<ffi.Pointer<ObjCObject>> outError) {'));
       expect(output, contains('double get duration {'));
       expect(output, contains('bool play() {'));
     });
