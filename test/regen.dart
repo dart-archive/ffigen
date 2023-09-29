@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/args.dart';
@@ -18,12 +19,15 @@ e.g. with this command:
 $ dart run test/setup.dart && dart run test/regen.dart && dart test
 ''';
 
-Future<void> _regenConfig(File yamlConfig, File bindingOutput) async {
-  yamlConfig = yamlConfig.absolute;
-  bindingOutput = bindingOutput.absolute;
-  final config = testConfigFromPath(yamlConfig.path);
-  final library = parse(config);
-  library.generateFile(bindingOutput);
+Future<void> _regenConfig(
+    String yamlConfigPath, String bindingOutputPath) async {
+  final yamlConfig = File(yamlConfigPath).absolute;
+  final bindingOutput = File(bindingOutputPath).absolute;
+  await withChDir(yamlConfig.path, () {
+    final config = testConfigFromPath(yamlConfig.path);
+    final library = parse(config);
+    library.generateFile(bindingOutput);
+  });
 }
 
 Future<void> main(List<String> args) async {
@@ -50,25 +54,12 @@ Future<void> main(List<String> args) async {
     print('${record.level.name}: ${record.time}: ${record.message}');
   });
 
-  final nativeTestConfig = File('test/native_test/config.yaml').absolute;
-  final nativeTestOut =
-      File('test/native_test/_expected_native_test_bindings.dart').absolute;
-  await withChDir(nativeTestConfig.path,
-      () => _regenConfig(nativeTestConfig, nativeTestOut));
-
-  final libclangConfig = File('example/libclang-example/config.yaml').absolute;
-  final libclangOut =
-      File('example/libclang-example/generated_bindings.dart').absolute;
-  await withChDir(
-      libclangConfig.path, () => _regenConfig(libclangConfig, libclangOut));
-
-  final simpleConfig = File('example/simple/config.yaml').absolute;
-  final simpleOut = File('example/simple/generated_bindings.dart').absolute;
-  await withChDir(
-      simpleConfig.path, () => _regenConfig(simpleConfig, simpleOut));
-
-  final cJsonConfig = File('example/c_json/config.yaml').absolute;
-  final cJsonOut =
-      File('example/c_json/cjson_generated_bindings.dart').absolute;
-  await withChDir(cJsonConfig.path, () => _regenConfig(cJsonConfig, cJsonOut));
+  await _regenConfig('test/native_test/config.yaml',
+      'test/native_test/_expected_native_test_bindings.dart');
+  await _regenConfig('example/libclang-example/config.yaml',
+      'example/libclang-example/generated_bindings.dart');
+  await _regenConfig(
+      'example/simple/config.yaml', 'example/simple/generated_bindings.dart');
+  await _regenConfig('example/c_json/config.yaml',
+      'example/c_json/cjson_generated_bindings.dart');
 }

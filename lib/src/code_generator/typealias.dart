@@ -102,7 +102,8 @@ class Typealias extends BindingType {
     final typeString =
         _useFfiDartType ? type.getFfiDartType(w) : type.getCType(w);
     final dartTypeString = type.getDartType(w);
-    if (_dartAliasName == null && typeString != dartTypeString) {
+    if (_dartAliasName == null && type is! Typealias &&
+        typeString != dartTypeString) {
       _dartAliasName = w.topLevelUniqueNamer.makeUnique('${name}_dart');
     }
 
