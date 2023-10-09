@@ -17,6 +17,7 @@ import 'writer.dart';
 /// ```
 class Typealias extends BindingType {
   final Type type;
+  bool _genFfiDartType;
   String? _ffiDartAliasName;
   String? _dartAliasName;
 
@@ -73,11 +74,7 @@ class Typealias extends BindingType {
     required this.type,
     bool genFfiDartType = false,
     bool isInternal = false,
-  })  : _ffiDartAliasName = genFfiDartType ? 'Dart$name' : null,
-        _dartAliasName =
-            !genFfiDartType && type is! Typealias && !type.sameDartAndCType
-                ? 'Dart$name'
-                : null,
+  })  : _genFfiDartType = genFfiDartType,
         super(
           usr: usr,
           name: genFfiDartType ? 'Native$name' : name,
@@ -103,6 +100,16 @@ class Typealias extends BindingType {
 
   @override
   BindingString toBindingString(Writer w) {
+    if (_ffiDartAliasName == null && _genFfiDartType) {
+      _ffiDartAliasName = w.topLevelUniqueNamer.makeUnique('Dart${name}');
+    }
+    if (_dartAliasName == null &&
+        !_genFfiDartType &&
+        type is! Typealias &&
+        !type.sameDartAndCType) {
+      _dartAliasName = w.topLevelUniqueNamer.makeUnique('Dart${name}');
+    }
+
     final sb = StringBuffer();
     if (dartDoc != null) {
       sb.write(makeDartDoc(dartDoc!));
