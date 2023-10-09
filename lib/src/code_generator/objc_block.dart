@@ -226,5 +226,11 @@ class $name extends _ObjCBlockBase {
   String getDartType(Writer w) => name;
 
   @override
+  bool get sameFfiDartAndCType => true;
+
+  @override
+  bool get sameDartAndCType => false;
+
+  @override
   String toString() => '($returnType (^)(${argTypes.join(', ')}))';
 }

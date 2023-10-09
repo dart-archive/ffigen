@@ -71,4 +71,3 @@ final class S extends ffi.Struct {
 typedef ArithmeticOperation
     = ffi.Pointer<ffi.NativeFunction<ArithmeticOperation_function>>;
 typedef ArithmeticOperation_function = ffi.Int Function(ffi.Int a, ffi.Int b);
-typedef ArithmeticOperation_function_dart = int Function(int a, int b);

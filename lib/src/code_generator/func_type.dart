@@ -82,6 +82,18 @@ class FunctionType extends Type {
   }
 
   @override
+  bool get sameFfiDartAndCType =>
+      returnType.sameFfiDartAndCType &&
+      parameters.every((p) => p.type.sameFfiDartAndCType) &&
+      varArgParameters.every((p) => p.type.sameFfiDartAndCType);
+
+  @override
+  bool get sameDartAndCType =>
+      returnType.sameDartAndCType &&
+      parameters.every((p) => p.type.sameDartAndCType) &&
+      varArgParameters.every((p) => p.type.sameDartAndCType);
+
+  @override
   String toString() => _getCacheKeyString(false, (Type t) => t.toString());
 
   @override
@@ -138,6 +150,9 @@ class NativeFunc extends Type {
 
   @override
   String getFfiDartType(Writer w) => getCType(w);
+
+  @override
+  bool get sameFfiDartAndCType => true;
 
   @override
   String toString() => 'NativeFunction<${_type.toString()}>';

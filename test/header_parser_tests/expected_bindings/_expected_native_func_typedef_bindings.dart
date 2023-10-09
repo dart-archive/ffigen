@@ -78,7 +78,6 @@ typedef WithTypedefReturnType_function = InsideReturnType Function();
 typedef InsideReturnType
     = ffi.Pointer<ffi.NativeFunction<InsideReturnType_function>>;
 typedef InsideReturnType_function = ffi.Void Function();
-typedef InsideReturnType_function_dart = void Function();
 
 final class Struct2 extends ffi.Struct {
   external VoidFuncPointer constFuncPointer;
@@ -87,4 +86,3 @@ final class Struct2 extends ffi.Struct {
 typedef VoidFuncPointer
     = ffi.Pointer<ffi.NativeFunction<VoidFuncPointer_function>>;
 typedef VoidFuncPointer_function = ffi.Void Function();
-typedef VoidFuncPointer_function_dart = void Function();

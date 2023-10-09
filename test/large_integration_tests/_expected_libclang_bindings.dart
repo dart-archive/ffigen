@@ -7434,8 +7434,6 @@ typedef CXCursorVisitor
     = ffi.Pointer<ffi.NativeFunction<CXCursorVisitor_function>>;
 typedef CXCursorVisitor_function = ffi.Int32 Function(
     CXCursor cursor, CXCursor parent, CXClientData client_data);
-typedef CXCursorVisitor_function_dart = int Function(
-    CXCursor cursor, CXCursor parent, CXClientData client_data);
 
 /// Opaque pointer representing client data that will be passed through to
 /// various callbacks and visitors.
@@ -7769,11 +7767,6 @@ typedef CXInclusionVisitor_function = ffi.Void Function(
     CXFile included_file,
     ffi.Pointer<CXSourceLocation> inclusion_stack,
     ffi.UnsignedInt include_len,
-    CXClientData client_data);
-typedef CXInclusionVisitor_function_dart = void Function(
-    CXFile included_file,
-    ffi.Pointer<CXSourceLocation> inclusion_stack,
-    int include_len,
     CXClientData client_data);
 
 abstract class CXEvalResultKind {
@@ -8234,8 +8227,6 @@ abstract class CXIndexOptFlags {
 typedef CXFieldVisitor
     = ffi.Pointer<ffi.NativeFunction<CXFieldVisitor_function>>;
 typedef CXFieldVisitor_function = ffi.Int32 Function(
-    CXCursor C, CXClientData client_data);
-typedef CXFieldVisitor_function_dart = int Function(
     CXCursor C, CXClientData client_data);
 
 const int CINDEX_VERSION_MAJOR = 0;

@@ -1249,7 +1249,6 @@ final class cJSON_Hooks extends ffi.Struct {
 }
 
 typedef cJSON_bool = ffi.Int;
-typedef cJSON_bool_dart = int;
 
 const int CJSON_VERSION_MAJOR = 1;
 

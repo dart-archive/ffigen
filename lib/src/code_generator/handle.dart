@@ -19,5 +19,8 @@ class HandleType extends Type {
   String getFfiDartType(Writer w) => 'Object';
 
   @override
+  bool get sameFfiDartAndCType => false;
+
+  @override
   String toString() => 'Handle';
 }

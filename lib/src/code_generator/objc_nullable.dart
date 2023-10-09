@@ -39,6 +39,12 @@ class ObjCNullable extends Type {
   String getDartType(Writer w) => '${child.getDartType(w)}?';
 
   @override
+  bool get sameFfiDartAndCType => child.sameFfiDartAndCType;
+
+  @override
+  bool get sameDartAndCType => false;
+
+  @override
   String toString() => '$child?';
 
   @override
