@@ -101,13 +101,13 @@ class Typealias extends BindingType {
   @override
   BindingString toBindingString(Writer w) {
     if (_ffiDartAliasName == null && _genFfiDartType) {
-      _ffiDartAliasName = w.topLevelUniqueNamer.makeUnique('Dart${name}');
+      _ffiDartAliasName = w.topLevelUniqueNamer.makeUnique('Dart$name');
     }
     if (_dartAliasName == null &&
         !_genFfiDartType &&
         type is! Typealias &&
         !type.sameDartAndCType) {
-      _dartAliasName = w.topLevelUniqueNamer.makeUnique('Dart${name}');
+      _dartAliasName = w.topLevelUniqueNamer.makeUnique('Dart$name');
     }
 
     final sb = StringBuffer();
