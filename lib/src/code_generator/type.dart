@@ -48,6 +48,12 @@ abstract class Type {
   /// as getFfiDartType. For ObjC bindings this refers to the wrapper object.
   String getDartType(Writer w) => getFfiDartType(w);
 
+  /// Returns whether the FFI dart type and C type string are same.
+  bool get sameFfiDartAndCType;
+
+  /// Returns whether the dart type and C type string are same.
+  bool get sameDartAndCType => sameFfiDartAndCType;
+
   /// Returns the string representation of the Type, for debugging purposes
   /// only. This string should not be printed as generated code.
   @override
@@ -65,9 +71,6 @@ abstract class Type {
   /// that default values aren't supported for this type, eg void.
   String? getDefaultValue(Writer w, String nativeLib) => null;
 }
-
-/// Function to check if the dart and C type string are same.
-bool sameDartAndCType(Type t, Writer w) => t.getCType(w) == t.getFfiDartType(w);
 
 /// Base class for all Type bindings.
 ///
@@ -108,6 +111,9 @@ abstract class BindingType extends NoLookUpBinding implements Type {
   String getDartType(Writer w) => getFfiDartType(w);
 
   @override
+  bool get sameDartAndCType => sameFfiDartAndCType;
+
+  @override
   String toString() => originalName;
 
   @override
@@ -125,4 +131,7 @@ class UnimplementedType extends Type {
 
   @override
   String toString() => '(Unimplemented: $reason)';
+
+  @override
+  bool get sameFfiDartAndCType => true;
 }

@@ -57,6 +57,9 @@ class NativeType extends Type {
   String getFfiDartType(Writer w) => _dartType;
 
   @override
+  bool get sameFfiDartAndCType => _cType == _dartType;
+
+  @override
   String toString() => _cType;
 
   @override

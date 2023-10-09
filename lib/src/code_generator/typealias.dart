@@ -121,12 +121,18 @@ class Typealias extends BindingType {
   String getFfiDartType(Writer w) {
     // Typealias cannot be used by name in Dart types unless both the C and Dart
     // type of the underlying types are same.
-    if (sameDartAndCType(type, w)) {
+    if (type.sameFfiDartAndCType) {
       return name;
     } else {
       return type.getFfiDartType(w);
     }
   }
+
+  @override
+  bool get sameFfiDartAndCType => type.sameFfiDartAndCType;
+
+  @override
+  bool get sameDartAndCType => type.sameDartAndCType;
 
   @override
   String cacheKey() => type.cacheKey();
