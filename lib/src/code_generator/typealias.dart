@@ -17,28 +17,28 @@ import 'writer.dart';
 /// ```
 class Typealias extends BindingType {
   final Type type;
-  final bool _useFfiDartType;
+  String? _ffiDartAliasName;
   String? _dartAliasName;
 
+  /// Creates a Typealias.
+  ///
+  /// If [genFfiDartType] is true, a binding is generated for the Ffi Dart type
+  /// in addition to the C type. See [Type.getFfiDartType].
   factory Typealias({
     String? usr,
     String? originalName,
     String? dartDoc,
     required String name,
     required Type type,
-
-    /// If true, the binding string uses Dart type instead of C type.
-    ///
-    /// E.g if C type is ffi.Void func(ffi.Int32), Dart type is void func(int).
-    bool useFfiDartType = false,
+    bool genFfiDartType = false,
     bool isInternal = false,
   }) {
     final funcType = _getFunctionTypeFromPointer(type);
     if (funcType != null) {
       type = PointerType(NativeFunc(Typealias._(
-        name: '${name}_function',
+        name: '${name}Function',
         type: funcType,
-        useFfiDartType: useFfiDartType,
+        genFfiDartType: genFfiDartType,
         isInternal: isInternal,
       )));
     }
@@ -50,7 +50,7 @@ class Typealias extends BindingType {
         dartDoc: dartDoc,
         name: name,
         type: type,
-        useFfiDartType: useFfiDartType,
+        genFfiDartType: genFfiDartType,
         isInternal: isInternal,
       );
     }
@@ -60,7 +60,7 @@ class Typealias extends BindingType {
       dartDoc: dartDoc,
       name: name,
       type: type,
-      useFfiDartType: useFfiDartType,
+      genFfiDartType: genFfiDartType,
       isInternal: isInternal,
     );
   }
@@ -71,12 +71,12 @@ class Typealias extends BindingType {
     String? dartDoc,
     required String name,
     required this.type,
-    bool useFfiDartType = false,
+    bool genFfiDartType = false,
     bool isInternal = false,
-  })  : _useFfiDartType = useFfiDartType,
+  })  : _ffiDartAliasName = genFfiDartType ? 'Dart$name' : null,
         super(
           usr: usr,
-          name: name,
+          name: genFfiDartType ? 'Native$name' : name,
           dartDoc: dartDoc,
           originalName: originalName,
           isInternal: isInternal,
@@ -100,7 +100,7 @@ class Typealias extends BindingType {
   @override
   BindingString toBindingString(Writer w) {
     final typeString =
-        _useFfiDartType ? type.getFfiDartType(w) : type.getCType(w);
+        _genFfiDartType ? type.getFfiDartType(w) : type.getCType(w);
     final dartTypeString = type.getDartType(w);
     if (_dartAliasName == null &&
         type is! Typealias &&
@@ -163,11 +163,7 @@ class ObjCInstanceType extends Typealias {
     String? dartDoc,
     required String name,
     required Type type,
-
-    /// If true, the binding string uses Dart type instead of C type.
-    ///
-    /// E.g if C type is ffi.Void func(ffi.Int32), Dart type is void func(int).
-    bool useFfiDartType = false,
+    bool genFfiDartType = false,
     bool isInternal = false,
   }) : super._(
           usr: usr,
@@ -175,7 +171,7 @@ class ObjCInstanceType extends Typealias {
           dartDoc: dartDoc,
           name: name,
           type: type,
-          useFfiDartType: useFfiDartType,
+          genFfiDartType: genFfiDartType,
           isInternal: isInternal,
         );
 }
