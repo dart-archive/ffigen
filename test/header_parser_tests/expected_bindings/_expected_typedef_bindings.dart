@@ -93,7 +93,9 @@ final class Struct1 extends ffi.Struct {
 
 typedef NamedFunctionProto
     = ffi.Pointer<ffi.NativeFunction<NamedFunctionProtoFunction>>;
+
 typedef NamedFunctionProtoFunction = ffi.Void Function();
+
 typedef DartNamedFunctionProtoFunction = void Function();
 
 final class AnonymousStructInTypedef extends ffi.Opaque {}
@@ -101,6 +103,7 @@ final class AnonymousStructInTypedef extends ffi.Opaque {}
 final class _NamedStructInTypedef extends ffi.Opaque {}
 
 typedef NTyperef1 = ExcludedStruct;
+
 typedef ExcludedStruct = _ExcludedStruct;
 
 final class _ExcludedStruct extends ffi.Opaque {}
@@ -114,6 +117,7 @@ abstract class _NamedEnumInTypedef {
 }
 
 typedef NestingASpecifiedType = ffi.IntPtr;
+
 typedef DartNestingASpecifiedType = int;
 
 final class Struct2 extends ffi.Opaque {}

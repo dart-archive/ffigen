@@ -6,24 +6,30 @@ import 'dart:ffi' as ffi;
 
 final class S extends ffi.Struct {
   external ffi.Pointer<ffi.NativeFunction<ffi.Int Function()>> func1;
+
   external ffi
       .Pointer<ffi.NativeFunction<ffi.Int Function(ffi.Int a, ffi.Int b)>>
       comparator;
+
   external ffi.Pointer<
       ffi.NativeFunction<
           ffi.Int Function(ffi.Double a, ffi.Float b, ffi.Pointer<ffi.Char> c,
               ffi.Int d, ffi.LongLong e)>> veryManyArguments;
+
   external ffi.Pointer<
           ffi.NativeFunction<
               ffi.Int Function(
                   ffi.Int, ffi.Int, ffi.Int, ffi.Float, ffi.Pointer<ffi.Char>)>>
       argsDontHaveNames;
+
   external ArithmeticOperation operation;
+
   external ffi.Pointer<
           ffi.Pointer<
               ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ffi.Int> array, ffi.Int len)>>>
       sortPtr;
+
   external ffi.Pointer<
       ffi.NativeFunction<
           ffi.Void Function(
@@ -31,9 +37,11 @@ final class S extends ffi.Struct {
               ffi.Int len,
               ffi.Pointer<ffi.NativeFunction<ffi.Int Function(ffi.Int x)>>
                   evaluator)>> sortBy;
+
   external ffi.Pointer<
           ffi.NativeFunction<ffi.Void Function(ffi.Int, ffi.Int, ffi.Char)>>
       improperlyDeclaredParams;
+
   external ffi.Pointer<
       ffi.NativeFunction<
           ffi.Void Function(
@@ -42,15 +50,18 @@ final class S extends ffi.Struct {
                   primaryEvaluator,
               ffi.Pointer<ffi.NativeFunction<ffi.Int Function(ffi.Int x)>>
                   fallbackEvaluator)>> sortByWithFallback;
+
   @ffi.Array.multi([2])
   external ffi.Array<
           ffi
           .Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Char, ffi.Char)>>>
       manyFunctions;
+
   external ffi.Pointer<
       ffi.NativeFunction<
           ffi.Pointer<ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Int)>>
               Function(ffi.Int, ffi.Int)>> functionReturningFunction;
+
   external ffi.Pointer<
       ffi.NativeFunction<
           ffi.Pointer<ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Int)>>
@@ -59,5 +70,7 @@ final class S extends ffi.Struct {
 
 typedef ArithmeticOperation
     = ffi.Pointer<ffi.NativeFunction<ArithmeticOperationFunction>>;
+
 typedef ArithmeticOperationFunction = ffi.Int Function(ffi.Int a, ffi.Int b);
+
 typedef DartArithmeticOperationFunction = int Function(int a, int b);

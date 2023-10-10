@@ -17,7 +17,6 @@ import 'writer.dart';
 /// ```
 class Typealias extends BindingType {
   final Type type;
-  bool _genFfiDartType;
   String? _ffiDartAliasName;
   String? _dartAliasName;
 
@@ -74,7 +73,11 @@ class Typealias extends BindingType {
     required this.type,
     bool genFfiDartType = false,
     bool isInternal = false,
-  })  : _genFfiDartType = genFfiDartType,
+  })  : _ffiDartAliasName = genFfiDartType ? 'Dart$name' : null,
+        _dartAliasName =
+            (!genFfiDartType && type is! Typealias && !type.sameDartAndCType)
+                ? 'Dart$name'
+                : null,
         super(
           usr: usr,
           name: genFfiDartType ? 'Native$name' : name,
@@ -100,26 +103,23 @@ class Typealias extends BindingType {
 
   @override
   BindingString toBindingString(Writer w) {
-    if (_ffiDartAliasName == null && _genFfiDartType) {
-      _ffiDartAliasName = w.topLevelUniqueNamer.makeUnique('Dart$name');
+    if (_ffiDartAliasName != null) {
+      _ffiDartAliasName = w.topLevelUniqueNamer.makeUnique(_ffiDartAliasName!);
     }
-    if (_dartAliasName == null &&
-        !_genFfiDartType &&
-        type is! Typealias &&
-        !type.sameDartAndCType) {
-      _dartAliasName = w.topLevelUniqueNamer.makeUnique('Dart$name');
+    if (_dartAliasName != null) {
+      _dartAliasName = w.topLevelUniqueNamer.makeUnique(_dartAliasName!);
     }
 
     final sb = StringBuffer();
     if (dartDoc != null) {
       sb.write(makeDartDoc(dartDoc!));
     }
-    sb.write('typedef $name = ${type.getCType(w)};\n');
+    sb.write('typedef $name = ${type.getCType(w)};\n\n');
     if (_ffiDartAliasName != null) {
-      sb.write('typedef $_ffiDartAliasName = ${type.getFfiDartType(w)};\n');
+      sb.write('typedef $_ffiDartAliasName = ${type.getFfiDartType(w)};\n\n');
     }
     if (_dartAliasName != null) {
-      sb.write('typedef $_dartAliasName = ${type.getDartType(w)};\n');
+      sb.write('typedef $_dartAliasName = ${type.getDartType(w)};\n\n');
     }
     return BindingString(
         type: BindingStringType.typeDef, string: sb.toString());
