@@ -389,6 +389,12 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
   @override
   String getDartType(Writer w) => name;
 
+  @override
+  bool get sameFfiDartAndCType => true;
+
+  @override
+  bool get sameDartAndCType => false;
+
   // Utils for converting between the internal types passed to native code, and
   // the external types visible to the user. For example, ObjCInterfaces are
   // passed to native as Pointer<ObjCObject>, but the user sees the Dart wrapper

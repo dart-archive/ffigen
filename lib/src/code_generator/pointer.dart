@@ -31,6 +31,10 @@ class PointerType extends Type {
   String getCType(Writer w) =>
       '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
 
+  // Both the C type and the FFI Dart type are 'Pointer<$cType>'.
+  @override
+  bool get sameFfiDartAndCType => true;
+
   @override
   String toString() => '$child*';
 
@@ -79,4 +83,7 @@ class ObjCObjectPointer extends PointerType {
 
   @override
   String getDartType(Writer w) => 'NSObject';
+
+  @override
+  bool get sameDartAndCType => false;
 }
