@@ -57,5 +57,4 @@ final class _SymbolAddresses extends ffi.Opaque {}
 abstract class Bindings {}
 
 typedef Native_library = ffi.Void Function();
-
 typedef Dart_library = void Function();

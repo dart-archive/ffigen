@@ -70,7 +70,5 @@ final class S extends ffi.Struct {
 
 typedef ArithmeticOperation
     = ffi.Pointer<ffi.NativeFunction<ArithmeticOperationFunction>>;
-
 typedef ArithmeticOperationFunction = ffi.Int Function(ffi.Int a, ffi.Int b);
-
 typedef DartArithmeticOperationFunction = int Function(int a, int b);

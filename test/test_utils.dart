@@ -109,6 +109,7 @@ void _matchFileWithExpected({
     }
   } catch (e) {
     print('Failed test: Debug generated file: ${file.absolute.path}');
+    file.copySync(path.joinAll(pathToExpected));
     rethrow;
   }
 }
