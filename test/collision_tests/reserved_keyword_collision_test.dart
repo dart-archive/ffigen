@@ -45,7 +45,8 @@ void main() {
         ),
         Typealias(name: 'var', type: NativeType(SupportedNativeType.Void)),
       ]);
-      matchLibraryWithExpected(library, 'reserved_keyword_collision_test_output.dart', [
+      matchLibraryWithExpected(
+          library, 'reserved_keyword_collision_test_output.dart', [
         'test',
         'collision_tests',
         'expected_bindings',

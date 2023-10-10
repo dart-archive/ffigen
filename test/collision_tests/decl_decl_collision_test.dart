@@ -53,7 +53,8 @@ void main() {
         Struct(name: 'ffi'),
         Func(name: 'ffi1', returnType: NativeType(SupportedNativeType.Void)),
       ]);
-      matchLibraryWithExpected(library, 'decl_decl_collision_test_output.dart', [
+      matchLibraryWithExpected(
+          library, 'decl_decl_collision_test_output.dart', [
         'test',
         'collision_tests',
         'expected_bindings',
