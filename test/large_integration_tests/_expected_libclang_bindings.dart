@@ -7432,10 +7432,8 @@ abstract class CXChildVisitResult {
 /// Visitor invoked for each cursor found by a traversal.
 typedef CXCursorVisitor
     = ffi.Pointer<ffi.NativeFunction<CXCursorVisitorFunction>>;
-
 typedef CXCursorVisitorFunction = ffi.Int32 Function(
     CXCursor cursor, CXCursor parent, CXClientData client_data);
-
 typedef DartCXCursorVisitorFunction = int Function(
     CXCursor cursor, CXCursor parent, CXClientData client_data);
 
@@ -7767,13 +7765,11 @@ abstract class CXCompletionContext {
 /// clang_getInclusions()).
 typedef CXInclusionVisitor
     = ffi.Pointer<ffi.NativeFunction<CXInclusionVisitorFunction>>;
-
 typedef CXInclusionVisitorFunction = ffi.Void Function(
     CXFile included_file,
     ffi.Pointer<CXSourceLocation> inclusion_stack,
     ffi.UnsignedInt include_len,
     CXClientData client_data);
-
 typedef DartCXInclusionVisitorFunction = void Function(
     CXFile included_file,
     ffi.Pointer<CXSourceLocation> inclusion_stack,
@@ -8237,10 +8233,8 @@ abstract class CXIndexOptFlags {
 /// Visitor invoked for each field found by a traversal.
 typedef CXFieldVisitor
     = ffi.Pointer<ffi.NativeFunction<CXFieldVisitorFunction>>;
-
 typedef CXFieldVisitorFunction = ffi.Int32 Function(
     CXCursor C, CXClientData client_data);
-
 typedef DartCXFieldVisitorFunction = int Function(
     CXCursor C, CXClientData client_data);
 
