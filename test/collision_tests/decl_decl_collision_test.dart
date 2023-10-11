@@ -13,7 +13,7 @@ void main() {
       logWarnings(Level.SEVERE);
     });
     test('declaration conflict', () {
-      final l1 = Library(name: 'Bindings', bindings: [
+      final library = Library(name: 'Bindings', bindings: [
         Struct(name: 'TestStruct'),
         Struct(name: 'TestStruct'),
         EnumClass(name: 'TestEnum'),
@@ -53,49 +53,13 @@ void main() {
         Struct(name: 'ffi'),
         Func(name: 'ffi1', returnType: NativeType(SupportedNativeType.Void)),
       ]);
-      final l2 = Library(name: 'Bindings', bindings: [
-        Struct(name: 'TestStruct'),
-        Struct(name: 'TestStruct1'),
-        EnumClass(name: 'TestEnum'),
-        EnumClass(name: 'TestEnum1'),
-        Func(
-            name: 'testFunc',
-            originalName: 'testFunc',
-            returnType: NativeType(SupportedNativeType.Void)),
-        Func(
-            name: 'testFunc1',
-            originalName: 'testFunc',
-            returnType: NativeType(SupportedNativeType.Void)),
-        Constant(
-          originalName: 'Test_Macro',
-          name: 'Test_Macro',
-          rawType: 'int',
-          rawValue: '0',
-        ),
-        Constant(
-          originalName: 'Test_Macro',
-          name: 'Test_Macro1',
-          rawType: 'int',
-          rawValue: '0',
-        ),
-        Typealias(
-            name: 'testAlias', type: NativeType(SupportedNativeType.Void)),
-        Typealias(
-            name: 'testAlias1', type: NativeType(SupportedNativeType.Void)),
-        Struct(name: 'testCrossDecl', originalName: 'testCrossDecl'),
-        Func(
-            name: 'testCrossDecl1',
-            originalName: 'testCrossDecl',
-            returnType: NativeType(SupportedNativeType.Void)),
-        Constant(name: 'testCrossDecl2', rawValue: '0', rawType: 'int'),
-        EnumClass(name: 'testCrossDecl3'),
-        Typealias(
-            name: 'testCrossDecl4', type: NativeType(SupportedNativeType.Void)),
-        Struct(name: 'ffi'),
-        Func(name: 'ffi1', returnType: NativeType(SupportedNativeType.Void)),
+      matchLibraryWithExpected(
+          library, 'decl_decl_collision_test_output.dart', [
+        'test',
+        'collision_tests',
+        'expected_bindings',
+        '_expected_decl_decl_collision_bindings.dart',
       ]);
-
-      expect(l1.generate(), l2.generate());
     });
   });
 }

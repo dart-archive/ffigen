@@ -14,7 +14,7 @@ void main() {
       logWarnings(Level.SEVERE);
     });
     test('reserved keyword collision', () {
-      final l1 = Library(name: 'Bindings', bindings: [
+      final library = Library(name: 'Bindings', bindings: [
         Struct(name: 'abstract'),
         Struct(name: 'abstract'),
         Struct(name: 'if'),
@@ -45,42 +45,13 @@ void main() {
         ),
         Typealias(name: 'var', type: NativeType(SupportedNativeType.Void)),
       ]);
-      final l2 = Library(name: 'Bindings', bindings: [
-        Struct(name: 'abstract1'),
-        Struct(name: 'abstract2'),
-        Struct(name: 'if1'),
-        EnumClass(name: 'return1'),
-        EnumClass(name: 'export1'),
-        Func(
-            name: 'show1',
-            originalName: 'show',
-            returnType: NativeType(SupportedNativeType.Void)),
-        Func(
-            name: 'implements1',
-            originalName: 'implements',
-            parameters: [
-              Parameter(
-                type: intType,
-                name: 'if1',
-              ),
-              Parameter(
-                type: intType,
-                name: 'abstract1',
-              ),
-              Parameter(
-                type: intType,
-                name: 'in1',
-              ),
-            ],
-            returnType: NativeType(SupportedNativeType.Void)),
-        Constant(
-          name: 'else1',
-          rawType: 'int',
-          rawValue: '0',
-        ),
-        Typealias(name: 'var1', type: NativeType(SupportedNativeType.Void)),
+      matchLibraryWithExpected(
+          library, 'reserved_keyword_collision_test_output.dart', [
+        'test',
+        'collision_tests',
+        'expected_bindings',
+        '_expected_reserved_keyword_collision_bindings.dart',
       ]);
-      expect(l1.generate(), l2.generate());
     });
   });
 }

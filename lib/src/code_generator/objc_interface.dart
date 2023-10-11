@@ -314,9 +314,11 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
     }
   }
 
-  static bool _isInstanceType(Type type) =>
-      type is ObjCInstanceType ||
-      (type is ObjCNullable && type.child is ObjCInstanceType);
+  static bool _isInstanceType(Type type) {
+    if (type is ObjCInstanceType) return true;
+    final baseType = type.typealiasType;
+    return baseType is ObjCNullable && baseType.child is ObjCInstanceType;
+  }
 
   void addMethod(ObjCMethod method) {
     final oldMethod = methods[method.originalName];
@@ -400,27 +402,29 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
   // passed to native as Pointer<ObjCObject>, but the user sees the Dart wrapper
   // class. These methods need to be kept in sync.
   bool _needsConverting(Type type) =>
-      type is ObjCInterface ||
-      type is ObjCBlock ||
-      type is ObjCObjectPointer ||
       type is ObjCInstanceType ||
-      type is ObjCNullable;
+      type.typealiasType is ObjCInterface ||
+      type.typealiasType is ObjCBlock ||
+      type.typealiasType is ObjCObjectPointer ||
+      type.typealiasType is ObjCNullable;
 
   String _getConvertedType(Type type, Writer w, String enclosingClass) {
     if (type is ObjCInstanceType) return enclosingClass;
-    if (type is ObjCNullable && type.child is ObjCInstanceType) {
+    final baseType = type.typealiasType;
+    if (baseType is ObjCNullable && baseType.child is ObjCInstanceType) {
       return '$enclosingClass?';
     }
     return type.getDartType(w);
   }
 
   String _doArgConversion(ObjCMethodParam arg) {
-    if (arg.type is ObjCNullable) {
+    final baseType = arg.type.typealiasType;
+    if (baseType is ObjCNullable) {
       return '${arg.name}?._id ?? ffi.nullptr';
-    } else if (arg.type is ObjCInterface ||
-        arg.type is ObjCObjectPointer ||
-        arg.type is ObjCInstanceType ||
-        arg.type is ObjCBlock) {
+    } else if (arg.type is ObjCInstanceType ||
+        baseType is ObjCInterface ||
+        baseType is ObjCObjectPointer ||
+        baseType is ObjCBlock) {
       return '${arg.name}._id';
     }
     return arg.name;
@@ -429,22 +433,24 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
   String _doReturnConversion(Type type, String value, String enclosingClass,
       String library, bool isOwnedReturn) {
     var prefix = '';
-    if (type is ObjCNullable) {
+    var baseType = type.typealiasType;
+    if (baseType is ObjCNullable) {
       prefix = '$value.address == 0 ? null : ';
-      type = type.child;
+      type = baseType.child;
+      baseType = type.typealiasType;
     }
     final ownerFlags = 'retain: ${!isOwnedReturn}, release: true';
-    if (type is ObjCInterface) {
-      return '$prefix${type.name}._($value, $library, $ownerFlags)';
-    }
-    if (type is ObjCBlock) {
-      return '$prefix${type.name}._($value, $library)';
-    }
-    if (type is ObjCObjectPointer) {
-      return '${prefix}NSObject._($value, $library, $ownerFlags)';
-    }
     if (type is ObjCInstanceType) {
       return '$prefix$enclosingClass._($value, $library, $ownerFlags)';
+    }
+    if (baseType is ObjCInterface) {
+      return '$prefix${baseType.name}._($value, $library, $ownerFlags)';
+    }
+    if (baseType is ObjCBlock) {
+      return '$prefix${baseType.name}._($value, $library)';
+    }
+    if (baseType is ObjCObjectPointer) {
+      return '${prefix}NSObject._($value, $library, $ownerFlags)';
     }
     return prefix + value;
   }

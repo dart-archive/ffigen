@@ -1,0 +1,17 @@
+name: TypedefTestObjCLibrary
+description: 'Tests typedef'
+language: objc
+output: 'typedef_bindings.dart'
+exclude-all-by-default: true
+objc-interfaces:
+  include:
+    - SomeClass
+    - AnotherClass
+typedefs:
+  include:
+    - SomeClassPtr
+headers:
+  entry-points:
+    - 'typedef_test.m'
+preamble: |
+  // ignore_for_file: camel_case_types, non_constant_identifier_names, unused_element, unused_field

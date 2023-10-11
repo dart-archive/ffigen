@@ -46,8 +46,7 @@ class Func extends LookUpBinding {
   late final String funcPointerName;
 
   /// Contains typealias for function type if [exposeFunctionTypedefs] is true.
-  Typealias? _exposedCFunctionTypealias;
-  Typealias? _exposedDartFunctionTypealias;
+  Typealias? _exposedFunctionTypealias;
 
   /// [originalName] is looked up in dynamic library, if not
   /// provided, takes the value of [name].
@@ -85,15 +84,10 @@ class Func extends LookUpBinding {
     // Get function name with first letter in upper case.
     final upperCaseName = name[0].toUpperCase() + name.substring(1);
     if (exposeFunctionTypedefs) {
-      _exposedCFunctionTypealias = Typealias(
-        name: 'Native$upperCaseName',
+      _exposedFunctionTypealias = Typealias(
+        name: upperCaseName,
         type: functionType,
-        isInternal: true,
-      );
-      _exposedDartFunctionTypealias = Typealias(
-        name: 'Dart$upperCaseName',
-        type: functionType,
-        useDartType: true,
+        genFfiDartType: true,
         isInternal: true,
       );
     }
@@ -115,12 +109,10 @@ class Func extends LookUpBinding {
       p.name = paramNamer.makeUnique(p.name);
     }
 
-    final cType = exposeFunctionTypedefs
-        ? _exposedCFunctionTypealias!.name
-        : functionType.getCType(w, writeArgumentNames: false);
-    final dartType = exposeFunctionTypedefs
-        ? _exposedDartFunctionTypealias!.name
-        : functionType.getFfiDartType(w, writeArgumentNames: false);
+    final cType = _exposedFunctionTypealias?.getCType(w) ??
+        functionType.getCType(w, writeArgumentNames: false);
+    final dartType = _exposedFunctionTypealias?.getFfiDartType(w) ??
+        functionType.getFfiDartType(w, writeArgumentNames: false);
 
     if (ffiNativeConfig.enabled) {
       final assetString = ffiNativeConfig.asset != null
@@ -180,8 +172,7 @@ class Func extends LookUpBinding {
     dependencies.add(this);
     functionType.addDependencies(dependencies);
     if (exposeFunctionTypedefs) {
-      _exposedCFunctionTypealias!.addDependencies(dependencies);
-      _exposedDartFunctionTypealias!.addDependencies(dependencies);
+      _exposedFunctionTypealias!.addDependencies(dependencies);
     }
   }
 }
