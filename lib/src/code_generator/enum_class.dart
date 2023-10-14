@@ -29,18 +29,12 @@ class EnumClass extends BindingType {
   final List<EnumConstant> enumConstants;
 
   EnumClass({
-    String? usr,
-    String? originalName,
-    required String name,
-    String? dartDoc,
+    super.usr,
+    super.originalName,
+    required super.name,
+    super.dartDoc,
     List<EnumConstant>? enumConstants,
-  })  : enumConstants = enumConstants ?? [],
-        super(
-          usr: usr,
-          originalName: originalName,
-          name: name,
-          dartDoc: dartDoc,
-        );
+  }) : enumConstants = enumConstants ?? [];
 
   @override
   BindingString toBindingString(Writer w) {

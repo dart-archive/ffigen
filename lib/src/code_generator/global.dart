@@ -24,18 +24,13 @@ class Global extends LookUpBinding {
   final bool exposeSymbolAddress;
 
   Global({
-    String? usr,
-    String? originalName,
-    required String name,
+    super.usr,
+    super.originalName,
+    required super.name,
     required this.type,
-    String? dartDoc,
+    super.dartDoc,
     this.exposeSymbolAddress = false,
-  }) : super(
-          usr: usr,
-          originalName: originalName,
-          name: name,
-          dartDoc: dartDoc,
-        );
+  });
 
   @override
   BindingString toBindingString(Writer w) {

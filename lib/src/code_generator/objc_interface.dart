@@ -48,18 +48,15 @@ class ObjCInterface extends BindingType {
   late final ObjCMsgSendFunc _isKindOfClassMsgSend;
 
   ObjCInterface({
-    String? usr,
-    required String originalName,
+    super.usr,
+    required String super.originalName,
     String? name,
     String? lookupName,
-    String? dartDoc,
+    super.dartDoc,
     required this.builtInFunctions,
   })  : lookupName = lookupName ?? originalName,
         super(
-          usr: usr,
-          originalName: originalName,
           name: name ?? originalName,
-          dartDoc: dartDoc,
         ) {
     builtInFunctions.registerInterface(this);
   }

@@ -35,23 +35,16 @@ abstract class Compound extends BindingType {
   bool get isUnion => compoundType == CompoundType.union;
 
   Compound({
-    String? usr,
-    String? originalName,
-    required String name,
+    super.usr,
+    super.originalName,
+    required super.name,
     required this.compoundType,
     this.isIncomplete = false,
     this.pack,
-    String? dartDoc,
+    super.dartDoc,
     List<Member>? members,
-    bool isInternal = false,
-  })  : members = members ?? [],
-        super(
-          usr: usr,
-          originalName: originalName,
-          name: name,
-          dartDoc: dartDoc,
-          isInternal: isInternal,
-        );
+    super.isInternal,
+  }) : members = members ?? [];
 
   factory Compound.fromType({
     required CompoundType type,

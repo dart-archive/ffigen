@@ -30,23 +30,13 @@ import 'package:ffigen/src/code_generator/compound.dart';
 /// ```
 class Struct extends Compound {
   Struct({
-    String? usr,
-    String? originalName,
-    required String name,
-    bool isIncomplete = false,
-    int? pack,
-    String? dartDoc,
-    List<Member>? members,
-    bool isInternal = false,
-  }) : super(
-          usr: usr,
-          originalName: originalName,
-          name: name,
-          dartDoc: dartDoc,
-          isIncomplete: isIncomplete,
-          members: members,
-          pack: pack,
-          compoundType: CompoundType.struct,
-          isInternal: isInternal,
-        );
+    super.usr,
+    super.originalName,
+    required super.name,
+    super.isIncomplete,
+    super.pack,
+    super.dartDoc,
+    super.members,
+    super.isInternal,
+  }) : super(compoundType: CompoundType.struct);
 }
