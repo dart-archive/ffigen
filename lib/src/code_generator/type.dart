@@ -79,18 +79,12 @@ abstract class Type {
 /// to extend both NoLookUpBinding and Type.
 abstract class BindingType extends NoLookUpBinding implements Type {
   BindingType({
-    String? usr,
-    String? originalName,
-    required String name,
-    String? dartDoc,
-    bool isInternal = false,
-  }) : super(
-          usr: usr,
-          originalName: originalName,
-          name: name,
-          dartDoc: dartDoc,
-          isInternal: isInternal,
-        );
+    super.usr,
+    super.originalName,
+    required super.name,
+    super.dartDoc,
+    super.isInternal,
+  });
 
   @override
   Type get baseType => this;

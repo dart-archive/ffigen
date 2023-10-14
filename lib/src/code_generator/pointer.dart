@@ -62,7 +62,7 @@ class ConstantArray extends PointerType {
 
 /// Represents an incomplete array, which has an unknown size.
 class IncompleteArray extends PointerType {
-  IncompleteArray(Type child) : super._(child);
+  IncompleteArray(super.child) : super._();
 
   @override
   Type get baseArrayType => child.baseArrayType;

@@ -44,15 +44,12 @@ abstract class LookUpBinding extends Binding {
   LookUpBinding({
     String? usr,
     String? originalName,
-    required String name,
-    String? dartDoc,
-    bool isInternal = false,
+    required super.name,
+    super.dartDoc,
+    super.isInternal,
   }) : super(
           usr: usr ?? name,
           originalName: originalName ?? name,
-          name: name,
-          dartDoc: dartDoc,
-          isInternal: isInternal,
         );
 }
 
@@ -61,14 +58,11 @@ abstract class NoLookUpBinding extends Binding {
   NoLookUpBinding({
     String? usr,
     String? originalName,
-    required String name,
-    String? dartDoc,
-    bool isInternal = false,
+    required super.name,
+    super.dartDoc,
+    super.isInternal,
   }) : super(
           usr: usr ?? name,
           originalName: originalName ?? name,
-          name: name,
-          dartDoc: dartDoc,
-          isInternal: isInternal,
         );
 }

@@ -51,17 +51,17 @@ class Func extends LookUpBinding {
   /// [originalName] is looked up in dynamic library, if not
   /// provided, takes the value of [name].
   Func({
-    String? usr,
+    super.usr,
     required String name,
-    String? originalName,
-    String? dartDoc,
+    super.originalName,
+    super.dartDoc,
     required Type returnType,
     List<Parameter>? parameters,
     List<Parameter>? varArgParameters,
     this.exposeSymbolAddress = false,
     this.exposeFunctionTypedefs = false,
     this.isLeaf = false,
-    bool isInternal = false,
+    super.isInternal,
     this.ffiNativeConfig = const FfiNativeConfig(enabled: false),
   })  : functionType = FunctionType(
           returnType: returnType,
@@ -69,11 +69,7 @@ class Func extends LookUpBinding {
           varArgParameters: varArgParameters ?? const [],
         ),
         super(
-          usr: usr,
-          originalName: originalName,
           name: name,
-          dartDoc: dartDoc,
-          isInternal: isInternal,
         ) {
     for (var i = 0; i < functionType.parameters.length; i++) {
       if (functionType.parameters[i].name.trim() == '') {

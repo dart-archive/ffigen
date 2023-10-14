@@ -26,16 +26,12 @@ class ObjCBlock extends BindingType {
         );
 
   ObjCBlock._({
-    required String usr,
-    required String name,
+    required String super.usr,
+    required super.name,
     required this.returnType,
     required this.argTypes,
     required this.builtInFunctions,
-  }) : super(
-          usr: usr,
-          originalName: name,
-          name: name,
-        );
+  }) : super(originalName: name);
 
   // Generates a human readable name for the block based on the args and return
   // type. These names will be pretty verbose and unweildy, but they're at least

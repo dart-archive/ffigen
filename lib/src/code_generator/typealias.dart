@@ -66,24 +66,20 @@ class Typealias extends BindingType {
   }
 
   Typealias._({
-    String? usr,
-    String? originalName,
-    String? dartDoc,
+    super.usr,
+    super.originalName,
+    super.dartDoc,
     required String name,
     required this.type,
     bool genFfiDartType = false,
-    bool isInternal = false,
+    super.isInternal,
   })  : _ffiDartAliasName = genFfiDartType ? 'Dart$name' : null,
         _dartAliasName =
             (!genFfiDartType && type is! Typealias && !type.sameDartAndCType)
                 ? 'Dart$name'
                 : null,
         super(
-          usr: usr,
           name: genFfiDartType ? 'Native$name' : name,
-          dartDoc: dartDoc,
-          originalName: originalName,
-          isInternal: isInternal,
         );
 
   @override
@@ -169,20 +165,12 @@ class Typealias extends BindingType {
 /// enclosing class's type, even in inherited methods.
 class ObjCInstanceType extends Typealias {
   ObjCInstanceType._({
-    String? usr,
-    String? originalName,
-    String? dartDoc,
-    required String name,
-    required Type type,
-    bool genFfiDartType = false,
-    bool isInternal = false,
-  }) : super._(
-          usr: usr,
-          originalName: originalName,
-          dartDoc: dartDoc,
-          name: name,
-          type: type,
-          genFfiDartType: genFfiDartType,
-          isInternal: isInternal,
-        );
+    super.usr,
+    super.originalName,
+    super.dartDoc,
+    required super.name,
+    required super.type,
+    super.genFfiDartType,
+    super.isInternal,
+  }) : super._();
 }

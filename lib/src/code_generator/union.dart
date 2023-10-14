@@ -29,21 +29,12 @@ import 'package:ffigen/src/code_generator/compound.dart';
 /// ```
 class Union extends Compound {
   Union({
-    String? usr,
-    String? originalName,
-    required String name,
-    bool isIncomplete = false,
-    int? pack,
-    String? dartDoc,
-    List<Member>? members,
-  }) : super(
-          usr: usr,
-          originalName: originalName,
-          name: name,
-          dartDoc: dartDoc,
-          isIncomplete: isIncomplete,
-          members: members,
-          pack: pack,
-          compoundType: CompoundType.union,
-        );
+    super.usr,
+    super.originalName,
+    required super.name,
+    super.isIncomplete,
+    super.pack,
+    super.dartDoc,
+    super.members,
+  }) : super(compoundType: CompoundType.union);
 }
