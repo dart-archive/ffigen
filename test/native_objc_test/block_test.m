@@ -12,11 +12,20 @@ typedef struct {
   double w;
 } Vec4;
 
+@interface DummyObject : NSObject {}
+@end
+@implementation DummyObject
+@end
+
+
 typedef int32_t (^IntBlock)(int32_t);
 typedef float (^FloatBlock)(float);
 typedef double (^DoubleBlock)(double);
 typedef Vec4 (^Vec4Block)(Vec4);
 typedef void (^VoidBlock)();
+typedef DummyObject* (^ObjectBlock)(DummyObject*);
+typedef DummyObject* _Nullable (^NullableBlock)(DummyObject* _Nullable);
+typedef IntBlock (^BlockBlock)(IntBlock);
 
 // Wrapper around a block, so that our Dart code can test creating and invoking
 // blocks in Objective C code.
@@ -34,6 +43,9 @@ typedef void (^VoidBlock)();
 + (float)callFloatBlock:(FloatBlock)block;
 + (double)callDoubleBlock:(DoubleBlock)block;
 + (Vec4)callVec4Block:(Vec4Block)block;
++ (DummyObject*)callObjectBlock:(ObjectBlock)block;
++ (DummyObject* _Nullable)callNullableBlock:(NullableBlock)block;
++ (IntBlock)callBlockBlock:(BlockBlock)block;
 @end
 
 @implementation BlockTester
@@ -114,6 +126,20 @@ void* valid_block_isa = NULL;
   vec4.z = 5.6;
   vec4.w = 7.8;
   return block(vec4);
+}
+
++ (DummyObject*)callObjectBlock:(ObjectBlock)block {
+  return block([DummyObject new]);
+}
+
++ (DummyObject* _Nullable)callNullableBlock:(NullableBlock)block {
+  return block(nil);
+}
+
++ (IntBlock)callBlockBlock:(BlockBlock)block {
+  return block(^int(int x) {
+    return 2 * x;
+  });
 }
 
 @end

@@ -21,6 +21,9 @@ typedef FloatBlock = ObjCBlock_ffiFloat_ffiFloat;
 typedef DoubleBlock = ObjCBlock_ffiDouble_ffiDouble;
 typedef Vec4Block = ObjCBlock_Vec4_Vec4;
 typedef VoidBlock = ObjCBlock_ffiVoid;
+typedef ObjectBlock = ObjCBlock_DummyObject_DummyObject;
+typedef NullableBlock = ObjCBlock_DummyObject_DummyObject1;
+typedef BlockBlock = ObjCBlock_Int32Int32_Int32Int32;
 
 void main() {
   late BlockTestObjCLibrary lib;
@@ -160,6 +163,25 @@ void main() {
       calloc.free(inputPtr);
       calloc.free(tempPtr);
       calloc.free(result2Ptr);
+    });
+
+    test('Object block', () {
+      bool isCalled = false;
+      final block = ObjectBlock.fromFunction(lib, (DummyObject x) {
+        isCalled = true;
+        return x;
+      });
+
+      final obj = DummyObject.new1(lib);
+      final result1 = block(obj);
+      expect(result1, obj);
+      expect(isCalled, isTrue);
+
+      isCalled = false;
+      final result2 = BlockTester.callObjectBlock_(lib, block);
+      expect(result2, isNot(obj));
+      expect(result2.pointer, isNot(nullptr));
+      expect(isCalled, isTrue);
     });
 
     Pointer<Void> funcPointerBlockRefCountTest() {

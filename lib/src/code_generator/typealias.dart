@@ -151,6 +151,26 @@ class Typealias extends BindingType {
   bool get sameDartAndCType => type.sameDartAndCType;
 
   @override
+  String convertDartTypeToFfiDartType(Writer w, String value) =>
+      type.convertDartTypeToFfiDartType(w, value);
+
+  @override
+  String convertFfiDartTypeToDartType(
+    Writer w,
+    String value,
+    String library, {
+    bool isObjCOwnedReturn = false,
+    String? objCEnclosingClass,
+  }) =>
+      type.convertFfiDartTypeToDartType(
+        w,
+        value,
+        library,
+        isObjCOwnedReturn: isObjCOwnedReturn,
+        objCEnclosingClass: objCEnclosingClass,
+      );
+
+  @override
   String cacheKey() => type.cacheKey();
 
   @override
@@ -173,4 +193,18 @@ class ObjCInstanceType extends Typealias {
     super.genFfiDartType,
     super.isInternal,
   }) : super._();
+
+  @override
+  String convertDartTypeToFfiDartType(Writer w, String value) => '$value._id';
+
+  @override
+  String convertFfiDartTypeToDartType(
+    Writer w,
+    String value,
+    String library, {
+    bool isObjCOwnedReturn = false,
+    String? objCEnclosingClass,
+  }) =>
+      ObjCInterface.generateConstructor(
+          objCEnclosingClass ?? 'NSObject', value, library, isObjCOwnedReturn);
 }
