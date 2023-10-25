@@ -184,6 +184,41 @@ void main() {
       expect(isCalled, isTrue);
     });
 
+    test('Nullable block', () {
+      bool isCalled = false;
+      final block = NullableBlock.fromFunction(lib, (DummyObject? x) {
+        isCalled = true;
+        return x;
+      });
+
+      final obj = DummyObject.new1(lib);
+      final result1 = block(obj);
+      expect(result1, obj);
+      expect(isCalled, isTrue);
+
+      isCalled = false;
+      final result2 = BlockTester.callNullableBlock_(lib, block);
+      expect(result2, isNull);
+      expect(isCalled, isTrue);
+    });
+
+    test('Block block', () {
+      final blockBlock = BlockBlock.fromFunction(lib, (IntBlock intBlock) {
+        return IntBlock.fromFunction(lib, (int x) {
+          return 3 * intBlock(x);
+        });
+      });
+
+      final intBlock = IntBlock.fromFunction(lib, (int x) {
+        return 5 * x;
+      });
+      final result1 = blockBlock(intBlock);
+      expect(result1(1), 15);
+
+      final result2 = BlockTester.callBlockBlock_(lib, blockBlock);
+      expect(result2(1), 6);
+    });
+
     Pointer<Void> funcPointerBlockRefCountTest() {
       final block =
           IntBlock.fromFunctionPointer(lib, Pointer.fromFunction(_add100, 999));
@@ -203,7 +238,7 @@ void main() {
       return block.pointer.cast();
     }
 
-    test('Function pointer block ref counting', () {
+    test('Function block ref counting', () {
       final rawBlock = funcBlockRefCountTest();
       doGC();
       expect(BlockTester.getBlockRetainCount_(lib, rawBlock.cast()), 0);
