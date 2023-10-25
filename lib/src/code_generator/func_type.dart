@@ -25,19 +25,30 @@ class FunctionType extends Type {
 
   String _getTypeImpl(
       bool writeArgumentNames, String Function(Type) typeToString,
-      {String? argSuffix}) {
-    final sb = StringBuffer();
+      {String? varArgWrapper}) {
+    final params = varArgWrapper != null ? parameters : dartTypeParameters;
+    String? varArgPack;
+    if (varArgWrapper != null && varArgParameters.isNotEmpty) {
+      final varArgPackBuf = StringBuffer();
+      varArgPackBuf.write("$varArgWrapper<(");
+      varArgPackBuf.write((varArgParameters).map<String>((p) {
+        return '${typeToString(p.type)} ${writeArgumentNames ? p.name : ""}';
+      }).join(', '));
+      varArgPackBuf.write(",)>");
+      varArgPack = varArgPackBuf.toString();
+    }
 
     // Write return Type.
+    final sb = StringBuffer();
     sb.write(typeToString(returnType));
 
     // Write Function.
     sb.write(' Function(');
     sb.write([
-      ...parameters.map<String>((p) {
+      ...params.map<String>((p) {
         return '${typeToString(p.type)} ${writeArgumentNames ? p.name : ""}';
       }),
-      if (argSuffix != null) argSuffix,
+      if (varArgPack != null) varArgPack,
     ].join(', '));
     sb.write(')');
 
@@ -45,20 +56,9 @@ class FunctionType extends Type {
   }
 
   @override
-  String getCType(Writer w, {bool writeArgumentNames = true}) {
-    String? varArgs;
-    if (varArgParameters.isNotEmpty) {
-      final sb = StringBuffer();
-      sb.write(", ${w.ffiLibraryPrefix}.VarArgs<(");
-      sb.write((varArgParameters).map<String>((p) {
-        return '${p.type.getCType(w)} ${writeArgumentNames ? p.name : ""}';
-      }).join(', '));
-      sb.write(",)>");
-    }
-
-    return _getTypeImpl(writeArgumentNames, (Type t) => t.getCType(w),
-        argSuffix: varArgs);
-  }
+  String getCType(Writer w, {bool writeArgumentNames = true}) =>
+      _getTypeImpl(writeArgumentNames, (Type t) => t.getCType(w),
+          varArgWrapper: '${w.ffiLibraryPrefix}.VarArgs');
 
   @override
   String getFfiDartType(Writer w, {bool writeArgumentNames = true}) =>
@@ -71,14 +71,12 @@ class FunctionType extends Type {
   @override
   bool get sameFfiDartAndCType =>
       returnType.sameFfiDartAndCType &&
-      parameters.every((p) => p.type.sameFfiDartAndCType) &&
-      varArgParameters.every((p) => p.type.sameFfiDartAndCType);
+      dartTypeParameters.every((p) => p.type.sameFfiDartAndCType);
 
   @override
   bool get sameDartAndCType =>
       returnType.sameDartAndCType &&
-      parameters.every((p) => p.type.sameDartAndCType) &&
-      varArgParameters.every((p) => p.type.sameDartAndCType);
+      dartTypeParameters.every((p) => p.type.sameDartAndCType);
 
   @override
   String toString() => _getTypeImpl(false, (Type t) => t.toString());
