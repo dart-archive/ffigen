@@ -142,7 +142,15 @@ class Typealias extends BindingType {
   }
 
   @override
-  String getDartType(Writer w) => _dartAliasName ?? type.getDartType(w);
+  String getDartType(Writer w) {
+    if (_dartAliasName != null) {
+      return _dartAliasName!;
+    } else if (type.sameDartAndCType) {
+      return getFfiDartType(w);
+    } else {
+      return type.getDartType(w);
+    }
+  }
 
   @override
   bool get sameFfiDartAndCType => type.sameFfiDartAndCType;
