@@ -24,7 +24,8 @@ class FunctionType extends Type {
   });
 
   String _getTypeImpl(
-      bool writeArgumentNames, String Function(Type) typeToString, {String? argSuffix}) {
+      bool writeArgumentNames, String Function(Type) typeToString,
+      {String? argSuffix}) {
     final sb = StringBuffer();
 
     // Write return Type.
@@ -55,7 +56,8 @@ class FunctionType extends Type {
       sb.write(",)>");
     }
 
-    return _getTypeImpl(writeArgumentNames, (Type t) => t.getCType(w), argSuffix: varArgs);
+    return _getTypeImpl(writeArgumentNames, (Type t) => t.getCType(w),
+        argSuffix: varArgs);
   }
 
   @override

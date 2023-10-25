@@ -418,7 +418,7 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
     String value,
     String library,
     bool isObjCOwnedReturn,
-  ){
+  ) {
     final ownershipFlags = 'retain: ${!isObjCOwnedReturn}, release: true';
     return '$className._($value, $library, $ownershipFlags)';
   }
