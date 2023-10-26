@@ -215,7 +215,7 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
           w,
           '_ret',
           '_lib',
-          isObjCOwnedReturn: m.isOwnedReturn,
+          objCShouldRetain: !m.isOwnedReturn,
           objCEnclosingClass: name,
         );
         s.write('    return $result;');
@@ -400,26 +400,33 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
   bool get sameDartAndCType => false;
 
   @override
-  String convertDartTypeToFfiDartType(Writer w, String value) => '$value._id';
+  String convertDartTypeToFfiDartType(
+    Writer w,
+    String value, {
+    bool objCShouldRetain = false,
+  }) =>
+      ObjCInterface.generateGetId(value, objCShouldRetain);
+
+  static String generateGetId(String value, bool objCShouldRetain) =>
+      objCShouldRetain ? '$value._retainAndReturnId()' : '$value._id';
 
   @override
   String convertFfiDartTypeToDartType(
     Writer w,
     String value,
     String library, {
-    bool isObjCOwnedReturn = false,
+    bool objCShouldRetain = true,
     String? objCEnclosingClass,
   }) =>
-      ObjCInterface.generateConstructor(
-          name, value, library, isObjCOwnedReturn);
+      ObjCInterface.generateConstructor(name, value, library, objCShouldRetain);
 
   static String generateConstructor(
     String className,
     String value,
     String library,
-    bool isObjCOwnedReturn,
+    bool objCShouldRetain,
   ) {
-    final ownershipFlags = 'retain: ${!isObjCOwnedReturn}, release: true';
+    final ownershipFlags = 'retain: $objCShouldRetain, release: true';
     return '$className._($value, $library, $ownershipFlags)';
   }
 

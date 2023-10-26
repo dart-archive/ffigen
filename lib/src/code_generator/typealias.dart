@@ -159,22 +159,27 @@ class Typealias extends BindingType {
   bool get sameDartAndCType => type.sameDartAndCType;
 
   @override
-  String convertDartTypeToFfiDartType(Writer w, String value) =>
-      type.convertDartTypeToFfiDartType(w, value);
+  String convertDartTypeToFfiDartType(
+    Writer w,
+    String value, {
+    bool objCShouldRetain = false,
+  }) =>
+      type.convertDartTypeToFfiDartType(w, value,
+          objCShouldRetain: objCShouldRetain);
 
   @override
   String convertFfiDartTypeToDartType(
     Writer w,
     String value,
     String library, {
-    bool isObjCOwnedReturn = false,
+    bool objCShouldRetain = true,
     String? objCEnclosingClass,
   }) =>
       type.convertFfiDartTypeToDartType(
         w,
         value,
         library,
-        isObjCOwnedReturn: isObjCOwnedReturn,
+        objCShouldRetain: objCShouldRetain,
         objCEnclosingClass: objCEnclosingClass,
       );
 
@@ -203,16 +208,21 @@ class ObjCInstanceType extends Typealias {
   }) : super._();
 
   @override
-  String convertDartTypeToFfiDartType(Writer w, String value) => '$value._id';
+  String convertDartTypeToFfiDartType(
+    Writer w,
+    String value, {
+    bool objCShouldRetain = false,
+  }) =>
+      ObjCInterface.generateGetId(value, objCShouldRetain);
 
   @override
   String convertFfiDartTypeToDartType(
     Writer w,
     String value,
     String library, {
-    bool isObjCOwnedReturn = false,
+    bool objCShouldRetain = true,
     String? objCEnclosingClass,
   }) =>
       ObjCInterface.generateConstructor(
-          objCEnclosingClass ?? 'NSObject', value, library, isObjCOwnedReturn);
+          objCEnclosingClass ?? 'NSObject', value, library, objCShouldRetain);
 }

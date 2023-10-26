@@ -118,10 +118,12 @@ $returnFfiDartType $closureTrampoline($blockCType block, $paramsFfiDartType) =>
     // Snippet that converts a Dart typed closure to FfiDart type. This snippet
     // is used below. Note that the closure being converted is called `fn`.
     final convertedFnArgs = params
-        .map((p) => p.type.convertFfiDartTypeToDartType(w, p.name, 'lib'))
+        .map((p) => p.type.convertFfiDartTypeToDartType(w, p.name, 'lib',
+            objCShouldRetain: false))
         .join(', ');
-    final convFnInvocation =
-        returnType.convertDartTypeToFfiDartType(w, 'fn($convertedFnArgs)');
+    final convFnInvocation = returnType.convertDartTypeToFfiDartType(
+        w, 'fn($convertedFnArgs)',
+        objCShouldRetain: true);
     final convFn = '($paramsFfiDartType) => $convFnInvocation';
 
     // Write the wrapper class.
@@ -129,8 +131,9 @@ $returnFfiDartType $closureTrampoline($blockCType block, $paramsFfiDartType) =>
     final exceptionalReturn = defaultValue == null ? '' : ', $defaultValue';
     s.write('''
 class $name extends _ObjCBlockBase {
-  $name._($blockCType id, ${w.className} lib) :
-      super._(id, lib, retain: false, release: true);
+  $name._($blockCType id, ${w.className} lib,
+      {bool retain = false, bool release = true}) :
+          super._(id, lib, retain: retain, release: release);
 
   /// Creates a block from a C function pointer.
   ///
@@ -189,7 +192,8 @@ class $name extends _ObjCBlockBase {
 _id.ref.invoke.cast<$natTrampFnType>().asFunction<$trampFuncFfiDartType>()(
     _id, $callMethodArgs)''';
     s.write(returnType.convertFfiDartTypeToDartType(
-        w, callMethodInvocation, '_lib'));
+        w, callMethodInvocation, '_lib',
+        objCShouldRetain: false));
     s.write(';\n');
 
     s.write('}\n');
@@ -223,17 +227,22 @@ _id.ref.invoke.cast<$natTrampFnType>().asFunction<$trampFuncFfiDartType>()(
   bool get sameDartAndCType => false;
 
   @override
-  String convertDartTypeToFfiDartType(Writer w, String value) => '$value._id';
+  String convertDartTypeToFfiDartType(
+    Writer w,
+    String value, {
+    bool objCShouldRetain = false,
+  }) =>
+      ObjCInterface.generateGetId(value, objCShouldRetain);
 
   @override
   String convertFfiDartTypeToDartType(
     Writer w,
     String value,
     String library, {
-    bool isObjCOwnedReturn = false,
+    bool objCShouldRetain = true,
     String? objCEnclosingClass,
   }) =>
-      '$name._($value, $library)';
+      ObjCInterface.generateConstructor(name, value, library, objCShouldRetain);
 
   @override
   String toString() => '($returnType (^)(${argTypes.join(', ')}))';

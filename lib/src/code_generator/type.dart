@@ -56,7 +56,12 @@ abstract class Type {
 
   /// Returns generated Dart code that converts the given value from its
   /// DartType to its FfiDartType.
-  String convertDartTypeToFfiDartType(Writer w, String value) => value;
+  String convertDartTypeToFfiDartType(
+    Writer w,
+    String value, {
+    bool objCShouldRetain = false,
+  }) =>
+      value;
 
   /// Returns generated Dart code that converts the given value from its
   /// FfiDartType to its DartType.
@@ -64,7 +69,7 @@ abstract class Type {
     Writer w,
     String value,
     String library, {
-    bool isObjCOwnedReturn = false,
+    bool objCShouldRetain = true,
     String? objCEnclosingClass,
   }) =>
       value;
@@ -124,14 +129,19 @@ abstract class BindingType extends NoLookUpBinding implements Type {
   bool get sameDartAndCType => sameFfiDartAndCType;
 
   @override
-  String convertDartTypeToFfiDartType(Writer w, String value) => value;
+  String convertDartTypeToFfiDartType(
+    Writer w,
+    String value, {
+    bool objCShouldRetain = false,
+  }) =>
+      value;
 
   @override
   String convertFfiDartTypeToDartType(
     Writer w,
     String value,
     String library, {
-    bool isObjCOwnedReturn = false,
+    bool objCShouldRetain = true,
     String? objCEnclosingClass,
   }) =>
       value;
