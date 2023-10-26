@@ -64,6 +64,13 @@ void main() {
         expect(NullableInterface.isNullWithNotNullableNSObjectPtrArg_(lib, obj),
             false);
       });
+
+      test('Explicit non null', () {
+        expect(
+            NullableInterface.isNullWithExplicitNonNullableNSObjectPtrArg_(
+                lib, obj),
+            false);
+      });
     });
   });
 }

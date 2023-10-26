@@ -162,24 +162,23 @@ class Typealias extends BindingType {
   String convertDartTypeToFfiDartType(
     Writer w,
     String value, {
-    bool objCShouldRetain = false,
+    required bool objCRetain,
   }) =>
-      type.convertDartTypeToFfiDartType(w, value,
-          objCShouldRetain: objCShouldRetain);
+      type.convertDartTypeToFfiDartType(w, value, objCRetain: objCRetain);
 
   @override
   String convertFfiDartTypeToDartType(
     Writer w,
     String value,
     String library, {
-    bool objCShouldRetain = true,
+    required bool objCRetain,
     String? objCEnclosingClass,
   }) =>
       type.convertFfiDartTypeToDartType(
         w,
         value,
         library,
-        objCShouldRetain: objCShouldRetain,
+        objCRetain: objCRetain,
         objCEnclosingClass: objCEnclosingClass,
       );
 
@@ -211,18 +210,20 @@ class ObjCInstanceType extends Typealias {
   String convertDartTypeToFfiDartType(
     Writer w,
     String value, {
-    bool objCShouldRetain = false,
+    required bool objCRetain,
   }) =>
-      ObjCInterface.generateGetId(value, objCShouldRetain);
+      ObjCInterface.generateGetId(value, objCRetain);
 
   @override
   String convertFfiDartTypeToDartType(
     Writer w,
     String value,
     String library, {
-    bool objCShouldRetain = true,
+    required bool objCRetain,
     String? objCEnclosingClass,
   }) =>
+      // objCEnclosingClass must be present, because instancetype can only
+      // occur inside a class.
       ObjCInterface.generateConstructor(
-          objCEnclosingClass ?? 'NSObject', value, library, objCShouldRetain);
+          objCEnclosingClass!, value, library, objCRetain);
 }

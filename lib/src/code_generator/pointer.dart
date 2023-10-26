@@ -91,18 +91,17 @@ class ObjCObjectPointer extends PointerType {
   String convertDartTypeToFfiDartType(
     Writer w,
     String value, {
-    bool objCShouldRetain = false,
+    required bool objCRetain,
   }) =>
-      '$value._id';
+      ObjCInterface.generateGetId(value, objCRetain);
 
   @override
   String convertFfiDartTypeToDartType(
     Writer w,
     String value,
     String library, {
-    bool objCShouldRetain = true,
+    required bool objCRetain,
     String? objCEnclosingClass,
   }) =>
-      ObjCInterface.generateConstructor(
-          'NSObject', value, library, objCShouldRetain);
+      ObjCInterface.generateConstructor('NSObject', value, library, objCRetain);
 }

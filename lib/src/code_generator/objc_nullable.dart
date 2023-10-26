@@ -48,13 +48,13 @@ class ObjCNullable extends Type {
   String convertDartTypeToFfiDartType(
     Writer w,
     String value, {
-    bool objCShouldRetain = false,
+    required bool objCRetain,
   }) {
     // This is a bit of a hack, but works for all the types that are allowed to
     // be a child type. If we add more allowed child types, we may have to start
     // special casing each type. Turns value._id into value?._id ?? nullptr.
     final convertedValue = child.convertDartTypeToFfiDartType(w, '$value?',
-        objCShouldRetain: objCShouldRetain);
+        objCRetain: objCRetain);
     return '$convertedValue ?? ${w.ffiLibraryPrefix}.nullptr';
   }
 
@@ -63,7 +63,7 @@ class ObjCNullable extends Type {
     Writer w,
     String value,
     String library, {
-    bool objCShouldRetain = true,
+    required bool objCRetain,
     String? objCEnclosingClass,
   }) {
     // All currently supported child types have a Pointer as their FfiDartType.
@@ -71,7 +71,7 @@ class ObjCNullable extends Type {
       w,
       value,
       library,
-      objCShouldRetain: objCShouldRetain,
+      objCRetain: objCRetain,
       objCEnclosingClass: objCEnclosingClass,
     );
     return '$value.address == 0 ? null : $convertedValue';

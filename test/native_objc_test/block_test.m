@@ -51,7 +51,7 @@ typedef double (^DoubleBlock)(double);
 typedef Vec4 (^Vec4Block)(Vec4);
 typedef void (^VoidBlock)();
 typedef DummyObject* (^ObjectBlock)(DummyObject*);
-typedef DummyObject* _Nullable (^NullableBlock)(DummyObject* _Nullable);
+typedef DummyObject* _Nullable (^NullableObjectBlock)(DummyObject* _Nullable);
 typedef IntBlock (^BlockBlock)(IntBlock);
 
 // Wrapper around a block, so that our Dart code can test creating and invoking
@@ -71,7 +71,7 @@ typedef IntBlock (^BlockBlock)(IntBlock);
 + (double)callDoubleBlock:(DoubleBlock)block;
 + (Vec4)callVec4Block:(Vec4Block)block;
 + (DummyObject*)callObjectBlock:(ObjectBlock)block NS_RETURNS_RETAINED;
-+ (DummyObject* _Nullable)callNullableBlock:(NullableBlock)block;
++ (nullable DummyObject*)callNullableObjectBlock:(NullableObjectBlock)block;
 + (IntBlock)newBlock:(BlockBlock)block withMult:(int)mult;
 + (BlockBlock)newBlockBlock:(int)mult;
 @end
@@ -160,7 +160,7 @@ void* valid_block_isa = NULL;
   return block([DummyObject new]);
 }
 
-+ (DummyObject* _Nullable)callNullableBlock:(NullableBlock)block {
++ (nullable DummyObject*)callNullableObjectBlock:(NullableObjectBlock)block {
   return block(nil);
 }
 

@@ -22,7 +22,7 @@ typedef DoubleBlock = ObjCBlock_ffiDouble_ffiDouble;
 typedef Vec4Block = ObjCBlock_Vec4_Vec4;
 typedef VoidBlock = ObjCBlock_ffiVoid;
 typedef ObjectBlock = ObjCBlock_DummyObject_DummyObject;
-typedef NullableBlock = ObjCBlock_DummyObject_DummyObject1;
+typedef NullableObjectBlock = ObjCBlock_DummyObject_DummyObject1;
 typedef BlockBlock = ObjCBlock_Int32Int32_Int32Int32;
 
 void main() {
@@ -128,41 +128,39 @@ void main() {
     });
 
     test('Struct block', () {
-      final inputPtr = calloc<Vec4>();
-      final input = inputPtr.ref;
-      input.x = 1.2;
-      input.y = 3.4;
-      input.z = 5.6;
-      input.w = 7.8;
+      using((Arena arena) {
+        final inputPtr = arena<Vec4>();
+        final input = inputPtr.ref;
+        input.x = 1.2;
+        input.y = 3.4;
+        input.z = 5.6;
+        input.w = 7.8;
 
-      final tempPtr = calloc<Vec4>();
-      final temp = tempPtr.ref;
-      final block = Vec4Block.fromFunction(lib, (Vec4 v) {
-        // Twiddle the Vec4 components.
-        temp.x = v.y;
-        temp.y = v.z;
-        temp.z = v.w;
-        temp.w = v.x;
-        return temp;
+        final tempPtr = arena<Vec4>();
+        final temp = tempPtr.ref;
+        final block = Vec4Block.fromFunction(lib, (Vec4 v) {
+          // Twiddle the Vec4 components.
+          temp.x = v.y;
+          temp.y = v.z;
+          temp.z = v.w;
+          temp.w = v.x;
+          return temp;
+        });
+
+        final result1 = block(input);
+        expect(result1.x, 3.4);
+        expect(result1.y, 5.6);
+        expect(result1.z, 7.8);
+        expect(result1.w, 1.2);
+
+        final result2Ptr = arena<Vec4>();
+        final result2 = result2Ptr.ref;
+        BlockTester.callVec4Block_(lib, result2Ptr, block);
+        expect(result2.x, 3.4);
+        expect(result2.y, 5.6);
+        expect(result2.z, 7.8);
+        expect(result2.w, 1.2);
       });
-
-      final result1 = block(input);
-      expect(result1.x, 3.4);
-      expect(result1.y, 5.6);
-      expect(result1.z, 7.8);
-      expect(result1.w, 1.2);
-
-      final result2Ptr = calloc<Vec4>();
-      final result2 = result2Ptr.ref;
-      BlockTester.callVec4Block_(lib, result2Ptr, block);
-      expect(result2.x, 3.4);
-      expect(result2.y, 5.6);
-      expect(result2.z, 7.8);
-      expect(result2.w, 1.2);
-
-      calloc.free(inputPtr);
-      calloc.free(tempPtr);
-      calloc.free(result2Ptr);
     });
 
     test('Object block', () {
@@ -184,9 +182,9 @@ void main() {
       expect(isCalled, isTrue);
     });
 
-    test('Nullable block', () {
+    test('Nullable object block', () {
       bool isCalled = false;
-      final block = NullableBlock.fromFunction(lib, (DummyObject? x) {
+      final block = NullableObjectBlock.fromFunction(lib, (DummyObject? x) {
         isCalled = true;
         return x;
       });
@@ -197,8 +195,13 @@ void main() {
       expect(isCalled, isTrue);
 
       isCalled = false;
-      final result2 = BlockTester.callNullableBlock_(lib, block);
+      final result2 = block(null);
       expect(result2, isNull);
+      expect(isCalled, isTrue);
+
+      isCalled = false;
+      final result3 = BlockTester.callNullableObjectBlock_(lib, block);
+      expect(result3, isNull);
       expect(isCalled, isTrue);
     });
 
@@ -393,9 +396,9 @@ void main() {
       expect(BlockTester.getBlockRetainCount_(lib, outputBlock), 0);
     });
 
-    (Pointer<Int32>, Pointer<Int32>) objectBlockRefCountTest() {
-      final inputCounter = calloc<Int32>();
-      final outputCounter = calloc<Int32>();
+    (Pointer<Int32>, Pointer<Int32>) objectBlockRefCountTest(Allocator alloc) {
+      final inputCounter = alloc<Int32>();
+      final outputCounter = alloc<Int32>();
       inputCounter.value = 0;
       outputCounter.value = 0;
 
@@ -412,17 +415,18 @@ void main() {
     }
 
     test('Objects received and returned by blocks have correct ref counts', () {
-      final (inputCounter, outputCounter) = objectBlockRefCountTest();
-      doGC();
-      expect(inputCounter.value, 0);
-      expect(outputCounter.value, 0);
-      calloc.free(inputCounter);
-      calloc.free(outputCounter);
+      using((Arena arena) {
+        final (inputCounter, outputCounter) = objectBlockRefCountTest(arena);
+        doGC();
+        expect(inputCounter.value, 0);
+        expect(outputCounter.value, 0);
+      });
     });
 
-    (Pointer<Int32>, Pointer<Int32>) objectNativeBlockRefCountTest() {
-      final inputCounter = calloc<Int32>();
-      final outputCounter = calloc<Int32>();
+    (Pointer<Int32>, Pointer<Int32>) objectNativeBlockRefCountTest(
+        Allocator alloc) {
+      final inputCounter = alloc<Int32>();
+      final outputCounter = alloc<Int32>();
       inputCounter.value = 0;
       outputCounter.value = 0;
 
@@ -441,16 +445,17 @@ void main() {
     test(
         'Objects received and returned by native blocks have correct ref counts',
         () {
-      final (inputCounter, outputCounter) = objectNativeBlockRefCountTest();
-      doGC();
+      using((Arena arena) {
+        final (inputCounter, outputCounter) =
+            objectNativeBlockRefCountTest(arena);
+        doGC();
 
-      // This leaks because block functions aren't cleaned up at the moment.
-      // TODO(https://github.com/dart-lang/ffigen/issues/428): Fix this leak.
-      expect(inputCounter.value, 1);
+        // This leaks because block functions aren't cleaned up at the moment.
+        // TODO(https://github.com/dart-lang/ffigen/issues/428): Fix this leak.
+        expect(inputCounter.value, 1);
 
-      expect(outputCounter.value, 0);
-      calloc.free(inputCounter);
-      calloc.free(outputCounter);
+        expect(outputCounter.value, 0);
+      });
     });
 
     test('Block fields have sensible values', () {

@@ -8,6 +8,7 @@
 - Fix ObjC methods returning instancetype having the wrong type in sublasses.
 - When generating typedefs for `Pointer<NativeFunction<Function>>`, also
   generate a typedef for the `Function`.
+- Use Dart wrapper types in args and returns of ObjCBlocks.
 - Bump min SDK version to 3.2.0-114.0.dev.
 
 # 9.0.1

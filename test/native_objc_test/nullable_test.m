@@ -5,6 +5,7 @@
 
 +(BOOL) isNullWithNullableNSObjectArg:(nullable NSObject *)x;
 +(BOOL) isNullWithNotNullableNSObjectPtrArg:(NSObject *)x;
++(BOOL) isNullWithExplicitNonNullableNSObjectPtrArg:(nonnull NSObject *)x;
 +(nullable NSObject *) returnNil:(BOOL)r;
 
 @property (nullable, retain) NSObject *nullableObjectProperty;
@@ -18,6 +19,10 @@
 }
 
 +(BOOL) isNullWithNotNullableNSObjectPtrArg:(NSObject *)x {
+  return x == NULL;
+}
+
++(BOOL) isNullWithExplicitNonNullableNSObjectPtrArg:(nonnull NSObject *)x {
   return x == NULL;
 }
 

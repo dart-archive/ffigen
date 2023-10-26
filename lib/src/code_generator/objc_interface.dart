@@ -207,7 +207,9 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
       s.write(isStatic ? '_lib.${_classObject.name}' : '_id');
       s.write(', _lib.${m.selObject!.name}');
       for (final p in m.params) {
-        s.write(', ${p.type.convertDartTypeToFfiDartType(w, p.name)}');
+        final convertedParam =
+            p.type.convertDartTypeToFfiDartType(w, p.name, objCRetain: false);
+        s.write(', $convertedParam');
       }
       s.write(');\n');
       if (convertReturn) {
@@ -215,7 +217,7 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
           w,
           '_ret',
           '_lib',
-          objCShouldRetain: !m.isOwnedReturn,
+          objCRetain: !m.isOwnedReturn,
           objCEnclosingClass: name,
         );
         s.write('    return $result;');
@@ -403,30 +405,30 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
   String convertDartTypeToFfiDartType(
     Writer w,
     String value, {
-    bool objCShouldRetain = false,
+    required bool objCRetain,
   }) =>
-      ObjCInterface.generateGetId(value, objCShouldRetain);
+      ObjCInterface.generateGetId(value, objCRetain);
 
-  static String generateGetId(String value, bool objCShouldRetain) =>
-      objCShouldRetain ? '$value._retainAndReturnId()' : '$value._id';
+  static String generateGetId(String value, bool objCRetain) =>
+      objCRetain ? '$value._retainAndReturnId()' : '$value._id';
 
   @override
   String convertFfiDartTypeToDartType(
     Writer w,
     String value,
     String library, {
-    bool objCShouldRetain = true,
+    required bool objCRetain,
     String? objCEnclosingClass,
   }) =>
-      ObjCInterface.generateConstructor(name, value, library, objCShouldRetain);
+      ObjCInterface.generateConstructor(name, value, library, objCRetain);
 
   static String generateConstructor(
     String className,
     String value,
     String library,
-    bool objCShouldRetain,
+    bool objCRetain,
   ) {
-    final ownershipFlags = 'retain: $objCShouldRetain, release: true';
+    final ownershipFlags = 'retain: $objCRetain, release: true';
     return '$className._($value, $library, $ownershipFlags)';
   }
 

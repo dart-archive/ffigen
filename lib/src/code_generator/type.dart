@@ -56,20 +56,30 @@ abstract class Type {
 
   /// Returns generated Dart code that converts the given value from its
   /// DartType to its FfiDartType.
+  ///
+  /// [value] is the value to be converted. If [objCRetain] is true, the ObjC
+  /// object will be reained (ref count incremented) during conversion.
   String convertDartTypeToFfiDartType(
     Writer w,
     String value, {
-    bool objCShouldRetain = false,
+    required bool objCRetain,
   }) =>
       value;
 
   /// Returns generated Dart code that converts the given value from its
   /// FfiDartType to its DartType.
+  ///
+  /// [value] is the value to be converted, and [library] is an instance of the
+  /// native library object. If [objCRetain] is true, the ObjC wrapper object
+  /// will retain (ref count increment) the wrapped object pointer. If this
+  /// conversion is occuring in the context of an ObjC class, then
+  /// [objCEnclosingClass] should be the name of the Dart wrapper class (this is
+  /// used by instancetype).
   String convertFfiDartTypeToDartType(
     Writer w,
     String value,
     String library, {
-    bool objCShouldRetain = true,
+    required bool objCRetain,
     String? objCEnclosingClass,
   }) =>
       value;
@@ -132,7 +142,7 @@ abstract class BindingType extends NoLookUpBinding implements Type {
   String convertDartTypeToFfiDartType(
     Writer w,
     String value, {
-    bool objCShouldRetain = false,
+    required bool objCRetain,
   }) =>
       value;
 
@@ -141,7 +151,7 @@ abstract class BindingType extends NoLookUpBinding implements Type {
     Writer w,
     String value,
     String library, {
-    bool objCShouldRetain = true,
+    required bool objCRetain,
     String? objCEnclosingClass,
   }) =>
       value;

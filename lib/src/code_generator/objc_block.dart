@@ -118,12 +118,12 @@ $returnFfiDartType $closureTrampoline($blockCType block, $paramsFfiDartType) =>
     // Snippet that converts a Dart typed closure to FfiDart type. This snippet
     // is used below. Note that the closure being converted is called `fn`.
     final convertedFnArgs = params
-        .map((p) => p.type.convertFfiDartTypeToDartType(w, p.name, 'lib',
-            objCShouldRetain: true))
+        .map((p) => p.type
+            .convertFfiDartTypeToDartType(w, p.name, 'lib', objCRetain: true))
         .join(', ');
     final convFnInvocation = returnType.convertDartTypeToFfiDartType(
         w, 'fn($convertedFnArgs)',
-        objCShouldRetain: true);
+        objCRetain: true);
     final convFn = '($paramsFfiDartType) => $convFnInvocation';
 
     // Write the wrapper class.
@@ -187,14 +187,15 @@ class $name extends _ObjCBlockBase {
     // Call method.
     s.write('  ${returnType.getDartType(w)} call($paramsDartType) =>');
     final callMethodArgs = params
-        .map((p) => p.type.convertDartTypeToFfiDartType(w, p.name))
+        .map((p) =>
+            p.type.convertDartTypeToFfiDartType(w, p.name, objCRetain: false))
         .join(', ');
     final callMethodInvocation = '''
 _id.ref.invoke.cast<$natTrampFnType>().asFunction<$trampFuncFfiDartType>()(
     _id, $callMethodArgs)''';
     s.write(returnType.convertFfiDartTypeToDartType(
         w, callMethodInvocation, '_lib',
-        objCShouldRetain: false));
+        objCRetain: false));
     s.write(';\n');
 
     s.write('}\n');
@@ -231,19 +232,19 @@ _id.ref.invoke.cast<$natTrampFnType>().asFunction<$trampFuncFfiDartType>()(
   String convertDartTypeToFfiDartType(
     Writer w,
     String value, {
-    bool objCShouldRetain = false,
+    required bool objCRetain,
   }) =>
-      ObjCInterface.generateGetId(value, objCShouldRetain);
+      ObjCInterface.generateGetId(value, objCRetain);
 
   @override
   String convertFfiDartTypeToDartType(
     Writer w,
     String value,
     String library, {
-    bool objCShouldRetain = true,
+    required bool objCRetain,
     String? objCEnclosingClass,
   }) =>
-      ObjCInterface.generateConstructor(name, value, library, objCShouldRetain);
+      ObjCInterface.generateConstructor(name, value, library, objCRetain);
 
   @override
   String toString() => '($returnType (^)(${argTypes.join(', ')}))';
