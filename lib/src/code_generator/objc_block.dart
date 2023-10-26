@@ -119,7 +119,7 @@ $returnFfiDartType $closureTrampoline($blockCType block, $paramsFfiDartType) =>
     // is used below. Note that the closure being converted is called `fn`.
     final convertedFnArgs = params
         .map((p) => p.type.convertFfiDartTypeToDartType(w, p.name, 'lib',
-            objCShouldRetain: false))
+            objCShouldRetain: true))
         .join(', ');
     final convFnInvocation = returnType.convertDartTypeToFfiDartType(
         w, 'fn($convertedFnArgs)',
@@ -175,8 +175,9 @@ class $name extends _ObjCBlockBase {
   /// blocks do not keep the isolate alive.
   $name.listener(${w.className} lib, $funcDartType fn) :
       this._(lib.${builtInFunctions.newBlock.name}(
-          (_dartFuncListenerTrampoline ??= $nativeCallableType.listener($closureTrampoline
-                  $exceptionalReturn)..keepIsolateAlive = false).nativeFunction.cast(),
+          (_dartFuncListenerTrampoline ??= $nativeCallableType.listener(
+              $closureTrampoline $exceptionalReturn)..keepIsolateAlive =
+                  false).nativeFunction.cast(),
           $registerClosure($convFn)), lib);
   static $nativeCallableType? _dartFuncListenerTrampoline;
 

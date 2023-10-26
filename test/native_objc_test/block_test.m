@@ -12,9 +12,36 @@ typedef struct {
   double w;
 } Vec4;
 
-@interface DummyObject : NSObject {}
+@interface DummyObject : NSObject {
+  int32_t* counter;
+}
++ (instancetype)newWithCounter:(int32_t*) _counter;
+- (instancetype)initWithCounter:(int32_t*) _counter;
+- (void)setCounter:(int32_t*) _counter;
+- (void)dealloc;
 @end
 @implementation DummyObject
+
++ (instancetype)newWithCounter:(int32_t*) _counter {
+  return [[DummyObject alloc] initWithCounter: _counter];
+}
+
+- (instancetype)initWithCounter:(int32_t*) _counter {
+  counter = _counter;
+  ++*counter;
+  return [super init];
+}
+
+- (void)setCounter:(int32_t*) _counter {
+  counter = _counter;
+  ++*counter;
+}
+
+- (void)dealloc {
+  if (counter != nil) --*counter;
+  [super dealloc];
+}
+
 @end
 
 
@@ -43,9 +70,10 @@ typedef IntBlock (^BlockBlock)(IntBlock);
 + (float)callFloatBlock:(FloatBlock)block;
 + (double)callDoubleBlock:(DoubleBlock)block;
 + (Vec4)callVec4Block:(Vec4Block)block;
-+ (DummyObject*)callObjectBlock:(ObjectBlock)block;
++ (DummyObject*)callObjectBlock:(ObjectBlock)block NS_RETURNS_RETAINED;
 + (DummyObject* _Nullable)callNullableBlock:(NullableBlock)block;
-+ (IntBlock)callBlockBlock:(BlockBlock)block;
++ (IntBlock)newBlock:(BlockBlock)block withMult:(int)mult;
++ (BlockBlock)newBlockBlock:(int)mult;
 @end
 
 @implementation BlockTester
@@ -128,7 +156,7 @@ void* valid_block_isa = NULL;
   return block(vec4);
 }
 
-+ (DummyObject*)callObjectBlock:(ObjectBlock)block {
++ (DummyObject*)callObjectBlock:(ObjectBlock)block NS_RETURNS_RETAINED {
   return block([DummyObject new]);
 }
 
@@ -136,10 +164,19 @@ void* valid_block_isa = NULL;
   return block(nil);
 }
 
-+ (IntBlock)callBlockBlock:(BlockBlock)block {
-  return block(^int(int x) {
-    return 2 * x;
-  });
++ (IntBlock)newBlock:(BlockBlock)block withMult:(int)mult {
+  return block([^int(int x) {
+    return mult * x;
+  } copy]);
+  // ^ copy this stack allocated block to the heap.
+}
+
++ (BlockBlock)newBlockBlock:(int)mult {
+  return [^IntBlock(IntBlock block) {
+    return [^int(int x) {
+      return mult * block(x);
+    } copy];
+  } copy];
 }
 
 @end
