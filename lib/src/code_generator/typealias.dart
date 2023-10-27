@@ -142,13 +142,45 @@ class Typealias extends BindingType {
   }
 
   @override
-  String getDartType(Writer w) => _dartAliasName ?? type.getDartType(w);
+  String getDartType(Writer w) {
+    if (_dartAliasName != null) {
+      return _dartAliasName!;
+    } else if (type.sameDartAndCType) {
+      return getFfiDartType(w);
+    } else {
+      return type.getDartType(w);
+    }
+  }
 
   @override
   bool get sameFfiDartAndCType => type.sameFfiDartAndCType;
 
   @override
   bool get sameDartAndCType => type.sameDartAndCType;
+
+  @override
+  String convertDartTypeToFfiDartType(
+    Writer w,
+    String value, {
+    required bool objCRetain,
+  }) =>
+      type.convertDartTypeToFfiDartType(w, value, objCRetain: objCRetain);
+
+  @override
+  String convertFfiDartTypeToDartType(
+    Writer w,
+    String value,
+    String library, {
+    required bool objCRetain,
+    String? objCEnclosingClass,
+  }) =>
+      type.convertFfiDartTypeToDartType(
+        w,
+        value,
+        library,
+        objCRetain: objCRetain,
+        objCEnclosingClass: objCEnclosingClass,
+      );
 
   @override
   String cacheKey() => type.cacheKey();
@@ -173,4 +205,25 @@ class ObjCInstanceType extends Typealias {
     super.genFfiDartType,
     super.isInternal,
   }) : super._();
+
+  @override
+  String convertDartTypeToFfiDartType(
+    Writer w,
+    String value, {
+    required bool objCRetain,
+  }) =>
+      ObjCInterface.generateGetId(value, objCRetain);
+
+  @override
+  String convertFfiDartTypeToDartType(
+    Writer w,
+    String value,
+    String library, {
+    required bool objCRetain,
+    String? objCEnclosingClass,
+  }) =>
+      // objCEnclosingClass must be present, because instancetype can only
+      // occur inside a class.
+      ObjCInterface.generateConstructor(
+          objCEnclosingClass!, value, library, objCRetain);
 }

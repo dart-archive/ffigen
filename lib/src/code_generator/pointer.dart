@@ -86,4 +86,22 @@ class ObjCObjectPointer extends PointerType {
 
   @override
   bool get sameDartAndCType => false;
+
+  @override
+  String convertDartTypeToFfiDartType(
+    Writer w,
+    String value, {
+    required bool objCRetain,
+  }) =>
+      ObjCInterface.generateGetId(value, objCRetain);
+
+  @override
+  String convertFfiDartTypeToDartType(
+    Writer w,
+    String value,
+    String library, {
+    required bool objCRetain,
+    String? objCEnclosingClass,
+  }) =>
+      ObjCInterface.generateConstructor('NSObject', value, library, objCRetain);
 }

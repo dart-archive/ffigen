@@ -207,12 +207,19 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
       s.write(isStatic ? '_lib.${_classObject.name}' : '_id');
       s.write(', _lib.${m.selObject!.name}');
       for (final p in m.params) {
-        s.write(', ${_doArgConversion(p)}');
+        final convertedParam =
+            p.type.convertDartTypeToFfiDartType(w, p.name, objCRetain: false);
+        s.write(', $convertedParam');
       }
       s.write(');\n');
       if (convertReturn) {
-        final result = _doReturnConversion(
-            returnType, '_ret', name, '_lib', m.isOwnedReturn);
+        final result = returnType.convertFfiDartTypeToDartType(
+          w,
+          '_ret',
+          '_lib',
+          objCRetain: !m.isOwnedReturn,
+          objCEnclosingClass: name,
+        );
         s.write('    return $result;');
       }
 
@@ -394,6 +401,37 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
   @override
   bool get sameDartAndCType => false;
 
+  @override
+  String convertDartTypeToFfiDartType(
+    Writer w,
+    String value, {
+    required bool objCRetain,
+  }) =>
+      ObjCInterface.generateGetId(value, objCRetain);
+
+  static String generateGetId(String value, bool objCRetain) =>
+      objCRetain ? '$value._retainAndReturnId()' : '$value._id';
+
+  @override
+  String convertFfiDartTypeToDartType(
+    Writer w,
+    String value,
+    String library, {
+    required bool objCRetain,
+    String? objCEnclosingClass,
+  }) =>
+      ObjCInterface.generateConstructor(name, value, library, objCRetain);
+
+  static String generateConstructor(
+    String className,
+    String value,
+    String library,
+    bool objCRetain,
+  ) {
+    final ownershipFlags = 'retain: $objCRetain, release: true';
+    return '$className._($value, $library, $ownershipFlags)';
+  }
+
   // Utils for converting between the internal types passed to native code, and
   // the external types visible to the user. For example, ObjCInterfaces are
   // passed to native as Pointer<ObjCObject>, but the user sees the Dart wrapper
@@ -412,44 +450,6 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
       return '$enclosingClass?';
     }
     return type.getDartType(w);
-  }
-
-  String _doArgConversion(ObjCMethodParam arg) {
-    final baseType = arg.type.typealiasType;
-    if (baseType is ObjCNullable) {
-      return '${arg.name}?._id ?? ffi.nullptr';
-    } else if (arg.type is ObjCInstanceType ||
-        baseType is ObjCInterface ||
-        baseType is ObjCObjectPointer ||
-        baseType is ObjCBlock) {
-      return '${arg.name}._id';
-    }
-    return arg.name;
-  }
-
-  String _doReturnConversion(Type type, String value, String enclosingClass,
-      String library, bool isOwnedReturn) {
-    var prefix = '';
-    var baseType = type.typealiasType;
-    if (baseType is ObjCNullable) {
-      prefix = '$value.address == 0 ? null : ';
-      type = baseType.child;
-      baseType = type.typealiasType;
-    }
-    final ownerFlags = 'retain: ${!isOwnedReturn}, release: true';
-    if (type is ObjCInstanceType) {
-      return '$prefix$enclosingClass._($value, $library, $ownerFlags)';
-    }
-    if (baseType is ObjCInterface) {
-      return '$prefix${baseType.name}._($value, $library, $ownerFlags)';
-    }
-    if (baseType is ObjCBlock) {
-      return '$prefix${baseType.name}._($value, $library)';
-    }
-    if (baseType is ObjCObjectPointer) {
-      return '${prefix}NSObject._($value, $library, $ownerFlags)';
-    }
-    return prefix + value;
   }
 }
 

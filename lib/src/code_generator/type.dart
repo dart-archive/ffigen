@@ -54,8 +54,39 @@ abstract class Type {
   /// Returns whether the dart type and C type string are same.
   bool get sameDartAndCType => sameFfiDartAndCType;
 
-  /// Returns the string representation of the Type, for debugging purposes
-  /// only. This string should not be printed as generated code.
+  /// Returns generated Dart code that converts the given value from its
+  /// DartType to its FfiDartType.
+  ///
+  /// [value] is the value to be converted. If [objCRetain] is true, the ObjC
+  /// object will be reained (ref count incremented) during conversion.
+  String convertDartTypeToFfiDartType(
+    Writer w,
+    String value, {
+    required bool objCRetain,
+  }) =>
+      value;
+
+  /// Returns generated Dart code that converts the given value from its
+  /// FfiDartType to its DartType.
+  ///
+  /// [value] is the value to be converted, and [library] is an instance of the
+  /// native library object. If [objCRetain] is true, the ObjC wrapper object
+  /// will retain (ref count increment) the wrapped object pointer. If this
+  /// conversion is occuring in the context of an ObjC class, then
+  /// [objCEnclosingClass] should be the name of the Dart wrapper class (this is
+  /// used by instancetype).
+  String convertFfiDartTypeToDartType(
+    Writer w,
+    String value,
+    String library, {
+    required bool objCRetain,
+    String? objCEnclosingClass,
+  }) =>
+      value;
+
+  /// Returns a human readable string representation of the Type. This is mostly
+  /// just for debugging, but it may also be used for non-functional code (eg to
+  /// name a variable or type in generated code).
   @override
   String toString();
 
@@ -106,6 +137,24 @@ abstract class BindingType extends NoLookUpBinding implements Type {
 
   @override
   bool get sameDartAndCType => sameFfiDartAndCType;
+
+  @override
+  String convertDartTypeToFfiDartType(
+    Writer w,
+    String value, {
+    required bool objCRetain,
+  }) =>
+      value;
+
+  @override
+  String convertFfiDartTypeToDartType(
+    Writer w,
+    String value,
+    String library, {
+    required bool objCRetain,
+    String? objCEnclosingClass,
+  }) =>
+      value;
 
   @override
   String toString() => originalName;

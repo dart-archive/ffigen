@@ -239,6 +239,11 @@ class $name implements ${w.ffiLibraryPrefix}.Finalizable {
 
   /// Return a pointer to this object.
   $idType get pointer => _id;
+
+  $idType _retainAndReturnId() {
+    _lib.$retain(_id.cast());
+    return _id;
+  }
 }
 ''');
   }

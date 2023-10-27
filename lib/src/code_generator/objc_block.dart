@@ -73,31 +73,36 @@ class ObjCBlock extends BindingType {
     final trampFuncType = FunctionType(
         returnType: returnType,
         parameters: [Parameter(type: blockPtr, name: 'block'), ...params]);
-    final natTrampFnType = NativeFunc(trampFuncType);
+    final trampFuncCType = trampFuncType.getCType(w, writeArgumentNames: false);
+    final trampFuncFfiDartType =
+        trampFuncType.getFfiDartType(w, writeArgumentNames: false);
+    final natTrampFnType = NativeFunc(trampFuncType).getCType(w);
     final nativeCallableType =
-        '${w.ffiLibraryPrefix}.NativeCallable<${trampFuncType.getCType(w)}>';
+        '${w.ffiLibraryPrefix}.NativeCallable<$trampFuncCType>';
+    final funcDartType = funcType.getDartType(w, writeArgumentNames: false);
+    final funcFfiDartType =
+        funcType.getFfiDartType(w, writeArgumentNames: false);
+    final returnFfiDartType = returnType.getFfiDartType(w);
+    final blockCType = blockPtr.getCType(w);
+
+    final paramsNameOnly = params.map((p) => p.name).join(', ');
+    final paramsFfiDartType =
+        params.map((p) => '${p.type.getFfiDartType(w)} ${p.name}').join(', ');
+    final paramsDartType =
+        params.map((p) => '${p.type.getDartType(w)} ${p.name}').join(', ');
 
     // Write the function pointer based trampoline function.
-    s.write(returnType.getFfiDartType(w));
-    s.write(' $funcPtrTrampoline(${blockPtr.getCType(w)} block');
-    for (int i = 0; i < params.length; ++i) {
-      s.write(', ${params[i].type.getFfiDartType(w)} ${params[i].name}');
-    }
-    s.write(') {\n');
-    s.write('  ${isVoid ? '' : 'return '}block.ref.target.cast<'
-        '${natFnType.getFfiDartType(w)}>().asFunction<'
-        '${funcType.getFfiDartType(w)}>()(');
-    for (int i = 0; i < params.length; ++i) {
-      s.write('${i == 0 ? '' : ', '}${params[i].name}');
-    }
-    s.write(');\n');
-    s.write('}\n');
+    s.write('''
+$returnFfiDartType $funcPtrTrampoline($blockCType block, $paramsFfiDartType) =>
+    block.ref.target.cast<${natFnType.getFfiDartType(w)}>()
+        .asFunction<$funcFfiDartType>()($paramsNameOnly);
+''');
 
     // Write the closure registry function.
     s.write('''
-final $closureRegistry = <int, Function>{};
+final $closureRegistry = <int, $funcFfiDartType>{};
 int $closureRegistryIndex = 0;
-$voidPtr $registerClosure(Function fn) {
+$voidPtr $registerClosure($funcFfiDartType fn) {
   final id = ++$closureRegistryIndex;
   $closureRegistry[id] = fn;
   return $voidPtr.fromAddress(id);
@@ -105,33 +110,30 @@ $voidPtr $registerClosure(Function fn) {
 ''');
 
     // Write the closure based trampoline function.
-    s.write(returnType.getFfiDartType(w));
-    s.write(' $closureTrampoline(${blockPtr.getCType(w)} block');
-    for (int i = 0; i < params.length; ++i) {
-      s.write(', ${params[i].type.getFfiDartType(w)} ${params[i].name}');
-    }
-    s.write(') {\n');
-    s.write('  ${isVoid ? '' : 'return '}');
-    s.write('($closureRegistry[block.ref.target.address]');
-    s.write(' as ${returnType.getFfiDartType(w)} Function(');
-    for (int i = 0; i < params.length; ++i) {
-      s.write('${i == 0 ? '' : ', '}${params[i].type.getFfiDartType(w)}');
-    }
-    s.write('))');
-    s.write('(');
-    for (int i = 0; i < params.length; ++i) {
-      s.write('${i == 0 ? '' : ', '}${params[i].name}');
-    }
-    s.write(');\n');
-    s.write('}\n');
+    s.write('''
+$returnFfiDartType $closureTrampoline($blockCType block, $paramsFfiDartType) =>
+    $closureRegistry[block.ref.target.address]!($paramsNameOnly);
+''');
+
+    // Snippet that converts a Dart typed closure to FfiDart type. This snippet
+    // is used below. Note that the closure being converted is called `fn`.
+    final convertedFnArgs = params
+        .map((p) => p.type
+            .convertFfiDartTypeToDartType(w, p.name, 'lib', objCRetain: true))
+        .join(', ');
+    final convFnInvocation = returnType.convertDartTypeToFfiDartType(
+        w, 'fn($convertedFnArgs)',
+        objCRetain: true);
+    final convFn = '($paramsFfiDartType) => $convFnInvocation';
 
     // Write the wrapper class.
     final defaultValue = returnType.getDefaultValue(w, '_lib');
     final exceptionalReturn = defaultValue == null ? '' : ', $defaultValue';
     s.write('''
 class $name extends _ObjCBlockBase {
-  $name._(${blockPtr.getCType(w)} id, ${w.className} lib) :
-      super._(id, lib, retain: false, release: true);
+  $name._($blockCType id, ${w.className} lib,
+      {bool retain = false, bool release = true}) :
+          super._(id, lib, retain: retain, release: release);
 
   /// Creates a block from a C function pointer.
   ///
@@ -141,7 +143,7 @@ class $name extends _ObjCBlockBase {
   $name.fromFunctionPointer(${w.className} lib, $natFnPtr ptr) :
       this._(lib.${builtInFunctions.newBlock.name}(
           _cFuncTrampoline ??= ${w.ffiLibraryPrefix}.Pointer.fromFunction<
-              ${trampFuncType.getCType(w)}>($funcPtrTrampoline
+              $trampFuncCType>($funcPtrTrampoline
                   $exceptionalReturn).cast(), ptr.cast()), lib);
   static $voidPtr? _cFuncTrampoline;
 
@@ -150,11 +152,11 @@ class $name extends _ObjCBlockBase {
   /// This block must be invoked by native code running on the same thread as
   /// the isolate that registered it. Invoking the block on the wrong thread
   /// will result in a crash.
-  $name.fromFunction(${w.className} lib, ${funcType.getFfiDartType(w)} fn) :
+  $name.fromFunction(${w.className} lib, $funcDartType fn) :
       this._(lib.${builtInFunctions.newBlock.name}(
           _dartFuncTrampoline ??= ${w.ffiLibraryPrefix}.Pointer.fromFunction<
-              ${trampFuncType.getCType(w)}>($closureTrampoline
-                  $exceptionalReturn).cast(), $registerClosure(fn)), lib);
+              $trampFuncCType>($closureTrampoline
+                  $exceptionalReturn).cast(), $registerClosure($convFn)), lib);
   static $voidPtr? _dartFuncTrampoline;
 
 ''');
@@ -171,31 +173,30 @@ class $name extends _ObjCBlockBase {
   ///
   /// Note that unlike the default behavior of NativeCallable.listener, listener
   /// blocks do not keep the isolate alive.
-  $name.listener(${w.className} lib, ${funcType.getFfiDartType(w)} fn) :
+  $name.listener(${w.className} lib, $funcDartType fn) :
       this._(lib.${builtInFunctions.newBlock.name}(
-          (_dartFuncListenerTrampoline ??= $nativeCallableType.listener($closureTrampoline
-                  $exceptionalReturn)..keepIsolateAlive = false).nativeFunction.cast(),
-          $registerClosure(fn)), lib);
+          (_dartFuncListenerTrampoline ??= $nativeCallableType.listener(
+              $closureTrampoline $exceptionalReturn)..keepIsolateAlive =
+                  false).nativeFunction.cast(),
+          $registerClosure($convFn)), lib);
   static $nativeCallableType? _dartFuncListenerTrampoline;
 
 ''');
     }
 
     // Call method.
-    s.write('  ${returnType.getFfiDartType(w)} call(');
-    for (int i = 0; i < params.length; ++i) {
-      s.write('${i == 0 ? '' : ', '}${params[i].type.getFfiDartType(w)}');
-      s.write(' ${params[i].name}');
-    }
-    s.write(''') {
-    ${isVoid ? '' : 'return '}_id.ref.invoke.cast<
-        ${natTrampFnType.getCType(w)}>().asFunction<
-            ${trampFuncType.getFfiDartType(w)}>()(_id''');
-    for (int i = 0; i < params.length; ++i) {
-      s.write(', ${params[i].name}');
-    }
-    s.write(''');
-  }''');
+    s.write('  ${returnType.getDartType(w)} call($paramsDartType) =>');
+    final callMethodArgs = params
+        .map((p) =>
+            p.type.convertDartTypeToFfiDartType(w, p.name, objCRetain: false))
+        .join(', ');
+    final callMethodInvocation = '''
+_id.ref.invoke.cast<$natTrampFnType>().asFunction<$trampFuncFfiDartType>()(
+    _id, $callMethodArgs)''';
+    s.write(returnType.convertFfiDartTypeToDartType(
+        w, callMethodInvocation, '_lib',
+        objCRetain: false));
+    s.write(';\n');
 
     s.write('}\n');
     return BindingString(
@@ -226,6 +227,24 @@ class $name extends _ObjCBlockBase {
 
   @override
   bool get sameDartAndCType => false;
+
+  @override
+  String convertDartTypeToFfiDartType(
+    Writer w,
+    String value, {
+    required bool objCRetain,
+  }) =>
+      ObjCInterface.generateGetId(value, objCRetain);
+
+  @override
+  String convertFfiDartTypeToDartType(
+    Writer w,
+    String value,
+    String library, {
+    required bool objCRetain,
+    String? objCEnclosingClass,
+  }) =>
+      ObjCInterface.generateConstructor(name, value, library, objCRetain);
 
   @override
   String toString() => '($returnType (^)(${argTypes.join(', ')}))';

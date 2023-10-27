@@ -12,11 +12,47 @@ typedef struct {
   double w;
 } Vec4;
 
+@interface DummyObject : NSObject {
+  int32_t* counter;
+}
++ (instancetype)newWithCounter:(int32_t*) _counter;
+- (instancetype)initWithCounter:(int32_t*) _counter;
+- (void)setCounter:(int32_t*) _counter;
+- (void)dealloc;
+@end
+@implementation DummyObject
+
++ (instancetype)newWithCounter:(int32_t*) _counter {
+  return [[DummyObject alloc] initWithCounter: _counter];
+}
+
+- (instancetype)initWithCounter:(int32_t*) _counter {
+  counter = _counter;
+  ++*counter;
+  return [super init];
+}
+
+- (void)setCounter:(int32_t*) _counter {
+  counter = _counter;
+  ++*counter;
+}
+
+- (void)dealloc {
+  if (counter != nil) --*counter;
+  [super dealloc];
+}
+
+@end
+
+
 typedef int32_t (^IntBlock)(int32_t);
 typedef float (^FloatBlock)(float);
 typedef double (^DoubleBlock)(double);
 typedef Vec4 (^Vec4Block)(Vec4);
 typedef void (^VoidBlock)();
+typedef DummyObject* (^ObjectBlock)(DummyObject*);
+typedef DummyObject* _Nullable (^NullableObjectBlock)(DummyObject* _Nullable);
+typedef IntBlock (^BlockBlock)(IntBlock);
 
 // Wrapper around a block, so that our Dart code can test creating and invoking
 // blocks in Objective C code.
@@ -34,6 +70,10 @@ typedef void (^VoidBlock)();
 + (float)callFloatBlock:(FloatBlock)block;
 + (double)callDoubleBlock:(DoubleBlock)block;
 + (Vec4)callVec4Block:(Vec4Block)block;
++ (DummyObject*)callObjectBlock:(ObjectBlock)block NS_RETURNS_RETAINED;
++ (nullable DummyObject*)callNullableObjectBlock:(NullableObjectBlock)block;
++ (IntBlock)newBlock:(BlockBlock)block withMult:(int)mult;
++ (BlockBlock)newBlockBlock:(int)mult;
 @end
 
 @implementation BlockTester
@@ -114,6 +154,29 @@ void* valid_block_isa = NULL;
   vec4.z = 5.6;
   vec4.w = 7.8;
   return block(vec4);
+}
+
++ (DummyObject*)callObjectBlock:(ObjectBlock)block NS_RETURNS_RETAINED {
+  return block([DummyObject new]);
+}
+
++ (nullable DummyObject*)callNullableObjectBlock:(NullableObjectBlock)block {
+  return block(nil);
+}
+
++ (IntBlock)newBlock:(BlockBlock)block withMult:(int)mult {
+  return block([^int(int x) {
+    return mult * x;
+  } copy]);
+  // ^ copy this stack allocated block to the heap.
+}
+
++ (BlockBlock)newBlockBlock:(int)mult {
+  return [^IntBlock(IntBlock block) {
+    return [^int(int x) {
+      return mult * block(x);
+    } copy];
+  } copy];
 }
 
 @end
