@@ -110,36 +110,31 @@ class Func extends LookUpBinding {
     final dartType = _exposedFunctionTypealias?.getFfiDartType(w) ??
         functionType.getFfiDartType(w, writeArgumentNames: false);
 
+    final returnType = functionType.returnType.getFfiDartType(w);
+    final argDeclString = functionType.dartTypeParameters
+        .map((p) => '${p.type.getFfiDartType(w)} ${p.name},\n')
+        .join('');
+    final argString =
+        functionType.dartTypeParameters.map((p) => '${p.name},\n').join('');
+    final isLeafString = isLeaf ? 'isLeaf:true' : '';
+
     if (ffiNativeConfig.enabled) {
       final assetString = ffiNativeConfig.asset != null
           ? ", asset: '${ffiNativeConfig.asset}'"
           : '';
-      final isLeafString = isLeaf ? ', isLeaf: true' : '';
-      s.write(
-          "@${w.ffiLibraryPrefix}.Native<$cType>(symbol: '$originalName'$assetString$isLeafString)\n");
+      s.write('''
+@${w.ffiLibraryPrefix}.Native<$cType>(symbol: '$originalName'$assetString$isLeafString)
+external $returnType $enclosingFuncName($argDeclString);
 
-      s.write(
-          'external ${functionType.returnType.getFfiDartType(w)} $enclosingFuncName(\n');
-      for (final p in functionType.dartTypeParameters) {
-        s.write('  ${p.type.getFfiDartType(w)} ${p.name},\n');
-      }
-      s.write(');\n\n');
+''');
     } else {
       // Write enclosing function.
-      s.write(
-          '${functionType.returnType.getFfiDartType(w)} $enclosingFuncName(\n');
-      for (final p in functionType.dartTypeParameters) {
-        s.write('  ${p.type.getFfiDartType(w)} ${p.name},\n');
-      }
-      s.write(') {\n');
-      s.write('return $funcVarName');
+      s.write('''
+$returnType $enclosingFuncName($argDeclString) {
+  return $funcVarName($argString);
+}
 
-      s.write('(\n');
-      for (final p in functionType.dartTypeParameters) {
-        s.write('    ${p.name},\n');
-      }
-      s.write('  );\n');
-      s.write('}\n');
+''');
 
       if (exposeSymbolAddress) {
         // Add to SymbolAddress in writer.
@@ -150,12 +145,14 @@ class Func extends LookUpBinding {
           ptrName: funcPointerName,
         );
       }
+
       // Write function pointer.
-      s.write(
-          "late final $funcPointerName = ${w.lookupFuncIdentifier}<${w.ffiLibraryPrefix}.NativeFunction<$cType>>('$originalName');\n");
-      final isLeafString = isLeaf ? 'isLeaf:true' : '';
-      s.write(
-          'late final $funcVarName = $funcPointerName.asFunction<$dartType>($isLeafString);\n\n');
+      s.write('''
+late final $funcPointerName = ${w.lookupFuncIdentifier}<
+    ${w.ffiLibraryPrefix}.NativeFunction<$cType>>('$originalName');
+late final $funcVarName = $funcPointerName.asFunction<$dartType>($isLeafString);
+
+''');
     }
 
     return BindingString(type: BindingStringType.func, string: s.toString());
