@@ -175,9 +175,6 @@ void _parseProperty(clang_types.CXCursor cursor) {
   final isReadOnly = propertyAttributes &
           clang_types.CXObjCPropertyAttrKind.CXObjCPropertyAttr_readonly >
       0;
-  // TODO(#334): Use the nullable attribute to decide this.
-  final isNullable =
-      cursor.type().kind == clang_types.CXTypeKind.CXType_ObjCObjectPointer;
 
   final property = ObjCProperty(fieldName);
 
@@ -193,7 +190,6 @@ void _parseProperty(clang_types.CXCursor cursor) {
     kind: ObjCMethodKind.propertyGetter,
     isClass: isClass,
     returnType: fieldType,
-    isNullableReturn: isNullable,
   );
   itf.addMethod(getter);
 
@@ -208,8 +204,7 @@ void _parseProperty(clang_types.CXCursor cursor) {
         kind: ObjCMethodKind.propertySetter,
         isClass: isClass,
         returnType: NativeType(SupportedNativeType.Void));
-    setter.params
-        .add(ObjCMethodParam(fieldType, 'value', isNullable: isNullable));
+    setter.params.add(ObjCMethodParam(fieldType, 'value'));
     itf.addMethod(setter);
   }
 }
@@ -264,22 +259,7 @@ int _parseMethodVisitor(clang_types.CXCursor cursor,
 }
 
 void _parseMethodParam(clang_types.CXCursor cursor) {
-  /*
-  TODO(#334): Change this to use:
-  
-  clang.clang_Type_getNullability(cursor.type()) ==
-      clang_types.CXTypeNullabilityKind.CXTypeNullability_Nullable;
-
-  NOTE: This will only work with the
-
-    clang_types
-      .CXTranslationUnit_Flags.CXTranslationUnit_IncludeAttributedTypes
-
-  option set.
-  */
   final parsed = _methodStack.top;
-  final isNullable =
-      cursor.type().kind == clang_types.CXTypeKind.CXType_ObjCObjectPointer;
   final name = cursor.spelling();
   final type = cursor.type().toCodeGenType();
   if (type.isIncompleteCompound) {
@@ -291,7 +271,7 @@ void _parseMethodParam(clang_types.CXCursor cursor) {
   }
   _logger.fine(
       '           >> Parameter: $type $name ${cursor.completeStringRepr()}');
-  parsed.method.params.add(ObjCMethodParam(type, name, isNullable: isNullable));
+  parsed.method.params.add(ObjCMethodParam(type, name));
 }
 
 void _markMethodReturnsRetained(clang_types.CXCursor cursor) {

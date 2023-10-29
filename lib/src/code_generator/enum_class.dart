@@ -29,18 +29,12 @@ class EnumClass extends BindingType {
   final List<EnumConstant> enumConstants;
 
   EnumClass({
-    String? usr,
-    String? originalName,
-    required String name,
-    String? dartDoc,
+    super.usr,
+    super.originalName,
+    required super.name,
+    super.dartDoc,
     List<EnumConstant>? enumConstants,
-  })  : enumConstants = enumConstants ?? [],
-        super(
-          usr: usr,
-          originalName: originalName,
-          name: name,
-          dartDoc: dartDoc,
-        );
+  }) : enumConstants = enumConstants ?? [];
 
   @override
   BindingString toBindingString(Writer w) {
@@ -85,6 +79,12 @@ class EnumClass extends BindingType {
 
   @override
   String getFfiDartType(Writer w) => nativeType.getFfiDartType(w);
+
+  @override
+  bool get sameFfiDartAndCType => nativeType.sameFfiDartAndCType;
+
+  @override
+  bool get sameDartAndCType => nativeType.sameDartAndCType;
 
   @override
   String? getDefaultValue(Writer w, String nativeLib) => '0';

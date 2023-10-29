@@ -915,6 +915,23 @@ class Clang {
   late final _clang_Type_getAlignOf =
       _clang_Type_getAlignOfPtr.asFunction<int Function(CXType)>();
 
+  /// Return the type that was modified by this attributed type.
+  ///
+  /// If the type is not an attributed type, an invalid type is returned.
+  CXType clang_Type_getModifiedType(
+    CXType T,
+  ) {
+    return _clang_Type_getModifiedType(
+      T,
+    );
+  }
+
+  late final _clang_Type_getModifiedTypePtr =
+      _lookup<ffi.NativeFunction<CXType Function(CXType)>>(
+          'clang_Type_getModifiedType');
+  late final _clang_Type_getModifiedType =
+      _clang_Type_getModifiedTypePtr.asFunction<CXType Function(CXType)>();
+
   /// Determine whether the given cursor represents an anonymous
   /// tag or namespace
   int clang_Cursor_isAnonymous(
@@ -2623,10 +2640,10 @@ abstract class CXChildVisitResult {
 ///
 /// The visitor should return one of the \c CXChildVisitResult values
 /// to direct clang_visitCursorChildren().
-typedef CXCursorVisitor = ffi.Pointer<
-    ffi.NativeFunction<
-        ffi.Int32 Function(
-            CXCursor cursor, CXCursor parent, CXClientData client_data)>>;
+typedef CXCursorVisitor
+    = ffi.Pointer<ffi.NativeFunction<CXCursorVisitor_function>>;
+typedef CXCursorVisitor_function = ffi.Int32 Function(
+    CXCursor cursor, CXCursor parent, CXClientData client_data);
 
 /// Opaque pointer representing client data that will be passed through
 /// to various callbacks and visitors.

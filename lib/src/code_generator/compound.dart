@@ -35,23 +35,16 @@ abstract class Compound extends BindingType {
   bool get isUnion => compoundType == CompoundType.union;
 
   Compound({
-    String? usr,
-    String? originalName,
-    required String name,
+    super.usr,
+    super.originalName,
+    required super.name,
     required this.compoundType,
     this.isIncomplete = false,
     this.pack,
-    String? dartDoc,
+    super.dartDoc,
     List<Member>? members,
-    bool isInternal = false,
-  })  : members = members ?? [],
-        super(
-          usr: usr,
-          originalName: originalName,
-          name: name,
-          dartDoc: dartDoc,
-          isInternal: isInternal,
-        );
+    super.isInternal,
+  }) : members = members ?? [];
 
   factory Compound.fromType({
     required CompoundType type,
@@ -145,7 +138,7 @@ abstract class Compound extends BindingType {
         s.write('${depth}external ${_getInlineArrayTypeString(m.type, w)} ');
         s.write('${m.name};\n\n');
       } else {
-        if (!sameDartAndCType(m.type, w)) {
+        if (!m.type.sameFfiDartAndCType) {
           s.write('$depth@${m.type.getCType(w)}()\n');
         }
         s.write('${depth}external ${m.type.getFfiDartType(w)} ${m.name};\n\n');
@@ -173,6 +166,9 @@ abstract class Compound extends BindingType {
 
   @override
   String getCType(Writer w) => name;
+
+  @override
+  bool get sameFfiDartAndCType => true;
 }
 
 class Member {

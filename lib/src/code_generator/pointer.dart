@@ -31,6 +31,10 @@ class PointerType extends Type {
   String getCType(Writer w) =>
       '${w.ffiLibraryPrefix}.Pointer<${child.getCType(w)}>';
 
+  // Both the C type and the FFI Dart type are 'Pointer<$cType>'.
+  @override
+  bool get sameFfiDartAndCType => true;
+
   @override
   String toString() => '$child*';
 
@@ -58,7 +62,7 @@ class ConstantArray extends PointerType {
 
 /// Represents an incomplete array, which has an unknown size.
 class IncompleteArray extends PointerType {
-  IncompleteArray(Type child) : super._(child);
+  IncompleteArray(super.child) : super._();
 
   @override
   Type get baseArrayType => child.baseArrayType;
@@ -79,4 +83,25 @@ class ObjCObjectPointer extends PointerType {
 
   @override
   String getDartType(Writer w) => 'NSObject';
+
+  @override
+  bool get sameDartAndCType => false;
+
+  @override
+  String convertDartTypeToFfiDartType(
+    Writer w,
+    String value, {
+    required bool objCRetain,
+  }) =>
+      ObjCInterface.generateGetId(value, objCRetain);
+
+  @override
+  String convertFfiDartTypeToDartType(
+    Writer w,
+    String value,
+    String library, {
+    required bool objCRetain,
+    String? objCEnclosingClass,
+  }) =>
+      ObjCInterface.generateConstructor('NSObject', value, library, objCRetain);
 }

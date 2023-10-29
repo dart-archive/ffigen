@@ -1,0 +1,14 @@
+name: NullableInheritanceTestObjCLibrary
+description: 'Tests nullability of inherited Objective-C methods'
+language: objc
+output: 'nullable_inheritance_bindings.dart'
+exclude-all-by-default: true
+objc-interfaces:
+  include:
+    - NullableBase
+    - NullableChild
+headers:
+  entry-points:
+    - 'nullable_inheritance_test.m'
+preamble: |
+  // ignore_for_file: camel_case_types, non_constant_identifier_names, unused_element, unused_field

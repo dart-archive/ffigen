@@ -239,6 +239,11 @@ class $name implements ${w.ffiLibraryPrefix}.Finalizable {
 
   /// Return a pointer to this object.
   $idType get pointer => _id;
+
+  $idType _retainAndReturnId() {
+    _lib.$retain(_id.cast());
+    return _id;
+  }
 }
 ''');
   }
@@ -326,7 +331,7 @@ class $name implements ${w.ffiLibraryPrefix}.Finalizable {
   String toString() {
     final data = dataUsingEncoding_(
         0x94000100 /* NSUTF16LittleEndianStringEncoding */);
-    return data.bytes.cast<${w.ffiPkgLibraryPrefix}.Utf16>().toDartString(
+    return data!.bytes.cast<${w.ffiPkgLibraryPrefix}.Utf16>().toDartString(
         length: length);
   }
 ''');

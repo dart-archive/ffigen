@@ -9748,8 +9748,10 @@ typedef DartClang_getIBOutletCollectionType = CXType Function(CXCursor arg0);
 /// The visitor should return one of the \c CXChildVisitResult values
 /// to direct clang_visitCursorChildren().
 typedef CXCursorVisitor
-    = ffi.Pointer<ffi.NativeFunction<CXCursorVisitor_function>>;
-typedef CXCursorVisitor_function = ffi.Int32 Function(
+    = ffi.Pointer<ffi.NativeFunction<CXCursorVisitorFunction>>;
+typedef CXCursorVisitorFunction = ffi.Int32 Function(
+    CXCursor cursor, CXCursor parent, CXClientData client_data);
+typedef DartCXCursorVisitorFunction = int Function(
     CXCursor cursor, CXCursor parent, CXClientData client_data);
 
 /// Describes how the traversal of the children of a particular
@@ -10426,11 +10428,16 @@ typedef DartClang_toggleCrashRecovery = void Function(int isEnabled);
 /// array is sorted in order of immediate inclusion.  For example,
 /// the first element refers to the location that included 'included_file'.
 typedef CXInclusionVisitor
-    = ffi.Pointer<ffi.NativeFunction<CXInclusionVisitor_function>>;
-typedef CXInclusionVisitor_function = ffi.Void Function(
+    = ffi.Pointer<ffi.NativeFunction<CXInclusionVisitorFunction>>;
+typedef CXInclusionVisitorFunction = ffi.Void Function(
     CXFile included_file,
     ffi.Pointer<CXSourceLocation> inclusion_stack,
     ffi.UnsignedInt include_len,
+    CXClientData client_data);
+typedef DartCXInclusionVisitorFunction = void Function(
+    CXFile included_file,
+    ffi.Pointer<CXSourceLocation> inclusion_stack,
+    int include_len,
     CXClientData client_data);
 typedef NativeClang_getInclusions = ffi.Void Function(
     CXTranslationUnit tu, CXInclusionVisitor visitor, CXClientData client_data);
@@ -11104,8 +11111,10 @@ typedef DartClang_indexLoc_getCXSourceLocation = CXSourceLocation Function(
 /// The visitor should return one of the \c CXVisitorResult values
 /// to direct \c clang_Type_visitFields.
 typedef CXFieldVisitor
-    = ffi.Pointer<ffi.NativeFunction<CXFieldVisitor_function>>;
-typedef CXFieldVisitor_function = ffi.Int32 Function(
+    = ffi.Pointer<ffi.NativeFunction<CXFieldVisitorFunction>>;
+typedef CXFieldVisitorFunction = ffi.Int32 Function(
+    CXCursor C, CXClientData client_data);
+typedef DartCXFieldVisitorFunction = int Function(
     CXCursor C, CXClientData client_data);
 typedef NativeClang_Type_visitFields = ffi.UnsignedInt Function(
     CXType T, CXFieldVisitor visitor, CXClientData client_data);

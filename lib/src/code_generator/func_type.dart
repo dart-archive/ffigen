@@ -23,69 +23,66 @@ class FunctionType extends Type {
     this.varArgParameters = const [],
   });
 
-  String _getCacheKeyString(
-      bool writeArgumentNames, String Function(Type) typeToString) {
-    final sb = StringBuffer();
+  String _getTypeImpl(
+      bool writeArgumentNames, String Function(Type) typeToString,
+      {String? varArgWrapper}) {
+    final params = varArgWrapper != null ? parameters : dartTypeParameters;
+    String? varArgPack;
+    if (varArgWrapper != null && varArgParameters.isNotEmpty) {
+      final varArgPackBuf = StringBuffer();
+      varArgPackBuf.write("$varArgWrapper<(");
+      varArgPackBuf.write((varArgParameters).map<String>((p) {
+        return '${typeToString(p.type)} ${writeArgumentNames ? p.name : ""}';
+      }).join(', '));
+      varArgPackBuf.write(",)>");
+      varArgPack = varArgPackBuf.toString();
+    }
 
     // Write return Type.
+    final sb = StringBuffer();
     sb.write(typeToString(returnType));
 
     // Write Function.
     sb.write(' Function(');
-    sb.write(parameters.map<String>((p) {
-      return '${typeToString(p.type)} ${writeArgumentNames ? p.name : ""}';
-    }).join(', '));
+    sb.write([
+      ...params.map<String>((p) {
+        return '${typeToString(p.type)} ${writeArgumentNames ? p.name : ""}';
+      }),
+      if (varArgPack != null) varArgPack,
+    ].join(', '));
     sb.write(')');
 
     return sb.toString();
   }
 
   @override
-  String getCType(Writer w, {bool writeArgumentNames = true}) {
-    final sb = StringBuffer();
-
-    // Write return Type.
-    sb.write(returnType.getCType(w));
-
-    // Write Function.
-    sb.write(' Function(');
-    sb.write((parameters).map<String>((p) {
-      return '${p.type.getCType(w)} ${writeArgumentNames ? p.name : ""}';
-    }).join(', '));
-    if (varArgParameters.isNotEmpty) {
-      sb.write(", ${w.ffiLibraryPrefix}.VarArgs<(");
-      sb.write((varArgParameters).map<String>((p) {
-        return '${p.type.getCType(w)} ${writeArgumentNames ? p.name : ""}';
-      }).join(', '));
-      sb.write(",)>");
-    }
-    sb.write(')');
-
-    return sb.toString();
-  }
+  String getCType(Writer w, {bool writeArgumentNames = true}) =>
+      _getTypeImpl(writeArgumentNames, (Type t) => t.getCType(w),
+          varArgWrapper: '${w.ffiLibraryPrefix}.VarArgs');
 
   @override
-  String getFfiDartType(Writer w, {bool writeArgumentNames = true}) {
-    final sb = StringBuffer();
-
-    // Write return Type.
-    sb.write(returnType.getFfiDartType(w));
-
-    // Write Function.
-    sb.write(' Function(');
-    sb.write(dartTypeParameters.map<String>((p) {
-      return '${p.type.getFfiDartType(w)} ${writeArgumentNames ? p.name : ""}';
-    }).join(', '));
-    sb.write(')');
-
-    return sb.toString();
-  }
+  String getFfiDartType(Writer w, {bool writeArgumentNames = true}) =>
+      _getTypeImpl(writeArgumentNames, (Type t) => t.getFfiDartType(w));
 
   @override
-  String toString() => _getCacheKeyString(false, (Type t) => t.toString());
+  String getDartType(Writer w, {bool writeArgumentNames = true}) =>
+      _getTypeImpl(writeArgumentNames, (Type t) => t.getDartType(w));
 
   @override
-  String cacheKey() => _getCacheKeyString(false, (Type t) => t.cacheKey());
+  bool get sameFfiDartAndCType =>
+      returnType.sameFfiDartAndCType &&
+      dartTypeParameters.every((p) => p.type.sameFfiDartAndCType);
+
+  @override
+  bool get sameDartAndCType =>
+      returnType.sameDartAndCType &&
+      dartTypeParameters.every((p) => p.type.sameDartAndCType);
+
+  @override
+  String toString() => _getTypeImpl(false, (Type t) => t.toString());
+
+  @override
+  String cacheKey() => _getTypeImpl(false, (Type t) => t.cacheKey());
 
   @override
   void addDependencies(Set<Binding> dependencies) {
@@ -138,6 +135,9 @@ class NativeFunc extends Type {
 
   @override
   String getFfiDartType(Writer w) => getCType(w);
+
+  @override
+  bool get sameFfiDartAndCType => true;
 
   @override
   String toString() => 'NativeFunction<${_type.toString()}>';

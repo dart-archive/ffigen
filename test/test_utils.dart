@@ -47,7 +47,7 @@ void verifySetupFile(File file) {
 // Remove '\r' for Windows compatibility, then apply user's normalizer.
 String _normalizeGeneratedCode(
     String generated, String Function(String)? codeNormalizer) {
-  final noCR = generated.replaceAll('\r', '').replaceAll(RegExp(r'\n+'), '\n');
+  final noCR = generated.replaceAll('\r', '');
   if (codeNormalizer == null) return noCR;
   return codeNormalizer(noCR);
 }
@@ -103,7 +103,7 @@ void _matchFileWithExpected({
         _normalizeGeneratedCode(file.readAsStringSync(), codeNormalizer);
     final expected = _normalizeGeneratedCode(
         File(path.joinAll(pathToExpected)).readAsStringSync(), codeNormalizer);
-    expect(actual, expected);
+    expect(actual.split('\n'), expected.split('\n'));
     if (file.existsSync()) {
       file.delete();
     }

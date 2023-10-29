@@ -22,8 +22,8 @@ jobs:
         # TODO: Change to 3.2.0 stable once it's released.
         sdk: [3.2.0-114.0.dev]
     steps:
-      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744
-      - uses: dart-lang/setup-dart@d6a63dab3335f427404425de0fbfed4686d93c4f
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+      - uses: dart-lang/setup-dart@8a4b97ea2017cc079571daec46542f76189836b1
         with:
           sdk: ${{ matrix.sdk }}
       - id: install
@@ -42,8 +42,8 @@ jobs:
     needs: analyze
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744
-      - uses: dart-lang/setup-dart@d6a63dab3335f427404425de0fbfed4686d93c4f
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+      - uses: dart-lang/setup-dart@8a4b97ea2017cc079571daec46542f76189836b1
         with:
           sdk: 3.2.0-114.0.dev
       - name: Install dependencies
@@ -59,8 +59,8 @@ jobs:
     needs: analyze
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744
-      - uses: dart-lang/setup-dart@d6a63dab3335f427404425de0fbfed4686d93c4f
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+      - uses: dart-lang/setup-dart@8a4b97ea2017cc079571daec46542f76189836b1
         with:
           sdk: 3.2.0-114.0.dev
       - name: Install dependencies
@@ -72,7 +72,7 @@ jobs:
       - name: Collect coverage
         run: ./tool/coverage.sh
       - name: Upload coverage
-        uses: coverallsapp/github-action@95b1a2355bd0e526ad2fd62da9fd386ad4c98474
+        uses: coverallsapp/github-action@3dfc5567390f6fa9267c0ee9c251e4c8c3f18949
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: lcov.info
@@ -81,8 +81,8 @@ jobs:
     needs: analyze
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744
-      - uses: dart-lang/setup-dart@d6a63dab3335f427404425de0fbfed4686d93c4f
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+      - uses: dart-lang/setup-dart@8a4b97ea2017cc079571daec46542f76189836b1
         with:
           sdk: 3.2.0-114.0.dev
       - name: Install dependencies
@@ -106,7 +106,7 @@ jobs:
     needs: analyze
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
       - uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
         with:
           channel: "master"
