@@ -48,28 +48,45 @@ abstract class Type {
   /// as getFfiDartType. For ObjC bindings this refers to the wrapper object.
   String getDartType(Writer w) => getFfiDartType(w);
 
-  /// Converts a value from Dart type to FFI Dart type. Use this when taking an
-  /// arg from a user and converting it to something that can be passed to FFI.
-  String convertDartTypeToFfiDartType(Writer w, String value, {
-      String? nativeLib,
-      bool isNullable = false,
-  }) => value;
+  /// Returns whether the FFI dart type and C type string are same.
+  bool get sameFfiDartAndCType;
 
-  /// Converts a value from FFI Dart type to Dart type. Use this when returning
-  /// a value from FFI to the user.
-  String convertFfiDartTypeToDartType(Writer w, String value, {
-      String? nativeLib,
-      bool isNullable = false,
-      bool objcRetain = false,
-  }) => value;
+  /// Returns whether the dart type and C type string are same.
+  bool get sameDartAndCType => sameFfiDartAndCType;
 
-  /// Returns whether the above conversion functions require a reference to the
-  /// native library. If this method returns true, a non-null value must be
-  /// passed to the [nativeLib] argument of those functions.
-  bool convertRequiresNativeLib => false;
+  /// Returns generated Dart code that converts the given value from its
+  /// DartType to its FfiDartType.
+  ///
+  /// [value] is the value to be converted. If [objCRetain] is true, the ObjC
+  /// object will be reained (ref count incremented) during conversion.
+  String convertDartTypeToFfiDartType(
+    Writer w,
+    String value, {
+    required bool objCRetain,
+  }) =>
+      value;
 
-  /// Returns the string representation of the Type, for debugging purposes
-  /// only. This string should not be printed as generated code.
+  /// Returns generated Dart code that converts the given value from its
+  /// FfiDartType to its DartType.
+  ///
+  /// [value] is the value to be converted, and [library] is an instance of the
+  /// native library object. If [objCRetain] is true, the ObjC wrapper object
+  /// will retain (ref count increment) the wrapped object pointer. If this
+  /// conversion is occuring in the context of an ObjC class, then
+  /// [objCEnclosingClass] should be the name of the Dart wrapper class (this is
+  /// used by instancetype).
+  String convertFfiDartTypeToDartType(
+    Writer w,
+    String value,
+    String library, {
+    required bool objCRetain,
+    String? objCEnclosingClass,
+  }) =>
+      value;
+
+  /// Returns a human readable string representation of the Type. This is mostly
+  /// just for debugging, but it may also be used for non-functional code (eg to
+  /// name a variable or type in generated code).
   @override
   String toString();
 
@@ -86,9 +103,6 @@ abstract class Type {
   String? getDefaultValue(Writer w, String nativeLib) => null;
 }
 
-/// Function to check if the dart and C type string are same.
-bool sameDartAndCType(Type t, Writer w) => t.getCType(w) == t.getFfiDartType(w);
-
 /// Base class for all Type bindings.
 ///
 /// Since Dart doesn't have multiple inheritance, this type exists so that we
@@ -96,18 +110,12 @@ bool sameDartAndCType(Type t, Writer w) => t.getCType(w) == t.getFfiDartType(w);
 /// to extend both NoLookUpBinding and Type.
 abstract class BindingType extends NoLookUpBinding implements Type {
   BindingType({
-    String? usr,
-    String? originalName,
-    required String name,
-    String? dartDoc,
-    bool isInternal = false,
-  }) : super(
-          usr: usr,
-          originalName: originalName,
-          name: name,
-          dartDoc: dartDoc,
-          isInternal: isInternal,
-        );
+    super.usr,
+    super.originalName,
+    required super.name,
+    super.dartDoc,
+    super.isInternal,
+  });
 
   @override
   Type get baseType => this;
@@ -128,6 +136,27 @@ abstract class BindingType extends NoLookUpBinding implements Type {
   String getDartType(Writer w) => getFfiDartType(w);
 
   @override
+  bool get sameDartAndCType => sameFfiDartAndCType;
+
+  @override
+  String convertDartTypeToFfiDartType(
+    Writer w,
+    String value, {
+    required bool objCRetain,
+  }) =>
+      value;
+
+  @override
+  String convertFfiDartTypeToDartType(
+    Writer w,
+    String value,
+    String library, {
+    required bool objCRetain,
+    String? objCEnclosingClass,
+  }) =>
+      value;
+
+  @override
   String toString() => originalName;
 
   @override
@@ -145,4 +174,7 @@ class UnimplementedType extends Type {
 
   @override
   String toString() => '(Unimplemented: $reason)';
+
+  @override
+  bool get sameFfiDartAndCType => true;
 }
