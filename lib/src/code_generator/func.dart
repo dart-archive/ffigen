@@ -93,8 +93,6 @@ class Func extends LookUpBinding {
   BindingString toBindingString(Writer w) {
     final s = StringBuffer();
     final enclosingFuncName = name;
-    final funcVarName = w.wrapperLevelUniqueNamer.makeUnique('_$name');
-    funcPointerName = w.wrapperLevelUniqueNamer.makeUnique('_${name}Ptr');
 
     if (dartDoc != null) {
       s.write(makeDartDoc(dartDoc!));
@@ -109,29 +107,58 @@ class Func extends LookUpBinding {
         functionType.getCType(w, writeArgumentNames: false);
     final dartType = _exposedFunctionTypealias?.getFfiDartType(w) ??
         functionType.getFfiDartType(w, writeArgumentNames: false);
+    final needsWrapper = !functionType.sameDartAndFfiDartType;
 
-    final returnType = functionType.returnType.getFfiDartType(w);
-    final argDeclString = functionType.dartTypeParameters
+    final isLeafString = isLeaf ? 'isLeaf:true' : '';
+    final funcVarName = w.wrapperLevelUniqueNamer.makeUnique('_$name');
+    final ffiReturnType = functionType.returnType.getFfiDartType(w);
+    final dartReturnType = functionType.returnType.getDartType(w);
+    final ffiArgDeclString = functionType.dartTypeParameters
         .map((p) => '${p.type.getFfiDartType(w)} ${p.name},\n')
         .join('');
-    final argString =
-        functionType.dartTypeParameters.map((p) => '${p.name},\n').join('');
-    final isLeafString = isLeaf ? 'isLeaf:true' : '';
+
+    String dartArgDeclString = functionType.dartTypeParameters
+        .map((p) => '${p.type.getDartType(w)} ${p.name},\n')
+        .join('');
+    if (needsWrapper) {
+      dartArgDeclString = '${w.className} lib, $dartArgDeclString';
+    }
+
+    final wrappedArgString = functionType.dartTypeParameters
+        .map((p) =>
+            '${p.type.convertDartTypeToFfiDartType(w, p.name, objCRetain: false)},\n')
+        .join('');
+    final wrappedFuncCall =
+        functionType.returnType.convertFfiDartTypeToDartType(
+      w,
+      '$funcVarName($wrappedArgString)',
+      'lib',
+      objCRetain: true,
+    );
 
     if (ffiNativeConfig.enabled) {
       final assetString = ffiNativeConfig.asset != null
           ? ", asset: '${ffiNativeConfig.asset}'"
           : '';
+      final nativeFuncName = needsWrapper ? funcVarName : enclosingFuncName;
       s.write('''
 @${w.ffiLibraryPrefix}.Native<$cType>(symbol: '$originalName'$assetString$isLeafString)
-external $returnType $enclosingFuncName($argDeclString);
+external $ffiReturnType $nativeFuncName($ffiArgDeclString);
 
 ''');
+      if (needsWrapper) {
+        s.write('''
+$dartReturnType $enclosingFuncName($dartArgDeclString) => $wrappedFuncCall;
+
+''');
+      }
     } else {
+      funcPointerName = w.wrapperLevelUniqueNamer.makeUnique('_${name}Ptr');
+
       // Write enclosing function.
       s.write('''
-$returnType $enclosingFuncName($argDeclString) {
-  return $funcVarName($argString);
+$dartReturnType $enclosingFuncName($dartArgDeclString) {
+  return $wrappedFuncCall;
 }
 
 ''');

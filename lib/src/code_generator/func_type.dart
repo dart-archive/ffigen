@@ -79,6 +79,11 @@ class FunctionType extends Type {
       dartTypeParameters.every((p) => p.type.sameDartAndCType);
 
   @override
+  bool get sameDartAndFfiDartType =>
+      returnType.sameDartAndFfiDartType &&
+      dartTypeParameters.every((p) => p.type.sameDartAndFfiDartType);
+
+  @override
   String toString() => _getTypeImpl(false, (Type t) => t.toString());
 
   @override

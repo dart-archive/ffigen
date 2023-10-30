@@ -159,6 +159,9 @@ class Typealias extends BindingType {
   bool get sameDartAndCType => type.sameDartAndCType;
 
   @override
+  bool get sameDartAndFfiDartType => type.sameDartAndFfiDartType;
+
+  @override
   String convertDartTypeToFfiDartType(
     Writer w,
     String value, {

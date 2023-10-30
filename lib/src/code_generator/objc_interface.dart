@@ -402,6 +402,9 @@ class $name extends ${superType?.name ?? '_ObjCWrapper'} {
   bool get sameDartAndCType => false;
 
   @override
+  bool get sameDartAndFfiDartType => false;
+
+  @override
   String convertDartTypeToFfiDartType(
     Writer w,
     String value, {
