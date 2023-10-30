@@ -107,34 +107,43 @@ class Func extends LookUpBinding {
         functionType.getCType(w, writeArgumentNames: false);
     final dartType = _exposedFunctionTypealias?.getFfiDartType(w) ??
         functionType.getFfiDartType(w, writeArgumentNames: false);
-    final needsWrapper = !functionType.sameDartAndFfiDartType;
+    final needsWrapper = !functionType.sameDartAndFfiDartType && !isInternal;
 
     final isLeafString = isLeaf ? 'isLeaf:true' : '';
     final funcVarName = w.wrapperLevelUniqueNamer.makeUnique('_$name');
     final ffiReturnType = functionType.returnType.getFfiDartType(w);
-    final dartReturnType = functionType.returnType.getDartType(w);
     final ffiArgDeclString = functionType.dartTypeParameters
         .map((p) => '${p.type.getFfiDartType(w)} ${p.name},\n')
         .join('');
 
-    String dartArgDeclString = functionType.dartTypeParameters
-        .map((p) => '${p.type.getDartType(w)} ${p.name},\n')
-        .join('');
+    late final String dartReturnType;
+    late final String dartArgDeclString;
+    late final String funcImplCall;
     if (needsWrapper) {
-      dartArgDeclString = '${w.className} lib, $dartArgDeclString';
-    }
+      dartReturnType = functionType.returnType.getDartType(w);
+      dartArgDeclString = functionType.dartTypeParameters
+          .map((p) => '${p.type.getDartType(w)} ${p.name},\n')
+          .join('');
 
-    final wrappedArgString = functionType.dartTypeParameters
-        .map((p) =>
-            '${p.type.convertDartTypeToFfiDartType(w, p.name, objCRetain: false)},\n')
-        .join('');
-    final wrappedFuncCall =
-        functionType.returnType.convertFfiDartTypeToDartType(
-      w,
-      '$funcVarName($wrappedArgString)',
-      'lib',
-      objCRetain: true,
-    );
+      final argString = functionType.dartTypeParameters
+          .map((p) =>
+              '${p.type.convertDartTypeToFfiDartType(w, p.name, objCRetain: false)},\n')
+          .join('');
+      funcImplCall =
+          functionType.returnType.convertFfiDartTypeToDartType(
+        w,
+        '$funcVarName($argString)',
+        'this',
+        objCRetain: true,
+      );
+    } else {
+      dartReturnType = ffiReturnType;
+      dartArgDeclString = ffiArgDeclString;
+      final argString = functionType.dartTypeParameters
+          .map((p) => '${p.name},\n')
+          .join('');
+      funcImplCall = '$funcVarName($argString)';
+    }
 
     if (ffiNativeConfig.enabled) {
       final assetString = ffiNativeConfig.asset != null
@@ -148,7 +157,7 @@ external $ffiReturnType $nativeFuncName($ffiArgDeclString);
 ''');
       if (needsWrapper) {
         s.write('''
-$dartReturnType $enclosingFuncName($dartArgDeclString) => $wrappedFuncCall;
+$dartReturnType $enclosingFuncName($dartArgDeclString) => $funcImplCall;
 
 ''');
       }
@@ -158,7 +167,7 @@ $dartReturnType $enclosingFuncName($dartArgDeclString) => $wrappedFuncCall;
       // Write enclosing function.
       s.write('''
 $dartReturnType $enclosingFuncName($dartArgDeclString) {
-  return $wrappedFuncCall;
+  return $funcImplCall;
 }
 
 ''');
