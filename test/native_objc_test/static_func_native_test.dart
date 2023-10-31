@@ -28,8 +28,7 @@ void main() {
       logWarnings();
       final dylib = File('test/native_objc_test/static_func_test.dylib');
       verifySetupFile(dylib);
-      lib =
-          StaticFuncTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
+      lib = StaticFuncTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
 
       executeInternalCommand = DynamicLibrary.process().lookupFunction<
           Void Function(Pointer<Char>, Pointer<Void>),
@@ -64,9 +63,7 @@ void main() {
       return counter;
     }
 
-    test(
-        'Objects passed through static functions have correct ref counts',
-        () {
+    test('Objects passed through static functions have correct ref counts', () {
       using((Arena arena) {
         final (counter) = staticFuncOfObjectRefCountTest(arena);
         doGC();
@@ -88,8 +85,7 @@ void main() {
       return counter;
     }
 
-    test(
-        'Nullables passed through static functions have correct ref counts',
+    test('Nullables passed through static functions have correct ref counts',
         () {
       using((Arena arena) {
         final (counter) = staticFuncOfNullableObjectRefCountTest(arena);
@@ -111,9 +107,7 @@ void main() {
       return block.pointer.cast();
     }
 
-    test(
-        'Blocks passed through static functions have correct ref counts',
-        () {
+    test('Blocks passed through static functions have correct ref counts', () {
       final (rawBlock) = staticFuncOfBlockRefCountTest();
       doGC();
       expect(getBlockRetainCount(rawBlock), 0);
