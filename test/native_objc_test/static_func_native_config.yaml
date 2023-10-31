@@ -1,8 +1,9 @@
 name: StaticFuncTestObjCLibrary
-description: 'Test ObjC static functions'
+description: 'Test ObjC static functions using @Native'
 language: objc
-output: 'static_func_bindings.dart'
+output: 'static_func_native_bindings.dart'
 exclude-all-by-default: true
+ffi-native:
 functions:
   include:
     - getBlockRetainCount

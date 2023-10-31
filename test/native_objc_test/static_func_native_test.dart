@@ -5,8 +5,8 @@
 // Objective C support is only available on mac.
 @TestOn('mac-os')
 
-// Keep in sync with static_func_test.dart. These are the same tests, but
-// without using @Native.
+// Keep in sync with static_func_test.dart. These are the same tests, but using
+// @Native.
 
 import 'dart:ffi';
 import 'dart:io';
@@ -14,7 +14,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import 'package:ffi/ffi.dart';
 import '../test_utils.dart';
-import 'static_func_bindings.dart';
+import 'static_func_native_bindings.dart';
 import 'util.dart';
 
 typedef IntBlock = ObjCBlock_Int32_Int32;
@@ -28,7 +28,8 @@ void main() {
       logWarnings();
       final dylib = File('test/native_objc_test/static_func_test.dylib');
       verifySetupFile(dylib);
-      lib = StaticFuncTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
+      lib =
+          StaticFuncTestObjCLibrary(DynamicLibrary.open(dylib.absolute.path));
 
       executeInternalCommand = DynamicLibrary.process().lookupFunction<
           Void Function(Pointer<Char>, Pointer<Void>),
@@ -45,8 +46,8 @@ void main() {
     }
 
     test('Static function returning NSString', () {
-      expect(lib.staticFuncReturningNSString().length, 12);
-      expect(lib.staticFuncReturningNSString().toString(), "Hello World!");
+      expect(staticFuncReturningNSString(lib).length, 12);
+      expect(staticFuncReturningNSString(lib).toString(), "Hello World!");
     });
 
     Pointer<Int32> staticFuncOfObjectRefCountTest(Allocator alloc) {
@@ -56,14 +57,16 @@ void main() {
       final obj = StaticFuncTestObj.newWithCounter_(lib, counter);
       expect(counter.value, 1);
 
-      final outputObj = lib.staticFuncOfObject(obj);
+      final outputObj = staticFuncOfObject(lib, obj);
       expect(obj, outputObj);
       expect(counter.value, 1);
 
       return counter;
     }
 
-    test('Objects passed through static functions have correct ref counts', () {
+    test(
+        'Objects passed through static functions have correct ref counts',
+        () {
       using((Arena arena) {
         final (counter) = staticFuncOfObjectRefCountTest(arena);
         doGC();
@@ -78,39 +81,42 @@ void main() {
       final obj = StaticFuncTestObj.newWithCounter_(lib, counter);
       expect(counter.value, 1);
 
-      final outputObj = lib.staticFuncOfNullableObject(obj);
+      final outputObj = staticFuncOfNullableObject(lib, obj);
       expect(obj, outputObj);
       expect(counter.value, 1);
 
       return counter;
     }
 
-    test('Nullables passed through static functions have correct ref counts',
+    test(
+        'Nullables passed through static functions have correct ref counts',
         () {
       using((Arena arena) {
         final (counter) = staticFuncOfNullableObjectRefCountTest(arena);
         doGC();
         expect(counter.value, 0);
 
-        expect(lib.staticFuncOfNullableObject(null), isNull);
+        expect(staticFuncOfNullableObject(lib, null), isNull);
       });
     });
 
     Pointer<Void> staticFuncOfBlockRefCountTest() {
       final block = IntBlock.fromFunction(lib, (int x) => 2 * x);
-      expect(lib.getBlockRetainCount(block.pointer.cast()), 1);
+      expect(getBlockRetainCount(block.pointer.cast()), 1);
 
-      final outputBlock = lib.staticFuncOfBlock(block);
+      final outputBlock = staticFuncOfBlock(lib, block);
       expect(block, outputBlock);
-      expect(lib.getBlockRetainCount(block.pointer.cast()), 2);
+      expect(getBlockRetainCount(block.pointer.cast()), 2);
 
       return block.pointer.cast();
     }
 
-    test('Blocks passed through static functions have correct ref counts', () {
+    test(
+        'Blocks passed through static functions have correct ref counts',
+        () {
       final (rawBlock) = staticFuncOfBlockRefCountTest();
       doGC();
-      expect(lib.getBlockRetainCount(rawBlock), 0);
+      expect(getBlockRetainCount(rawBlock), 0);
     });
   });
 }
