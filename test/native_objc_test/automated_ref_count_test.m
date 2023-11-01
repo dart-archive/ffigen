@@ -89,12 +89,12 @@
 
 @end
 
-id createAutoreleasePool() {
-  return [NSAutoreleasePool new];
+void* createAutoreleasePool() {
+  return (void*)[NSAutoreleasePool new];
 }
 
-void destroyAutoreleasePool(id pool) {
-  [pool release];
+void destroyAutoreleasePool(void* pool) {
+  [((NSAutoreleasePool*)pool) release];
 }
 
 @implementation RefCounted
