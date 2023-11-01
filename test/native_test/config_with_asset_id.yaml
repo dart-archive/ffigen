@@ -14,6 +14,8 @@ headers:
     - 'native_test.c'
   include-directives:
     - '**native_test.c'
+ffi-native:
+  assetId: 'package:ffinative_example/generated_bindings.dart' # (optional)
 
 compiler-opts: '-Wno-nullability-completeness'
 preamble: |

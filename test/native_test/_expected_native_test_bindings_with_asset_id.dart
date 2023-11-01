@@ -6,243 +6,117 @@
 // ignore_for_file: type=lint
 import 'dart:ffi' as ffi;
 
-/// Native tests.
-class NativeLibrary {
-  /// Holds the symbol lookup function.
-  final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
-      _lookup;
+@ffi.Native<ffi.Bool Function(ffi.Bool)>(
+    symbol: 'Function1Bool',
+    assetId: 'package:ffinative_example/generated_bindings.dart')
+external bool Function1Bool(
+  bool x,
+);
 
-  /// The symbols are looked up in [dynamicLibrary].
-  NativeLibrary(ffi.DynamicLibrary dynamicLibrary)
-      : _lookup = dynamicLibrary.lookup;
+@ffi.Native<ffi.Uint8 Function(ffi.Uint8)>(
+    symbol: 'Function1Uint8',
+    assetId: 'package:ffinative_example/generated_bindings.dart')
+external int Function1Uint8(
+  int x,
+);
 
-  /// The symbols are looked up with [lookup].
-  NativeLibrary.fromLookup(
-      ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
-          lookup)
-      : _lookup = lookup;
+@ffi.Native<ffi.Uint16 Function(ffi.Uint16)>(
+    symbol: 'Function1Uint16',
+    assetId: 'package:ffinative_example/generated_bindings.dart')
+external int Function1Uint16(
+  int x,
+);
 
-  bool Function1Bool(
-    bool x,
-  ) {
-    return _Function1Bool(
-      x,
-    );
-  }
+@ffi.Native<ffi.Uint32 Function(ffi.Uint32)>(
+    symbol: 'Function1Uint32',
+    assetId: 'package:ffinative_example/generated_bindings.dart')
+external int Function1Uint32(
+  int x,
+);
 
-  late final _Function1BoolPtr =
-      _lookup<ffi.NativeFunction<ffi.Bool Function(ffi.Bool)>>('Function1Bool');
-  late final _Function1Bool =
-      _Function1BoolPtr.asFunction<bool Function(bool)>();
+@ffi.Native<ffi.Uint64 Function(ffi.Uint64)>(
+    symbol: 'Function1Uint64',
+    assetId: 'package:ffinative_example/generated_bindings.dart')
+external int Function1Uint64(
+  int x,
+);
 
-  int Function1Uint8(
-    int x,
-  ) {
-    return _Function1Uint8(
-      x,
-    );
-  }
+@ffi.Native<ffi.Int8 Function(ffi.Int8)>(
+    symbol: 'Function1Int8',
+    assetId: 'package:ffinative_example/generated_bindings.dart')
+external int Function1Int8(
+  int x,
+);
 
-  late final _Function1Uint8Ptr =
-      _lookup<ffi.NativeFunction<ffi.Uint8 Function(ffi.Uint8)>>(
-          'Function1Uint8');
-  late final _Function1Uint8 =
-      _Function1Uint8Ptr.asFunction<int Function(int)>();
+@ffi.Native<ffi.Int16 Function(ffi.Int16)>(
+    symbol: 'Function1Int16',
+    assetId: 'package:ffinative_example/generated_bindings.dart')
+external int Function1Int16(
+  int x,
+);
 
-  int Function1Uint16(
-    int x,
-  ) {
-    return _Function1Uint16(
-      x,
-    );
-  }
+@ffi.Native<ffi.Int32 Function(ffi.Int32)>(
+    symbol: 'Function1Int32',
+    assetId: 'package:ffinative_example/generated_bindings.dart')
+external int Function1Int32(
+  int x,
+);
 
-  late final _Function1Uint16Ptr =
-      _lookup<ffi.NativeFunction<ffi.Uint16 Function(ffi.Uint16)>>(
-          'Function1Uint16');
-  late final _Function1Uint16 =
-      _Function1Uint16Ptr.asFunction<int Function(int)>();
+@ffi.Native<ffi.Int64 Function(ffi.Int64)>(
+    symbol: 'Function1Int64',
+    assetId: 'package:ffinative_example/generated_bindings.dart')
+external int Function1Int64(
+  int x,
+);
 
-  int Function1Uint32(
-    int x,
-  ) {
-    return _Function1Uint32(
-      x,
-    );
-  }
+@ffi.Native<ffi.IntPtr Function(ffi.IntPtr)>(
+    symbol: 'Function1IntPtr',
+    assetId: 'package:ffinative_example/generated_bindings.dart')
+external int Function1IntPtr(
+  int x,
+);
 
-  late final _Function1Uint32Ptr =
-      _lookup<ffi.NativeFunction<ffi.Uint32 Function(ffi.Uint32)>>(
-          'Function1Uint32');
-  late final _Function1Uint32 =
-      _Function1Uint32Ptr.asFunction<int Function(int)>();
+@ffi.Native<ffi.UintPtr Function(ffi.UintPtr)>(
+    symbol: 'Function1UintPtr',
+    assetId: 'package:ffinative_example/generated_bindings.dart')
+external int Function1UintPtr(
+  int x,
+);
 
-  int Function1Uint64(
-    int x,
-  ) {
-    return _Function1Uint64(
-      x,
-    );
-  }
+@ffi.Native<ffi.Float Function(ffi.Float)>(
+    symbol: 'Function1Float',
+    assetId: 'package:ffinative_example/generated_bindings.dart')
+external double Function1Float(
+  double x,
+);
 
-  late final _Function1Uint64Ptr =
-      _lookup<ffi.NativeFunction<ffi.Uint64 Function(ffi.Uint64)>>(
-          'Function1Uint64');
-  late final _Function1Uint64 =
-      _Function1Uint64Ptr.asFunction<int Function(int)>();
+@ffi.Native<ffi.Double Function(ffi.Double)>(
+    symbol: 'Function1Double',
+    assetId: 'package:ffinative_example/generated_bindings.dart')
+external double Function1Double(
+  double x,
+);
 
-  int Function1Int8(
-    int x,
-  ) {
-    return _Function1Int8(
-      x,
-    );
-  }
+@ffi.Native<ffi.Pointer<Struct1> Function()>(
+    symbol: 'getStruct1',
+    assetId: 'package:ffinative_example/generated_bindings.dart')
+external ffi.Pointer<Struct1> getStruct1();
 
-  late final _Function1Int8Ptr =
-      _lookup<ffi.NativeFunction<ffi.Int8 Function(ffi.Int8)>>('Function1Int8');
-  late final _Function1Int8 = _Function1Int8Ptr.asFunction<int Function(int)>();
+@ffi.Native<Struct3 Function(ffi.Int, ffi.Int, ffi.Int)>(
+    symbol: 'Function1StructReturnByValue',
+    assetId: 'package:ffinative_example/generated_bindings.dart')
+external Struct3 Function1StructReturnByValue(
+  int a,
+  int b,
+  int c,
+);
 
-  int Function1Int16(
-    int x,
-  ) {
-    return _Function1Int16(
-      x,
-    );
-  }
-
-  late final _Function1Int16Ptr =
-      _lookup<ffi.NativeFunction<ffi.Int16 Function(ffi.Int16)>>(
-          'Function1Int16');
-  late final _Function1Int16 =
-      _Function1Int16Ptr.asFunction<int Function(int)>();
-
-  int Function1Int32(
-    int x,
-  ) {
-    return _Function1Int32(
-      x,
-    );
-  }
-
-  late final _Function1Int32Ptr =
-      _lookup<ffi.NativeFunction<ffi.Int32 Function(ffi.Int32)>>(
-          'Function1Int32');
-  late final _Function1Int32 =
-      _Function1Int32Ptr.asFunction<int Function(int)>();
-
-  int Function1Int64(
-    int x,
-  ) {
-    return _Function1Int64(
-      x,
-    );
-  }
-
-  late final _Function1Int64Ptr =
-      _lookup<ffi.NativeFunction<ffi.Int64 Function(ffi.Int64)>>(
-          'Function1Int64');
-  late final _Function1Int64 =
-      _Function1Int64Ptr.asFunction<int Function(int)>();
-
-  int Function1IntPtr(
-    int x,
-  ) {
-    return _Function1IntPtr(
-      x,
-    );
-  }
-
-  late final _Function1IntPtrPtr =
-      _lookup<ffi.NativeFunction<ffi.IntPtr Function(ffi.IntPtr)>>(
-          'Function1IntPtr');
-  late final _Function1IntPtr =
-      _Function1IntPtrPtr.asFunction<int Function(int)>();
-
-  int Function1UintPtr(
-    int x,
-  ) {
-    return _Function1UintPtr(
-      x,
-    );
-  }
-
-  late final _Function1UintPtrPtr =
-      _lookup<ffi.NativeFunction<ffi.UintPtr Function(ffi.UintPtr)>>(
-          'Function1UintPtr');
-  late final _Function1UintPtr =
-      _Function1UintPtrPtr.asFunction<int Function(int)>();
-
-  double Function1Float(
-    double x,
-  ) {
-    return _Function1Float(
-      x,
-    );
-  }
-
-  late final _Function1FloatPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(ffi.Float)>>(
-          'Function1Float');
-  late final _Function1Float =
-      _Function1FloatPtr.asFunction<double Function(double)>();
-
-  double Function1Double(
-    double x,
-  ) {
-    return _Function1Double(
-      x,
-    );
-  }
-
-  late final _Function1DoublePtr =
-      _lookup<ffi.NativeFunction<ffi.Double Function(ffi.Double)>>(
-          'Function1Double');
-  late final _Function1Double =
-      _Function1DoublePtr.asFunction<double Function(double)>();
-
-  ffi.Pointer<Struct1> getStruct1() {
-    return _getStruct1();
-  }
-
-  late final _getStruct1Ptr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<Struct1> Function()>>(
-          'getStruct1');
-  late final _getStruct1 =
-      _getStruct1Ptr.asFunction<ffi.Pointer<Struct1> Function()>();
-
-  Struct3 Function1StructReturnByValue(
-    int a,
-    int b,
-    int c,
-  ) {
-    return _Function1StructReturnByValue(
-      a,
-      b,
-      c,
-    );
-  }
-
-  late final _Function1StructReturnByValuePtr =
-      _lookup<ffi.NativeFunction<Struct3 Function(ffi.Int, ffi.Int, ffi.Int)>>(
-          'Function1StructReturnByValue');
-  late final _Function1StructReturnByValue = _Function1StructReturnByValuePtr
-      .asFunction<Struct3 Function(int, int, int)>();
-
-  int Function1StructPassByValue(
-    Struct3 sum_a_b_c,
-  ) {
-    return _Function1StructPassByValue(
-      sum_a_b_c,
-    );
-  }
-
-  late final _Function1StructPassByValuePtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function(Struct3)>>(
-          'Function1StructPassByValue');
-  late final _Function1StructPassByValue =
-      _Function1StructPassByValuePtr.asFunction<int Function(Struct3)>();
-}
+@ffi.Native<ffi.Int Function(Struct3)>(
+    symbol: 'Function1StructPassByValue',
+    assetId: 'package:ffinative_example/generated_bindings.dart')
+external int Function1StructPassByValue(
+  Struct3 sum_a_b_c,
+);
 
 final class Struct1 extends ffi.Struct {
   @ffi.Int8()
