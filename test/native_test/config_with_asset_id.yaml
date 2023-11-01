@@ -8,7 +8,7 @@
 
 name: NativeLibrary
 description: 'Native tests.'
-output: '_expected_native_test_bindings.dart'
+output: '_expected_native_test_bindings_with_asset_id.dart'
 headers:
   entry-points:
     - 'native_test.c'
