@@ -44,11 +44,6 @@ void main() {
       calloc.free(gcNow);
     }
 
-    test('Static function returning NSString', () {
-      expect(staticFuncReturningNSString(lib).length, 12);
-      expect(staticFuncReturningNSString(lib).toString(), "Hello World!");
-    });
-
     Pointer<Int32> staticFuncOfObjectRefCountTest(Allocator alloc) {
       final counter = alloc<Int32>();
       counter.value = 0;
@@ -111,6 +106,51 @@ void main() {
       final (rawBlock) = staticFuncOfBlockRefCountTest();
       doGC();
       expect(getBlockRetainCount(rawBlock), 0);
+    });
+
+    Pointer<Int32> staticFuncReturnsRetainedRefCountTest(Allocator alloc) {
+      final counter = alloc<Int32>();
+      counter.value = 0;
+
+      final outputObj = staticFuncReturnsRetained(lib, counter);
+      expect(counter.value, 1);
+
+      return counter;
+    }
+
+    test(
+        'Objects returned from static functions with NS_RETURNS_RETAINED '
+        'have correct ref counts', () {
+      using((Arena arena) {
+        final (counter) = staticFuncReturnsRetainedRefCountTest(arena);
+        doGC();
+        expect(counter.value, 0);
+      });
+    });
+
+    Pointer<Int32> staticFuncOfObjectReturnsRetainedRefCountTest(
+        Allocator alloc) {
+      final counter = alloc<Int32>();
+      counter.value = 0;
+
+      final obj = StaticFuncTestObj.newWithCounter_(lib, counter);
+      expect(counter.value, 1);
+
+      final outputObj = staticFuncReturnsRetainedArg(lib, obj);
+      expect(obj, outputObj);
+      expect(counter.value, 1);
+
+      return counter;
+    }
+
+    test(
+        'Objects passed through static functions with NS_RETURNS_RETAINED '
+        'have correct ref counts', () {
+      using((Arena arena) {
+        final (counter) = staticFuncOfObjectReturnsRetainedRefCountTest(arena);
+        doGC();
+        expect(counter.value, 0);
+      });
     });
   });
 }

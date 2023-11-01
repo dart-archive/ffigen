@@ -10,7 +10,8 @@ functions:
     - staticFuncOfObject
     - staticFuncOfNullableObject
     - staticFuncOfBlock
-    - staticFuncReturningNSString
+    - staticFuncReturnsRetained
+    - staticFuncReturnsRetainedArg
 headers:
   entry-points:
     - 'static_func_test.m'

@@ -42,6 +42,7 @@ class Func extends LookUpBinding {
   final bool exposeSymbolAddress;
   final bool exposeFunctionTypedefs;
   final bool isLeaf;
+  final bool objCReturnsRetained;
   final FfiNativeConfig ffiNativeConfig;
   late final String funcPointerName;
 
@@ -61,6 +62,7 @@ class Func extends LookUpBinding {
     this.exposeSymbolAddress = false,
     this.exposeFunctionTypedefs = false,
     this.isLeaf = false,
+    this.objCReturnsRetained = false,
     super.isInternal,
     this.ffiNativeConfig = const FfiNativeConfig(enabled: false),
   })  : functionType = FunctionType(
@@ -133,7 +135,7 @@ class Func extends LookUpBinding {
         w,
         '$funcVarName($argString)',
         ffiNativeConfig.enabled ? 'lib' : 'this',
-        objCRetain: true,
+        objCRetain: !objCReturnsRetained,
       );
     } else {
       dartReturnType = ffiReturnType;

@@ -1,3 +1,4 @@
+
 // Copyright (c) 2023, the Dart project authors. Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -5,9 +6,6 @@
 #import <Foundation/NSString.h>
 
 #include "util.h"
-
-// Take and return object, nullable, and block
-// ref counting tests
 
 @interface StaticFuncTestObj : NSObject {
   int32_t* counter;
@@ -55,6 +53,12 @@ IntBlock staticFuncOfBlock(IntBlock a) {
   return a;
 }
 
-NSString* staticFuncReturningNSString() {
-  return @"Hello World!";
+NS_RETURNS_RETAINED StaticFuncTestObj* staticFuncReturnsRetained(
+    int32_t* counter) {
+  return [StaticFuncTestObj newWithCounter: counter];
+}
+
+NS_RETURNS_RETAINED StaticFuncTestObj* staticFuncReturnsRetainedArg(
+    StaticFuncTestObj* a) {
+  return [a retain];
 }

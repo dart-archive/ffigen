@@ -89,6 +89,8 @@
 
 @end
 
+// Pass around the NSAutoreleasePool as a void* to bypass the Dart wrappers so
+// that we can precisely control the life cycle.
 void* createAutoreleasePool() {
   return (void*)[NSAutoreleasePool new];
 }
