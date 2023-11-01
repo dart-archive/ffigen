@@ -111,8 +111,8 @@ class Func extends LookUpBinding {
         functionType.getFfiDartType(w, writeArgumentNames: false);
 
     if (ffiNativeConfig.enabled) {
-      final assetString = ffiNativeConfig.asset != null
-          ? ", asset: '${ffiNativeConfig.asset}'"
+      final assetString = ffiNativeConfig.assetId != null
+          ? ", assetId: '${ffiNativeConfig.assetId}'"
           : '';
       final isLeafString = isLeaf ? ', isLeaf: true' : '';
       s.write(

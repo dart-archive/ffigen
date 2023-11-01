@@ -58,6 +58,7 @@ void main() {
         rethrow;
       }
     });
+
     test('bool', () {
       expect(bindings.Function1Bool(true), false);
       expect(bindings.Function1Bool(false), true);
@@ -112,6 +113,7 @@ void main() {
         }
       }
     });
+
     test('Array Workaround: Range Errors', () {
       final struct1 = bindings.getStruct1();
       // Index (get) above range.

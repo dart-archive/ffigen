@@ -418,12 +418,12 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "asset": {
+            "assetId": {
               "type": "string"
             }
           },
           "required": [
-            "asset"
+            "assetId"
           ]
         }
       ]

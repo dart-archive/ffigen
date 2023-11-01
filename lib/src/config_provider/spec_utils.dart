@@ -602,6 +602,6 @@ FfiNativeConfig ffiNativeExtractor(dynamic yamlConfig) {
   final yamlMap = yamlConfig as Map?;
   return FfiNativeConfig(
     enabled: true,
-    asset: yamlMap?[strings.ffiNativeAsset] as String?,
+    assetId: yamlMap?[strings.ffiNativeAsset] as String?,
   );
 }
