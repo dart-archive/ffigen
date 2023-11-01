@@ -11,6 +11,7 @@
 - Use Dart wrapper types in args and returns of ObjCBlocks.
 - Use Dart wrapper types in args and returns of static functions.
 - Bump min SDK version to 3.2.0-114.0.dev.
+- Renamed `asset` to `assetId` for `ffi-native`.  
 
 # 9.0.1
 

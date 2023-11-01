@@ -384,9 +384,9 @@ class ObjCModulePrefixer {
 
 class FfiNativeConfig {
   final bool enabled;
-  final String? asset;
+  final String? assetId;
 
-  const FfiNativeConfig({required this.enabled, this.asset});
+  const FfiNativeConfig({required this.enabled, this.assetId});
 }
 
 class SymbolFile {

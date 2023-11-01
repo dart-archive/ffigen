@@ -146,8 +146,8 @@ class Func extends LookUpBinding {
     }
 
     if (ffiNativeConfig.enabled) {
-      final assetString = ffiNativeConfig.asset != null
-          ? ", asset: '${ffiNativeConfig.asset}'"
+      final assetString = ffiNativeConfig.assetId != null
+          ? ", assetId: '${ffiNativeConfig.assetId}'"
           : '';
       final nativeFuncName = needsWrapper ? funcVarName : enclosingFuncName;
       s.write('''
