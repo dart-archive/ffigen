@@ -8,7 +8,7 @@ import 'dart:ffi' as ffi;
 
 /// Adds 2 integers.
 @ffi.Native<ffi.Int Function(ffi.Int, ffi.Int)>(
-    symbol: 'sum', assetId: 'assetname')
+    symbol: 'sum', assetId: 'package:ffinative_example/generated_bindings.dart')
 external int sum(
   int a,
   int b,
@@ -16,7 +16,8 @@ external int sum(
 
 /// Subtracts 2 integers.
 @ffi.Native<ffi.Int Function(ffi.Int, ffi.Int)>(
-    symbol: 'subtract', assetId: 'assetname')
+    symbol: 'subtract',
+    assetId: 'package:ffinative_example/generated_bindings.dart')
 external int subtract(
   int a,
   int b,
@@ -24,7 +25,8 @@ external int subtract(
 
 /// Multiplies 2 integers, returns pointer to an integer,.
 @ffi.Native<ffi.Pointer<ffi.Int> Function(ffi.Int, ffi.Int)>(
-    symbol: 'multiply', assetId: 'assetname')
+    symbol: 'multiply',
+    assetId: 'package:ffinative_example/generated_bindings.dart')
 external ffi.Pointer<ffi.Int> multiply(
   int a,
   int b,
@@ -32,7 +34,8 @@ external ffi.Pointer<ffi.Int> multiply(
 
 /// Divides 2 integers, returns pointer to a float.
 @ffi.Native<ffi.Pointer<ffi.Float> Function(ffi.Int, ffi.Int)>(
-    symbol: 'divide', assetId: 'assetname')
+    symbol: 'divide',
+    assetId: 'package:ffinative_example/generated_bindings.dart')
 external ffi.Pointer<ffi.Float> divide(
   int a,
   int b,
@@ -40,7 +43,8 @@ external ffi.Pointer<ffi.Float> divide(
 
 /// Divides 2 floats, returns a pointer to double.
 @ffi.Native<ffi.Pointer<ffi.Double> Function(ffi.Float, ffi.Float)>(
-    symbol: 'dividePrecision', assetId: 'assetname')
+    symbol: 'dividePrecision',
+    assetId: 'package:ffinative_example/generated_bindings.dart')
 external ffi.Pointer<ffi.Double> dividePrecision(
   double a,
   double b,

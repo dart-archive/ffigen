@@ -58,6 +58,39 @@ void main() {
         rethrow;
       }
     });
+
+    test('generate_bindings with assetId', () {
+      final configFile =
+          File(path.join('test', 'native_test', 'config_with_asset_id.yaml'))
+              .absolute;
+      final outFile = File(
+        path.join('test', 'debug_generated',
+            '_expected_native_test_bindings_with_asset_id.dart'),
+      ).absolute;
+
+      late Config config;
+      withChDir(configFile.path, () {
+        config = testConfigFromPath(configFile.path);
+      });
+      final library = parse(config);
+
+      library.generateFile(outFile);
+
+      try {
+        final actual = outFile.readAsStringSync().replaceAll('\r', '');
+        final expected = File(path.join(config.output))
+            .readAsStringSync()
+            .replaceAll('\r', '');
+        expect(actual, expected);
+        if (outFile.existsSync()) {
+          outFile.delete();
+        }
+      } catch (e) {
+        print('Failed test: Debug generated file: ${outFile.absolute.path}');
+        rethrow;
+      }
+    });
+
     test('bool', () {
       expect(bindings.Function1Bool(true), false);
       expect(bindings.Function1Bool(false), true);
@@ -112,6 +145,7 @@ void main() {
         }
       }
     });
+
     test('Array Workaround: Range Errors', () {
       final struct1 = bindings.getStruct1();
       // Index (get) above range.

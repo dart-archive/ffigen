@@ -6,16 +6,14 @@
 #    dart run ffigen --config test/native_test/config.yaml
 # ===============================================================
 
-name: FfiNative
-description: 'ffi-native tests.'
-output: '_expected_ffi_native_test_bindings.dart'
+name: NativeLibrary
+description: 'Native tests.'
+output: '_expected_native_test_bindings.dart'
 headers:
   entry-points:
     - 'native_test.c'
   include-directives:
     - '**native_test.c'
-ffi-native:
-  assetId: "native_test"
 
 compiler-opts: '-Wno-nullability-completeness'
 preamble: |
