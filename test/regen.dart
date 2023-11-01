@@ -54,6 +54,8 @@ Future<void> main(List<String> args) async {
 
   _regenConfig('test/native_test/config.yaml',
       'test/native_test/_expected_native_test_bindings.dart');
+  _regenConfig('test/ffi_native_test/config.yaml',
+      'test/ffi_native_test/_expected_ffi_native_test_bindings.dart');
   _regenConfig('example/libclang-example/config.yaml',
       'example/libclang-example/generated_bindings.dart');
   _regenConfig(

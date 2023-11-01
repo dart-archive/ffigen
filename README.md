@@ -543,7 +543,7 @@ type-map:
 
 ```yaml
 ffi-native:
-  asset: 'myasset' # Optional.
+  assetId: 'myasset' # Optional.
 ```
   </td>
   </tr>

@@ -1,0 +1,20 @@
+; Copyright (c) 2020, the Dart project authors. Please see the AUTHORS file
+; for details. All rights reserved. Use of this source code is governed by a
+; BSD-style license that can be found in the LICENSE file.
+
+EXPORTS
+Function1Bool
+Function1Uint8
+Function1Uint16
+Function1Uint32
+Function1Uint64
+Function1Int8
+Function1Int16
+Function1Int32
+Function1Int64
+Function1IntPtr
+Function1Float
+Function1Double
+getStruct1
+Function1StructReturnByValue
+Function1StructPassByValue
