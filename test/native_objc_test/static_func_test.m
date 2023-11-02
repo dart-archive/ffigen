@@ -1,4 +1,3 @@
-
 // Copyright (c) 2023, the Dart project authors. Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -14,29 +13,6 @@
 - (instancetype)initWithCounter:(int32_t*) _counter;
 - (void)setCounter:(int32_t*) _counter;
 - (void)dealloc;
-@end
-@implementation StaticFuncTestObj
-
-+ (instancetype)newWithCounter:(int32_t*) _counter {
-  return [[StaticFuncTestObj alloc] initWithCounter: _counter];
-}
-
-- (instancetype)initWithCounter:(int32_t*) _counter {
-  counter = _counter;
-  ++*counter;
-  return [super init];
-}
-
-- (void)setCounter:(int32_t*) _counter {
-  counter = _counter;
-  ++*counter;
-}
-
-- (void)dealloc {
-  if (counter != nil) --*counter;
-  [super dealloc];
-}
-
 @end
 
 StaticFuncTestObj* staticFuncOfObject(StaticFuncTestObj* a) {
@@ -62,3 +38,26 @@ NS_RETURNS_RETAINED StaticFuncTestObj* staticFuncReturnsRetainedArg(
     StaticFuncTestObj* a) {
   return [a retain];
 }
+
+
+@implementation StaticFuncTestObj
++ (instancetype)newWithCounter:(int32_t*) _counter {
+  return [[StaticFuncTestObj alloc] initWithCounter: _counter];
+}
+
+- (instancetype)initWithCounter:(int32_t*) _counter {
+  counter = _counter;
+  ++*counter;
+  return [super init];
+}
+
+- (void)setCounter:(int32_t*) _counter {
+  counter = _counter;
+  ++*counter;
+}
+
+- (void)dealloc {
+  if (counter != nil) --*counter;
+  [super dealloc];
+}
+@end
