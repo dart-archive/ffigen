@@ -229,6 +229,9 @@ _id.ref.invoke.cast<$natTrampFnType>().asFunction<$trampFuncFfiDartType>()(
   bool get sameDartAndCType => false;
 
   @override
+  bool get sameDartAndFfiDartType => false;
+
+  @override
   String convertDartTypeToFfiDartType(
     Writer w,
     String value, {

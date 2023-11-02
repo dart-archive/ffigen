@@ -54,6 +54,9 @@ abstract class Type {
   /// Returns whether the dart type and C type string are same.
   bool get sameDartAndCType => sameFfiDartAndCType;
 
+  /// Returns whether the dart type and FFI dart type string are same.
+  bool get sameDartAndFfiDartType => true;
+
   /// Returns generated Dart code that converts the given value from its
   /// DartType to its FfiDartType.
   ///
@@ -137,6 +140,9 @@ abstract class BindingType extends NoLookUpBinding implements Type {
 
   @override
   bool get sameDartAndCType => sameFfiDartAndCType;
+
+  @override
+  bool get sameDartAndFfiDartType => true;
 
   @override
   String convertDartTypeToFfiDartType(

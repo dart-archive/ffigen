@@ -238,26 +238,26 @@ void main() {
     Pointer<Void> funcPointerBlockRefCountTest() {
       final block =
           IntBlock.fromFunctionPointer(lib, Pointer.fromFunction(_add100, 999));
-      expect(BlockTester.getBlockRetainCount_(lib, block.pointer.cast()), 1);
+      expect(lib.getBlockRetainCount(block.pointer.cast()), 1);
       return block.pointer.cast();
     }
 
     test('Function pointer block ref counting', () {
       final rawBlock = funcPointerBlockRefCountTest();
       doGC();
-      expect(BlockTester.getBlockRetainCount_(lib, rawBlock), 0);
+      expect(lib.getBlockRetainCount(rawBlock), 0);
     });
 
     Pointer<Void> funcBlockRefCountTest() {
       final block = IntBlock.fromFunction(lib, makeAdder(4000));
-      expect(BlockTester.getBlockRetainCount_(lib, block.pointer.cast()), 1);
+      expect(lib.getBlockRetainCount(block.pointer.cast()), 1);
       return block.pointer.cast();
     }
 
     test('Function block ref counting', () {
       final rawBlock = funcBlockRefCountTest();
       doGC();
-      expect(BlockTester.getBlockRetainCount_(lib, rawBlock), 0);
+      expect(lib.getBlockRetainCount(rawBlock), 0);
     });
 
     (Pointer<Void>, Pointer<Void>, Pointer<Void>)
@@ -276,13 +276,10 @@ void main() {
 
       // One reference held by inputBlock object, another bound to the
       // outputBlock lambda.
-      expect(
-          BlockTester.getBlockRetainCount_(lib, inputBlock.pointer.cast()), 2);
+      expect(lib.getBlockRetainCount(inputBlock.pointer.cast()), 2);
 
-      expect(
-          BlockTester.getBlockRetainCount_(lib, blockBlock.pointer.cast()), 1);
-      expect(
-          BlockTester.getBlockRetainCount_(lib, outputBlock.pointer.cast()), 1);
+      expect(lib.getBlockRetainCount(blockBlock.pointer.cast()), 1);
+      expect(lib.getBlockRetainCount(outputBlock.pointer.cast()), 1);
       return (
         inputBlock.pointer.cast(),
         blockBlock.pointer.cast(),
@@ -297,10 +294,10 @@ void main() {
 
       // This leaks because block functions aren't cleaned up at the moment.
       // TODO(https://github.com/dart-lang/ffigen/issues/428): Fix this leak.
-      expect(BlockTester.getBlockRetainCount_(lib, inputBlock), 1);
+      expect(lib.getBlockRetainCount(inputBlock), 1);
 
-      expect(BlockTester.getBlockRetainCount_(lib, blockBlock), 0);
-      expect(BlockTester.getBlockRetainCount_(lib, outputBlock), 0);
+      expect(lib.getBlockRetainCount(blockBlock), 0);
+      expect(lib.getBlockRetainCount(outputBlock), 0);
     });
 
     (Pointer<Void>, Pointer<Void>, Pointer<Void>)
@@ -316,11 +313,9 @@ void main() {
       expect(outputBlock(1), 6);
       doGC();
 
-      expect(BlockTester.getBlockRetainCount_(lib, inputBlock), 2);
-      expect(
-          BlockTester.getBlockRetainCount_(lib, blockBlock.pointer.cast()), 1);
-      expect(
-          BlockTester.getBlockRetainCount_(lib, outputBlock.pointer.cast()), 1);
+      expect(lib.getBlockRetainCount(inputBlock), 2);
+      expect(lib.getBlockRetainCount(blockBlock.pointer.cast()), 1);
+      expect(lib.getBlockRetainCount(outputBlock.pointer.cast()), 1);
       return (
         inputBlock,
         blockBlock.pointer.cast(),
@@ -335,10 +330,10 @@ void main() {
 
       // This leaks because block functions aren't cleaned up at the moment.
       // TODO(https://github.com/dart-lang/ffigen/issues/428): Fix this leak.
-      expect(BlockTester.getBlockRetainCount_(lib, inputBlock), 2);
+      expect(lib.getBlockRetainCount(inputBlock), 2);
 
-      expect(BlockTester.getBlockRetainCount_(lib, blockBlock), 0);
-      expect(BlockTester.getBlockRetainCount_(lib, outputBlock), 0);
+      expect(lib.getBlockRetainCount(blockBlock), 0);
+      expect(lib.getBlockRetainCount(outputBlock), 0);
     });
 
     (Pointer<Void>, Pointer<Void>, Pointer<Void>)
@@ -353,13 +348,10 @@ void main() {
 
       // One reference held by inputBlock object, another held internally by the
       // ObjC implementation of the blockBlock.
-      expect(
-          BlockTester.getBlockRetainCount_(lib, inputBlock.pointer.cast()), 2);
+      expect(lib.getBlockRetainCount(inputBlock.pointer.cast()), 2);
 
-      expect(
-          BlockTester.getBlockRetainCount_(lib, blockBlock.pointer.cast()), 1);
-      expect(
-          BlockTester.getBlockRetainCount_(lib, outputBlock.pointer.cast()), 1);
+      expect(lib.getBlockRetainCount(blockBlock.pointer.cast()), 1);
+      expect(lib.getBlockRetainCount(outputBlock.pointer.cast()), 1);
       return (
         inputBlock.pointer.cast(),
         blockBlock.pointer.cast(),
@@ -371,9 +363,9 @@ void main() {
       final (inputBlock, blockBlock, outputBlock) =
           nativeBlockBlockDartCallRefCountTest();
       doGC();
-      expect(BlockTester.getBlockRetainCount_(lib, inputBlock), 0);
-      expect(BlockTester.getBlockRetainCount_(lib, blockBlock), 0);
-      expect(BlockTester.getBlockRetainCount_(lib, outputBlock), 0);
+      expect(lib.getBlockRetainCount(inputBlock), 0);
+      expect(lib.getBlockRetainCount(blockBlock), 0);
+      expect(lib.getBlockRetainCount(outputBlock), 0);
     });
 
     (Pointer<Void>, Pointer<Void>) nativeBlockBlockObjCCallRefCountTest() {
@@ -382,18 +374,16 @@ void main() {
       expect(outputBlock(1), 14);
       doGC();
 
-      expect(
-          BlockTester.getBlockRetainCount_(lib, blockBlock.pointer.cast()), 1);
-      expect(
-          BlockTester.getBlockRetainCount_(lib, outputBlock.pointer.cast()), 1);
+      expect(lib.getBlockRetainCount(blockBlock.pointer.cast()), 1);
+      expect(lib.getBlockRetainCount(outputBlock.pointer.cast()), 1);
       return (blockBlock.pointer.cast(), outputBlock.pointer.cast());
     }
 
     test('Calling a native block block from ObjC has correct ref counting', () {
       final (blockBlock, outputBlock) = nativeBlockBlockObjCCallRefCountTest();
       doGC();
-      expect(BlockTester.getBlockRetainCount_(lib, blockBlock), 0);
-      expect(BlockTester.getBlockRetainCount_(lib, outputBlock), 0);
+      expect(lib.getBlockRetainCount(blockBlock), 0);
+      expect(lib.getBlockRetainCount(outputBlock), 0);
     });
 
     (Pointer<Int32>, Pointer<Int32>) objectBlockRefCountTest(Allocator alloc) {

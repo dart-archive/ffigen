@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:ffi';
+
 import 'package:ffigen/src/code_generator.dart';
 import 'package:ffigen/src/config_provider/config_types.dart';
 import 'package:ffigen/src/header_parser/data.dart';
@@ -20,6 +22,7 @@ class _ParserFunc {
   List<Func> funcs = [];
   bool incompleteStructParameter = false;
   bool unimplementedParameterType = false;
+  bool objCReturnsRetained = false;
   _ParserFunc();
 }
 
@@ -69,6 +72,13 @@ List<Func>? parseFunctionDeclaration(clang_types.CXCursor cursor) {
       return _stack.pop().funcs;
     }
 
+    // Look for any annotations on the function.
+    clang.clang_visitChildren(
+        cursor,
+        _parseAnnotationVisitorPtr ??= Pointer.fromFunction(
+            _parseAnnotationVisitor, exceptional_visitor_return),
+        nullptr);
+
     // Initialized with a single value with no prefix and empty var args.
     var varArgFunctions = [VarArgFunction('', [])];
     if (config.varArgFunctions.containsKey(funcName)) {
@@ -97,6 +107,7 @@ List<Func>? parseFunctionDeclaration(clang_types.CXCursor cursor) {
         exposeFunctionTypedefs:
             config.exposeFunctionTypedefs.shouldInclude(funcName),
         isLeaf: config.leafFunctions.shouldInclude(funcName),
+        objCReturnsRetained: _stack.top.objCReturnsRetained,
         ffiNativeConfig: config.ffiNativeConfig,
       ));
     }
@@ -146,4 +157,20 @@ List<Parameter> _getParameters(clang_types.CXCursor cursor, String funcName) {
 
 Type _getParameterType(clang_types.CXCursor cursor) {
   return cursor.toCodeGenType();
+}
+
+Pointer<
+        NativeFunction<
+            Int32 Function(
+                clang_types.CXCursor, clang_types.CXCursor, Pointer<Void>)>>?
+    _parseAnnotationVisitorPtr;
+int _parseAnnotationVisitor(clang_types.CXCursor cursor,
+    clang_types.CXCursor parent, Pointer<Void> clientData) {
+  switch (cursor.kind) {
+    case clang_types.CXCursorKind.CXCursor_NSReturnsRetained:
+      _stack.top.objCReturnsRetained = true;
+      break;
+    default:
+  }
+  return clang_types.CXChildVisitResult.CXChildVisit_Continue;
 }

@@ -6,6 +6,9 @@ exclude-all-by-default: true
 objc-interfaces:
   include:
     - BlockTester
+functions:
+  include:
+    - getBlockRetainCount
 headers:
   entry-points:
     - 'block_test.m'

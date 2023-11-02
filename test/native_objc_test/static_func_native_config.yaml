@@ -1,0 +1,19 @@
+name: StaticFuncTestObjCLibrary
+description: 'Test ObjC static functions using @Native'
+language: objc
+output: 'static_func_native_bindings.dart'
+exclude-all-by-default: true
+ffi-native:
+functions:
+  include:
+    - getBlockRetainCount
+    - staticFuncOfObject
+    - staticFuncOfNullableObject
+    - staticFuncOfBlock
+    - staticFuncReturnsRetained
+    - staticFuncReturnsRetainedArg
+headers:
+  entry-points:
+    - 'static_func_test.m'
+preamble: |
+  // ignore_for_file: camel_case_types, non_constant_identifier_names, unused_element, unused_field
