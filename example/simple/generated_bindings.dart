@@ -81,9 +81,8 @@ class NativeLibrary {
   }
 
   late final _dividePtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Pointer<ffi.Float> Function(ffi.Int, ffi.Int)>>(
-      'divide');
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Float> Function(ffi.Int, ffi.Int)>>('divide');
   late final _divide =
       _dividePtr.asFunction<ffi.Pointer<ffi.Float> Function(int, int)>();
 

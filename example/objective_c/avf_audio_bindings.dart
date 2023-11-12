@@ -22553,20 +22553,20 @@ class AVFAudio {
     );
   }
 
-  late final __objc_msgSend_803Ptr = _lookup<
-          ffi.NativeFunction<
-              ffi.Pointer<
-                      ffi.NativeFunction<
-                          ffi.Pointer<ffi.Void> Function(
-                              ffi.Pointer<ffi.Void>,
-                              ffi
-                                  .Pointer<
+  late final __objc_msgSend_803Ptr =
+      _lookup<
+              ffi.NativeFunction<
+                  ffi.Pointer<
+                          ffi.NativeFunction<
+                              ffi.Pointer<ffi.Void> Function(
+                                  ffi.Pointer<ffi.Void>,
+                                  ffi.Pointer<
                                       ffi.NativeFunction<
                                           NSUInteger Function(
                                               ffi.Pointer<ffi.Void>)>>,
-                              ffi.Bool)>>
-                  Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>>(
-      'objc_msgSend');
+                                  ffi.Bool)>>
+                      Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>>(
+          'objc_msgSend');
   late final __objc_msgSend_803 = __objc_msgSend_803Ptr.asFunction<
       ffi.Pointer<
               ffi.NativeFunction<
@@ -36092,17 +36092,16 @@ class ObjCBlock4 extends _ObjCBlockBase {
                       NSUInteger arg1, ffi.Pointer<ffi.Bool> arg2)>>
           ptr)
       : this._(
-            lib
-                ._newBlock1(
-                    ffi.Pointer.fromFunction<
-                                ffi.Bool Function(
-                                    ffi.Pointer<_ObjCBlock> block,
-                                    ffi.Pointer<ObjCObject> arg0,
-                                    NSUInteger arg1,
-                                    ffi.Pointer<ffi.Bool> arg2)>(
-                            _ObjCBlock4_fnPtrTrampoline, false)
-                        .cast(),
-                    ptr.cast()),
+            lib._newBlock1(
+                ffi.Pointer.fromFunction<
+                            ffi.Bool Function(
+                                ffi.Pointer<_ObjCBlock> block,
+                                ffi.Pointer<ObjCObject> arg0,
+                                NSUInteger arg1,
+                                ffi.Pointer<ffi.Bool> arg2)>(
+                        _ObjCBlock4_fnPtrTrampoline, false)
+                    .cast(),
+                ptr.cast()),
             lib);
 
   /// Creates a block from a Dart function.
@@ -47404,16 +47403,15 @@ class ObjCBlock19 extends _ObjCBlockBase {
                       ffi.Pointer<ObjCObject> arg1)>>
           ptr)
       : this._(
-            lib
-                ._newBlock1(
-                    ffi.Pointer.fromFunction<
-                                ffi.Void Function(
-                                    ffi.Pointer<_ObjCBlock> block,
-                                    ffi.Pointer<ObjCObject> arg0,
-                                    ffi.Pointer<ObjCObject> arg1)>(
-                            _ObjCBlock19_fnPtrTrampoline)
-                        .cast(),
-                    ptr.cast()),
+            lib._newBlock1(
+                ffi.Pointer.fromFunction<
+                            ffi.Void Function(
+                                ffi.Pointer<_ObjCBlock> block,
+                                ffi.Pointer<ObjCObject> arg0,
+                                ffi.Pointer<ObjCObject> arg1)>(
+                        _ObjCBlock19_fnPtrTrampoline)
+                    .cast(),
+                ptr.cast()),
             lib);
 
   /// Creates a block from a Dart function.
@@ -47562,8 +47560,7 @@ class ObjCBlock21 extends _ObjCBlockBase {
   ObjCBlock21.fromFunctionPointer(
       AVFAudio lib,
       ffi.Pointer<
-              ffi
-              .NativeFunction<
+              ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0, ffi.Bool arg1,
                       ffi.Pointer<ObjCObject> arg2)>>
           ptr)
@@ -47657,16 +47654,15 @@ class ObjCBlock22 extends _ObjCBlockBase {
                       ffi.Pointer<ObjCObject> arg1)>>
           ptr)
       : this._(
-            lib
-                ._newBlock1(
-                    ffi.Pointer.fromFunction<
-                                ffi.Void Function(
-                                    ffi.Pointer<_ObjCBlock> block,
-                                    ffi.Pointer<ObjCObject> arg0,
-                                    ffi.Pointer<ObjCObject> arg1)>(
-                            _ObjCBlock22_fnPtrTrampoline)
-                        .cast(),
-                    ptr.cast()),
+            lib._newBlock1(
+                ffi.Pointer.fromFunction<
+                            ffi.Void Function(
+                                ffi.Pointer<_ObjCBlock> block,
+                                ffi.Pointer<ObjCObject> arg0,
+                                ffi.Pointer<ObjCObject> arg1)>(
+                        _ObjCBlock22_fnPtrTrampoline)
+                    .cast(),
+                ptr.cast()),
             lib);
 
   /// Creates a block from a Dart function.
@@ -47815,16 +47811,15 @@ class ObjCBlock24 extends _ObjCBlockBase {
                       ffi.Pointer<ObjCObject> arg1)>>
           ptr)
       : this._(
-            lib
-                ._newBlock1(
-                    ffi.Pointer.fromFunction<
-                                ffi.Void Function(
-                                    ffi.Pointer<_ObjCBlock> block,
-                                    ffi.Pointer<ObjCObject> arg0,
-                                    ffi.Pointer<ObjCObject> arg1)>(
-                            _ObjCBlock24_fnPtrTrampoline)
-                        .cast(),
-                    ptr.cast()),
+            lib._newBlock1(
+                ffi.Pointer.fromFunction<
+                            ffi.Void Function(
+                                ffi.Pointer<_ObjCBlock> block,
+                                ffi.Pointer<ObjCObject> arg0,
+                                ffi.Pointer<ObjCObject> arg1)>(
+                        _ObjCBlock24_fnPtrTrampoline)
+                    .cast(),
+                ptr.cast()),
             lib);
 
   /// Creates a block from a Dart function.
@@ -62447,8 +62442,7 @@ class ObjCBlock39 extends _ObjCBlockBase {
   ObjCBlock39.fromFunctionPointer(
       AVFAudio lib,
       ffi.Pointer<
-              ffi
-              .NativeFunction<
+              ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0, ffi.Bool arg1,
                       ffi.Pointer<ObjCObject> arg2)>>
           ptr)
@@ -63112,16 +63106,15 @@ class ObjCBlock40 extends _ObjCBlockBase {
                       ffi.Pointer<ObjCObject> arg1)>>
           ptr)
       : this._(
-            lib
-                ._newBlock1(
-                    ffi.Pointer.fromFunction<
-                                ffi.Void Function(
-                                    ffi.Pointer<_ObjCBlock> block,
-                                    ffi.Pointer<ObjCObject> arg0,
-                                    ffi.Pointer<ObjCObject> arg1)>(
-                            _ObjCBlock40_fnPtrTrampoline)
-                        .cast(),
-                    ptr.cast()),
+            lib._newBlock1(
+                ffi.Pointer.fromFunction<
+                            ffi.Void Function(
+                                ffi.Pointer<_ObjCBlock> block,
+                                ffi.Pointer<ObjCObject> arg0,
+                                ffi.Pointer<ObjCObject> arg1)>(
+                        _ObjCBlock40_fnPtrTrampoline)
+                    .cast(),
+                ptr.cast()),
             lib);
 
   /// Creates a block from a Dart function.

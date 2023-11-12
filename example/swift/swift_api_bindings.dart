@@ -22558,20 +22558,20 @@ class SwiftLibrary {
     );
   }
 
-  late final __objc_msgSend_803Ptr = _lookup<
-          ffi.NativeFunction<
-              ffi.Pointer<
-                      ffi.NativeFunction<
-                          ffi.Pointer<ffi.Void> Function(
-                              ffi.Pointer<ffi.Void>,
-                              ffi
-                                  .Pointer<
+  late final __objc_msgSend_803Ptr =
+      _lookup<
+              ffi.NativeFunction<
+                  ffi.Pointer<
+                          ffi.NativeFunction<
+                              ffi.Pointer<ffi.Void> Function(
+                                  ffi.Pointer<ffi.Void>,
+                                  ffi.Pointer<
                                       ffi.NativeFunction<
                                           NSUInteger Function(
                                               ffi.Pointer<ffi.Void>)>>,
-                              ffi.Bool)>>
-                  Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>>(
-      'objc_msgSend');
+                                  ffi.Bool)>>
+                      Function(ffi.Pointer<ObjCObject>, ffi.Pointer<ObjCSel>)>>(
+          'objc_msgSend');
   late final __objc_msgSend_803 = __objc_msgSend_803Ptr.asFunction<
       ffi.Pointer<
               ffi.NativeFunction<
@@ -34838,7 +34838,8 @@ class ObjCBlock4 extends _ObjCBlockBase {
   /// Creates a block from a C function pointer.
   ObjCBlock4.fromFunctionPointer(
       SwiftLibrary lib,
-      ffi.Pointer<
+      ffi
+          .Pointer<
               ffi
               .NativeFunction<
                   ffi.Bool Function(ffi.Pointer<ObjCObject> arg0,
@@ -46336,8 +46337,7 @@ class ObjCBlock21 extends _ObjCBlockBase {
   ObjCBlock21.fromFunctionPointer(
       SwiftLibrary lib,
       ffi.Pointer<
-              ffi
-              .NativeFunction<
+              ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0, ffi.Bool arg1,
                       ffi.Pointer<ObjCObject> arg2)>>
           ptr)
@@ -61245,8 +61245,7 @@ class ObjCBlock39 extends _ObjCBlockBase {
   ObjCBlock39.fromFunctionPointer(
       SwiftLibrary lib,
       ffi.Pointer<
-              ffi
-              .NativeFunction<
+              ffi.NativeFunction<
                   ffi.Void Function(ffi.Pointer<ObjCObject> arg0, ffi.Bool arg1,
                       ffi.Pointer<ObjCObject> arg2)>>
           ptr)

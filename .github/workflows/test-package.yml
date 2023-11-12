@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         # TODO: Change to 3.2.0 stable once it's released.
-        sdk: [3.2.0-114.0.dev]
+        sdk: [3.2.0-210.4.beta]
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
       - uses: dart-lang/setup-dart@b64355ae6ca0b5d484f0106a033dd1388965d06d
@@ -45,7 +45,7 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
       - uses: dart-lang/setup-dart@b64355ae6ca0b5d484f0106a033dd1388965d06d
         with:
-          sdk: 3.2.0-114.0.dev
+          sdk: 3.2.0-210.4.beta
       - name: Install dependencies
         run: dart pub get
       - name: Install libclang-14-dev
@@ -62,7 +62,7 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
       - uses: dart-lang/setup-dart@b64355ae6ca0b5d484f0106a033dd1388965d06d
         with:
-          sdk: 3.2.0-114.0.dev
+          sdk: 3.2.0-210.4.beta
       - name: Install dependencies
         run: dart pub get
       - name: Build test dylib and bindings
@@ -84,7 +84,7 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
       - uses: dart-lang/setup-dart@b64355ae6ca0b5d484f0106a033dd1388965d06d
         with:
-          sdk: 3.2.0-114.0.dev
+          sdk: 3.2.0-210.4.beta
       - name: Install dependencies
         run: dart pub get
       - name: Build test dylib and bindings
