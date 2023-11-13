@@ -5,7 +5,7 @@
 name: ffinative_example
 
 environment:
-  sdk: ">=3.2.0-114.0.dev <4.0.0"
+  sdk: ">=3.2.0-210.4.beta <4.0.0"
 
 dependencies:
   ffi: ^2.0.1

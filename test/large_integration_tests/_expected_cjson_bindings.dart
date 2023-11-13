@@ -54,9 +54,8 @@ class CJson {
   }
 
   late final _cJSON_ParsePtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Pointer<cJSON> Function(ffi.Pointer<ffi.Char>)>>(
-      'cJSON_Parse');
+      ffi.NativeFunction<
+          ffi.Pointer<cJSON> Function(ffi.Pointer<ffi.Char>)>>('cJSON_Parse');
   late final _cJSON_Parse = _cJSON_ParsePtr
       .asFunction<ffi.Pointer<cJSON> Function(ffi.Pointer<ffi.Char>)>();
 
@@ -91,9 +90,8 @@ class CJson {
   }
 
   late final _cJSON_PrintPtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<cJSON>)>>(
-      'cJSON_Print');
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(ffi.Pointer<cJSON>)>>('cJSON_Print');
   late final _cJSON_Print = _cJSON_PrintPtr
       .asFunction<ffi.Pointer<ffi.Char> Function(ffi.Pointer<cJSON>)>();
 
